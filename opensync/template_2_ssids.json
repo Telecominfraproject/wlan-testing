@@ -1,0 +1,27 @@
+{
+  "_type" : "OpensyncAPConfig",
+  "radioConfig" : {
+    "_type" : "OpensyncAPRadioConfig",
+    "country" : "__COUNTRY_CODE__",
+    "radioChannel24G" : __CH2__,
+    "radioChannel5LG" : __CH5L__,
+    "radioChannel5HG" : __CH5H__
+  },
+  "ssidConfigs" : [ {
+    "_type" : "OpensyncAPSsidConfig",
+    "radioType" : "is2dot4GHz",
+    "ssid" : "__SSID2__",
+    "encryption" : "__ENCRYPT2__",
+    "key" : "__PSK2__",
+    "mode" : "2",
+    "broadcast" : true
+  }, {
+    "_type" : "OpensyncAPSsidConfig",
+    "radioType" : "is5GHz",
+    "ssid" : "__SSID5__",
+    "encryption" : "__ENCRYPT5__",
+    "key" : "__PSK5__",
+    "mode" : "2",
+    "broadcast" : true
+  } ]
+}
