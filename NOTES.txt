@@ -1,0 +1,9 @@
+Notes for TIP WiFi testing related topics.
+
+
+# To pull the latest upstream lanforge-scripts repo into the wlan-lanforge-scripts
+# repository, use this or similar command.
+
+git pull git@github.com:greearb/lanforge-scripts.git
+
+
