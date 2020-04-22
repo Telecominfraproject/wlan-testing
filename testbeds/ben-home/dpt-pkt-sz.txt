@@ -12,7 +12,7 @@ skip_5: 0
 selected_dut: mr8300
 duration: 15000
 traffic_port: 1.1.6 sta00000
-upstream_port:
+upstream_port: 1.1.1 eth0
 path_loss: 10
 speed: 85%
 speed2: 0Kbps
