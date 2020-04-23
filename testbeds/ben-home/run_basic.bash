@@ -34,4 +34,16 @@ DEFAULT_ENABLE=0 DO_SHORT_AP_STABILITY_RESET=1 ./basic_regression.bash
 
 cd -
 
+if [ ! -d $RSLTS_DIR ]
+then
+    echo "Test did not run as expected, $RSLTS_DIR not found."
+    mkdir -p $RSLTS_DIR
+fi
+
+if [ -f ${MY_TMPDIR}/basic_regression_log.txt ]
+then
+    echo "Found ${MY_TMPDIR}/basic_regression_log.txt, moving into $RSLTS_DIR"
+    mv ${MY_TMPDIR}/basic_regression_log.txt $RSLTS_DIR/
+fi
+
 echo "See results in $RSLTS_DIR"

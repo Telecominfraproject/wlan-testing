@@ -2,8 +2,22 @@ Notes for TIP WiFi testing related topics.
 
 
 # To pull the latest upstream lanforge-scripts repo into the wlan-lanforge-scripts
-# repository, use this or similar command.
+# repository, use this or similar command.  This action will probably only be done
+# by whoever is curating the wlan-lanforge-scripts repository.
 
 git pull git@github.com:greearb/lanforge-scripts.git
 
 
+# Testbed setup
+
+Test-Controller system must be able to ssh into the LANforge system w/out a password
+(use authorized_keys ssh setup) as both user lanforge and user root.
+
+Test-Controller will need to be able to access the Cloud-SDK machines.  Not sure
+exact details on this yet.
+
+For each new test-bed hardware config (including LANforge and AP hardware types and radio
+layouts), a new directory in testbeds/ should be created, and populated with test-bed specific
+LANforge scenario and test configuration files.  See 'ben-home' for examples.
+See lanforge/lanforge-scripts/gui/README.txt for details on ways to grab the appropriate text,
+but you will also need familiarity with LANforge to accomplish this easily.
