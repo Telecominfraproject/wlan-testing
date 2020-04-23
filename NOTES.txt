@@ -16,6 +16,9 @@ Test-Controller system must be able to ssh into the LANforge system w/out a pass
 Test-Controller will need to be able to access the Cloud-SDK machines.  Not sure
 exact details on this yet.
 
+Serial ports must be make available to non-root users, command like this for each serial port:
+chmod a+rwx /dev/ttyUSB0
+
 For each new test-bed hardware config (including LANforge and AP hardware types and radio
 layouts), a new directory in testbeds/ should be created, and populated with test-bed specific
 LANforge scenario and test configuration files.  See 'ben-home' for examples.

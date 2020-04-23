@@ -25,6 +25,9 @@ cd ../../lanforge/lanforge-scripts/gui
 RSLTS_DIR=/tmp/ben-basic-regression
 export RSLTS_DIR
 
+# Clean any existing data from the results dir
+rm -fr $RSLTS_DIR
+
 # Run one test
 DEFAULT_ENABLE=0 DO_SHORT_AP_STABILITY_RESET=1 ./basic_regression.bash
 
