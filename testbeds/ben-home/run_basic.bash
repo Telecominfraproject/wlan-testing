@@ -29,11 +29,11 @@ export RSLTS_DIR
 rm -fr $RSLTS_DIR
 
 # Run one test
-DEFAULT_ENABLE=0 DO_SHORT_AP_STABILITY_RESET=1 ./basic_regression.bash
+# DEFAULT_ENABLE=0 DO_SHORT_AP_STABILITY_RESET=1 ./basic_regression.bash
 
 
 # Run all tests
-#./basic_regression.bash
+./basic_regression.bash
 
 cd -
 
