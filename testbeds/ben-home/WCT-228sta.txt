@@ -237,9 +237,9 @@ show_scan: 1
 auto_helper: 1
 skip_2: 0
 skip_5: 0
-batch_size: 1,2,5,10,20
+batch_size: 1,2,5,10,20,45,60,100
 loop_iter: 1
-duration: 20000
+duration: 60000
 test_groups: 0
 test_groups_subset: 0
 protocol: UDP-IPv4
