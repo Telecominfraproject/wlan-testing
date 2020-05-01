@@ -15,6 +15,14 @@
 # Source config file
 . test_bed_cfg.bash
 
+echo "<b>Top wlan-testing git commits.</b><br><pre>" > ./tmp_gitlog.html
+git log -n 8 --oneline >> ./tmp_gitlog.html
+echo "</pre>" >> ./tmp_gitlog.html
+
+NOTES_HTML=`pwd`/testbed_notes.html
+GITLOG=`pwd`/tmp_gitlog.html
+export NOTES_HTML GITLOG
+
 # TODO:  Copy config file to cloud controller and restart it
 # and/or do other config to make it work.
 
