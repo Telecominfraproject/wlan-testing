@@ -1,18 +1,18 @@
 [BLANK]
-sel_port-0: 1.1.eth0
 show_events: 1
 show_log: 0
 port_sorting: 0
+kpi_id: Dataplane
 bg: 0xE0ECF8
 test_rig:
 show_scan: 1
 auto_helper: 0
 skip_2: 0
 skip_5: 0
-selected_dut: mr8300
+selected_dut: ea8300
 duration: 15000
-traffic_port: 1.1.6 sta00000
-upstream_port: 1.1.1 eth0
+traffic_port: 1.1.136 sta01001
+upstream_port: 1.1.2 eth2
 path_loss: 10
 speed: 85%
 speed2: 0Kbps
@@ -41,7 +41,7 @@ chamber: 0
 tt_deg: 0..+45..359
 cust_pkt_sz:
 show_3s: 0
-show_ll_graphs: 0
+show_ll_graphs: 1
 show_gp_graphs: 1
 show_1m: 1
 pause_iter: 0
