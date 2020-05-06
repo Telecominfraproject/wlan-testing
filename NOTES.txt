@@ -24,3 +24,48 @@ layouts), a new directory in testbeds/ should be created, and populated with tes
 LANforge scenario and test configuration files.  See 'ben-home' for examples.
 See lanforge/lanforge-scripts/gui/README.txt for details on ways to grab the appropriate text,
 but you will also need familiarity with LANforge to accomplish this easily.
+
+
+# Test controller setup.  Assuming Fedora-30 or similar is installed.
+
+# Enable vnc, install some things, disable selinux so vnc will work.
+./lf_kinstall.pl --do_vnc --do_pkgs --do_selinux 0
+
+# As user lanforge (or other user should work too)
+# You will need to put the proper keys in ~/.ssh/ in order to
+# do the clone.
+mkdir ~/git
+cd ~/git
+git clone git@github.com:Telecominfraproject/wlan-testing.git
+git clone git@github.com:Telecominfraproject/wlan-lanforge-scripts.git
+cd wlan-testing/lanforge
+ln -s ../../wlan-lanforge-scripts lanforge-scripts
+
+# Make a copy of a test bed similar to what you have, for instance:
+cd ~/git/wlan-testing/testbeds
+cp -ar example_test_bed my_new_test_bed
+
+# Edit the new test bed details as needed, this may be somewhat tricky
+# if your test bed is different from others.
+# See ~/git/wlan-lanforge-scripts/gui/README.txt for some hints on setting up
+# scenarios and such.
+
+
+
+# On LANforge machine, make sure GUI is in auto-start mode:
+https://www.candelatech.com/cookbook/misc/autostart
+
+* Create uplink-nat profile.
+* Create upstream DUT
+* Create AP DUT
+* Create scenario that uses uplink-nat profile and upstream-dhcp to provide VR+NAT access to the world.
+* Add stations for the radios, properly linked to DUT radio(s).
+
+* Create WCT test, verify it works OK, save scenario
+*  Interleave sort, set pass/fail limits
+
+* Create AP-Auto test
+ * configure DUT
+ * configure radios
+ * configure advanced (dual-band only in our case)
+ * configure stability settings
