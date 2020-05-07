@@ -1,4 +1,4 @@
 TESTBED_HW=ea8300
 
-# Controller's view of the test bed.
-TESTBED_DIR=/home/greearb/git/tip/wlan-testing/testbeds/ferndale-basic-01
+# Controller's view of the test bed, from wlan-testing/cicd/[testbed] directory
+TESTBED_DIR=../../testbeds/ferndale-basic-01

@@ -90,8 +90,8 @@ for ($i = 0; $i<@lines; $i++) {
          $githash = $3;
       }
       else {
-         print "ERROR:  Un-handled filename syntax: $fname\n";
-         exit(1);
+         print "ERROR:  Un-handled filename syntax: $fname, assuming file-name is hardware name.\n";
+         $hw = $fname;
       }
 
       # Find the least used testbed for this hardware.
@@ -143,12 +143,14 @@ for ($i = 0; $i<@lines; $i++) {
          $fname_nogz = $1;
       }
 
-      open(FILE, ">", "$best_tb/pending_work/$cicd_prefix-$fname_nogz");
+      my $work_fname = "$best_tb/pending_work/$cicd_prefix-$fname_nogz";
+
+      open(FILE, ">", "$work_fname");
 
       system("mkdir -p $best_tb/reports");
 
       # In case we run different types of tests, report dir would need to be unique per test run
-      print FILE "CICD_RPT=$tb_url_base/$best_tb/reports/fname_nogz\n";
+      print FILE "CICD_RPT=$tb_url_base/$best_tb/reports/$fname_nogz\n";
 
       print FILE "CICD_HW=$hw\nCICD_FILEDATE=$fdate\nCICD_GITHASH=$githash\n";
       print FILE "CICD_URL=$url\nCICD_FILE_NAME=$fname\nCICD_URL_DATE=$date\n";
@@ -156,7 +158,8 @@ for ($i = 0; $i<@lines; $i++) {
       close(FILE);
 
       print("Next: File Name: $fname  Display Name: $name  Date: $date\n");
-      print("To download: curl --location -o /tmp/$fname -u $user:$passwd $url/$fname\n");
+      print("Work item placed at: $work_fname\n");
+      #print("To download: curl --location -o /tmp/$fname -u $user:$passwd $url/$fname\n");
       exit(0);
    }
 

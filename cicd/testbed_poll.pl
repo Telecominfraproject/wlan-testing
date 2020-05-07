@@ -26,8 +26,7 @@ my $usage = qq($0
 
 Example:
 $0 --user to_user --passwd secret --jfrog_user cicd_user --jfrog_passwd secret2 \
-   --url https://tip.cicd.mycloud.com/testbed-ferndale-01/ \
-   --next_info jfrog_files_next.txt
+   --url https://tip.cicd.mycloud.com/testbed-ferndale-01/
 
 );
 
@@ -66,13 +65,13 @@ if ($user eq "") {
 my $cmd = "curl $cuser $url";
 
 print ("Calling command: $cmd\n");
-$listing = `$cmd`;
-@lines = split(/\n/, $listing);
+my $listing = `$cmd`;
+my @lines = split(/\n/, $listing);
 for ($i = 0; $i<@lines; $i++) {
    my $ln = $lines[$i];
    chomp($ln);
 
-   if ($ln =~ /href=\"(CICD_TEST_.*)\">(.*)<\/a>\s+(.*)\s+\S+\s+\S+/) {
+   if ($ln =~ /href=\"(CICD_TEST-.*)\">(.*)<\/a>\s+(.*)\s+\S+\s+\S+/) {
       my $fname = $1;
       my $name = $2;
       my $date = $3;
@@ -110,10 +109,63 @@ for ($i = 0; $i<@lines; $i++) {
       my $cmd = "curl --location -o $jfile -u $jfrog_user:$jfrog_passwd $jurl/$jfile";
       system($cmd);
 
+      `rm -f openwrt-*.bin`;
+      `rm -f *sysupgrade.bin`; # just in case openwrt prefix changes.
+      `tar xf $jfile`;
+
       # Next steps here are to put the OpenWrt file on the LANforge system
+      my $tb_info = `cat TESTBED_INFO.txt`;
+      my $tb_dir = "";
+      if ($tb_info =~ /TESTBED_DIR=(.*)/g) {
+         $tb_dir = $1;
+      }
+
+      my $env = `. $tb_dir/test_bed_cfg.bash && env`;
+      my $lfmgr = "";
+      my $serial = "";
+
+      if ($tb_info =~ /LFMANAGER=(.*)/g) {
+         $lfmgr = $1;
+      }
+      else {
+         print("ERRROR:  Could not find LFMANAGER in environment, configuration error!\n");
+         exit(1);
+      }
+
+      if ($tb_info =~ /AP_SERIAL=(.*)/g) {
+         $serial = $1;
+      }
+      else {
+         print("ERRROR:  Could not find AP_SERIAL in environment, configuration error!\n");
+         exit(1);
+      }
+
       # and then get it onto the DUT, reboot DUT, re-configure as needed,
+      `scp *sysupgrade.bin jfile lanforge@$LFMANAGER/tip-$jfile`;
+
       # and then kick off automated regression test.
-      # When complete, upload the results to the requested location.
+      # Default gateway on the AP should be one of the ports on the LANforge system, so we can use
+      # that to scp the file to the DUT, via serial-console connection this controller has to the DUT.
+      my $ap_route = `../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty /dev/ttyUSB1 --action cmd --value "ip route show"`;
+      my $ap_gw = "";
+      if ($ap_route =~ /default via (\S+)/g) {
+         $ap_gw = $1;
+      }
+      if ($ap_gw eq "") {
+         print("ERROR:  Could not find default gateway for AP, route info:\n$ap_route\n");
+         exit(1);
+      }
+
+      my $ap_out = `../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty /dev/ttyUSB1 --action sysupgrade --value "lanforge@$ap_gw:tip-$jfile"`;
+
+      # System should be rebooted at this point.
+
+      # TODO:  Re-apply overlay
+
+      # TODO:  Allow specifying other tests.
+      `cd $tb_dir && ./run_basic.bash`;
+
+      # TODO: When complete, upload the results to the requested location.
 
       exit(0);
    }

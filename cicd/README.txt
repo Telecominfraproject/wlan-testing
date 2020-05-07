@@ -48,3 +48,49 @@ CICD_GITHASH=046ab4f
 
 
 
+*************   Installation / Usage ***************
+
+The jfrog.pl runs on the web server.  Create a directory structure looking similar to this:
+
+[greearb@ben-dt4 html]$ find tip -name "*" -print
+tip
+tip/testbeds
+tip/testbeds/ferndale-basic-01
+tip/testbeds/ferndale-basic-01/pending_work
+tip/testbeds/ferndale-basic-01/reports
+
+Copy the TESTBED_INFO from wlan-testing git to the tip/testbeds directory:
+
+[greearb@ben-dt4 testbeds]$ pwd
+/var/www/html/tip/testbeds
+cp -ar /home/greearb/git/tip/wlan-testing/cicd/ferndale-basic-01/ ./
+
+
+Run the jfrog.pl script from the tip/testbeds directory:
+
+/ome/greearb/git/tip/wlan-testing/cicd/jfrog.pl --passwd secret --tb_url_base greearb@192.168.100.195:/var/www/html/tip/testbeds/
+
+A work-item file will be created as needed, in my case, it is here:
+
+[greearb@ben-dt4 testbeds]$ cat ferndale-basic-01/pending_work/CICD_TEST-ea8300
+CICD_RPT=greearb@192.168.100.195:/var/www/html/tip/testbeds//ferndale-basic-01/reports/ea8300
+CICD_HW=ea8300
+CICD_FILEDATE=
+CICD_GITHASH=
+CICD_URL=https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/
+CICD_FILE_NAME=ea8300
+CICD_URL_DATE=24-Apr-2020 16:32 
+
+
+
+************  Installation / Usage on Test Controller **************
+
+# Set up OS
+sudo chmod a+rwx /dev/ttyUSB*
+sudo pip3 install pexpect-serial
+
+Run testbed_poll.pl from the cicd testbed directory:
+
+cd ~/tip/wlan-testing/cicd/ferndale-basic-01
+
+../testbed_poll.pl --jfrog_passwd secret --url http://192.168.100.195/tip/testbeds/testbed-ferndale-01/pending_work/
