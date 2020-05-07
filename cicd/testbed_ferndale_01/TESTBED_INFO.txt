@@ -1,4 +1,0 @@
-TESTBED_HW=ea8300
-
-# Controller's view of the test bed.
-TESTBED_DIR=../testbeds/ferndale-basic-01

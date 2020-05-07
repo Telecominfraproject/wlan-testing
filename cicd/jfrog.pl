@@ -119,7 +119,7 @@ for ($i = 0; $i<@lines; $i++) {
             next;
          }
          print "Checking testbed $dname backlog..\n";
-         my $bklog = `ls $dname/$cicd_prefix-*`;
+         my $bklog = `ls $dname/pending_work/$cicd_prefix-*`;
          my $bklog_count = split(/\n/, $bklog);
          if ($best_tb eq "") {
             $best_tb = $dname;
@@ -143,7 +143,7 @@ for ($i = 0; $i<@lines; $i++) {
          $fname_nogz = $1;
       }
 
-      open(FILE, ">", "$best_tb/$cicd_prefix-$fname_nogz");
+      open(FILE, ">", "$best_tb/pending_work/$cicd_prefix-$fname_nogz");
 
       system("mkdir -p $best_tb/reports");
 
