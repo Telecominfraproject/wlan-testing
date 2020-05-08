@@ -65,7 +65,7 @@ if ($user eq "") {
 my $cmd = "curl $cuser $url";
 
 print ("Calling command: $cmd\n");
-my $listing = `$cmd`;
+my $listing = do_system($cmd);
 my @lines = split(/\n/, $listing);
 for ($i = 0; $i<@lines; $i++) {
    my $ln = $lines[$i];
@@ -78,13 +78,15 @@ for ($i = 0; $i<@lines; $i++) {
 
       # Grab that test file
       $cmd = "curl --location $cuser -o $next_info $url/$fname";
-      system($cmd);
+      do_system($cmd);
 
       # Read in that file
       my $jurl = "";
       my $jfile = "";
       my $report_to = "";
-      my $listing = `cat $next_info`;
+      my $swver = "";
+      my $fdate = "";
+      my $listing = do_system("cat $next_info");
       my @lines = split(/\n/, $listing);
       for ($i = 0; $i<@lines; $i++) {
          my $ln = $lines[$i];
@@ -95,6 +97,23 @@ for ($i = 0; $i<@lines; $i++) {
          elsif ($ln =~ /^CICD_FILE_NAME=(.*)/) {
             $jfile = $1;
          }
+         elsif ($ln =~ /^CICD_RPT=(.*)/) {
+            $report_to = $1;
+         }
+         elsif ($ln =~ /^CICD_GITHASH=(.*)/) {
+            $swver = $1;
+         }
+         elsif ($ln =~ /^CICD_FILEDATE=(.*)/) {
+            $fdate = $1;
+         }
+      }
+
+      if ($swver = "") {
+         $swver = $fdate;
+      }
+
+      if ($swver = "") {
+         $swver = "jfile";
       }
 
       if ($jurl eq "") {
@@ -107,32 +126,33 @@ for ($i = 0; $i<@lines; $i++) {
       }
 
       my $cmd = "curl --location -o $jfile -u $jfrog_user:$jfrog_passwd $jurl/$jfile";
-      system($cmd);
+      do_system($cmd);
 
-      `rm -f openwrt-*.bin`;
-      `rm -f *sysupgrade.bin`; # just in case openwrt prefix changes.
-      `tar xf $jfile`;
+      do_system("rm -f openwrt-*.bin");
+      do_system("rm -f *sysupgrade.bin"); # just in case openwrt prefix changes.
+      do_system("tar xf $jfile");
 
       # Next steps here are to put the OpenWrt file on the LANforge system
-      my $tb_info = `cat TESTBED_INFO.txt`;
+      my $tb_info = do_system("cat TESTBED_INFO.txt");
       my $tb_dir = "";
       if ($tb_info =~ /TESTBED_DIR=(.*)/g) {
          $tb_dir = $1;
       }
 
-      my $env = `. $tb_dir/test_bed_cfg.bash && env`;
+      my $env = do_system(". $tb_dir/test_bed_cfg.bash && env");
       my $lfmgr = "";
       my $serial = "";
 
-      if ($tb_info =~ /LFMANAGER=(.*)/g) {
+      if ($env =~ /LFMANAGER=(.*)/g) {
          $lfmgr = $1;
       }
       else {
          print("ERRROR:  Could not find LFMANAGER in environment, configuration error!\n");
+         print("env: $env\n");
          exit(1);
       }
 
-      if ($tb_info =~ /AP_SERIAL=(.*)/g) {
+      if ($env =~ /AP_SERIAL=(.*)/g) {
          $serial = $1;
       }
       else {
@@ -141,12 +161,12 @@ for ($i = 0; $i<@lines; $i++) {
       }
 
       # and then get it onto the DUT, reboot DUT, re-configure as needed,
-      `scp *sysupgrade.bin jfile lanforge@$LFMANAGER/tip-$jfile`;
+      do_system("scp *sysupgrade.bin lanforge\@$lfmgr:tip-$jfile");
 
       # and then kick off automated regression test.
       # Default gateway on the AP should be one of the ports on the LANforge system, so we can use
       # that to scp the file to the DUT, via serial-console connection this controller has to the DUT.
-      my $ap_route = `../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty /dev/ttyUSB1 --action cmd --value "ip route show"`;
+      my $ap_route = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action cmd --value \"ip route show\"");
       my $ap_gw = "";
       if ($ap_route =~ /default via (\S+)/g) {
          $ap_gw = $1;
@@ -156,16 +176,31 @@ for ($i = 0; $i<@lines; $i++) {
          exit(1);
       }
 
-      my $ap_out = `../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty /dev/ttyUSB1 --action sysupgrade --value "lanforge@$ap_gw:tip-$jfile"`;
+      my $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action sysupgrade --value \"lanforge\@$ap_gw:tip-$jfile\"");
 
       # System should be rebooted at this point.
+      sleep(10); # Give it some more time
 
-      # TODO:  Re-apply overlay
+      # Re-apply overlay
+      $ap_out = do_system("cd $tb_dir/OpenWrt-overlay && tar -cvzf ../overlay_tmp.tar.gz * && scp ../overlay_tmp.tar.gz lanforge\@$lfmgr:tip-overlay.tar.gz");
+      print ("Create overlay zip:\n$ap_out\n");
+      $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action download --value \"lanforge\@$ap_gw:tip-overlay.tar.gz --value2 overlay.tgz\"");
+      print ("Download overlay to DUT:\n$ap_out\n");
+      $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action cmd --value \"cd / && tar -xf /tmp/overlay.tgz\"");
+      print ("Un-zip overlay on DUT:\n$ap_out\n");
+      $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action reboot");
+      print ("Reboot DUT so overlay takes effect:\n$ap_out\n");
 
       # TODO:  Allow specifying other tests.
-      `cd $tb_dir && ./run_basic.bash`;
+      $ap_out = do_system("cd $tb_dir && DUT_SW_VER=$swver ./run_basic_fast.bash");
+      print("Regression test script output:\n$ap_out\n");
 
-      # TODO: When complete, upload the results to the requested location.
+      #When complete, upload the results to the requested location.
+      if ($ap_out =~ /Results-Dir: (.*)/g) {
+         my $rslts_dir = $1;
+         print ("Found results at: $rslts_dir\n");
+         do_system("scp -r $rslts_dir $report_to");
+      }
 
       exit(0);
    }
@@ -174,3 +209,9 @@ for ($i = 0; $i<@lines; $i++) {
 }
 
 exit 0;
+
+sub do_system {
+   my $cmd = shift;
+   print ">>> $cmd\n";
+   return `$cmd`;
+}

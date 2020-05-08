@@ -12,6 +12,11 @@
 # DUT_PASSWD1 DUT_PASSWD2 DUT_PASSWD3
 # DUT_BSSID1 DUT_BSSID2 DUT_BSSID3
 
+DO_SHORT_AP_BASIC_CX=${DO_SHORT_AP_BASIC_CX:-1}
+DO_WCT_BI=${DO_WCT_BI:-1}
+
+export DO_SHORT_AP_BASI_CX DO_WCT_BI
+
 # Source config file
 . test_bed_cfg.bash
 
@@ -41,7 +46,7 @@ rm -fr $RSLTS_DIR
 
 #DEFAULT_ENABLE=0 WCT_DURATION=20s DO_SHORT_AP_BASIC_CX=1 DO_WCT_BI=1 ./basic_regression.bash
 
-DEFAULT_ENABLE=0 WCT_DURATION=20s DO_SHORT_AP_BASIC_CX=1 DO_WCT_BI=0 ./basic_regression.bash
+DEFAULT_ENABLE=0 WCT_DURATION=20s ./basic_regression.bash
 
 
 # Run all tests
