@@ -163,6 +163,10 @@ for ($i = 0; $i<@lines; $i++) {
       # and then get it onto the DUT, reboot DUT, re-configure as needed,
       do_system("scp *sysupgrade.bin lanforge\@$lfmgr:tip-$jfile");
 
+
+      # TODO:  Kill anything using the serial port
+
+
       # and then kick off automated regression test.
       # Default gateway on the AP should be one of the ports on the LANforge system, so we can use
       # that to scp the file to the DUT, via serial-console connection this controller has to the DUT.
@@ -173,6 +177,8 @@ for ($i = 0; $i<@lines; $i++) {
       }
       if ($ap_gw eq "") {
          print("ERROR:  Could not find default gateway for AP, route info:\n$ap_route\n");
+         # TODO:  Re-apply scenario so the LANforge gateway/NAT is enabled for sure.
+         # TODO:  Use power-controller to reboot the AP and retry.
          exit(1);
       }
 
@@ -184,9 +190,9 @@ for ($i = 0; $i<@lines; $i++) {
       # Re-apply overlay
       $ap_out = do_system("cd $tb_dir/OpenWrt-overlay && tar -cvzf ../overlay_tmp.tar.gz * && scp ../overlay_tmp.tar.gz lanforge\@$lfmgr:tip-overlay.tar.gz");
       print ("Create overlay zip:\n$ap_out\n");
-      $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action download --value \"lanforge\@$ap_gw:tip-overlay.tar.gz --value2 overlay.tgz\"");
+      $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action download --value \"lanforge\@$ap_gw:tip-overlay.tar.gz\" --value2 \"overlay.tgz\"");
       print ("Download overlay to DUT:\n$ap_out\n");
-      $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action cmd --value \"cd / && tar -xf /tmp/overlay.tgz\"");
+      $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action cmd --value \"cd / && tar -xzf /tmp/overlay.tgz\"");
       print ("Un-zip overlay on DUT:\n$ap_out\n");
       $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action reboot");
       print ("Reboot DUT so overlay takes effect:\n$ap_out\n");
