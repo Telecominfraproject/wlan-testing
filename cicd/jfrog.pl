@@ -3,6 +3,7 @@
 # Query jfrog URL and get list of builds.
 # This will be run on the test-bed orchestrator
 # Run this in directory that contains the testbed_$hw/ directories
+# Assumes cicd.class is found in ~/git/tip/wlan-lanforge-scripts/gui/
 
 use strict;
 use warnings;
@@ -15,6 +16,8 @@ my $files_processed = "jfrog_files_processed.txt";
 my $tb_url_base = "cicd_user\@tip.cicd.cloud.com/testbeds";  # Used by SSH: scp -R results_dir cicd_user@tip.cicd.cloud.com/testbeds/
 my $help = 0;
 my $cicd_prefix = "CICD_TEST";
+my $kpi_dir = "/home/greearb/git/tip/wlan-lanforge-scripts/gui/";
+my @ttypes = ("fast", "basic");
 
 my $usage = qq($0
   [--user { jfrog user (default: cicd_user) }
@@ -51,14 +54,48 @@ if ($passwd eq "") {
 
 my $i;
 
+my $pwd = `pwd`;
+chomp($pwd);
+
+my $listing;
+my @lines;
+my $j;
+
+# Check for any completed reports.
+for ($j = 0; $j<@ttypes; $j++) {
+   my $ttype = $ttypes[$j];
+   $listing = `ls */reports/$ttype/NEW_RESULTS-*`;
+   @lines = split(/\n/, $listing);
+   for ($i = 0; $i<@lines; $i++) {
+      my $ln = $lines[$i];
+      chomp($ln);
+      if ($ln =~ /(.*)\/NEW_RESULTS/) {
+         my $process = $1;
+         my $completed = `cat $ln`;
+         chomp($completed);
+         if ($ln =~ /(.*)\/reports\/$ttype\/NEW_RESULTS/) {
+            my $tbed = $1;
+
+            `rm ./$tbed/pending_work/$completed`;
+
+            my $cmd = "cd $kpi_dir && java kpi --dir \"$pwd/$process\" && cd -";
+            print ("Running kpi: $cmd\n");
+            `$cmd`;
+            `rm $ln`;
+            `scp -C -r $process www:candela_html/examples/cicd/$tbed/`
+         }
+      }
+   }
+}
+
 #Read in already_processed builds
 my @processed = ();
-my $listing = `cat $files_processed`;
-my @lines = split(/\n/, $listing);
+$listing = `cat $files_processed`;
+@lines = split(/\n/, $listing);
 for ($i = 0; $i<@lines; $i++) {
    my $ln = $lines[$i];
    chomp($ln);
-   print("Skipping, already processed: $ln\n");
+   print("Reported already processed: $ln\n");
    push(@processed, $ln);
 }
 
@@ -143,14 +180,33 @@ for ($i = 0; $i<@lines; $i++) {
          $fname_nogz = $1;
       }
 
-      my $work_fname = "$best_tb/pending_work/$cicd_prefix-$fname_nogz";
+      my $ttype = "fast";
+      my $work_fname = "$best_tb/pending_work/$cicd_prefix-$fname_nogz-$ttype";
 
       open(FILE, ">", "$work_fname");
 
-      system("mkdir -p $best_tb/reports");
+      system("mkdir -p $best_tb/reports/$ttype");
 
-      # In case we run different types of tests, report dir would need to be unique per test run
-      print FILE "CICD_RPT=$tb_url_base/$best_tb/reports/$fname_nogz\n";
+      print FILE "CICD_TYPE=$ttype\n";
+      print FILE "CICD_RPT_NAME=$fname_nogz\n";
+      print FILE "CICD_RPT_DIR=$tb_url_base/$best_tb/reports/$ttype\n";
+
+      print FILE "CICD_HW=$hw\nCICD_FILEDATE=$fdate\nCICD_GITHASH=$githash\n";
+      print FILE "CICD_URL=$url\nCICD_FILE_NAME=$fname\nCICD_URL_DATE=$date\n";
+
+      close(FILE);
+
+
+      $ttype = "basic";
+      $work_fname = "$best_tb/pending_work/$cicd_prefix-$fname_nogz-$ttype";
+
+      open(FILE, ">", "$work_fname");
+
+      system("mkdir -p $best_tb/reports/$ttype");
+
+      print FILE "CICD_TYPE=$ttype\n";
+      print FILE "CICD_RPT_NAME=$fname_nogz\n";
+      print FILE "CICD_RPT_DIR=$tb_url_base/$best_tb/reports/$ttype\n";
 
       print FILE "CICD_HW=$hw\nCICD_FILEDATE=$fdate\nCICD_GITHASH=$githash\n";
       print FILE "CICD_URL=$url\nCICD_FILE_NAME=$fname\nCICD_URL_DATE=$date\n";
@@ -160,6 +216,11 @@ for ($i = 0; $i<@lines; $i++) {
       print("Next: File Name: $fname  Display Name: $name  Date: $date\n");
       print("Work item placed at: $work_fname\n");
       #print("To download: curl --location -o /tmp/$fname -u $user:$passwd $url/$fname\n");
+
+      # Note this one is processed
+      `echo -n "$fname " >> $files_processed`;
+      `date >> $files_processed`;
+
       exit(0);
    }
 

@@ -71,11 +71,20 @@ for ($i = 0; $i<@lines; $i++) {
    my $ln = $lines[$i];
    chomp($ln);
 
-   if ($ln =~ /href=\"(CICD_TEST-.*)\">(.*)<\/a>\s+(.*)\s+\S+\s+\S+/) {
-      my $fname = $1;
-      my $name = $2;
-      my $date = $3;
+   my $fname = "";
+   my $name = "";
+   my $date = "";
 
+   if ($ln =~ /href=\"(CICD_TEST-.*)\">(.*)<\/a>\s+(.*)\s+\S+\s+\S+/) {
+      $fname = $1;
+      $name = $2;
+      $date = $3;
+   }
+   elsif ($ln =~ /href=\"(CICD_TEST-.*)\">(.*)<\/a>/) {
+      $fname = $1;
+   }
+
+   if ($fname ne "") {
       # Grab that test file
       $cmd = "curl --location $cuser -o $next_info $url/$fname";
       do_system($cmd);
@@ -84,8 +93,10 @@ for ($i = 0; $i<@lines; $i++) {
       my $jurl = "";
       my $jfile = "";
       my $report_to = "";
+      my $report_name = "";
       my $swver = "";
       my $fdate = "";
+      my $ttype = "";
       my $listing = do_system("cat $next_info");
       my @lines = split(/\n/, $listing);
       for ($i = 0; $i<@lines; $i++) {
@@ -94,11 +105,17 @@ for ($i = 0; $i<@lines; $i++) {
          if ($ln =~ /^CICD_URL=(.*)/) {
             $jurl = $1;
          }
+         elsif ($ln =~ /^CICD_TYPE=(.*)/) {
+            $ttype = $1;
+         }
          elsif ($ln =~ /^CICD_FILE_NAME=(.*)/) {
             $jfile = $1;
          }
-         elsif ($ln =~ /^CICD_RPT=(.*)/) {
+         elsif ($ln =~ /^CICD_RPT_DIR=(.*)/) {
             $report_to = $1;
+         }
+         elsif ($ln =~ /^CICD_RPT_NAME=(.*)/) {
+            $report_name = $1;
          }
          elsif ($ln =~ /^CICD_GITHASH=(.*)/) {
             $swver = $1;
@@ -108,11 +125,11 @@ for ($i = 0; $i<@lines; $i++) {
          }
       }
 
-      if ($swver = "") {
+      if ($swver eq "") {
          $swver = $fdate;
       }
 
-      if ($swver = "") {
+      if ($swver eq "") {
          $swver = "jfile";
       }
 
@@ -160,12 +177,23 @@ for ($i = 0; $i<@lines; $i++) {
          exit(1);
       }
 
+      my $gmport = "3990";
+      my $gmanager = $lfmgr;
+      my $scenario = "tip-auto";  # matches basic_regression.bash
+
+      if ($env =~ /GMANAGER=(.*)/g) {
+         $gmanager = $1;
+      }
+      if ($env =~ /GMPORT=(.*)/g) {
+         $gmport = $1;
+      }
+
       # and then get it onto the DUT, reboot DUT, re-configure as needed,
       do_system("scp *sysupgrade.bin lanforge\@$lfmgr:tip-$jfile");
 
 
       # TODO:  Kill anything using the serial port
-
+      do_system("sudo lsof -t $serial | sudo xargs --no-run-if-empty kill -9");
 
       # and then kick off automated regression test.
       # Default gateway on the AP should be one of the ports on the LANforge system, so we can use
@@ -177,11 +205,24 @@ for ($i = 0; $i<@lines; $i++) {
       }
       if ($ap_gw eq "") {
          print("ERROR:  Could not find default gateway for AP, route info:\n$ap_route\n");
-         # TODO:  Re-apply scenario so the LANforge gateway/NAT is enabled for sure.
+         # Re-apply scenario so the LANforge gateway/NAT is enabled for sure.
+         do_system("../../lanforge/lanforge-scripts/lf_gui_cmd.pl --manager $gmanager --port $gmport --scenario $scenario");
          # TODO:  Use power-controller to reboot the AP and retry.
-         exit(1);
+
+         my $out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action reboot");
+         print ("Reboot DUT to try to recover networking:\n$out\n");
+         sleep(15);
+
+         $ap_route = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action cmd --value \"ip route show\"");
+         if ($ap_route =~ /default via (\S+)/g) {
+            $ap_gw = $1;
+         }
+         if ($ap_gw eq "") {
+            exit(1);
+         }
       }
 
+      # TODO: Change this to curl download??
       my $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action sysupgrade --value \"lanforge\@$ap_gw:tip-$jfile\"");
 
       # System should be rebooted at this point.
@@ -197,15 +238,22 @@ for ($i = 0; $i<@lines; $i++) {
       $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action reboot");
       print ("Reboot DUT so overlay takes effect:\n$ap_out\n");
 
-      # TODO:  Allow specifying other tests.
-      $ap_out = do_system("cd $tb_dir && DUT_SW_VER=$swver ./run_basic_fast.bash");
-      print("Regression test script output:\n$ap_out\n");
+      if ($ttype eq "fast") {
+         $ap_out = do_system("cd $tb_dir && DUT_SW_VER=$swver ./run_basic_fast.bash");
+      }
+      else {
+         $ap_out = do_system("cd $tb_dir && DUT_SW_VER=$swver ./run_basic.bash");
+      }
+      print("Regression $ttype test script output:\n$ap_out\n");
 
       #When complete, upload the results to the requested location.
       if ($ap_out =~ /Results-Dir: (.*)/g) {
          my $rslts_dir = $1;
          print ("Found results at: $rslts_dir\n");
-         do_system("scp -r $rslts_dir $report_to");
+         do_system("mv $rslts_dir /tmp/$report_name");
+         do_system("scp -r /tmp/$report_name $report_to/");
+         do_system("echo $fname > /tmp/NEW_RESULTS-$fname");
+         do_system("scp /tmp/NEW_RESULTS-$fname $report_to/");
       }
 
       exit(0);
