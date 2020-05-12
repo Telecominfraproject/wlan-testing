@@ -53,7 +53,8 @@ CICD_URL_DATE=24-Apr-2020 16:32
 
 *************   Installation / Usage ***************
 
-The jfrog.pl runs on the web server.  Create a directory structure looking similar to this:
+The jfrog.pl runs on the web server.  This is the Test Orchestrator.
+Create a directory structure looking similar to this:
 
 [greearb@ben-dt4 html]$ find tip -name "*" -print
 tip
@@ -71,7 +72,7 @@ cp -ar /home/greearb/git/tip/wlan-testing/cicd/ferndale-basic-01/ ./
 
 Run the jfrog.pl script from the tip/testbeds directory:
 
-/ome/greearb/git/tip/wlan-testing/cicd/jfrog.pl --passwd secret --tb_url_base greearb@192.168.100.195:/var/www/html/tip/testbeds/
+/home/greearb/git/tip/wlan-testing/cicd/jfrog.pl --passwd secret --tb_url_base greearb@192.168.100.195:/var/www/html/tip/testbeds/
 
 A work-item file will be created as needed, in my case, it is here:
 
@@ -90,6 +91,8 @@ CICD_URL_DATE=24-Apr-2020 16:32
 
 ************  Installation / Usage on Test Controller **************
 
+# This runs on the test controller or Jump-Box.
+
 # Set up OS
 sudo needs to work w/out password.
 
@@ -97,6 +100,9 @@ sudo chmod a+rwx /dev/ttyUSB*
 sudo pip3 install pexpect-serial
 
 Run testbed_poll.pl from the cicd testbed directory:
+
+The 192.168.100.195 system is the jfrog / Orchestrator machine.  The jfrog
+password is so that it can download the OpenWrt binary file from jfrog.
 
 cd ~/tip/wlan-testing/cicd/ferndale-basic-01
 
