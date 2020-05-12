@@ -183,9 +183,10 @@ for ($i = 0; $i<@lines; $i++) {
       my $ttype = "fast";
       my $work_fname = "$best_tb/pending_work/$cicd_prefix-$fname_nogz-$ttype";
 
-      open(FILE, ">", "$work_fname");
-
+      system("mkdir -p $best_tb/pending_work");
       system("mkdir -p $best_tb/reports/$ttype");
+
+      open(FILE, ">", "$work_fname");
 
       print FILE "CICD_TYPE=$ttype\n";
       print FILE "CICD_RPT_NAME=$fname_nogz\n";
@@ -200,9 +201,9 @@ for ($i = 0; $i<@lines; $i++) {
       $ttype = "basic";
       $work_fname = "$best_tb/pending_work/$cicd_prefix-$fname_nogz-$ttype";
 
-      open(FILE, ">", "$work_fname");
-
       system("mkdir -p $best_tb/reports/$ttype");
+
+      open(FILE, ">", "$work_fname");
 
       print FILE "CICD_TYPE=$ttype\n";
       print FILE "CICD_RPT_NAME=$fname_nogz\n";
