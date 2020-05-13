@@ -224,6 +224,9 @@ for ($i = 0; $i<@lines; $i++) {
 
       # TODO: Change this to curl download??
       my $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action sysupgrade --value \"lanforge\@$ap_gw:tip-$jfile\"");
+      print ("Sys-upgrade results:\n$ap_out\n");
+      # TODO:  Verify this (and reboot below) worked.  DUT can get wedged and in that case it will need
+      # a power-cycle to continue.
 
       # System should be rebooted at this point.
       sleep(10); # Give it some more time
