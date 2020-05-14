@@ -27,7 +27,7 @@ MY_TMPDIR=${MY_TMPDIR:-/tmp}
 
 # Test configuration (10 minutes by default, in interest of time)
 STABILITY_DURATION=${STABILITY_DURATION:-600}
-TEST_RIG_ID=${TEST_RIG_ID:-Ferndale-01-Basic-Testbed}
+TEST_RIG_ID=${TEST_RIG_ID:-Ferndale-01-Basic}
 
 # DUT configuration
 #DUT_FLAGS=${DUT_FLAGS:-0x22}  # AP, WPA-PSK
