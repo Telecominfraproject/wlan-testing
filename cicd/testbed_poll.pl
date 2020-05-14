@@ -130,7 +130,7 @@ for ($i = 0; $i<@lines; $i++) {
       }
 
       if ($swver eq "") {
-         $swver = "jfile";
+         $swver = "$jfile";
       }
 
       if ($jurl eq "") {
