@@ -1,0 +1,4 @@
+TESTBED_HW=mr8300
+
+# Controller's view of the test bed, from wlan-testing/cicd/[testbed] directory
+TESTBED_DIR=../../testbeds/ben-home
