@@ -18,6 +18,10 @@ my $help = 0;
 my $cicd_prefix = "CICD_TEST";
 my $kpi_dir = "/home/greearb/git/tip/wlan-lanforge-scripts/gui/";
 my @ttypes = ("fast", "basic");
+my $duplicate_work = 1;
+
+my $ul_dest = "www:candela_html/examples/cicd/"; # used by scp
+my $other_ul_dest = ""; # used by scp
 
 my $usage = qq($0
   [--user { jfrog user (default: cicd_user) }
@@ -82,7 +86,14 @@ for ($j = 0; $j<@ttypes; $j++) {
             print ("Running kpi: $cmd\n");
             `$cmd`;
             `rm $ln`;
-            `scp -C -r $process www:candela_html/examples/cicd/$tbed/`
+            $cmd = "scp -C -r $process $ul_dest/$tbed/$ttype/";
+            print "Uploading: $cmd";
+            `$cmd`;
+            if ($other_ul_dest ne "") {
+               $cmd = "scp -C -r $process $other_ul_dest/$tbed/$ttype/";
+               print "Uploading to secondary location: $cmd";
+               `$cmd`;
+            }
          }
       }
    }
@@ -151,7 +162,7 @@ for ($i = 0; $i<@lines; $i++) {
          if ($tb_info =~ /TESTBED_HW=(.*)/g) {
             $tb_hw_type = $1;
          }
-         if ($tb_hw_type ne $hw) {
+         if (!hw_matches($tb_hw_type, $hw)) {
             print "Skipping test bed $dname, jfrog hardware type: -:$hw:-  testbed hardware type: -:$tb_hw_type:-";
             next;
          }
@@ -180,43 +191,84 @@ for ($i = 0; $i<@lines; $i++) {
          $fname_nogz = $1;
       }
 
-      my $ttype = "fast";
-      my $work_fname = "$best_tb/pending_work/$cicd_prefix-$fname_nogz-$ttype";
+      my @tbs = ($best_tb);
 
-      system("mkdir -p $best_tb/pending_work");
-      system("mkdir -p $best_tb/reports/$ttype");
+      # For more test coverage, send work to rest of the available test beds as well.
+      if ($duplicate_work) {
+         for ($di = 0; $di<@dira; $di++) {
+            my $dname = $dira[$di];
+            chomp($dname);
+            if (! -d $dname) {
+               next;
+            }
+            if ($dname eq $best_tb) {
+               next; # processed this one above
+            }
+            if (! -f "$dname/TESTBED_INFO.txt") {
+               next;
+            }
 
-      open(FILE, ">", "$work_fname");
+            my $tb_info = `cat $dname/TESTBED_INFO.txt`;
+            my $tb_hw_type = "";
+            if ($tb_info =~ /TESTBED_HW=(.*)/g) {
+               $tb_hw_type = $1;
+            }
 
-      print FILE "CICD_TYPE=$ttype\n";
-      print FILE "CICD_RPT_NAME=$fname_nogz\n";
-      print FILE "CICD_RPT_DIR=$tb_url_base/$best_tb/reports/$ttype\n";
+            if (!hw_matches($tb_hw_type, $hw)) {
+               print "Skipping test bed $dname, jfrog hardware type: -:$hw:-  testbed hardware type: -:$tb_hw_type:-";
+               next;
+            }
 
-      print FILE "CICD_HW=$hw\nCICD_FILEDATE=$fdate\nCICD_GITHASH=$githash\n";
-      print FILE "CICD_URL=$url\nCICD_FILE_NAME=$fname\nCICD_URL_DATE=$date\n";
+            push(@tbs, "$dname");
+         }
+      }
 
-      close(FILE);
+      my $q;
+      for ($q = 0; $q < @tbs; $q++) {
+         $best_tb = $tbs[$q];
+
+         my $ttype = "fast";
+         my $work_fname = "$best_tb/pending_work/$cicd_prefix-$fname_nogz-$ttype";
+         my $work_fname_a = $work_fname;
+
+         system("mkdir -p $best_tb/pending_work");
+         system("mkdir -p $best_tb/reports/$ttype");
+
+         open(FILE, ">", "$work_fname");
+
+         print FILE "CICD_TYPE=$ttype\n";
+         print FILE "CICD_RPT_NAME=$fname_nogz\n";
+         print FILE "CICD_RPT_DIR=$tb_url_base/$best_tb/reports/$ttype\n";
+
+         print FILE "CICD_HW=$hw\nCICD_FILEDATE=$fdate\nCICD_GITHASH=$githash\n";
+         print FILE "CICD_URL=$url\nCICD_FILE_NAME=$fname\nCICD_URL_DATE=$date\n";
+
+         close(FILE);
+
+         print("Next: File Name: $fname  Display Name: $name  Date: $date  TType: $ttype\n");
+         print("Work item placed at: $work_fname\n");
 
 
-      $ttype = "basic";
-      $work_fname = "$best_tb/pending_work/$cicd_prefix-$fname_nogz-$ttype";
+         $ttype = "basic";
+         $work_fname = "$best_tb/pending_work/$cicd_prefix-$fname_nogz-$ttype";
 
-      system("mkdir -p $best_tb/reports/$ttype");
+         system("mkdir -p $best_tb/reports/$ttype");
 
-      open(FILE, ">", "$work_fname");
+         open(FILE, ">", "$work_fname");
 
-      print FILE "CICD_TYPE=$ttype\n";
-      print FILE "CICD_RPT_NAME=$fname_nogz\n";
-      print FILE "CICD_RPT_DIR=$tb_url_base/$best_tb/reports/$ttype\n";
+         print FILE "CICD_TYPE=$ttype\n";
+         print FILE "CICD_RPT_NAME=$fname_nogz\n";
+         print FILE "CICD_RPT_DIR=$tb_url_base/$best_tb/reports/$ttype\n";
 
-      print FILE "CICD_HW=$hw\nCICD_FILEDATE=$fdate\nCICD_GITHASH=$githash\n";
-      print FILE "CICD_URL=$url\nCICD_FILE_NAME=$fname\nCICD_URL_DATE=$date\n";
+         print FILE "CICD_HW=$hw\nCICD_FILEDATE=$fdate\nCICD_GITHASH=$githash\n";
+         print FILE "CICD_URL=$url\nCICD_FILE_NAME=$fname\nCICD_URL_DATE=$date\n";
 
-      close(FILE);
+         close(FILE);
 
-      print("Next: File Name: $fname  Display Name: $name  Date: $date\n");
-      print("Work item placed at: $work_fname\n");
-      #print("To download: curl --location -o /tmp/$fname -u $user:$passwd $url/$fname\n");
+         print("Next: File Name: $fname  Display Name: $name  Date: $date TType: $ttype\n");
+         print("Work item placed at: $work_fname\n");
+         #print("To download: curl --location -o /tmp/$fname -u $user:$passwd $url/$fname\n");
+      }# for all testbeds
 
       # Note this one is processed
       `echo -n "$fname " >> $files_processed`;
@@ -229,3 +281,22 @@ for ($i = 0; $i<@lines; $i++) {
 }
 
 exit 0;
+
+
+sub hw_matches {
+   my $a = shift;
+   my $b = shift;
+
+   # Normalize equivalent HW types.
+   if ($a eq "mr8300") {
+      $a = "ea8300";
+   }
+   if ($b eq "mr8300") {
+      $b = "ea8300";
+   }
+
+   if ($a eq $b) {
+      return 1;
+   }
+   return 0;
+}
