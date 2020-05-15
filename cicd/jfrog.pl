@@ -86,11 +86,11 @@ for ($j = 0; $j<@ttypes; $j++) {
             print ("Running kpi: $cmd\n");
             `$cmd`;
             `rm $ln`;
-            $cmd = "scp -C -r $process $ul_dest/$tbed/$ttype/";
+            $cmd = "scp -C -r $process $ul_dest/$tbed/";
             print "Uploading: $cmd";
             `$cmd`;
             if ($other_ul_dest ne "") {
-               $cmd = "scp -C -r $process $other_ul_dest/$tbed/$ttype/";
+               $cmd = "scp -C -r $process $other_ul_dest/$tbed/";
                print "Uploading to secondary location: $cmd";
                `$cmd`;
             }
