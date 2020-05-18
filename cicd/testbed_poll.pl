@@ -75,6 +75,24 @@ my $cmd = "curl $cuser $url";
 print ("Calling command: $cmd\n");
 my $listing = do_system($cmd);
 my @lines = split(/\n/, $listing);
+
+# First, if any have 'fast' in them, they get precedence.
+for ($i = 0; $i<@lines; $i++) {
+   my $ln = $lines[$i];
+   chomp($ln);
+   my $fast = 0;
+   if ($ln =~ /href=\"(CICD_TEST-.*-fast)\">(.*)<\/a>\s+(.*)\s+\S+\s+\S+/) {
+      $fast = 1;
+   }
+   elsif ($ln =~ /href=\"(CICD_TEST-.*-fast)\">(.*)<\/a>/) {
+      $fast = 1;
+   }
+   if ($fast) {
+      @lines[0] = $ln;
+      last;
+   }
+}
+
 for ($i = 0; $i<@lines; $i++) {
    my $ln = $lines[$i];
    chomp($ln);
@@ -148,6 +166,11 @@ for ($i = 0; $i<@lines; $i++) {
       if ($jfile eq "") {
          print("ERROR: No CICD_FILE_NAME found, cannot download file.\n");
          exit(1);
+      }
+
+      # Refresh wlan-ap repo if it exists.
+      if ( -d "../../../wlan-ap") {
+         do_system("cd ../../../wlan-ap && git pull && cd -");
       }
 
       my $cmd = "curl --location -o $jfile -u $jfrog_user:$jfrog_passwd $jurl/$jfile";
