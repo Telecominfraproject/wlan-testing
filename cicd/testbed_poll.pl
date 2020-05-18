@@ -15,6 +15,8 @@ my $jfrog_passwd = "";
 my $url = "";
 my $next_info = "__next_test.txt";
 my $help = 0;
+my $owt_log = "";
+my $log = "";
 
 my $usage = qq($0
   [--jfrog_user { jfrog user (default: cicd_user) }
@@ -23,6 +25,7 @@ my $usage = qq($0
   [--passwd { for accessing URL }
   [--url { test-orchestrator URL for this test bed }
   [--next_info { output text file containing info about the next test to process }
+  [--log {location}   For instance: --log stdout, for openwrt_ctl expect script.
 
 Example:
 $0 --user to_user --passwd secret --jfrog_user cicd_user --jfrog_passwd secret2 \
@@ -38,6 +41,7 @@ GetOptions
   'passwd=s'               => \$passwd,
   'url=s'                  => \$url,
   'next_info=s'            => \$next_info,
+  'log=s'                  => \$log,
   'help|?'                 => \$help,
 ) || (print($usage) && exit(1));
 
@@ -53,6 +57,10 @@ if ($jfrog_passwd eq "") {
 if ($user ne "" && $passwd eq "") {
    print("ERROR:  You must specify a password if specifying a user.\n");
    exit(1);
+}
+
+if ($log ne "") {
+   $owt_log = "--log $log";
 }
 
 my $i;
@@ -188,6 +196,9 @@ for ($i = 0; $i<@lines; $i++) {
          $gmport = $1;
       }
 
+      # Restart the GUI on the LANforge system
+      do_system("ssh lanforge\@lfmgr pkill -f \"miglayout.*8080\"");
+
       # and then get it onto the DUT, reboot DUT, re-configure as needed,
       do_system("scp *sysupgrade.bin lanforge\@$lfmgr:tip-$jfile");
 
@@ -198,7 +209,7 @@ for ($i = 0; $i<@lines; $i++) {
       # and then kick off automated regression test.
       # Default gateway on the AP should be one of the ports on the LANforge system, so we can use
       # that to scp the file to the DUT, via serial-console connection this controller has to the DUT.
-      my $ap_route = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action cmd --value \"ip route show\"");
+      my $ap_route = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"ip route show\"");
       my $ap_gw = "";
       if ($ap_route =~ /default via (\S+)/g) {
          $ap_gw = $1;
@@ -209,11 +220,11 @@ for ($i = 0; $i<@lines; $i++) {
          do_system("../../lanforge/lanforge-scripts/lf_gui_cmd.pl --manager $gmanager --port $gmport --scenario $scenario");
          # TODO:  Use power-controller to reboot the AP and retry.
 
-         my $out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action reboot");
+         my $out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action reboot");
          print ("Reboot DUT to try to recover networking:\n$out\n");
          sleep(15);
 
-         $ap_route = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action cmd --value \"ip route show\"");
+         $ap_route = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"ip route show\"");
          if ($ap_route =~ /default via (\S+)/g) {
             $ap_gw = $1;
          }
@@ -223,7 +234,7 @@ for ($i = 0; $i<@lines; $i++) {
       }
 
       # TODO: Change this to curl download??
-      my $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action sysupgrade --value \"lanforge\@$ap_gw:tip-$jfile\"");
+      my $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action sysupgrade --value \"lanforge\@$ap_gw:tip-$jfile\"");
       print ("Sys-upgrade results:\n$ap_out\n");
       # TODO:  Verify this (and reboot below) worked.  DUT can get wedged and in that case it will need
       # a power-cycle to continue.
@@ -231,14 +242,21 @@ for ($i = 0; $i<@lines; $i++) {
       # System should be rebooted at this point.
       sleep(10); # Give it some more time
 
+      # Disable openvsync, it will re-write /etc/config/wireless
+      # This code should not be used when we get cloud-sdk wired up.
+      $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"service opensync stop\"");
+      print ("Stop openvsync:\n$ap_out\n");
+      $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"service opensync disable\"");
+      print ("Disable openvsync:\n$ap_out\n");
+
       # Re-apply overlay
       $ap_out = do_system("cd $tb_dir/OpenWrt-overlay && tar -cvzf ../overlay_tmp.tar.gz * && scp ../overlay_tmp.tar.gz lanforge\@$lfmgr:tip-overlay.tar.gz");
       print ("Create overlay zip:\n$ap_out\n");
-      $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action download --value \"lanforge\@$ap_gw:tip-overlay.tar.gz\" --value2 \"overlay.tgz\"");
+      $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action download --value \"lanforge\@$ap_gw:tip-overlay.tar.gz\" --value2 \"overlay.tgz\"");
       print ("Download overlay to DUT:\n$ap_out\n");
-      $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action cmd --value \"cd / && tar -xzf /tmp/overlay.tgz\"");
+      $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"cd / && tar -xzf /tmp/overlay.tgz\"");
       print ("Un-zip overlay on DUT:\n$ap_out\n");
-      $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --scheme serial --tty $serial --action reboot");
+      $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action reboot");
       print ("Reboot DUT so overlay takes effect:\n$ap_out\n");
 
       if ($ttype eq "fast") {
