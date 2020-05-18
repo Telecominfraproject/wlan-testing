@@ -21,6 +21,16 @@ echo "</pre>" >> ./tmp_gitlog.html
 
 NOTES_HTML=`pwd`/testbed_notes.html
 GITLOG=`pwd`/tmp_gitlog.html
+
+if [ -d "../../../wlan-ap" ]
+then
+    DUTGITLOG=/tmp/${DUT_SW_VER}_dut_gitlog.html
+    echo "<b>Top wlan-ap git commits.</b><br><pre>" > $DUTGITLOG
+    (cd ../../../wlan-ap && git log -n 8 --oneline $DUT_SW_VER >> $DUTGITLOG && cd -)
+    echo "</pre>" >> $DUTGITLOG
+    export DUTGITLOG
+fi
+
 export NOTES_HTML GITLOG
 
 # TODO:  Copy config file to cloud controller and restart it
@@ -39,9 +49,9 @@ rm -fr $RSLTS_DIR
 # Run a subset of available tests
 # See 'Tests to run' comment in basic_regression.bash for available options.
 
-#DEFAULT_ENABLE=0 WCT_DURATION=20s DO_SHORT_AP_BASIC_CX=1 DO_WCT_BI=1 ./basic_regression.bash
+DEFAULT_ENABLE=0 WCT_DURATION=20s DO_SHORT_AP_BASIC_CX=1 DO_WCT_BI=1 ./basic_regression.bash
 
-DEFAULT_ENABLE=0 WCT_DURATION=20s DO_SHORT_AP_BASIC_CX=1 DO_WCT_BI=0 ./basic_regression.bash
+#DEFAULT_ENABLE=0 WCT_DURATION=20s DO_SHORT_AP_BASIC_CX=1 DO_WCT_BI=0 ./basic_regression.bash
 
 
 # Run all tests

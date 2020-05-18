@@ -21,6 +21,15 @@ echo "</pre>" >> ./tmp_gitlog.html
 
 NOTES_HTML=`pwd`/testbed_notes.html
 GITLOG=`pwd`/tmp_gitlog.html
+
+if [ -d "../../../wlan-ap" ]
+then
+    DUTGITLOG=/tmp/${DUT_SW_VER}_dut_gitlog.html
+    echo "<b>Top wlan-ap git commits.</b><br><pre>" > $DUTGITLOG
+    (cd ../../../wlan-ap && git log -n 8 --oneline $DUT_SW_VER >> $DUTGITLOG && cd -)
+    echo "</pre>" >> $DUTGITLOG
+    export DUTGITLOG
+fi
 export NOTES_HTML GITLOG
 
 # TODO:  Copy config file to cloud controller and restart it
