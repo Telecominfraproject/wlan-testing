@@ -71,4 +71,31 @@ reset_batch_size: 1
 reset_duration_min: 10000
 reset_duration_max: 60000
 
+# Configure pass/fail metrics for this testbed.
+pf_text0: 2.4 DL 200 60Mbps
+pf_text1: 2.4 DL 512 90Mbps
+pf_text2: 2.4 DL 1024 110Mbps
+pf_text3: 2.4 DL MTU 112Mbps
+pf_text4:
+pf_text5: 2.4 UL 200 60Mbps
+pf_text6: 2.4 UL 512 90Mbps
+pf_text7: 2.4 UL 1024 110Mbps
+pf_text8: 2.4 UL MTU 112Mbps
+pf_text9:
+pf_text10: 5 DL 200 72Mbps
+pf_text11: 5 DL 512 185Mbps
+pf_text12: 5 DL 1024 370Mbps
+pf_text13: 5 DL MTU 520Mbps
+pf_text14:
+pf_text15: 5 UL 200 85Mbps
+pf_text16: 5 UL 512 220Mbps
+pf_text17: 5 UL 1024 430Mbps
+pf_text18: 5 UL MTU 600Mbps
+
+# Tune connect-time thresholds.
+cx_prcnt: 950000
+cx_open_thresh: 35
+cx_psk_thresh: 75
+cx_1x_thresh: 130
+
 
