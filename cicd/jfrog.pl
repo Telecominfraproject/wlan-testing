@@ -20,7 +20,9 @@ my $kpi_dir = "/home/greearb/git/tip/wlan-lanforge-scripts/gui/";
 my @ttypes = ("fast", "basic");
 my $duplicate_work = 1;
 
-my $ul_dest = "www:candela_html/examples/cicd/"; # used by scp
+my $ul_host = "www";
+my $ul_dir = "candela_html/examples/cicd/"; # used by scp
+my $ul_dest = "$ul_host:$ul_dir"; # used by scp
 my $other_ul_dest = ""; # used by scp
 
 my $usage = qq($0
@@ -74,21 +76,44 @@ for ($j = 0; $j<@ttypes; $j++) {
       my $ln = $lines[$i];
       chomp($ln);
       if ($ln =~ /(.*)\/NEW_RESULTS/) {
-         my $process = $1;
-         my $completed = `cat $ln`;
+         my $process = $1;  # For example: ben-home/reports/fast
+         my $completed = `cat $ln`;  # Contents of the results file
          chomp($completed);
          if ($ln =~ /(.*)\/reports\/$ttype\/NEW_RESULTS/) {
             my $tbed = $1;
+            my $cmd;
 
-            `rm ./$tbed/pending_work/$completed`;
+            print "Processing new results, line: $ln  process: $process  completed: $completed  testbed: $tbed\n";
 
-            my $cmd = "cd $kpi_dir && java kpi --dir \"$pwd/$process\" && cd -";
+            # Figure out the new directory from the work-item.
+            my $wi = `cat ./$tbed/pending_work/$completed`;
+
+            `mv ./$tbed/pending_work/$completed /tmp/`;
+
+            if ($wi =~ /CICD_RPT_NAME=(.*)/g) {
+               my $widir = $1;
+
+               # Ensure we have a place to copy the new report
+               $cmd = "ssh $ul_host \"mkdir -p $ul_dir/$bed/$ttype\"";
+               print "Ensure directory exists: $cmd";
+               `$cmd`;
+
+               # Upload the report directory
+               $cmd = "scp -C -r $process/$widir $ul_dest/$tbed/$ttype/";
+               print "Uploading: $cmd";
+               `$cmd`;
+            }
+
+            $cmd = "cd $kpi_dir && java kpi --dir \"$pwd/$process\" && cd -";
             print ("Running kpi: $cmd\n");
             `$cmd`;
             `rm $ln`;
-            $cmd = "scp -C -r $process $ul_dest/$tbed/";
+            $cmd = "scp -C $process/*.png $process/*.html $process/*.csv $process/*.ico $process/*.css $ul_dest/$tbed/$ttype/";
             print "Uploading: $cmd";
             `$cmd`;
+
+            # This might need similar partial-upload logic as that above, if it is ever actually
+            # enabled.
             if ($other_ul_dest ne "") {
                $cmd = "scp -C -r $process $other_ul_dest/$tbed/";
                print "Uploading to secondary location: $cmd";
