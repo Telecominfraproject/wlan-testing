@@ -46,6 +46,9 @@ export RSLTS_DIR
 # Clean any existing data from the results dir
 rm -fr $RSLTS_DIR
 
+# Clean up old DHCP leases
+../lf_gui_cmd.pl --manager $GMANAGER --port $GMPORT --cmd "cli clear_port_counters ALL ALL ALL dhcp_leases"
+
 # Run a subset of available tests
 # See 'Tests to run' comment in basic_regression.bash for available options.
 

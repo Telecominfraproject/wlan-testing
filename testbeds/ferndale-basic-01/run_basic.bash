@@ -48,6 +48,8 @@ rm -fr $RSLTS_DIR
 # Run one test
 # DEFAULT_ENABLE=0 DO_SHORT_AP_STABILITY_RESET=1 ./basic_regression.bash
 
+# Clean up old DHCP leases
+../lf_gui_cmd.pl --manager $GMANAGER --port $GMPORT --cmd "cli clear_port_counters ALL ALL ALL dhcp_leases"
 
 # Run all tests
 ./basic_regression.bash
