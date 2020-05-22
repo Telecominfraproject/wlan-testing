@@ -220,7 +220,7 @@ for ($i = 0; $i<@lines; $i++) {
       }
 
       # Restart the GUI on the LANforge system
-      do_system("ssh lanforge\@lfmgr pkill -f \"miglayout.*8080\"");
+      do_system("ssh lanforge\@$lfmgr pkill -f \"miglayout.*8080\"");
 
       # and then get it onto the DUT, reboot DUT, re-configure as needed,
       do_system("scp *sysupgrade.bin lanforge\@$lfmgr:tip-$jfile");
