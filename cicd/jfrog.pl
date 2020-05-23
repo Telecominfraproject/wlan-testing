@@ -94,7 +94,7 @@ for ($j = 0; $j<@ttypes; $j++) {
                my $widir = $1;
 
                # Ensure we have a place to copy the new report
-               $cmd = "ssh $ul_host \"mkdir -p $ul_dir/$bed/$ttype\"";
+               $cmd = "ssh $ul_host \"mkdir -p $ul_dir/$tbed/$ttype\"";
                print "Ensure directory exists: $cmd";
                `$cmd`;
 
