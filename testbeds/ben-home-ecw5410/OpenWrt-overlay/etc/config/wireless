@@ -1,6 +1,6 @@
 config wifi-device 'radio0'
         option type 'mac80211'
-        option channel '149'
+        option channel '36'
         option hwmode '11a'
         option path 'soc/1b700000.pci/pci0001:00/0001:00:00.0/0001:01:00.0'
         option htmode 'VHT80'
