@@ -275,8 +275,25 @@ for ($i = 0; $i<@lines; $i++) {
       # Re-apply overlay
       $ap_out = do_system("cd $tb_dir/OpenWrt-overlay && tar -cvzf ../overlay_tmp.tar.gz * && scp ../overlay_tmp.tar.gz lanforge\@$lfmgr:tip-overlay.tar.gz");
       print ("Create overlay zip:\n$ap_out\n");
-      $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action download --value \"lanforge\@$ap_gw:tip-overlay.tar.gz\" --value2 \"overlay.tgz\"");
-      print ("Download overlay to DUT:\n$ap_out\n");
+      for (my $q = 0; $q<10; $q++) {
+         $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action download --value \"lanforge\@$ap_gw:tip-overlay.tar.gz\" --value2 \"overlay.tgz\"");
+         print ("Download overlay to DUT:\n$ap_out\n");
+         if ($ap_out =~ /ERROR:  Could not connect to LANforge/g) {
+            # Try to restart the network
+            $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"/etc/init.d/network restart\"");
+            print ("Request restart of DUT networking:\n$ap_out\n");
+            if ($q == 9) {
+               # We have failed to apply overlay at this point, bail out.
+               print("ERROR:  Could not apply overlay to DUT, exiting test attempt.\n");
+               exit(1);
+            }
+            print("Will retry overlay download in 10 seconds, try $q / 10\n");
+            sleep(10);
+         }
+         else {
+            last;
+         }
+      }
       $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"cd / && tar -xzf /tmp/overlay.tgz\"");
       print ("Un-zip overlay on DUT:\n$ap_out\n");
       $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action reboot");

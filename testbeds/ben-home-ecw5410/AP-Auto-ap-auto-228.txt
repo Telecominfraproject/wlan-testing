@@ -9,8 +9,8 @@ show_scan: 1
 auto_helper: 1
 skip_2: 1
 skip_5: 1
-dut5-0: ecw5410 OpenWrt-5
-dut2-0: ecw5410 OpenWrt-2
+dut5-0: ecw5410 OpenWrt-ecw-5
+dut2-0: ecw5410 OpenWrt-ecw-2
 dut5-1: NA
 dut2-1: NA
 dut5-2: NA
@@ -40,9 +40,9 @@ stab_tcp_ul_min: 500000
 stab_tcp_ul_max: 0
 dl_speed: 85%
 ul_speed: 85%
-max_stations_2: 180
+max_stations_2: 178
 max_stations_5: 64
-max_stations_dual: 244
+max_stations_dual: 242
 lt_sta: 2
 voip_calls: 20
 lt_dur: 3600
