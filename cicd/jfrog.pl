@@ -138,7 +138,8 @@ for ($i = 0; $i<@lines; $i++) {
 
 my $z;
 for ($z = 0; $z<@platforms; $z++) {
-   my $cmd = "curl -u $user:$passwd $url/" . $platforms[$z] . "/";
+   my $pf = $platforms[$z];
+   my $cmd = "curl -u $user:$passwd $url/$pf/";
    print ("Calling command: $cmd\n");
    $listing = `$cmd`;
    @lines = split(/\n/, $listing);
@@ -267,7 +268,7 @@ for ($z = 0; $z<@platforms; $z++) {
             print FILE "CICD_RPT_DIR=$tb_url_base/$best_tb/reports/$ttype\n";
 
             print FILE "CICD_HW=$hw\nCICD_FILEDATE=$fdate\nCICD_GITHASH=$githash\n";
-            print FILE "CICD_URL=$url\nCICD_FILE_NAME=$fname\nCICD_URL_DATE=$date\n";
+            print FILE "CICD_URL=$url/$pf\nCICD_FILE_NAME=$fname\nCICD_URL_DATE=$date\n";
 
             close(FILE);
 
@@ -287,13 +288,13 @@ for ($z = 0; $z<@platforms; $z++) {
             print FILE "CICD_RPT_DIR=$tb_url_base/$best_tb/reports/$ttype\n";
 
             print FILE "CICD_HW=$hw\nCICD_FILEDATE=$fdate\nCICD_GITHASH=$githash\n";
-            print FILE "CICD_URL=$url\nCICD_FILE_NAME=$fname\nCICD_URL_DATE=$date\n";
+            print FILE "CICD_URL=$url/$pf\nCICD_FILE_NAME=$fname\nCICD_URL_DATE=$date\n";
 
             close(FILE);
 
             print("Next: File Name: $fname  Display Name: $name  Date: $date TType: $ttype\n");
             print("Work item placed at: $work_fname\n");
-            #print("To download: curl --location -o /tmp/$fname -u $user:$passwd $url/$fname\n");
+            #print("To download: curl --location -o /tmp/$fname -u $user:$passwd $url/$pf/$fname\n");
          }                         # for all testbeds
 
          # Note this one is processed
