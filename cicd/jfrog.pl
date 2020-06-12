@@ -25,10 +25,12 @@ my $ul_host = "www";
 my $ul_dir = "candela_html/examples/cicd/"; # used by scp
 my $ul_dest = "$ul_host:$ul_dir"; # used by scp
 my $other_ul_dest = ""; # used by scp
+my $result_url_base = "http://localhost/tip/cicd";
 
 my $usage = qq($0
   [--user { jfrog user (default: cicd_user) }
   [--passwd { jfrog password }
+  [--result_url_base { http://foo.com/tip/cicd }
   [--url { jfrog URL, default is OpenWrt URL: https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ }
   [--files_processed { text file containing file names we have already processed }
   [--tb_url_base { Where to report the test results? }
@@ -47,6 +49,7 @@ GetOptions
   'url=s'                  => \$url,
   'files_processed=s'      => \$files_processed,
   'tb_url_base=s'          => \$tb_url_base,
+  'result_url_base=s'      => \$result_url_base,
   'help|?'                 => \$help,
 ) || (print($usage) && exit(1));
 
@@ -83,6 +86,7 @@ for ($j = 0; $j<@ttypes; $j++) {
          if ($ln =~ /(.*)\/reports\/$ttype\/NEW_RESULTS/) {
             my $tbed = $1;
             my $cmd;
+            my $caseid = "";
 
             print "Processing new results, line: $ln  process: $process  completed: $completed  testbed: $tbed\n";
 
@@ -90,6 +94,10 @@ for ($j = 0; $j<@ttypes; $j++) {
             my $wi = `cat ./$tbed/pending_work/$completed`;
 
             `mv ./$tbed/pending_work/$completed /tmp/`;
+
+            if ($wi =~ /CICD_CASE_ID=(\S+)/g) {
+               $caseid = "--caseid $1";
+            }
 
             if ($wi =~ /CICD_RPT_NAME=(.*)/g) {
                my $widir = $1;
@@ -103,9 +111,11 @@ for ($j = 0; $j<@ttypes; $j++) {
                $cmd = "scp -C -r $process/$widir $ul_dest/$tbed/$ttype/";
                print "Uploading: $cmd";
                `$cmd`;
+
+               $caseid .= " --results_url $result_url_base/$tbed/$ttype/$widir";
             }
 
-            $cmd = "cd $kpi_dir && java kpi --dir \"$pwd/$process\" && cd -";
+            $cmd = "cd $kpi_dir && java kpi $caseid --dir \"$pwd/$process\" && cd -";
             print ("Running kpi: $cmd\n");
             `$cmd`;
             `rm $ln`;
