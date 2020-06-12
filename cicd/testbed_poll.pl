@@ -28,7 +28,7 @@ my $usage = qq($0
   [--log {location}   For instance: --log stdout, for openwrt_ctl expect script.
 
 Example:
-$0 --user to_user --passwd secret --jfrog_user cicd_user --jfrog_passwd secret2 \
+$0 --user to_user --passwd secret --jfrog_user tip-read --jfrog_passwd tip-read \
    --url https://tip.cicd.mycloud.com/testbed-ferndale-01/
 
 );
