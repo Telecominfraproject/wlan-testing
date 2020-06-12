@@ -28,8 +28,13 @@ my $usage = qq($0
   [--log {location}   For instance: --log stdout, for openwrt_ctl expect script.
 
 Example:
-$0 --user to_user --passwd secret --jfrog_user tip-read --jfrog_passwd tip-read \
+$0 --user to_user --passwd secret --jfrog_user tip-read --jfrog_passwd tip-read \\
    --url https://tip.cicd.mycloud.com/testbed-ferndale-01/
+
+# Use specific scenario file.
+SCENARIO_CFG_FILE=/home/lanforge/git/wlan-testing/testbeds/ferndale-basic-01/scenario_small.txt \\
+  ../testbed_poll.pl --jfrog_passwd tip-read --jfrog_user tip-read \\
+  --url http://192.168.100.195/tip/testbeds/ferndale-basic-01/pending_work/
 
 );
 
