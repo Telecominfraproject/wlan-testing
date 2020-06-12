@@ -72,7 +72,7 @@ if ($user eq "") {
 
 my $cmd = "curl $cuser $url";
 
-print ("Calling command: $cmd\n");
+print_note("Checking Test-Orchestrator for new work-items");
 my $listing = do_system($cmd);
 my @lines = split(/\n/, $listing);
 
@@ -173,6 +173,7 @@ for ($i = 0; $i<@lines; $i++) {
          do_system("cd ../../../wlan-ap && git pull && cd -");
       }
 
+      print_note("Download latest AP Build from jfrog repository.");
       my $cmd = "curl --location -o $jfile -u $jfrog_user:$jfrog_passwd $jurl/$jfile";
       do_system($cmd);
 
@@ -180,6 +181,7 @@ for ($i = 0; $i<@lines; $i++) {
       do_system("rm -f *sysupgrade.bin"); # just in case openwrt prefix changes.
       do_system("tar xf $jfile");
 
+      print_note("Copy AP build to LANforge so LANforge can serve the file to AP");
       # Next steps here are to put the OpenWrt file on the LANforge system
       my $tb_info = do_system("cat TESTBED_INFO.txt");
       my $tb_dir = "";
@@ -219,16 +221,19 @@ for ($i = 0; $i<@lines; $i++) {
          $gmport = $1;
       }
 
+      print_note("Restart LANforge GUI to be sure it is in known state.");
       # Restart the GUI on the LANforge system
       do_system("ssh lanforge\@$lfmgr pkill -f \"miglayout.*8080\"");
 
       # and then get it onto the DUT, reboot DUT, re-configure as needed,
+      print_note("Request AP DUT to install the test image.");
       do_system("scp *sysupgrade.bin lanforge\@$lfmgr:tip-$jfile");
 
 
       # TODO:  Kill anything using the serial port
       do_system("sudo lsof -t $serial | sudo xargs --no-run-if-empty kill -9");
 
+      print_note("Find AP DUT default gateway.");
       # and then kick off automated regression test.
       # Default gateway on the AP should be one of the ports on the LANforge system, so we can use
       # that to scp the file to the DUT, via serial-console connection this controller has to the DUT.
@@ -256,6 +261,7 @@ for ($i = 0; $i<@lines; $i++) {
          }
       }
 
+      print_note("Request AP DUT to install the test image and reboot.");
       # TODO: Change this to curl download??
       my $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action sysupgrade --value \"lanforge\@$ap_gw:tip-$jfile\"");
       print ("Sys-upgrade results:\n$ap_out\n");
@@ -265,6 +271,7 @@ for ($i = 0; $i<@lines; $i++) {
       # System should be rebooted at this point.
       sleep(10); # Give it some more time
 
+      print_note("Initialize AP, disable OpenVsync since this is stand-alone testbed.");
       # Disable openvsync, it will re-write /etc/config/wireless
       # This code should not be used when we get cloud-sdk wired up.
       $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"service opensync stop\"");
@@ -273,6 +280,7 @@ for ($i = 0; $i<@lines; $i++) {
       print ("Disable openvsync:\n$ap_out\n");
 
       # Re-apply overlay
+      print_note("Apply default AP configuration for this test bed.");
       $ap_out = do_system("cd $tb_dir/OpenWrt-overlay && tar -cvzf ../overlay_tmp.tar.gz * && scp ../overlay_tmp.tar.gz lanforge\@$lfmgr:tip-overlay.tar.gz");
       print ("Create overlay zip:\n$ap_out\n");
       for (my $q = 0; $q<10; $q++) {
@@ -296,16 +304,23 @@ for ($i = 0; $i<@lines; $i++) {
       }
       $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"cd / && tar -xzf /tmp/overlay.tgz\"");
       print ("Un-zip overlay on DUT:\n$ap_out\n");
+
+
+      print_note("Reboot AP so that new configuration is applied.");
       $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action reboot");
-      print ("Reboot DUT so overlay takes effect:\n$ap_out\n");
+      print ("Rebooted DUT so overlay takes effect:\n$ap_out\n");
 
       if ($ttype eq "fast") {
+         print_note("Start 'Fast' LANforge regression test.");
          $ap_out = do_system("cd $tb_dir && DUT_SW_VER=$swver ./run_basic_fast.bash");
       }
       else {
+         print_note("Start 'Fast' LANforge regression test.");
          $ap_out = do_system("cd $tb_dir && DUT_SW_VER=$swver ./run_basic.bash");
       }
       print("Regression $ttype test script output:\n$ap_out\n");
+
+      print_note("Upload results.");
 
       #When complete, upload the results to the requested location.
       if ($ap_out =~ /Results-Dir: (.*)/g) {
@@ -330,4 +345,10 @@ sub do_system {
    my $cmd = shift;
    print ">>> $cmd\n";
    return `$cmd`;
+}
+
+sub print_note {
+   my $n = shift;
+   my $hdr = "###############################################################";
+   print "\n\n\n$hdr\n### $n\n$hdr\n\n";
 }
