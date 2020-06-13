@@ -263,6 +263,16 @@ for ($z = 0; $z<@platforms; $z++) {
          my $q;
          for ($q = 0; $q < @tbs; $q++) {
             $best_tb = $tbs[$q];
+            my $caseid_fast = "";
+            my $caseid_basic = "";
+
+            my $tb_info = `cat $best_tb/TESTBED_INFO.txt`;
+            if ($tb_info =~ /TESTBED_CASEID_FAST=(.*)/g) {
+               $caseid_fast = $1;
+            }
+            if ($tb_info =~ /TESTBED_CASEID_BASIC=(.*)/g) {
+               $caseid_basic = $1;
+            }
 
             my $ttype = "fast";
             my $work_fname = "$best_tb/pending_work/$cicd_prefix-$fname_nogz-$ttype";
@@ -279,6 +289,9 @@ for ($z = 0; $z<@platforms; $z++) {
 
             print FILE "CICD_HW=$hw\nCICD_FILEDATE=$fdate\nCICD_GITHASH=$githash\n";
             print FILE "CICD_URL=$url/$pf\nCICD_FILE_NAME=$fname\nCICD_URL_DATE=$date\n";
+            if ($caseid_fast ne "") {
+               print FILE "CICD_CASE_ID=$caseid_fast\n";
+            }
 
             close(FILE);
 
@@ -299,6 +312,9 @@ for ($z = 0; $z<@platforms; $z++) {
 
             print FILE "CICD_HW=$hw\nCICD_FILEDATE=$fdate\nCICD_GITHASH=$githash\n";
             print FILE "CICD_URL=$url/$pf\nCICD_FILE_NAME=$fname\nCICD_URL_DATE=$date\n";
+            if ($caseid_basic ne "") {
+               print FILE "CICD_CASE_ID=$caseid_basic\n";
+            }
 
             close(FILE);
 

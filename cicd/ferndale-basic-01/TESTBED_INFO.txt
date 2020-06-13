@@ -2,3 +2,6 @@ TESTBED_HW=ea8300
 
 # Controller's view of the test bed, from wlan-testing/cicd/[testbed] directory
 TESTBED_DIR=../../testbeds/ferndale-basic-01
+
+TESTBED_CASEID_FAST=19001
+TESTBED_CASEID_BASIC=19002
