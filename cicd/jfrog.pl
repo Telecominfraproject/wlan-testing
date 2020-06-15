@@ -114,6 +114,9 @@ for ($j = 0; $j<@ttypes; $j++) {
 
                $caseid .= " --results_url $result_url_base/$tbed/$ttype/$widir";
             }
+            else {
+               print "WARNING:  No CICD_RPT_NAME line found in work-item contents:\n$wi\n";
+            }
 
             $cmd = "cd $kpi_dir && java kpi $caseid --dir \"$pwd/$process\" && cd -";
             print ("Running kpi: $cmd\n");
