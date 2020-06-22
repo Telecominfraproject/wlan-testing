@@ -36,9 +36,15 @@ my $usage = qq($0
   [--tb_url_base { Where to report the test results? }
 
 Example:
-$0 --user cicd_user --passwd secret --url https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ \
-   --files_processed jfrog_files_processed.txt \
+
+# Use TIP jfrog repo
+$0 --user cicd_user --passwd secret --url https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ \\
+   --files_processed jfrog_files_processed.txt \\
    --tb_url_base cicd_user\@tip.cicd.cloud.com/testbeds
+
+# Download images from candelatech.com web site (for developer testing and such)
+$0 --tb_url_base greearb@192.168.100.195:/var/www/html/tip/testbeds/ \\
+   --url http://www.candelatech.com/downloads/tip/test_images
 
 );
 
@@ -57,10 +63,10 @@ if ($help) {
   print($usage) && exit(0);
 }
 
-if ($passwd eq "") {
-   print("ERROR:  You must specify jfrog password.\n");
-   exit(1);
-}
+#if ($passwd eq "") {
+#   print("ERROR:  You must specify jfrog password.\n");
+#   exit(1);
+#}
 
 my $i;
 
@@ -160,10 +166,26 @@ for ($z = 0; $z<@platforms; $z++) {
       my $ln = $lines[$i];
       chomp($ln);
 
-      if ($ln =~ /href=\"(.*)\">(.*)<\/a>\s+(.*)\s+\S+\s+\S+/) {
+      #print("ln -:$ln:-\n");
+
+      if (($ln =~ /href=\"(.*)\">(.*)<\/a>\s+(.*)\s+\S+\s+\S+/)
+          || ($ln =~ /class=\"indexcolname\"><a href=\"(.*.tar.gz)\">(.*)<\/a>.*class=\"indexcollastmod\">(\S+)\s+.*/)) {
          my $fname = $1;
          my $name = $2;
          my $date = $3;
+
+         # Skip header
+         if ($ln =~ /Last modified/) {
+            next;
+         }
+
+         # Skip parent-dir
+         if ($ln =~ /Parent Directory/) {
+            next;
+         }
+
+         #print("line matched -:$ln:-\n");
+         #print("fname: $fname  name: $name  date: $date\n");
 
          if ( grep( /^$fname\s+/, @processed ) ) {
             # Skip this one, already processed.
