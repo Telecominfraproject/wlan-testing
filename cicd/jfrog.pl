@@ -101,21 +101,21 @@ for ($j = 0; $j<@ttypes; $j++) {
 
             `mv ./$tbed/pending_work/$completed /tmp/`;
 
-            if ($wi =~ /CICD_CASE_ID=(\S+)/g) {
+            if ($wi =~ /CICD_CASE_ID=(\S+)/) {
                $caseid = "--caseid $1";
             }
 
-            if ($wi =~ /CICD_RPT_NAME=(.*)/g) {
+            if ($wi =~ /CICD_RPT_NAME=(.*)/) {
                my $widir = $1;
 
                # Ensure we have a place to copy the new report
                $cmd = "ssh $ul_host \"mkdir -p $ul_dir/$tbed/$ttype\"";
-               print "Ensure directory exists: $cmd";
+               print "Ensure directory exists: $cmd\n";
                `$cmd`;
 
                # Upload the report directory
                $cmd = "scp -C -r $process/$widir $ul_dest/$tbed/$ttype/";
-               print "Uploading: $cmd";
+               print "Uploading: $cmd\n";
                `$cmd`;
 
                $caseid .= " --results_url $result_url_base/$tbed/$ttype/$widir";
