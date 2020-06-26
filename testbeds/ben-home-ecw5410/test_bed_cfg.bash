@@ -9,7 +9,7 @@
 # from the directory in which it resides.
 
 PWD=`pwd`
-AP_SERIAL=${AP_SERIAL:-/dev/ttyUSB1}
+AP_SERIAL=${AP_SERIAL:-/dev/ttyUSB2}
 LF_SERIAL=${LF_SERIAL:-/dev/ttyS0}
 LFPASSWD=${LFPASSWD:-r}  # Root password on LANforge machine
 AP_AUTO_CFG_FILE=${AP_AUTO_CFG_FILE:-$PWD/AP-Auto-ap-auto-228.txt}

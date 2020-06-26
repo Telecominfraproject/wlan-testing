@@ -17,6 +17,9 @@ WCT_CFG_FILE=${WCT_CFG_FILE:-$PWD/wct.txt}
 DPT_CFG_FILE=${DPT_CFG_FILE:-$PWD/dpt-pkt-sz.txt}
 SCENARIO_CFG_FILE=${SCENARIO_CFG_FILE:-$PWD/scenario.txt}
 
+# Default to enable cloud-sdk for this testbed, cloud-sdk is at IP addr below
+USE_CLOUD_SDK=${USE_CLOUD_SDK:-192.168.100.164}
+
 # LANforge target machine
 LFMANAGER=${LFMANAGER:-192.168.100.209}
 

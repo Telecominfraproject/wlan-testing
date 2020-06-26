@@ -197,6 +197,7 @@ for ($i = 0; $i<@lines; $i++) {
       my $env = do_system(". $tb_dir/test_bed_cfg.bash && env");
       my $lfmgr = "";
       my $serial = "";
+      my $cloud_sdk = "";
 
       if ($env =~ /LFMANAGER=(.*)/g) {
          $lfmgr = $1;
@@ -205,6 +206,14 @@ for ($i = 0; $i<@lines; $i++) {
          print("ERRROR:  Could not find LFMANAGER in environment, configuration error!\n");
          print("env: $env\n");
          exit(1);
+      }
+
+      if ($env =~ /USE_CLOUD_SDK=(\S+)/g) {
+         $cloud_sdk = $1;
+         print("NOTE:  Using cloud controller: $cloud_sdk\n");
+      }
+      else {
+         print("NOTE:  NOT Using cloud controller\n");
       }
 
       if ($env =~ /AP_SERIAL=(.*)/g) {
@@ -276,18 +285,48 @@ for ($i = 0; $i<@lines; $i++) {
       # System should be rebooted at this point.
       sleep(10); # Give it some more time
 
-      print_note("Initialize AP, disable OpenVsync since this is stand-alone testbed.");
-      # Disable openvsync, it will re-write /etc/config/wireless
-      # This code should not be used when we get cloud-sdk wired up.
-      $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"service opensync stop\"");
-      print ("Stop openvsync:\n$ap_out\n");
-      $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"service opensync disable\"");
-      print ("Disable openvsync:\n$ap_out\n");
+      if ($cloud_sdk eq "") {
+         print_note("Initialize AP, disable OpenVsync since this is stand-alone testbed.");
+         # Disable openvsync, it will re-write /etc/config/wireless
+         # This code should not be used when we get cloud-sdk wired up.
+         $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"service opensync stop\"");
+         print ("Stop openvsync:\n$ap_out\n");
+         $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"service opensync disable\"");
+         print ("Disable openvsync:\n$ap_out\n");
+      }
+      else {
+         print_note("Initialize AP, enable OpenVsync since this testbed is using Cloud-Controler: $cloud_sdk.");
+         $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"service opensync ensable\"");
+         print ("Disable openvsync:\n$ap_out\n");
+      }
 
       # Re-apply overlay
       print_note("Apply default AP configuration for this test bed.");
-      $ap_out = do_system("cd $tb_dir/OpenWrt-overlay && tar -cvzf ../overlay_tmp.tar.gz * && scp ../overlay_tmp.tar.gz lanforge\@$lfmgr:tip-overlay.tar.gz");
+      if ($cloud_sdk eq "") {
+         $ap_out = do_system("cd $tb_dir/OpenWrt-overlay && tar -cvzf ../overlay_tmp.tar.gz * && scp ../overlay_tmp.tar.gz lanforge\@$lfmgr:tip-overlay.tar.gz");
+      }
+      else {
+         # Create /etc/hosts file that points us towards correct cloud-sdk machine
+         my $etc_hosts = "$tb_dir/OpenWrt-overlay/etc/hosts";
+         open(FILE, ">", "$etc_hosts");
+         print FILE "# Auto-Created by CICD process
+127.0.0.1 localhost
+
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+$cloud_sdk opensync-mqtt-broker
+$cloud_sdk opensync-wifi-controller
+$cloud_sdk opensync.zone1.art2wave.com
+";
+
+         # Leave 'wireless' out of the overlay since opensync will be designed to work with default config.
+         $ap_out = do_system("cd $tb_dir/OpenWrt-overlay && tar -cvzf ../overlay_tmp.tar.gz --exclude etc/config/wireless * && scp ../overlay_tmp.tar.gz lanforge\@$lfmgr:tip-overlay.tar.gz");
+         unlink($etc_hosts);
+      }
+
       print ("Create overlay zip:\n$ap_out\n");
+
       for (my $q = 0; $q<10; $q++) {
          $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action download --value \"lanforge\@$ap_gw:tip-overlay.tar.gz\" --value2 \"overlay.tgz\"");
          print ("Download overlay to DUT:\n$ap_out\n");
