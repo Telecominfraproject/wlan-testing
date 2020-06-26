@@ -190,7 +190,7 @@ for ($i = 0; $i<@lines; $i++) {
       # Next steps here are to put the OpenWrt file on the LANforge system
       my $tb_info = do_system("cat TESTBED_INFO.txt");
       my $tb_dir = "";
-      if ($tb_info =~ /TESTBED_DIR=(.*)/g) {
+      if ($tb_info =~ /TESTBED_DIR=(.*)/) {
          $tb_dir = $1;
       }
 
@@ -199,7 +199,7 @@ for ($i = 0; $i<@lines; $i++) {
       my $serial = "";
       my $cloud_sdk = "";
 
-      if ($env =~ /LFMANAGER=(.*)/g) {
+      if ($env =~ /LFMANAGER=(.*)/) {
          $lfmgr = $1;
       }
       else {
@@ -208,15 +208,17 @@ for ($i = 0; $i<@lines; $i++) {
          exit(1);
       }
 
-      if ($env =~ /USE_CLOUD_SDK=(\S+)/g) {
+      if ($env =~ /USE_CLOUD_SDK=(\S+)/) {
          $cloud_sdk = $1;
          print("NOTE:  Using cloud controller: $cloud_sdk\n");
       }
       else {
          print("NOTE:  NOT Using cloud controller\n");
       }
+      #print("env: $env");
+      #exit(0);
 
-      if ($env =~ /AP_SERIAL=(.*)/g) {
+      if ($env =~ /AP_SERIAL=(.*)/) {
          $serial = $1;
       }
       else {
@@ -228,10 +230,10 @@ for ($i = 0; $i<@lines; $i++) {
       my $gmanager = $lfmgr;
       my $scenario = "tip-auto";  # matches basic_regression.bash
 
-      if ($env =~ /GMANAGER=(.*)/g) {
+      if ($env =~ /GMANAGER=(.*)/) {
          $gmanager = $1;
       }
-      if ($env =~ /GMPORT=(.*)/g) {
+      if ($env =~ /GMPORT=(.*)/) {
          $gmport = $1;
       }
 
@@ -296,8 +298,8 @@ for ($i = 0; $i<@lines; $i++) {
       }
       else {
          print_note("Initialize AP, enable OpenVsync since this testbed is using Cloud-Controler: $cloud_sdk.");
-         $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"service opensync ensable\"");
-         print ("Disable openvsync:\n$ap_out\n");
+         $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"service opensync enable\"");
+         print ("Enable openvsync:\n$ap_out\n");
       }
 
       # Re-apply overlay
