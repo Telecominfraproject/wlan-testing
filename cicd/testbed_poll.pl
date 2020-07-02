@@ -255,22 +255,38 @@ for ($i = 0; $i<@lines; $i++) {
       # that to scp the file to the DUT, via serial-console connection this controller has to the DUT.
       my $ap_route = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"ip route show\"");
       my $ap_gw = "";
-      if ($ap_route =~ /default via (\S+)/g) {
+      if ($ap_route =~ /default via (\S+)/) {
          $ap_gw = $1;
       }
       if ($ap_gw eq "") {
          print("ERROR:  Could not find default gateway for AP, route info:\n$ap_route\n");
+         if ($ap_route =~ /pexpect.exceptions.TIMEOUT/) {
+            print("FATAL-ERROR:  DUT is in bad state, bail out.\n");
+            exit(33);
+         }
          # Re-apply scenario so the LANforge gateway/NAT is enabled for sure.
-         do_system("../../lanforge/lanforge-scripts/lf_gui_cmd.pl --manager $gmanager --port $gmport --scenario $scenario");
+         my $out = do_system("../../lanforge/lanforge-scripts/lf_gui_cmd.pl --manager $gmanager --port $gmport --scenario $scenario");
          # TODO:  Use power-controller to reboot the AP and retry.
+         if ($out =~ /pexpect.exceptions.TIMEOUT/) {
+            print("FATAL-ERROR:  DUT is in bad state, bail out.\n");
+            exit(34);
+         }
 
-         my $out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action reboot");
+         $out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action reboot");
          print ("Reboot DUT to try to recover networking:\n$out\n");
+         if ($out =~ /pexpect.exceptions.TIMEOUT/) {
+            print("FATAL-ERROR:  DUT is in bad state, bail out.\n");
+            exit(35);
+         }
          sleep(15);
 
          $ap_route = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"ip route show\"");
          if ($ap_route =~ /default via (\S+)/g) {
             $ap_gw = $1;
+         }
+         if ($ap_route =~ /pexpect.exceptions.TIMEOUT/) {
+            print("FATAL-ERROR:  DUT is in bad state, bail out.\n");
+            exit(36);
          }
          if ($ap_gw eq "") {
             exit(1);
@@ -281,6 +297,10 @@ for ($i = 0; $i<@lines; $i++) {
       # TODO: Change this to curl download??
       my $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action sysupgrade --value \"lanforge\@$ap_gw:tip-$jfile\"");
       print ("Sys-upgrade results:\n$ap_out\n");
+      if ($ap_out =~ /pexpect.exceptions.TIMEOUT/) {
+         print("FATAL-ERROR:  DUT is in bad state, bail out.\n");
+         exit(37);
+      }
       # TODO:  Verify this (and reboot below) worked.  DUT can get wedged and in that case it will need
       # a power-cycle to continue.
 
@@ -293,13 +313,25 @@ for ($i = 0; $i<@lines; $i++) {
          # This code should not be used when we get cloud-sdk wired up.
          $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"service opensync stop\"");
          print ("Stop openvsync:\n$ap_out\n");
+         if ($ap_out =~ /pexpect.exceptions.TIMEOUT/) {
+            print("FATAL-ERROR:  DUT is in bad state, bail out.\n");
+            exit(38);
+         }
          $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"service opensync disable\"");
          print ("Disable openvsync:\n$ap_out\n");
+         if ($ap_out =~ /pexpect.exceptions.TIMEOUT/) {
+            print("FATAL-ERROR:  DUT is in bad state, bail out.\n");
+            exit(39);
+         }
       }
       else {
          print_note("Initialize AP, enable OpenVsync since this testbed is using Cloud-Controler: $cloud_sdk.");
          $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"service opensync enable\"");
          print ("Enable openvsync:\n$ap_out\n");
+         if ($ap_out =~ /pexpect.exceptions.TIMEOUT/) {
+            print("FATAL-ERROR:  DUT is in bad state, bail out.\n");
+            exit(40);
+         }
       }
 
       # Re-apply overlay
@@ -350,11 +382,18 @@ $cloud_sdk opensync.zone1.art2wave.com
       }
       $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"cd / && tar -xzf /tmp/overlay.tgz\"");
       print ("Un-zip overlay on DUT:\n$ap_out\n");
-
+      if ($ap_out =~ /pexpect.exceptions.TIMEOUT/) {
+         print("FATAL-ERROR:  DUT is in bad state, bail out.\n");
+         exit(41);
+      }
 
       print_note("Reboot AP so that new configuration is applied.");
       $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action reboot");
       print ("Rebooted DUT so overlay takes effect:\n$ap_out\n");
+      if ($ap_out =~ /pexpect.exceptions.TIMEOUT/) {
+         print("FATAL-ERROR:  DUT is in bad state, bail out.\n");
+         exit(42);
+      }
 
       if ($ttype eq "fast") {
          print_note("Start 'Fast' LANforge regression test.");
@@ -377,6 +416,13 @@ $cloud_sdk opensync.zone1.art2wave.com
          do_system("scp -C -r /tmp/$report_name $report_to/");
          do_system("echo $fname > /tmp/NEW_RESULTS-$fname");
          do_system("scp /tmp/NEW_RESULTS-$fname $report_to/");
+
+         # This will indirectly stop logread if it is running.
+         $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"uptime\"");
+         if ($ap_out =~ /pexpect.exceptions.TIMEOUT/) {
+            print("FATAL-ERROR:  DUT is in bad state, bail out.\n");
+            exit(43);
+         }
       }
 
       exit(0);
@@ -390,7 +436,7 @@ exit 0;
 sub do_system {
    my $cmd = shift;
    print ">>> $cmd\n";
-   return `$cmd`;
+   return `$cmd 2>&1`;
 }
 
 sub print_note {
