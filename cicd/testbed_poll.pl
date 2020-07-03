@@ -408,8 +408,11 @@ $cloud_sdk opensync.zone1.art2wave.com
       print_note("Upload results.");
 
       #When complete, upload the results to the requested location.
-      if ($ap_out =~ /Results-Dir: (.*)/g) {
+      if ($ap_out =~ /Results-Dir: (.*)/) {
          my $rslts_dir = $1;
+         if ($rslts_dir =~ /(.*)\'/) {
+            $rslts_dir = $1;
+         }
          print ("Found results at: $rslts_dir\n");
          do_system("rm -fr /tmp/$report_name");
          do_system("mv $rslts_dir /tmp/$report_name");
