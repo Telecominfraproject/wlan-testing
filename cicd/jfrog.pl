@@ -12,7 +12,7 @@ use Getopt::Long;
 my $user = "cicd_user";
 my $passwd = "";
 my $url = "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware";
-my @platforms = ("ea8300", "ecw5410");  # Add more here as we have test beds that support them.
+my @platforms = ("ea8300", "ecw5410", "ecw5211");  # Add more here as we have test beds that support them.
 my $files_processed = "jfrog_files_processed.txt";
 my $tb_url_base = "cicd_user\@tip.cicd.cloud.com/testbeds";  # Used by SSH: scp -R results_dir cicd_user@tip.cicd.cloud.com/testbeds/
 my $help = 0;
@@ -21,7 +21,8 @@ my $kpi_dir = "/home/greearb/git/tip/wlan-lanforge-scripts/gui/";
 my @ttypes = ("fast", "basic");
 my $duplicate_work = 1;
 
-my $ul_host = "www";
+#my $ul_host = "www";
+my $ul_host = "";
 my $ul_dir = "candela_html/examples/cicd/"; # used by scp
 my $ul_dest = "$ul_host:$ul_dir"; # used by scp
 my $other_ul_dest = ""; # used by scp
@@ -34,6 +35,8 @@ my $usage = qq($0
   [--url { jfrog URL, default is OpenWrt URL: https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ }
   [--files_processed { text file containing file names we have already processed }
   [--tb_url_base { Where to report the test results? }
+  [--kpi_dir { Where the kpi java binary is found }
+  [--ul_host { Host that results should be copied too }
 
 Example:
 
@@ -56,6 +59,8 @@ GetOptions
   'files_processed=s'      => \$files_processed,
   'tb_url_base=s'          => \$tb_url_base,
   'result_url_base=s'      => \$result_url_base,
+  'kpi_dir=s'              => \$kpi_dir,
+  'ul_host=s'              => \$ul_host,
   'help|?'                 => \$help,
 ) || (print($usage) && exit(1));
 
@@ -108,15 +113,17 @@ for ($j = 0; $j<@ttypes; $j++) {
             if ($wi =~ /CICD_RPT_NAME=(.*)/) {
                my $widir = $1;
 
-               # Ensure we have a place to copy the new report
-               $cmd = "ssh $ul_host \"mkdir -p $ul_dir/$tbed/$ttype\"";
-               print "Ensure directory exists: $cmd\n";
-               `$cmd`;
+	       if ($ul_host ne "") {
+                  # Ensure we have a place to copy the new report
+                  $cmd = "ssh $ul_host \"mkdir -p $ul_dir/$tbed/$ttype\"";
+                  print "Ensure directory exists: $cmd\n";
+                  `$cmd`;
 
-               # Upload the report directory
-               $cmd = "scp -C -r $process/$widir $ul_dest/$tbed/$ttype/";
-               print "Uploading: $cmd\n";
-               `$cmd`;
+                  # Upload the report directory
+                  $cmd = "scp -C -r $process/$widir $ul_dest/$tbed/$ttype/";
+                  print "Uploading: $cmd\n";
+                  `$cmd`;
+	       }
 
                $caseid .= " --results_url $result_url_base/$tbed/$ttype/$widir";
             }
@@ -184,8 +191,13 @@ for ($z = 0; $z<@platforms; $z++) {
             next;
          }
 
-         #print("line matched -:$ln:-\n");
-         #print("fname: $fname  name: $name  date: $date\n");
+	 # Skip dev directory
+	 if ($ln =~ /href=\"dev\/\">dev\/<\/a>/) {
+	    next;
+	 }
+
+	 #print("line matched -:$ln:-\n");
+	 #print("fname: $fname  name: $name  date: $date\n");
 
          if ( grep( /^$fname\s+/, @processed ) ) {
             # Skip this one, already processed.
