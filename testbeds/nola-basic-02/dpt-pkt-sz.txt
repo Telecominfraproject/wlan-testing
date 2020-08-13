@@ -11,7 +11,7 @@ skip_2: 0
 skip_5: 0
 selected_dut: ea8300
 duration: 15000
-traffic_port: 1.1.136 sta01001
+traffic_port: 1.1.136 sta00500
 upstream_port: 1.1.2 eth2
 path_loss: 10
 speed: 85%
