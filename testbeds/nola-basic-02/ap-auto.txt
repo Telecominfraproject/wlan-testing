@@ -60,10 +60,13 @@ frame_sizes: 200, 512, 1024, MTU
 capacities: 1, 2, 5, 10, 20, 40, 64, 128, 256, 512, 1024, MAX
 radio2-0: 1.1.4 wiphy0
 radio2-1: 1.1.6 wiphy2
+radio2-2: 1.1.8 wiphy4
 radio5-0: 1.1.5 wiphy1
 radio5-1: 1.1.7 wiphy3
-radio5-2: 1.1.8 wiphy4
-radio5-3: 1.1.9 wiphy5
+radio5-2: 1.1.9 wiphy5
+radio5-3:
+radio5-4: 
+radio5-5: 
 basic_cx: 1
 tput: 0
 dual_band_tput: 0
