@@ -37,6 +37,7 @@ my $usage = qq($0
   [--tb_url_base { Where to report the test results? }
   [--kpi_dir { Where the kpi java binary is found }
   [--ul_host { Host that results should be copied too }
+  [--duplicate_work { Should we send work items to all available test beds?  Default is 1 (true).  Set to 0 to only send to one. }
 
 Example:
 
@@ -48,6 +49,10 @@ $0 --user cicd_user --passwd secret --url https://tip.jfrog.io/artifactory/tip-w
 # Download images from candelatech.com web site (for developer testing and such)
 $0 --tb_url_base greearb@192.168.100.195:/var/www/html/tip/testbeds/ \\
    --url http://www.candelatech.com/downloads/tip/test_images
+
+# This is what is used in TIP testbed orchestrator
+$0 --passwd tip-read --user tip-read --tb_url_base lanforge@orch:/var/www/html/tip/testbeds/ \\
+   --kpi_dir /home/lanforge/git/tip/wlan-lanforge-scripts/gui
 
 );
 
@@ -61,6 +66,7 @@ GetOptions
   'result_url_base=s'      => \$result_url_base,
   'kpi_dir=s'              => \$kpi_dir,
   'ul_host=s'              => \$ul_host,
+  'duplicate_work=i'       => \$duplicate_work,
   'help|?'                 => \$help,
 ) || (print($usage) && exit(1));
 
