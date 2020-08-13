@@ -51,7 +51,7 @@ $0 --tb_url_base greearb@192.168.100.195:/var/www/html/tip/testbeds/ \\
    --url http://www.candelatech.com/downloads/tip/test_images
 
 # This is what is used in TIP testbed orchestrator
-$0 --passwd tip-read --user tip-read --tb_url_base lanforge@orch:/var/www/html/tip/testbeds/ \\
+$0 --passwd tip-read --user tip-read --tb_url_base lanforge\@orch:/var/www/html/tip/testbeds/ \\
    --kpi_dir /home/lanforge/git/tip/wlan-lanforge-scripts/gui
 
 );
