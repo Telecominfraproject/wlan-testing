@@ -10,11 +10,14 @@ show_scan: 1
 auto_helper: 1
 skip_2: 1
 skip_5: 1
-dut5-0: ea8300 OpenWrt-5lo
-dut2-0: ea8300 OpenWrt-2
+dut5b-0: ea8300 Default-SSID-5gu
+dut5-0: ea8300 Default-SSID-5gl
+dut2-0: ea8300 Default-SSID-2g
+dut5b-1: NA
 dut5-1: NA
 dut2-1: NA
-dut5-2: ea8300 OpenWrt-2
+dut5b-2: NA
+dut5-2: NA
 dut2-2: NA
 spatial_streams: AUTO
 bandw_options: AUTO
