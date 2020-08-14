@@ -141,9 +141,11 @@ for ($j = 0; $j<@ttypes; $j++) {
             print ("Running kpi: $cmd\n");
             `$cmd`;
             `rm $ln`;
-            $cmd = "scp -C $process/*.png $process/*.html $process/*.csv $process/*.ico $process/*.css $ul_dest/$tbed/$ttype/";
-            print "Uploading: $cmd";
-            `$cmd`;
+	    if ($ul_host ne "") {
+               $cmd = "scp -C $process/*.png $process/*.html $process/*.csv $process/*.ico $process/*.css $ul_dest/$tbed/$ttype/";
+               print "Uploading: $cmd";
+               `$cmd`;
+            }
 
             # This might need similar partial-upload logic as that above, if it is ever actually
             # enabled.
@@ -317,7 +319,22 @@ for ($z = 0; $z<@platforms; $z++) {
                $caseid_basic = $1;
             }
 
+	    
             my $ttype = "fast";
+	    # Ensure duplicate runs show up individually.
+	    my $extra_run = 0;
+	    if (-e "$best_tb/reports/$ttype/${fname_nogz}") {
+	       $extra_run = 1;
+	       while (-e "$best_tb/reports/$ttype/${fname_nogz}-$extra_run") {
+		  $extra_run++;
+	       }
+            }
+
+	    my $erun = "";
+	    if ($extra_run > 0) {
+	       $erun = "-$extra_run";
+            }
+
             my $work_fname = "$best_tb/pending_work/$cicd_prefix-$fname_nogz-$ttype";
             my $work_fname_a = $work_fname;
 
@@ -327,7 +344,7 @@ for ($z = 0; $z<@platforms; $z++) {
             open(FILE, ">", "$work_fname");
 
             print FILE "CICD_TYPE=$ttype\n";
-            print FILE "CICD_RPT_NAME=$fname_nogz\n";
+            print FILE "CICD_RPT_NAME=$fname_nogz$erun\n";
             print FILE "CICD_RPT_DIR=$tb_url_base/$best_tb/reports/$ttype\n";
 
             print FILE "CICD_HW=$hw\nCICD_FILEDATE=$fdate\nCICD_GITHASH=$githash\n";
@@ -343,6 +360,20 @@ for ($z = 0; $z<@platforms; $z++) {
 
 
             $ttype = "basic";
+	    # Ensure duplicate runs show up individually.
+            $extra_run = 0;
+            if (-e "$best_tb/reports/$ttype/${fname_nogz}") {
+               $extra_run = 1;
+               while (-e "$best_tb/reports/$ttype/${fname_nogz}-$extra_run") {
+                  $extra_run++;
+               }
+            }
+
+            $erun = "";
+            if ($extra_run > 0) {
+               $erun = "-$extra_run";
+            }
+
             $work_fname = "$best_tb/pending_work/$cicd_prefix-$fname_nogz-$ttype";
 
             system("mkdir -p $best_tb/reports/$ttype");
@@ -350,7 +381,7 @@ for ($z = 0; $z<@platforms; $z++) {
             open(FILE, ">", "$work_fname");
 
             print FILE "CICD_TYPE=$ttype\n";
-            print FILE "CICD_RPT_NAME=$fname_nogz\n";
+            print FILE "CICD_RPT_NAME=$fname_nogz$erun\n";
             print FILE "CICD_RPT_DIR=$tb_url_base/$best_tb/reports/$ttype\n";
 
             print FILE "CICD_HW=$hw\nCICD_FILEDATE=$fdate\nCICD_GITHASH=$githash\n";
