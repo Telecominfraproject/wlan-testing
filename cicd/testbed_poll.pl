@@ -16,6 +16,8 @@ my $url = "";
 my $next_info = "__next_test.txt";
 my $help = 0;
 my $owt_log = "";
+#my $prompt = "root\@OpenAp";
+my $prompt = "root\@Open"; # match OpenWrt and OpenAp-foo
 my $log = "";
 
 my $usage = qq($0
@@ -67,6 +69,7 @@ if ($user ne "" && $passwd eq "") {
 if ($log ne "") {
    $owt_log = "--log $log";
 }
+$owt_log .= " --prompt $prompt";
 
 my $i;
 
