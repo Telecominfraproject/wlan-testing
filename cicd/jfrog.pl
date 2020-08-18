@@ -173,7 +173,11 @@ for ($i = 0; $i<@lines; $i++) {
 my $z;
 for ($z = 0; $z<@platforms; $z++) {
    my $pf = $platforms[$z];
-   my $cmd = "curl -u $user:$passwd $url/$pf/";
+   # Interesting builds are now found in hardware sub-dirs
+   my @subdirs = ("trunk", "dev");
+   for (my $sidx = 0; $sidx<@subdirs; $sidx++) {
+	   my $sdir = $subdirs[$sidx];
+   my $cmd = "curl -u $user:$passwd $url/$pf/$sdir/";
    print ("Calling command: $cmd\n");
    $listing = `$cmd`;
    @lines = split(/\n/, $listing);
@@ -199,10 +203,15 @@ for ($z = 0; $z<@platforms; $z++) {
             next;
          }
 
-	 # Skip dev directory
-	 if ($ln =~ /href=\"dev\/\">dev\/<\/a>/) {
+	 # Skip staging builds
+	 if ($ln =~ /staging/) {
 	    next;
 	 }
+
+	 # Skip dev directory
+	 #if ($ln =~ /href=\"dev\/\">dev\/<\/a>/) {
+	 #   next;
+	 #}
 
 	 #print("line matched -:$ln:-\n");
 	 #print("fname: $fname  name: $name  date: $date\n");
@@ -348,7 +357,7 @@ for ($z = 0; $z<@platforms; $z++) {
             print FILE "CICD_RPT_DIR=$tb_url_base/$best_tb/reports/$ttype\n";
 
             print FILE "CICD_HW=$hw\nCICD_FILEDATE=$fdate\nCICD_GITHASH=$githash\n";
-            print FILE "CICD_URL=$url/$pf\nCICD_FILE_NAME=$fname\nCICD_URL_DATE=$date\n";
+            print FILE "CICD_URL=$url/$pf/$sdir\nCICD_FILE_NAME=$fname\nCICD_URL_DATE=$date\n";
             if ($caseid_fast ne "") {
                print FILE "CICD_CASE_ID=$caseid_fast\n";
             }
@@ -385,7 +394,7 @@ for ($z = 0; $z<@platforms; $z++) {
             print FILE "CICD_RPT_DIR=$tb_url_base/$best_tb/reports/$ttype\n";
 
             print FILE "CICD_HW=$hw\nCICD_FILEDATE=$fdate\nCICD_GITHASH=$githash\n";
-            print FILE "CICD_URL=$url/$pf\nCICD_FILE_NAME=$fname\nCICD_URL_DATE=$date\n";
+            print FILE "CICD_URL=$url/$pf/$sdir\nCICD_FILE_NAME=$fname\nCICD_URL_DATE=$date\n";
             if ($caseid_basic ne "") {
                print FILE "CICD_CASE_ID=$caseid_basic\n";
             }
@@ -404,6 +413,7 @@ for ($z = 0; $z<@platforms; $z++) {
 
       #print "$ln\n";
    }# for all lines in a directory listing
+   } # For all sub directories
 }# for all URLs to process
 
 exit 0;
