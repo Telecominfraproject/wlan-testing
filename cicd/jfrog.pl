@@ -20,6 +20,7 @@ my $cicd_prefix = "CICD_TEST";
 my $kpi_dir = "/home/greearb/git/tip/wlan-lanforge-scripts/gui/";
 my @ttypes = ("fast", "basic");
 my $duplicate_work = 1;
+my $slack = "";  # file that holds slack URL in case we want the kpi tool to post slack announcements.
 
 #my $ul_host = "www";
 my $ul_host = "";
@@ -31,6 +32,7 @@ my $result_url_base = "http://localhost/tip/cicd";
 my $usage = qq($0
   [--user { jfrog user (default: cicd_user) }
   [--passwd { jfrog password }
+  [--slack { file holding slack webhook URL }
   [--result_url_base { http://foo.com/tip/cicd }
   [--url { jfrog URL, default is OpenWrt URL: https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ }
   [--files_processed { text file containing file names we have already processed }
@@ -60,6 +62,7 @@ GetOptions
 (
   'user=s'                 => \$user,
   'passwd=s'               => \$passwd,
+  'slack=s'                => \$slack,
   'url=s'                  => \$url,
   'files_processed=s'      => \$files_processed,
   'tb_url_base=s'          => \$tb_url_base,
@@ -78,6 +81,11 @@ if ($help) {
 #   print("ERROR:  You must specify jfrog password.\n");
 #   exit(1);
 #}
+
+my $slack_fname = "";
+if ($slack ne "") {
+   $slack_fname = "--slack_fname $slack";
+}
 
 my $i;
 
@@ -104,6 +112,18 @@ for ($j = 0; $j<@ttypes; $j++) {
             my $tbed = $1;
             my $cmd;
             my $caseid = "";
+            my $tb_pretty_name = $tbed;
+            my $tb_hw_type = "";
+
+            my $tb_info = `cat $tbed/TESTBED_INFO.txt`;
+            my $tb_hw_type = "";
+            my $tb_pretty_name = $tbed;
+            if ($tb_info =~ /TESTBED_HW=(.*)/g) {
+               $tb_hw_type = $1;
+            }
+            if ($tb_info =~ /TESTBED_NAME=(.*)/g) {
+               $tb_pretty_name = $1;
+            }
 
             print "Processing new results, line: $ln  process: $process  completed: $completed  testbed: $tbed\n";
 
@@ -137,7 +157,7 @@ for ($j = 0; $j<@ttypes; $j++) {
                print "WARNING:  No CICD_RPT_NAME line found in work-item contents:\n$wi\n";
             }
 
-            $cmd = "cd $kpi_dir && java kpi $caseid --dir \"$pwd/$process\" && cd -";
+            $cmd = "cd $kpi_dir && java kpi $slack_fname --testbed_name \"$tb_pretty_name $tb_hw_type $ttype\"  $caseid --dir \"$pwd/$process\" && cd -";
             print ("Running kpi: $cmd\n");
             `$cmd`;
             `rm $ln`;
