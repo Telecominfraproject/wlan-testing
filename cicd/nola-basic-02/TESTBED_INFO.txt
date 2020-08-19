@@ -1,4 +1,5 @@
 TESTBED_HW=ecw5410
+TESTBED_NAME=NOLA-02
 
 # Controller's view of the test bed, from wlan-testing/cicd/[testbed] directory
 TESTBED_DIR=../../testbeds/nola-basic-02
