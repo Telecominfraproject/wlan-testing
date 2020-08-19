@@ -54,7 +54,9 @@ $0 --tb_url_base greearb@192.168.100.195:/var/www/html/tip/testbeds/ \\
 
 # This is what is used in TIP testbed orchestrator
 $0 --passwd tip-read --user tip-read --tb_url_base lanforge\@orch:/var/www/html/tip/testbeds/ \\
-   --kpi_dir /home/lanforge/git/tip/wlan-lanforge-scripts/gui
+   --kpi_dir /home/lanforge/git/tip/wlan-lanforge-scripts/gui \\
+   --slack /home/lanforge/slack.txt \\
+   --result_url_base http://3.130.51.163/tip/testbeds
 
 );
 
@@ -116,8 +118,6 @@ for ($j = 0; $j<@ttypes; $j++) {
             my $tb_hw_type = "";
 
             my $tb_info = `cat $tbed/TESTBED_INFO.txt`;
-            my $tb_hw_type = "";
-            my $tb_pretty_name = $tbed;
             if ($tb_info =~ /TESTBED_HW=(.*)/g) {
                $tb_hw_type = $1;
             }
@@ -150,14 +150,14 @@ for ($j = 0; $j<@ttypes; $j++) {
                   print "Uploading: $cmd\n";
                   `$cmd`;
 	       }
-
-               $caseid .= " --results_url $result_url_base/$tbed/$ttype/$widir";
             }
             else {
                print "WARNING:  No CICD_RPT_NAME line found in work-item contents:\n$wi\n";
             }
 
-            $cmd = "cd $kpi_dir && java kpi $slack_fname --testbed_name \"$tb_pretty_name $tb_hw_type $ttype\"  $caseid --dir \"$pwd/$process\" && cd -";
+	    $caseid .= " --results_url $result_url_base/$tbed/reports/$ttype";
+
+	    $cmd = "cd $kpi_dir && java kpi $slack_fname --testbed_name \"$tb_pretty_name $tb_hw_type $ttype\"  $caseid --dir \"$pwd/$process\" && cd -";
             print ("Running kpi: $cmd\n");
             `$cmd`;
             `rm $ln`;
