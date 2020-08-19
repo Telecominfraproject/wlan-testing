@@ -69,7 +69,8 @@ if ($user ne "" && $passwd eq "") {
 if ($log ne "") {
    $owt_log = "--log $log";
 }
-$owt_log .= " --prompt $prompt";
+my $owt_args = " --prompt $prompt";
+$owt_log .= $owt_args;
 
 my $i;
 
@@ -400,11 +401,11 @@ $cloud_sdk opensync.zone1.art2wave.com
 
       if ($ttype eq "fast") {
          print_note("Start 'Fast' LANforge regression test.");
-         $ap_out = do_system("cd $tb_dir && DUT_SW_VER=$swver ./run_basic_fast.bash");
+         $ap_out = do_system("cd $tb_dir && DUT_SW_VER=$swver OWRTCTL_ARGS=\"$owt_args\" ./run_basic_fast.bash");
       }
       else {
          print_note("Start 'Fast' LANforge regression test.");
-         $ap_out = do_system("cd $tb_dir && DUT_SW_VER=$swver ./run_basic.bash");
+         $ap_out = do_system("cd $tb_dir && DUT_SW_VER=$swver OWRTCTL_ARGS=\"$owt_args\" ./run_basic.bash");
       }
       print("Regression $ttype test script output:\n$ap_out\n");
 
