@@ -265,8 +265,26 @@ for ($i = 0; $i<@lines; $i++) {
       if ($ap_gw eq "") {
          print("ERROR:  Could not find default gateway for AP, route info:\n$ap_route\n");
          if ($ap_route =~ /pexpect.exceptions.TIMEOUT/) {
-            print("FATAL-ERROR:  DUT is in bad state, bail out.\n");
-            exit(33);
+            # In case AP went into boot-loader, deal with that.
+            if ($ap_route =~ /\(IPQ\)/) {
+               print("WARNING:  Detected Bootloader, will attempt to reset and recover.\n");
+               do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --prompt \"(IPQ)\" --scheme serial --tty $serial --action cmd --value \"reset\"");
+               sleep(20);
+               $ap_route = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"ip route show\"");
+               iff ($ap_route =~ /default via (\S+)/) {
+                  $ap_gw = $1;
+               }
+               if ($ap_gw eq "") {
+                  if ($ap_route =~ /pexpect.exceptions.TIMEOUT/) {
+                     print("FATAL-ERROR:  DUT is in bad state, bail out (find default GW, after bootloader reset).\n");
+                     exit(55);
+                  }
+               }
+            }
+            else {
+               print("FATAL-ERROR:  DUT is in bad state, bail out (find default GW).\n");
+               exit(33);
+            }
          }
          # Re-apply scenario so the LANforge gateway/NAT is enabled for sure.
          my $out = do_system("../../lanforge/lanforge-scripts/lf_gui_cmd.pl --manager $gmanager --port $gmport --scenario $scenario");
