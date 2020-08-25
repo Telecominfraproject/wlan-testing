@@ -271,7 +271,7 @@ for ($i = 0; $i<@lines; $i++) {
                do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py --prompt \"(IPQ)\" --scheme serial --tty $serial --action cmd --value \"reset\"");
                sleep(20);
                $ap_route = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action cmd --value \"ip route show\"");
-               iff ($ap_route =~ /default via (\S+)/) {
+               if ($ap_route =~ /default via (\S+)/) {
                   $ap_gw = $1;
                }
                if ($ap_gw eq "") {
