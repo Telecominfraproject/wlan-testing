@@ -420,6 +420,7 @@ $cloud_sdk opensync.zone1.art2wave.com
          print ("Found results at: $rslts_dir\n");
          do_system("rm -fr /tmp/$report_name");
          do_system("mv $rslts_dir /tmp/$report_name");
+         do_system("chmod -R a+r /tmp/$report_name");
          do_system("scp -C -r /tmp/$report_name $report_to/");
          do_system("echo $fname > /tmp/NEW_RESULTS-$fname");
          do_system("scp /tmp/NEW_RESULTS-$fname $report_to/");
