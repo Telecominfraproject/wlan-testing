@@ -379,9 +379,18 @@ $cloud_sdk opensync.zone1.art2wave.com
          # Leave 'wireless' out of the overlay since opensync will be designed to work with default config.
          $ap_out = do_system("cd $tb_dir/OpenWrt-overlay && tar -cvzf ../overlay_tmp.tar.gz --exclude etc/config/wireless * && scp ../overlay_tmp.tar.gz lanforge\@$lfmgr:tip-overlay.tar.gz");
          unlink($etc_hosts);
+         close(FILE);
       }
 
-      print ("Create overlay zip:\n$ap_out\n");
+      # Enable bugcheck script
+      my $etc_hosts = "$tb_dir/OpenWrt-overlay/etc/config/bugcheck";
+      open(FILE, ">", "$etc_bugcheck");
+      print FILE "DO_BUGCHECK=1
+export DO_BUGCHECK
+";
+      close(FILE);
+
+      print ("Copy overlay to DUT\n");
 
       for (my $q = 0; $q<10; $q++) {
          $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action download --value \"lanforge\@$ap_gw:tip-overlay.tar.gz\" --value2 \"overlay.tgz\"");
