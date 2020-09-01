@@ -1,7 +1,7 @@
 profile_link 1.1 STA-AC 64 'DUT: ecw5211 Radio-1' NA wiphy4,AUTO -1
 profile_link 1.1 STA-AC 64 'DUT: ecw5211 Radio-2' NA wiphy5,AUTO -1
 profile_link 1.1 upstream-dhcp 1 NA NA eth2,AUTO -1
-profile_link 1.1 uplink-nat 1 'DUT: upstream LAN 192.168.100.1/24' NA eth3,eth2 -1
+profile_link 1.1 uplink-nat 1 'DUT: upstream LAN 100.97.39.129/25' NA eth3,eth2 -1
 profile_link 1.1 STA-AC 1 'DUT: ecw5211 Radio-2' NA wiphy0,AUTO -1
 profile_link 1.1 STA-AC 1 'DUT: ecw5211 Radio-2' NA wiphy1,AUTO -1
 profile_link 1.1 STA-AC 1 'DUT: ecw5211 Radio-2' NA wiphy2,AUTO -1
