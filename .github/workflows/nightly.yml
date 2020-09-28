@@ -23,7 +23,7 @@ jobs:
         
     - name: build docker image
       shell: bash
-      run: docker build -t tip/nightly:${{ github.run_id }} -f wlan-testing/docker/Dockerfile .
+      run: docker build -t tip/cloud-sdk-nightly:${{ github.run_id }} -f wlan-testing/docker/Dockerfile .
 
     - name: run nightly tests
       shell: bash
