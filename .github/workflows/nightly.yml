@@ -2,11 +2,12 @@ name: nightly build
 
 on: 
   workflow_dispatch:
+  schedule:
+    - cron: '15 0 * * *'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: 4c74356b41/cloud-sdk-nightly
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -17,9 +18,11 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: Telecominfraproject/wlan-lanforge-scripts
-        token: ${{ secrets.GitHub_PAT }} # `GitHub_PAT` is a secret that contains your PAT
+        token: ${{ secrets.GITHUB_TOKEN }}
         path: wlan-LANforge-scripts
         
     - name: build docker image
       shell: bash
-      run: ls -Rla; docker build -t tip/nightly -f wlan-testing/docker/Dockerfile
+      run: |
+        ls -Rla
+        docker build -t tip/nightly -f wlan-testing/docker/Dockerfile .
