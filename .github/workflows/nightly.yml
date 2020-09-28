@@ -23,6 +23,8 @@ jobs:
         
     - name: build docker image
       shell: bash
-      run: |
-        ls -Rla
-        docker build -t tip/nightly -f wlan-testing/docker/Dockerfile .
+      run: docker build -t tip/nightly:${{ github.run_id }} -f wlan-testing/docker/Dockerfile .
+
+    - name: run nightly tests
+      shell: bash
+      run: docker run cloud-sdk-nightly:${{ github.run_id }} --testrail-user-password ${{ secrets.TESTRAIL_USER_PASSWORD }} --jfrog-user-password ${{ secrets.JFROG_USER_PASSWORD }}
