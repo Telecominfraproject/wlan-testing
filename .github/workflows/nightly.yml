@@ -27,4 +27,4 @@ jobs:
 
     - name: run nightly tests
       shell: bash
-      run: docker run cloud-sdk-nightly:${{ github.run_id }} --testrail-user-password ${{ secrets.TESTRAIL_USER_PASSWORD }} --jfrog-user-password ${{ secrets.JFROG_USER_PASSWORD }}
+      run: docker run tip/cloud-sdk-nightly:${{ github.run_id }} --testrail-user-password ${{ secrets.TESTRAIL_USER_PASSWORD }} --jfrog-user-password ${{ secrets.JFROG_USER_PASSWORD }}
