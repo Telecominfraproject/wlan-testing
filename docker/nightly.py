@@ -185,7 +185,7 @@ class jFrog_Client:
         return f"https://{self.user}:{self.password}@{self.baseUrl}/{model}/dev/{latest_image}.tar.gz"
 
 # Class for CloudSDK Interaction via RestAPI
-class CloudSDK_Client_:
+class CloudSDK_Client:
     def __init__(self):
         self.baseUrl = args.sdk_base_url
         cloud_login_url = f"{self.baseUrl}/management/v1/oauth2/token"
