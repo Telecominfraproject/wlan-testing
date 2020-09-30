@@ -11,8 +11,8 @@ auto_helper: 1
 skip_2: 1
 skip_5: 1
 dut5b-0: NA
-dut5-0: ecw5211 Default-SSID-5gl
-dut2-0: ecw5211 Default-SSID-2g
+dut5-0: ecw5410 Default-SSID-5gl
+dut2-0: ecw5410 Default-SSID-2g
 dut5b-1: NA
 dut5-1: NA
 dut2-1: NA

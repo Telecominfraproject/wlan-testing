@@ -1,2 +1,2 @@
 
-DUT is an Edge-Core 5211, running TIP OpenWrt.
+DUT is an Edge-Core 5410, running TIP OpenWrt.
