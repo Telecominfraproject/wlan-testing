@@ -1,4 +1,4 @@
-TESTBED_HW=ecw5211
+TESTBED_HW=ecw5410
 TESTBED_NAME=NOLA-01
 
 # Controller's view of the test bed, from wlan-testing/cicd/[testbed] directory
