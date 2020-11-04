@@ -13,6 +13,7 @@ config wifi-iface 'default_radio0'
         option ssid 'Default-SSID-5gl'
         option encryption 'psk-mixed'
         option key '12345678'
+	option macaddr '00:00:ec:42:00:02'
 
 config wifi-device 'radio1'
         option type 'mac80211'
@@ -29,4 +30,5 @@ config wifi-iface 'default_radio1'
         option ssid 'Default-SSID-2g'
         option encryption 'psk-mixed'
         option key '12345678'
+	option macaddr '00:00:ec:42:00:01'
 
