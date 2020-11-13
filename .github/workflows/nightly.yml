@@ -66,11 +66,11 @@ jobs:
               - name: tests
                 image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
                 args: 
-                - --testrail-user-password
-                - ${{ env.TESTRAIL_USER_PASSWORD }}
-                - --jfrog-user-password
-                - ${{ env.JFROG_USER_PASSWORD }}
-                - --skip-update-firmware
+                - "--testrail-user-password"
+                - "${{ env.TESTRAIL_USER_PASSWORD }}"
+                - "--jfrog-user-password"
+                - "${{ env.JFROG_USER_PASSWORD }}"
+                - "--skip-update-firmware"
               imagePullSecrets:
               - name: tip-docker-registry-key
               restartPolicy: Never
