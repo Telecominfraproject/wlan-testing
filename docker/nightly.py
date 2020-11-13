@@ -312,9 +312,12 @@ for model in TEST_DATA["ap_models"].keys():
         logging.info("Model does not require firmware upgrade, skipping sanity tests")
     else:
         if args.update_firmware:
+            firmware_update_case = [2831]
             logging.info("Model requires firmware update, will update and sleep")
             sdk.update_firmware(TEST_DATA["ap_models"][model]["id"], model_firmware_id)
             sleep(300)
+        else:
+            firmware_update_case = []
 
         test_cases_data = {
             2832: { # 2.4 GHz Open
@@ -364,7 +367,7 @@ for model in TEST_DATA["ap_models"].keys():
         # Create Test Run
         test_run_name = f'Nightly_model_{fw_model}_firmware_{ap_fw}_{strftime("%Y-%m-%d", gmtime())}'
         testrail_project_id = testrail.get_project_id(project_name=args.testrail_project)
-        runId = testrail.create_testrun(name=test_run_name, case_ids=(list(test_cases_data) + [2831]), project_id=testrail_project_id)
+        runId = testrail.create_testrun(name=test_run_name, case_ids=( [*test_cases_data] + firmware_update_case ), project_id=testrail_project_id)
         logging.info(f"Testrail project id: {testrail_project_id}; run ID is: {runId}")
 
         # Check if upgrade worked
@@ -374,6 +377,7 @@ for model in TEST_DATA["ap_models"].keys():
             logging.info(f"Upgrade {results['statusCode']}")
             if not test_result:
                 continue
+
 
         # Set Proper AP Profile
         test_profile_id = TEST_DATA["ap_models"][fw_model]["info"]["profile_id"]
