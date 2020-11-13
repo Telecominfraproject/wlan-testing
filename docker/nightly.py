@@ -63,7 +63,7 @@ TESTRAIL = {
     },
     False: {
         "statusCode": 5,
-        "message": "failuse"
+        "message": "failure"
     }
 }
 
@@ -387,7 +387,7 @@ for model in TEST_DATA["ap_models"].keys():
         # Run Client Single Connectivity Test Cases
         for testcase in test_cases_data.keys():
             logging.info(f"Test parameters are\n        radio: {test_cases_data[testcase]['radio']}\n        ssid_name: {test_cases_data[testcase]['ssid_name']}\n        ssid_psk: {test_cases_data[testcase]['ssid_psk']}\n        security: {test_cases_data[testcase]['security']}\n        station: {test_cases_data[testcase]['station']}\n        testcase: {testcase}\n        runId: {runId}")
-            staConnect = StaConnect2(args.lanforge_ip_address, args.lanforge_port_number, debug_ = True)
+            staConnect = StaConnect2(args.lanforge_ip_address, args.lanforge_port_number, debug_ = False)
             staConnect.sta_mode = 0
             staConnect.upstream_resource = 1
             staConnect.upstream_port = "eth2"

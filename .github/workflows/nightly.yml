@@ -75,5 +75,5 @@ jobs:
         EOF
         kubectl wait job/nightly-ci-$today --for=condition=complete --timeout=3600s
         kubectl logs -l job-name=nightly-ci-$today
-        kubectl delete job/nightly-$today
+        # kubectl delete job/nightly-ci-$today
       shell: bash
