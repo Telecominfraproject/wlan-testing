@@ -21,18 +21,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    # checkout needed repositories
     - name: Checkout
       uses: actions/checkout@v2
       with:
         path: wlan-testing
-
     - name: Checkout LANforge scripts
       uses: actions/checkout@v2
       with:
         repository: Telecominfraproject/wlan-lanforge-scripts
         token: ${{ secrets.GITHUB_TOKEN }}
-        path: wlan-LANforge-scripts
-
+        path: wlan-lanforge-scripts
+    # build and push docker image
     - name: docker login
       shell: bash
       run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
@@ -43,7 +43,10 @@ jobs:
       shell: bash
       run: docker push -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
 
-    - name: publish application
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: run tests
       # prerequisites update might not be needed
       run: |
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
