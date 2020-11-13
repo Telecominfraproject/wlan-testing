@@ -1,9 +1,21 @@
 name: nightly build
+env:
+  DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
+  DOCKER_USER_NAME: ${{ secrets.DOCKER_USER_NAME }}
+  DOCKER_USER_PASSWORD: ${{ secrets.DOCKER_USER_PASSWORD }}
+  TESTRAIL_USER_PASSWORD: ${{ secrets.TESTRAIL_USER_PASSWORD }}
+  JFROG_USER_PASSWORD: ${{ secrets.JFROG_USER_PASSWORD }}
+  AWS_EKS_NAME: tip-wlan-main
+  AWS_DEFAULT_REGION: us-east-2
+  AWS_DEFAULT_OUTPUT: json
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
 
-on: 
+on:
   workflow_dispatch:
   schedule:
-    - cron: '15 0 * * *'
+  - cron: '15 0 x* * *'
 
 jobs:
   build:
@@ -20,11 +32,21 @@ jobs:
         repository: Telecominfraproject/wlan-lanforge-scripts
         token: ${{ secrets.GITHUB_TOKEN }}
         path: wlan-LANforge-scripts
-        
+
+    - name: docker login
+      shell: bash
+      run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
     - name: build docker image
       shell: bash
-      run: docker build -t tip/cloud-sdk-nightly:${{ github.run_id }} -f wlan-testing/docker/Dockerfile .
-
-    - name: run nightly tests
+      run: docker build -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }} -f wlan-testing/docker/Dockerfile .
+    - name: push docker image
       shell: bash
-      run: docker run tip/cloud-sdk-nightly:${{ github.run_id }} --testrail-user-password ${{ secrets.TESTRAIL_USER_PASSWORD }} --jfrog-user-password ${{ secrets.JFROG_USER_PASSWORD }}
+      run: docker push -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+
+    - name: publish application
+      # prerequisites update might not be needed
+      run: |
+        aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+        kubectl run -it nightly-:${{ github.run_id }} --image ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }} --  --testrail-user-password ${{ env.TESTRAIL_USER_PASSWORD }} --jfrog-user-password ${{ env.JFROG_USER_PASSWORD }}
+        kubectl delete po nightly-:${{ github.run_id }}
+      shell: bash
