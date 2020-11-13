@@ -15,7 +15,7 @@ env:
 on:
   workflow_dispatch:
   schedule:
-  - cron: '15 0 x* * *'
+  - cron: '15 0 * * *'
 
 jobs:
   build:
