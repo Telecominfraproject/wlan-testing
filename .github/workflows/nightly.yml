@@ -58,9 +58,6 @@ jobs:
           name: nightly-ci-$today
         spec:
           template:
-            labels:
-              nightly: true
-              date: $today
             spec:
               containers:
               - name: tests
