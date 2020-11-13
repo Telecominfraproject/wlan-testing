@@ -52,30 +52,30 @@ jobs:
         today=$(date +"%d-%m-%Y")
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
         cat <<EOF | kubectl apply -f -
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: nightly-ci-$today
-spec:
-  template:
-    labels:
-      nightly: true
-      date: $today
-    spec:
-      containers:
-      - name: tests
-        image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
-        args: 
-        - --testrail-user-password
-        - ${{ env.TESTRAIL_USER_PASSWORD }}
-        - --jfrog-user-password
-        - ${{ env.JFROG_USER_PASSWORD }}
-        - --skip-update-firmware
-      imagePullSecrets:
-      - name: tip-docker-registry-key
-      restartPolicy: Never
-  backoffLimit: 0
-EOF
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: nightly-ci-$today
+        spec:
+          template:
+            labels:
+              nightly: true
+              date: $today
+            spec:
+              containers:
+              - name: tests
+                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+                args: 
+                - --testrail-user-password
+                - ${{ env.TESTRAIL_USER_PASSWORD }}
+                - --jfrog-user-password
+                - ${{ env.JFROG_USER_PASSWORD }}
+                - --skip-update-firmware
+              imagePullSecrets:
+              - name: tip-docker-registry-key
+              restartPolicy: Never
+          backoffLimit: 0
+        EOF
         kubectl wait job/nightly-ci-$today --for=condition=complete --timeout=3600s
         kubectl logs -l job-name=nightly-ci-$today
         kubectl delete job/nightly-$today
