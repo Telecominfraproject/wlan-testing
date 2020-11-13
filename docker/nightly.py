@@ -362,7 +362,7 @@ for model in TEST_DATA["ap_models"].keys():
         }
 
         # Create Test Run
-        test_run_name = f'Daily_Sanity_{fw_model}_{strftime("%Y-%m-%d", gmtime())}_{ap_fw}_opsfleet'
+        test_run_name = f'Nightly_model_{fw_model}_firmware_{ap_fw}_{strftime("%Y-%m-%d", gmtime())}'
         testrail_project_id = testrail.get_project_id(project_name=args.testrail_project)
         runId = testrail.create_testrun(name=test_run_name, case_ids=(list(test_cases_data) + [2831]), project_id=testrail_project_id)
         logging.info(f"Testrail project id: {testrail_project_id}; run ID is: {runId}")
