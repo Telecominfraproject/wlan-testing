@@ -51,6 +51,6 @@ jobs:
       run: |
         today=$(date +"%d-%m-%Y")
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-        kubectl run nightly-$today -it --restart=Never --image-pull-secrets=tip-docker-registry-key --image ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }} --  --testrail-user-password ${{ env.TESTRAIL_USER_PASSWORD }} --jfrog-user-password ${{ env.JFROG_USER_PASSWORD }} --skip-update-firmware
+        kubectl run nightly-$today -it --restart=Never --overrides='{ "apiVersion": "v1", "spec": {"imagePullSecrets": [{"name": "tip-docker-registry-key"}]} }' --image ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }} --  --testrail-user-password ${{ env.TESTRAIL_USER_PASSWORD }} --jfrog-user-password ${{ env.JFROG_USER_PASSWORD }} --skip-update-firmware
         kubectl delete po nightly-$today
       shell: bash
