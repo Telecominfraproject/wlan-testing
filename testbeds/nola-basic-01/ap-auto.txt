@@ -10,11 +10,14 @@ show_scan: 1
 auto_helper: 1
 skip_2: 1
 skip_5: 1
-dut5-0: ea8300 OpenWrt-5lo
-dut2-0: ea8300 OpenWrt-2
+dut5b-0: NA
+dut5-0: ecw5410 Default-SSID-5gl
+dut2-0: ecw5410 Default-SSID-2g
+dut5b-1: NA
 dut5-1: NA
 dut2-1: NA
-dut5-2: ea8300 OpenWrt-2
+dut5b-2: NA
+dut5-2: NA
 dut2-2: NA
 spatial_streams: AUTO
 bandw_options: AUTO
@@ -41,9 +44,9 @@ stab_tcp_ul_min: 500000
 stab_tcp_ul_max: 0
 dl_speed: 85%
 ul_speed: 85%
-max_stations_2: 128
-max_stations_5: 132
-max_stations_dual: 260
+max_stations_2: 66
+max_stations_5: 66
+max_stations_dual: 132
 lt_sta: 2
 voip_calls: 0
 lt_dur: 3600
@@ -60,12 +63,13 @@ frame_sizes: 200, 512, 1024, MTU
 capacities: 1, 2, 5, 10, 20, 40, 64, 128, 256, 512, 1024, MAX
 radio2-0: 1.1.4 wiphy0
 radio2-1: 1.1.6 wiphy2
+radio2-2: 1.1.8 wiphy4
 radio5-0: 1.1.5 wiphy1
 radio5-1: 1.1.7 wiphy3
-radio5-2: 1.1.8 wiphy4
-radio5-3: 1.1.9 wiphy5
-radio5-4: 1.1.10 wiphy6
-radio5-5: 1.1.11 wiphy7
+radio5-2: 1.1.9 wiphy5
+radio5-3:
+radio5-4: 
+radio5-5: 
 basic_cx: 1
 tput: 0
 dual_band_tput: 0

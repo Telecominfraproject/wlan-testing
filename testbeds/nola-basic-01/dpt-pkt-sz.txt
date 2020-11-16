@@ -9,7 +9,7 @@ show_scan: 1
 auto_helper: 0
 skip_2: 0
 skip_5: 0
-selected_dut: ecw5211
+selected_dut: ecw5410
 duration: 15000
 traffic_port: 1.1.136 sta00500
 upstream_port: 1.1.2 eth2

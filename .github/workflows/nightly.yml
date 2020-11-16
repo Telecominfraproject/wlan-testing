@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # checkout needed repositories
-    - name: Checkout
+    - name: Checkout Testing repo
       uses: actions/checkout@v2
       with:
         path: wlan-testing
