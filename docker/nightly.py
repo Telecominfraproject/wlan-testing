@@ -22,7 +22,7 @@ parser.add_argument("--jfrog-base-url", type=str, help="jfrog base url",
 parser.add_argument("--jfrog-user-id", type=str, help="jfrog user id",
                     default="cicd_user")
 parser.add_argument("--jfrog-user-password", type=str, help="jfrog user password",
-                    default="fepv6nj9guCPeEHC")
+                    default="password")
 parser.add_argument("--testrail-base-url", type=str, help="testrail base url",
                     default="https://telecominfraproject.testrail.com")
 parser.add_argument("--testrail-project", type=str, help="testrail project name",
@@ -30,7 +30,7 @@ parser.add_argument("--testrail-project", type=str, help="testrail project name"
 parser.add_argument("--testrail-user-id", type=str, help="testrail user id",
                     default="gleb@opsfleet.com")
 parser.add_argument("--testrail-user-password", type=str, help="testrail user password",
-                    default="@3x57XQmkKVGFt8Ujnyf")
+                    default="password")
 parser.add_argument("--lanforge-ip-address", type=str, help="ip address of the lanforge gui",
                     default="10.28.3.6")
 parser.add_argument("--lanforge-port-number", type=str, help="port of the lanforge gui",
@@ -377,7 +377,6 @@ for model in TEST_DATA["ap_models"].keys():
             logging.info(f"Upgrade {results['statusCode']}")
             if not test_result:
                 continue
-
 
         # Set Proper AP Profile
         test_profile_id = TEST_DATA["ap_models"][fw_model]["info"]["profile_id"]
