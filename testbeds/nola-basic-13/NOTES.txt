@@ -1,0 +1,2 @@
+
+DUT is an EAP-102 wifi-6, running TIP OpenWrt.
