@@ -8,11 +8,11 @@
 # call the 'lanforge/lanforge-scripts/gui/basic_regression.bash'
 # from the directory in which it resides.
 
-NOLA_NUM=12
+NOLA_NUM=13
 
 PWD=`pwd`
-AP_SERIAL=${AP_SERIAL:-/dev/ttyAP1}
-LF_SERIAL=${LF_SERIAL:-/dev/ttyLF1}
+AP_SERIAL=${AP_SERIAL:-/dev/ttyAP2}
+LF_SERIAL=${LF_SERIAL:-/dev/ttyLF2}
 LFPASSWD=${LFPASSWD:-lanforge}  # Root password on LANforge machine
 AP_AUTO_CFG_FILE=${AP_AUTO_CFG_FILE:-$PWD/ap-auto.txt}
 WCT_CFG_FILE=${WCT_CFG_FILE:-$PWD/wct.txt}
@@ -23,10 +23,10 @@ SCENARIO_CFG_FILE=${SCENARIO_CFG_FILE:-$PWD/scenario.txt}
 #USE_CLOUD_SDK=${USE_CLOUD_SDK:-192.168.100.164}
 
 # LANforge target machine
-LFMANAGER=${LFMANAGER:-lf12}
+LFMANAGER=${LFMANAGER:-lf13}
 
 # LANforge GUI machine (may often be same as target)
-GMANAGER=${GMANAGER:-lf12}
+GMANAGER=${GMANAGER:-lf13}
 GMPORT=${GMPORT:-3990}
 MY_TMPDIR=${MY_TMPDIR:-/tmp}
 
@@ -47,9 +47,9 @@ DUT_SSID2=${DUT_SSID2:-Default-SSID-5gl}
 DUT_PASSWD1=${DUT_PASSWD1:-12345678}
 DUT_PASSWD2=${DUT_PASSWD2:-12345678}
 # 2.4 radio
-DUT_BSSID1=00:00:ea:92:01:01
+DUT_BSSID1=00:00:ea:92:01:02
 # 5Ghz radio
-DUT_BSSID2=00:00:ea:D2:01:01
+DUT_BSSID2=00:00:ea:D2:01:02
 
 export LF_SERIAL AP_SERIAL LFPASSWD
 export AP_AUTO_CFG_FILE WCT_CFG_FILE DPT_CFG_FILE SCENARIO_CFG_FILE

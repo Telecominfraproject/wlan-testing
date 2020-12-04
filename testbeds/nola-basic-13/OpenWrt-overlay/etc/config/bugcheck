@@ -1,0 +1,2 @@
+DO_BUGCHECK=1
+export DO_BUGCHECK
