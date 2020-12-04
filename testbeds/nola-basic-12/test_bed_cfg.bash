@@ -23,10 +23,10 @@ SCENARIO_CFG_FILE=${SCENARIO_CFG_FILE:-$PWD/scenario.txt}
 #USE_CLOUD_SDK=${USE_CLOUD_SDK:-192.168.100.164}
 
 # LANforge target machine
-LFMANAGER=${LFMANAGER:-lf1}
+LFMANAGER=${LFMANAGER:-lf12}
 
 # LANforge GUI machine (may often be same as target)
-GMANAGER=${GMANAGER:-lf1}
+GMANAGER=${GMANAGER:-lf12}
 GMPORT=${GMPORT:-3990}
 MY_TMPDIR=${MY_TMPDIR:-/tmp}
 
