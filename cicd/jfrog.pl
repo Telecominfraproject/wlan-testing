@@ -12,7 +12,7 @@ use Getopt::Long;
 my $user = "cicd_user";
 my $passwd = "";
 my $url = "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware";
-my @platforms = ("ea8300", "ecw5410", "ecw5211", "ec420");  # Add more here as we have test beds that support them.
+my @platforms = ("ea8300", "ecw5410", "ecw5211", "ec420", "eap102");  # Add more here as we have test beds that support them.
 my $files_processed = "jfrog_files_processed.txt";
 my $tb_url_base = "cicd_user\@tip.cicd.cloud.com/testbeds";  # Used by SSH: scp -R results_dir cicd_user@tip.cicd.cloud.com/testbeds/
 my $help = 0;
