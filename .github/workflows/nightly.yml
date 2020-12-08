@@ -65,12 +65,13 @@ jobs:
     - name: Generate certs
       shell: bash
       run: |
-        mkdir -p ./wlan-pki/testCA/private
-        mkdir -p ./wlan-pki/generated
+        cd ./wlan-pki
+        mkdir -p ./testCA/private
+        mkdir -p ./generated
         echo "${{ env.CACERT }}" | base64 -d > ./wlan-pki/testCA/cacert.pem
         echo "${{ env.CAKEY }}" | base64 -d > ./wlan-pki/testCA/private/cakey.pem
         ./wlan-pki/generate_all.sh true
-        ./wlan-pki/copy-certs-to-helm.sh "./wlan-helm"
+        ./wlan-pki/copy-certs-to-helm.sh "../wlan-helm"
 
   test:
     runs-on: ubuntu-latest
