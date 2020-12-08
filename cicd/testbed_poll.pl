@@ -18,6 +18,7 @@ my $help = 0;
 my $owt_log = "";
 my $dut_passwd = "";
 my $dut_user = "root";
+my $sysupgrade_n = 0;
 #my $prompt = "root\@OpenAp";
 my $prompt = "root\@Open"; # match OpenWrt and OpenAp-foo
 my $log = "";
@@ -31,6 +32,7 @@ my $usage = qq($0
   [--dut_passwd { for accessing DUT }
   [--url { test-orchestrator URL for this test bed }
   [--next_info { output text file containing info about the next test to process }
+  [--sysupgrade-n { 0 | 1 }   1 means use the -n option when doing sysupgrade.
   [--log {location}   For instance: --log stdout, for openwrt_ctl expect script.
 
 Example:
@@ -54,6 +56,7 @@ GetOptions
   'dut_user=s'             => \$dut_user,
   'url=s'                  => \$url,
   'next_info=s'            => \$next_info,
+  'sysupgrade_n=i'         => \$sysupgrade_n,
   'log=s'                  => \$log,
   'help|?'                 => \$help,
 ) || (print($usage) && exit(1));
@@ -332,7 +335,13 @@ for ($i = 0; $i<@lines; $i++) {
 
       print_note("Request AP DUT to install the test image and reboot.");
       # TODO: Change this to curl download??
-      my $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action sysupgrade --value \"lanforge\@$ap_gw:tip-$jfile\"");
+      my $ap_out;
+      if ($sysupgrade_n) {
+	 $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action sysupgrade-n --value \"lanforge\@$ap_gw:tip-$jfile\"");
+      }
+      else {
+	 $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action sysupgrade --value \"lanforge\@$ap_gw:tip-$jfile\"");
+      }
       print ("Sys-upgrade results:\n$ap_out\n");
       if ($ap_out =~ /pexpect.exceptions.TIMEOUT/) {
          print("FATAL-ERROR:  DUT is in bad state, bail out.\n");
