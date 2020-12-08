@@ -6,8 +6,8 @@ env:
   TESTRAIL_USER_PASSWORD: ${{ secrets.TESTRAIL_USER_PASSWORD }}
   JFROG_USER_PASSWORD: ${{ secrets.JFROG_USER_PASSWORD }}
   AWS_EKS_NAME: tip-wlan-main
-  AWS_DEFAULT_REGION: us-east-2
   AWS_DEFAULT_OUTPUT: json
+  AWS_DEFAULT_REGION: us-east-2
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
@@ -66,8 +66,8 @@ jobs:
       shell: bash
       run: |
         mkdir -p ./wlan-pki/testCA/private
-        ${{ env.CACERT }} | base64 -d > ./wlan-pki/cacert.pem
-        ${{ env.CAKEY }}  | base64 -d > ./wlan-pki/private/cakey.pem
+        echo "${{ env.CACERT }}" | base64 -d > ./wlan-pki/cacert.pem
+        echo "${{ env.CAKEY }}" | base64 -d > ./wlan-pki/private/cakey.pem
         ./wlan-pki/generate_all.sh true
         ./wlan-pki/copy-certs-to-helm.sh "./wlan-helm"
 
