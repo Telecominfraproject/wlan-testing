@@ -84,6 +84,7 @@ jobs:
         echo "01" > ./wlan-pki/testCA/serial.txt
         echo "${{ env.CACERT }}" | base64 -d > ./wlan-pki/testCA/cacert.pem
         echo "${{ env.CAKEY }}" | base64 -d > ./wlan-pki/testCA/private/cakey.pem
+        echo "https://raw.githubusercontent.com/Telecominfraproject/Toolsmith/master/helm-values/aws-cicd.yaml?token=${{ secrets.GITHUB_TOKEN }}"
         curl -H 'Accept: application/vnd.github.v3.raw' -L 'https://raw.githubusercontent.com/Telecominfraproject/Toolsmith/master/helm-values/aws-cicd.yaml?token=${{ secrets.GITHUB_TOKEN }}'
         # cp ./toolsmith/helm-values/aws-cicd.yaml ./wlan-helm/tip-wlan/resources/environments/aws-cicd.yaml
 
