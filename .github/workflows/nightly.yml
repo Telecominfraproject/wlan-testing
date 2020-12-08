@@ -88,8 +88,13 @@ jobs:
         cd ./wlan-pki
         ./generate_all.sh true
         ./copy-certs-to-helm.sh "../wlan-helm"
-        ls -Rla ../
-        cat ../wlan-helm/tip-wlan/resources/environments/aws-cicd.yaml
+
+    - name: Deploy Cloud SDK
+      shell: bash
+      run: |
+        cd ./wlan-helm/tip-wlan
+        aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+        helm upgrade --install tip-wlan . -f resources/environments/aws-cicd.yaml --create-namespace -n tip
 
   test:
     runs-on: ubuntu-latest
