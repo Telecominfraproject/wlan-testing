@@ -68,10 +68,10 @@ jobs:
         cd ./wlan-pki
         mkdir -p ./testCA/private
         mkdir -p ./generated
-        echo "${{ env.CACERT }}" | base64 -d > ./wlan-pki/testCA/cacert.pem
-        echo "${{ env.CAKEY }}" | base64 -d > ./wlan-pki/testCA/private/cakey.pem
-        ./wlan-pki/generate_all.sh true
-        ./wlan-pki/copy-certs-to-helm.sh "../wlan-helm"
+        echo "${{ env.CACERT }}" | base64 -d > ./testCA/cacert.pem
+        echo "${{ env.CAKEY }}" | base64 -d > ./testCA/private/cakey.pem
+        ./generate_all.sh true
+        ./copy-certs-to-helm.sh "../wlan-helm"
 
   test:
     runs-on: ubuntu-latest
