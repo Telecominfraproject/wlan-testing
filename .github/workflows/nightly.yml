@@ -62,6 +62,7 @@ jobs:
         path: wlan-helm
         repository: Telecominfraproject/wlan-cloud-helm
         token: ${{ secrets.GITHUB_TOKEN }}
+        ref: feature/update-kafka
     - name: Generate certs
       shell: bash
       run: |
@@ -75,6 +76,7 @@ jobs:
         echo "${{ env.CAKEY }}" | base64 -d > ./testCA/private/cakey.pem
         ./generate_all.sh true
         ./copy-certs-to-helm.sh "../wlan-helm"
+        ls -Rla "../wlan-helm/tip-wlan/resources/certs"
 
   test:
     runs-on: ubuntu-latest
