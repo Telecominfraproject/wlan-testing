@@ -69,6 +69,8 @@ jobs:
         mkdir -p ./testCA/private
         mkdir -p ./testCA/newcerts
         mkdir -p ./generated
+        touch ./testCA/serial.txt
+        touch ./testCA/index.txt
         echo "${{ env.CACERT }}" | base64 -d > ./testCA/cacert.pem
         echo "${{ env.CAKEY }}" | base64 -d > ./testCA/private/cakey.pem
         ./generate_all.sh true
