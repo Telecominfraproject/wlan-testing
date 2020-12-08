@@ -63,12 +63,13 @@ jobs:
         repository: Telecominfraproject/wlan-cloud-helm
         token: ${{ secrets.GITHUB_TOKEN }}
         ref: feature/update-kafka
-    - name: Checkout Cloud SDK repo
+    - name: Checkout helm values file
       uses: actions/checkout@v2
       with:
         path: toolsmith
         repository: Telecominfraproject/Toolsmith
         token: ${{ secrets.GITHUB_TOKEN }}
+        ref: master
     - name: Prepare environment
       shell: bash
       run: |
