@@ -5,6 +5,7 @@ env:
   DOCKER_USER_PASSWORD: ${{ secrets.DOCKER_USER_PASSWORD }}
   TESTRAIL_USER_PASSWORD: ${{ secrets.TESTRAIL_USER_PASSWORD }}
   JFROG_USER_PASSWORD: ${{ secrets.JFROG_USER_PASSWORD }}
+  # AWS credentials
   AWS_EKS_NAME: tip-wlan-main
   AWS_DEFAULT_OUTPUT: json
   AWS_DEFAULT_REGION: us-east-2
@@ -32,9 +33,9 @@ jobs:
     - name: Checkout LANforge scripts
       uses: actions/checkout@v2
       with:
+        path: wlan-lanforge-scripts
         repository: Telecominfraproject/wlan-lanforge-scripts
         token: ${{ secrets.GITHUB_TOKEN }}
-        path: wlan-lanforge-scripts
 
     # build and push docker image
     - name: docker login
