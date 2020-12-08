@@ -82,8 +82,8 @@ jobs:
         mkdir -p ./wlan-pki/generated
         touch ./wlan-pki/testCA/index.txt
         echo "01" > ./wlan-pki/testCA/serial.txt
-        echo "${{ env.CACERT }}" | base64 -d > ./testCA/cacert.pem
-        echo "${{ env.CAKEY }}" | base64 -d > ./testCA/private/cakey.pem
+        echo "${{ env.CACERT }}" | base64 -d > ./wlan-pki/testCA/cacert.pem
+        echo "${{ env.CAKEY }}" | base64 -d > ./wlan-pki/testCA/private/cakey.pem
         curl -H 'Accept: application/vnd.github.v3.raw' -o ./wlan-helm/tip-wlan/resources/environments/aws-cicd.yaml -L 'https://raw.githubusercontent.com/Telecominfraproject/Toolsmith/master/helm-values/aws-cicd.yaml?token=${{ secrets.GITHUB_TOKEN }}'
         # cp ./toolsmith/helm-values/aws-cicd.yaml ./wlan-helm/tip-wlan/resources/environments/aws-cicd.yaml
 
