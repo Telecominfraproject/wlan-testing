@@ -63,20 +63,32 @@ jobs:
         repository: Telecominfraproject/wlan-cloud-helm
         token: ${{ secrets.GITHUB_TOKEN }}
         ref: feature/update-kafka
+    - name: Checkout Cloud SDK repo
+      uses: actions/checkout@v2
+      with:
+        path: toolsmith
+        repository: Telecominfraproject/Toolsmith
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Prepare environment
+      shell: bash
+      run: |
+        mkdir ./wlan-helm/tip-wlan/resources/certs
+        mkdir -p ./wlan-pki/testCA/private
+        mkdir -p ./wlan-pki/testCA/newcerts
+        mkdir -p ./wlan-pki/generated
+        touch ./wlan-pki/testCA/index.txt
+        echo "01" > ./wlan-pki/testCA/serial.txt
+        echo "${{ env.CACERT }}" | base64 -d > ./testCA/cacert.pem
+        echo "${{ env.CAKEY }}" | base64 -d > ./testCA/private/cakey.pem
+        cp ./toolsmith/helm-values/aws-cicd.yaml ./wlan-helm/tip-wlan/resources/environments/aws-cicd.yaml
+
     - name: Generate certs
       shell: bash
       run: |
         cd ./wlan-pki
-        mkdir -p ./testCA/private
-        mkdir -p ./testCA/newcerts
-        mkdir -p ./generated
-        touch ./testCA/index.txt
-        echo "01" > ./testCA/serial.txt
-        echo "${{ env.CACERT }}" | base64 -d > ./testCA/cacert.pem
-        echo "${{ env.CAKEY }}" | base64 -d > ./testCA/private/cakey.pem
         ./generate_all.sh true
         ./copy-certs-to-helm.sh "../wlan-helm"
-        ls -Rla "../wlan-helm/tip-wlan/resources"
+        ls -Rla ../
 
   test:
     runs-on: ubuntu-latest
