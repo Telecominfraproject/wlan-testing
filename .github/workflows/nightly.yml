@@ -76,7 +76,7 @@ jobs:
         echo "${{ env.CAKEY }}" | base64 -d > ./testCA/private/cakey.pem
         ./generate_all.sh true
         ./copy-certs-to-helm.sh "../wlan-helm"
-        ls -Rla "../wlan-helm/tip-wlan/resources/config"
+        ls -Rla "../wlan-helm/tip-wlan/resources"
 
   test:
     runs-on: ubuntu-latest
