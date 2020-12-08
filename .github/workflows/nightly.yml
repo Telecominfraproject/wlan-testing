@@ -70,6 +70,7 @@ jobs:
         path: toolsmith
         repository: Telecominfraproject/toolsmith
         token: ${{ secrets.GITHUB_TOKEN }}
+        ref: master
 
     - name: Prepare environment
       shell: bash
