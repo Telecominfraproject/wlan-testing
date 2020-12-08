@@ -65,13 +65,13 @@ jobs:
         repository: Telecominfraproject/wlan-cloud-helm
         token: ${{ secrets.GITHUB_TOKEN }}
         ref: feature/update-kafka
-    - name: Checkout helm values repo
-      uses: actions/checkout@v2
-      with:
-        path: toolsmith
-        repository: Telecominfraproject/Toolsmith
-        token: ${{ secrets.GITHUB_TOKEN }}
-        ref: master
+    # - name: Checkout helm values repo
+    #   uses: actions/checkout@v2
+    #   with:
+    #     path: toolsmith
+    #     repository: Telecominfraproject/Toolsmith
+    #     token: ${{ secrets.GITHUB_TOKEN }}
+    #     ref: master
 
     - name: Prepare environment
       shell: bash
@@ -84,7 +84,8 @@ jobs:
         echo "01" > ./wlan-pki/testCA/serial.txt
         echo "${{ env.CACERT }}" | base64 -d > ./testCA/cacert.pem
         echo "${{ env.CAKEY }}" | base64 -d > ./testCA/private/cakey.pem
-        cp ./toolsmith/helm-values/aws-cicd.yaml ./wlan-helm/tip-wlan/resources/environments/aws-cicd.yaml
+        curl -H 'Accept: application/vnd.github.v3.raw' -o ./wlan-helm/tip-wlan/resources/environments/aws-cicd.yaml -L 'https://raw.githubusercontent.com/Telecominfraproject/Toolsmith/master/helm-values/aws-cicd.yaml?token=${{ secrets.GITHUB_TOKEN }}'
+        # cp ./toolsmith/helm-values/aws-cicd.yaml ./wlan-helm/tip-wlan/resources/environments/aws-cicd.yaml
 
     - name: Generate certs
       shell: bash
