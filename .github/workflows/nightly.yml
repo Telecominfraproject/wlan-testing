@@ -96,7 +96,7 @@ jobs:
         # the 2 lines below are needed for the new flow only, not needed for the old one
         # helm dependency update
         # helm upgrade --install tip-wlan . -f resources/environments/aws-cicd.yaml --create-namespace -n tip
-        helm upgrade --install tip-wlan . -f resources/environments/aws-cicd.yaml --namespace tip
+        helm upgrade --install tip-wlan . -f resources/environments/aws-cicd.yaml --namespace default
 
   test:
     runs-on: ubuntu-latest
