@@ -104,7 +104,6 @@ jobs:
     steps:
     - name: run tests
       run: |
-        exit 1
         today=$(date +"%d-%m-%Y")
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
         cat <<EOF | kubectl apply -f -
