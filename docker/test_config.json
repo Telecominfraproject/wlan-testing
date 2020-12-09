@@ -2,7 +2,7 @@
     "customer_id": "2",
     "ap_models": {
         "ecw5410": {
-            "id": "5",
+            "id": "1",
             "firmware": "unknown",
             "info": {
                 "profile_id": "6",
@@ -11,9 +11,9 @@
                 "fiveG_WPA_SSID": "TipWlan-cloud-wifi",
                 "fiveG_WPA_PSK": "w1r3l3ss-fr33d0m",
                 "fiveG_OPEN_SSID": "TipWlan-cloud-wifi",
-                "twoFourG_OPEN_SSID": "gt-open",
-                "twoFourG_WPA2_SSID": "gt-wpa2",
-                "twoFourG_WPA2_PSK": "gt-wpa2-key",
+                "twoFourG_OPEN_SSID": "TipWlan-cloud-wifi",
+                "twoFourG_WPA2_SSID": "TipWlan-cloud-wifi",
+                "twoFourG_WPA2_PSK": "w1r3l3ss-fr33d0m",
                 "twoFourG_WPA_SSID": "TipWlan-cloud-wifi",
                 "twoFourG_WPA_PSK": "w1r3l3ss-fr33d0m"
             }
