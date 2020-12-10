@@ -1,4 +1,13 @@
 #!/usr/local/bin/python3
+
+import sys
+
+if 'py-json' not in sys.path:
+    sys.path.append('../lanforge/lanforge/py-json')
+
+if 'py-scripts' not in sys.path:
+    sys.path.append('../lanforge/lanforge/py-scripts')
+
 import re
 import requests
 import json
@@ -10,6 +19,11 @@ from time import sleep, gmtime, strftime
 from LANforge.LFUtils import *
 from sta_connect2 import StaConnect2
 
+# Some usage examples.
+# Run from remote dev machine on ssh tunnel through to LANforge in TIP Lab, without testrails being used.
+# SSH tunnel created with login to orchestrator with option:  -L 10080:lf1:8080
+# python3 ./nightly.py --skip-update-firmware --no-testrails --lanforge-ip-address localhost --lanforge-port-number 10080
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--sdk-base-url", type=str, help="cloudsdk base url",
                     default="https://wlan-portal-svc.cicd.lab.wlan.tip.build")
@@ -20,9 +34,9 @@ parser.add_argument("--sdk-user-password", type=str, help="cloudsdk user passwor
 parser.add_argument("--jfrog-base-url", type=str, help="jfrog base url",
                     default="tip.jFrog.io/artifactory/tip-wlan-ap-firmware")
 parser.add_argument("--jfrog-user-id", type=str, help="jfrog user id",
-                    default="cicd_user")
+                    default="tip-read")
 parser.add_argument("--jfrog-user-password", type=str, help="jfrog user password",
-                    default="password")
+                    default="tip-read")
 parser.add_argument("--testrail-base-url", type=str, help="testrail base url",
                     default="https://telecominfraproject.testrail.com")
 parser.add_argument("--testrail-project", type=str, help="testrail project name",
@@ -37,7 +51,9 @@ parser.add_argument("--lanforge-port-number", type=str, help="port of the lanfor
                     default="8080")
 parser.add_argument('--update-firmware', dest='update_firmware', action='store_true')
 parser.add_argument('--skip-update-firmware', dest='update_firmware', action='store_false')
+parser.add_argument('--no-testrails', dest='use_testrails', action='store_false')
 parser.set_defaults(update_firmware=True)
+parser.set_defaults(use_testrails=True)
 args = parser.parse_args()
 
 logging.basicConfig(level=logging.DEBUG,
@@ -183,6 +199,7 @@ class jFrog_Client:
         # todo handle auth errors
         logging.debug(f"searching for the latest firmware on url: {model}")
         response = requests.get(f"https://{self.baseUrl}/{model}/dev/", auth=(self.user, self.password))
+        print(response.text)
         return re.findall('href="(.+pending.+).tar.gz"', response.text)[-1]
 
     def get_latest_image_url(self, model, latest_image):
@@ -364,24 +381,34 @@ for model in TEST_DATA["ap_models"].keys():
             # }
         }
 
-        # Create Test Run
+        runId = -1
         test_run_name = f'Nightly_model_{fw_model}_firmware_{ap_fw}_{strftime("%Y-%m-%d", gmtime())}'
-        testrail_project_id = testrail.get_project_id(project_name=args.testrail_project)
-        runId = testrail.create_testrun(name=test_run_name, case_ids=( [*test_cases_data] + firmware_update_case ), project_id=testrail_project_id)
-        logging.info(f"Testrail project id: {testrail_project_id}; run ID is: {runId}")
 
-        # Check if upgrade worked
-        if args.update_firmware:
-            results = TESTRAIL[(sdk.ap_firmware(TEST_DATA["customer_id"], TEST_DATA["ap_models"][model]["id"]) == latest_ap_image)]
-            testrail.update_testrail(case_id="2831", run_id=runId, status_id=results["statusCode"], msg=f"Upgrade {results['message']}")
-            logging.info(f"Upgrade {results['statusCode']}")
-            if not test_result:
-                continue
+        if args.use_testrails:
+            # Create Test Run
+            testrail_project_id = testrail.get_project_id(project_name=args.testrail_project)
+            runId = testrail.create_testrun(name=test_run_name, case_ids=( [*test_cases_data] + firmware_update_case ), project_id=testrail_project_id)
+            logging.info(f"Testrail project id: {testrail_project_id}; run ID is: {runId}")
 
-        # Set Proper AP Profile
-        test_profile_id = TEST_DATA["ap_models"][fw_model]["info"]["profile_id"]
-        sdk.set_ap_profile(TEST_DATA["ap_models"][model]["id"], test_profile_id)
-        logging.info(f"Test profile id: test_profile_id")
+            # Check if upgrade worked
+            if args.update_firmware:
+                results = TESTRAIL[(sdk.ap_firmware(TEST_DATA["customer_id"], TEST_DATA["ap_models"][model]["id"]) == latest_ap_image)]
+                testrail.update_testrail(case_id="2831", run_id=runId, status_id=results["statusCode"], msg=f"Upgrade {results['message']}")
+                logging.info(f"Upgrade {results['statusCode']}")
+                if not test_result:
+                    continue
+
+            # Set Proper AP Profile
+            test_profile_id = TEST_DATA["ap_models"][fw_model]["info"]["profile_id"]
+            sdk.set_ap_profile(TEST_DATA["ap_models"][model]["id"], test_profile_id)
+            logging.info(f"Test profile id: test_profile_id")
+
+        else:
+            if args.update_firmware:
+                # TODO:  Not sure this is correct. --Ben
+                if not (sdk.ap_firmware(TEST_DATA["customer_id"], TEST_DATA["ap_models"][model]["id"]) == latest_ap_image):
+                    print("ERROR:  Updating firmware faled.")
+                    exit(1);
 
         # Run Client Single Connectivity Test Cases
         for testcase in test_cases_data.keys():
@@ -406,9 +433,10 @@ for model in TEST_DATA["ap_models"].keys():
             staConnect.cleanup()
             for result in staConnect.get_result_list():
                 logging.info(f"test result: {result}")
-            results = TESTRAIL[staConnect.passes()]
             logging.info(f"Single client connection to {test_cases_data[testcase]['ssid_name']} successful. Test {results['message']}")
-            testrail.update_testrail(case_id=testcase, run_id=runId, status_id=results["statusCode"], msg="Client connectivity {results['message']}")
+            if args.use_testrails:
+                results = TESTRAIL[staConnect.passes()]
+                testrail.update_testrail(case_id=testcase, run_id=runId, status_id=results["statusCode"], msg="Client connectivity {results['message']}")
 
 logging.info("----------------------")
 logging.info("End of Sanity Test run")
