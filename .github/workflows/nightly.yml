@@ -106,6 +106,7 @@ jobs:
       run: |
         today=$(date +"%d-%m-%Y")
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+        kubectl delete job nightly-ci-$today --wait=true
         cat <<EOF | kubectl apply -f -
         apiVersion: batch/v1
         kind: Job
