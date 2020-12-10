@@ -424,6 +424,7 @@ for model in TEST_DATA["ap_models"].keys():
             staConnect.dut_security = test_cases_data[testcase]["security"]
             staConnect.station_names = test_cases_data[testcase]["station"]
             staConnect.runtime_secs = 30
+            staConnect.clean_all_sta = True
             staConnect.cleanup_on_exit = True
             staConnect.setup()
             staConnect.start()
