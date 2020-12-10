@@ -52,8 +52,16 @@ parser.add_argument("--lanforge-port-number", type=str, help="port of the lanfor
 parser.add_argument('--update-firmware', dest='update_firmware', action='store_true')
 parser.add_argument('--skip-update-firmware', dest='update_firmware', action='store_false')
 parser.add_argument('--no-testrails', dest='use_testrails', action='store_false')
+parser.add_argument('--skip-open', dest='skip_open', action='store_true')
+parser.add_argument('--skip-wpa', dest='skip_wpa', action='store_true')
+parser.add_argument('--skip-wpa2', dest='skip_wpa2', action='store_true')
+parser.add_argument('--skip-wpa3', dest='skip_wpa3', action='store_true')
 parser.set_defaults(update_firmware=True)
 parser.set_defaults(use_testrails=True)
+parser.set_defaults(skip_open=False)
+parser.set_defaults(skip_wpa=False)
+parser.set_defaults(skip_wpa2=False)
+parser.set_defaults(skip_wpa3=False)
 args = parser.parse_args()
 
 logging.basicConfig(level=logging.DEBUG,
@@ -412,6 +420,15 @@ for model in TEST_DATA["ap_models"].keys():
 
         # Run Client Single Connectivity Test Cases
         for testcase in test_cases_data.keys():
+            if (args.skip_open and test_cases_data[testcase]['security'] == "open"):
+                continue
+            if (args.skip_wpa and test_cases_data[testcase]['security'] == "wpa"):
+                continue
+            if (args.skip_wpa2 and test_cases_data[testcase]['security'] == "wpa2"):
+                continue
+            if (args.skip_wpa3 and test_cases_data[testcase]['security'] == "wpa3"):
+                continue
+
             logging.info(f"Test parameters are\n        radio: {test_cases_data[testcase]['radio']}\n        ssid_name: {test_cases_data[testcase]['ssid_name']}\n        ssid_psk: {test_cases_data[testcase]['ssid_psk']}\n        security: {test_cases_data[testcase]['security']}\n        station: {test_cases_data[testcase]['station']}\n        testcase: {testcase}\n        runId: {runId}")
             staConnect = StaConnect2(args.lanforge_ip_address, args.lanforge_port_number, debug_ = False)
             staConnect.sta_mode = 0
@@ -434,9 +451,9 @@ for model in TEST_DATA["ap_models"].keys():
             staConnect.cleanup()
             for result in staConnect.get_result_list():
                 logging.info(f"test result: {result}")
-            logging.info(f"Single client connection to {test_cases_data[testcase]['ssid_name']} successful. Test {results['message']}")
             if args.use_testrails:
                 results = TESTRAIL[staConnect.passes()]
+                logging.info(f"Single client connection to {test_cases_data[testcase]['ssid_name']} successful. Test {results['message']}")
                 testrail.update_testrail(case_id=testcase, run_id=runId, status_id=results["statusCode"], msg="Client connectivity {results['message']}")
 
 logging.info("----------------------")
