@@ -1,19 +1,12 @@
 #!/usr/local/bin/python3
 
-import sys
-
-if 'py-json' not in sys.path:
-    sys.path.append('../lanforge/lanforge/py-json')
-
-if 'py-scripts' not in sys.path:
-    sys.path.append('../lanforge/lanforge/py-scripts')
-
 import re
 import requests
 import json
 import logging
 import argparse
 from time import sleep, gmtime, strftime
+from unittest.mock import Mock
 # if you lack __init__.py in this directory this import will fail
 # This should be replaced with a module and added to dockerfile
 from LANforge.LFUtils import *
@@ -49,20 +42,11 @@ parser.add_argument("--lanforge-ip-address", type=str, help="ip address of the l
                     default="10.28.3.6")
 parser.add_argument("--lanforge-port-number", type=str, help="port of the lanforge gui",
                     default="8080")
-parser.add_argument('--update-firmware', dest='update_firmware', action='store_true')
 parser.add_argument('--skip-update-firmware', dest='update_firmware', action='store_false')
 parser.add_argument('--no-testrails', dest='use_testrails', action='store_false')
-parser.add_argument('--skip-open', dest='skip_open', action='store_true')
-parser.add_argument('--skip-wpa', dest='skip_wpa', action='store_true')
-parser.add_argument('--skip-wpa2', dest='skip_wpa2', action='store_true')
-parser.add_argument('--skip-wpa3', dest='skip_wpa3', action='store_true')
 parser.set_defaults(update_firmware=True)
 parser.set_defaults(use_testrails=True)
-parser.set_defaults(skip_open=False)
-parser.set_defaults(skip_wpa=False)
-parser.set_defaults(skip_wpa2=False)
-parser.set_defaults(skip_wpa3=False)
-args = parser.parse_args()
+command_line_args = parser.parse_args()
 
 logging.basicConfig(level=logging.DEBUG,
                     format="%(asctime)s %(levelname)-8s %(message)s file:%(pathname)s line:%(lineno)d",
@@ -91,12 +75,23 @@ TESTRAIL = {
     }
 }
 
+
+
 # Class to interact with Testrail; better to replace this with pytest\nunit
 class TestRail_Client:
+    def __new__(cls, *args, **kwargs):
+        if command_line_args.use_testrails:
+            return super().__new__(cls, *args, **kwargs)
+        else:
+            mock = Mock()
+            mock.get_project_id.return_value = -1
+            mock.create_testrun.return_value = -1
+            return mock
+
     def __init__(self):
-        self.user = args.testrail_user_id
-        self.password = args.testrail_user_password
-        self.__url = f"{args.testrail_base_url}/index.php?/api/v2/"
+        self.user = command_line_args.testrail_user_id
+        self.password = command_line_args.testrail_user_password
+        self.__url = f"{command_line_args.testrail_base_url}/index.php?/api/v2/"
 
     def send_get(self, uri, filepath=None):
         """Issue a GET request (read) against the API.
@@ -199,15 +194,14 @@ class TestRail_Client:
 # Class for jFrog Interaction
 class jFrog_Client:
     def __init__(self):
-        self.user = args.jfrog_user_id
-        self.password = args.jfrog_user_password
-        self.baseUrl = args.jfrog_base_url
+        self.user = command_line_args.jfrog_user_id
+        self.password = command_line_args.jfrog_user_password
+        self.baseUrl = command_line_args.jfrog_base_url
 
     def get_latest_image(self, model):
         # todo handle auth errors
         logging.debug(f"searching for the latest firmware on url: {model}")
         response = requests.get(f"https://{self.baseUrl}/{model}/dev/", auth=(self.user, self.password))
-        print(response.text)
         return re.findall('href="(.+pending.+).tar.gz"', response.text)[-1]
 
     def get_latest_image_url(self, model, latest_image):
@@ -216,11 +210,11 @@ class jFrog_Client:
 # Class for CloudSDK Interaction via RestAPI
 class CloudSDK_Client:
     def __init__(self):
-        self.baseUrl = args.sdk_base_url
+        self.baseUrl = command_line_args.sdk_base_url
         cloud_login_url = f"{self.baseUrl}/management/v1/oauth2/token"
         payload = {
-            "userId": args.sdk_user_id,
-            "password": args.sdk_user_password
+            "userId": command_line_args.sdk_user_id,
+            "password": command_line_args.sdk_user_password
         }
         headers = {
             "Content-Type": "application/json"
@@ -333,10 +327,10 @@ for model in TEST_DATA["ap_models"].keys():
     model_firmware_id = sdk.get_firmware_id(latest_ap_image)
     logging.info(f"Firmware: {ap_fw}; latest firmware ID is: {model_firmware_id}")
 
-    if ap_fw == latest_ap_image and args.update_firmware:
+    if ap_fw == latest_ap_image and command_line_args.update_firmware:
         logging.info("Model does not require firmware upgrade, skipping sanity tests")
     else:
-        if args.update_firmware:
+        if command_line_args.update_firmware:
             firmware_update_case = [2831]
             logging.info("Model requires firmware update, will update and sleep")
             sdk.update_firmware(TEST_DATA["ap_models"][model]["id"], model_firmware_id)
@@ -358,100 +352,81 @@ for model in TEST_DATA["ap_models"].keys():
                 "ssid_name": TEST_DATA["ap_models"][fw_model]["info"]["twoFourG_WPA2_SSID"],
                 "ssid_psk": TEST_DATA["ap_models"][fw_model]["info"]["twoFourG_WPA2_PSK"],
                 "security": "wpa2"
+            },
+            2833: { # 5 GHz Open
+                "radio": "wiphy3",
+                "station": ["sta2235"],
+                "ssid_name": TEST_DATA["ap_models"][fw_model]["info"]["fiveG_OPEN_SSID"],
+                "ssid_psk": "BLANK",
+                "security": "open"
+            },
+            2834: { # 5 GHz WPA2
+                "radio": "wiphy3",
+                "station": ["sta2236"],
+                "ssid_name": TEST_DATA["ap_models"][fw_model]["info"]["fiveG_WPA2_SSID"],
+                "ssid_psk": TEST_DATA["ap_models"][fw_model]["info"]["fiveG_WPA2_PSK"],
+                "security": "wpa2"
+            },
+            2836: { # 5 GHz WPA
+                "radio": "wiphy3",
+                "station": ["sta2419"],
+                "ssid_name": TEST_DATA["ap_models"][fw_model]["info"]["fiveG_WPA_SSID"],
+                "ssid_psk": TEST_DATA["ap_models"][fw_model]["info"]["fiveG_WPA_PSK"],
+                "security": "wpa"
+            },
+            2837: { # 2.4 GHz WPA
+                "radio": "wiphy0",
+                "station": ["sta2420"],
+                "ssid_name": TEST_DATA["ap_models"][fw_model]["info"]["twoFourG_WPA_SSID"],
+                "ssid_psk": TEST_DATA["ap_models"][fw_model]["info"]["twoFourG_WPA_PSK"],
+                "security": "wpa"
             }
-            # 2833: { # 5 GHz Open
-            #     "radio": "wiphy3",
-            #     "station": ["sta2235"],
-            #     "ssid_name": TEST_DATA["ap_models"][fw_model]["info"]["fiveG_OPEN_SSID"],
-            #     "ssid_psk": "BLANK",
-            #     "security": "open"
-            # },
-            # 2834: { # 5 GHz WPA2
-            #     "radio": "wiphy3",
-            #     "station": ["sta2236"],
-            #     "ssid_name": TEST_DATA["ap_models"][fw_model]["info"]["fiveG_WPA2_SSID"],
-            #     "ssid_psk": TEST_DATA["ap_models"][fw_model]["info"]["fiveG_WPA2_PSK"],
-            #     "security": "wpa2"
-            # },
-            # 2836: { # 5 GHz WPA
-            #     "radio": "wiphy3",
-            #     "station": ["sta2419"],
-            #     "ssid_name": TEST_DATA["ap_models"][fw_model]["info"]["fiveG_WPA_SSID"],
-            #     "ssid_psk": TEST_DATA["ap_models"][fw_model]["info"]["fiveG_WPA_PSK"],
-            #     "security": "wpa"
-            # },
-            # 2837: { # 2.4 GHz WPA
-            #     "radio": "wiphy0",
-            #     "station": ["sta2420"],
-            #     "ssid_name": TEST_DATA["ap_models"][fw_model]["info"]["twoFourG_WPA_SSID"],
-            #     "ssid_psk": TEST_DATA["ap_models"][fw_model]["info"]["twoFourG_WPA_PSK"],
-            #     "security": "wpa"
-            # }
         }
 
-        runId = -1
+        # Create Test Run
         test_run_name = f'Nightly_model_{fw_model}_firmware_{ap_fw}_{strftime("%Y-%m-%d", gmtime())}'
+        testrail_project_id = testrail.get_project_id(project_name=command_line_args.testrail_project)
+        runId = testrail.create_testrun(name=test_run_name, case_ids=( [*test_cases_data] + firmware_update_case ), project_id=testrail_project_id)
+        logging.info(f"Testrail project id: {testrail_project_id}; run ID is: {runId}")
 
-        if args.use_testrails:
-            # Create Test Run
-            testrail_project_id = testrail.get_project_id(project_name=args.testrail_project)
-            runId = testrail.create_testrun(name=test_run_name, case_ids=( [*test_cases_data] + firmware_update_case ), project_id=testrail_project_id)
-            logging.info(f"Testrail project id: {testrail_project_id}; run ID is: {runId}")
+        # Check if upgrade worked
+        if command_line_args.update_firmware:
+            results = TESTRAIL[(sdk.ap_firmware(TEST_DATA["customer_id"], TEST_DATA["ap_models"][model]["id"]) == latest_ap_image)]
+            testrail.update_testrail(case_id="2831", run_id=runId, status_id=results["statusCode"], msg=f"Upgrade {results['message']}")
+            logging.info(f"Upgrade {results['statusCode']}")
+            if not test_result:
+                continue
 
-            # Check if upgrade worked
-            if args.update_firmware:
-                results = TESTRAIL[(sdk.ap_firmware(TEST_DATA["customer_id"], TEST_DATA["ap_models"][model]["id"]) == latest_ap_image)]
-                testrail.update_testrail(case_id="2831", run_id=runId, status_id=results["statusCode"], msg=f"Upgrade {results['message']}")
-                logging.info(f"Upgrade {results['statusCode']}")
-                if not test_result:
-                    continue
-
-            # Set Proper AP Profile
-            test_profile_id = TEST_DATA["ap_models"][fw_model]["info"]["profile_id"]
-            sdk.set_ap_profile(TEST_DATA["ap_models"][model]["id"], test_profile_id)
-            logging.info(f"Test profile id: test_profile_id")
-
-        else:
-            if args.update_firmware:
-                # TODO:  Not sure this is correct. --Ben
-                if not (sdk.ap_firmware(TEST_DATA["customer_id"], TEST_DATA["ap_models"][model]["id"]) == latest_ap_image):
-                    print("ERROR:  Updating firmware faled.")
-                    exit(1);
+        # Set Proper AP Profile
+        test_profile_id = TEST_DATA["ap_models"][fw_model]["info"]["profile_id"]
+        sdk.set_ap_profile(TEST_DATA["ap_models"][model]["id"], test_profile_id)
+        logging.info(f"Test profile id: test_profile_id")
 
         # Run Client Single Connectivity Test Cases
         for testcase in test_cases_data.keys():
-            if (args.skip_open and test_cases_data[testcase]['security'] == "open"):
-                continue
-            if (args.skip_wpa and test_cases_data[testcase]['security'] == "wpa"):
-                continue
-            if (args.skip_wpa2 and test_cases_data[testcase]['security'] == "wpa2"):
-                continue
-            if (args.skip_wpa3 and test_cases_data[testcase]['security'] == "wpa3"):
-                continue
-
-            logging.info(f"Test parameters are\n        radio: {test_cases_data[testcase]['radio']}\n        ssid_name: {test_cases_data[testcase]['ssid_name']}\n        ssid_psk: {test_cases_data[testcase]['ssid_psk']}\n        security: {test_cases_data[testcase]['security']}\n        station: {test_cases_data[testcase]['station']}\n        testcase: {testcase}\n        runId: {runId}")
-            staConnect = StaConnect2(args.lanforge_ip_address, args.lanforge_port_number, debug_ = False)
-            staConnect.sta_mode = 0
-            staConnect.upstream_resource = 1
-            staConnect.upstream_port = "eth2"
-            staConnect.radio = test_cases_data[testcase]["radio"]
-            staConnect.resource = 1
-            staConnect.dut_ssid = test_cases_data[testcase]["ssid_name"]
-            staConnect.dut_passwd = test_cases_data[testcase]["ssid_psk"]
-            staConnect.dut_security = test_cases_data[testcase]["security"]
-            staConnect.station_names = test_cases_data[testcase]["station"]
-            staConnect.runtime_secs = 30
-            staConnect.clean_all_sta = True
-            staConnect.cleanup_on_exit = True
-            staConnect.setup()
-            staConnect.start()
-            logging.info(f"sleeping {staConnect.runtime_secs} seconds")
-            sleep(staConnect.runtime_secs)
-            staConnect.stop()
-            staConnect.cleanup()
-            for result in staConnect.get_result_list():
-                logging.info(f"test result: {result}")
-            if args.use_testrails:
+            if test_cases_data[testcase]["ssid_name"] != "skip":
+                logging.info(f"Test parameters are\n        radio: {test_cases_data[testcase]['radio']}\n        ssid_name: {test_cases_data[testcase]['ssid_name']}\n        ssid_psk: {test_cases_data[testcase]['ssid_psk']}\n        security: {test_cases_data[testcase]['security']}\n        station: {test_cases_data[testcase]['station']}\n        testcase: {testcase}\n        runId: {runId}")
+                staConnect = StaConnect2(command_line_args.lanforge_ip_address, command_line_args.lanforge_port_number, debug_ = False)
+                staConnect.sta_mode = 0
+                staConnect.upstream_resource = 1
+                staConnect.upstream_port = "eth2"
+                staConnect.radio = test_cases_data[testcase]["radio"]
+                staConnect.resource = 1
+                staConnect.dut_ssid = test_cases_data[testcase]["ssid_name"]
+                staConnect.dut_passwd = test_cases_data[testcase]["ssid_psk"]
+                staConnect.dut_security = test_cases_data[testcase]["security"]
+                staConnect.station_names = test_cases_data[testcase]["station"]
+                staConnect.runtime_secs = 30
+                staConnect.clean_all_sta = True
+                staConnect.cleanup_on_exit = True
+                staConnect.setup()
+                staConnect.start()
+                logging.info(f"sleeping {staConnect.runtime_secs} seconds")
+                sleep(staConnect.runtime_secs)
+                staConnect.stop()
+                staConnect.cleanup()
+                for result in staConnect.get_result_list():
+                    logging.info(f"test result: {result}")
                 results = TESTRAIL[staConnect.passes()]
                 logging.info(f"Single client connection to {test_cases_data[testcase]['ssid_name']} successful. Test {results['message']}")
                 testrail.update_testrail(case_id=testcase, run_id=runId, status_id=results["statusCode"], msg="Client connectivity {results['message']}")

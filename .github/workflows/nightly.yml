@@ -119,8 +119,12 @@ jobs:
               - name: tests
                 image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
                 args: 
+                - "--testrail-user-id"
+                - "gleb@opsfleet.com"
                 - "--testrail-user-password"
                 - "${{ env.TESTRAIL_USER_PASSWORD }}"
+                - "--jforg-user-id"
+                - "cicd_user"
                 - "--jfrog-user-password"
                 - "${{ env.JFROG_USER_PASSWORD }}"
                 - "--skip-update-firmware"
