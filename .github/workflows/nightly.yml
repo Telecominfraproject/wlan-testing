@@ -123,10 +123,6 @@ jobs:
                 - "gleb@opsfleet.com"
                 - "--testrail-user-password"
                 - "${{ env.TESTRAIL_USER_PASSWORD }}"
-                - "--jfrog-user-id"
-                - "cicd_user"
-                - "--jfrog-user-password"
-                - "${{ env.JFROG_USER_PASSWORD }}"
                 - "--skip-update-firmware"
               imagePullSecrets:
               - name: tip-docker-registry-key
