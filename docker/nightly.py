@@ -401,7 +401,7 @@ for model in TEST_DATA["ap_models"].keys():
         # Run Client Single Connectivity Test Cases
         for testcase in test_cases_data.keys():
             if test_cases_data[testcase]["ssid_name"] != "skip":
-                logging.info(f"Test parameters are: radio = {test_cases_data[testcase]['radio']}\n        ssid_name = {test_cases_data[testcase]['ssid_name']}\n        ssid_psk = {test_cases_data[testcase]['ssid_psk']}\n        security = {test_cases_data[testcase]['security']}\n        station = {test_cases_data[testcase]['station']}\n        testcase = {testcase}")
+                logging.info(f"Test parameters are\n  radio = {test_cases_data[testcase]['radio']}\n  ssid_name = {test_cases_data[testcase]['ssid_name']}\n  ssid_psk = {test_cases_data[testcase]['ssid_psk']}\n  security = {test_cases_data[testcase]['security']}\n  station = {test_cases_data[testcase]['station']}\n  testcase = {testcase}")
                 staConnect = StaConnect2(command_line_args.lanforge_ip_address, command_line_args.lanforge_port_number, debug_ = False)
                 staConnect.sta_mode = 0
                 staConnect.upstream_resource = 1
@@ -425,7 +425,7 @@ for model in TEST_DATA["ap_models"].keys():
                     logging.info(f"test result: {result}")
                 results = TESTRAIL[staConnect.passes()]
                 logging.info(f"Single client connection to {test_cases_data[testcase]['ssid_name']} successful. Test {results['message']}")
-                testrail.update_testrail(case_id=testcase, run_id=runId, status_id=results["statusCode"], msg=f"Client connectivity {results['message']}")
+                testrail.update_testrail(case_id=testcase, run_id=runId, status_id=results["statusCode"], msg=f"Test {results['message']}")
 
 logging.info("----------------------")
 logging.info("End of Sanity Test run")
