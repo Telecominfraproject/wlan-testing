@@ -7,8 +7,14 @@ import logging
 import argparse
 from time import sleep, gmtime, strftime
 from unittest.mock import Mock
-# if you lack __init__.py in this directory this import will fail
+
+# the below hack is only needed for local dev
 # This should be replaced with a module and added to dockerfile
+import sys
+for folder in 'py-json','py-scripts':
+    if folder not in sys.path:
+        sys.path.append(f'../lanforge/lanforge/{folder}')
+
 from LANforge.LFUtils import *
 from sta_connect2 import StaConnect2
 
