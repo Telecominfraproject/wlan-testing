@@ -1,27 +1,135 @@
 name: nightly build
+env:
+  DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
+  DOCKER_USER_NAME: ${{ secrets.DOCKER_USER_NAME }}
+  DOCKER_USER_PASSWORD: ${{ secrets.DOCKER_USER_PASSWORD }}
+  TESTRAIL_USER_PASSWORD: ${{ secrets.TESTRAIL_USER_PASSWORD }}
+  JFROG_USER_PASSWORD: ${{ secrets.JFROG_USER_PASSWORD }}
+  # AWS credentials
+  AWS_EKS_NAME: tip-wlan-main
+  AWS_DEFAULT_OUTPUT: json
+  AWS_DEFAULT_REGION: us-east-2
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+  # Cloud SDK certs
+  CACERT: ${{ secrets.CACERT }}
+  CAKEY: ${{ secrets.CAKEY }}
 
-on: 
+on:
   workflow_dispatch:
   schedule:
-    - cron:  '15 0 * * *'
+  - cron: '15 0 * * *'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: 4c74356b41/cloud-sdk-nightly
     steps:
-    - name: Checkout
+    # checkout needed repositories
+    - name: Checkout Testing repo
       uses: actions/checkout@v2
       with:
         path: wlan-testing
-
     - name: Checkout LANforge scripts
       uses: actions/checkout@v2
       with:
+        path: wlan-lanforge-scripts
         repository: Telecominfraproject/wlan-lanforge-scripts
-        token: ${{ secrets.GitHub_PAT }} # `GitHub_PAT` is a secret that contains your PAT
-        path: wlan-LANforge-scripts
-        
+
+    # build and push docker image
+    - name: docker login
+      shell: bash
+      run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
     - name: build docker image
       shell: bash
-      run: ls -Rla; docker build -t tip/nightly -f wlan-testing/docker/Dockerfile
+      run: docker build -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }} -f wlan-testing/docker/Dockerfile .
+    - name: push docker image
+      shell: bash
+      run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+
+  cloudsdk:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout pki scripts repo
+      uses: actions/checkout@v2
+      with:
+        path: wlan-pki
+        repository: Telecominfraproject/wlan-pki-cert-scripts
+        ref: local/dev
+    - name: Checkout Cloud SDK repo
+      uses: actions/checkout@v2
+      with:
+        path: wlan-helm
+        repository: Telecominfraproject/wlan-cloud-helm
+    - name: Checkout helm values repo
+      uses: actions/checkout@v2
+      with:
+        path: toolsmith
+        repository: Telecominfraproject/Toolsmith
+        token: ${{ secrets.PAT_TOKEN }}
+
+    - name: Prepare environment
+      shell: bash
+      run: |
+        mkdir ./wlan-helm/tip-wlan/resources/certs
+        mkdir -p ./wlan-pki/testCA/private
+        mkdir -p ./wlan-pki/testCA/newcerts
+        mkdir -p ./wlan-pki/generated
+        touch ./wlan-pki/testCA/index.txt
+        echo "01" > ./wlan-pki/testCA/serial.txt
+        echo "${{ env.CACERT }}" | base64 -d > ./wlan-pki/testCA/cacert.pem
+        echo "${{ env.CAKEY }}" | base64 -d > ./wlan-pki/testCA/private/cakey.pem
+        cp ./toolsmith/helm-values/aws-cicd.yaml ./wlan-helm/tip-wlan/resources/environments/aws-cicd.yaml
+
+    - name: Generate certs
+      shell: bash
+      run: |
+        cd ./wlan-pki
+        ./generate_all.sh true
+        ./copy-certs-to-helm.sh "../wlan-helm"
+
+    - name: Deploy Cloud SDK
+      shell: bash
+      run: |
+        cd ./wlan-helm/tip-wlan
+        aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+        # the 2 lines below are needed for the new flow only, not needed for the old one
+        # helm dependency update
+        # helm upgrade --install tip-wlan . -f resources/environments/aws-cicd.yaml --create-namespace -n tip
+        helm upgrade --install tip-wlan . -f resources/environments/aws-cicd.yaml --namespace default
+
+  test:
+    runs-on: ubuntu-latest
+    needs: [ build, cloudsdk ]
+    steps:
+    - name: run tests
+      run: |
+        today=$(date +"%d-%m-%Y")
+        aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+        kubectl delete job nightly-ci-$today --wait=true --ignore-not-found=true
+        cat <<EOF | kubectl apply -f -
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: nightly-ci-$today
+        spec:
+          template:
+            spec:
+              containers:
+              - name: tests
+                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+                args: 
+                - "--testrail-user-id"
+                - "gleb@opsfleet.com"
+                - "--testrail-user-password"
+                - "${{ env.TESTRAIL_USER_PASSWORD }}"
+                - "--skip-update-firmware"
+              imagePullSecrets:
+              - name: tip-docker-registry-key
+              restartPolicy: Never
+          backoffLimit: 0
+        EOF
+        # kubectl wait job/nightly-ci-$today --for=condition=complete --timeout=3600s
+        # kubectl logs -l job-name=nightly-ci-$today --since=1h
+        # kubectl delete job/nightly-ci-$today
+      shell: bash
