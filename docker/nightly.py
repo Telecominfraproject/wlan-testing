@@ -12,9 +12,8 @@ from unittest.mock import Mock
 from LANforge.LFUtils import *
 from sta_connect2 import StaConnect2
 
-# Some usage examples.
 # Run from remote dev machine on ssh tunnel through to LANforge in TIP Lab, without testrails being used.
-# SSH tunnel created with login to orchestrator with option:  -L 10080:lf1:8080
+# SSH tunnel created with login to orchestrator with option: -L 10080:lf1:8080
 # python3 ./nightly.py --skip-update-firmware --no-testrails --lanforge-ip-address localhost --lanforge-port-number 10080
 
 parser = argparse.ArgumentParser()
@@ -188,7 +187,7 @@ class TestRail_Client:
             f"add_run/{project_id}",
             {"name": name, "case_ids": case_ids, "include_all": False}
         )
-        logging.info(result)
+        logging.debug(result.json())
         return result["id"]
 
 # Class for jFrog Interaction
@@ -400,12 +399,12 @@ for model in TEST_DATA["ap_models"].keys():
         # Set Proper AP Profile
         test_profile_id = TEST_DATA["ap_models"][fw_model]["info"]["profile_id"]
         sdk.set_ap_profile(TEST_DATA["ap_models"][model]["id"], test_profile_id)
-        logging.info(f"Test profile id: test_profile_id")
+        logging.info(f"Test profile id: {test_profile_id}")
 
         # Run Client Single Connectivity Test Cases
         for testcase in test_cases_data.keys():
             if test_cases_data[testcase]["ssid_name"] != "skip":
-                logging.info(f"Test parameters are\n        radio: {test_cases_data[testcase]['radio']}\n        ssid_name: {test_cases_data[testcase]['ssid_name']}\n        ssid_psk: {test_cases_data[testcase]['ssid_psk']}\n        security: {test_cases_data[testcase]['security']}\n        station: {test_cases_data[testcase]['station']}\n        testcase: {testcase}\n        runId: {runId}")
+                logging.info(f"Test parameters are\n        radio: {test_cases_data[testcase]['radio']}\n        ssid_name: {test_cases_data[testcase]['ssid_name']}\n        ssid_psk: {test_cases_data[testcase]['ssid_psk']}\n        security: {test_cases_data[testcase]['security']}\n        station: {test_cases_data[testcase]['station']}\n        testcase: {testcase}")
                 staConnect = StaConnect2(command_line_args.lanforge_ip_address, command_line_args.lanforge_port_number, debug_ = False)
                 staConnect.sta_mode = 0
                 staConnect.upstream_resource = 1
