@@ -123,7 +123,7 @@ jobs:
                 - "gleb@opsfleet.com"
                 - "--testrail-user-password"
                 - "${{ env.TESTRAIL_USER_PASSWORD }}"
-                - "--jforg-user-id"
+                - "--jfrog-user-id"
                 - "cicd_user"
                 - "--jfrog-user-password"
                 - "${{ env.JFROG_USER_PASSWORD }}"
