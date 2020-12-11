@@ -61,7 +61,7 @@ logging.info("------------------------")
 logging.info("nightly sanity run start")
 
 # ap details, test data and test config
-with open("test_config.json") as json_file:
+with open("nightly_test_config.json") as json_file:
     TEST_DATA = json.load(json_file)
 TESTRAIL = {
     True: {
@@ -187,7 +187,7 @@ class TestRail_Client:
             f"add_run/{project_id}",
             {"name": name, "case_ids": case_ids, "include_all": False}
         )
-        logging.debug(result.json())
+        logging.debug(result)
         return result["id"]
 
 # Class for jFrog Interaction
@@ -278,7 +278,7 @@ class CloudSDK_Client:
     def set_ap_profile(self, equipment_id, test_profile_id):
         url = f"{self.baseUrl}/portal/equipment?equipmentId={equipment_id}"
         response = requests.get(url, headers=self.headers)
-        logging.info(response)
+        logging.debug(response.json())
 
         # Add Lab Profile ID to Equipment
         equipment_info = response.json()
@@ -387,6 +387,7 @@ for model in TEST_DATA["ap_models"].keys():
         testrail_project_id = testrail.get_project_id(project_name=command_line_args.testrail_project)
         runId = testrail.create_testrun(name=test_run_name, case_ids=( [*test_cases_data] + firmware_update_case ), project_id=testrail_project_id)
         logging.info(f"Testrail project id: {testrail_project_id}; run ID is: {runId}")
+        import pdb; pdb.set_trace()
 
         # Check if upgrade worked
         if command_line_args.update_firmware:
@@ -404,7 +405,7 @@ for model in TEST_DATA["ap_models"].keys():
         # Run Client Single Connectivity Test Cases
         for testcase in test_cases_data.keys():
             if test_cases_data[testcase]["ssid_name"] != "skip":
-                logging.info(f"Test parameters are\n        radio: {test_cases_data[testcase]['radio']}\n        ssid_name: {test_cases_data[testcase]['ssid_name']}\n        ssid_psk: {test_cases_data[testcase]['ssid_psk']}\n        security: {test_cases_data[testcase]['security']}\n        station: {test_cases_data[testcase]['station']}\n        testcase: {testcase}")
+                logging.info(f"Test parameters are: radio = {test_cases_data[testcase]['radio']}\n        ssid_name = {test_cases_data[testcase]['ssid_name']}\n        ssid_psk = {test_cases_data[testcase]['ssid_psk']}\n        security = {test_cases_data[testcase]['security']}\n        station = {test_cases_data[testcase]['station']}\n        testcase = {testcase}")
                 staConnect = StaConnect2(command_line_args.lanforge_ip_address, command_line_args.lanforge_port_number, debug_ = False)
                 staConnect.sta_mode = 0
                 staConnect.upstream_resource = 1
