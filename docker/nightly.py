@@ -387,7 +387,6 @@ for model in TEST_DATA["ap_models"].keys():
         testrail_project_id = testrail.get_project_id(project_name=command_line_args.testrail_project)
         runId = testrail.create_testrun(name=test_run_name, case_ids=( [*test_cases_data] + firmware_update_case ), project_id=testrail_project_id)
         logging.info(f"Testrail project id: {testrail_project_id}; run ID is: {runId}")
-        import pdb; pdb.set_trace()
 
         # Check if upgrade worked
         if command_line_args.update_firmware:
