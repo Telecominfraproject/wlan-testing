@@ -74,8 +74,6 @@ TESTRAIL = {
     }
 }
 
-
-
 # Class to interact with Testrail; better to replace this with pytest\nunit
 class TestRail_Client:
     def __new__(cls, *args, **kwargs):
@@ -240,7 +238,6 @@ class CloudSDK_Client:
         return([ version.get("versionName") for version in status_response.json()])
 
     def firwmare_upload(self, apModel, latest_image, fw_url):
-        commit = latest_image.split("-")[-1]
         fw_upload_url = f"{self.baseUrl}/portal/firmware/version"
         payload = {
             "model_type": "FirmwareVersion",
@@ -250,7 +247,7 @@ class CloudSDK_Client:
             "versionName": latest_image,
             "description": "",
             "filename": fw_url,
-            "commit": commit,
+            "commit": latest_image.split("-")[-1],
             "validationMethod": "MD5_CHECKSUM",
             "validationCode": "19494befa87eb6bb90a64fd515634263",
             "releaseDate": 1596192028877,
@@ -428,7 +425,7 @@ for model in TEST_DATA["ap_models"].keys():
                     logging.info(f"test result: {result}")
                 results = TESTRAIL[staConnect.passes()]
                 logging.info(f"Single client connection to {test_cases_data[testcase]['ssid_name']} successful. Test {results['message']}")
-                testrail.update_testrail(case_id=testcase, run_id=runId, status_id=results["statusCode"], msg="Client connectivity {results['message']}")
+                testrail.update_testrail(case_id=testcase, run_id=runId, status_id=results["statusCode"], msg=f"Client connectivity {results['message']}")
 
 logging.info("----------------------")
 logging.info("End of Sanity Test run")
