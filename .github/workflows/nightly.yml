@@ -129,7 +129,7 @@ jobs:
               restartPolicy: Never
           backoffLimit: 0
         EOF
-        kubectl wait job/nightly-ci-$today --for=condition=complete --timeout=600s
+        kubectl wait job/nightly-ci-$today --for=condition=complete --timeout=1200s
         podname=$(kubectl get pods -o name -l job-name=nightly-ci-$today)
         kubectl logs $podname
       shell: bash
