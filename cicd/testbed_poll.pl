@@ -16,6 +16,9 @@ my $url = "";
 my $next_info = "__next_test.txt";
 my $help = 0;
 my $owt_log = "";
+my $dut_passwd = "";
+my $dut_user = "root";
+my $sysupgrade_n = 0;
 #my $prompt = "root\@OpenAp";
 my $prompt = "root\@Open"; # match OpenWrt and OpenAp-foo
 my $log = "";
@@ -25,13 +28,16 @@ my $usage = qq($0
   [--jfrog_passwd { jfrog password }
   [--user { for accessing URL }
   [--passwd { for accessing URL }
+  [--dut_user { for accessing DUT }
+  [--dut_passwd { for accessing DUT }
   [--url { test-orchestrator URL for this test bed }
   [--next_info { output text file containing info about the next test to process }
+  [--sysupgrade-n { 0 | 1 }   1 means use the -n option when doing sysupgrade.
   [--log {location}   For instance: --log stdout, for openwrt_ctl expect script.
 
 Example:
 $0 --user to_user --passwd secret --jfrog_user tip-read --jfrog_passwd tip-read \\
-   --url https://tip.cicd.mycloud.com/testbed-ferndale-01/
+   --url https://tip.cicd.mycloud.com/testbed-ferndale-01/ --dut_passwd owrt --dut_user root
 
 # Use specific scenario file.
 SCENARIO_CFG_FILE=/home/lanforge/git/wlan-testing/testbeds/ferndale-basic-01/scenario_small.txt \\
@@ -46,8 +52,11 @@ GetOptions
   'jfrog_passwd=s'         => \$jfrog_passwd,
   'user=s'                 => \$user,
   'passwd=s'               => \$passwd,
+  'dut_passwd=s'           => \$dut_passwd,
+  'dut_user=s'             => \$dut_user,
   'url=s'                  => \$url,
   'next_info=s'            => \$next_info,
+  'sysupgrade_n=i'         => \$sysupgrade_n,
   'log=s'                  => \$log,
   'help|?'                 => \$help,
 ) || (print($usage) && exit(1));
@@ -70,6 +79,15 @@ if ($log ne "") {
    $owt_log = "--log $log";
 }
 my $owt_args = " --prompt $prompt";
+
+if ($dut_user ne "") {
+   $owt_args .= " --user $dut_user";
+}
+
+if ($dut_passwd ne "") {
+   $owt_args .= " --passwd $dut_passwd";
+}
+
 $owt_log .= $owt_args;
 
 my $i;
@@ -187,7 +205,7 @@ for ($i = 0; $i<@lines; $i++) {
       do_system($cmd);
 
       do_system("rm -f openwrt-*.bin");
-      do_system("rm -f *sysupgrade.bin"); # just in case openwrt prefix changes.
+      do_system("rm -f *sysupgrade.*"); # just in case openwrt prefix changes.
       do_system("tar xf $jfile");
 
       print_note("Copy AP build to LANforge so LANforge can serve the file to AP");
@@ -247,7 +265,7 @@ for ($i = 0; $i<@lines; $i++) {
 
       # and then get it onto the DUT, reboot DUT, re-configure as needed,
       print_note("Request AP DUT to install the test image.");
-      do_system("scp *sysupgrade.bin lanforge\@$lfmgr:tip-$jfile");
+      do_system("scp *sysupgrade.* lanforge\@$lfmgr:tip-$jfile");
 
 
       # TODO:  Kill anything using the serial port
@@ -317,7 +335,13 @@ for ($i = 0; $i<@lines; $i++) {
 
       print_note("Request AP DUT to install the test image and reboot.");
       # TODO: Change this to curl download??
-      my $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action sysupgrade --value \"lanforge\@$ap_gw:tip-$jfile\"");
+      my $ap_out;
+      if ($sysupgrade_n) {
+	 $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action sysupgrade-n --value \"lanforge\@$ap_gw:tip-$jfile\"");
+      }
+      else {
+	 $ap_out = do_system("../../lanforge/lanforge-scripts/openwrt_ctl.py $owt_log --scheme serial --tty $serial --action sysupgrade --value \"lanforge\@$ap_gw:tip-$jfile\"");
+      }
       print ("Sys-upgrade results:\n$ap_out\n");
       if ($ap_out =~ /pexpect.exceptions.TIMEOUT/) {
          print("FATAL-ERROR:  DUT is in bad state, bail out.\n");
