@@ -12,22 +12,21 @@ import org.junit.internal.TextListener;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 
-public class testSuite {
+public class TestSuite {
 	static APIClient client;
 	public static void main(String args[]) throws Exception {
 		
-		
 		client = new APIClient("https://telecominfraproject.testrail.com");
 		client.setUser("syama.devi@connectus.ai");
-		client.setPassword("Connectus123$");
+		client.setPassword("Connect123$");
 
 		JUnitCore junit = new JUnitCore();
 		junit.addListener(new TextListener(System.out));
 		Result result = junit.run(SystemTests.class);
 		Result result1 = junit.run(ProfilesTest.class);
-//		Result result2 = junit.run(NetworkTest.class);
+		Result result2 = junit.run(NetworkTest.class);
 		Result result3 = junit.run(LoginTest.class);
-	    Result result4 = junit.run(AccountTest.class);
+	    Result result4 = junit.run(UsersTest.class);
 		Result result5 = junit.run(DashboardTest.class);
 		if (result3.getFailureCount() > 0) {
 			System.out.println("Tests failed.");

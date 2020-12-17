@@ -27,20 +27,29 @@ public class DashboardTest {
 	WebDriver driver;
 	static APIClient client;
 	static long runId;
+//	static String Url = System.getenv("CLOUD_SDK_URL");
+//	static String trUser = System.getenv("TR_USER");
+//	static String trPwd = System.getenv("TR_PWD");
+//	static String cloudsdkUser = "support@example.com";
+//	static String cloudsdkPwd="support";
+	
 	@BeforeClass
 	public static void startTest() throws Exception
 	{
 		client = new APIClient("https://telecominfraproject.testrail.com");
 		client.setUser("syama.devi@connectus.ai");
-		client.setPassword("Connectus123$");
+		client.setPassword("Connect123$");
 		
 		JSONArray c = (JSONArray) client.sendGet("get_runs/5");
 		runId = new Long(0);
 		Calendar cal = Calendar.getInstance();
 		//Months are indexed 0-11 so add 1 for current month
 		int month = cal.get(Calendar.MONTH) + 1;
-		String date = "UI Automation Run - " + cal.get(Calendar.DATE) + "/" + month + "/" + cal.get(Calendar.YEAR);
-		
+		String day = Integer.toString(cal.get(Calendar.DATE));
+		if (day.length()<2) {
+			day = "0"+day;
+		}
+		String date = "UI Automation Run - " + day + "/" + month + "/" + cal.get(Calendar.YEAR);
 		for (int a = 0; a < c.size(); a++) {
 			if (((JSONObject) c.get(a)).get("name").equals(date)) {
 				runId =  (Long) ((JSONObject) c.get(a)).get("id"); 
@@ -69,6 +78,14 @@ public class DashboardTest {
 		driver.findElement(By.xpath("//*[@id=\"login\"]/button/span")).click();
 	}
 	
+	public void failure(int testId) throws MalformedURLException, IOException, APIException {
+		driver.close();
+		Map data = new HashMap();
+		data.put("status_id", new Integer(5));
+		data.put("comment", "Fail");
+		JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+	}
+	
 	public void networkScreen() throws Exception {
 		driver.findElement(By.linkText("Network")).click();
 	}
@@ -84,10 +101,7 @@ public class DashboardTest {
 				Thread.sleep(2500);	
 			}
 		}  catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
 			fail("Number of AP's provisioned cannot be found");
 		}
 	
@@ -108,10 +122,7 @@ public class DashboardTest {
 			}
 			
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
 			fail("Number of AP's provisioned cannot be found");
 		}
 		return 0;
@@ -124,10 +135,7 @@ public class DashboardTest {
 			int displ = Integer.parseInt(displayed.substring(displayed.length()-2));
 			return displ;
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
 
 			fail("Number of total devices associated cannot be found");
 		}
@@ -139,10 +147,7 @@ public class DashboardTest {
 		try {
 			
 		}catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
 
 			fail("Number of total devices associated cannot be found");
 		}
@@ -150,22 +155,18 @@ public class DashboardTest {
 		List<WebElement> lines = driver.findElements(By.cssSelector("[class^='highcharts-tracker-line']"));
 		
 		if (lines.size()!= 5) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
-		Assert.assertEquals("Graphs not displayed", 5, lines.size());
+		
 	}
 	
 	public int countRows(int testId) throws MalformedURLException, IOException, APIException {
 		try {
 			
 		}catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		WebElement tbl = driver.findElement(By.xpath("//table"));
 		List<WebElement> rows = tbl.findElements(By.tagName("tr"));
@@ -176,10 +177,8 @@ public class DashboardTest {
 		try {
 			
 		}catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		WebElement tbl = driver.findElement(By.xpath("//table"));
 		List<WebElement> rows = tbl.findElements(By.tagName("tr"));
@@ -197,6 +196,30 @@ public class DashboardTest {
 		    
 		}
 		return count;
+	}
+	
+	public void verifyClientDevicesGraphs(int testId) throws MalformedURLException, IOException, APIException, InterruptedException {	
+		List<WebElement> points = driver.findElements(By.cssSelector("[class^='highcharts-point']"));	
+		points.get(1).click();
+		points.get(2).click();
+		Thread.sleep(1000);
+		List<WebElement> lines = driver.findElements(By.cssSelector("[class^='highcharts-tracker-line']"));	
+		if (!lines.get(1).getAttribute("visibility").equals("hidden")||!lines.get(2).getAttribute("visibility").equals("hidden")) {
+			failure(testId);
+			fail();
+		}
+	}
+	
+	public void verifyTrafficGraphs(int testId) throws MalformedURLException, IOException, APIException, InterruptedException {	
+		List<WebElement> points = driver.findElements(By.cssSelector("[class^='highcharts-point']"));	
+		points.get(3).click();
+		points.get(4).click();
+		Thread.sleep(1000);
+		List<WebElement> lines = driver.findElements(By.cssSelector("[class^='highcharts-tracker-line']"));	
+		if (!lines.get(3).getAttribute("visibility").equals("hidden")||!lines.get(4).getAttribute("visibility").equals("hidden")) {
+			failure(testId);
+			fail();
+		}
 	}
 	
 	public void verifyDashboardScreenDetails(int testId) throws MalformedURLException, IOException, APIException {		
@@ -306,6 +329,42 @@ public class DashboardTest {
 		data.put("comment", "This test worked fine!");
 		JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/5220", data);
 		
+	}
+	
+	//C5634
+	@Test
+	public void clientDevicesGraphsTest() throws Exception {
+		int testId = 5634;
+		Map data = new HashMap();
+		DashboardTest obj = new DashboardTest();
+		obj.launchBrowser();
+		obj.logIn();
+		Thread.sleep(5000);
+		obj.verifyClientDevicesGraphs(testId);
+		Thread.sleep(2000);
+		obj.closeBrowser();
+		data.put("status_id", new Integer(1));
+		data.put("comment", "This test worked fine!");
+		JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+	}
+	
+	//C5635
+	@Test
+	public void trafficGraphsTest() throws Exception {
+		int testId = 5635;
+		
+		DashboardTest obj = new DashboardTest();
+		obj.launchBrowser();
+		obj.logIn();
+		Thread.sleep(5000);
+		obj.verifyTrafficGraphs(testId);
+		Thread.sleep(2000);
+		obj.closeBrowser();
+		
+		Map data = new HashMap();
+		data.put("status_id", new Integer(1));
+		data.put("comment", "This test worked fine!");
+		JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
 	}
 
 //	@Test

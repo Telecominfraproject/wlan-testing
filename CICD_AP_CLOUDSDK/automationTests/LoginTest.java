@@ -35,21 +35,29 @@ public class LoginTest {
 	WebDriver driver, driver2;
 	static APIClient client;
 	static long runId;
+//	static String Url = System.getenv("CLOUD_SDK_URL");
+//	static String trUser = System.getenv("TR_USER");
+//	static String trPwd = System.getenv("TR_PWD");
+//	static String cloudsdkUser = "support@example.com";
+//	static String cloudsdkPwd="support";
 	
 	@BeforeClass
 	public static void startTest() throws Exception
 	{
 		client = new APIClient("https://telecominfraproject.testrail.com");
 		client.setUser("syama.devi@connectus.ai");
-		client.setPassword("Connectus123$");
+		client.setPassword("Connect123$");
 		
 		JSONArray c = (JSONArray) client.sendGet("get_runs/5");
 		runId = new Long(0);
 		Calendar cal = Calendar.getInstance();
 		//Months are indexed 0-11 so add 1 for current month
 		int month = cal.get(Calendar.MONTH) + 1;
-		String date = "UI Automation Run - " + cal.get(Calendar.DATE) + "/" + month + "/" + cal.get(Calendar.YEAR);
-		
+		String day = Integer.toString(cal.get(Calendar.DATE));
+		if (day.length()<2) {
+			day = "0"+day;
+		}
+		String date = "UI Automation Run - " + day + "/" + month + "/" + cal.get(Calendar.YEAR);	
 		for (int a = 0; a < c.size(); a++) {
 			if (((JSONObject) c.get(a)).get("name").equals(date)) {
 				runId =  (Long) ((JSONObject) c.get(a)).get("id"); 
@@ -58,11 +66,10 @@ public class LoginTest {
 	}
 
 	public void launchBrowser() {
-		System.setProperty("webdriver.chrome.driver", "/Users/mohammadrahman/Downloads/chromedriver");
-//		System.setProperty("webdriver.chrome.driver", "/Users/mohammadrahman/Downloads/chromedriver");System.setProperty("webdriver.chrome.driver", "/home/netex/nightly_sanity/ui-scripts/chromedriver");
+//		System.setProperty("webdriver.chrome.driver", "/Users/mohammadrahman/Downloads/chromedriver");
+		System.setProperty("webdriver.chrome.driver", "/home/netex/nightly_sanity/ui-scripts/chromedriver");
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("--no-sandbox");
-//		options.addArguments("--disable-dev-shm-usage");
 		options.addArguments("--headless");
 		options.addArguments("--window-size=1920,1080");
 		driver = new ChromeDriver(options);
@@ -70,17 +77,12 @@ public class LoginTest {
 		
 	}
 	
-	public void launchPortal() {
-		driver2 = new ChromeDriver();
-		driver2.get("https://wlan-ui.qa.lab.wlan.tip.build/");
-	}
-	
-	public void launchSecondWindow() throws Exception {
-		Actions action = new Actions(driver);
-	    String URL = driver.getCurrentUrl();
-	    action.sendKeys(Keys.chord(Keys.CONTROL, "n")).build().perform();
-		driver.get(URL);
-		Thread.sleep(2000);
+	public void failure(int testId) throws MalformedURLException, IOException, APIException {
+		driver.close();
+		Map data = new HashMap();
+		data.put("status_id", new Integer(5));
+		data.put("comment", "Fail");
+		JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
 	}
 	
 	public void login(String email, String password) {
@@ -88,6 +90,8 @@ public class LoginTest {
 		driver.findElement(By.id("login_password")).sendKeys(password);
 		driver.findElement(By.xpath("//*[@id=\"login\"]/button/span")).click();	
 	}
+	
+	
 	
 	public void checkHover(String box, int testId) throws Exception {
 		try {
@@ -132,10 +136,8 @@ public class LoginTest {
 				
 			}
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 		
@@ -154,10 +156,8 @@ public class LoginTest {
 			}
 			Assert.assertEquals("Email field is not in focus", true, emailFocus);
 		} catch (Exception E){
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 		
@@ -204,10 +204,8 @@ public class LoginTest {
 			}
 			Assert.assertEquals("Login button is not in focus", true, confirmFocus);
 		}catch (Exception E){
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 	}
@@ -237,10 +235,8 @@ public class LoginTest {
 			}
 			Assert.assertEquals("Password is still hidden", true, passwordTest2);
 		} catch (Exception E){
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 			
@@ -262,10 +258,8 @@ public class LoginTest {
 			
 			//Assert.assertEquals(expected, actual);
 		} catch (Exception E){
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 	}
@@ -304,10 +298,8 @@ public class LoginTest {
 			}
 			Assert.assertEquals("No error message displayed", true, found);
 		} catch (Exception E){
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 	}
@@ -322,10 +314,8 @@ public class LoginTest {
 			}
 			Assert.assertEquals("Email field not found", true, driver.findElement(By.id("login_email")).isDisplayed());
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 		
@@ -341,10 +331,8 @@ public class LoginTest {
 			}
 			Assert.assertEquals("Password field not found", true, driver.findElement(By.id("login_password")).isDisplayed());
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 	}
@@ -357,10 +345,8 @@ public class LoginTest {
 			}
 			Assert.assertEquals("Incorrect URL", URL, "https://wlan-ui.qa.lab.wlan.tip.build/dashboard");
 		}catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 	}
@@ -373,10 +359,8 @@ public class LoginTest {
 			}
 			Assert.assertEquals("Incorrect URL", URL, "https://wlan-ui.qa.lab.wlan.tip.build/login");
 		}catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 	}

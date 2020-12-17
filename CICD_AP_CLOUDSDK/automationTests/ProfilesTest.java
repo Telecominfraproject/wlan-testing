@@ -37,20 +37,29 @@ public class ProfilesTest {
 	
 	static APIClient client;
 	static long runId;
+	
+//	static String Url = System.getenv("CLOUD_SDK_URL");
+//	static String trUser = System.getenv("TR_USER");
+//	static String trPwd = System.getenv("TR_PWD");
+//	static String cloudsdkUser = "support@example.com";
+//	static String cloudsdkPwd="support";
 	@BeforeClass
 	public static void startTest() throws Exception
 	{
 		client = new APIClient("https://telecominfraproject.testrail.com");
 		client.setUser("syama.devi@connectus.ai");
-		client.setPassword("Connectus123$");
+		client.setPassword("Connect123$");
 		
 		JSONArray c = (JSONArray) client.sendGet("get_runs/5");
 		runId = new Long(0);
 		Calendar cal = Calendar.getInstance();
 		//Months are indexed 0-11 so add 1 for current month
 		int month = cal.get(Calendar.MONTH) + 1;
-		String date = "UI Automation Run - " + cal.get(Calendar.DATE) + "/" + month + "/" + cal.get(Calendar.YEAR);
-		
+		String day = Integer.toString(cal.get(Calendar.DATE));
+		if (day.length()<2) {
+			day = "0"+day;
+		}
+		String date = "UI Automation Run - " + day + "/" + month + "/" + cal.get(Calendar.YEAR);	
 		for (int a = 0; a < c.size(); a++) {
 			if (((JSONObject) c.get(a)).get("name").equals(date)) {
 				runId =  (Long) ((JSONObject) c.get(a)).get("id"); 
@@ -80,6 +89,14 @@ public class ProfilesTest {
 		driver.findElement(By.xpath("//*[@id=\"login\"]/button/span")).click();
 	}
 	
+	public void failure(int testId) throws MalformedURLException, IOException, APIException {
+		driver.close();
+		Map data = new HashMap();
+		data.put("status_id", new Integer(5));
+		data.put("comment", "Fail");
+		JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+	}
+	
 	//Navigates to profiles tab
 	public void profileScreen() throws Exception {
 		driver.findElement(By.linkText("Profiles")).click();
@@ -89,13 +106,10 @@ public class ProfilesTest {
 		try {
 			while (driver.findElements(By.xpath("//*[@id=\"root\"]/section/main/div/div/div[3]/button/span")).size() != 0) {
 				driver.findElement(By.xpath("/html/body/div/section/main/div/div/div[3]/button/span")).click();
-				Thread.sleep(2000);	
+				Thread.sleep(1400);	
 			}
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
 			fail();
 		}
 		
@@ -122,18 +136,15 @@ public class ProfilesTest {
 			    }
 			}
 			if (expected != found && expected == true) {
-				
+				failure(testId);
 				fail("Profile not found.");
 			} else if (expected != found && expected == false){
-				
+				failure(testId);
 				fail("Profile unexpectedly found in the list.");
 			}
 			//Assert.assertEquals(expected, found);
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
 			fail();
 		}
 		
@@ -162,17 +173,12 @@ public class ProfilesTest {
 			    }
 			}
 			if (!found) {
-				Map data = new HashMap();
-				data.put("status_id", new Integer(5));
-				data.put("comment", "Fail");
-				JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+				failure(testId);
 				fail("Profile not found.");
 			}
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 	}
 	
@@ -182,17 +188,11 @@ public class ProfilesTest {
 				//Correct profile
 			}
 			else {
-				Map data = new HashMap();
-				data.put("status_id", new Integer(5));
-				data.put("comment", "Fail");
-				JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+				failure(testId);
 				fail("Incorrect Profile selected");
 			}
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
 			fail("No title found for profile");
 		}
 	}
@@ -209,10 +209,8 @@ public class ProfilesTest {
 				fail("Popup displays incorrect text");
 			}
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 		
@@ -227,10 +225,8 @@ public class ProfilesTest {
 			driver.navigate().refresh();
 			Thread.sleep(3000);
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 	}
@@ -244,10 +240,8 @@ public class ProfilesTest {
 			driver.navigate().refresh();
 			Thread.sleep(1500);
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 	}
@@ -260,10 +254,7 @@ public class ProfilesTest {
 			String URL = driver.getCurrentUrl();
 			Assert.assertEquals("Incorrect URL", URL, "https://wlan-ui.qa.lab.wlan.tip.build/addprofile");
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
 			fail();
 		}
 		
@@ -276,10 +267,7 @@ public class ProfilesTest {
 			driver.findElement(By.xpath("//*[@id=\"root\"]/section/main/div/div/div[1]/div/button")).click();
 			Thread.sleep(1000);
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
 			fail();
 		}
 		
@@ -292,10 +280,7 @@ public class ProfilesTest {
 				//pass
 			}
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
 			fail("Notification not found");
 		}
 		
@@ -307,10 +292,8 @@ public class ProfilesTest {
 			driver.findElement(By.xpath("//*[@id=\"name\"]")).sendKeys("AutomationTest Profile");
 			driver.findElement(By.xpath("//*[@id=\"ssid\"]")).sendKeys("Automation Test SSID");
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 	}
@@ -319,10 +302,8 @@ public class ProfilesTest {
 		try {
 			driver.findElement(By.xpath("//*[@id=\"root\"]/section/main/div/div/div/div/button/span")).click();
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 	}
@@ -334,10 +315,8 @@ public class ProfilesTest {
 			driver.findElement(By.cssSelector("body > div:nth-child(9) > div > div.ant-modal-wrap > div > div.ant-modal-content > "
 					+ "div.ant-modal-footer > div > button.ant-btn.index-module__Button___3SCd4.ant-btn-primary")).click();
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 	}
@@ -354,10 +333,8 @@ public class ProfilesTest {
 				fail("No options for captive portal found");
 			}
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 	}
@@ -373,14 +350,12 @@ public class ProfilesTest {
 			Thread.sleep(3000);
 			
 			if (driver.findElements(By.className("ant-table-empty")).size()!=0) {
-				
+				failure(testId);
 				fail("Table not displaying SSIDs");
 			}
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 
 		
@@ -388,28 +363,20 @@ public class ProfilesTest {
 	
 	public void bandwidthDetails(int testId) throws Exception {
 		try {
-			Map data = new HashMap();
 			WebElement bandwidth = driver.findElement(By.xpath("//*[@id=\"bandwidthLimitDown\"]"));
 			//Actions action = new Actions(driver);
 			bandwidth.sendKeys(Keys.BACK_SPACE);
 			bandwidth.sendKeys("123");
 			Thread.sleep(500);
 			
-			//Looks for field and error text is verified. If field is not found the exception is caught.
 			try {
-				if (driver.findElement(By.cssSelector("#root > section > main > div > div > form > div.index-module__ProfilePage___OaO8O > div:nth-child(1) > div.ant-card-body > div:nth-child(3) > div.ant-col.ant-col-12.ant-form-item-control > div > div > div > div.ant-row.ant-form-item.ant-form-item-with-help.ant-form-item-has-error > div > div.ant-form-item-explain > div"))
+				if (!driver.findElement(By.cssSelector("#root > section > main > div > div > form > div.index-module__ProfilePage___OaO8O > div:nth-child(1) > div.ant-card-body > div:nth-child(3) > div.ant-col.ant-col-12.ant-form-item-control > div > div > div > div.ant-row.ant-form-item.ant-form-item-with-help.ant-form-item-has-error > div > div.ant-form-item-explain > div"))
 						.getText().equals("Downstream bandwidth limit can be a number between 0 and 100.")){
-					//No further steps needed
-				} else {
-					System.out.print(driver.findElement(By.cssSelector("#root > section > main > div > div > form > div.index-module__ProfilePage___OaO8O > div:nth-child(1) > div.ant-card-body > div:nth-child(3) > div.ant-col.ant-col-12.ant-form-item-control > div > div > div > div.ant-row.ant-form-item.ant-form-item-with-help.ant-form-item-has-error > div > div.ant-form-item-explain > div"))
-						.getText());
-					
+					failure(testId);
 					fail();
 				}
 			} catch (Exception E) {
-				data.put("status_id", new Integer(5));
-				data.put("comment", "Fail");
-				JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+				failure(testId);
 				fail();
 			}
 
@@ -420,22 +387,17 @@ public class ProfilesTest {
 			bandwidth.sendKeys("-10");
 			Thread.sleep(500);
 			
-			//Looks for field and text is verified. If field is not found the exception is caught.
+			
 			try {
-				if (driver.findElement(By.cssSelector("#root > section > main > div > div > form > div.index-module__ProfilePage___OaO8O > div:nth-child(1) > div.ant-card-body > div:nth-child(3) > div.ant-col.ant-col-12.ant-form-item-control > div > div > div > div.ant-row.ant-form-item.ant-form-item-with-help.ant-form-item-has-error > div > div.ant-form-item-explain > div"))
+				if (!driver.findElement(By.cssSelector("#root > section > main > div > div > form > div.index-module__ProfilePage___OaO8O > div:nth-child(1) > div.ant-card-body > div:nth-child(3) > div.ant-col.ant-col-12.ant-form-item-control > div > div > div > div.ant-row.ant-form-item.ant-form-item-with-help.ant-form-item-has-error > div > div.ant-form-item-explain > div"))
 						.getText().equals("Downstream bandwidth limit can be a number between 0 and 100.")){
-					//No further steps needed
-				} else {
-					System.out.print(driver.findElement(By.cssSelector("#root > section > main > div > div > form > div.index-module__ProfilePage___OaO8O > div:nth-child(1) > div.ant-card-body > div:nth-child(3) > div.ant-col.ant-col-12.ant-form-item-control > div > div > div > div.ant-row.ant-form-item.ant-form-item-with-help.ant-form-item-has-error > div > div.ant-form-item-explain > div"))
-						.getText());
-					
+					failure(testId);
 					fail();
 				}
 			} catch (Exception E) {
-				data.put("status_id", new Integer(5));
-				data.put("comment", "Fail");
-				JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
-				fail("Bandwidths outside the desired range are accepted");
+				failure(testId);
+				fail();
+				
 			}
 			
 			bandwidth.sendKeys(Keys.BACK_SPACE);
@@ -445,17 +407,16 @@ public class ProfilesTest {
 			bandwidth.sendKeys("10");
 			Thread.sleep(500);
 			
-			//Looks for field and text is verified. If field is not found the exception is caught.
+			
 			if (driver.findElements(By.cssSelector("#root > section > main > div > div > form > div.index-module__ProfilePage___OaO8O > div:nth-child(1) > div.ant-card-body > div:nth-child(3) > div.ant-col.ant-col-12.ant-form-item-control > div > div > div > div.ant-row.ant-form-item.ant-form-item-with-help.ant-form-item-has-error > div > div.ant-form-item-explain > div"))
 					.size()!=0){
+				failure(testId);
+				fail();
 				
-				fail("Field not found");
 			}
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 
 			
@@ -484,15 +445,14 @@ public class ProfilesTest {
 					found = false;
 				}
 			} catch (Exception E) {
+				failure(testId);
+				fail();
 				
-				fail("Section not found");
 			}
 			Assert.assertEquals(true, found);
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 	}
@@ -508,29 +468,24 @@ public class ProfilesTest {
 			cursor.sendKeys(Keys.ENTER).perform();
 			Thread.sleep(1500);
 
-			boolean found = true;
 			try {
 				if (!driver.findElement(By.cssSelector("#root > section > main > div > div > form > div.index-module__ProfilePage___OaO8O > div:nth-child(1) > div.ant-card-head > div > div")).getText().equals("LAN and Services")) {
-					found = false;
+					failure(testId);
+					fail();
 				} else if (!driver.findElement(By.cssSelector("#root > section > main > div > div > form > div.index-module__ProfilePage___OaO8O > div:nth-child(2) > div.ant-card-head > div > div")).getText().equals("Wireless Networks (SSIDs) Enabled on This Profile")) {
-					found = false;
+					failure(testId);
+					fail();
 				}
 			} catch (Exception E) {
-				found = false;
-				
-				fail("Section not found");
+				failure(testId);
+				fail();
 			}
 			
-			if (!found) {
-				
-				fail("Section Not Found");
-			}
+
 			//Assert.assertEquals(true, found);
 		} catch (Exception E) {
-			Map data = new HashMap();
-			data.put("status_id", new Integer(5));
-			data.put("comment", "Fail");
-			JSONObject r = (JSONObject) client.sendPost("add_result_for_case/"+runId+"/"+testId, data);
+			failure(testId);
+			fail();
 		}
 		
 	}
@@ -818,7 +773,6 @@ public class ProfilesTest {
 		obj.findProfile("ECW5410 Automation",4815);
 		Thread.sleep(5000);
 		obj.verifyProfile("ECW5410 Automation",4815);
-		//obj.addProfileButton();
 		obj.closeBrowser();
 		data.put("status_id", new Integer(1));
 		data.put("comment", "This test worked fine!");
