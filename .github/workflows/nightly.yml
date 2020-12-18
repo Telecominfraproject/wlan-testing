@@ -126,6 +126,8 @@ jobs:
                 - "gleb@opsfleet.com"
                 - "--testrail-user-password"
                 - "${{ env.TESTRAIL_USER_PASSWORD }}"
+                - "--sdk-base-url"
+                - "https://wlan-portal-svc.testcluster.lab.wlan.tip.build"
                 - "--skip-update-firmware"
               imagePullSecrets:
               - name: tip-docker-registry-key
