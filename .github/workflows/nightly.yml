@@ -95,7 +95,7 @@ jobs:
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
         # the 2 lines below are needed for the new flow only, not needed for the old one
         # helm dependency update
-        # helm upgrade --install tip-wlan . -f resources/environments/aws-cicd.yaml --create-namespace -n tip
+        # helm upgrade --install tip-wlan . -f resources/environments/aws-cicd.yaml --create-namespace --namespace ${GITHUB_REF##*/} 
         helm upgrade --install tip-wlan . -f resources/environments/aws-cicd.yaml --namespace default
 
   test:
@@ -107,6 +107,9 @@ jobs:
         today=$(date +"%d-%m-%Y")
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
         kubectl delete job nightly-ci-$today --wait=true --ignore-not-found=true
+        # will be needed for multiple branches at the same time
+        # namespace: ${GITHUB_REF##*/}
+        echo ${GITHUB_REF##*/}
         cat <<EOF | kubectl apply -f -
         apiVersion: batch/v1
         kind: Job
@@ -123,13 +126,18 @@ jobs:
                 - "gleb@opsfleet.com"
                 - "--testrail-user-password"
                 - "${{ env.TESTRAIL_USER_PASSWORD }}"
+                - "--sdk-base-url"
+                - "https://wlan-portal-svc.testcluster.lab.wlan.tip.build"
                 - "--skip-update-firmware"
               imagePullSecrets:
               - name: tip-docker-registry-key
               restartPolicy: Never
           backoffLimit: 0
         EOF
-        # kubectl wait job/nightly-ci-$today --for=condition=complete --timeout=3600s
-        # kubectl logs -l job-name=nightly-ci-$today --since=1h
-        # kubectl delete job/nightly-ci-$today
+        kubectl wait job/nightly-ci-$today --for=condition=complete --timeout=1200s
+        podname=$(kubectl get pods -o name -l job-name=nightly-ci-$today)
+        kubectl logs $podname
+        # placeholder for now
+        echo "Grafana Link: https://grafana.lab.wlan.tip.build/TO_BE_PROVIDED"
+        echo "Kibana Link: https://kibana.lab.wlan.tip.build/TO_BE_PROVIDED"
       shell: bash

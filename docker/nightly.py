@@ -66,7 +66,7 @@ logging.getLogger().addHandler(console)
 logging.info("------------------------")
 logging.info("nightly sanity run start")
 
-# ap details, test data and test config
+# Initialize constants
 with open("nightly_test_config.json") as json_file:
     TEST_DATA = json.load(json_file)
 TESTRAIL = {
@@ -266,9 +266,9 @@ class CloudSDK_Client:
         logging.debug(response)
         return(response.json())
 
-    def get_firmware_id(self, latest_ap_image):
-        logging.debug(latest_ap_image)
-        fw_id_url = f"{self.baseUrl}/portal/firmware/version/byName?firmwareVersionName={latest_ap_image}"
+    def get_firmware_id(self, image):
+        logging.debug(image)
+        fw_id_url = f"{self.baseUrl}/portal/firmware/version/byName?firmwareVersionName={image}"
         response = requests.get(fw_id_url, headers=self.headers)
         fw_data = response.json()
         return fw_data["id"]
@@ -287,7 +287,6 @@ class CloudSDK_Client:
         equipment_info = response.json()
         logging.debug(equipment_info)
         equipment_info["profileId"] = test_profile_id
-        logging.debug(equipment_info)
 
         # Update AP Info with Required Profile ID
         url = f"{self.baseUrl}/portal/equipment"
@@ -296,7 +295,7 @@ class CloudSDK_Client:
         self.headers.pop("Content-Type", None)
         logging.debug(response.text)
 
-# instantiate clients and configuration
+# Instantiate clients and configuration
 sdk: CloudSDK_Client = CloudSDK_Client()
 testrail: TestRail_Client = TestRail_Client()
 jFrog: jFrog_Client = jFrog_Client()
@@ -310,33 +309,31 @@ for model in TEST_DATA["ap_models"].keys():
     # Get latest firmware on jFrog and Cloud SDK
     latest_image = jFrog.get_latest_image(model)
     firmware_list_by_model = sdk.get_images(model)
-    logging.info(f"Model: {model}; Latest firmware on jFrog: {latest_image}; Latest firmware on Cloud SDK: {firmware_list_by_model}")
+    TEST_DATA["ap_models"][model]["firmware"] = latest_image
+    logging.info(f"Model: {model}; Latest firmware on jFrog: {latest_image}; Firmware on Cloud SDK: {firmware_list_by_model}")
 
     if latest_image in firmware_list_by_model:
+        model_firmware_id = sdk.get_firmware_id(latest_image)
         logging.info(f"Latest firmware {latest_image} present on CloudSDK!")
-        TEST_DATA["ap_models"][model]["firmware"] = latest_image
     else:
         logging.info(f"Uploading {latest_image} firmware to CloudSDK")
         fw_url = jFrog.get_latest_image_url(model, latest_image)
         fw_upload_status = sdk.firwmare_upload(model, latest_image, fw_url)
-        logging.info(f"Upload Complete. {latest_image}; firmware ID is {fw_upload_status['id']}")
-        TEST_DATA["ap_models"][model]["firmware"] = latest_image
+        model_firmware_id = fw_upload_status['id']
+        logging.info(f"Upload Complete. {latest_image}; firmware ID is {model_firmware_id}")
 
-    # Get Current AP Firmware and upgrade
+    # Get Current AP Firmware and upgrade\run tests if needed
     ap_fw = sdk.ap_firmware(TEST_DATA["customer_id"], TEST_DATA["ap_models"][model]["id"])
-    fw_model = ap_fw.partition("-")[0]
-    latest_ap_image = TEST_DATA["ap_models"][fw_model]["firmware"]
-    model_firmware_id = sdk.get_firmware_id(latest_ap_image)
-    logging.info(f"Firmware: {ap_fw}; latest firmware ID is: {model_firmware_id}")
+    logging.info(f"Firmware: {ap_fw}; latest firmware is: {latest_image} with ID: {model_firmware_id}")
 
-    if ap_fw == latest_ap_image and command_line_args.update_firmware:
+    if ap_fw == latest_image and command_line_args.update_firmware:
         logging.info("Model does not require firmware upgrade, skipping sanity tests")
     else:
         if command_line_args.update_firmware:
             firmware_update_case = [2831]
             logging.info("Model requires firmware update, will update and sleep")
             sdk.update_firmware(TEST_DATA["ap_models"][model]["id"], model_firmware_id)
-            sleep(300)
+            sleep(300) # need to have a proper wait\retry here
         else:
             firmware_update_case = []
 
@@ -344,69 +341,72 @@ for model in TEST_DATA["ap_models"].keys():
             2832: { # 2.4 GHz Open
                 "radio": "wiphy4",
                 "station": ["sta2234"],
-                "ssid_name": TEST_DATA["ap_models"][fw_model]["info"]["twoFourG_OPEN_SSID"],
+                "ssid_name": TEST_DATA["ap_models"][model]["info"]["twoFourG_OPEN_SSID"],
                 "ssid_psk": "BLANK",
                 "security": "open"
             },
             2835: { # 2.4 GHz WPA2
                 "radio": "wiphy4",
                 "station": ["sta2237"],
-                "ssid_name": TEST_DATA["ap_models"][fw_model]["info"]["twoFourG_WPA2_SSID"],
-                "ssid_psk": TEST_DATA["ap_models"][fw_model]["info"]["twoFourG_WPA2_PSK"],
+                "ssid_name": TEST_DATA["ap_models"][model]["info"]["twoFourG_WPA2_SSID"],
+                "ssid_psk": TEST_DATA["ap_models"][model]["info"]["twoFourG_WPA2_PSK"],
                 "security": "wpa2"
             },
             2833: { # 5 GHz Open
                 "radio": "wiphy3",
                 "station": ["sta2235"],
-                "ssid_name": TEST_DATA["ap_models"][fw_model]["info"]["fiveG_OPEN_SSID"],
+                "ssid_name": TEST_DATA["ap_models"][model]["info"]["fiveG_OPEN_SSID"],
                 "ssid_psk": "BLANK",
                 "security": "open"
             },
             2834: { # 5 GHz WPA2
                 "radio": "wiphy3",
                 "station": ["sta2236"],
-                "ssid_name": TEST_DATA["ap_models"][fw_model]["info"]["fiveG_WPA2_SSID"],
-                "ssid_psk": TEST_DATA["ap_models"][fw_model]["info"]["fiveG_WPA2_PSK"],
+                "ssid_name": TEST_DATA["ap_models"][model]["info"]["fiveG_WPA2_SSID"],
+                "ssid_psk": TEST_DATA["ap_models"][model]["info"]["fiveG_WPA2_PSK"],
                 "security": "wpa2"
             },
             2836: { # 5 GHz WPA
                 "radio": "wiphy3",
                 "station": ["sta2419"],
-                "ssid_name": TEST_DATA["ap_models"][fw_model]["info"]["fiveG_WPA_SSID"],
-                "ssid_psk": TEST_DATA["ap_models"][fw_model]["info"]["fiveG_WPA_PSK"],
+                "ssid_name": TEST_DATA["ap_models"][model]["info"]["fiveG_WPA_SSID"],
+                "ssid_psk": TEST_DATA["ap_models"][model]["info"]["fiveG_WPA_PSK"],
                 "security": "wpa"
             },
             2837: { # 2.4 GHz WPA
                 "radio": "wiphy0",
                 "station": ["sta2420"],
-                "ssid_name": TEST_DATA["ap_models"][fw_model]["info"]["twoFourG_WPA_SSID"],
-                "ssid_psk": TEST_DATA["ap_models"][fw_model]["info"]["twoFourG_WPA_PSK"],
+                "ssid_name": TEST_DATA["ap_models"][model]["info"]["twoFourG_WPA_SSID"],
+                "ssid_psk": TEST_DATA["ap_models"][model]["info"]["twoFourG_WPA_PSK"],
                 "security": "wpa"
             }
         }
 
         # Create Test Run
-        test_run_name = f'Nightly_model_{fw_model}_firmware_{ap_fw}_{strftime("%Y-%m-%d", gmtime())}'
         testrail_project_id = testrail.get_project_id(project_name=command_line_args.testrail_project)
-        runId = testrail.create_testrun(name=test_run_name, case_ids=( [*test_cases_data] + firmware_update_case ), project_id=testrail_project_id)
+        runId = testrail.create_testrun(
+            name=f'Nightly_model_{model}_firmware_{ap_fw}_{strftime("%Y-%m-%d", gmtime())}',
+            case_ids=( [*test_cases_data] + firmware_update_case ),
+            project_id=testrail_project_id
+        )
         logging.info(f"Testrail project id: {testrail_project_id}; run ID is: {runId}")
 
         # Check if upgrade worked
         if command_line_args.update_firmware:
-            results = TESTRAIL[(sdk.ap_firmware(TEST_DATA["customer_id"], TEST_DATA["ap_models"][model]["id"]) == latest_ap_image)]
+            results = TESTRAIL[(sdk.ap_firmware(TEST_DATA["customer_id"], TEST_DATA["ap_models"][model]["id"]) == latest_image)]
             testrail.update_testrail(case_id="2831", run_id=runId, status_id=results["statusCode"], msg=f"Upgrade {results['message']}")
             logging.info(f"Upgrade {results['statusCode']}")
-            if not test_result:
+            if results["message"] == "failure": # might want to fail all the other tests in testrails
                 continue
 
         # Set Proper AP Profile
-        test_profile_id = TEST_DATA["ap_models"][fw_model]["info"]["profile_id"]
+        test_profile_id = TEST_DATA["ap_models"][model]["info"]["profile_id"]
         sdk.set_ap_profile(TEST_DATA["ap_models"][model]["id"], test_profile_id)
         logging.info(f"Test profile id: {test_profile_id}")
 
         # Run Client Single Connectivity Test Cases
         for testcase in test_cases_data.keys():
-            if test_cases_data[testcase]["ssid_name"] != "skip":
+            if test_cases_data[testcase]["ssid_name"] != "skip": # to be refactored with pytest, good enough for now
                 logging.info(f"Test parameters are:\n  radio = {test_cases_data[testcase]['radio']}\n  ssid_name = {test_cases_data[testcase]['ssid_name']}\n  ssid_psk = {test_cases_data[testcase]['ssid_psk']}\n  security = {test_cases_data[testcase]['security']}\n  station = {test_cases_data[testcase]['station']}\n  testcase = {testcase}")
                 staConnect = StaConnect2(command_line_args.lanforge_ip_address, command_line_args.lanforge_port_number, debug_ = False)
                 staConnect.sta_mode = 0
@@ -435,3 +435,4 @@ for model in TEST_DATA["ap_models"].keys():
 
 logging.info("----------------------")
 logging.info("End of Sanity Test run")
+logging.info("----------------------")
