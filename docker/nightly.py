@@ -66,7 +66,7 @@ logging.getLogger().addHandler(console)
 logging.info("------------------------")
 logging.info("nightly sanity run start")
 
-# ap details, test data and test config
+# Initialize constants
 with open("nightly_test_config.json") as json_file:
     TEST_DATA = json.load(json_file)
 TESTRAIL = {
@@ -295,7 +295,7 @@ class CloudSDK_Client:
         self.headers.pop("Content-Type", None)
         logging.debug(response.text)
 
-# instantiate clients and configuration
+# Instantiate clients and configuration
 sdk: CloudSDK_Client = CloudSDK_Client()
 testrail: TestRail_Client = TestRail_Client()
 jFrog: jFrog_Client = jFrog_Client()
@@ -406,7 +406,7 @@ for model in TEST_DATA["ap_models"].keys():
 
         # Run Client Single Connectivity Test Cases
         for testcase in test_cases_data.keys():
-            if test_cases_data[testcase]["ssid_name"] != "skip":
+            if test_cases_data[testcase]["ssid_name"] != "skip": # to be refactored with pytest, good enough for now
                 logging.info(f"Test parameters are:\n  radio = {test_cases_data[testcase]['radio']}\n  ssid_name = {test_cases_data[testcase]['ssid_name']}\n  ssid_psk = {test_cases_data[testcase]['ssid_psk']}\n  security = {test_cases_data[testcase]['security']}\n  station = {test_cases_data[testcase]['station']}\n  testcase = {testcase}")
                 staConnect = StaConnect2(command_line_args.lanforge_ip_address, command_line_args.lanforge_port_number, debug_ = False)
                 staConnect.sta_mode = 0
@@ -435,3 +435,4 @@ for model in TEST_DATA["ap_models"].keys():
 
 logging.info("----------------------")
 logging.info("End of Sanity Test run")
+logging.info("----------------------")

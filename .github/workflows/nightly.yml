@@ -137,4 +137,7 @@ jobs:
         kubectl wait job/nightly-ci-$today --for=condition=complete --timeout=1200s
         podname=$(kubectl get pods -o name -l job-name=nightly-ci-$today)
         kubectl logs $podname
+        # placeholder for now
+        echo "Grafana Link: https://grafana.lab.wlan.tip.build/TO_BE_PROVIDED"
+        echo "Kibana Link: https://kibana.lab.wlan.tip.build/TO_BE_PROVIDED"
       shell: bash
