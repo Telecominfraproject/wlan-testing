@@ -47,7 +47,7 @@ parser.add_argument("--lanforge-ip-address", type=str, help="ip address of the l
                     default="10.28.3.6")
 parser.add_argument("--lanforge-port-number", type=str, help="port of the lanforge gui",
                     default="8080")
-parser.add_argument('--skip-update-firmware', dest='update_firmware', action='store_false')
+parser.add_argument('--skip-update-firmwarmodee', dest='update_firmware', action='store_false')
 parser.add_argument('--no-testrails', dest='use_testrails', action='store_false')
 parser.set_defaults(update_firmware=True)
 parser.set_defaults(use_testrails=True)
@@ -319,7 +319,8 @@ for model in TEST_DATA["ap_models"].keys():
         logging.info(f"Uploading {latest_image} firmware to CloudSDK")
         fw_url = jFrog.get_latest_image_url(model, latest_image)
         fw_upload_status = sdk.firwmare_upload(model, latest_image, fw_url)
-        logging.info(f"Upload Complete. {latest_image}; firmware ID is {fw_upload_status['id']}")
+        model_firmware_id = fw_upload_status['id']
+        logging.info(f"Upload Complete. {latest_image}; firmware ID is {model_firmware_id}")
 
     # Get Current AP Firmware and upgrade\run tests if needed
     ap_fw = sdk.ap_firmware(TEST_DATA["customer_id"], TEST_DATA["ap_models"][model]["id"])
