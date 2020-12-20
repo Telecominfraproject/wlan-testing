@@ -47,7 +47,7 @@ parser.add_argument("--lanforge-ip-address", type=str, help="ip address of the l
                     default="10.28.3.6")
 parser.add_argument("--lanforge-port-number", type=str, help="port of the lanforge gui",
                     default="8080")
-parser.add_argument('--skip-update-firmwarmodee', dest='update_firmware', action='store_false')
+parser.add_argument('--skip-update-firmware', dest='update_firmware', action='store_false')
 parser.add_argument('--no-testrails', dest='use_testrails', action='store_false')
 parser.set_defaults(update_firmware=True)
 parser.set_defaults(use_testrails=True)
