@@ -12,7 +12,7 @@ use Getopt::Long;
 my $user = "cicd_user";
 my $passwd = "";
 my $url = "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware";
-my @platforms = ("ea8300", "ecw5410", "ecw5211", "ec420", "eap102");  # Add more here as we have test beds that support them.
+my @platforms = ("ea8300", "ecw5410", "ec420", "eap102");  # Add more here as we have test beds that support them.
 my $files_processed = "jfrog_files_processed.txt";
 my $tb_url_base = "cicd_user\@tip.cicd.cloud.com/testbeds";  # Used by SSH: scp -R results_dir cicd_user@tip.cicd.cloud.com/testbeds/
 my $help = 0;
@@ -97,6 +97,22 @@ chomp($pwd);
 my $listing;
 my @lines;
 my $j;
+my $do_nightly = 0;
+
+my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+my $last_hr = `cat last_jfrog_hour.txt`;
+my $lh = 24;
+if ($last_hr ne "") {
+   $lh = int($last_hr);
+   if ($lh > $hour) {
+      # tis the wee hours again, run a nightly.
+      $do_nightly = 1;
+   }
+}
+else {
+   $do_nightly = 1;
+}
+`echo $hour > last_jfrog_hour.txt`;
 
 # Check for any completed reports.
 for ($j = 0; $j<@ttypes; $j++) {
@@ -191,6 +207,21 @@ for ($i = 0; $i<@lines; $i++) {
 }
 
 my $z;
+if ($do_nightly) {
+   # Remove last 'pending' instance of each HW type so that we re-run the test for it.
+   for ($z = 0; $z < @platforms; $z++) {
+      my $q;
+      my $hw = $platforms[$z];
+      for ($q = @processed - 1; $q >= 0; $q--) {
+         if ($processed[$q] =~ /$hw/) {
+            print("Nightly, re-doing: $processed[$q]\n");
+            $processed[$q] = "";
+            last;
+         }
+      }
+   }
+}
+
 for ($z = 0; $z<@platforms; $z++) {
    my $pf = $platforms[$z];
    # Interesting builds are now found in hardware sub-dirs
