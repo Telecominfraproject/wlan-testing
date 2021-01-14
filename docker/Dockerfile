@@ -2,7 +2,7 @@ FROM python:3.8
 WORKDIR /ci
 
 RUN apt update && apt install vim -y && rm -rf /var/lib/apt/lists/*
-RUN pip3 install requests xlsxwriter
+RUN pip3 install requests xlsxwriter pandas
 
 COPY wlan-lanforge-scripts/py-json/LANforge /ci/LANforge
 COPY wlan-lanforge-scripts/py-json/realm.py /ci
