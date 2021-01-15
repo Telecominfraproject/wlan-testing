@@ -37,6 +37,15 @@ import glob
 
 # external_results_dir=/var/tmp/lanforge
 
+# To run this from your home system to NOLA-01 testbed, use this command.
+# This assumes you have set up an ssh tunnel logged to the cicd jumphost that can
+# reach the lab.
+# In separate console to set up the ssh tunnel:
+#ssh -C -L 7220:lab-ctlr:22 ubuntu@3.130.51.163
+# On local machine:
+#./Nightly_Sanity.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 7220 --ap-jumphost-password secret --ap-jumphost-tty /dev/ttyAP1
+
+
 if sys.version_info[0] != 3:
     print("This script requires Python 3")
     exit(1)
@@ -44,7 +53,7 @@ if sys.version_info[0] != 3:
 import sys
 for folder in 'py-json','py-scripts':
     if folder not in sys.path:
-        sys.path.append(f'../lanforge/lanforge/{folder}')
+        sys.path.append(f'../lanforge/lanforge-scripts/{folder}')
 
 from LANforge.LFUtils import *
 
@@ -128,15 +137,27 @@ parser.add_argument("--eap-id", type=str, help="EAP indentity",
 parser.add_argument("--ttls-password", type=str, help="TTLS password",
                     default="lanforge")
 
+parser.add_argument("--ap-ip", type=str, help="AP IP Address, for direct ssh access if not using jumphost",
+                    default="127.0.0.1")
 parser.add_argument("--ap-username", type=str, help="AP username",
                     default="root")
 parser.add_argument("--ap-password", type=str, help="AP password",
                     default="root")
+parser.add_argument("--ap-jumphost-address", type=str, help="IP of system that we can ssh in to get serial console access to AP",
+                    default=None)
+parser.add_argument("--ap-jumphost-port", type=str, help="SSH port to use in case we are using ssh tunneling or other non-standard ports",
+                    default="22")
+parser.add_argument("--ap-jumphost-username", type=str, help="User-ID for system that we can ssh in to get serial console access to AP",
+                    default="lanforge")
+parser.add_argument("--ap-jumphost-password", type=str, help="Passwort for system that we can ssh in to get serial console access to AP",
+                    default="lanforge")
+parser.add_argument("--ap-jumphost-wlan-testing", type=str, help="wlan-testing repo dir on the jumphost",
+                    default="git/wlan-testing")
+parser.add_argument("--ap-jumphost-tty", type=str, help="Serial port for the AP we wish to talk to",
+                    default="UNCONFIGURED-JUMPHOST-TTY")
 
 parser.add_argument('--skip-update-firmware', dest='update_firmware', action='store_false')
-parser.add_argument('--no-testrails', dest='use_testrails', action='store_false')
 parser.set_defaults(update_firmware=True)
-parser.set_defaults(use_testrails=True)
 command_line_args = parser.parse_args()
 
 # cmd line takes precedence over env-vars.
@@ -168,10 +189,6 @@ lanforge_ip = command_line_args.lanforge_ip_address
 lanforge_prefix = command_line_args.lanforge_prefix
 
 build = command_line_args.build_id
-
-use_testrails = False
-if command_line_args.testrail_user_id != "NONE":
-    use_testrails = True
 
 logger = logging.getLogger('Nightly_Sanity')
 hdlr = logging.FileHandler(local_dir + "/Nightly_Sanity.log")
@@ -315,9 +332,8 @@ else:
 
 Test: RunTest = RunTest()
 
-if use_testrails:
-    projId = client.get_project_id(project_name=projectId)
-    print("TIP WLAN Project ID is:", projId)
+projId = client.get_project_id(project_name=projectId)
+print("TIP WLAN Project ID is:", projId)
 
 logger.info('Start of Nightly Sanity')
 
@@ -411,16 +427,15 @@ for key in equipment_ids:
 
     ###Get Current AP Firmware and upgrade
     equipment_id = equipment_id_dict[key]
-    ap_ip = equipment_ip_dict[key]
-    ap_username = command_line_args.ap_username
-    ap_password = command_line_args.ap_password
     print("AP MODEL UNDER TEST IS", key)
     try:
-        ap_cli_info = ssh_cli_active_fw(ap_ip, ap_username, ap_password)
+        ap_cli_info = ssh_cli_active_fw(command_line_args)
         ap_cli_fw = ap_cli_info['active_fw']
-    except:
+    except Exception as ex:
+        print(ex)
+        logging.error(logging.traceback.format_exc())
         ap_cli_info = "ERROR"
-        print("Cannot Reach AP CLI, IP %s  username: %s  password: %s, will not test this variant"%(ap_ip, ap_username, ap_password))
+        print("Cannot Reach AP CLI, will not test this variant");
         continue
 
     fw_model = ap_cli_fw.partition("-")[0]

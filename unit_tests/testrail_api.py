@@ -24,6 +24,9 @@ class TestRail_Client:
         if not base_url.endswith('/'):
             base_url += '/'
         self.__url = base_url + 'index.php?/api/v2/'
+        self.use_testrails = True
+        if command_line_args.testrail_user_id == "NONE":
+            self.use_testrails = False
 
 
     def send_get(self, uri, filepath=None):
@@ -54,6 +57,9 @@ class TestRail_Client:
         return self.__send_request('POST', uri, data)
 
     def __send_request(self, method, uri, data):
+        if not self.use_testrails:
+            return {"TESTRAILS":"DISABLED"}
+
         url = self.__url + uri
 
         auth = str(
@@ -110,6 +116,10 @@ class TestRail_Client:
 
     def get_project_id(self, project_name):
         "Get the project ID using project name"
+
+        if not self.use_testrails:
+            return -1
+
         project_id = None
         projects = self.send_get('get_projects')
         ##pprint(projects)
@@ -123,6 +133,10 @@ class TestRail_Client:
 
     def get_run_id(self, test_run_name):
         "Get the run ID using test name and project name"
+
+        if not self.use_testrails:
+            return -1
+
         run_id = None
         project_id = self.get_project_id(project_name=project)
 
@@ -146,6 +160,10 @@ class TestRail_Client:
 
     def update_testrail(self, case_id, run_id, status_id, msg):
         "Update TestRail for a given run_id and case_id"
+
+        if not self.use_testrails:
+            return False
+
         update_flag = False
         # Get the TestRail client account details
         # Update the result in TestRail using send_post function.
