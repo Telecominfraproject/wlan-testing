@@ -1,6 +1,14 @@
 # TIP CICD Sanity Scripts
 This directory contains scripts and modules designed for wlan sanity testing. 
 
+# Libraries needed to run this code successfully
+sudo pip3 install artifactory
+sudo pip3 install xlsxwriter
+sudo pip3 install pandas
+sudo pip3 install paramiko
+sudo pip3 install scp
+sudo pip3 install pexpect
+
 ## Nightly Sanity
 This script is used to look for and test new firmware available for the APs. AP equipment IDs and SSID information used in test is stored in the lab_ap_info file
 

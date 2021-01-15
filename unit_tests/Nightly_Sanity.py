@@ -29,6 +29,7 @@ import time
 from datetime import date
 from shutil import copyfile
 import argparse
+from unittest.mock import Mock
 
 # For finding files
 # https://stackoverflow.com/questions/3207219/how-do-i-list-all-files-of-a-directory
@@ -39,20 +40,20 @@ import glob
 if sys.version_info[0] != 3:
     print("This script requires Python 3")
     exit(1)
-if 'py-json' not in sys.path:
-    sys.path.append('../../py-json')
+
+import sys
+for folder in 'py-json','py-scripts':
+    if folder not in sys.path:
+        sys.path.append(f'../lanforge/lanforge/{folder}')
 
 from LANforge.LFUtils import *
 
 # if you lack __init__.py in this directory you will not find sta_connect module#
 
-if 'py-json' not in sys.path:
-    sys.path.append('../../py-scripts')
-
 import sta_connect2
 from sta_connect2 import StaConnect2
 import testrail_api
-from testrail_api import APIClient
+from testrail_api import TestRail_Client
 import eap_connect
 from eap_connect import EAPConnect
 import cloudsdk
@@ -74,33 +75,103 @@ from lab_ap_info import cloud_type
 from lab_ap_info import test_cases
 from lab_ap_info import radius_info
 
-### Set CloudSDK URL ###
-cloudSDK_url = os.getenv('CLOUD_SDK_URL')
-### Directories
-local_dir = os.getenv('SANITY_LOG_DIR')
-report_path = os.getenv('SANITY_REPORT_DIR')
-report_template = os.getenv('REPORT_TEMPLATE')
+parser = argparse.ArgumentParser(description="Sanity Testing on Firmware Build")
+parser.add_argument("-b", "--build-id", type=str, help="FW commit ID (latest pending build on dev is default)",
+                    default = "pending")
+parser.add_argument("-i", "--ignore-ap-version", type=bool, help="Ignore current running version on AP and run sanity regardless",
+                    default = False)
+parser.add_argument("-m", "--model", type=str, choices=['ea8300', 'ecw5410', 'ecw5211', 'ec420'],
+                    help="AP model to be run", required=True)
+
+parser.add_argument("--sdk-base-url", type=str, help="cloudsdk base url",
+                    default="https://wlan-portal-svc.cicd.lab.wlan.tip.build")
+parser.add_argument("--sdk-user-id", type=str, help="cloudsdk user id",
+                    default="support@example.com")
+parser.add_argument("--sdk-user-password", type=str, help="cloudsdk user password",
+                    default="support")
+
+parser.add_argument("--jfrog-base-url", type=str, help="jfrog base url",
+                    default="tip.jFrog.io/artifactory/tip-wlan-ap-firmware")
+parser.add_argument("--jfrog-user-id", type=str, help="jfrog user id",
+                    default="tip-read")
+parser.add_argument("--jfrog-user-password", type=str, help="jfrog user password",
+                    default="tip-read")
+parser.add_argument("--testrail-base-url", type=str, help="testrail base url",   # was os.getenv('TESTRAIL_URL')
+                    default="https://telecominfraproject.testrail.com")
+parser.add_argument("--testrail-project", type=str, help="testrail project name",
+                    default="opsfleet-wlan")
+parser.add_argument("--testrail-user-id", type=str, help="testrail user id.  Use 'NONE' to disable use of testrails.",
+                    default="gleb@opsfleet.com")
+parser.add_argument("--testrail-user-password", type=str, help="testrail user password",
+                    default="password")
+parser.add_argument("--testrail-run-prefix", type=str, help="testrail run prefix",
+                    default="prefix-1")
+parser.add_argument("--milestone", type=str, help="testrail milestone ID",
+                    default="milestone-1")
+
+parser.add_argument("--lanforge-ip-address", type=str, help="ip address of the lanforge gui",
+                    default="127.0.0.1")
+parser.add_argument("--lanforge-port-number", type=str, help="port of the lanforge gui",
+                    default="8080")
+parser.add_argument("--lanforge-prefix", type=str, help="LANforge api prefix string",
+                    default="sdk")
+
+parser.add_argument("--local_dir", type=str, help="Sanity logging directory",
+                    default="logs")
+parser.add_argument("--report-path", type=str, help="Sanity report directory",
+                    default="reports")
+parser.add_argument("--report-template", type=str, help="Sanity report template",
+                    default="reports/report_template.php")
+
+parser.add_argument("--eap-id", type=str, help="EAP indentity",
+                    default="lanforge")
+parser.add_argument("--ttls-password", type=str, help="TTLS password",
+                    default="lanforge")
+
+parser.add_argument("--ap-username", type=str, help="AP username",
+                    default="root")
+parser.add_argument("--ap-password", type=str, help="AP password",
+                    default="root")
+
+parser.add_argument('--skip-update-firmware', dest='update_firmware', action='store_false')
+parser.add_argument('--no-testrails', dest='use_testrails', action='store_false')
+parser.set_defaults(update_firmware=True)
+parser.set_defaults(use_testrails=True)
+command_line_args = parser.parse_args()
+
+# cmd line takes precedence over env-vars.
+cloudSDK_url = command_line_args.sdk_base_url       # was os.getenv('CLOUD_SDK_URL')
+local_dir = command_line_args.local_dir             # was os.getenv('SANITY_LOG_DIR')
+report_path = command_line_args.report_path         # was os.getenv('SANITY_REPORT_DIR')
+report_template = command_line_args.report_template  # was os.getenv('REPORT_TEMPLATE')
 
 ## TestRail Information
-tr_user = os.getenv('TR_USER')
-tr_pw = os.getenv('TR_PWD')
-milestoneId = os.getenv('MILESTONE')
-projectId = os.getenv('PROJECT_ID')
-testRunPrefix = os.getenv('TEST_RUN_PREFIX')
-
-##LANForge Information
-lanforge_ip = lab_ap_info.lanforge_ip
-lanforge_prefix = lab_ap_info.lanforge_prefix
+tr_user = command_line_args.testrail_user_id        # was os.getenv('TR_USER')
+tr_pw = command_line_args.testrail_user_password    # was os.getenv('TR_PWD')
+milestoneId = command_line_args.milestone           # was os.getenv('MILESTONE')
+projectId = command_line_args.testrail_project      # was os.getenv('PROJECT_ID')
+testRunPrefix = command_line_args.testrail_run_prefix # os.getenv('TEST_RUN_PREFIX')
 
 ##Jfrog credentials
-jfrog_user = os.getenv('JFROG_USER')
-jfrog_pwd = os.getenv('JFROG_PWD')
+jfrog_user = command_line_args.jfrog_user_id        # was os.getenv('JFROG_USER')
+jfrog_pwd = command_line_args.jfrog_user_password   # was os.getenv('JFROG_PWD')
+
 ##EAP Credentials
-identity = os.getenv('EAP_IDENTITY')
-ttls_password = os.getenv('EAP_PWD')
+identity = command_line_args.eap_id                 # was os.getenv('EAP_IDENTITY')
+ttls_password = command_line_args.ttls_password     # was os.getenv('EAP_PWD')
 
 ## AP Credentials
-ap_username = os.getenv('AP_USER')
+ap_username = command_line_args.ap_username         # was os.getenv('AP_USER')
+
+##LANForge Information
+lanforge_ip = command_line_args.lanforge_ip_address
+lanforge_prefix = command_line_args.lanforge_prefix
+
+build = command_line_args.build_id
+
+use_testrails = False
+if command_line_args.testrail_user_id != "NONE":
+    use_testrails = True
 
 logger = logging.getLogger('Nightly_Sanity')
 hdlr = logging.FileHandler(local_dir + "/Nightly_Sanity.log")
@@ -109,11 +180,7 @@ hdlr.setFormatter(formatter)
 logger.addHandler(hdlr)
 logger.setLevel(logging.INFO)
 
-testrail_url = os.getenv('TESTRAIL_URL')
-client: APIClient = APIClient(testrail_url)
-client.user = tr_user
-client.password = tr_pw
-
+client: TestRail_Client = TestRail_Client(command_line_args)
 
 ###Class for jfrog Interaction
 class GetBuild:
@@ -229,33 +296,17 @@ class RunTest:
         logger.warning("ERROR testing Client connectivity to " + ssid_name)
 
 ####Use variables other than defaults for running tests on custom FW etc
-build = "pending"
-ignore = False
 equipment_ids = equipment_id_dict
 
-parser = argparse.ArgumentParser(description="Sanity Testing on Firmware Build")
-parser.add_argument("-b", "--build", type=str, help="FW commit ID (latest pending build on dev is default)")
-parser.add_argument("-i", "--ignore", type=bool, help="Ignore current running version on AP and run sanity regardless")
-parser.add_argument("-r", "--report", type=str, help="Report directory path other than default - directory must already exist!")
-parser.add_argument("-m", "--model", type=str, choices=['ea8300', 'ecw5410', 'ecw5211', 'ec420'], help="AP model to be run")
-args = parser.parse_args()
-
-if args.build is not None:
-    build = args.build
-if args.ignore is not None:
-    ignore = True
-if args.report is not None:
-    report_path = args.report
-if args.model is not None:
-    model_id = args.model
-    equipment_ids = {
-        model_id: equipment_id_dict[model_id]
-    }
-    print(equipment_ids)
+model_id = command_line_args.model
+equipment_ids = {
+    model_id: equipment_id_dict[model_id]
+}
+print(equipment_ids)
 
 print("Start of Sanity Testing...")
 print("Testing Latest Build with Tag: "+build)
-if ignore == True:
+if command_line_args.ignore_ap_version == True:
     print("Will ignore if AP is already running build under test and run sanity regardless...")
 else:
     print("Checking for APs requiring upgrade to latest build...")
@@ -264,8 +315,9 @@ else:
 
 Test: RunTest = RunTest()
 
-projId = client.get_project_id(project_name=projectId)
-print("TIP WLAN Project ID is:", projId)
+if use_testrails:
+    projId = client.get_project_id(project_name=projectId)
+    print("TIP WLAN Project ID is:", projId)
 
 logger.info('Start of Nightly Sanity')
 
@@ -329,7 +381,8 @@ with open(report_path + today + '/report_data.json', 'w') as report_json_file:
     json.dump(report_data, report_json_file)
 
 ###Get Cloud Bearer Token
-bearer = CloudSDK.get_bearer(cloudSDK_url, cloud_type)
+cloud: CloudSDK = CloudSDK(command_line_args)
+bearer = cloud.get_bearer(cloudSDK_url, cloud_type)
 
 ############################################################################
 #################### Jfrog Firmware Check ##################################
@@ -354,20 +407,20 @@ for model in ap_models:
 
 for key in equipment_ids:
     ##Get Bearer Token to make sure its valid (long tests can require re-auth)
-    bearer = CloudSDK.get_bearer(cloudSDK_url, cloud_type)
+    bearer = cloud.get_bearer(cloudSDK_url, cloud_type)
 
     ###Get Current AP Firmware and upgrade
     equipment_id = equipment_id_dict[key]
     ap_ip = equipment_ip_dict[key]
-    ap_username = "root"
-    ap_password = eqiupment_credentials_dict[key]
+    ap_username = command_line_args.ap_username
+    ap_password = command_line_args.ap_password
     print("AP MODEL UNDER TEST IS", key)
     try:
         ap_cli_info = ssh_cli_active_fw(ap_ip, ap_username, ap_password)
         ap_cli_fw = ap_cli_info['active_fw']
     except:
         ap_cli_info = "ERROR"
-        print("Cannot Reach AP CLI, will not test this variant")
+        print("Cannot Reach AP CLI, IP %s  username: %s  password: %s, will not test this variant"%(ap_ip, ap_username, ap_password))
         continue
 
     fw_model = ap_cli_fw.partition("-")[0]
@@ -407,7 +460,7 @@ for key in equipment_ids:
         ###GetCloudSDK Version
         print("Getting CloudSDK version information...")
         try:
-            cluster_ver = CloudSDK.get_cloudsdk_version(cloudSDK_url, bearer)
+            cluster_ver = cloud.get_cloudsdk_version(cloudSDK_url, bearer)
             print("CloudSDK Version Information:")
             print("-------------------------------------------")
             print(cluster_ver)
@@ -444,17 +497,17 @@ for key in equipment_ids:
         latest_image = ap_latest_dict[key]
         cloudModel = cloud_sdk_models[key]
         print(cloudModel)
-        firmware_list_by_model = CloudSDK.CloudSDK_images(cloudModel, cloudSDK_url, bearer)
+        firmware_list_by_model = cloud.CloudSDK_images(cloudModel, cloudSDK_url, bearer)
         print("Available", cloudModel, "Firmware on CloudSDK:", firmware_list_by_model)
 
         if latest_image in firmware_list_by_model:
             print("Latest Firmware", latest_image, "is already on CloudSDK, need to delete to test create FW API")
-            old_fw_id = CloudSDK.get_firmware_id(latest_image, cloudSDK_url, bearer)
-            delete_fw = CloudSDK.delete_firmware(str(old_fw_id), cloudSDK_url, bearer)
+            old_fw_id = cloud.get_firmware_id(latest_image, cloudSDK_url, bearer)
+            delete_fw = cloud.delete_firmware(str(old_fw_id), cloudSDK_url, bearer)
             fw_url = "https://" + jfrog_user + ":" + jfrog_pwd + "@tip.jfrog.io/artifactory/tip-wlan-ap-firmware/" + key + "/dev/" + latest_image + ".tar.gz"
             commit = latest_image.split("-")[-1]
             try:
-                fw_upload_status = CloudSDK.firwmare_upload(commit, cloudModel, latest_image, fw_url, cloudSDK_url,
+                fw_upload_status = cloud.firwmare_upload(commit, cloudModel, latest_image, fw_url, cloudSDK_url,
                                                             bearer)
                 fw_id = fw_upload_status['id']
                 print("Upload Complete.", latest_image, "FW ID is", fw_id)
@@ -473,7 +526,7 @@ for key in equipment_ids:
             fw_url = "https://" + jfrog_user + ":" + jfrog_pwd + "@tip.jfrog.io/artifactory/tip-wlan-ap-firmware/" + key + "/dev/" + latest_image + ".tar.gz"
             commit = latest_image.split("-")[-1]
             try:
-                fw_upload_status = CloudSDK.firwmare_upload(commit, cloudModel, latest_image, fw_url, cloudSDK_url,
+                fw_upload_status = cloud.firwmare_upload(commit, cloudModel, latest_image, fw_url, cloudSDK_url,
                                                             bearer)
                 fw_id = fw_upload_status['id']
                 print("Upload Complete.", latest_image, "FW ID is", fw_id)
@@ -490,7 +543,7 @@ for key in equipment_ids:
 
         # Upgrade AP firmware
         print("Upgrading...firmware ID is: ", fw_id)
-        upgrade_fw = CloudSDK.update_firmware(equipment_id, str(fw_id), cloudSDK_url, bearer)
+        upgrade_fw = cloud.update_firmware(equipment_id, str(fw_id), cloudSDK_url, bearer)
         logger.info("Lab " + fw_model + " Requires FW update")
         print(upgrade_fw)
 
@@ -519,7 +572,7 @@ for key in equipment_ids:
 
         # Check if upgrade success is displayed on CloudSDK
         test_id_cloud = test_cases["cloud_fw"]
-        cloud_ap_fw = CloudSDK.ap_firmware(customer_id, equipment_id, cloudSDK_url, bearer)
+        cloud_ap_fw = cloud.ap_firmware(customer_id, equipment_id, cloudSDK_url, bearer)
         print('Current AP Firmware from CloudSDK:', cloud_ap_fw)
         logger.info('AP Firmware from CloudSDK: ' + cloud_ap_fw)
         if cloud_ap_fw == "ERROR":
@@ -646,7 +699,7 @@ for key in equipment_ids:
         secret = radius_info['secret']
         auth_port = radius_info['auth_port']
         try:
-            radius_profile = CloudSDK.create_radius_profile(cloudSDK_url, bearer, radius_template, radius_name, subnet_name, subnet,
+            radius_profile = cloud.create_radius_profile(cloudSDK_url, bearer, radius_template, radius_name, subnet_name, subnet,
                                                         subnet_mask, region, server_name, server_ip, secret, auth_port)
             print("radius profile Id is", radius_profile)
             client.update_testrail(case_id=test_cases["radius_profile"], run_id=rid, status_id=1,
@@ -671,7 +724,7 @@ for key in equipment_ids:
 
         # 5G SSIDs
         try:
-            fiveG_eap = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template, fw_model + '_5G_EAP_' + today,
+            fiveG_eap = cloud.create_ssid_profile(cloudSDK_url, bearer, ssid_template, fw_model + '_5G_EAP_' + today,
                                                      profile_info_dict[fw_model]["fiveG_WPA2-EAP_SSID"], None,
                                                      radius_name,
                                                      "wpa2OnlyRadius", "BRIDGE", 1, ["is5GHzU", "is5GHz", "is5GHzL"])
@@ -688,7 +741,7 @@ for key in equipment_ids:
             fiveG_eap = profile_info_dict[fw_model]["fiveG_WPA2-EAP_profile"]
 
         try:
-            fiveG_wpa2 = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template, fw_model + '_5G_WPA2_' + today,
+            fiveG_wpa2 = cloud.create_ssid_profile(cloudSDK_url, bearer, ssid_template, fw_model + '_5G_WPA2_' + today,
                                                       profile_info_dict[fw_model]["fiveG_WPA2_SSID"],
                                                       profile_info_dict[fw_model]["fiveG_WPA2_PSK"],
                                                       "Radius-Accounting-Profile", "wpa2OnlyPSK", "BRIDGE", 1,
@@ -705,7 +758,7 @@ for key in equipment_ids:
             fiveG_wpa2 = profile_info_dict[fw_model]["fiveG_WPA2_profile"]
 
         try:
-            fiveG_wpa = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template, fw_model + '_5G_WPA_' + today,
+            fiveG_wpa = cloud.create_ssid_profile(cloudSDK_url, bearer, ssid_template, fw_model + '_5G_WPA_' + today,
                                                      profile_info_dict[fw_model]["fiveG_WPA_SSID"],
                                                      profile_info_dict[fw_model]["fiveG_WPA_PSK"],
                                                      "Radius-Accounting-Profile", "wpaPSK", "BRIDGE", 1,
@@ -724,7 +777,7 @@ for key in equipment_ids:
 
         # 2.4G SSIDs
         try:
-            twoFourG_eap = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
+            twoFourG_eap = cloud.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
                                                         fw_model + '_2G_EAP_' + today,
                                                         profile_info_dict[fw_model]["twoFourG_WPA2-EAP_SSID"], None,
                                                         radius_name, "wpa2OnlyRadius", "BRIDGE", 1, ["is2dot4GHz"])
@@ -741,7 +794,7 @@ for key in equipment_ids:
             twoFourG_eap = profile_info_dict[fw_model]["twoFourG_WPA2-EAP_SSID"]
 
         try:
-            twoFourG_wpa2 = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
+            twoFourG_wpa2 = cloud.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
                                                          fw_model + '_2G_WPA2_' + today,
                                                          profile_info_dict[fw_model]["twoFourG_WPA2_SSID"],
                                                          profile_info_dict[fw_model]["twoFourG_WPA2_PSK"],
@@ -760,7 +813,7 @@ for key in equipment_ids:
             twoFourG_wpa2 = profile_info_dict[fw_model]["twoFourG_WPA2_SSID"]
 
         try:
-            twoFourG_wpa = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
+            twoFourG_wpa = cloud.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
                                                         fw_model + '_2G_WPA_' + today,
                                                         profile_info_dict[fw_model]["twoFourG_WPA_SSID"],
                                                         profile_info_dict[fw_model]["twoFourG_WPA_PSK"],
@@ -788,7 +841,7 @@ for key in equipment_ids:
         name = "Nightly_Sanity_" + fw_model + "_" + today + "_bridge"
 
         try:
-            create_ap_profile = CloudSDK.create_ap_profile(cloudSDK_url, bearer, ap_template, name, child_profiles)
+            create_ap_profile = cloud.create_ap_profile(cloudSDK_url, bearer, ap_template, name, child_profiles)
             test_profile_id = create_ap_profile
             print("Test Profile ID for Test is:",test_profile_id)
             client.update_testrail(case_id=test_cases["ap_bridge"], run_id=rid, status_id=1,
@@ -803,7 +856,7 @@ for key in equipment_ids:
             report_data['tests'][key][test_cases["ap_bridge"]] = "failed"
 
         ### Set Proper AP Profile for Bridge SSID Tests
-        ap_profile = CloudSDK.set_ap_profile(equipment_id, test_profile_id, cloudSDK_url, bearer)
+        ap_profile = cloud.set_ap_profile(equipment_id, test_profile_id, cloudSDK_url, bearer)
 
         ### Wait for Profile Push
         time.sleep(180)
@@ -996,7 +1049,7 @@ for key in equipment_ids:
 
         # 5G SSIDs
         try:
-            fiveG_eap = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
+            fiveG_eap = cloud.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
                                                      fw_model + '_5G_EAP_NAT_' + today,
                                                      profile_info_dict[fw_model + '_nat']["fiveG_WPA2-EAP_SSID"], None,
                                                      radius_name,
@@ -1016,7 +1069,7 @@ for key in equipment_ids:
             fiveG_eap = profile_info_dict[fw_model + '_nat']["fiveG_WPA2-EAP_profile"]
 
         try:
-            fiveG_wpa2 = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
+            fiveG_wpa2 = cloud.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
                                                       fw_model + '_5G_WPA2_NAT_' + today,
                                                       profile_info_dict[fw_model + '_nat']["fiveG_WPA2_SSID"],
                                                       profile_info_dict[fw_model + '_nat']["fiveG_WPA2_PSK"],
@@ -1035,7 +1088,7 @@ for key in equipment_ids:
             fiveG_wpa2 = profile_info_dict[fw_model + '_nat']["fiveG_WPA2_profile"]
 
         try:
-            fiveG_wpa = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
+            fiveG_wpa = cloud.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
                                                      fw_model + '_5G_WPA_NAT_' + today,
                                                      profile_info_dict[fw_model + '_nat']["fiveG_WPA_SSID"],
                                                      profile_info_dict[fw_model + '_nat']["fiveG_WPA_PSK"],
@@ -1055,7 +1108,7 @@ for key in equipment_ids:
 
             # 2.4G SSIDs
         try:
-            twoFourG_eap = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
+            twoFourG_eap = cloud.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
                                                         fw_model + '_2G_EAP_NAT_' + today,
                                                         profile_info_dict[fw_model + '_nat']["twoFourG_WPA2-EAP_SSID"],
                                                         None,
@@ -1073,7 +1126,7 @@ for key in equipment_ids:
             twoFourG_eap = profile_info_dict[fw_model + '_nat']["twoFourG_WPA2-EAP_SSID"]
 
         try:
-            twoFourG_wpa2 = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
+            twoFourG_wpa2 = cloud.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
                                                          fw_model + '_2G_WPA2_NAT_' + today,
                                                          profile_info_dict[fw_model + '_nat']["twoFourG_WPA2_SSID"],
                                                          profile_info_dict[fw_model + '_nat']["twoFourG_WPA2_PSK"],
@@ -1092,7 +1145,7 @@ for key in equipment_ids:
             twoFourG_wpa2 = profile_info_dict[fw_model + '_nat']["twoFourG_WPA2_SSID"]
 
         try:
-            twoFourG_wpa = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
+            twoFourG_wpa = cloud.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
                                                         fw_model + '_2G_WPA_NAT_' + today,
                                                         profile_info_dict[fw_model + '_nat']["twoFourG_WPA_SSID"],
                                                         profile_info_dict[fw_model + '_nat']["twoFourG_WPA_PSK"],
@@ -1119,7 +1172,7 @@ for key in equipment_ids:
         ap_template = "templates/ap_profile_template.json"
         name = "Nightly_Sanity_" + fw_model + "_" + today + "_nat"
         try:
-            create_ap_profile = CloudSDK.create_ap_profile(cloudSDK_url, bearer, ap_template, name, child_profiles)
+            create_ap_profile = cloud.create_ap_profile(cloudSDK_url, bearer, ap_template, name, child_profiles)
             test_profile_id = create_ap_profile
             print("Test Profile ID for Test is:", test_profile_id)
             client.update_testrail(case_id=test_cases["ap_nat"], run_id=rid, status_id=1,
@@ -1134,7 +1187,7 @@ for key in equipment_ids:
             report_data['tests'][key][test_cases["ap_nat"]] = "failed"
 
         ###Set Proper AP Profile for NAT SSID Tests
-        ap_profile = CloudSDK.set_ap_profile(equipment_id, test_profile_id, cloudSDK_url, bearer)
+        ap_profile = cloud.set_ap_profile(equipment_id, test_profile_id, cloudSDK_url, bearer)
 
         ### Wait for Profile Push
         time.sleep(180)
@@ -1325,7 +1378,7 @@ for key in equipment_ids:
 
         # 5G SSIDs
         try:
-            fiveG_eap = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
+            fiveG_eap = cloud.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
                                                      fw_model + '_5G_EAP_VLAN' + today,
                                                      profile_info_dict[fw_model + '_vlan']["fiveG_WPA2-EAP_SSID"], None,
                                                      radius_name,
@@ -1344,7 +1397,7 @@ for key in equipment_ids:
             fiveG_eap = profile_info_dict[fw_model + '_vlan']["fiveG_WPA2-EAP_profile"]
 
         try:
-            fiveG_wpa2 = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
+            fiveG_wpa2 = cloud.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
                                                       fw_model + '_5G_WPA2_VLAN' + today,
                                                       profile_info_dict[fw_model + '_vlan']["fiveG_WPA2_SSID"],
                                                       profile_info_dict[fw_model + '_vlan']["fiveG_WPA2_PSK"],
@@ -1363,7 +1416,7 @@ for key in equipment_ids:
             fiveG_wpa2 = profile_info_dict[fw_model + '_vlan']["fiveG_WPA2_profile"]
 
         try:
-            fiveG_wpa = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
+            fiveG_wpa = cloud.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
                                                      fw_model + '_5G_WPA_VLAN_' + today,
                                                      profile_info_dict[fw_model + '_vlan']["fiveG_WPA_SSID"],
                                                      profile_info_dict[fw_model + '_vlan']["fiveG_WPA_PSK"],
@@ -1383,7 +1436,7 @@ for key in equipment_ids:
 
         # 2.4G SSIDs
         try:
-            twoFourG_eap = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
+            twoFourG_eap = cloud.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
                                                         fw_model + '_2G_EAP_VLAN_' + today,
                                                         profile_info_dict[fw_model + '_vlan']["twoFourG_WPA2-EAP_SSID"],
                                                         None,
@@ -1401,7 +1454,7 @@ for key in equipment_ids:
             twoFourG_eap = profile_info_dict[fw_model + '_vlan']["twoFourG_WPA2-EAP_SSID"]
 
         try:
-            twoFourG_wpa2 = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
+            twoFourG_wpa2 = cloud.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
                                                          fw_model + '_2G_WPA2_VLAN_' + today,
                                                          profile_info_dict[fw_model + '_vlan']["twoFourG_WPA2_SSID"],
                                                          profile_info_dict[fw_model + '_vlan']["twoFourG_WPA2_PSK"],
@@ -1420,7 +1473,7 @@ for key in equipment_ids:
             twoFourG_wpa2 = profile_info_dict[fw_model + '_vlan']["twoFourG_WPA2_SSID"]
 
         try:
-            twoFourG_wpa = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
+            twoFourG_wpa = cloud.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
                                                         fw_model + '_2G_WPA_VLAN_' + today,
                                                         profile_info_dict[fw_model + '_vlan']["twoFourG_WPA_SSID"],
                                                         profile_info_dict[fw_model + '_vlan']["twoFourG_WPA_PSK"],
@@ -1447,7 +1500,7 @@ for key in equipment_ids:
         name = "Nightly_Sanity_" + fw_model + "_" + today + "_vlan"
 
         try:
-            create_ap_profile = CloudSDK.create_ap_profile(cloudSDK_url, bearer, ap_template, name, child_profiles)
+            create_ap_profile = cloud.create_ap_profile(cloudSDK_url, bearer, ap_template, name, child_profiles)
             test_profile_id = create_ap_profile
             print("Test Profile ID for Test is:", test_profile_id)
             client.update_testrail(case_id=test_cases["ap_vlan"], run_id=rid, status_id=1,
@@ -1462,7 +1515,7 @@ for key in equipment_ids:
             report_data['tests'][key][test_cases["ap_vlan"]] = "failed"
 
         ### Set Proper AP Profile for VLAN SSID Tests
-        ap_profile = CloudSDK.set_ap_profile(equipment_id, test_profile_id, cloudSDK_url, bearer)
+        ap_profile = cloud.set_ap_profile(equipment_id, test_profile_id, cloudSDK_url, bearer)
 
         ### Wait for Profile Push
         time.sleep(180)

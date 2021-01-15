@@ -14,15 +14,13 @@ import json
 import requests
 from pprint import pprint
 import os
-tr_user=os.getenv('TR_USER')
-tr_pw=os.getenv('TR_PWD')
-project = os.getenv('PROJECT_ID')
 
-
-class APIClient:
-    def __init__(self, base_url):
-        self.user = tr_user
-        self.password = tr_pw
+class TestRail_Client:
+    def __init__(self, command_line_args):
+        self.user = command_line_args.testrail_user_id
+        self.password = command_line_args.testrail_user_password
+        self.command_line_args = command_line_args
+        base_url = command_line_args.testrail_base_url
         if not base_url.endswith('/'):
             base_url += '/'
         self.__url = base_url + 'index.php?/api/v2/'
@@ -113,7 +111,7 @@ class APIClient:
     def get_project_id(self, project_name):
         "Get the project ID using project name"
         project_id = None
-        projects = client.send_get('get_projects')
+        projects = self.send_get('get_projects')
         ##pprint(projects)
         for project in projects:
             if project['name']== project_name:
@@ -126,10 +124,10 @@ class APIClient:
     def get_run_id(self, test_run_name):
         "Get the run ID using test name and project name"
         run_id = None
-        project_id = client.get_project_id(project_name=project)
+        project_id = self.get_project_id(project_name=project)
 
         try:
-            test_runs = client.send_get('get_runs/%s' % (project_id))
+            test_runs = self.send_get('get_runs/%s' % (project_id))
             #print("------------TEST RUNS----------")
             #pprint(test_runs)
 
@@ -160,7 +158,7 @@ class APIClient:
         print("run id passed to update is ", run_id, case_id)
         if run_id is not None:
             try:
-                result = client.send_post(
+                result = self.send_post(
                     'add_result_for_case/%s/%s' % (run_id, case_id),
                     {'status_id': status_id, 'comment': msg})
                 print("result in post",result)
@@ -175,13 +173,10 @@ class APIClient:
         return update_flag
 
     def create_testrun(self, name, case_ids, project_id, milestone_id, description):
-        result = client.send_post(
+        result = self.send_post(
             'add_run/%s' % (project_id),
             {'name': name, 'case_ids': case_ids, 'milestone_id': milestone_id, 'description': description, 'include_all': False})
         print("result in post", result)
-
-client: APIClient = APIClient(os.getenv('TESTRAIL_URL'))
-
 
 class APIError(Exception):
     pass
