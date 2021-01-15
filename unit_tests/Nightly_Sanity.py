@@ -1674,7 +1674,7 @@ with open('sanity_status.json', 'w') as json_file:
 
 # Calculate percent of tests passed for report
 for key in ap_models:
-    if report_data['fw_available'][key] is "No":
+    if report_data['fw_available'][key] == "No":
         report_data["pass_percent"][key] = "Not Run"
     else:
         no_of_tests = len(report_data["tests"][key])
