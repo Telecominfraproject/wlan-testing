@@ -8,7 +8,7 @@ import paramiko
 from paramiko import SSHClient
 import socket
 
-owrt_args = "--prompt root@OpenAp -s serial --log stdout"
+owrt_args = "--prompt root@OpenAp -s serial --log stdout --user root --passwd openwifi"
 
 def ssh_cli_connect(command_line_args):
     client = paramiko.SSHClient()

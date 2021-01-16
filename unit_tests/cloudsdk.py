@@ -153,7 +153,7 @@ class CloudSDK:
         equipment_info = response.json()
         #print(equipment_info)
         equipment_info["profileId"] = test_profile_id
-        #print(equipment_info)
+        print(equipment_info)
 
         ###Update AP Info with Required Profile ID
         url = cloudSDK_url+"/portal/equipment"
@@ -163,7 +163,7 @@ class CloudSDK:
         }
 
         response = requests.request("PUT", url, headers=headers, data=json.dumps(equipment_info))
-        #print(response)
+        print(response)
 
     def get_cloudsdk_version(self, cloudSDK_url, bearer):
         #print(latest_ap_image)
@@ -218,7 +218,7 @@ class CloudSDK:
         }
         response = requests.request("POST", url, headers=headers, data=open(template, 'rb'))
         ssid_profile = response.json()
-        #print(ssid_profile)
+        print(ssid_profile)
         ssid_profile_id = ssid_profile['id']
         return ssid_profile_id
 
@@ -259,7 +259,7 @@ class CloudSDK:
         }
         response = requests.request("POST", url, headers=headers, data=open(template, 'rb'))
         radius_profile = response.json()
-        #print(radius_profile)
-        #print(ssid_profile)
+        print(radius_profile)
+        print(ssid_profile)
         radius_profile_id = radius_profile['id']
         return radius_profile_id

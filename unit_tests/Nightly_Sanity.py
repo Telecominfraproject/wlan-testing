@@ -739,7 +739,9 @@ for key in equipment_ids:
             client.update_testrail(case_id=test_cases["radius_profile"], run_id=rid, status_id=1,
                                    msg='RADIUS profile created successfully')
             report_data['tests'][key][test_cases["radius_profile"]] = "passed"
-        except:
+        except Exception as ex:
+            print(ex)
+            logging.error(logging.traceback.format_exc())
             radius_profile = 'error'
             print("RADIUS Profile Create Error, will use existing profile for tests")
             #Set backup profile ID so test can continue
@@ -766,7 +768,9 @@ for key in equipment_ids:
             client.update_testrail(case_id=test_cases["ssid_5g_eap_bridge"], run_id=rid, status_id=1, msg='5G EAP SSID created successfully - bridge mode')
             report_data['tests'][key][test_cases["ssid_5g_eap_bridge"]] = "passed"
 
-        except:
+        except Exception as ex:
+            print(ex)
+            logging.error(logging.traceback.format_exc())
             fiveG_eap = "error"
             print("5G EAP SSID create failed - bridge mode")
             client.update_testrail(case_id=test_cases["ssid_5g_eap_bridge"], run_id=rid, status_id=5,
@@ -783,7 +787,9 @@ for key in equipment_ids:
             print("5G WPA2 SSID created successfully - bridge mode")
             client.update_testrail(case_id=test_cases["ssid_5g_wpa2_bridge"], run_id=rid, status_id=1, msg='5G WPA2 SSID created successfully - bridge mode')
             report_data['tests'][key][test_cases["ssid_5g_wpa2_bridge"]] = "passed"
-        except:
+        except Exception as ex:
+            print(ex)
+            logging.error(logging.traceback.format_exc())
             fiveG_wpa2 = "error"
             print("5G WPA2 SSID create failed - bridge mode")
             client.update_testrail(case_id=test_cases["ssid_5g_wpa2_bridge"], run_id=rid, status_id=5,
@@ -801,7 +807,9 @@ for key in equipment_ids:
             client.update_testrail(case_id=test_cases["ssid_5g_wpa_bridge"], run_id=rid, status_id=1,
                                    msg='5G WPA SSID created successfully - bridge mode')
             report_data['tests'][key][test_cases["ssid_5g_wpa_bridge"]] = "passed"
-        except:
+        except Exception as ex:
+            print(ex)
+            logging.error(logging.traceback.format_exc())
             fiveG_wpa = "error"
             print("5G WPA SSID create failed - bridge mode")
             client.update_testrail(case_id=test_cases["ssid_5g_wpa_bridge"], run_id=rid, status_id=5,
@@ -819,7 +827,9 @@ for key in equipment_ids:
             client.update_testrail(case_id=test_cases["ssid_2g_eap_bridge"], run_id=rid, status_id=1,
                                    msg='2.4G EAP SSID created successfully - bridge mode')
             report_data['tests'][key][test_cases["ssid_2g_eap_bridge"]] = "passed"
-        except:
+        except Exception as ex:
+            print(ex)
+            logging.error(logging.traceback.format_exc())
             twoFourG_eap = "error"
             print("2.4G EAP SSID create failed - bridge mode")
             client.update_testrail(case_id=test_cases["ssid_2g_eap_bridge"], run_id=rid, status_id=5,
@@ -838,7 +848,9 @@ for key in equipment_ids:
             client.update_testrail(case_id=test_cases["ssid_2g_wpa2_bridge"], run_id=rid, status_id=1,
                                    msg='2.4G WPA2 SSID created successfully - bridge mode')
             report_data['tests'][key][test_cases["ssid_2g_wpa2_bridge"]] = "passed"
-        except:
+        except Exception as ex:
+            print(ex)
+            logging.error(logging.traceback.format_exc())
             twoFourG_wpa2 = "error"
             print("2.4G WPA2 SSID create failed - bridge mode")
             client.update_testrail(case_id=test_cases["ssid_2g_wpa2_bridge"], run_id=rid, status_id=5,
@@ -857,7 +869,9 @@ for key in equipment_ids:
             client.update_testrail(case_id=test_cases["ssid_2g_wpa_bridge"], run_id=rid, status_id=1,
                                    msg='2.4G WPA SSID created successfully - bridge mode')
             report_data['tests'][key][test_cases["ssid_2g_wpa_bridge"]] = "passed"
-        except:
+        except Exception as ex:
+            print(ex)
+            logging.error(logging.traceback.format_exc())
             twoFourG_wpa = "error"
             print("2.4G WPA SSID create failed - bridge mode")
             client.update_testrail(case_id=test_cases["ssid_2g_wpa_bridge"], run_id=rid, status_id=5,
