@@ -8,6 +8,8 @@ import paramiko
 from paramiko import SSHClient
 import socket
 
+owrt_args = "--prompt root@OpenAp -s serial --log stdout"
+
 def ssh_cli_connect(command_line_args):
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -34,16 +36,12 @@ def ssh_cli_active_fw(command_line_args):
     try:
         client = ssh_cli_connect(command_line_args)
 
-        ap_ip = command_line_args.ap_ip
-        ap_username = command_line_args.ap_username
-        ap_password = command_line_args.ap_password
-
         jumphost_wlan_testing = command_line_args.ap_jumphost_wlan_testing
         jumphost_tty = command_line_args.ap_jumphost_tty
 
         ap_cmd = "/usr/opensync/bin/ovsh s AWLAN_Node -c | grep FW_IMAGE_ACTIVE"
         if command_line_args.ap_jumphost_address != None:
-            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py --prompt OpenAp -s serial -t %s --action cmd --value \"%s\""%(jumphost_wlan_testing, jumphost_tty, ap_cmd)
+            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\""%(jumphost_wlan_testing, owrt_args, jumphost_tty, ap_cmd)
             stdin, stdout, stderr = client.exec_command(cmd)
         else:
             stdin, stdout, stderr = client.exec_command(ap_cmd)
@@ -57,7 +55,7 @@ def ssh_cli_active_fw(command_line_args):
 
         ap_cmd = "/usr/opensync/bin/ovsh s Manager -c | grep status"
         if command_line_args.ap_jumphost_address != None:
-            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py --prompt OpenAp -s serial -t %s --action cmd --value \"%s\""%(jumphost_wlan_testing, jumphost_tty, ap_cmd)
+            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\""%(jumphost_wlan_testing, owrt_args, jumphost_tty, ap_cmd)
             stdin, stdout, stderr = client.exec_command(cmd)
         else:
             stdin, stdout, stderr = client.exec_command(ap_cmd)
@@ -100,7 +98,7 @@ def iwinfo_status(command_line_args):
 
         ap_cmd = "iwinfo | grep ESSID"
         if command_line_args.ap_jumphost_address != None:
-            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py --prompt OpenAp -s serial -t %s --action cmd --value \"%s\""%(jumphost_wlan_testing, jumphost_tty, ap_cmd)
+            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\""%(jumphost_wlan_testing, owrt_args, jumphost_tty, ap_cmd)
             stdin, stdout, stderr = client.exec_command(cmd)
         else:
             stdin, stdout, stderr = client.exec_command(ap_cmd)
@@ -118,14 +116,14 @@ def iwinfo_status(command_line_args):
         print("AP Unreachable")
         return "ERROR"
 
-def get_vif_config(ap_ip, username, password):
+def get_vif_config(command_line_args):
     try:
         client = ssh_cli_connect(command_line_args)
 
         ap_cmd = "/usr/opensync/bin/ovsh s Wifi_VIF_Config -c | grep 'ssid               :'"
 
         if command_line_args.ap_jumphost_address != None:
-            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py --prompt OpenAp -s serial -t %s --action cmd --value \"%s\""%(jumphost_wlan_testing, jumphost_tty, ap_cmd)
+            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\""%(jumphost_wlan_testing, owrt_args, jumphost_tty, ap_cmd)
             stdin, stdout, stderr = client.exec_command(cmd)
         else:
             stdin, stdout, stderr = client.exec_command(ap_cmd)
@@ -152,7 +150,7 @@ def get_vif_state(command_line_args):
         ap_cmd = "/usr/opensync/bin/ovsh s Wifi_VIF_State -c | grep 'ssid               :'"
 
         if command_line_args.ap_jumphost_address != None:
-            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py --prompt OpenAp -s serial -t %s --action cmd --value \"%s\""%(jumphost_wlan_testing, jumphost_tty, ap_cmd)
+            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\""%(jumphost_wlan_testing, owrt_args, jumphost_tty, ap_cmd)
             stdin, stdout, stderr = client.exec_command(cmd)
         else:
             stdin, stdout, stderr = client.exec_command(ap_cmd)

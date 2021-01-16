@@ -47,37 +47,8 @@ mimo_2dot4g = {
     "ecw5410": "4x4"
 }
 
-sanity_status = {
-    "ea8300": "failed",
-    "ecw5211": 'passed',
-    "ecw5410": 'failed',
-    "ec420": 'failed'
-}
-
 ##Customer ID for testing
 customer_id = "2"
-
-##Equipment IDs for Lab APs under test
-equipment_id_dict = {
-    "ea8300": "19",
-    "ecw5410": "20",
-    "ecw5211": "21",
-    "ec420": "27"
-}
-
-equipment_ip_dict = {
-    "ea8300": "10.10.10.103",
-    "ecw5410": "10.10.10.105",
-    "ec420": "10.10.10.104",
-    "ecw5211": "10.10.10.102"
-}
-
-eqiupment_credentials_dict = {
-    "ea8300": "openwifi",
-    "ecw5410": "openwifi",
-    "ec420": "openwifi",
-    "ecw5211": "admin123"
-}
 
 ##Test Case information - Maps a generic TC name to TestRail TC numbers
 test_cases = {

@@ -43,7 +43,9 @@ import glob
 # In separate console to set up the ssh tunnel:
 #ssh -C -L 7220:lab-ctlr:22 ubuntu@3.130.51.163
 # On local machine:
-#./Nightly_Sanity.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 7220 --ap-jumphost-password secret --ap-jumphost-tty /dev/ttyAP1
+#./Nightly_Sanity.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 7220 --ap-jumphost-password secret --ap-jumphost-tty /dev/ttyAP1 --equipment_id 3
+
+# TODO: Query cloud to find equipment-id based on ovsh output from DUT in question?
 
 
 if sys.version_info[0] != 3:
@@ -73,11 +75,8 @@ from ap_ssh import iwinfo_status
 
 ##Import info for lab setup and APs under test
 import lab_ap_info
-from lab_ap_info import equipment_id_dict
 from lab_ap_info import profile_info_dict
 from lab_ap_info import cloud_sdk_models
-from lab_ap_info import equipment_ip_dict
-from lab_ap_info import eqiupment_credentials_dict
 from lab_ap_info import ap_models
 from lab_ap_info import customer_id
 from lab_ap_info import cloud_type
@@ -87,10 +86,14 @@ from lab_ap_info import radius_info
 parser = argparse.ArgumentParser(description="Sanity Testing on Firmware Build")
 parser.add_argument("-b", "--build-id", type=str, help="FW commit ID (latest pending build on dev is default)",
                     default = "pending")
-parser.add_argument("-i", "--ignore-ap-version", type=bool, help="Ignore current running version on AP and run sanity regardless",
+parser.add_argument("--skip-upgrade", type=bool, help="Skip upgrading firmware",
+                    default = False)
+parser.add_argument("--force-upgrade", type=bool, help="Force upgrading firmware even if it is already current version",
                     default = False)
 parser.add_argument("-m", "--model", type=str, choices=['ea8300', 'ecw5410', 'ecw5211', 'ec420'],
                     help="AP model to be run", required=True)
+parser.add_argument("--equipment_id", type=str,
+                    help="AP model ID, as exists in the cloud-sdk", required=True)
 
 parser.add_argument("--sdk-base-url", type=str, help="cloudsdk base url",
                     default="https://wlan-portal-svc.cicd.lab.wlan.tip.build")
@@ -105,6 +108,7 @@ parser.add_argument("--jfrog-user-id", type=str, help="jfrog user id",
                     default="tip-read")
 parser.add_argument("--jfrog-user-password", type=str, help="jfrog user password",
                     default="tip-read")
+
 parser.add_argument("--testrail-base-url", type=str, help="testrail base url",   # was os.getenv('TESTRAIL_URL')
                     default="https://telecominfraproject.testrail.com")
 parser.add_argument("--testrail-project", type=str, help="testrail project name",
@@ -313,20 +317,14 @@ class RunTest:
         logger.warning("ERROR testing Client connectivity to " + ssid_name)
 
 ####Use variables other than defaults for running tests on custom FW etc
-equipment_ids = equipment_id_dict
 
 model_id = command_line_args.model
-equipment_ids = {
-    model_id: equipment_id_dict[model_id]
-}
-print(equipment_ids)
+equipment_id = command_line_args.equipment_id
 
 print("Start of Sanity Testing...")
 print("Testing Latest Build with Tag: "+build)
-if command_line_args.ignore_ap_version == True:
-    print("Will ignore if AP is already running build under test and run sanity regardless...")
-else:
-    print("Checking for APs requiring upgrade to latest build...")
+if command_line_args.skip_upgrade == True:
+    print("Will skip upgrading AP firmware...")
 
 ######Testrail Project and Run ID Information ##############################
 
@@ -421,12 +419,18 @@ for model in ap_models:
 ####################################################################################
 ####################################################################################
 
+# Dummy up a single list item.
+equipment_ids = {
+    model: equipment_id
+}
+print(equipment_ids)
+
+
 for key in equipment_ids:
     ##Get Bearer Token to make sure its valid (long tests can require re-auth)
     bearer = cloud.get_bearer(cloudSDK_url, cloud_type)
 
     ###Get Current AP Firmware and upgrade
-    equipment_id = equipment_id_dict[key]
     print("AP MODEL UNDER TEST IS", key)
     try:
         ap_cli_info = ssh_cli_active_fw(command_line_args)
@@ -444,10 +448,11 @@ for key in equipment_ids:
 
     ##Compare Latest and Current AP FW and Upgrade
     latest_ap_image = ap_latest_dict[fw_model]
-    if ap_cli_fw == latest_ap_image and ignore != True:
+    do_upgrade = False
+    if ap_cli_fw == latest_ap_image and command_line_args.force_upgrade != True:
         print('FW does not require updating')
         report_data['fw_available'][key] = "No"
-        logger.info(fw_model + " does not require upgrade. Not performing sanity tests for this AP variant")
+        logger.info(fw_model + " does not require upgrade.")
         cloudsdk_cluster_info = {
             "date": "N/A",
             "commitId": "N/A",
@@ -455,58 +460,68 @@ for key in equipment_ids:
         }
         report_data['cloud_sdk'][key] = cloudsdk_cluster_info
 
-    else:
-        if ap_cli_fw == latest_ap_image and ignore == True:
-            print('AP is already running FW version under test. Ignored based on ignore flag, updating AP')
-        else:
-            print('FW needs updating')
+    if ap_cli_fw != latest_ap_image and command_line_args.skip_upgrade == True:
+        print('FW needs updating, but skip_upgrade is True, so skipping upgrade')
+        report_data['fw_available'][key] = "No"
+        logger.info(fw_model + " firmware upgrade skipped, running with " + ap_cli_fw)
+        cloudsdk_cluster_info = {
+            "date": "N/A",
+            "commitId": "N/A",
+            "projectVersion": "N/A"
+        }
+        report_data['cloud_sdk'][key] = cloudsdk_cluster_info
+
+    if (ap_cli_fw != latest_ap_image or command_line_args.force_upgrade == True) and not command_line_args.skip_upgrade:
+        print('Updating firmware, old: %s  new: %s'%(ap_cli_fw, latest_ap_image))
+        do_upgrade = True
         report_data['fw_available'][key] = "Yes"
         report_data['fw_under_test'][key] = latest_ap_image
 
-        ###Create Test Run
-        today = str(date.today())
-        case_ids = list(test_cases.values())
-        test_run_name = testRunPrefix + fw_model + "_" + today + "_" + latest_ap_image
-        client.create_testrun(name=test_run_name, case_ids=case_ids, project_id=projId, milestone_id=milestoneId,
-                              description="Automated Nightly Sanity test run for new firmware build")
-        rid = client.get_run_id(test_run_name= testRunPrefix + fw_model + "_" + today + "_" + latest_ap_image)
-        print("TIP run ID is:", rid)
+    ###Create Test Run
+    today = str(date.today())
+    case_ids = list(test_cases.values())
+    test_run_name = testRunPrefix + fw_model + "_" + today + "_" + latest_ap_image
+    client.create_testrun(name=test_run_name, case_ids=case_ids, project_id=projId, milestone_id=milestoneId,
+                          description="Automated Nightly Sanity test run for new firmware build")
+    rid = client.get_run_id(test_run_name= testRunPrefix + fw_model + "_" + today + "_" + latest_ap_image)
+    print("TIP run ID is:", rid)
 
-        ###GetCloudSDK Version
-        print("Getting CloudSDK version information...")
-        try:
-            cluster_ver = cloud.get_cloudsdk_version(cloudSDK_url, bearer)
-            print("CloudSDK Version Information:")
-            print("-------------------------------------------")
-            print(cluster_ver)
-            print("-------------------------------------------")
+    ###GetCloudSDK Version
+    print("Getting CloudSDK version information...")
+    try:
+        cluster_ver = cloud.get_cloudsdk_version(cloudSDK_url, bearer)
+        print("CloudSDK Version Information:")
+        print("-------------------------------------------")
+        print(cluster_ver)
+        print("-------------------------------------------")
 
-            cloudsdk_cluster_info = {}
-            cloudsdk_cluster_info['date'] = cluster_ver['commitDate']
-            cloudsdk_cluster_info['commitId'] = cluster_ver['commitID']
-            cloudsdk_cluster_info['projectVersion'] = cluster_ver['projectVersion']
-            report_data['cloud_sdk'][key] = cloudsdk_cluster_info
-            client.update_testrail(case_id=test_cases["cloud_ver"], run_id=rid, status_id=1,
-                                   msg='Read CloudSDK version from API successfully')
-            report_data['tests'][key][test_cases["cloud_ver"]] = "passed"
+        cloudsdk_cluster_info = {}
+        cloudsdk_cluster_info['date'] = cluster_ver['commitDate']
+        cloudsdk_cluster_info['commitId'] = cluster_ver['commitID']
+        cloudsdk_cluster_info['projectVersion'] = cluster_ver['projectVersion']
+        report_data['cloud_sdk'][key] = cloudsdk_cluster_info
+        client.update_testrail(case_id=test_cases["cloud_ver"], run_id=rid, status_id=1,
+                               msg='Read CloudSDK version from API successfully')
+        report_data['tests'][key][test_cases["cloud_ver"]] = "passed"
 
-        except:
-            cluster_ver = 'error'
-            print("ERROR: CloudSDK Version Unavailable")
-            logger.info('CloudSDK version Unavailable')
-            cloudsdk_cluster_info = {
-                "date": "unknown",
-                "commitId": "unknown",
-                "projectVersion": "unknown"
-            }
-            client.update_testrail(case_id=test_cases["cloud_ver"], run_id=rid, status_id=5,
-                                   msg='Could not read CloudSDK version from API')
-            report_data['cloud_sdk'][key] = cloudsdk_cluster_info
-            report_data['tests'][key][test_cases["cloud_ver"]] = "failed"
+    except:
+        cluster_ver = 'error'
+        print("ERROR: CloudSDK Version Unavailable")
+        logger.info('CloudSDK version Unavailable')
+        cloudsdk_cluster_info = {
+            "date": "unknown",
+            "commitId": "unknown",
+            "projectVersion": "unknown"
+        }
+        client.update_testrail(case_id=test_cases["cloud_ver"], run_id=rid, status_id=5,
+                               msg='Could not read CloudSDK version from API')
+        report_data['cloud_sdk'][key] = cloudsdk_cluster_info
+        report_data['tests'][key][test_cases["cloud_ver"]] = "failed"
 
-        with open(report_path + today + '/report_data.json', 'w') as report_json_file:
+    with open(report_path + today + '/report_data.json', 'w') as report_json_file:
             json.dump(report_data, report_json_file)
 
+    if do_upgrade:
         ###Test Create Firmware Version
         test_id_fw = test_cases["create_fw"]
         latest_image = ap_latest_dict[key]
@@ -602,12 +617,14 @@ for key in equipment_ids:
         # Check if upgrade successful on AP CLI
         test_id_cli = test_cases["ap_upgrade"]
         try:
-            ap_cli_info = ssh_cli_active_fw(ap_ip, ap_username, ap_password)
+            ap_cli_info = ssh_cli_active_fw(command_line_args)
             ap_cli_fw = ap_cli_info['active_fw']
             print("CLI reporting AP Active FW as:", ap_cli_fw)
             logger.info('Firmware from CLI: ' + ap_cli_fw)
-        except:
+        except Exception as ex:
             ap_cli_info = "ERROR"
+            print(ex)
+            logging.error(logging.traceback.format_exc())
             print("Cannot Reach AP CLI to confirm upgrade!")
             logger.warning('Cannot Reach AP CLI to confirm upgrade!')
             client.update_testrail(case_id=test_id_cli, run_id=rid, status_id=4,
@@ -667,6 +684,8 @@ for key in equipment_ids:
 
         print(report_data)
 
+    # TODO:  Fix indentation, break all this up into small test cases anyway.
+    if True:
         ###Check AP Manager Status
         manager_status = ap_cli_info['state']
 
@@ -674,7 +693,7 @@ for key in equipment_ids:
             print("Manager status is " + manager_status + "! Not connected to the cloud.")
             print("Waiting 30 seconds and re-checking status")
             time.sleep(30)
-            ap_cli_info = ssh_cli_active_fw(ap_ip, ap_username, ap_password)
+            ap_cli_info = ssh_cli_active_fw(command_line_args)
             manager_status = ap_cli_info['state']
             if manager_status != "active":
                 print("Manager status is", manager_status, "! Not connected to the cloud.")
@@ -882,7 +901,7 @@ for key in equipment_ids:
             ssid_config = profile_info_dict[key]["ssid_list"]
             print("SSIDs in AP Profile:", ssid_config)
 
-            ssid_list = ap_ssh.get_vif_config(ap_ip, ap_username, ap_password)
+            ssid_list = ap_ssh.get_vif_config(command_line_args)
             print("SSIDs in AP VIF Config:", ssid_list)
 
             if set(ssid_list) == set(ssid_config):
@@ -903,7 +922,7 @@ for key in equipment_ids:
             report_data['tests'][key][test_cases["bridge_vifc"]] = "error"
         # VIF State
         try:
-            ssid_state = ap_ssh.get_vif_state(ap_ip, ap_username, ap_password)
+            ssid_state = ap_ssh.get_vif_state(command_line_args)
             print("SSIDs in AP VIF State:", ssid_state)
 
             if set(ssid_state) == set(ssid_config):
@@ -928,7 +947,7 @@ for key in equipment_ids:
         port = "eth2"
 
         # print iwinfo for information
-        iwinfo = iwinfo_status(ap_ip, ap_username, ap_password)
+        iwinfo = iwinfo_status(command_line_args)
         print(iwinfo)
 
         ###Run Client Single Connectivity Test Cases for Bridge SSIDs
@@ -1213,7 +1232,7 @@ for key in equipment_ids:
             ssid_config = profile_info_dict[fw_model + '_nat']["ssid_list"]
             print("SSIDs in AP Profile:", ssid_config)
 
-            ssid_list = ap_ssh.get_vif_config(ap_ip, ap_username, ap_password)
+            ssid_list = ap_ssh.get_vif_config(command_line_args)
             print("SSIDs in AP VIF Config:", ssid_list)
 
             if set(ssid_list) == set(ssid_config):
@@ -1234,7 +1253,7 @@ for key in equipment_ids:
             report_data['tests'][key][test_cases["nat_vifc"]] = "error"
         # VIF State
         try:
-            ssid_state = ap_ssh.get_vif_state(ap_ip, ap_username, ap_password)
+            ssid_state = ap_ssh.get_vif_state(command_line_args)
             print("SSIDs in AP VIF State:", ssid_state)
 
             if set(ssid_state) == set(ssid_config):
@@ -1259,7 +1278,7 @@ for key in equipment_ids:
         port = "eth2"
 
         # Print iwinfo for logs
-        iwinfo = iwinfo_status(ap_ip, ap_username, ap_password)
+        iwinfo = iwinfo_status(command_line_args)
         print(iwinfo)
 
         ###Run Client Single Connectivity Test Cases for NAT SSIDs
@@ -1541,7 +1560,7 @@ for key in equipment_ids:
             ssid_config = profile_info_dict[fw_model + '_vlan']["ssid_list"]
             print("SSIDs in AP Profile:", ssid_config)
 
-            ssid_list = ap_ssh.get_vif_config(ap_ip, ap_username, ap_password)
+            ssid_list = ap_ssh.get_vif_config(command_line_args)
             print("SSIDs in AP VIF Config:", ssid_list)
 
             if set(ssid_list) == set(ssid_config):
@@ -1562,7 +1581,7 @@ for key in equipment_ids:
             report_data['tests'][key][test_cases["vlan_vifc"]] = "error"
         # VIF State
         try:
-            ssid_state = ap_ssh.get_vif_state(ap_ip, ap_username, ap_password)
+            ssid_state = ap_ssh.get_vif_state(command_line_args)
             print("SSIDs in AP VIF State:", ssid_state)
 
             if set(ssid_state) == set(ssid_config):
@@ -1587,7 +1606,7 @@ for key in equipment_ids:
         port = "vlan100"
 
         # Print iwinfo for logs
-        iwinfo = iwinfo_status(ap_ip, ap_username, ap_password)
+        iwinfo = iwinfo_status(command_line_args)
         print(iwinfo)
 
         ###Run Client Single Connectivity Test Cases for VLAN SSIDs
