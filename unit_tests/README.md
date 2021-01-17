@@ -9,6 +9,9 @@ sudo pip3 install paramiko
 sudo pip3 install scp
 sudo pip3 install pexpect
 
+# Find the cloud-sdk API document here:
+https://github.com/Telecominfraproject/wlan-cloud-services/tree/master/portal-services/src/main/resources/
+
 ## Nightly Sanity
 This script is used to look for and test new firmware available for the APs. AP equipment IDs and SSID information used in test is stored in the lab_ap_info file
 

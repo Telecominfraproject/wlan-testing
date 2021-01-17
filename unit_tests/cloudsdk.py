@@ -67,7 +67,7 @@ class CloudSDK:
         }
         status_response = requests.request("GET", equip_fw_url, headers=headers, data=payload)
         status_code = status_response.status_code
-        if status_code is 200:
+        if status_code == 200:
             status_data = status_response.json()
             #print(status_data)
             current_ap_fw = status_data[2]['details']['reportedSwVersion']
@@ -116,6 +116,16 @@ class CloudSDK:
         fw_data = response.json()
         latest_fw_id = fw_data['id']
         return latest_fw_id
+
+    def get_customer_profiles(self, cloudSDK_url, bearer, customer_id):
+        fw_id_url = cloudSDK_url + "/portal/profile/forCustomer" + "?customerId=" + customer_id
+
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+        response = requests.request("GET", fw_id_url, headers=headers, data=payload)
+        return response.json()
 
     def delete_firmware(self, fw_id, cloudSDK_url, bearer):
         url = cloudSDK_url + '/portal/firmware/version?firmwareVersionId=' + fw_id
