@@ -6,10 +6,10 @@ base = UnitTestBase("query-sdk")
 
 # Get customer profiles
 try:
-    ssids = base.cloud.get_customer_profiles(base.cloudSDK_url, base.bearer, base.customer_id)
+    rv = base.cloud.get_customer_profiles(base.cloudSDK_url, base.bearer, base.customer_id)
     print("Profiles for customer %s:"%(base.customer_id))
     #jobj = json.load(ssids)
-    print(json.dumps(ssids, indent=4, sort_keys=True))
+    print(json.dumps(rv, indent=4, sort_keys=True))
 except Exception as ex:
     print(ex)
     logging.error(logging.traceback.format_exc())
@@ -19,11 +19,115 @@ except Exception as ex:
 for customer_id in range(4):
     try:
         # NOTE:  Could also use base.customer_id to get single one that user may have specified.
-        ssids = base.cloud.get_customer(base.cloudSDK_url, base.bearer, "%i"%(customer_id))
+        rv = base.cloud.get_customer(base.cloudSDK_url, base.bearer, "%i"%(customer_id))
         print("Customer %i:"%(customer_id))
         #jobj = json.load(ssids)
-        print(json.dumps(ssids, indent=4, sort_keys=True))
+        print(json.dumps(rv, indent=4, sort_keys=True))
     except Exception as ex:
         print(ex)
         logging.error(logging.traceback.format_exc())
         print("Failed to read Customer %i"%(customer_id))
+
+# Get location info
+try:
+    # NOTE:  Could also use base.customer_id to get single one that user may have specified.
+    rv = base.cloud.get_customer_locations(base.cloudSDK_url, base.bearer, base.customer_id)
+    print("Locations for customer %s:"%(base.customer_id))
+    #jobj = json.load(ssids)
+    print(json.dumps(rv, indent=4, sort_keys=True))
+except Exception as ex:
+    print(ex)
+    logging.error(logging.traceback.format_exc())
+    print("Failed to read Customer %s locations"%(base.customer_id))
+
+# Get equipment info
+try:
+    rv = base.cloud.get_customer_equipment(base.cloudSDK_url, base.bearer, base.customer_id)
+    print("Equipment for customer %s:"%(base.customer_id))
+    #jobj = json.load(ssids)
+    print(json.dumps(rv, indent=4, sort_keys=True))
+except Exception as ex:
+    print(ex)
+    logging.error(logging.traceback.format_exc())
+    print("Failed to read Customer %s equipment"%(base.customer_id))
+
+# Get portalUser info
+try:
+    rv = base.cloud.get_customer_portal_users(base.cloudSDK_url, base.bearer, base.customer_id)
+    print("PortalUsers for customer %s:"%(base.customer_id))
+    #jobj = json.load(ssids)
+    print(json.dumps(rv, indent=4, sort_keys=True))
+except Exception as ex:
+    print(ex)
+    logging.error(logging.traceback.format_exc())
+    print("Failed to read Customer %s portalUsers"%(base.customer_id))
+
+# Get status info
+try:
+    rv = base.cloud.get_customer_status(base.cloudSDK_url, base.bearer, base.customer_id)
+    print("Status for customer %s:"%(base.customer_id))
+    #jobj = json.load(ssids)
+    print(json.dumps(rv, indent=4, sort_keys=True))
+except Exception as ex:
+    print(ex)
+    logging.error(logging.traceback.format_exc())
+    print("Failed to read Customer %s status"%(base.customer_id))
+
+# Get client sessions info
+try:
+    rv = base.cloud.get_customer_client_sessions(base.cloudSDK_url, base.bearer, base.customer_id)
+    print("Sessions for customer %s:"%(base.customer_id))
+    #jobj = json.load(ssids)
+    print(json.dumps(rv, indent=4, sort_keys=True))
+except Exception as ex:
+    print(ex)
+    logging.error(logging.traceback.format_exc())
+    print("Failed to read Customer %s sessions"%(base.customer_id))
+
+# Get clients info
+try:
+    rv = base.cloud.get_customer_clients(base.cloudSDK_url, base.bearer, base.customer_id)
+    print("Clients for customer %s:"%(base.customer_id))
+    #jobj = json.load(ssids)
+    print(json.dumps(rv, indent=4, sort_keys=True))
+except Exception as ex:
+    print(ex)
+    logging.error(logging.traceback.format_exc())
+    print("Failed to read Customer %s clients"%(base.customer_id))
+
+# Get alarms info
+try:
+    rv = base.cloud.get_customer_alarms(base.cloudSDK_url, base.bearer, base.customer_id)
+    print("Alarms for customer %s:"%(base.customer_id))
+    #jobj = json.load(ssids)
+    print(json.dumps(rv, indent=4, sort_keys=True))
+except Exception as ex:
+    print(ex)
+    logging.error(logging.traceback.format_exc())
+    print("Failed to read Customer %s alarms"%(base.customer_id))
+
+# Get service metrics
+try:
+    fromTime = "0"
+    toTime = "%i"%(0xFFFFFFFFFFFF)  # something past now, units are msec
+    rv = base.cloud.get_customer_service_metrics(base.cloudSDK_url, base.bearer, base.customer_id, fromTime, toTime)
+    print("Service Metrics for customer %s:"%(base.customer_id))
+    #jobj = json.load(ssids)
+    print(json.dumps(rv, indent=4, sort_keys=True))
+except Exception as ex:
+    print(ex)
+    logging.error(logging.traceback.format_exc())
+    print("Failed to read Customer %s service metrics"%(base.customer_id))
+
+# Get system events
+try:
+    fromTime = "0"
+    toTime = "%i"%(0xFFFFFFFFFFFF)  # something past now, units are msec
+    rv = base.cloud.get_customer_system_events(base.cloudSDK_url, base.bearer, base.customer_id, fromTime, toTime)
+    print("System Events for customer %s:"%(base.customer_id))
+    #jobj = json.load(ssids)
+    print(json.dumps(rv, indent=4, sort_keys=True))
+except Exception as ex:
+    print(ex)
+    logging.error(logging.traceback.format_exc())
+    print("Failed to read Customer %s system events"%(base.customer_id))

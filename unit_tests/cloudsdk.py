@@ -127,6 +127,97 @@ class CloudSDK:
         response = requests.request("GET", fw_id_url, headers=headers, data=payload)
         return response.json()
 
+    def get_customer_locations(self, cloudSDK_url, bearer, customer_id):
+        url = cloudSDK_url + "/portal/location/forCustomer" + "?customerId=" + customer_id
+        print("get-customer-locations URL: %s"%(url))
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+        response = requests.request("GET", url, headers=headers, data=payload)
+        return response.json()
+
+    def get_customer_equipment(self, cloudSDK_url, bearer, customer_id):
+        url = cloudSDK_url + "/portal/equipment/forCustomer" + "?customerId=" + customer_id
+        print("get-customer-eq URL: %s"%(url))
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+        response = requests.request("GET", url, headers=headers, data=payload)
+        return response.json()
+
+    def get_customer_portal_users(self, cloudSDK_url, bearer, customer_id):
+        url = cloudSDK_url + "/portal/portalUser/forCustomer" + "?customerId=" + customer_id
+        print("get-customer-portal-users URL: %s"%(url))
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+        response = requests.request("GET", url, headers=headers, data=payload)
+        return response.json()
+
+    def get_customer_status(self, cloudSDK_url, bearer, customer_id):
+        url = cloudSDK_url + "/portal/status/forCustomer" + "?customerId=" + customer_id
+        print("get-customer-status URL: %s"%(url))
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+        response = requests.request("GET", url, headers=headers, data=payload)
+        return response.json()
+
+    def get_customer_client_sessions(self, cloudSDK_url, bearer, customer_id):
+        # TODO:  Need to deal with pagination for this one.
+        url = cloudSDK_url + "/portal/client/session/forCustomer" + "?customerId=" + customer_id
+        print("get-customer-client-session URL: %s"%(url))
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+        response = requests.request("GET", url, headers=headers, data=payload)
+        return response.json()
+
+    def get_customer_clients(self, cloudSDK_url, bearer, customer_id):
+        url = cloudSDK_url + "/portal/client/forCustomer" + "?customerId=" + customer_id
+        print("get-customer-client URL: %s"%(url))
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+        response = requests.request("GET", url, headers=headers, data=payload)
+        return response.json()
+
+    def get_customer_alarms(self, cloudSDK_url, bearer, customer_id):
+        url = cloudSDK_url + "/portal/alarm/forCustomer" + "?customerId=" + customer_id
+        print("get-customer-alarm URL: %s"%(url))
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+        response = requests.request("GET", url, headers=headers, data=payload)
+        return response.json()
+
+    def get_customer_service_metrics(self, cloudSDK_url, bearer, customer_id, fromTime, toTime):
+        url = cloudSDK_url + "/portal/serviceMetric/forCustomer" + "?customerId=" + customer_id + "&fromTime=" + fromTime + "&toTime=" + toTime
+        print("get-customer-service-metrics URL: %s"%(url))
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+        response = requests.request("GET", url, headers=headers, data=payload)
+        return response.json()
+
+    def get_customer_system_events(self, cloudSDK_url, bearer, customer_id, fromTime, toTime):
+        url = cloudSDK_url + "/portal/systemEvent/forCustomer" + "?customerId=" + customer_id + "&fromTime=" + fromTime + "&toTime=" + toTime
+        print("get-customer-service-metrics URL: %s"%(url))
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+        response = requests.request("GET", url, headers=headers, data=payload)
+        return response.json()
+
     def get_customer(self, cloudSDK_url, bearer, customer_id):
         fw_id_url = cloudSDK_url + "/portal/customer" + "?customerId=" + customer_id
 
@@ -148,6 +239,58 @@ class CloudSDK:
 
     def update_firmware(self, equipment_id, latest_firmware_id, cloudSDK_url, bearer):
         url = cloudSDK_url+"/portal/equipmentGateway/requestFirmwareUpdate?equipmentId="+equipment_id+"&firmwareVersionId="+latest_firmware_id
+
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+
+        response = requests.request("POST", url, headers=headers, data=payload)
+        #print(response.text)
+        return response.json()
+
+    # This one is not yet tested, coded from spec, could have bugs.
+    def ap_reboot(self, equipment_id, cloudSDK_url, bearer):
+        url = cloudSDK_url+"/portal/equipmentGateway/requestApReboot?equipmentId="+equipment_id
+
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+
+        response = requests.request("POST", url, headers=headers, data=payload)
+        #print(response.text)
+        return response.json()
+
+    # This one is not yet tested, coded from spec, could have bugs.
+    def ap_switch_sw_bank(self, equipment_id, cloudSDK_url, bearer):
+        url = cloudSDK_url+"/portal/equipmentGateway/requestApSwitchSoftwareBank?equipmentId="+equipment_id
+
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+
+        response = requests.request("POST", url, headers=headers, data=payload)
+        #print(response.text)
+        return response.json()
+
+    # This one is not yet tested, coded from spec, could have bugs.
+    def ap_factory_reset(self, equipment_id, cloudSDK_url, bearer):
+        url = cloudSDK_url+"/portal/equipmentGateway/requestApFactoryReset?equipmentId="+equipment_id
+
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+
+        response = requests.request("POST", url, headers=headers, data=payload)
+        #print(response.text)
+        return response.json()
+
+    # This one is not yet tested, coded from spec, could have bugs.
+    def ap_channel_change(self, equipment_id, cloudSDK_url, bearer):
+        url = cloudSDK_url+"/portal/equipmentGateway/requestChannelChange?equipmentId="+equipment_id
 
         payload = {}
         headers = {
