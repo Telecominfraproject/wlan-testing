@@ -43,7 +43,7 @@ import glob
 # In separate console to set up the ssh tunnel:
 #ssh -C -L 7220:lab-ctlr:22 ubuntu@3.130.51.163
 # On local machine:
-#./query_ssids.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 7220 --ap-jumphost-password secret --ap-jumphost-tty /dev/ttyAP1 --equipment_id 3
+#./query_ssids.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 7220 --ap-jumphost-password secret --ap-jumphost-tty /dev/ttyAP1
 
 if sys.version_info[0] != 3:
     print("This script requires Python 3")
@@ -67,8 +67,7 @@ from eap_connect import EAPConnect
 import cloudsdk
 from cloudsdk import CloudSDK
 import ap_ssh
-from ap_ssh import ssh_cli_active_fw
-from ap_ssh import iwinfo_status
+from ap_ssh import *
 
 ##Import info for lab setup and APs under test
 import lab_ap_info
@@ -95,7 +94,8 @@ class UnitTestBase:
         self.parser.add_argument("-m", "--model", type=str, choices=['ea8300', 'ecw5410', 'ecw5211', 'ec420'],
                             help="AP model to be run", required=True)
         self.parser.add_argument("--equipment_id", type=str,
-                            help="AP model ID, as exists in the cloud-sdk", required=True)
+                                 help="AP model ID, as exists in the cloud-sdk.  -1 to auto-detect.",
+                                 default = "-1")
 
         self.parser.add_argument("--sdk-base-url", type=str, help="cloudsdk base url",
                             default="https://wlan-portal-svc.cicd.lab.wlan.tip.build")

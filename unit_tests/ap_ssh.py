@@ -116,6 +116,48 @@ def iwinfo_status(command_line_args):
         print("AP Unreachable")
         return "ERROR"
 
+
+def ap_ssh_ovsh_nodec(command_line_args, key):
+    try:
+        jumphost_wlan_testing = command_line_args.ap_jumphost_wlan_testing
+        jumphost_tty = command_line_args.ap_jumphost_tty
+
+        client = ssh_cli_connect(command_line_args)
+
+        ap_cmd = "/usr/opensync/bin/ovsh s AWLAN_Node -c"
+        if command_line_args.ap_jumphost_address != None:
+            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\""%(jumphost_wlan_testing, owrt_args, jumphost_tty, ap_cmd)
+            stdin, stdout, stderr = client.exec_command(cmd)
+        else:
+            stdin, stdout, stderr = client.exec_command(ap_cmd)
+
+        output = str(stdout.read(), 'utf-8')
+
+        if key != None:
+            for line in output.splitlines():
+                toks = line.split(':', 1)
+                try:
+                    k = toks[0].strip(' ')
+                    v = toks[1].strip(' ')
+                    if k == 'id':
+                        return v
+                except Exception as e1:
+                    print(e1)
+                    print(line)
+                    print(toks)
+
+        return output
+
+    except paramiko.ssh_exception.AuthenticationException:
+        print("Authentication Error, Check Credentials")
+        return "ERROR"
+    except paramiko.SSHException:
+        print("Cannot SSH to the AP")
+        return "ERROR"
+    except socket.timeout:
+        print("AP Unreachable")
+        return "ERROR"
+
 def get_vif_config(command_line_args):
     try:
         client = ssh_cli_connect(command_line_args)
