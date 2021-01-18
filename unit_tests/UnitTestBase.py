@@ -82,9 +82,9 @@ from lab_ap_info import radius_info
 
 class UnitTestBase:
 
-    def __init__(self, log_name):
+    def __init__(self, log_name, args):
 
-        self.parser = argparse.ArgumentParser(description="Sanity Testing on Firmware Build")
+        self.parser = argparse.ArgumentParser(description="Sanity Testing on Firmware Build", parents=[args])
 
         self.parser.add_argument("-b", "--build-id", type=str, help="FW commit ID (latest pending build on dev is default)",
                             default = "pending")
