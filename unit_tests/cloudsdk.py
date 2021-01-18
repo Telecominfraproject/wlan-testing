@@ -127,6 +127,16 @@ class CloudSDK:
         response = requests.request("GET", fw_id_url, headers=headers, data=payload)
         return response.json()
 
+    def get_customer(self, cloudSDK_url, bearer, customer_id):
+        fw_id_url = cloudSDK_url + "/portal/customer" + "?customerId=" + customer_id
+
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+        response = requests.request("GET", fw_id_url, headers=headers, data=payload)
+        return response.json()
+
     def delete_firmware(self, fw_id, cloudSDK_url, bearer):
         url = cloudSDK_url + '/portal/firmware/version?firmwareVersionId=' + fw_id
         payload = {}
