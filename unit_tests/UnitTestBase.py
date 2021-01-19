@@ -96,6 +96,9 @@ class UnitTestBase:
         self.parser.add_argument("--equipment_id", type=str,
                                  help="AP model ID, as exists in the cloud-sdk.  -1 to auto-detect.",
                                  default = "-1")
+        self.parser.add_argument("--object_id", type=str,
+                                 help="Used when querying and deleting individual objects.",
+                                 default = None)
         self.parser.add_argument("--testbed", type=str,
                                  help="Testbed name, will be prefixed to profile names and similar",
                                  default = None)

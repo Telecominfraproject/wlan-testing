@@ -177,12 +177,13 @@ if equipment_id == "-1":
 
     # Now, query equipment to find something that matches.
     eq = cloud.get_customer_equipment(cloudSDK_url, bearer, customer_id)
-    for e in eq['items']:
-        print(e['id'], "  ", e['inventoryId'])
-        if e['inventoryId'].endswith("_%s"%(eq_id)):
-            print("Found equipment ID: %s  inventoryId: %s",
-                  e['id'], e['inventoryId'])
-            equipment_id = str(e['id'])
+    for item in eq:
+        for e in item['items']:
+            print(e['id'], "  ", e['inventoryId'])
+            if e['inventoryId'].endswith("_%s"%(eq_id)):
+                print("Found equipment ID: %s  inventoryId: %s",
+                      e['id'], e['inventoryId'])
+                equipment_id = str(e['id'])
 
 print("Start of Sanity Testing...")
 print("Testing Latest Build with Tag: "+build)

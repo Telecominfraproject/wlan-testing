@@ -145,9 +145,23 @@ class CloudSDK:
 
         return rv
 
-    def get_customer_profiles(self, cloudSDK_url, bearer, customer_id):
-        url_base = cloudSDK_url + "/portal/profile/forCustomer" + "?customerId=" + customer_id
-        return self.get_paged_url(bearer, fw_id_url_base)
+    def get_url(self, bearer, url):
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+
+        print("Get-url, url: %s"%(url))
+        response = requests.request("GET", url, headers=headers, data=payload)
+        return response.json()
+
+    def get_customer_profiles(self, cloudSDK_url, bearer, customer_id, object_id):
+        if object_id != None:
+            url_base = cloudSDK_url + "/portal/profile" + "?profileId=" + object_id
+            return [self.get_url(bearer, url_base)]
+        else:
+            url_base = cloudSDK_url + "/portal/profile/forCustomer" + "?customerId=" + customer_id
+            return self.get_paged_url(bearer, url_base)
 
     def delete_customer_profile(self, cloudSDK_url, bearer, customer_id, profile_id):
         url = cloudSDK_url + '/portal/customer?customerId='+ customer_id + "&profileId=" + profile_id

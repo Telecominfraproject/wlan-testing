@@ -8,19 +8,28 @@ parser.add_argument("--type", type=str, help="Type of thing to query",
                              'status', 'client-sessions', 'client-info', 'alarm', 'service-metric',
                              'event', 'all'],
                     default = "all")
+parser.add_argument("--cmd", type=str, help="Operation to do, default is 'get'",
+                    choices=['get', 'delete'],
+                    default = "get")
 
 base = UnitTestBase("query-sdk", parser)
 
 qtype = base.command_line_args.type
+cmd = base.command_line_args.cmd
 
 if qtype == 'all' or qtype == 'profile':
     # Get customer profiles
     try:
-        rv = base.cloud.get_customer_profiles(base.cloudSDK_url, base.bearer, base.customer_id)
-        print("Profiles for customer %s  (%i pages):"%(base.customer_id, len(rv)))
-        #jobj = json.load(ssids)
-        for r in rv:
-            print(json.dumps(r, indent=4, sort_keys=True))
+        if cmd == "get":
+            rv = base.cloud.get_customer_profiles(base.cloudSDK_url, base.bearer, base.customer_id, base.command_line_args.object_id)
+            print("Profiles for customer %s  (%i pages):"%(base.customer_id, len(rv)))
+            #jobj = json.load(ssids)
+            for r in rv:
+                print(json.dumps(r, indent=4, sort_keys=True))
+        else:
+            rv = base.cloud.delete_customer_profile(base.cloudSDK_url, base.bearer, base.customer_id, base.command_line_args.object_id)
+            print("Delete profile for customer %s, id: %s results:"%(base.customer_id, base.command_line_args.object_id))
+            print(rv)
     except Exception as ex:
         print(ex)
         logging.error(logging.traceback.format_exc())
