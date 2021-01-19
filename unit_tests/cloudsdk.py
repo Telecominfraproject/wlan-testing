@@ -346,7 +346,7 @@ class CloudSDK:
 
     def create_ap_profile(self, cloudSDK_url, bearer, customer_id, template, name, child_profiles):
         # TODO:  specify default ap profile.
-        profile = self.get_customer_profile_by_name(cloudSDK_url, bearer, customer_id, "TipWlan-2-Radios")
+        profile = self.get_customer_profile_by_name(cloudSDK_url, bearer, customer_id, template)
 
         profile["name"] = name
         profile["childProfileIds"] = child_profiles
@@ -364,6 +364,25 @@ class CloudSDK:
         print("New AP profile: ", ap_profile)
         ap_profile_id = ap_profile['id']
         return ap_profile_id
+
+    def create_or_update_ap_profile(self, cloudSDK_url, bearer, customer_id, template, name, child_profiles):
+        profile = self.get_customer_profile_by_name(cloudSDK_url, bearer, customer_id, name)
+        if profile == None:
+            return self.create_ap_profile(cloudSDK_url, bearer, customer_id, template, name, child_profiles)
+
+        profile["name"] = name
+        profile["childProfileIds"] = child_profiles
+
+        url = cloudSDK_url+"/portal/profile"
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + bearer
+        }
+
+        data_str = json.dumps(profile)
+        print("Updating ap-profile, data: %s"%(data_str))
+        response = requests.request("PUT", url, headers=headers, data=data_str)
+        return profile['id']
 
     def create_ssid_profile(self, cloudSDK_url, bearer, template, name, ssid, passkey, radius, security, mode, vlan, radios):
         print("create-ssid-profile, template: %s"%(template))

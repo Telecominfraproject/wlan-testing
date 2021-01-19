@@ -3,6 +3,9 @@
 from UnitTestBase import *
 
 parser = argparse.ArgumentParser(description="Nightly Combined Tests", add_help=False)
+parser.add_argument("--default_ap_profile", type=str,
+                    help="Default AP profile to use as basis for creating new ones, typically: TipWlan-2-Radios or TipWlan-3-Radios",
+                    required=True)
 
 base = UnitTestBase("query-sdk", parser)
 
@@ -666,9 +669,9 @@ for key in equipment_ids:
             print(ex)
             logging.error(logging.traceback.format_exc())
             radius_profile = 'error'
-            print("RADIUS Profile Create Error, will use existing profile for tests")
+            print("RADIUS Profile Create Error, will skip radius profile.")
             #Set backup profile ID so test can continue
-            radius_profile = lab_ap_info.radius_profile
+            radius_profile = None
             server_name = "Lab-RADIUS"
             client.update_testrail(case_id=test_cases["radius_profile"], run_id=rid, status_id=5,
                                    msg='Failed to create RADIUS profile')
@@ -721,11 +724,11 @@ for key in equipment_ids:
             fiveG_wpa2 = profile_info_dict[fw_model]["fiveG_WPA2_profile"]
 
         try:
-            fiveG_wpa = cloud.create_or_upate_ssid_profile(cloudSDK_url, bearer, customer_id, ssid_template, prof_5g_wpa_name,
-                                                           profile_info_dict[fw_model]["fiveG_WPA_SSID"],
-                                                           profile_info_dict[fw_model]["fiveG_WPA_PSK"],
-                                                           "Radius-Accounting-Profile", "wpaPSK", "BRIDGE", 1,
-                                                           ["is5GHzU", "is5GHz", "is5GHzL"])
+            fiveG_wpa = cloud.create_or_update_ssid_profile(cloudSDK_url, bearer, customer_id, ssid_template, prof_5g_wpa_name,
+                                                            profile_info_dict[fw_model]["fiveG_WPA_SSID"],
+                                                            profile_info_dict[fw_model]["fiveG_WPA_PSK"],
+                                                            "Radius-Accounting-Profile", "wpaPSK", "BRIDGE", 1,
+                                                            ["is5GHzU", "is5GHz", "is5GHzL"])
             print("5G WPA SSID created successfully - bridge mode")
             client.update_testrail(case_id=test_cases["ssid_5g_wpa_bridge"], run_id=rid, status_id=1,
                                    msg='5G WPA SSID created successfully - bridge mode')
@@ -804,15 +807,17 @@ for key in equipment_ids:
 
         ### Create AP Bridge Profile
         rfProfileId = lab_ap_info.rf_profile
-        radiusProfileId = radius_profile
-        child_profiles = [fiveG_eap, fiveG_wpa2, fiveG_wpa, twoFourG_eap, twoFourG_wpa2, twoFourG_wpa, rfProfileId, radiusProfileId]
+        child_profiles = [fiveG_eap, fiveG_wpa2, fiveG_wpa, twoFourG_eap, twoFourG_wpa2, twoFourG_wpa, rfProfileId]
+        if radius_profile != None:
+            child_profiles.append(radius_profile)
         print(child_profiles)
 
         ap_template = "templates/ap_profile_template.json"
         name = "Nightly_Sanity_" + fw_model + "_" + today + "_bridge"
 
         try:
-            create_ap_profile = cloud.create_ap_profile(cloudSDK_url, bearer, customer_id, ap_template, name, child_profiles)
+            create_ap_profile = cloud.create_or_update_ap_profile(cloudSDK_url, bearer, customer_id,
+                                                                  command_line_args.default_ap_profile, name, child_profiles)
             test_profile_id = create_ap_profile
             print("Test Profile ID for Test is:",test_profile_id)
             client.update_testrail(case_id=test_cases["ap_bridge"], run_id=rid, status_id=1,
@@ -1138,14 +1143,14 @@ for key in equipment_ids:
 
         ### Create AP NAT Profile
         rfProfileId = lab_ap_info.rf_profile
-        radiusProfileId = radius_profile
-        child_profiles = [fiveG_eap, fiveG_wpa2, fiveG_wpa, twoFourG_eap, twoFourG_wpa2, twoFourG_wpa, rfProfileId,
-                              radiusProfileId]
+        child_profiles = [fiveG_eap, fiveG_wpa2, fiveG_wpa, twoFourG_eap, twoFourG_wpa2, twoFourG_wpa, rfProfileId]
+        if radius_profile != None:
+            child_profiles.append(radius_profile)
         print(child_profiles)
-        ap_template = "templates/ap_profile_template.json"
         name = "Nightly_Sanity_" + fw_model + "_" + today + "_nat"
         try:
-            create_ap_profile = cloud.create_ap_profile(cloudSDK_url, bearer, customer_id, ap_template, name, child_profiles)
+            create_ap_profile = cloud.create_or_update_ap_profile(cloudSDK_url, bearer, customer_id,
+                                                                  command_line_args.default_ap_profile, name, child_profiles)
             test_profile_id = create_ap_profile
             print("Test Profile ID for Test is:", test_profile_id)
             client.update_testrail(case_id=test_cases["ap_nat"], run_id=rid, status_id=1,
@@ -1466,14 +1471,15 @@ for key in equipment_ids:
 
         ### Create AP VLAN Profile
         rfProfileId = lab_ap_info.rf_profile
-        radiusProfileId = radius_profile
-        child_profiles = [fiveG_eap, fiveG_wpa2, fiveG_wpa, twoFourG_eap, twoFourG_wpa2, twoFourG_wpa, rfProfileId, radiusProfileId]
+        child_profiles = [fiveG_eap, fiveG_wpa2, fiveG_wpa, twoFourG_eap, twoFourG_wpa2, twoFourG_wpa, rfProfileId]
+        if radius_profile != None:
+            child_profiles.append(radius_profile)
         print(child_profiles)
-        ap_template = "templates/ap_profile_template.json"
         name = "Nightly_Sanity_" + fw_model + "_" + today + "_vlan"
 
         try:
-            create_ap_profile = cloud.create_ap_profile(cloudSDK_url, bearer, customer_id, ap_template, name, child_profiles)
+            create_ap_profile = cloud.create_or_update_ap_profile(cloudSDK_url, bearer, customer_id,
+                                                                  command_line_args.default_ap_profile, name, child_profiles)
             test_profile_id = create_ap_profile
             print("Test Profile ID for Test is:", test_profile_id)
             client.update_testrail(case_id=test_cases["ap_vlan"], run_id=rid, status_id=1,
