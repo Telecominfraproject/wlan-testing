@@ -163,6 +163,19 @@ class CloudSDK:
             url_base = cloudSDK_url + "/portal/profile/forCustomer" + "?customerId=" + customer_id
             return self.get_paged_url(bearer, url_base)
 
+    def get_customer_profile_by_name(self, cloudSDK_url, bearer, customer_id, name):
+        rv = self.get_customer_profiles(cloudSDK_url, bearer, customer_id, None)
+        for page in rv:
+            for e in page['items']:
+                prof_id = str(e['id'])
+                prof_model_type = e['model_type']
+                prof_type = e['profileType']
+                prof_name = e['name']
+                print("looking for profile: %s  checking prof-id: %s  model-type: %s  type: %s  name: %s"%(name, prof_id, prof_model_type, prof_type, prof_name))
+                if name == prof_name:
+                    return e
+        return None
+
     def delete_customer_profile(self, cloudSDK_url, bearer, customer_id, profile_id):
         url = cloudSDK_url + '/portal/customer?customerId='+ customer_id + "&profileId=" + profile_id
         print("Deleting customer profile with url: " + url)
@@ -331,27 +344,29 @@ class CloudSDK:
         cloud_sdk_version = response.json()
         return cloud_sdk_version
 
-    def create_ap_profile(self, cloudSDK_url, bearer, template, name, child_profiles):
-        with open(template, 'r+') as ap_profile:
-            profile = json.load(ap_profile)
-            profile["name"] = name
-            profile["childProfileIds"] = child_profiles
+    def create_ap_profile(self, cloudSDK_url, bearer, customer_id, template, name, child_profiles):
+        # TODO:  specify default ap profile.
+        profile = self.get_customer_profile_by_name(cloudSDK_url, bearer, customer_id, "TipWlan-2-Radios")
 
-        with open(template, 'w') as ap_profile:
-            json.dump(profile, ap_profile)
+        profile["name"] = name
+        profile["childProfileIds"] = child_profiles
 
         url = cloudSDK_url+"/portal/profile"
         headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + bearer
         }
-        response = requests.request("POST", url, headers=headers, data=open(template, 'rb'))
+
+        data_str = json.dumps(profile)
+        print("Creating new ap-profile, data: %s"%(data_str))
+        response = requests.request("POST", url, headers=headers, data=data_str)
         ap_profile = response.json()
-        print(ap_profile)
+        print("New AP profile: ", ap_profile)
         ap_profile_id = ap_profile['id']
         return ap_profile_id
 
     def create_ssid_profile(self, cloudSDK_url, bearer, template, name, ssid, passkey, radius, security, mode, vlan, radios):
+        print("create-ssid-profile, template: %s"%(template))
         with open(template, 'r+') as ssid_profile:
             profile = json.load(ssid_profile)
             profile['name'] = name
@@ -362,8 +377,6 @@ class CloudSDK:
             profile['details']['forwardMode'] = mode
             profile['details']['vlanId'] = vlan
             profile['details']['appliedRadios'] = radios
-        with open(template, 'w') as ssid_profile:
-            json.dump(profile, ssid_profile)
 
         url = cloudSDK_url + "/portal/profile"
         headers = {
@@ -372,11 +385,39 @@ class CloudSDK:
         }
         response = requests.request("POST", url, headers=headers, data=open(template, 'rb'))
         ssid_profile = response.json()
-        print(ssid_profile)
-        ssid_profile_id = ssid_profile['id']
-        return ssid_profile_id
+        return ssid_profile['id']
 
-    def create_radius_profile(self, cloudSDK_url, bearer, template, name, subnet_name, subnet, subnet_mask, region, server_name, server_ip, secret, auth_port):
+    def create_or_update_ssid_profile(self, cloudSDK_url, bearer, customer_id, template, name,
+                                      ssid, passkey, radius, security, mode, vlan, radios):
+        # First, see if profile of this name already exists.
+        profile = self.get_customer_profile_by_name(cloudSDK_url, bearer, customer_id, name)
+        if profile == None:
+            # create one then
+            return self.create_ssid_profile(cloudSDK_url, bearer, template, name,
+                                            ssid, passkey, radius, security, mode, vlan, radios)
+
+        # Update then.
+        print("Update existing ssid profile, name: %s"%(name))
+        profile['name'] = name
+        profile['details']['ssid'] = ssid
+        profile['details']['keyStr'] = passkey
+        profile['details']['radiusServiceName'] = radius
+        profile['details']['secureMode'] = security
+        profile['details']['forwardMode'] = mode
+        profile['details']['vlanId'] = vlan
+        profile['details']['appliedRadios'] = radios
+
+        url = cloudSDK_url + "/portal/profile"
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + bearer
+        }
+        response = requests.request("PUT", url, headers=headers, data=json.dumps(profile))
+        return profile['id']
+
+    def create_radius_profile(self, cloudSDK_url, bearer, template, name, subnet_name, subnet, subnet_mask,
+                              region, server_name, server_ip, secret, auth_port):
+        print("Create-radius-profile called, template: %s"%(template))
         with open(template, 'r+') as radius_profile:
             profile = json.load(radius_profile)
 
@@ -416,3 +457,42 @@ class CloudSDK:
         print(radius_profile)
         radius_profile_id = radius_profile['id']
         return radius_profile_id
+
+    def create_or_update_radius_profile(self, cloudSDK_url, bearer, customer_id, template, name, subnet_name, subnet, subnet_mask,
+                                        region, server_name, server_ip, secret, auth_port):
+        profile = self.get_customer_profile_by_name(cloudSDK_url, bearer, customer_id, name)
+        if profile == None:
+            # create one then
+            return self.create_radius_profile(cloudSDK_url, bearer, template, name, subnet_name, subnet, subnet_mask,
+                                              region, server_name, server_ip, secret, auth_port)
+        
+        print("Found existing radius profile, will update, name: %s"%(name))
+
+        subnet_config = profile['details']['subnetConfiguration']
+        old_subnet_name = list(subnet_config.keys())[0]
+        subnet_config[subnet_name] = subnet_config.pop(old_subnet_name)
+        profile['details']['subnetConfiguration'][subnet_name]['subnetAddress'] = subnet
+        profile['details']['subnetConfiguration'][subnet_name]['subnetCidrPrefix'] = subnet_mask
+        profile['details']['subnetConfiguration'][subnet_name]['subnetName'] = subnet_name
+
+        region_map = profile['details']['serviceRegionMap']
+        old_region = list(region_map.keys())[0]
+        region_map[region] = region_map.pop(old_region)
+        profile['details']['serviceRegionName'] = region
+        profile['details']['subnetConfiguration'][subnet_name]['serviceRegionName'] = region
+        profile['details']['serviceRegionMap'][region]['regionName'] = region
+
+        server_map = profile['details']['serviceRegionMap'][region]['serverMap']
+        old_server_name = list(server_map.keys())[0]
+        server_map[server_name] = server_map.pop(old_server_name)
+        profile['details']['serviceRegionMap'][region]['serverMap'][server_name][0]['ipAddress'] = server_ip
+        profile['details']['serviceRegionMap'][region]['serverMap'][server_name][0]['secret'] = secret
+        profile['details']['serviceRegionMap'][region]['serverMap'][server_name][0]['authPort'] = auth_port
+
+        url = cloudSDK_url + "/portal/profile"
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + bearer
+        }
+        response = requests.request("PUT", url, headers=headers, data=profile)
+        return profile['id']
