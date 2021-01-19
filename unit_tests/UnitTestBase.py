@@ -96,6 +96,9 @@ class UnitTestBase:
         self.parser.add_argument("--equipment_id", type=str,
                                  help="AP model ID, as exists in the cloud-sdk.  -1 to auto-detect.",
                                  default = "-1")
+        self.parser.add_argument("--testbed", type=str,
+                                 help="Testbed name, will be prefixed to profile names and similar",
+                                 default = None)
 
         self.parser.add_argument("--sdk-base-url", type=str, help="cloudsdk base url",
                             default="https://wlan-portal-svc.cicd.lab.wlan.tip.build")

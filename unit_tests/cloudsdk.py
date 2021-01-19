@@ -127,6 +127,16 @@ class CloudSDK:
         response = requests.request("GET", fw_id_url, headers=headers, data=payload)
         return response.json()
 
+    def delete_customer_profile(self, cloudSDK_url, bearer, customer_id, profile_id):
+        url = cloudSDK_url + '/portal/customer?custoomerId='+ customer_id + "&profileId=" + profile_id
+        print("Deleting customer profile with url: " + url)
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+        response = requests.request("DELETE", url, headers=headers, data=payload)
+        return(response)
+
     def get_customer_locations(self, cloudSDK_url, bearer, customer_id):
         url = cloudSDK_url + "/portal/location/forCustomer" + "?customerId=" + customer_id
         print("get-customer-locations URL: %s"%(url))
@@ -423,6 +433,5 @@ class CloudSDK:
         response = requests.request("POST", url, headers=headers, data=open(template, 'rb'))
         radius_profile = response.json()
         print(radius_profile)
-        print(ssid_profile)
         radius_profile_id = radius_profile['id']
         return radius_profile_id

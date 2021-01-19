@@ -25,19 +25,16 @@ if qtype == 'all' or qtype == 'profile':
         logging.error(logging.traceback.format_exc())
         print("Failed to read customer profiles")
 
-if qtype == 'all' or qtype == 'profile':
-    # Get customer info.  I don't see any way to query for all customer IDs, so just look at first 3 for now.
-    for customer_id in range(4):
-        try:
-            # NOTE:  Could also use base.customer_id to get single one that user may have specified.
-            rv = base.cloud.get_customer(base.cloudSDK_url, base.bearer, "%i"%(customer_id))
-            print("Customer %i:"%(customer_id))
-            #jobj = json.load(ssids)
-            print(json.dumps(rv, indent=4, sort_keys=True))
-        except Exception as ex:
-            print(ex)
-            logging.error(logging.traceback.format_exc())
-            print("Failed to read Customer %i"%(customer_id))
+if qtype == 'all' or qtype == 'customer':
+    try:
+        rv = base.cloud.get_customer(base.cloudSDK_url, base.bearer, "%i"%(base.customer_id))
+        print("Customer %i:"%(base.customer_id))
+        #jobj = json.load(ssids)
+        print(json.dumps(rv, indent=4, sort_keys=True))
+    except Exception as ex:
+        print(ex)
+        logging.error(logging.traceback.format_exc())
+        print("Failed to read Customer %i"%(customer_id))
 
 if qtype == 'all' or qtype == 'location':
     # Get location info
