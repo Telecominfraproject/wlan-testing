@@ -118,7 +118,6 @@ class CloudSDK:
         return latest_fw_id
 
     def get_paged_url(self, bearer, url_base):
-        print("in get-paged-url, url: %s"%(url_base))
         url = url_base
 
         payload = {}
@@ -127,7 +126,9 @@ class CloudSDK:
         }
 
         rv = []
+        req = 0
         while True:
+            print("Request %i: in get-paged-url, url: %s"%(req, url))
             response = requests.request("GET", url, headers=headers, data=payload)
             rjson = response.json()
             rv.append(rjson)
@@ -137,6 +138,7 @@ class CloudSDK:
             context_str = json.dumps(rjson['context'])
             #print("context-str: %s"%(context_str))
             url = url_base + "&paginationContext=" + urllib.parse.quote(context_str)
+            req = req + 1
             #print("Profile, reading another page, context:")
             #print(rjson['context'])
             #print("url: %s"%(fw_id_url))

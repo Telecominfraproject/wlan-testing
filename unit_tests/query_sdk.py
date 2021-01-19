@@ -135,8 +135,9 @@ if qtype == 'all' or qtype == 'service-metric':
         toTime = "%i"%(0xFFFFFFFFFFFF)  # something past now, units are msec
         rv = base.cloud.get_customer_service_metrics(base.cloudSDK_url, base.bearer, base.customer_id, fromTime, toTime)
         print("Service Metrics for customer %s:"%(base.customer_id))
-        #jobj = json.load(ssids)
-        print(json.dumps(rv, indent=4, sort_keys=True))
+        for e in rv:
+            #jobj = json.load(ssids)
+            print(json.dumps(e, indent=4, sort_keys=True))
     except Exception as ex:
         print(ex)
         logging.error(logging.traceback.format_exc())

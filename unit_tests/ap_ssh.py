@@ -158,6 +158,22 @@ def ap_ssh_ovsh_nodec(command_line_args, key):
         print("AP Unreachable")
         return "ERROR"
 
+# This can throw exceptions, calling code beware.
+def ap_ssh_cmd(command_line_args, ap_cmd):
+    jumphost_wlan_testing = command_line_args.ap_jumphost_wlan_testing
+    jumphost_tty = command_line_args.ap_jumphost_tty
+
+    client = ssh_cli_connect(command_line_args)
+
+    if command_line_args.ap_jumphost_address != None:
+        cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\""%(jumphost_wlan_testing, owrt_args, jumphost_tty, ap_cmd)
+        stdin, stdout, stderr = client.exec_command(cmd)
+    else:
+        stdin, stdout, stderr = client.exec_command(ap_cmd)
+
+    output = str(stdout.read(), 'utf-8')
+    return output
+
 def get_vif_config(command_line_args):
     try:
         client = ssh_cli_connect(command_line_args)
