@@ -628,18 +628,20 @@ for key in equipment_ids:
                       prof_5g_eap_name_vlan, prof_5g_wpa2_name_vlan, prof_5g_wpa_name_vlan, prof_2g_eap_name_vlan, prof_2g_wpa2_name_vlan, prof_2g_wpa_name_vlan]
 
         # First, remove any existing profiles
+        # Paginated reads means we get an array of json objects back, one object per 'page'
         profs = cloud.get_customer_profiles(cloudSDK_url, bearer, customer_id)
-        for e in profs['items']:
-            prof_id = str(e['id'])
-            prof_model_type = e['model_type']
-            #print(" prof-id: %s  model-type: %s"%(prof_id, prof_model_type))
-            prof_type = e['profileType']
-            prof_name = e['name']
-            print("Profile: ", prof_id, " Model-Type: ", prof_model_type, " Profile-Type: ", prof_type, " Name: ", prof_name)
-            for pn in prof_names:
-                if pn == prof_name:
-                    print("Deleting existing profile name: ", pn)
-                    cloud.delete_customer_profile(cloudSDK_url, bearer, customer_id, prof_id)
+        for p in profs:
+            for e in p['items']:
+                prof_id = str(e['id'])
+                prof_model_type = e['model_type']
+                #print(" prof-id: %s  model-type: %s"%(prof_id, prof_model_type))
+                prof_type = e['profileType']
+                prof_name = e['name']
+                print("Profile: ", prof_id, " Model-Type: ", prof_model_type, " Profile-Type: ", prof_type, " Name: ", prof_name)
+                for pn in prof_names:
+                    if pn == prof_name:
+                        print("Deleting existing profile name: ", pn)
+                        cloud.delete_customer_profile(cloudSDK_url, bearer, customer_id, prof_id)
 
 
         ### Create RADIUS profile - used for all EAP SSIDs

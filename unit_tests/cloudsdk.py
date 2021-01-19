@@ -59,7 +59,7 @@ class CloudSDK:
         bearer_token = token_data['access_token']
         return(bearer_token)
 
-    def ap_firmware(self, customer_id,equipment_id, cloudSDK_url, bearer):
+    def ap_firmware(self, customer_id, equipment_id, cloudSDK_url, bearer):
         equip_fw_url = cloudSDK_url+"/portal/status/forEquipment?customerId="+customer_id+"&equipmentId="+equipment_id
         payload = {}
         headers = {
@@ -117,18 +117,38 @@ class CloudSDK:
         latest_fw_id = fw_data['id']
         return latest_fw_id
 
-    def get_customer_profiles(self, cloudSDK_url, bearer, customer_id):
-        fw_id_url = cloudSDK_url + "/portal/profile/forCustomer" + "?customerId=" + customer_id
+    def get_paged_url(self, bearer, url_base):
+        print("in get-paged-url, url: %s"%(url_base))
+        url = url_base
 
         payload = {}
         headers = {
             'Authorization': 'Bearer ' + bearer
         }
-        response = requests.request("GET", fw_id_url, headers=headers, data=payload)
-        return response.json()
+
+        rv = []
+        while True:
+            response = requests.request("GET", url, headers=headers, data=payload)
+            rjson = response.json()
+            rv.append(rjson)
+            #print(json.dumps(rjson, indent=4, sort_keys=True))
+            if rjson['context']['lastPage']:
+                break
+            context_str = json.dumps(rjson['context'])
+            #print("context-str: %s"%(context_str))
+            url = url_base + "&paginationContext=" + urllib.parse.quote(context_str)
+            #print("Profile, reading another page, context:")
+            #print(rjson['context'])
+            #print("url: %s"%(fw_id_url))
+
+        return rv
+
+    def get_customer_profiles(self, cloudSDK_url, bearer, customer_id):
+        url_base = cloudSDK_url + "/portal/profile/forCustomer" + "?customerId=" + customer_id
+        return self.get_paged_url(bearer, fw_id_url_base)
 
     def delete_customer_profile(self, cloudSDK_url, bearer, customer_id, profile_id):
-        url = cloudSDK_url + '/portal/customer?custoomerId='+ customer_id + "&profileId=" + profile_id
+        url = cloudSDK_url + '/portal/customer?customerId='+ customer_id + "&profileId=" + profile_id
         print("Deleting customer profile with url: " + url)
         payload = {}
         headers = {
@@ -138,95 +158,40 @@ class CloudSDK:
         return(response)
 
     def get_customer_locations(self, cloudSDK_url, bearer, customer_id):
-        url = cloudSDK_url + "/portal/location/forCustomer" + "?customerId=" + customer_id
-        print("get-customer-locations URL: %s"%(url))
-        payload = {}
-        headers = {
-            'Authorization': 'Bearer ' + bearer
-        }
-        response = requests.request("GET", url, headers=headers, data=payload)
-        return response.json()
+        url_base = cloudSDK_url + "/portal/location/forCustomer" + "?customerId=" + customer_id
+        return self.get_paged_url(bearer, url_base)
 
     def get_customer_equipment(self, cloudSDK_url, bearer, customer_id):
-        url = cloudSDK_url + "/portal/equipment/forCustomer" + "?customerId=" + customer_id
-        print("get-customer-eq URL: %s"%(url))
-        payload = {}
-        headers = {
-            'Authorization': 'Bearer ' + bearer
-        }
-        response = requests.request("GET", url, headers=headers, data=payload)
-        return response.json()
+        url_base = cloudSDK_url + "/portal/equipment/forCustomer" + "?customerId=" + customer_id
+        return self.get_paged_url(bearer, url_base)
 
     def get_customer_portal_users(self, cloudSDK_url, bearer, customer_id):
-        url = cloudSDK_url + "/portal/portalUser/forCustomer" + "?customerId=" + customer_id
-        print("get-customer-portal-users URL: %s"%(url))
-        payload = {}
-        headers = {
-            'Authorization': 'Bearer ' + bearer
-        }
-        response = requests.request("GET", url, headers=headers, data=payload)
-        return response.json()
+        url_base = cloudSDK_url + "/portal/portalUser/forCustomer" + "?customerId=" + customer_id
+        return self.get_paged_url(bearer, url_base)
 
     def get_customer_status(self, cloudSDK_url, bearer, customer_id):
-        url = cloudSDK_url + "/portal/status/forCustomer" + "?customerId=" + customer_id
-        print("get-customer-status URL: %s"%(url))
-        payload = {}
-        headers = {
-            'Authorization': 'Bearer ' + bearer
-        }
-        response = requests.request("GET", url, headers=headers, data=payload)
-        return response.json()
+        url_base = cloudSDK_url + "/portal/status/forCustomer" + "?customerId=" + customer_id
+        return self.get_paged_url(bearer, url_base)
 
     def get_customer_client_sessions(self, cloudSDK_url, bearer, customer_id):
-        # TODO:  Need to deal with pagination for this one.
-        url = cloudSDK_url + "/portal/client/session/forCustomer" + "?customerId=" + customer_id
-        print("get-customer-client-session URL: %s"%(url))
-        payload = {}
-        headers = {
-            'Authorization': 'Bearer ' + bearer
-        }
-        response = requests.request("GET", url, headers=headers, data=payload)
-        return response.json()
+        url_base = cloudSDK_url + "/portal/client/session/forCustomer" + "?customerId=" + customer_id
+        return self.get_paged_url(bearer, url_base)
 
     def get_customer_clients(self, cloudSDK_url, bearer, customer_id):
-        url = cloudSDK_url + "/portal/client/forCustomer" + "?customerId=" + customer_id
-        print("get-customer-client URL: %s"%(url))
-        payload = {}
-        headers = {
-            'Authorization': 'Bearer ' + bearer
-        }
-        response = requests.request("GET", url, headers=headers, data=payload)
-        return response.json()
+        url_base = cloudSDK_url + "/portal/client/forCustomer" + "?customerId=" + customer_id
+        return self.get_paged_url(bearer, url_base)
 
     def get_customer_alarms(self, cloudSDK_url, bearer, customer_id):
-        url = cloudSDK_url + "/portal/alarm/forCustomer" + "?customerId=" + customer_id
-        print("get-customer-alarm URL: %s"%(url))
-        payload = {}
-        headers = {
-            'Authorization': 'Bearer ' + bearer
-        }
-        response = requests.request("GET", url, headers=headers, data=payload)
-        return response.json()
+        url_base = cloudSDK_url + "/portal/alarm/forCustomer" + "?customerId=" + customer_id
+        return self.get_paged_url(bearer, url_base)
 
     def get_customer_service_metrics(self, cloudSDK_url, bearer, customer_id, fromTime, toTime):
-        url = cloudSDK_url + "/portal/serviceMetric/forCustomer" + "?customerId=" + customer_id + "&fromTime=" + fromTime + "&toTime=" + toTime
-        print("get-customer-service-metrics URL: %s"%(url))
-        payload = {}
-        headers = {
-            'Authorization': 'Bearer ' + bearer
-        }
-        response = requests.request("GET", url, headers=headers, data=payload)
-        return response.json()
+        url_base = cloudSDK_url + "/portal/serviceMetric/forCustomer" + "?customerId=" + customer_id + "&fromTime=" + fromTime + "&toTime=" + toTime
+        return self.get_paged_url(bearer, url_base)
 
     def get_customer_system_events(self, cloudSDK_url, bearer, customer_id, fromTime, toTime):
-        url = cloudSDK_url + "/portal/systemEvent/forCustomer" + "?customerId=" + customer_id + "&fromTime=" + fromTime + "&toTime=" + toTime
-        print("get-customer-service-metrics URL: %s"%(url))
-        payload = {}
-        headers = {
-            'Authorization': 'Bearer ' + bearer
-        }
-        response = requests.request("GET", url, headers=headers, data=payload)
-        return response.json()
+        url_base = cloudSDK_url + "/portal/systemEvent/forCustomer" + "?customerId=" + customer_id + "&fromTime=" + fromTime + "&toTime=" + toTime
+        return self.get_paged_url(bearer, url_base)
 
     def get_customer(self, cloudSDK_url, bearer, customer_id):
         fw_id_url = cloudSDK_url + "/portal/customer" + "?customerId=" + customer_id
