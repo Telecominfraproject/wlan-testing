@@ -649,7 +649,7 @@ for key in equipment_ids:
         #                cloud.delete_customer_profile(cloudSDK_url, bearer, customer_id, prof_id)
 
         ### Create RADIUS profile - used for all EAP SSIDs
-        radius_template = "templates/radius_profile_template.json"
+        radius_template = "Radius-Profile"  # Default radius profile found in cloud-sdk
         subnet_name = radius_info['subnet_name']
         subnet = radius_info['subnet']
         subnet_mask = radius_info['subnet_mask']

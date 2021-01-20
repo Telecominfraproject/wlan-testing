@@ -434,44 +434,43 @@ class CloudSDK:
         response = requests.request("PUT", url, headers=headers, data=json.dumps(profile))
         return profile['id']
 
-    def create_radius_profile(self, cloudSDK_url, bearer, template, name, subnet_name, subnet, subnet_mask,
+    def create_radius_profile(self, cloudSDK_url, bearer, customer_id, template, name, subnet_name, subnet, subnet_mask,
                               region, server_name, server_ip, secret, auth_port):
         print("Create-radius-profile called, template: %s"%(template))
-        with open(template, 'r+') as radius_profile:
-            profile = json.load(radius_profile)
+        profile = self.get_customer_profile_by_name(cloudSDK_url, bearer, customer_id, template)
 
-            profile['name'] = name
+        profile['name'] = name
 
-            subnet_config = profile['details']['subnetConfiguration']
-            old_subnet_name = list(subnet_config.keys())[0]
-            subnet_config[subnet_name] = subnet_config.pop(old_subnet_name)
-            profile['details']['subnetConfiguration'][subnet_name]['subnetAddress'] = subnet
-            profile['details']['subnetConfiguration'][subnet_name]['subnetCidrPrefix'] = subnet_mask
-            profile['details']['subnetConfiguration'][subnet_name]['subnetName'] = subnet_name
+        subnet_config = profile['details']['subnetConfiguration']
+        old_subnet_name = list(subnet_config.keys())[0]
+        subnet_config[subnet_name] = subnet_config.pop(old_subnet_name)
+        profile['details']['subnetConfiguration'][subnet_name]['subnetAddress'] = subnet
+        profile['details']['subnetConfiguration'][subnet_name]['subnetCidrPrefix'] = subnet_mask
+        profile['details']['subnetConfiguration'][subnet_name]['subnetName'] = subnet_name
 
-            region_map = profile['details']['serviceRegionMap']
-            old_region = list(region_map.keys())[0]
-            region_map[region] = region_map.pop(old_region)
-            profile['details']['serviceRegionName'] = region
-            profile['details']['subnetConfiguration'][subnet_name]['serviceRegionName'] = region
-            profile['details']['serviceRegionMap'][region]['regionName'] = region
+        region_map = profile['details']['serviceRegionMap']
+        old_region = list(region_map.keys())[0]
+        region_map[region] = region_map.pop(old_region)
+        profile['details']['serviceRegionName'] = region
+        profile['details']['subnetConfiguration'][subnet_name]['serviceRegionName'] = region
+        profile['details']['serviceRegionMap'][region]['regionName'] = region
 
-            server_map = profile['details']['serviceRegionMap'][region]['serverMap']
-            old_server_name = list(server_map.keys())[0]
-            server_map[server_name] = server_map.pop(old_server_name)
-            profile['details']['serviceRegionMap'][region]['serverMap'][server_name][0]['ipAddress'] = server_ip
-            profile['details']['serviceRegionMap'][region]['serverMap'][server_name][0]['secret'] = secret
-            profile['details']['serviceRegionMap'][region]['serverMap'][server_name][0]['authPort'] = auth_port
-
-        with open(template, 'w') as radius_profile:
-            json.dump(profile, radius_profile)
+        server_map = profile['details']['serviceRegionMap'][region]['serverMap']
+        old_server_name = list(server_map.keys())[0]
+        server_map[server_name] = server_map.pop(old_server_name)
+        profile['details']['serviceRegionMap'][region]['serverMap'][server_name][0]['ipAddress'] = server_ip
+        profile['details']['serviceRegionMap'][region]['serverMap'][server_name][0]['secret'] = secret
+        profile['details']['serviceRegionMap'][region]['serverMap'][server_name][0]['authPort'] = auth_port
 
         url = cloudSDK_url + "/portal/profile"
         headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + bearer
         }
-        response = requests.request("POST", url, headers=headers, data=open(template, 'rb'))
+
+        data_str = json.dumps(profile)
+        print("Sending json to create radius: %s"%(data_str))
+        response = requests.request("POST", url, headers=headers, data=data_str)
         radius_profile = response.json()
         print(radius_profile)
         radius_profile_id = radius_profile['id']
@@ -482,7 +481,7 @@ class CloudSDK:
         profile = self.get_customer_profile_by_name(cloudSDK_url, bearer, customer_id, name)
         if profile == None:
             # create one then
-            return self.create_radius_profile(cloudSDK_url, bearer, template, name, subnet_name, subnet, subnet_mask,
+            return self.create_radius_profile(cloudSDK_url, bearer, customer_id, template, name, subnet_name, subnet, subnet_mask,
                                               region, server_name, server_ip, secret, auth_port)
         
         print("Found existing radius profile, will update, name: %s"%(name))
