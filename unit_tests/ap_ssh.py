@@ -96,6 +96,9 @@ def iwinfo_status(command_line_args):
     try:
         client = ssh_cli_connect(command_line_args)
 
+        jumphost_wlan_testing = command_line_args.ap_jumphost_wlan_testing
+        jumphost_tty = command_line_args.ap_jumphost_tty
+
         ap_cmd = "iwinfo | grep ESSID"
         if command_line_args.ap_jumphost_address != None:
             cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\""%(jumphost_wlan_testing, owrt_args, jumphost_tty, ap_cmd)
@@ -178,6 +181,9 @@ def get_vif_config(command_line_args):
     try:
         client = ssh_cli_connect(command_line_args)
 
+        jumphost_wlan_testing = command_line_args.ap_jumphost_wlan_testing
+        jumphost_tty = command_line_args.ap_jumphost_tty
+
         ap_cmd = "/usr/opensync/bin/ovsh s Wifi_VIF_Config -c | grep 'ssid               :'"
 
         if command_line_args.ap_jumphost_address != None:
@@ -204,6 +210,9 @@ def get_vif_config(command_line_args):
 def get_vif_state(command_line_args):
     try:
         client = ssh_cli_connect(command_line_args)
+
+        jumphost_wlan_testing = command_line_args.ap_jumphost_wlan_testing
+        jumphost_tty = command_line_args.ap_jumphost_tty
 
         ap_cmd = "/usr/opensync/bin/ovsh s Wifi_VIF_State -c | grep 'ssid               :'"
 
