@@ -812,7 +812,6 @@ for key in equipment_ids:
             child_profiles.append(radius_profile)
         print(child_profiles)
 
-        ap_template = "templates/ap_profile_template.json"
         name = "Nightly_Sanity_" + fw_model + "_" + today + "_bridge"
 
         try:
