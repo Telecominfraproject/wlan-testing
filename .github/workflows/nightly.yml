@@ -112,25 +112,30 @@ jobs:
         kind: Job
         metadata:
           name: nightly-ci-$today
-          namespace: default
         spec:
           template:
             spec:
               containers:
               - name: tests
-                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-499077849
+                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_id }}
                 args: 
                 - "-c"
-                - "pytest --no-testrails --skip-update-firmware; echo 'starting sleep'; sleep 300"
+                - "pytest --no-testrails --skip-update-firmware; sleep 300"
                 command: [ "bash" ]
               imagePullSecrets:
               - name: tip-docker-registry-key
               restartPolicy: Never
           backoffLimit: 0
         EOF
-        sleep 120
-        podname=$(kubectl get pods -o name -l job-name=nightly-ci-$today -n default)
-        kubectl cp $podname:/ci/test_everything.xml test_everything.xml -n default
+
+        podname=$(kubectl get pods -o name -l job-name=nightly-ci-$today | sed "s/pod\///")
+        until [ -s test_everything.xml ]
+        do
+          echo "waiting for tests to complete"
+          kubectl cp $podname:/ci/test_everything.xml test_everything.xml
+          sleep 5
+        done
+
         kubectl logs $podname
       shell: bash
     - name: Publish Unit Test Results

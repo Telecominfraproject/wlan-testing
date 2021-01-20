@@ -13,33 +13,31 @@ from sta_connect2 import StaConnect2
 class Test24ghz(object):
     @pytest.mark.featureA
     def test_single_client_wpa2(self, setup_testrails, setup_cloudsdk, update_firmware, instantiate_testrail):
-        pytest.skip("speedup")
-        pass
-        # lf_config = setup_cloudsdk["LANforge"]
-        # radio_config = setup_cloudsdk["24ghz"]
+        lf_config = setup_cloudsdk["LANforge"]
+        radio_config = setup_cloudsdk["24ghz"]
 
-        # staConnect = StaConnect2(lf_config["host"], lf_config["port"], debug_ = False)
-        # staConnect.sta_mode = 0
-        # staConnect.upstream_resource = 1
-        # staConnect.upstream_port = lf_config["eth_port"]
-        # staConnect.radio = lf_config["radio"]
-        # staConnect.runtime_secs = lf_config["runtime_duration"]
-        # staConnect.resource = 1
-        # staConnect.dut_ssid = radio_config["ssid"]
-        # staConnect.dut_passwd = radio_config["password"]
-        # staConnect.dut_security = "wpa2"
-        # staConnect.station_names = radio_config["station_names"]
-        # staConnect.bringup_time_sec = 60
-        # staConnect.cleanup_on_exit = True
-        # staConnect.setup()
-        # staConnect.start()
-        # sleep(staConnect.runtime_secs)
-        # staConnect.stop()
-        # staConnect.cleanup()
+        staConnect = StaConnect2(lf_config["host"], lf_config["port"], debug_ = False)
+        staConnect.sta_mode = 0
+        staConnect.upstream_resource = 1
+        staConnect.upstream_port = lf_config["eth_port"]
+        staConnect.radio = lf_config["radio"]
+        staConnect.runtime_secs = lf_config["runtime_duration"]
+        staConnect.resource = 1
+        staConnect.dut_ssid = radio_config["ssid"]
+        staConnect.dut_passwd = radio_config["password"]
+        staConnect.dut_security = "wpa2"
+        staConnect.station_names = radio_config["station_names"]
+        staConnect.bringup_time_sec = 60
+        staConnect.cleanup_on_exit = True
+        staConnect.setup()
+        staConnect.start()
+        sleep(staConnect.runtime_secs)
+        staConnect.stop()
+        staConnect.cleanup()
 
-        # assert staConnect.passes()
-        # if setup_testrails > 0:
-        #     instantiate_testrail.update_testrail(case_id=2835, run_id=setup_testrails, status_id=1, msg="testing")
+        assert staConnect.passes()
+        if setup_testrails > 0:
+            instantiate_testrail.update_testrail(case_id=2835, run_id=setup_testrails, status_id=1, msg="testing")
 
     @pytest.mark.featureB
     def test_feature_b(self):
@@ -47,11 +45,11 @@ class Test24ghz(object):
 
     @pytest.mark.featureC
     def test_feature_c(self):
-        pass
+        assert 1 == 0
 
     @pytest.mark.featureD
     def test_feature_d(self):
-        pass
+        pytest.skip("speedup")
 
     @pytest.mark.xfail
     @pytest.mark.featureE
