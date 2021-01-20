@@ -853,7 +853,7 @@ for key in equipment_ids:
                 ssid_config = profile_info_dict[key]["ssid_list"]
                 print("SSIDs in AP Profile:", ssid_config)
                 
-                ssid_list = ap_ssh.get_vif_config(command_line_args)
+                ssid_list = ap_ssh.get_vif_state(command_line_args)
                 print("SSIDs in AP VIF Config:", ssid_list)
                 
                 if set(ssid_list) == set(ssid_config):

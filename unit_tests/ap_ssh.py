@@ -7,6 +7,7 @@
 import paramiko
 from paramiko import SSHClient
 import socket
+import logging
 
 owrt_args = "--prompt root@OpenAp -s serial --log stdout --user root --passwd openwifi"
 
@@ -161,6 +162,45 @@ def ap_ssh_ovsh_nodec(command_line_args, key):
         print("AP Unreachable")
         return "ERROR"
 
+def ap_ssh_ovsh_by_key(command_line_args, ovsh_cmd, key):
+    jumphost_wlan_testing = command_line_args.ap_jumphost_wlan_testing
+    jumphost_tty = command_line_args.ap_jumphost_tty
+
+    client = ssh_cli_connect(command_line_args)
+
+    ap_cmd = ovsh_cmd
+    if command_line_args.ap_jumphost_address != None:
+        cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\""%(jumphost_wlan_testing, owrt_args, jumphost_tty, ap_cmd)
+        stdin, stdout, stderr = client.exec_command(cmd)
+    else:
+        stdin, stdout, stderr = client.exec_command(ap_cmd)
+
+    output = str(stdout.read(), 'utf-8')
+
+    if key != None:
+        rv = []
+        for line in output.splitlines():
+            toks = line.split(':', 1)
+            if (len(toks) < 2):
+                print("ovsh-by-key, ignoring line: %s"%(line))
+                continue
+
+            try:
+                k = toks[0].strip(' ')
+                v = toks[1].strip(' ')
+                print("ovsh-by-key, k -:%s:-  v -:%s:-  searching for key -:%s:-"%(k, v, key))
+                if k == key:
+                    rv.append(v)
+            except Exception as e1:
+                print(e1)
+                print(line)
+                print(toks)
+                print("Output:\n", output)
+                logging.error(logging.traceback.format_exc())
+        return rv
+
+    return output
+
 # This can throw exceptions, calling code beware.
 def ap_ssh_cmd(command_line_args, ap_cmd):
     jumphost_wlan_testing = command_line_args.ap_jumphost_wlan_testing
@@ -178,61 +218,9 @@ def ap_ssh_cmd(command_line_args, ap_cmd):
     return output
 
 def get_vif_config(command_line_args):
-    try:
-        client = ssh_cli_connect(command_line_args)
-
-        jumphost_wlan_testing = command_line_args.ap_jumphost_wlan_testing
-        jumphost_tty = command_line_args.ap_jumphost_tty
-
-        ap_cmd = "/usr/opensync/bin/ovsh s Wifi_VIF_Config -c | grep 'ssid               :'"
-
-        if command_line_args.ap_jumphost_address != None:
-            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\""%(jumphost_wlan_testing, owrt_args, jumphost_tty, ap_cmd)
-            stdin, stdout, stderr = client.exec_command(cmd)
-        else:
-            stdin, stdout, stderr = client.exec_command(ap_cmd)
-
-        output = str(stdout.read(), 'utf-8')
-        ssid_output = output.splitlines()
-        ssid_list = [s.strip('ssid               : ') for s in ssid_output]
-        return ssid_list
-
-    except paramiko.ssh_exception.AuthenticationException:
-        print("Authentication Error, Check Credentials")
-        return "ERROR"
-    except paramiko.SSHException:
-        print("Cannot SSH to the AP")
-        return "ERROR"
-    except socket.timeout:
-        print("AP Unreachable")
-        return "ERROR"
+    ap_cmd = "/usr/opensync/bin/ovsh s Wifi_VIF_Config -c"
+    return ap_ssh_ovsh_by_key(command_line_args, ap_cmd, "ssid")
 
 def get_vif_state(command_line_args):
-    try:
-        client = ssh_cli_connect(command_line_args)
-
-        jumphost_wlan_testing = command_line_args.ap_jumphost_wlan_testing
-        jumphost_tty = command_line_args.ap_jumphost_tty
-
-        ap_cmd = "/usr/opensync/bin/ovsh s Wifi_VIF_State -c | grep 'ssid               :'"
-
-        if command_line_args.ap_jumphost_address != None:
-            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\""%(jumphost_wlan_testing, owrt_args, jumphost_tty, ap_cmd)
-            stdin, stdout, stderr = client.exec_command(cmd)
-        else:
-            stdin, stdout, stderr = client.exec_command(ap_cmd)
-
-        output = str(stdout.read(), 'utf-8')
-        ssid_output = output.splitlines()
-        ssid_list = [s.strip('ssid               : ') for s in ssid_output]
-        return ssid_list
-
-    except paramiko.ssh_exception.AuthenticationException:
-        print("Authentication Error, Check Credentials")
-        return "ERROR"
-    except paramiko.SSHException:
-        print("Cannot SSH to the AP")
-        return "ERROR"
-    except socket.timeout:
-        print("AP Unreachable")
-        return "ERROR"
+    ap_cmd = "/usr/opensync/bin/ovsh s Wifi_VIF_State -c"
+    return ap_ssh_ovsh_by_key(command_line_args, ap_cmd, "ssid")
