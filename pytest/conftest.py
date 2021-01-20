@@ -137,7 +137,7 @@ def pytest_addoption(parser):
         help="do not generate testrails tests"
     )
     # this has to be the last argument
-    # example: --access-points ECW5410 EA8300-EU    
+    # example: --access-points ECW5410 EA8300-EU
     parser.addoption(
         "--access-points",
         nargs="+",

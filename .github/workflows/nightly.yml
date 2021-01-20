@@ -42,10 +42,10 @@ jobs:
       run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
     - name: build docker image
       shell: bash
-      run: docker build -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }} -f wlan-testing/docker/Dockerfile .
+      run: docker build -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_id }} -f wlan-testing/pytest/Dockerfile .
     - name: push docker image
       shell: bash
-      run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+      run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_id }}
 
   cloudsdk:
     runs-on: ubuntu-latest
@@ -100,42 +100,41 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    needs: [ build, cloudsdk ]
     steps:
     - name: run tests
       run: |
         today=$(date +"%d-%m-%Y")
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
         kubectl delete job nightly-ci-$today --wait=true --ignore-not-found=true
-        # will be needed for multiple branches at the same time
-        # namespace: ${GITHUB_REF##*/}
-        echo ${GITHUB_REF##*/}
+
         cat <<EOF | kubectl apply -f -
         apiVersion: batch/v1
         kind: Job
         metadata:
           name: nightly-ci-$today
+          namespace: default
         spec:
           template:
             spec:
               containers:
               - name: tests
-                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-499077849
                 args: 
-                - "--testrail-user-id"
-                - "gleb@opsfleet.com"
-                - "--testrail-user-password"
-                - "${{ env.TESTRAIL_USER_PASSWORD }}"
-                - "--skip-update-firmware"
+                - "-c"
+                - "pytest --no-testrails --skip-update-firmware; echo 'starting sleep'; sleep 300"
+                command: [ "bash" ]
               imagePullSecrets:
               - name: tip-docker-registry-key
               restartPolicy: Never
           backoffLimit: 0
         EOF
-        kubectl wait job/nightly-ci-$today --for=condition=complete --timeout=1200s
-        podname=$(kubectl get pods -o name -l job-name=nightly-ci-$today)
+        sleep 120
+        podname=$(kubectl get pods -o name -l job-name=nightly-ci-$today -n default)
+        kubectl cp $podname:/ci/test_everything.xml test_everything.xml -n default
         kubectl logs $podname
-        # placeholder for now
-        echo "Grafana Link: https://grafana.lab.wlan.tip.build/TO_BE_PROVIDED"
-        echo "Kibana Link: https://kibana.lab.wlan.tip.build/TO_BE_PROVIDED"
       shell: bash
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v1.7
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        files: "**/*.xml"
