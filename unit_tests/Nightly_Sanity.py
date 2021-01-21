@@ -637,7 +637,7 @@ for key in equipment_ids:
 
         # First, remove any existing profiles
         # Paginated reads means we get an array of json objects back, one object per 'page'
-        # NOTE:  Cloud gives error when I try to remove these.  Not sure removal works?
+        # NOTE:  You cannot remove profiles in use
         #profs = cloud.get_customer_profiles(cloudSDK_url, bearer, customer_id)
         #for p in profs:
         #    for e in p['items']:
@@ -650,11 +650,11 @@ for key in equipment_ids:
         #        for pn in prof_names:
         #            if pn == prof_name:
         #                print("Deleting existing profile name: ", pn)
-        #                cloud.delete_customer_profile(cloudSDK_url, bearer, customer_id, prof_id)
+        #                cloud.delete_profile(cloudSDK_url, bearer, prof_id)
         #        for pn in prof_names_eap:
         #            if pn == prof_name:
         #                print("Deleting existing profile name: ", pn)
-        #                cloud.delete_customer_profile(cloudSDK_url, bearer, customer_id, prof_id)
+        #                cloud.delete_profile(cloudSDK_url, bearer, prof_id)
 
         ### Create RADIUS profile - used for all EAP SSIDs
         radius_template = "Radius-Profile"  # Default radius profile found in cloud-sdk

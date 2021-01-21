@@ -46,14 +46,14 @@ if qtype == 'all' or qtype == 'profile':
         if cmd == "delete":
             delid = base.command_line_args.object_id;
             if delid.isdigit():
-                rv = base.cloud.delete_customer_profile(base.cloudSDK_url, base.bearer, base.customer_id, base.command_line_args.object_id)
+                rv = base.cloud.delete_profile(base.cloudSDK_url, base.bearer, base.command_line_args.object_id)
                 print("Delete profile for customer %s, id: %s results:"%(base.customer_id, base.command_line_args.object_id))
                 print(rv.json())
             else:
                 # Query object by name to find its ID
                 targets = get_profile(base.cloudSDK_url, base.bearer, base.customer_id, base.command_line_args.object_id)
                 for me in targets:
-                    rv = base.cloud.delete_customer_profile(base.cloudSDK_url, base.bearer, base.customer_id, str(me['id']))
+                    rv = base.cloud.delete_profile(base.cloudSDK_url, base.bearer, str(me['id']))
                     print("Delete profile for customer %s, id: %s results:"%(base.customer_id, base.command_line_args.object_id))
                     print(rv.json())
 
@@ -107,15 +107,22 @@ if qtype == 'all' or qtype == 'location':
 if qtype == 'all' or qtype == 'equipment':
     # Get equipment info
     try:
-        rv = base.cloud.get_customer_equipment(base.cloudSDK_url, base.bearer, base.customer_id)
-        print("Equipment for customer %s:"%(base.customer_id))
-        #jobj = json.load(ssids)
-        for e in rv:
-            if brief:
-                for eq in e['items']:
-                    print("Equipment id: %s inventoryId: %s profileId: %s type: %s"%(eq['id'], eq['inventoryId'], eq['profileId'], eq['equipmentType']))
-            else:
-                print(json.dumps(e, indent=4, sort_keys=True))
+        if cmd == "get":
+            rv = base.cloud.get_customer_equipment(base.cloudSDK_url, base.bearer, base.customer_id)
+            print("Equipment for customer %s:"%(base.customer_id))
+            #jobj = json.load(ssids)
+            for e in rv:
+                if brief:
+                    for eq in e['items']:
+                        print("Equipment id: %s inventoryId: %s profileId: %s type: %s"%(eq['id'], eq['inventoryId'], eq['profileId'], eq['equipmentType']))
+                else:
+                    print(json.dumps(e, indent=4, sort_keys=True))
+        if cmd == "delete":
+            delid = base.command_line_args.object_id;
+            rv = base.cloud.delete_equipment(base.cloudSDK_url, base.bearer, base.command_line_args.object_id)
+            print("Delete Equipment, id: %s results:"%(base.command_line_args.object_id))
+            print(rv.json())
+
 
     except Exception as ex:
         print(ex)

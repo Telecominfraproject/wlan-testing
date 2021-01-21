@@ -178,9 +178,19 @@ class CloudSDK:
                     return e
         return None
 
-    def delete_customer_profile(self, cloudSDK_url, bearer, customer_id, profile_id):
+    def delete_customer_profile(self, cloudSDK_url, bearer, profile_id):
         url = cloudSDK_url + '/portal/profile/?profileId=' + profile_id
         print("Deleting customer profile with url: " + url)
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+        response = requests.request("DELETE", url, headers=headers, data=payload)
+        return(response)
+
+    def delete_equipment(self, cloudSDK_url, bearer, eq_id):
+        url = cloudSDK_url + '/portal/equipment/?equipmentId=' + eq_id
+        print("Deleting equipment with url: " + url)
         payload = {}
         headers = {
             'Authorization': 'Bearer ' + bearer
