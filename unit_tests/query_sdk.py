@@ -9,7 +9,7 @@ parser.add_argument("--type", type=str, help="Type of thing to query",
                              'event', 'all'],
                     default = "all")
 parser.add_argument("--cmd", type=str, help="Operation to do, default is 'get'",
-                    choices=['get', 'delete'],
+                    choices=['get', 'delete', 'child_of'],
                     default = "get")
 
 base = UnitTestBase("query-sdk", parser)
@@ -17,19 +17,50 @@ base = UnitTestBase("query-sdk", parser)
 qtype = base.command_line_args.type
 cmd = base.command_line_args.cmd
 
+def get_profile(url, bearer, cust_id, object_id):
+    if (object_id == None or object_id.isdigit()):
+        return base.cloud.get_customer_profiles(url, bearer, cust_id, object_id)
+    else:
+        return base.cloud.get_customer_profile_by_name(url, bearer, cust_id, object_id)
+    
 if qtype == 'all' or qtype == 'profile':
     # Get customer profiles
     try:
         if cmd == "get":
-            rv = base.cloud.get_customer_profiles(base.cloudSDK_url, base.bearer, base.customer_id, base.command_line_args.object_id)
+            rv = get_profile(base.cloudSDK_url, base.bearer, base.customer_id, base.command_line_args.object_id)
             print("Profiles for customer %s  (%i pages):"%(base.customer_id, len(rv)))
             #jobj = json.load(ssids)
             for r in rv:
                 print(json.dumps(r, indent=4, sort_keys=True))
-        else:
-            rv = base.cloud.delete_customer_profile(base.cloudSDK_url, base.bearer, base.customer_id, base.command_line_args.object_id)
+
+        if cmd == "delete":
+            delid = base.command_line_args.object_id;
+            if delid.isdigit():
+                rv = base.cloud.delete_customer_profile(base.cloudSDK_url, base.bearer, base.customer_id, base.command_line_args.object_id)
+            else:
+                # Query object by name to find its ID
+                me = get_profile(base.cloudSDK_url, base.bearer, base.customer_id, base.command_line_args.object_id)
+                rv = base.cloud.delete_customer_profile(base.cloudSDK_url, base.bearer, base.customer_id, str(me['id']))
             print("Delete profile for customer %s, id: %s results:"%(base.customer_id, base.command_line_args.object_id))
             print(rv)
+
+        if cmd == "child_of":
+            me = get_profile(base.cloudSDK_url, base.bearer, base.customer_id, base.command_line_args.object_id)
+            meid = me['id']
+            print("Profiles using profile: %s %s"%(meid, me['name']))
+
+            # Get all profiles and search
+            rv = get_profile(base.cloudSDK_url, base.bearer, base.customer_id, None)
+            #jobj = json.load(ssids)
+            for r in rv:
+                for p in r['items']:
+                    #print("profile: %s %s, checking children..."%(p['id'], p['name']))
+                    if 'childProfileIds' in p:
+                        for child in p['childProfileIds']:
+                            #print("profile: %s %s, checking child: %s  my-id: %s"%(p['id'], p['name'], child, meid))
+                            if child == meid:
+                                print("Used-By: %s %s"%(p['id'], p['name']))
+
     except Exception as ex:
         print(ex)
         logging.error(logging.traceback.format_exc())
