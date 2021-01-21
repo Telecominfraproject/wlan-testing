@@ -693,7 +693,8 @@ for key in equipment_ids:
         ###########################################################################
 
         ### Create SSID Profiles
-        ssid_template = "templates/ssid_profile_template.json"
+        # TODO:  Make this configurable, put at top.
+        ssid_template = "TipWlan-Cloud-Wifi"
 
         # 5G SSIDs
         try:
@@ -827,7 +828,7 @@ for key in equipment_ids:
             child_profiles.append(twoFourG_eap)
         print(child_profiles)
 
-        name = "Nightly_Sanity_" + fw_model + "_" + today + "_bridge"
+        name = command_line_args.testbed + "-" + fw_model + "_bridge"
 
         try:
             create_ap_profile = cloud.create_or_update_ap_profile(cloudSDK_url, bearer, customer_id,
@@ -1175,7 +1176,7 @@ for key in equipment_ids:
             child_profiles.append(fiveG_eap)
             child_profiles.append(twoFourG_eap)
         print(child_profiles)
-        name = "Nightly_Sanity_" + fw_model + "_" + today + "_nat"
+        name = command_line_args.testbed + "-" + fw_model + "_nat"
         try:
             create_ap_profile = cloud.create_or_update_ap_profile(cloudSDK_url, bearer, customer_id,
                                                                   command_line_args.default_ap_profile, name, child_profiles)
@@ -1505,8 +1506,8 @@ for key in equipment_ids:
             child_profiles.append(fiveG_eap)
             child_profiles.append(twoFourG_eap)
         print(child_profiles)
-        name = "Nightly_Sanity_" + fw_model + "_" + today + "_vlan"
 
+        name = command_line_args.testbed + "-" + fw_model + "_vlan"
         try:
             create_ap_profile = cloud.create_or_update_ap_profile(cloudSDK_url, bearer, customer_id,
                                                                   command_line_args.default_ap_profile, name, child_profiles)

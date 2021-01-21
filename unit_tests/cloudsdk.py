@@ -397,25 +397,25 @@ class CloudSDK:
         print(response)
         return profile['id']
 
-    def create_ssid_profile(self, cloudSDK_url, bearer, template, name, ssid, passkey, radius, security, mode, vlan, radios):
+    def create_ssid_profile(self, cloudSDK_url, bearer, customer_id, template, name, ssid, passkey, radius, security, mode, vlan, radios):
         print("create-ssid-profile, template: %s"%(template))
-        with open(template, 'r+') as ssid_profile:
-            profile = json.load(ssid_profile)
-            profile['name'] = name
-            profile['details']['ssid'] = ssid
-            profile['details']['keyStr'] = passkey
-            profile['details']['radiusServiceName'] = radius
-            profile['details']['secureMode'] = security
-            profile['details']['forwardMode'] = mode
-            profile['details']['vlanId'] = vlan
-            profile['details']['appliedRadios'] = radios
+        profile = self.get_customer_profile_by_name(cloudSDK_url, bearer, customer_id, template)
+
+        profile['name'] = name
+        profile['details']['ssid'] = ssid
+        profile['details']['keyStr'] = passkey
+        profile['details']['radiusServiceName'] = radius
+        profile['details']['secureMode'] = security
+        profile['details']['forwardMode'] = mode
+        profile['details']['vlanId'] = vlan
+        profile['details']['appliedRadios'] = radios
 
         url = cloudSDK_url + "/portal/profile"
         headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + bearer
         }
-        response = requests.request("POST", url, headers=headers, data=open(template, 'rb'))
+        response = requests.request("POST", url, headers=headers, data=json.dumps(profile))
         ssid_profile = response.json()
         return ssid_profile['id']
 
@@ -425,7 +425,7 @@ class CloudSDK:
         profile = self.get_customer_profile_by_name(cloudSDK_url, bearer, customer_id, name)
         if profile == None:
             # create one then
-            return self.create_ssid_profile(cloudSDK_url, bearer, template, name,
+            return self.create_ssid_profile(cloudSDK_url, bearer, customer_id, template, name,
                                             ssid, passkey, radius, security, mode, vlan, radios)
 
         # Update then.
