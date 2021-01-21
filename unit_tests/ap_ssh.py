@@ -182,13 +182,13 @@ def ap_ssh_ovsh_by_key(command_line_args, ovsh_cmd, key):
         for line in output.splitlines():
             toks = line.split(':', 1)
             if (len(toks) < 2):
-                print("ovsh-by-key, ignoring line: %s"%(line))
+                #print("ovsh-by-key, ignoring line: %s"%(line))
                 continue
 
             try:
                 k = toks[0].strip(' ')
                 v = toks[1].strip(' ')
-                print("ovsh-by-key, k -:%s:-  v -:%s:-  searching for key -:%s:-"%(k, v, key))
+                #print("ovsh-by-key, k -:%s:-  v -:%s:-  searching for key -:%s:-"%(k, v, key))
                 if k == key:
                     rv.append(v)
             except Exception as e1:

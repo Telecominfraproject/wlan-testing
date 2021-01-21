@@ -382,6 +382,7 @@ class CloudSDK:
         data_str = json.dumps(profile)
         print("Updating ap-profile, data: %s"%(data_str))
         response = requests.request("PUT", url, headers=headers, data=data_str)
+        print(response)
         return profile['id']
 
     def create_ssid_profile(self, cloudSDK_url, bearer, template, name, ssid, passkey, radius, security, mode, vlan, radios):
@@ -432,6 +433,7 @@ class CloudSDK:
             'Authorization': 'Bearer ' + bearer
         }
         response = requests.request("PUT", url, headers=headers, data=json.dumps(profile))
+        print(response)
         return profile['id']
 
     def create_radius_profile(self, cloudSDK_url, bearer, customer_id, template, name, subnet_name, subnet, subnet_mask,
@@ -512,5 +514,9 @@ class CloudSDK:
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + bearer
         }
-        response = requests.request("PUT", url, headers=headers, data=profile)
+        response = requests.request("PUT", url, headers=headers, data=json.dumps(profile))
+        # TODO:  Code below is wrong, obviously in hindsight.  But, need to parse response
+        # and throw exception or something if it is an error code.
+        #response = requests.request("PUT", url, headers=headers, data=profile)
+        print(response)
         return profile['id']

@@ -627,9 +627,13 @@ for key in equipment_ids:
         prof_2g_wpa2_name_vlan = "%s-%s-%s"%(command_line_args.testbed, fw_model, "2G_WPA2_VLAN")
         prof_2g_wpa_name_vlan = "%s-%s-%s"%(command_line_args.testbed, fw_model, "2G_WPA_VLAN")
 
-        prof_names = [prof_5g_eap_name, prof_5g_wpa2_name, prof_5g_wpa_name, prof_2g_eap_name, prof_2g_wpa2_name, prof_2g_wpa_name,
-                      prof_5g_eap_name_nat, prof_5g_wpa2_name_nat, prof_5g_wpa_name_nat, prof_2g_eap_name_nat, prof_2g_wpa2_name_nat, prof_2g_wpa_name_nat,
-                      prof_5g_eap_name_vlan, prof_5g_wpa2_name_vlan, prof_5g_wpa_name_vlan, prof_2g_eap_name_vlan, prof_2g_wpa2_name_vlan, prof_2g_wpa_name_vlan]
+        prof_names = [prof_5g_wpa2_name, prof_5g_wpa_name, prof_2g_wpa2_name, prof_2g_wpa_name,
+                      prof_5g_wpa2_name_nat, prof_5g_wpa_name_nat, prof_2g_wpa2_name_nat, prof_2g_wpa_name_nat,
+                      prof_5g_wpa2_name_vlan, prof_5g_wpa_name_vlan, prof_2g_wpa2_name_vlan, prof_2g_wpa_name_vlan]
+
+        prof_names_eap = [prof_5g_eap_name, prof_2g_eap_name,
+                          prof_5g_eap_name_nat, prof_2g_eap_name_nat,
+                          prof_5g_eap_name_vlan, prof_2g_eap_name_vlan]
 
         # First, remove any existing profiles
         # Paginated reads means we get an array of json objects back, one object per 'page'
@@ -647,6 +651,10 @@ for key in equipment_ids:
         #            if pn == prof_name:
         #                print("Deleting existing profile name: ", pn)
         #                cloud.delete_customer_profile(cloudSDK_url, bearer, customer_id, prof_id)
+        #        for pn in prof_names_eap:
+        #            if pn == prof_name:
+        #                print("Deleting existing profile name: ", pn)
+        #                cloud.delete_customer_profile(cloudSDK_url, bearer, customer_id, prof_id)
 
         ### Create RADIUS profile - used for all EAP SSIDs
         radius_template = "Radius-Profile"  # Default radius profile found in cloud-sdk
@@ -658,6 +666,7 @@ for key in equipment_ids:
         server_ip = radius_info['server_ip']
         secret = radius_info['secret']
         auth_port = radius_info['auth_port']
+
         try:
             radius_profile = cloud.create_or_update_radius_profile(cloudSDK_url, bearer, customer_id, radius_template, radius_name, subnet_name, subnet,
                                                                    subnet_mask, region, server_name, server_ip, secret, auth_port)
@@ -672,10 +681,12 @@ for key in equipment_ids:
             print("RADIUS Profile Create Error, will skip radius profile.")
             #Set backup profile ID so test can continue
             radius_profile = None
+            radius_name = None
             server_name = "Lab-RADIUS"
             client.update_testrail(case_id=test_cases["radius_profile"], run_id=rid, status_id=5,
                                    msg='Failed to create RADIUS profile')
             report_data['tests'][key][test_cases["radius_profile"]] = "failed"
+
 
         ###########################################################################
         ############## Bridge Mode Client Connectivity ############################
@@ -807,9 +818,13 @@ for key in equipment_ids:
 
         ### Create AP Bridge Profile
         rfProfileId = lab_ap_info.rf_profile
-        child_profiles = [fiveG_eap, fiveG_wpa2, fiveG_wpa, twoFourG_eap, twoFourG_wpa2, twoFourG_wpa, rfProfileId]
+        # NOTE:  If you add eap, but not radius, it triggers a bug as of Jan 21, 2021
+        # We should be able to write a specific test case for this.
+        child_profiles = [fiveG_wpa2, fiveG_wpa, twoFourG_wpa2, twoFourG_wpa, rfProfileId]
         if radius_profile != None:
             child_profiles.append(radius_profile)
+            child_profiles.append(fiveG_eap)
+            child_profiles.append(twoFourG_eap)
         print(child_profiles)
 
         name = "Nightly_Sanity_" + fw_model + "_" + today + "_bridge"
@@ -1154,9 +1169,11 @@ for key in equipment_ids:
 
         ### Create AP NAT Profile
         rfProfileId = lab_ap_info.rf_profile
-        child_profiles = [fiveG_eap, fiveG_wpa2, fiveG_wpa, twoFourG_eap, twoFourG_wpa2, twoFourG_wpa, rfProfileId]
+        child_profiles = [fiveG_wpa2, fiveG_wpa, twoFourG_wpa2, twoFourG_wpa, rfProfileId]
         if radius_profile != None:
             child_profiles.append(radius_profile)
+            child_profiles.append(fiveG_eap)
+            child_profiles.append(twoFourG_eap)
         print(child_profiles)
         name = "Nightly_Sanity_" + fw_model + "_" + today + "_nat"
         try:
@@ -1482,9 +1499,11 @@ for key in equipment_ids:
 
         ### Create AP VLAN Profile
         rfProfileId = lab_ap_info.rf_profile
-        child_profiles = [fiveG_eap, fiveG_wpa2, fiveG_wpa, twoFourG_eap, twoFourG_wpa2, twoFourG_wpa, rfProfileId]
+        child_profiles = [fiveG_wpa2, fiveG_wpa, twoFourG_wpa2, twoFourG_wpa, rfProfileId]
         if radius_profile != None:
             child_profiles.append(radius_profile)
+            child_profiles.append(fiveG_eap)
+            child_profiles.append(twoFourG_eap)
         print(child_profiles)
         name = "Nightly_Sanity_" + fw_model + "_" + today + "_vlan"
 
