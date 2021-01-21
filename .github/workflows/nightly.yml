@@ -122,14 +122,14 @@ jobs:
                 image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_id }}
                 args: 
                 - "-c"
-                - "pytest --no-testrails --skip-update-firmware; sleep 300"
+                - "pytest --no-testrails --skip-update-firmware; sleep 3000"
                 command: [ "bash" ]
               imagePullSecrets:
               - name: tip-docker-registry-key
               restartPolicy: Never
           backoffLimit: 0
         EOF
-
+        sleep 60 # needed to wait for the pod to come up
         podname=$(kubectl get pods -o name -l job-name=nightly-ci-$today | sed "s/pod\///")
         until [ -s test_everything.xml ]
         do
