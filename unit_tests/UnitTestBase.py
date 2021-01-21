@@ -71,7 +71,6 @@ from ap_ssh import *
 
 ##Import info for lab setup and APs under test
 import lab_ap_info
-from lab_ap_info import profile_info_dict
 from lab_ap_info import cloud_sdk_models
 from lab_ap_info import ap_models
 from lab_ap_info import customer_id

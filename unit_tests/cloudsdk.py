@@ -132,7 +132,9 @@ class CloudSDK:
             response = requests.request("GET", url, headers=headers, data=payload)
             rjson = response.json()
             rv.append(rjson)
-            #print(json.dumps(rjson, indent=4, sort_keys=True))
+            if not 'context' in rjson:
+                print(json.dumps(rjson, indent=4, sort_keys=True))
+                break
             if rjson['context']['lastPage']:
                 break
             context_str = json.dumps(rjson['context'])
