@@ -179,7 +179,7 @@ class CloudSDK:
         return None
 
     def delete_customer_profile(self, cloudSDK_url, bearer, customer_id, profile_id):
-        url = cloudSDK_url + '/portal/customer?customerId='+ customer_id + "&profileId=" + profile_id
+        url = cloudSDK_url + '/portal/profile/?profileId=' + profile_id
         print("Deleting customer profile with url: " + url)
         payload = {}
         headers = {

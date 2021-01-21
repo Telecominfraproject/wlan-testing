@@ -42,7 +42,7 @@ if qtype == 'all' or qtype == 'profile':
                 me = get_profile(base.cloudSDK_url, base.bearer, base.customer_id, base.command_line_args.object_id)
                 rv = base.cloud.delete_customer_profile(base.cloudSDK_url, base.bearer, base.customer_id, str(me['id']))
             print("Delete profile for customer %s, id: %s results:"%(base.customer_id, base.command_line_args.object_id))
-            print(rv)
+            print(rv.json())
 
         if cmd == "child_of":
             me = get_profile(base.cloudSDK_url, base.bearer, base.customer_id, base.command_line_args.object_id)
