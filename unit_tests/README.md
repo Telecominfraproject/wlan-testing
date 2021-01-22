@@ -12,6 +12,18 @@ sudo pip3 install pexpect
 # Find the cloud-sdk API document here:
 https://github.com/Telecominfraproject/wlan-cloud-services/tree/master/portal-services/src/main/resources/
 
+# Examples in this code often assume you are using ssh port redirects to log into the testbeds,
+# for instance:
+ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 ubuntu@orch
+
+Then, you would use port 8802 for connecting to the LANforge-GUI for the python LANforge test logic,
+and port 8803 to access the lab jumphost.
+
+./Nightly_Sanity.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 8803 \
+  --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --skip-upgrade True --testbed "NOLA-01h" \
+  --lanforge-ip-address localhost --lanforge-port-number 8802 --default_ap_profile TipWlan-2-Radios --skip_radius --skip_profiles
+
+
 ## Nightly Sanity
 This script is used to look for and test new firmware available for the APs. AP equipment IDs and SSID information used in test is stored in the lab_ap_info file
 
