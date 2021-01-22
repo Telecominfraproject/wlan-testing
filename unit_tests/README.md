@@ -1,5 +1,5 @@
 # TIP CICD Sanity Scripts
-This directory contains scripts and modules designed for wlan sanity testing. 
+This directory contains scripts and modules designed for automated full-system testing. 
 
 # Libraries needed to run this code successfully
 sudo pip3 install artifactory
@@ -9,8 +9,21 @@ sudo pip3 install paramiko
 sudo pip3 install scp
 sudo pip3 install pexpect
 
+# Clone these repositories to get started:
+git@github.com:Telecominfraproject/wlan-testing.git   # This repo
+
+# LANforge scripts repo.  This *MUST* be located or linked at wlan-testing/lanforge/lanforge-scripts
+git@github.com:Telecominfraproject/wlan-lanforge-scripts.git
+
+# Cloud-services, so that you can find the API document
+git@github.com:Telecominfraproject/wlan-cloud-services
+
 # Find the cloud-sdk API document here:
 https://github.com/Telecominfraproject/wlan-cloud-services/tree/master/portal-services/src/main/resources/
+
+# You need access to the 'ubuntu' jumphost.  Send your public ssh key to greearb@candelatech.com
+# and he will add this to the jumphost.
+# For ease of use, add this to your /etc/hosts file:  3.130.51.163 orch
 
 # Examples in this code often assume you are using ssh port redirects to log into the testbeds,
 # for instance:
@@ -20,13 +33,48 @@ Then, you would use port 8802 for connecting to the LANforge-GUI for the python 
 and port 8803 to access the lab jumphost.  Port 8800 could connect a locally running LANforge GUI to the
 testbed for monitoring the test, and port 8801 will connect VNC to the LANforge machine.
 
+# This automated test logic is found in the wlan-testing/unit_tests directory.  These notes
+# assume you are in that directory unless otherwise specified.
+
+# Interesting files in this repo
+
+* ap_ssh.py:  Library methods to access the AP over direct ssh connection or serial console.  For NOLA
+  testbeds, currently serial console is the only viable way to connect.
+
+* cloudsdk.py: Library methods to access the cloud controller API using REST/JSON.  This is how you configure
+  the AP.
+
+* lab_ap_info.py:  Holds some variables related to lab config.  I prefer to use this as little as possible.
+  Instead, use command line arguments, possibly specifying a particular config file on the cmd line if
+  needed.
+
+* UnitTestBase.py:  Base class for all test cases.  Handles bulk of command-line-argument processing and importing
+  of various modules needed for testing.  Test cases should normally inherit from this.
+
+* Nightly_Sanity.py:  All-in-one script that updates firmware, creates cloud controller profiles, and runs LANforge
+  tests.  This is only partially functional for now.  Much of the logic in it needs to be moved to library files
+  so that other test cases can take advantage of the logic.
+
+* query_ap.py:  Calls into ap_ssh.py to do some actions on APs, including running arbitrary commands.  This would
+  be a good example to use as starting point for writing new test cases that need to access the AP.
+  Try: ./query_ap.py --help  for example of how to use.
+
+* query_sdk.py:  Calls into cloudsdk.py to do some actions on cloud controller.  This would
+  be a good example to use as starting point for writing new test cases that need to access the cloud controller.
+  Try: ./query_sdk.py --help  for example of how to use.
+
+
+
+# This is how the nightly sanity script is launched for the NOLA-01 testbed.
+
 ./Nightly_Sanity.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 8803 \
   --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --skip-upgrade True --testbed "NOLA-01h" \
   --lanforge-ip-address localhost --lanforge-port-number 8802 --default_ap_profile TipWlan-2-Radios --skip_radius --skip_profiles \
   --lanforge-2g-radio 1.1.wiphy4 --lanforge-5g-radio 1.1.wiphy5
 
 
-## Nightly Sanity
+
+## Nightly Sanity details:
 This script is used to look for and test new firmware available for the APs. AP equipment IDs and SSID information used in test is stored in the lab_ap_info file
 
 1. Check current CloudSDK version
@@ -54,38 +102,3 @@ For each AP model:
     2) Record results to CSV file
 2) Update sanity_status.json that throughput tests have been run
 
-## Environment Variables
-Environment variables required to run scripts and modules in this directory
-#### Nightly_Sanity.py		
-CLOUD_SDK_URL: CloudSDK URL for API calls  
-SANITY_LOG_DIR: Logger file directory  
-SANITY_REPORT_DIR: Report file directory 
-REPORT_TEMPLATE: Report template path  
-TR_USER: TestRail Username  
-TR_PWD: TestRail Password  
-MILESTONE: TestRail Milestone ID  
-PROJECT_ID: TestRail Project ID  
-EAP_IDENTITY: EAP identity for testing  
-EAP_PWD: EAP password for testing  
-AP_USER: Username for AP  
-JFROG_USER: Jfrog username  
-JFROG_PWD: Jfrog password  
-		
-#### cloudsdk.py		
-CLOUDSDK_USER: CloudSDK username  
-CLOUDSDK_PWD: CloudSDK password  
-		
-#### cluster_version.py		
-AWS_USER: CloudSDK username  
-AWS_PWD: CloudSDK password  
-		
-#### testrail_api.py		
-TR_USER	tr_user	TestRail Username  
-TR_PWD	tr_pw	TestRail Password  
-		
-#### Throughput_Test.py		
-CLOUD_SDK_URL: CloudSDK URL for API calls  
-CSV_PATH: Path for CSV file  
-EAP_IDENTITY: EAP identity for testing  
-EAP_PWD: EAP password for testing  
-TPUT_LOG_DIR: Logger file directory  
