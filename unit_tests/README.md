@@ -14,14 +14,16 @@ https://github.com/Telecominfraproject/wlan-cloud-services/tree/master/portal-se
 
 # Examples in this code often assume you are using ssh port redirects to log into the testbeds,
 # for instance:
-ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 ubuntu@orch
+ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 -L 8803:lab-ctlr:22 ubuntu@orch
 
 Then, you would use port 8802 for connecting to the LANforge-GUI for the python LANforge test logic,
-and port 8803 to access the lab jumphost.
+and port 8803 to access the lab jumphost.  Port 8800 could connect a locally running LANforge GUI to the
+testbed for monitoring the test, and port 8801 will connect VNC to the LANforge machine.
 
 ./Nightly_Sanity.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 8803 \
   --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --skip-upgrade True --testbed "NOLA-01h" \
-  --lanforge-ip-address localhost --lanforge-port-number 8802 --default_ap_profile TipWlan-2-Radios --skip_radius --skip_profiles
+  --lanforge-ip-address localhost --lanforge-port-number 8802 --default_ap_profile TipWlan-2-Radios --skip_radius --skip_profiles \
+  --lanforge-2g-radio 1.1.wiphy4 --lanforge-5g-radio 1.1.wiphy5
 
 
 ## Nightly Sanity

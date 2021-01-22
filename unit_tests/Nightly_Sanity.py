@@ -45,6 +45,8 @@ ap_username = command_line_args.ap_username         # was os.getenv('AP_USER')
 lanforge_ip = command_line_args.lanforge_ip_address
 lanforge_port = command_line_args.lanforge_port_number
 lanforge_prefix = command_line_args.lanforge_prefix
+lanforge_2g_radio = command_line_args.lanforge_2g_radio
+lanforge_5g_radio = command_line_args.lanforge_5g_radio
 
 build = command_line_args.build_id
 
@@ -974,7 +976,7 @@ for key in equipment_ids:
             ###Run Client Single Connectivity Test Cases for Bridge SSIDs
             # TC5214 - 2.4 GHz WPA2-Enterprise
             test_case = test_cases["2g_eap_bridge"]
-            radio = lab_ap_info.lanforge_2dot4g
+            radio = lanforge_2g_radio
             sta_list = [lanforge_prefix+"5214"]
             ssid_name = ssid_2g_eap;
             security = "wpa2"
@@ -994,7 +996,7 @@ for key in equipment_ids:
         ###Run Client Single Connectivity Test Cases for Bridge SSIDs
         # TC - 2.4 GHz WPA2
         test_case = test_cases["2g_wpa2_bridge"]
-        radio = lab_ap_info.lanforge_2dot4g
+        radio = lanforge_2g_radio
         station = [lanforge_prefix+"2237"]
         ssid_name = ssid_2g_wpa2
         ssid_psk = psk_2g_wpa2
@@ -1014,7 +1016,7 @@ for key in equipment_ids:
 
         # TC - 2.4 GHz WPA
         test_case = test_cases["2g_wpa_bridge"]
-        radio = lab_ap_info.lanforge_2dot4g
+        radio = lanforge_2g_radio
         station = [lanforge_prefix+"2420"]
         ssid_name = ssid_2g_wpa
         ssid_psk = psk_2g_wpa
@@ -1032,28 +1034,29 @@ for key in equipment_ids:
 
         time.sleep(10)
 
-        # TC - 5 GHz WPA2-Enterprise
-        test_case = test_cases["5g_eap_bridge"]
-        radio = lab_ap_info.lanforge_5g
-        sta_list = [lanforge_prefix+"5215"]
-        ssid_name = ssid_5g_eap
-        security = "wpa2"
-        eap_type = "TTLS"
-        try:
-            test_result = RunTest.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type, identity,
-                                                    ttls_password, test_case, rid)
-        except:
-            test_result = "error"
-            Test.testrail_retest(test_case, rid, ssid_name)
-            pass
-        report_data['tests'][key][int(test_case)] = test_result
-        print(report_data['tests'][key])
+        if not command_line_args.skip_radius:
+            # TC - 5 GHz WPA2-Enterprise
+            test_case = test_cases["5g_eap_bridge"]
+            radio = lanforge_5g_radio
+            sta_list = [lanforge_prefix+"5215"]
+            ssid_name = ssid_5g_eap
+            security = "wpa2"
+            eap_type = "TTLS"
+            try:
+                test_result = RunTest.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type, identity,
+                                                        ttls_password, test_case, rid)
+            except:
+                test_result = "error"
+                Test.testrail_retest(test_case, rid, ssid_name)
+                pass
+            report_data['tests'][key][int(test_case)] = test_result
+            print(report_data['tests'][key])
 
-        time.sleep(10)
+            time.sleep(10)
 
         # TC 5 GHz WPA2
         test_case = test_cases["5g_wpa2_bridge"]
-        radio = lab_ap_info.lanforge_5g
+        radio = lanforge_5g_radio
         station = [lanforge_prefix+"2236"]
         ssid_name = ssid_5g_wpa2
         ssid_psk = psk_5g_wpa2
@@ -1073,7 +1076,7 @@ for key in equipment_ids:
 
         # TC - 5 GHz WPA
         test_case = test_cases["5g_wpa_bridge"]
-        radio = lab_ap_info.lanforge_5g
+        radio = lanforge_5g_radio
         station = [lanforge_prefix+"2419"]
         ssid_name = ssid_5g_wpa
         ssid_psk = psk_5g_wpa
@@ -1211,14 +1214,14 @@ for key in equipment_ids:
         ### Create AP NAT Profile
         rfProfileId = lab_ap_info.rf_profile
         child_profiles = [fiveG_wpa2, fiveG_wpa, twoFourG_wpa2, twoFourG_wpa, rfProfileId]
-        ssid_prof_config = [prof_5g_wpa2_nat_name, prof_5g_wpa_nat_name, prof_2g_wpa2_nat_name, prof_2g_wpa_nat_name]
+        ssid_prof_config = [prof_5g_wpa2_name_nat, prof_5g_wpa_name_nat, prof_2g_wpa2_name_nat, prof_2g_wpa_name_nat]
         ssid_config = [ssid_5g_wpa2_nat, ssid_5g_wpa_nat, ssid_2g_wpa2_nat, ssid_2g_wpa_nat]
         if radius_profile != None:
             child_profiles.append(radius_profile)
             child_profiles.append(fiveG_eap)
             child_profiles.append(twoFourG_eap)
-            ssid_prof_config.append(prof_5g_wpa2_nat_name)
-            ssid_prof_config.append(prof_2g_wpa2_nat_name)
+            ssid_prof_config.append(prof_5g_wpa2_name_nat)
+            ssid_prof_config.append(prof_2g_wpa2_name_nat)
             ssid_config.append(ssid_5g_wpa2_nat)
             ssid_config.append(ssid_2g_wpa2_nat)
 
@@ -1301,29 +1304,30 @@ for key in equipment_ids:
         iwinfo = iwinfo_status(command_line_args)
         print(iwinfo)
 
-        ###Run Client Single Connectivity Test Cases for NAT SSIDs
-        # TC - 2.4 GHz WPA2-Enterprise NAT
-        test_case = test_cases["2g_eap_nat"]
-        radio = lab_ap_info.lanforge_2dot4g
-        sta_list = [lanforge_prefix+"5216"]
-        ssid_name = ssid_2g_eap_nat
-        security = "wpa2"
-        eap_type = "TTLS"
-        try:
-            test_result = RunTest.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type, identity,
-                                                    ttls_password, test_case, rid)
-        except:
-            test_result = "error"
-            Test.testrail_retest(test_case, rid, ssid_name)
-            pass
-        report_data['tests'][key][int(test_case)] = test_result
-        print(report_data['tests'][key])
+        if not command_line_args.skip_radius:
+            ###Run Client Single Connectivity Test Cases for NAT SSIDs
+            # TC - 2.4 GHz WPA2-Enterprise NAT
+            test_case = test_cases["2g_eap_nat"]
+            radio = lanforge_2g_radio
+            sta_list = [lanforge_prefix+"5216"]
+            ssid_name = ssid_2g_eap_nat
+            security = "wpa2"
+            eap_type = "TTLS"
+            try:
+                test_result = RunTest.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type, identity,
+                                                        ttls_password, test_case, rid)
+            except:
+                test_result = "error"
+                Test.testrail_retest(test_case, rid, ssid_name)
+                pass
+            report_data['tests'][key][int(test_case)] = test_result
+            print(report_data['tests'][key])
 
-        time.sleep(10)
+            time.sleep(10)
 
         # TC - 2.4 GHz WPA2 NAT
         test_case = test_cases["2g_wpa2_nat"]
-        radio = lab_ap_info.lanforge_2dot4g
+        radio = lanforge_2g_radio
         station = [lanforge_prefix+"4325"]
         ssid_name = ssid_2g_wpa2_nat
         ssid_psk = psk_2g_wpa2_nat
@@ -1343,7 +1347,7 @@ for key in equipment_ids:
 
         # TC - 2.4 GHz WPA NAT
         test_case = test_cases["2g_wpa_nat"]
-        radio = lab_ap_info.lanforge_2dot4g
+        radio = lanforge_2g_radio
         station = [lanforge_prefix+"4323"]
         ssid_name = ssid_2g_wpa_nat
         ssid_psk = psk_2g_wpa_nat
@@ -1360,28 +1364,29 @@ for key in equipment_ids:
 
         time.sleep(10)
 
-        # TC - 5 GHz WPA2-Enterprise NAT
-        test_case = test_cases["5g_eap_nat"]
-        radio = lab_ap_info.lanforge_5g
-        sta_list = [lanforge_prefix+"5217"]
-        ssid_name = ssid_5g_eap_nat
-        security = "wpa2"
-        eap_type = "TTLS"
-        try:
-            test_result = RunTest.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type, identity,
-                                                    ttls_password, test_case, rid)
-        except:
-            test_result = "error"
-            Test.testrail_retest(test_case, rid, ssid_name)
-            pass
-        report_data['tests'][key][int(test_case)] = test_result
-        print(report_data['tests'][key])
+        if not command_line_args.skip_radius:
+            # TC - 5 GHz WPA2-Enterprise NAT
+            test_case = test_cases["5g_eap_nat"]
+            radio = lanforge_5g_radio
+            sta_list = [lanforge_prefix+"5217"]
+            ssid_name = ssid_5g_eap_nat
+            security = "wpa2"
+            eap_type = "TTLS"
+            try:
+                test_result = RunTest.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type, identity,
+                                                        ttls_password, test_case, rid)
+            except:
+                test_result = "error"
+                Test.testrail_retest(test_case, rid, ssid_name)
+                pass
+            report_data['tests'][key][int(test_case)] = test_result
+            print(report_data['tests'][key])
 
-        time.sleep(10)
+            time.sleep(10)
 
         # TC - 5 GHz WPA2 NAT
         test_case = test_cases["5g_wpa2_nat"]
-        radio = lab_ap_info.lanforge_5g
+        radio = lanforge_5g_radio
         station = [lanforge_prefix+"4326"]
         ssid_name = ssid_5g_wpa2_nat
         ssid_psk = psk_5g_wpa2_nat
@@ -1401,7 +1406,7 @@ for key in equipment_ids:
 
         # TC - 5 GHz WPA NAT
         test_case = test_cases["5g_wpa_nat"]
-        radio = lab_ap_info.lanforge_5g
+        radio = lanforge_5g_radio
         station = [lanforge_prefix+"4324"]
         ssid_name = ssid_5g_wpa_nat
         ssid_psk = psk_5g_wpa_nat
@@ -1538,14 +1543,14 @@ for key in equipment_ids:
         ### Create AP VLAN Profile
         rfProfileId = lab_ap_info.rf_profile
         child_profiles = [fiveG_wpa2, fiveG_wpa, twoFourG_wpa2, twoFourG_wpa, rfProfileId]
-        ssid_prof_config = [prof_5g_wpa2_vlan_name, prof_5g_wpa_vlan_name, prof_2g_wpa2_vlan_name, prof_2g_wpa_vlan_name]
+        ssid_prof_config = [prof_5g_wpa2_name_vlan, prof_5g_wpa_name_vlan, prof_2g_wpa2_name_vlan, prof_2g_wpa_name_vlan]
         ssid_config = [ssid_5g_wpa2_vlan, ssid_5g_wpa_vlan, ssid_2g_wpa2_vlan, ssid_2g_wpa_vlan]
         if radius_profile != None:
             child_profiles.append(radius_profile)
             child_profiles.append(fiveG_eap)
             child_profiles.append(twoFourG_eap)
-            ssid_prof_config.append(prof_5g_wpa2_vlan_name)
-            ssid_prof_config.append(prof_2g_wpa2_vlan_name)
+            ssid_prof_config.append(prof_5g_wpa2_name_vlan)
+            ssid_prof_config.append(prof_2g_wpa2_name_vlan)
             ssid_config.append(ssid_5g_wpa2_vlan)
             ssid_config.append(ssid_2g_wpa2_vlan)
         print(child_profiles)
@@ -1628,29 +1633,30 @@ for key in equipment_ids:
         iwinfo = iwinfo_status(command_line_args)
         print(iwinfo)
 
-        ###Run Client Single Connectivity Test Cases for VLAN SSIDs
-        # TC- 2.4 GHz WPA2-Enterprise VLAN
-        test_case = test_cases["2g_eap_vlan"]
-        radio = lab_ap_info.lanforge_2dot4g
-        sta_list = [lanforge_prefix+"5253"]
-        ssid_name = ssid_2g_eap_vlan
-        security = "wpa2"
-        eap_type = "TTLS"
-        try:
-            test_result = RunTest.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type, identity,
-                                                    ttls_password, test_case, rid)
-        except:
-            test_result = "error"
-            Test.testrail_retest(test_case, rid, ssid_name)
-            pass
-        report_data['tests'][key][int(test_case)] = test_result
-        print(report_data['tests'][key])
+        if not command_line_args.skip_radius:
+            ###Run Client Single Connectivity Test Cases for VLAN SSIDs
+            # TC- 2.4 GHz WPA2-Enterprise VLAN
+            test_case = test_cases["2g_eap_vlan"]
+            radio = lanforge_2g_radio
+            sta_list = [lanforge_prefix+"5253"]
+            ssid_name = ssid_2g_eap_vlan
+            security = "wpa2"
+            eap_type = "TTLS"
+            try:
+                test_result = RunTest.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type, identity,
+                                                        ttls_password, test_case, rid)
+            except:
+                test_result = "error"
+                Test.testrail_retest(test_case, rid, ssid_name)
+                pass
+            report_data['tests'][key][int(test_case)] = test_result
+            print(report_data['tests'][key])
 
-        time.sleep(10)
+            time.sleep(10)
 
         # TC - 2.4 GHz WPA2 VLAN
         test_case = test_cases["2g_wpa2_vlan"]
-        radio = lab_ap_info.lanforge_2dot4g
+        radio = lanforge_2g_radio
         station = [lanforge_prefix+"5251"]
         ssid_name = ssid_2g_wpa2_vlan
         ssid_psk = psk_2g_wpa2_vlan
@@ -1670,7 +1676,7 @@ for key in equipment_ids:
 
         # TC 4323 - 2.4 GHz WPA VLAN
         test_case = test_cases["2g_wpa_vlan"]
-        radio = lab_ap_info.lanforge_2dot4g
+        radio = lanforge_2g_radio
         station = [lanforge_prefix+"5252"]
         ssid_name = ssid_2g_wpa_vlan
         ssid_psk = psk_2g_wpa_vlan
@@ -1687,28 +1693,29 @@ for key in equipment_ids:
 
         time.sleep(10)
 
-        # TC - 5 GHz WPA2-Enterprise VLAN
-        test_case = test_cases["5g_eap_vlan"]
-        radio = lab_ap_info.lanforge_5g
-        sta_list = [lanforge_prefix+"5250"]
-        ssid_name = ssid_5g_eap_vlan
-        security = "wpa2"
-        eap_type = "TTLS"
-        try:
-            test_result = RunTest.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type, identity,
-                                                    ttls_password, test_case, rid)
-        except:
-            test_result = "error"
-            Test.testrail_retest(test_case, rid, ssid_name)
-            pass
-        report_data['tests'][key][int(test_case)] = test_result
-        print(report_data['tests'][key])
+        if not command_line_args.skip_radius:
+            # TC - 5 GHz WPA2-Enterprise VLAN
+            test_case = test_cases["5g_eap_vlan"]
+            radio = lanforge_5g_radio
+            sta_list = [lanforge_prefix+"5250"]
+            ssid_name = ssid_5g_eap_vlan
+            security = "wpa2"
+            eap_type = "TTLS"
+            try:
+                test_result = RunTest.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type, identity,
+                                                        ttls_password, test_case, rid)
+            except:
+                test_result = "error"
+                Test.testrail_retest(test_case, rid, ssid_name)
+                pass
+            report_data['tests'][key][int(test_case)] = test_result
+            print(report_data['tests'][key])
 
-        time.sleep(10)
+            time.sleep(10)
 
         # TC - 5 GHz WPA2 VLAN
         test_case = test_cases["5g_wpa2_vlan"]
-        radio = lab_ap_info.lanforge_5g
+        radio = lanforge_5g_radio
         station = [lanforge_prefix+"5248"]
         ssid_name = ssid_5g_wpa2_vlan
         ssid_psk = psk_5g_wpa2_vlan
@@ -1728,7 +1735,7 @@ for key in equipment_ids:
 
         # TC 4324 - 5 GHz WPA VLAN
         test_case = test_cases["5g_wpa_vlan"]
-        radio = lab_ap_info.lanforge_5g
+        radio = lanforge_5g_radio
         station = [lanforge_prefix+"5249"]
         ssid_name = ssid_5g_wpa_vlan
         ssid_psk = psk_5g_wpa_vlan

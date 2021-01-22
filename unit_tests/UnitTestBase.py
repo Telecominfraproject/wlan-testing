@@ -135,6 +135,10 @@ class UnitTestBase:
                             default="8080")
         self.parser.add_argument("--lanforge-prefix", type=str, help="LANforge api prefix string",
                             default="sdk")
+        self.parser.add_argument("--lanforge-2g-radio", type=str, help="LANforge 2Ghz radio to use for testing",
+                            default="1.1.wiphy0")
+        self.parser.add_argument("--lanforge-5g-radio", type=str, help="LANforge 5Ghz radio to use for testing",
+                            default="1.1.wiphy1")
 
         self.parser.add_argument("--local_dir", type=str, help="Sanity logging directory",
                             default="logs")
@@ -198,6 +202,7 @@ class UnitTestBase:
 
         ##LANForge Information
         self.lanforge_ip = self.command_line_args.lanforge_ip_address
+        self.lanforge_port = self.command_line_args.lanforge_port_number
         self.lanforge_prefix = self.command_line_args.lanforge_prefix
 
         self.build = self.command_line_args.build_id
