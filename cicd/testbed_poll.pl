@@ -451,6 +451,9 @@ $cloud_sdk opensync.zone1.art2wave.com
          exit(42);
       }
 
+      my $dt = `date`;
+      print_note("$dt");
+
       if ($ttype eq "fast") {
          print_note("Start 'Fast' LANforge regression test.");
          $ap_out = do_system("cd $tb_dir && APGW=$ap_gw DUT_SW_VER=$swver OWRTCTL_ARGS=\"$owt_args\" ./run_basic_fast.bash");
