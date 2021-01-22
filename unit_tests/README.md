@@ -26,7 +26,12 @@ https://github.com/Telecominfraproject/wlan-cloud-services/tree/master/portal-se
 # For ease of use, add this to your /etc/hosts file:  3.130.51.163 orch
 
 # Examples in this code often assume you are using ssh port redirects to log into the testbeds,
-# for instance:
+# for instance, this is for working on the NOLA-01 testbed.  The 3.130.51.163 (aka orch)
+# system has its /etc/hosts file updated, so that 'lf1' means LANforg system in testbed NOLA-01
+# You can find other testbed info in TIP Confluence
+#  https://telecominfraproject.atlassian.net/wiki/spaces/WIFI/pages/307888428/TIP+Testbeds
+#  Please communicate with Ben Greear or Jaspreet Sachdev before accessing a testbed
+#  at leat until we have a reservation system in place.
 ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 -L 8803:lab-ctlr:22 ubuntu@orch
 
 Then, you would use port 8802 for connecting to the LANforge-GUI for the python LANforge test logic,
