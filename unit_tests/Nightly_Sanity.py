@@ -1102,203 +1102,200 @@ for key in equipment_ids:
         ################# NAT Mode Client Connectivity ############################
         ###########################################################################
 
-        ### Create SSID Profiles
-        ssid_template = "templates/ssid_profile_template.json"
+        if not command_line_args.skip_profiles:
+            ### Create SSID Profiles
 
-        # 5G SSIDs
-        try:
-            fiveG_eap = cloud.create_or_update_ssid_profile(cloudSDK_url, bearer, customer_id, ssid_template,
-                                                            prof_5g_eap_name_nat,
-                                                            ssid_5g_eap_nat, None,
-                                                            radius_name,
-                                                            "wpa2OnlyRadius", "NAT", 1,
-                                                            ["is5GHzU", "is5GHz", "is5GHzL"])
-            print("5G EAP SSID created successfully - NAT mode")
-            client.update_testrail(case_id=test_cases["ssid_5g_eap_nat"], run_id=rid, status_id=1,
-                                   msg='5G EAP SSID created successfully - NAT mode')
-            report_data['tests'][key][test_cases["ssid_5g_eap_nat"]] = "passed"
+            # 5G SSIDs
+            try:
+                fiveG_eap = cloud.create_or_update_ssid_profile(cloudSDK_url, bearer, customer_id, ssid_template,
+                                                                prof_5g_eap_name_nat,
+                                                                ssid_5g_eap_nat, None,
+                                                                radius_name,
+                                                                "wpa2OnlyRadius", "NAT", 1,
+                                                                ["is5GHzU", "is5GHz", "is5GHzL"])
+                print("5G EAP SSID created successfully - NAT mode")
+                client.update_testrail(case_id=test_cases["ssid_5g_eap_nat"], run_id=rid, status_id=1,
+                                       msg='5G EAP SSID created successfully - NAT mode')
+                report_data['tests'][key][test_cases["ssid_5g_eap_nat"]] = "passed"
 
-        except:
-            fiveG_eap = "error"
-            print("5G EAP SSID create failed - NAT mode")
-            client.update_testrail(case_id=test_cases["ssid_5g_eap_nat"], run_id=rid, status_id=5,
-                                   msg='5G EAP SSID create failed - NAT mode')
-            report_data['tests'][key][test_cases["ssid_5g_eap_nat"]] = "failed"
+            except:
+                fiveG_eap = "error"
+                print("5G EAP SSID create failed - NAT mode")
+                client.update_testrail(case_id=test_cases["ssid_5g_eap_nat"], run_id=rid, status_id=5,
+                                       msg='5G EAP SSID create failed - NAT mode')
+                report_data['tests'][key][test_cases["ssid_5g_eap_nat"]] = "failed"
 
-        try:
-            fiveG_wpa2 = cloud.create_or_update_ssid_profile(cloudSDK_url, bearer, customer_id, ssid_template,
-                                                             prof_5g_wpa2_name_nat,
-                                                             ssid_5g_wpa2_nat, psk_5g_wpa2_nat,
-                                                             "Radius-Accounting-Profile", "wpa2OnlyPSK", "NAT", 1,
-                                                             ["is5GHzU", "is5GHz", "is5GHzL"])
-            print("5G WPA2 SSID created successfully - NAT mode")
-            client.update_testrail(case_id=test_cases["ssid_5g_wpa2_nat"], run_id=rid, status_id=1,
-                                   msg='5G WPA2 SSID created successfully - NAT mode')
-            report_data['tests'][key][test_cases["ssid_5g_wpa2_nat"]] = "passed"
-        except:
-            fiveG_wpa2 = "error"
-            print("5G WPA2 SSID create failed - NAT mode")
-            client.update_testrail(case_id=test_cases["ssid_5g_wpa2_nat"], run_id=rid, status_id=5,
-                                   msg='5G WPA2 SSID create failed - NAT mode')
-            report_data['tests'][key][test_cases["ssid_5g_wpa2_nat"]] = "failed"
+            try:
+                fiveG_wpa2 = cloud.create_or_update_ssid_profile(cloudSDK_url, bearer, customer_id, ssid_template,
+                                                                 prof_5g_wpa2_name_nat,
+                                                                 ssid_5g_wpa2_nat, psk_5g_wpa2_nat,
+                                                                 "Radius-Accounting-Profile", "wpa2OnlyPSK", "NAT", 1,
+                                                                 ["is5GHzU", "is5GHz", "is5GHzL"])
+                print("5G WPA2 SSID created successfully - NAT mode")
+                client.update_testrail(case_id=test_cases["ssid_5g_wpa2_nat"], run_id=rid, status_id=1,
+                                       msg='5G WPA2 SSID created successfully - NAT mode')
+                report_data['tests'][key][test_cases["ssid_5g_wpa2_nat"]] = "passed"
+            except:
+                fiveG_wpa2 = "error"
+                print("5G WPA2 SSID create failed - NAT mode")
+                client.update_testrail(case_id=test_cases["ssid_5g_wpa2_nat"], run_id=rid, status_id=5,
+                                       msg='5G WPA2 SSID create failed - NAT mode')
+                report_data['tests'][key][test_cases["ssid_5g_wpa2_nat"]] = "failed"
 
-        try:
-            fiveG_wpa = cloud.create_or_update_ssid_profile(cloudSDK_url, bearer, customer_id, ssid_template,
-                                                            prof_5g_wpa_name_nat,
-                                                            ssid_5g_wpa_nat, psk_5g_wpa_nat,
-                                                            "Radius-Accounting-Profile", "wpaPSK", "NAT", 1,
-                                                            ["is5GHzU", "is5GHz", "is5GHzL"])
-            print("5G WPA SSID created successfully - NAT mode")
-            client.update_testrail(case_id=test_cases["ssid_5g_wpa_nat"], run_id=rid, status_id=1,
-                                   msg='5G WPA SSID created successfully - NAT mode')
-            report_data['tests'][key][test_cases["ssid_5g_wpa_nat"]] = "passed"
-        except:
-            fiveG_wpa = "error"
-            print("5G WPA SSID create failed - NAT mode")
-            client.update_testrail(case_id=test_cases["ssid_5g_wpa_nat"], run_id=rid, status_id=5,
-                                   msg='5G WPA SSID create failed - NAT mode')
-            report_data['tests'][key][test_cases["ssid_5g_wpa_nat"]] = "failed"
+            try:
+                fiveG_wpa = cloud.create_or_update_ssid_profile(cloudSDK_url, bearer, customer_id, ssid_template,
+                                                                prof_5g_wpa_name_nat,
+                                                                ssid_5g_wpa_nat, psk_5g_wpa_nat,
+                                                                "Radius-Accounting-Profile", "wpaPSK", "NAT", 1,
+                                                                ["is5GHzU", "is5GHz", "is5GHzL"])
+                print("5G WPA SSID created successfully - NAT mode")
+                client.update_testrail(case_id=test_cases["ssid_5g_wpa_nat"], run_id=rid, status_id=1,
+                                       msg='5G WPA SSID created successfully - NAT mode')
+                report_data['tests'][key][test_cases["ssid_5g_wpa_nat"]] = "passed"
+            except:
+                fiveG_wpa = "error"
+                print("5G WPA SSID create failed - NAT mode")
+                client.update_testrail(case_id=test_cases["ssid_5g_wpa_nat"], run_id=rid, status_id=5,
+                                       msg='5G WPA SSID create failed - NAT mode')
+                report_data['tests'][key][test_cases["ssid_5g_wpa_nat"]] = "failed"
 
-            # 2.4G SSIDs
-        try:
-            twoFourG_eap = cloud.create_or_update_ssid_profile(cloudSDK_url, bearer, customer_id, ssid_template,
-                                                               prof_2g_eap_name_nat,
-                                                               ssid_2g_eap_nat, None,
-                                                               None,
-                                                               radius_name, "wpa2OnlyRadius", "NAT", 1, ["is2dot4GHz"])
-            print("2.4G EAP SSID created successfully - NAT mode")
-            client.update_testrail(case_id=test_cases["ssid_2g_eap_nat"], run_id=rid, status_id=1,
-                                   msg='2.4G EAP SSID created successfully - NAT mode')
-            report_data['tests'][key][test_cases["ssid_2g_eap_nat"]] = "passed"
-        except:
-            twoFourG_eap = "error"
-            print("2.4G EAP SSID create failed - NAT mode")
-            client.update_testrail(case_id=test_cases["ssid_2g_eap_nat"], run_id=rid, status_id=5,
-                                   msg='2.4G EAP SSID create failed - NAT mode')
-            report_data['tests'][key][test_cases["ssid_2g_eap_nat"]] = "failed"
+                # 2.4G SSIDs
+            try:
+                twoFourG_eap = cloud.create_or_update_ssid_profile(cloudSDK_url, bearer, customer_id, ssid_template,
+                                                                   prof_2g_eap_name_nat,
+                                                                   ssid_2g_eap_nat, None,
+                                                                   None,
+                                                                   radius_name, "wpa2OnlyRadius", "NAT", 1, ["is2dot4GHz"])
+                print("2.4G EAP SSID created successfully - NAT mode")
+                client.update_testrail(case_id=test_cases["ssid_2g_eap_nat"], run_id=rid, status_id=1,
+                                       msg='2.4G EAP SSID created successfully - NAT mode')
+                report_data['tests'][key][test_cases["ssid_2g_eap_nat"]] = "passed"
+            except:
+                twoFourG_eap = "error"
+                print("2.4G EAP SSID create failed - NAT mode")
+                client.update_testrail(case_id=test_cases["ssid_2g_eap_nat"], run_id=rid, status_id=5,
+                                       msg='2.4G EAP SSID create failed - NAT mode')
+                report_data['tests'][key][test_cases["ssid_2g_eap_nat"]] = "failed"
 
-        try:
-            twoFourG_wpa2 = cloud.create_or_update_ssid_profile(cloudSDK_url, bearer, customer_id, ssid_template,
-                                                                prof_2g_wpa2_name_nat,
-                                                                ssid_2g_wpa2_nat, psk_2g_wpa2_nat,
-                                                                "Radius-Accounting-Profile", "wpa2OnlyPSK", "NAT", 1,
-                                                                ["is2dot4GHz"])
-            print("2.4G WPA2 SSID created successfully - NAT mode")
-            client.update_testrail(case_id=test_cases["ssid_2g_wpa2_nat"], run_id=rid, status_id=1,
-                                   msg='2.4G WPA2 SSID created successfully - NAT mode')
-            report_data['tests'][key][test_cases["ssid_2g_wpa2_nat"]] = "passed"
-        except:
-            twoFourG_wpa2 = "error"
-            print("2.4G WPA2 SSID create failed - NAT mode")
-            client.update_testrail(case_id=test_cases["ssid_2g_wpa2_nat"], run_id=rid, status_id=5,
-                                   msg='2.4G WPA2 SSID create failed - NAT mode')
-            report_data['tests'][key][test_cases["ssid_2g_wpa2_nat"]] = "failed"
+            try:
+                twoFourG_wpa2 = cloud.create_or_update_ssid_profile(cloudSDK_url, bearer, customer_id, ssid_template,
+                                                                    prof_2g_wpa2_name_nat,
+                                                                    ssid_2g_wpa2_nat, psk_2g_wpa2_nat,
+                                                                    "Radius-Accounting-Profile", "wpa2OnlyPSK", "NAT", 1,
+                                                                    ["is2dot4GHz"])
+                print("2.4G WPA2 SSID created successfully - NAT mode")
+                client.update_testrail(case_id=test_cases["ssid_2g_wpa2_nat"], run_id=rid, status_id=1,
+                                       msg='2.4G WPA2 SSID created successfully - NAT mode')
+                report_data['tests'][key][test_cases["ssid_2g_wpa2_nat"]] = "passed"
+            except:
+                twoFourG_wpa2 = "error"
+                print("2.4G WPA2 SSID create failed - NAT mode")
+                client.update_testrail(case_id=test_cases["ssid_2g_wpa2_nat"], run_id=rid, status_id=5,
+                                       msg='2.4G WPA2 SSID create failed - NAT mode')
+                report_data['tests'][key][test_cases["ssid_2g_wpa2_nat"]] = "failed"
 
-        try:
-            twoFourG_wpa = cloud.create_or_update_ssid_profile(cloudSDK_url, bearer, customer_id, ssid_template,
-                                                               prof_2g_wpa_name_nat,
-                                                               ssid_2g_wpa_nat, psk_2g_wpa_nat,
-                                                               "Radius-Accounting-Profile", "wpaPSK", "NAT", 1,
-                                                               ["is2dot4GHz"])
-            print("2.4G WPA SSID created successfully - NAT mode")
-            client.update_testrail(case_id=test_cases["ssid_2g_wpa_nat"], run_id=rid, status_id=1,
-                                   msg='2.4G WPA SSID created successfully - NAT mode')
-            report_data['tests'][key][test_cases["ssid_2g_wpa_nat"]] = "passed"
-        except:
-            twoFourG_wpa = "error"
-            print("2.4G WPA SSID create failed - NAT mode")
-            client.update_testrail(case_id=test_cases["ssid_2g_wpa_nat"], run_id=rid, status_id=5,
-                                   msg='2.4G WPA SSID create failed - NAT mode')
-            report_data['tests'][key][test_cases["ssid_2g_wpa_nat"]] = "failed"
+            try:
+                twoFourG_wpa = cloud.create_or_update_ssid_profile(cloudSDK_url, bearer, customer_id, ssid_template,
+                                                                   prof_2g_wpa_name_nat,
+                                                                   ssid_2g_wpa_nat, psk_2g_wpa_nat,
+                                                                   "Radius-Accounting-Profile", "wpaPSK", "NAT", 1,
+                                                                   ["is2dot4GHz"])
+                print("2.4G WPA SSID created successfully - NAT mode")
+                client.update_testrail(case_id=test_cases["ssid_2g_wpa_nat"], run_id=rid, status_id=1,
+                                       msg='2.4G WPA SSID created successfully - NAT mode')
+                report_data['tests'][key][test_cases["ssid_2g_wpa_nat"]] = "passed"
+            except:
+                twoFourG_wpa = "error"
+                print("2.4G WPA SSID create failed - NAT mode")
+                client.update_testrail(case_id=test_cases["ssid_2g_wpa_nat"], run_id=rid, status_id=5,
+                                       msg='2.4G WPA SSID create failed - NAT mode')
+                report_data['tests'][key][test_cases["ssid_2g_wpa_nat"]] = "failed"
 
-        ### Create AP NAT Profile
-        rfProfileId = lab_ap_info.rf_profile
-        child_profiles = [fiveG_wpa2, fiveG_wpa, twoFourG_wpa2, twoFourG_wpa, rfProfileId]
-        ssid_prof_config = [prof_5g_wpa2_name_nat, prof_5g_wpa_name_nat, prof_2g_wpa2_name_nat, prof_2g_wpa_name_nat]
-        ssid_config = [ssid_5g_wpa2_nat, ssid_5g_wpa_nat, ssid_2g_wpa2_nat, ssid_2g_wpa_nat]
-        if radius_profile != None:
-            child_profiles.append(radius_profile)
-            child_profiles.append(fiveG_eap)
-            child_profiles.append(twoFourG_eap)
-            ssid_prof_config.append(prof_5g_wpa2_name_nat)
-            ssid_prof_config.append(prof_2g_wpa2_name_nat)
-            ssid_config.append(ssid_5g_wpa2_nat)
-            ssid_config.append(ssid_2g_wpa2_nat)
+            ### Create AP NAT Profile
+            rfProfileId = lab_ap_info.rf_profile
+            child_profiles = [fiveG_wpa2, fiveG_wpa, twoFourG_wpa2, twoFourG_wpa, rfProfileId]
+            ssid_prof_config = [prof_5g_wpa2_name_nat, prof_5g_wpa_name_nat, prof_2g_wpa2_name_nat, prof_2g_wpa_name_nat]
+            ssid_config = [ssid_5g_wpa2_nat, ssid_5g_wpa_nat, ssid_2g_wpa2_nat, ssid_2g_wpa_nat]
+            if radius_profile != None:
+                child_profiles.append(radius_profile)
+                child_profiles.append(fiveG_eap)
+                child_profiles.append(twoFourG_eap)
+                ssid_prof_config.append(prof_5g_wpa2_name_nat)
+                ssid_prof_config.append(prof_2g_wpa2_name_nat)
+                ssid_config.append(ssid_5g_wpa2_nat)
+                ssid_config.append(ssid_2g_wpa2_nat)
 
-        print(child_profiles)
-        name = command_line_args.testbed + "-" + fw_model + "_nat"
-        try:
-            create_ap_profile = cloud.create_or_update_ap_profile(cloudSDK_url, bearer, customer_id,
-                                                                  command_line_args.default_ap_profile, name, child_profiles)
-            test_profile_id = create_ap_profile
-            print("Test Profile ID for Test is:", test_profile_id)
-            client.update_testrail(case_id=test_cases["ap_nat"], run_id=rid, status_id=1,
-                                       msg='AP profile for NAT tests created successfully')
-            report_data['tests'][key][test_cases["ap_nat"]] = "passed"
-        except:
-            create_ap_profile = "error"
-            test_profile_id = profile_info_dict[fw_model + '_nat']["profile_id"]
-            print("Error creating AP profile for NAT tests. Will use existing AP profile")
-            client.update_testrail(case_id=test_cases["ap_nat"], run_id=rid, status_id=5,
-                                       msg='AP profile for NAT tests could not be created using API')
-            report_data['tests'][key][test_cases["ap_nat"]] = "failed"
+            print(child_profiles)
+            name = command_line_args.testbed + "-" + fw_model + "_nat"
+            try:
+                create_ap_profile = cloud.create_or_update_ap_profile(cloudSDK_url, bearer, customer_id,
+                                                                      command_line_args.default_ap_profile, name, child_profiles)
+                test_profile_id = create_ap_profile
+                print("Test Profile ID for Test is:", test_profile_id)
+                client.update_testrail(case_id=test_cases["ap_nat"], run_id=rid, status_id=1,
+                                           msg='AP profile for NAT tests created successfully')
+                report_data['tests'][key][test_cases["ap_nat"]] = "passed"
+            except:
+                create_ap_profile = "error"
+                test_profile_id = profile_info_dict[fw_model + '_nat']["profile_id"]
+                print("Error creating AP profile for NAT tests. Will use existing AP profile")
+                client.update_testrail(case_id=test_cases["ap_nat"], run_id=rid, status_id=5,
+                                           msg='AP profile for NAT tests could not be created using API')
+                report_data['tests'][key][test_cases["ap_nat"]] = "failed"
 
-        ###Set Proper AP Profile for NAT SSID Tests
-        ap_profile = cloud.set_ap_profile(equipment_id, test_profile_id, cloudSDK_url, bearer)
+            ###Set Proper AP Profile for NAT SSID Tests
+            ap_profile = cloud.set_ap_profile(equipment_id, test_profile_id, cloudSDK_url, bearer)
 
-        ### Wait for Profile Push
-        time.sleep(180)
+            ### Wait for Profile Push
+            time.sleep(180)
 
-        ###Check if VIF Config and VIF State reflect AP Profile from CloudSDK
-        ## VIF Config
-        try:
-            print("SSIDs in AP Profile:", ssid_config)
-            print("SSID Profiles in AP Profile:", ssid_prof_config)
+            ###Check if VIF Config and VIF State reflect AP Profile from CloudSDK
+            ## VIF Config
+            try:
+                print("SSIDs in AP Profile:", ssid_config)
+                print("SSID Profiles in AP Profile:", ssid_prof_config)
 
-            ssid_list = ap_ssh.get_vif_config(command_line_args)
-            print("SSIDs in AP VIF Config:", ssid_list)
+                ssid_list = ap_ssh.get_vif_config(command_line_args)
+                print("SSIDs in AP VIF Config:", ssid_list)
 
-            if set(ssid_list) == set(ssid_config):
-                print("SSIDs in Wifi_VIF_Config Match AP Profile Config")
-                client.update_testrail(case_id=test_cases["nat_vifc"], run_id=rid, status_id=1,
-                                       msg='SSIDs in VIF Config matches AP Profile Config')
-                report_data['tests'][key][test_cases["nat_vifc"]] = "passed"
-            else:
-                print("SSIDs in Wifi_VIF_Config do not match desired AP Profile Config")
-                client.update_testrail(case_id=test_cases["nat_vifc"], run_id=rid, status_id=5,
-                                       msg='SSIDs in VIF Config do not match AP Profile Config')
-                report_data['tests'][key][test_cases["nat_vifc"]] = "failed"
-        except:
-            ssid_list = "ERROR"
-            print("Error accessing VIF Config from AP CLI")
-            client.update_testrail(case_id=test_cases["nat_vifc"], run_id=rid, status_id=4,
-                                   msg='Cannot determine VIF Config - re-test required')
-            report_data['tests'][key][test_cases["nat_vifc"]] = "error"
-        # VIF State
-        try:
-            ssid_state = ap_ssh.get_vif_state(command_line_args)
-            print("SSIDs in AP VIF State:", ssid_state)
+                if set(ssid_list) == set(ssid_config):
+                    print("SSIDs in Wifi_VIF_Config Match AP Profile Config")
+                    client.update_testrail(case_id=test_cases["nat_vifc"], run_id=rid, status_id=1,
+                                           msg='SSIDs in VIF Config matches AP Profile Config')
+                    report_data['tests'][key][test_cases["nat_vifc"]] = "passed"
+                else:
+                    print("SSIDs in Wifi_VIF_Config do not match desired AP Profile Config")
+                    client.update_testrail(case_id=test_cases["nat_vifc"], run_id=rid, status_id=5,
+                                           msg='SSIDs in VIF Config do not match AP Profile Config')
+                    report_data['tests'][key][test_cases["nat_vifc"]] = "failed"
+            except:
+                ssid_list = "ERROR"
+                print("Error accessing VIF Config from AP CLI")
+                client.update_testrail(case_id=test_cases["nat_vifc"], run_id=rid, status_id=4,
+                                       msg='Cannot determine VIF Config - re-test required')
+                report_data['tests'][key][test_cases["nat_vifc"]] = "error"
+            # VIF State
+            try:
+                ssid_state = ap_ssh.get_vif_state(command_line_args)
+                print("SSIDs in AP VIF State:", ssid_state)
 
-            if set(ssid_state) == set(ssid_config):
-                print("SSIDs properly applied on AP")
-                client.update_testrail(case_id=test_cases["nat_vifs"], run_id=rid, status_id=1,
-                                       msg='SSIDs in VIF Config applied to VIF State')
-                report_data['tests'][key][test_cases["nat_vifs"]] = "passed"
-            else:
-                print("SSIDs not applied on AP")
-                client.update_testrail(case_id=test_cases["nat_vifs"], run_id=rid, status_id=5,
-                                       msg='SSIDs in VIF Config not applied to VIF State')
-                report_data['tests'][key][test_cases["nat_vifs"]] = "failed"
-        except:
-            ssid_list = "ERROR"
-            print("Error accessing VIF State from AP CLI")
-            print("Error accessing VIF Config from AP CLI")
-            client.update_testrail(case_id=test_cases["nat_vifs"], run_id=rid, status_id=4,
-                                   msg='Cannot determine VIF State - re-test required')
-            report_data['tests'][key][test_cases["nat_vifs"]] = "error"
-
-        ### Set LANForge port for tests
-        port = "eth2"
+                if set(ssid_state) == set(ssid_config):
+                    print("SSIDs properly applied on AP")
+                    client.update_testrail(case_id=test_cases["nat_vifs"], run_id=rid, status_id=1,
+                                           msg='SSIDs in VIF Config applied to VIF State')
+                    report_data['tests'][key][test_cases["nat_vifs"]] = "passed"
+                else:
+                    print("SSIDs not applied on AP")
+                    client.update_testrail(case_id=test_cases["nat_vifs"], run_id=rid, status_id=5,
+                                           msg='SSIDs in VIF Config not applied to VIF State')
+                    report_data['tests'][key][test_cases["nat_vifs"]] = "failed"
+            except:
+                ssid_list = "ERROR"
+                print("Error accessing VIF State from AP CLI")
+                print("Error accessing VIF Config from AP CLI")
+                client.update_testrail(case_id=test_cases["nat_vifs"], run_id=rid, status_id=4,
+                                       msg='Cannot determine VIF State - re-test required')
+                report_data['tests'][key][test_cases["nat_vifs"]] = "error"
 
         # Print iwinfo for logs
         iwinfo = iwinfo_status(command_line_args)
