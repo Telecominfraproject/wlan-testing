@@ -137,6 +137,16 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+# nightlies
 docker/*
 !docker/nightly*
 docker/nightly*log
+
+# nightlies with pytest
+pytest/*
+!pytest/Dockerfile
+!pytest/conftest.py
+!pytest/test_*.py
+!pytest/helpers
+!pytest/pytest.ini
+pytest/nightly*log
