@@ -210,7 +210,8 @@ for ($i = 0; $i<@lines; $i++) {
 
       # Detect if we are using full pkg or new trimmed sysupgrade image
       my $full_owrt_pkg = 0;
-      if (-f "*sysupgrade*") {
+      my @listing = glob("*sysupgrade*");
+      if (@listing > 0) {
 	 print("NOTE:  Found full openwrt package.\n");
 	 $full_owrt_pkg = 1;
       } 
