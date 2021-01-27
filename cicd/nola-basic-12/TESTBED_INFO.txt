@@ -1,4 +1,4 @@
-TESTBED_HW=eap102
+TESTBED_HW=wf188n
 TESTBED_NAME=NOLA-12
 
 # Controller's view of the test bed, from wlan-testing/cicd/[testbed] directory
