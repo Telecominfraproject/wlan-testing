@@ -44,9 +44,12 @@ stab_tcp_ul_min: 500000
 stab_tcp_ul_max: 0
 dl_speed: 85%
 ul_speed: 85%
-max_stations_2: 129
-max_stations_5: 131
-max_stations_dual: 260
+#max_stations_2: 129
+#max_stations_5: 131
+#max_stations_dual: 260
+max_stations_2: 64
+max_stations_5: 64
+max_stations_dual: 128
 lt_sta: 2
 voip_calls: 0
 lt_dur: 3600
