@@ -208,6 +208,16 @@ for ($i = 0; $i<@lines; $i++) {
       do_system("rm -f *sysupgrade.*"); # just in case openwrt prefix changes.
       do_system("tar xf $jfile");
 
+      # Detect if we are using full pkg or new trimmed sysupgrade image
+      my $full_owrt_pkg = 0;
+      if (-f "*sysupgrade*") {
+	 print("NOTE:  Found full openwrt package.\n");
+	 $full_owrt_pkg = 1;
+      } 
+      else {
+	 print("NOTE:  Found trimmed sysupgrade openwrt package.\n");
+      }
+
       print_note("Copy AP build to LANforge so LANforge can serve the file to AP");
       # Next steps here are to put the OpenWrt file on the LANforge system
       my $tb_info = do_system("cat TESTBED_INFO.txt");
@@ -265,7 +275,12 @@ for ($i = 0; $i<@lines; $i++) {
 
       # and then get it onto the DUT, reboot DUT, re-configure as needed,
       print_note("Request AP DUT to install the test image.");
-      do_system("scp *sysupgrade.* lanforge\@$lfmgr:tip-$jfile");
+      if ($full_owrt_pkg) {
+      	do_system("scp *sysupgrade.* lanforge\@$lfmgr:tip-$jfile");
+      }
+      else {
+	do_system("scp $jfile lanforge\@$lfmgr:tip-$jfile");
+      }
 
 
       # TODO:  Kill anything using the serial port
