@@ -102,12 +102,12 @@ class UnitTestBase:
                                  help="Testbed name, will be prefixed to profile names and similar",
                                  default = None)
 
-        self.parser.add_argument("--sdk-base-url", type=str, help="cloudsdk base url",
-                            default="https://wlan-portal-svc.cicd.lab.wlan.tip.build")
-        self.parser.add_argument("--sdk-user-id", type=str, help="cloudsdk user id",
-                            default="support@example.com")
-        self.parser.add_argument("--sdk-user-password", type=str, help="cloudsdk user password",
-                            default="support")
+        self.parser.add_argument("--sdk-base-url", type=str, help="cloudsdk base url, default: https://wlan-portal-svc.cicd.lab.wlan.tip.build",
+                                 default="https://wlan-portal-svc.cicd.lab.wlan.tip.build")
+        self.parser.add_argument("--sdk-user-id", type=str, help="cloudsdk user id, default: support@example.conf",
+                                 default="support@example.com")
+        self.parser.add_argument("--sdk-user-password", type=str, help="cloudsdk user password, default:  support",
+                                 default="support")
 
         self.parser.add_argument("--jfrog-base-url", type=str, help="jfrog base url",
                             default="tip.jFrog.io/artifactory/tip-wlan-ap-firmware")

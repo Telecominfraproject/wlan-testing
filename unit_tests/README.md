@@ -32,7 +32,21 @@ https://github.com/Telecominfraproject/wlan-cloud-services/tree/master/portal-se
 #  https://telecominfraproject.atlassian.net/wiki/spaces/WIFI/pages/307888428/TIP+Testbeds
 #  Please communicate with Ben Greear or Jaspreet Sachdev before accessing a testbed
 #  at leat until we have a reservation system in place.
+
+# NOLA-01 testbed
 ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 -L 8803:lab-ctlr:22 ubuntu@orch
+#  Example of accessing AP over serial console through jumphost
+./query_ap.py --ap-jumphost-address localhost --ap-jumphost-port 8803 --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 -m ecw5410 --cmd "cat /etc/banner"
+# Example of accessing NOLA-01's cloud controller (https://wlan-portal-svc.cicd.lab.wlan.tip.build)
+./query_sdk.py --testrail-user-id NONE --model ecw5410 --sdk-base-url https://wlan-portal-svc.cicd.lab.wlan.tip.build --sdk-user-id \
+   support@example.com --sdk-user-password support --equipment_id 3 --type profile --cmd get --brief true
+
+# NOLA-04 testbed
+#  testbed ssh tunnel
+ssh -C -L 8810:lf4:4002 -L 8811:lf4:5901 -L 8812:lf4:8080 -L 8813:lab-ctlr:22 ubuntu@orch
+#  Example of accessing AP over serial console through jumphost
+./query_ap.py --ap-jumphost-address localhost --ap-jumphost-port 8813 --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP4 -m ecw5410 --cmd "cat /etc/banner"
+
 
 Then, you would use port 8802 for connecting to the LANforge-GUI for the python LANforge test logic,
 and port 8803 to access the lab jumphost.  Port 8800 could connect a locally running LANforge GUI to the

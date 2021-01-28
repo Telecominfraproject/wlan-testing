@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 # Example command line:
-#./query_ap.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 7220 --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --cmd "ifconfig -a"
+#./query_ap.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 8803 --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --cmd "ifconfig -a"
 
 from UnitTestBase import *
 
