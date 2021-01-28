@@ -42,6 +42,7 @@ class CloudSDK:
     def __init__(self, command_line_args):
         self.user = command_line_args.sdk_user_id
         self.password = command_line_args.sdk_user_password
+        self.assert_bad_response = False
 
     def get_bearer(self, cloudSDK_url, cloud_type):
         cloud_login_url = cloudSDK_url+"/management/"+cloud_type+"/oauth2/token"
@@ -62,6 +63,18 @@ class CloudSDK:
         bearer_token = token_data['access_token']
         return(bearer_token)
 
+    def check_response(self, response, headers, data_str):
+        if response.status_code >= 500:
+            print("response-status: ", response.status_code)
+            print("response-headers: ", response.headers)
+            print("headers: ", headers)
+            print("data-str: ", data_str)
+            if self.assert_bad_response:
+                raise NameError("Invalid response code.")
+            return False
+        return True
+
+
     def ap_firmware(self, customer_id, equipment_id, cloudSDK_url, bearer):
         equip_fw_url = cloudSDK_url+"/portal/status/forEquipment?customerId="+customer_id+"&equipmentId="+equipment_id
         payload = {}
@@ -76,6 +89,7 @@ class CloudSDK:
             current_ap_fw = status_data[2]['details']['reportedSwVersion']
             return current_ap_fw
         else:
+            self.check_response(status_response, headers, payload)
             return("ERROR")
 
     def CloudSDK_images(self, apModel, cloudSDK_url, bearer):
@@ -85,6 +99,7 @@ class CloudSDK:
             'Authorization': 'Bearer ' + bearer
         }
         response = requests.request("GET", getFW_url, headers=headers, data=payload)
+        self.check_response(response, headers, payload)
         ap_fw_details = response.json()
         ###return ap_fw_details
         fwlist = []
@@ -103,6 +118,7 @@ class CloudSDK:
         }
 
         response = requests.request("POST", fw_upload_url, headers=headers, data=payload)
+        self.check_response(response, headers, payload)
         #print(response)
         upload_result = response.json()
         return(upload_result)
@@ -116,6 +132,7 @@ class CloudSDK:
             'Authorization': 'Bearer ' + bearer
         }
         response = requests.request("GET", fw_id_url, headers=headers, data=payload)
+        self.check_response(response, headers, payload)
         fw_data = response.json()
         latest_fw_id = fw_data['id']
         return latest_fw_id
@@ -133,6 +150,7 @@ class CloudSDK:
         while True:
             print("Request %i: in get-paged-url, url: %s"%(req, url))
             response = requests.request("GET", url, headers=headers, data=payload)
+            self.check_response(response, headers, payload)
             rjson = response.json()
             rv.append(rjson)
             if not 'context' in rjson:
@@ -158,6 +176,7 @@ class CloudSDK:
 
         print("Get-url, url: %s"%(url))
         response = requests.request("GET", url, headers=headers, data=payload)
+        self.check_response(response, headers, payload)
         return response.json()
 
     def get_customer_profiles(self, cloudSDK_url, bearer, customer_id, object_id):
@@ -191,6 +210,7 @@ class CloudSDK:
             'Authorization': 'Bearer ' + bearer
         }
         response = requests.request("DELETE", url, headers=headers, data=payload)
+        self.check_response(response, headers, payload)
         return(response)
 
     def delete_equipment(self, cloudSDK_url, bearer, eq_id):
@@ -201,6 +221,7 @@ class CloudSDK:
             'Authorization': 'Bearer ' + bearer
         }
         response = requests.request("DELETE", url, headers=headers, data=payload)
+        self.check_response(response, headers, payload)
         return(response)
 
     def get_customer_locations(self, cloudSDK_url, bearer, customer_id):
@@ -247,6 +268,7 @@ class CloudSDK:
             'Authorization': 'Bearer ' + bearer
         }
         response = requests.request("GET", fw_id_url, headers=headers, data=payload)
+        self.check_response(response, headers, payload)
         return response.json()
 
     def delete_firmware(self, fw_id, cloudSDK_url, bearer):
@@ -256,6 +278,7 @@ class CloudSDK:
             'Authorization': 'Bearer ' + bearer
         }
         response = requests.request("DELETE", url, headers=headers, data=payload)
+        self.check_response(response, headers, payload)
         return(response)
 
     def update_firmware(self, equipment_id, latest_firmware_id, cloudSDK_url, bearer):
@@ -267,6 +290,7 @@ class CloudSDK:
         }
 
         response = requests.request("POST", url, headers=headers, data=payload)
+        self.check_response(response, headers, payload)
         #print(response.text)
         return response.json()
 
@@ -280,6 +304,7 @@ class CloudSDK:
         }
 
         response = requests.request("POST", url, headers=headers, data=payload)
+        self.check_response(response, headers, payload)
         #print(response.text)
         return response.json()
 
@@ -293,6 +318,7 @@ class CloudSDK:
         }
 
         response = requests.request("POST", url, headers=headers, data=payload)
+        self.check_response(response, headers, payload)
         #print(response.text)
         return response.json()
 
@@ -306,6 +332,7 @@ class CloudSDK:
         }
 
         response = requests.request("POST", url, headers=headers, data=payload)
+        self.check_response(response, headers, payload)
         #print(response.text)
         return response.json()
 
@@ -319,6 +346,7 @@ class CloudSDK:
         }
 
         response = requests.request("POST", url, headers=headers, data=payload)
+        self.check_response(response, headers, payload)
         #print(response.text)
         return response.json()
 
@@ -331,6 +359,7 @@ class CloudSDK:
         }
 
         response = requests.request("GET", url, headers=headers, data=payload)
+        self.check_response(response, headers, payload)
         print(response)
 
         ###Add Lab Profile ID to Equipment
@@ -347,6 +376,7 @@ class CloudSDK:
         }
 
         response = requests.request("PUT", url, headers=headers, data=json.dumps(equipment_info))
+        self.check_response(response, headers, payload)
         print(response)
 
     def get_cloudsdk_version(self, cloudSDK_url, bearer):
@@ -358,6 +388,7 @@ class CloudSDK:
             'Authorization': 'Bearer ' + bearer
         }
         response = requests.request("GET", url, headers=headers, data=payload)
+        self.check_response(response, headers, payload)
         cloud_sdk_version = response.json()
         return cloud_sdk_version
 
@@ -377,6 +408,7 @@ class CloudSDK:
         data_str = json.dumps(profile)
         print("Creating new ap-profile, data: %s"%(data_str))
         response = requests.request("POST", url, headers=headers, data=data_str)
+        self.check_response(response, headers, data_str)
         ap_profile = response.json()
         print("New AP profile: ", ap_profile)
         ap_profile_id = ap_profile['id']
@@ -399,6 +431,7 @@ class CloudSDK:
         data_str = json.dumps(profile)
         print("Updating ap-profile, data: %s"%(data_str))
         response = requests.request("PUT", url, headers=headers, data=data_str)
+        self.check_response(response, headers, data_str)
         print(response)
         return profile['id']
 
@@ -420,9 +453,12 @@ class CloudSDK:
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + bearer
         }
-        response = requests.request("POST", url, headers=headers, data=json.dumps(profile))
+        data_str = json.dumps(profile)
+        response = requests.request("POST", url, headers=headers, data=data_str)
+        self.check_response(response, headers, data_str)
         ssid_profile = response.json()
         return ssid_profile['id']
+        
 
     def create_or_update_ssid_profile(self, cloudSDK_url, bearer, customer_id, template, name,
                                       ssid, passkey, radius, security, mode, vlan, radios):
@@ -449,8 +485,9 @@ class CloudSDK:
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + bearer
         }
-        response = requests.request("PUT", url, headers=headers, data=json.dumps(profile))
-        print(response)
+        data_str = json.dumps(profile)
+        response = requests.request("PUT", url, headers=headers, data=data_str)
+        self.check_response(response, headers, data_str)
         return profile['id']
 
     def create_radius_profile(self, cloudSDK_url, bearer, customer_id, template, name, subnet_name, subnet, subnet_mask,
@@ -491,6 +528,7 @@ class CloudSDK:
         data_str = json.dumps(profile)
         print("Sending json to create radius: %s"%(data_str))
         response = requests.request("POST", url, headers=headers, data=data_str)
+        self.check_response(response, headers, data_str)
         radius_profile = response.json()
         print(radius_profile)
         radius_profile_id = radius_profile['id']
@@ -532,8 +570,10 @@ class CloudSDK:
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + bearer
         }
-        response = requests.request("PUT", url, headers=headers, data=json.dumps(profile))
-        # TODO:  Code below is wrong, obviously in hindsight.  But, need to parse response
+        data_str = json.dumps(profile)
+        response = requests.request("PUT", url, headers=headers, data=data_str)
+        self.check_response(response, headers, data_str)
+        # TODO:  Commented code below is wrong, obviously in hindsight.  But, need to parse response
         # and throw exception or something if it is an error code.
         #response = requests.request("PUT", url, headers=headers, data=profile)
         print(response)
@@ -552,6 +592,7 @@ class CreateAPProfiles:
                  client = None
                  ):
 
+        self.rid = None
         self.command_line_args = command_line_args
         self.radius_profile = None
         self.radius_name = None
@@ -632,7 +673,7 @@ class CreateAPProfiles:
                 radius_name = None
                 server_name = "Lab-RADIUS"
                 self.client.update_testrail(case_id=self.test_cases["radius_profile"], run_id=self.rid, status_id=5,
-                                       msg='Failed to create RADIUS profile')
+                                            msg='Failed to create RADIUS profile')
                 self.test_cases["radius_profile"] = "failed"
 
     def create_ssid_profile(self, ssid_profile_data= None):
@@ -650,7 +691,7 @@ class CreateAPProfiles:
                                                             "wpa2OnlyRadius", "BRIDGE", 1, ["is5GHzU", "is5GHz", "is5GHzL"])
             print("5G EAP SSID created successfully - bridge mode")
             self.client.update_testrail(case_id=self.test_cases["ssid_5g_eap_bridge"], run_id=self.rid, status_id=1,
-                                   msg='5G EAP SSID created successfully - bridge mode')
+                                        msg='5G EAP SSID created successfully - bridge mode')
             self.test_cases["ssid_5g_eap_bridge"] = "passed"
         except Exception as ex:
             print(ex)
@@ -658,7 +699,7 @@ class CreateAPProfiles:
             fiveG_eap = "error"
             print("5G EAP SSID create failed - bridge mode")
             self.client.update_testrail(case_id=self.test_cases["ssid_5g_eap_bridge"], run_id=self.rid, status_id=5,
-                                   msg='5G EAP SSID create failed - bridge mode')
+                                        msg='5G EAP SSID create failed - bridge mode')
             self.test_cases["ssid_5g_eap_bridge"] = "failed"
 
         # 5g wpa2
@@ -767,7 +808,7 @@ class CreateAPProfiles:
 
 
 
-    def create_ap_bridge_profile(self,fw_model=None):
+    def create_ap_bridge_profile(self, eq_id=None, fw_model=None):
         self.fw_model = fw_model
         self.rfProfileId = lab_ap_info.rf_profile
         self.child_profiles = [self.fiveG_wpa2, self.fiveG_wpa, self.twoFourG_wpa2, self.twoFourG_wpa, self.rfProfileId]
@@ -809,7 +850,7 @@ class CreateAPProfiles:
             self.client.update_testrail(case_id=self.test_cases["ap_bridge"], run_id=self.rid, status_id=5,
                                    msg='AP profile for bridge tests could not be created using API')
             self.test_cases["ap_bridge"] = "failed"
-        self.ap_profile = self.cloud.set_ap_profile(self.command_line_args.equipment_id, self.test_profile_id, self.command_line_args.sdk_base_url, self.bearer)
+        self.ap_profile = self.cloud.set_ap_profile(eq_id, self.test_profile_id, self.command_line_args.sdk_base_url, self.bearer)
 
 
 

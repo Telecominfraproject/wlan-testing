@@ -48,6 +48,13 @@ ssh -C -L 8810:lf4:4002 -L 8811:lf4:5901 -L 8812:lf4:8080 -L 8813:lab-ctlr:22 ub
 ./query_ap.py --ap-jumphost-address localhost --ap-jumphost-port 8813 --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP4 -m ecw5410 --cmd "cat /etc/banner"
 
 
+# NOLA-12 testbed
+#  testbed ssh tunnel
+ssh -C -L 8820:lf12:4002 -L 8821:lf12:5901 -L 8822:lf12:8080 -L 8823:lab-ctlr4:22 ubuntu@orch
+# Create profiles.
+./sdk_set_profile.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 8823 --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --testbed "NOLA-12" --lanforge-ip-address localhost --lanforge-port-number 8822 --default_ap_profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc-ben-testbed.cicd.lab.wlan.tip.build --skip_radius
+
+
 Then, you would use port 8802 for connecting to the LANforge-GUI for the python LANforge test logic,
 and port 8803 to access the lab jumphost.  Port 8800 could connect a locally running LANforge GUI to the
 testbed for monitoring the test, and port 8801 will connect VNC to the LANforge machine.
