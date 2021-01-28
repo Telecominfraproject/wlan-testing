@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from UnitTestBase import *
-
+from cloudsdk import CreateAPProfiles
 parser = argparse.ArgumentParser(description="Nightly Combined Tests", add_help=False)
 parser.add_argument("--default_ap_profile", type=str,
                     help="Default AP profile to use as basis for creating new ones, typically: TipWlan-2-Radios or TipWlan-3-Radios",
@@ -636,6 +636,8 @@ for key in equipment_ids:
         prof_2g_wpa2_name_vlan = "%s-%s-%s"%(command_line_args.testbed, fw_model, "2G_WPA2_VLAN")
         prof_2g_wpa_name_vlan = "%s-%s-%s"%(command_line_args.testbed, fw_model, "2G_WPA_VLAN")
 
+
+
         prof_names = [prof_5g_wpa2_name, prof_5g_wpa_name, prof_2g_wpa2_name, prof_2g_wpa_name,
                       prof_5g_wpa2_name_nat, prof_5g_wpa_name_nat, prof_2g_wpa2_name_nat, prof_2g_wpa_name_nat,
                       prof_5g_wpa2_name_vlan, prof_5g_wpa_name_vlan, prof_2g_wpa2_name_vlan, prof_2g_wpa_name_vlan]
@@ -682,13 +684,45 @@ for key in equipment_ids:
         psk_2g_wpa2_vlan = "%s-%s"%(fw_model, "2G_WPA2_VLAN")
         psk_2g_wpa_vlan = "%s-%s"%(fw_model, "2G_WPA_VLAN")
 
+        print("creating Profiles")
+        ssid_template = "TipWlan-Cloud-Wifi"
+        ssid_profile_data = {
+            "ssid_template" : ssid_template,
+
+            "2G" :
+                {
+                    "eap": {"info" : [ssid_2g_eap ,prof_2g_eap_name, prof_2g_eap_name_nat, prof_2g_eap_name_vlan], "psk" :[]},
+                    "wpa": {"info" : [ssid_2g_wpa, prof_2g_wpa_name, prof_2g_wpa_name_nat, prof_2g_wpa_name_vlan], "psk" : [psk_2g_wpa, psk_2g_wpa_nat, psk_2g_wpa_vlan]},
+                    "wpa2": {"info" : [ssid_2g_wpa2, prof_2g_wpa2_name, prof_2g_wpa2_name_nat, prof_2g_wpa2_name_vlan], "psk" : [psk_2g_wpa2, psk_2g_wpa2_nat, psk_2g_wpa2_vlan]},
+                },
+
+            "5G" :
+                {
+                    "eap": {"info" : [ssid_5g_eap, prof_5g_eap_name, prof_5g_eap_name_nat, prof_5g_eap_name_vlan], "psk" : []},
+                    "wpa": {"info" : [ssid_5g_wpa, prof_5g_wpa_name, prof_5g_wpa_name_nat, prof_5g_wpa_name_vlan], "psk" : [psk_5g_wpa, psk_5g_wpa_nat, psk_5g_wpa_vlan]},
+                    "wpa2":{"info" : [ssid_5g_wpa2, prof_5g_wpa2_name, prof_5g_wpa2_name_nat, prof_5g_wpa_name_vlan], "psk" : [psk_2g_wpa2, psk_5g_wpa2_nat, psk_5g_wpa2_vlan]}
+                }
+        }
+
+
+
+        # if not command_line_args.skip_profiles:
+        #
+        #     obj = CreateAPProfiles(command_line_args, cloud=cloud, client= client)
+        #     obj.create_radius_profile(radius_name, rid, key)
+        #     obj.create_ssid_profile(ssid_profile_data= ssid_profile_data)
+        #     obj.create_ap_bridge_profile(fw_model=fw_model)
+        #     obj.validate_changes()
+        # exit()
 
         if not command_line_args.skip_profiles:
+
+            # print('into')
             # First, remove any existing profiles
             # Paginated reads means we get an array of json objects back, one object per 'page'
             # NOTE:  You cannot remove profiles in use
-            #profs = cloud.get_customer_profiles(cloudSDK_url, bearer, customer_id)
-            #for p in profs:
+            # profs = cloud.get_customer_profiles(cloudSDK_url, bearer, customer_id)
+            # for p in profs:
             #    for e in p['items']:
             #        prof_id = str(e['id'])
             #        prof_model_type = e['model_type']
@@ -741,15 +775,15 @@ for key in equipment_ids:
                 report_data['tests'][key][test_cases["radius_profile"]] = "failed"
 
 
-            ###########################################################################
-            ############## Bridge Mode Client Connectivity ############################
-            ###########################################################################
-
-            ### Create SSID Profiles
-            # TODO:  Make this configurable, put at top.
+        #     ###########################################################################
+        #     ############## Bridge Mode Client Connectivity ############################
+        #     ###########################################################################
+        #
+        #     ### Create SSID Profiles
+        #     # TODO:  Make this configurable, put at top.
             ssid_template = "TipWlan-Cloud-Wifi"
-
-            # 5G SSIDs
+        #
+        #     # 5G SSIDs
             try:
                 fiveG_eap = cloud.create_or_update_ssid_profile(cloudSDK_url, bearer, customer_id, ssid_template, prof_5g_eap_name,
                                                                 ssid_5g_eap, None,
@@ -965,6 +999,9 @@ for key in equipment_ids:
                                            msg='Cannot determine VIF State - re-test required')
                     report_data['tests'][key][test_cases["bridge_vifs"]] = "error"
 
+        print("Profiles Created")
+
+        # exit()
         ### Set LANForge port for tests
         port = "eth2"
 
