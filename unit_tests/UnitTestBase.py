@@ -98,6 +98,9 @@ class UnitTestBase:
         self.parser.add_argument("--object_id", type=str,
                                  help="Used when querying and deleting individual objects.",
                                  default = None)
+        self.parser.add_argument("--customer-id", type=str,
+                                 help="Specify cloud customer-id, default is 2",
+                                 default = "2")
         self.parser.add_argument("--testbed", type=str,
                                  help="Testbed name, will be prefixed to profile names and similar",
                                  default = None)
@@ -222,4 +225,4 @@ class UnitTestBase:
         ###Get Cloud Bearer Token
         self.cloud: CloudSDK = CloudSDK(self.command_line_args)
         self.bearer = self.cloud.get_bearer(self.cloudSDK_url, cloud_type)
-        self.customer_id = "2"
+        self.customer_id = self.command_line_args.customer_id
