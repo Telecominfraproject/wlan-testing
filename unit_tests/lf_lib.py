@@ -1,6 +1,7 @@
 # create TCP and UDP traffic, run it a short amount of time.
-#
-# Used by Nightly_Sanity and Throughput_Test ############################################################
+
+#########################################################################################################
+# Used by Nightly_Sanity and eap_connect ############################################################
 #########################################################################################################
 
 #  create TCP and UDP traffic, run it a short amount of time,
@@ -25,7 +26,7 @@ import realm
 from realm import Realm
 import pprint
 
-class CreateTraffic:
+class createTraffic:
 
     def __init__(self,localrealm, sta_prefix, resource, upstream_port):
         self.localrealm = localrealm
@@ -47,9 +48,6 @@ class CreateTraffic:
                                    side_a=list(self.localrealm.find_ports_like("%s*" % self.sta_prefix)),
                                    side_b="%d.%s" % (self.resource, self.upstream_port),
                                    suppress_related_commands=True)
-    #
-    # def lf_l3_udp_profile_start(self):
-    #     self.l3_udp_profile.start_cx()
 
     def lf_l3_tcp_profile(self):
         # Create TCP endpoints
@@ -61,6 +59,3 @@ class CreateTraffic:
                                    side_a=list(self.localrealm.find_ports_like("%s*" % self.sta_prefix)),
                                    side_b="%d.%s" % (self.resource, self.upstream_port),
                                    suppress_related_commands=True)
-
-    # def lf_l3_tcp_profile_start(self):
-    #     self.l3_tcp_profile.start_cx()

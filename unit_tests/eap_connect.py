@@ -181,35 +181,9 @@ class EAPConnect(LFCliBase):
         self.station_profile.create(radio=self.radio, sta_names_=self.sta_list, debug=self.debug, use_radius=True, hs20_enable=False)
         self._pass("PASS: Station build finished")
 
-        self.CreateTraffic_ = CreateTraffic(self.localrealm, self.sta_prefix, self.resource, self.upstream_port)
-        self.CreateTraffic_.lf_l3_udp_profile()
-        self.CreateTraffic_.lf_l3_tcp_profile()
-
-
-
-        # Create UDP endpoints
-        # self.l3_udp_profile = self.localrealm.new_l3_cx_profile()
-        # self.l3_udp_profile.side_a_min_bps = 128000
-        # self.l3_udp_profile.side_b_min_bps = 128000
-        # self.l3_udp_profile.side_a_min_pdu = 1200
-        # self.l3_udp_profile.side_b_min_pdu = 1500
-        # self.l3_udp_profile.report_timer = 1000
-        # self.l3_udp_profile.name_prefix = "udp"
-        # self.l3_udp_profile.create(endp_type="lf_udp",
-        #                            side_a=list(self.localrealm.find_ports_like("%s*"%self.sta_prefix)),
-        #                            side_b="%d.%s" % (self.resource, self.upstream_port),
-        #                            suppress_related_commands=True)
-        #
-        # # Create TCP endpoints
-        # self.l3_tcp_profile = self.localrealm.new_l3_cx_profile()
-        # self.l3_tcp_profile.side_a_min_bps = 128000
-        # self.l3_tcp_profile.side_b_min_bps = 56000
-        # self.l3_tcp_profile.name_prefix = "tcp"
-        # self.l3_tcp_profile.report_timer = 1000
-        # self.l3_tcp_profile.create(endp_type="lf_tcp",
-        #                            side_a=list(self.localrealm.find_ports_like("%s*"%self.sta_prefix)),
-        #                            side_b="%d.%s" % (self.resource, self.upstream_port),
-        #                            suppress_related_commands=True)
+        self.create_traffic = createTraffic(self.localrealm, self.sta_prefix, self.resource, self.upstream_port)
+        self.create_traffic.lf_l3_udp_profile()
+        self.create_traffic.lf_l3_tcp_profile()
 
     def start(self):
         if self.station_profile is None:
@@ -300,21 +274,12 @@ class EAPConnect(LFCliBase):
 
         # start cx traffic
         print("\nStarting CX Traffic")
-        # self.l3_udp_profile.start_cx()
-        # self.l3_tcp_profile.start_cx()
 
-        self.CreateTraffic_.l3_udp_profile.start_cx()
-        self.CreateTraffic_.l3_tcp_profile.start_cx()
+        self.create_traffic.l3_udp_profile.start_cx()
+        self.create_traffic.l3_tcp_profile.start_cx()
         time.sleep(1)
-        self.CreateTraffic_.l3_tcp_profile.refresh_cx()
-        self.CreateTraffic_.l3_udp_profile.refresh_cx()
-        # self.l3_udp_profile.refresh_cx()
-        # self.l3_tcp_profile.refresh_cx()
-
-
-        # Refresh stats
-        # self.l3_udp_profile.start_cx()
-        # self.l3_tcp_profile.start_cx()
+        self.create_traffic.l3_tcp_profile.refresh_cx()
+        self.create_traffic.l3_udp_profile.refresh_cx()
 
     def collect_endp_stats(self, endp_map):
         print("Collecting Data")
