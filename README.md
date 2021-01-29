@@ -15,19 +15,21 @@ All code must be written in python 3 and conform to PEP 8 style guide. The test 
 
 ## Proposed Directory Structure
 ```bash
-├── pytest
-│   ├── helpers
-│   │   ├── *.py      /* AP, SDK, LANForge, Perfecto libs */
-│   ├── Dockerfile
-│   ├── pytest.ini
-│   ├── conftest.py
-│   ├── *.py  (test cases)
-├── CICD_AP_CLOUSDK - /* to be deleted */
-├── cicd            - /* to be deleted */
-├── docker          - /* to be deleted */
+├── tests
+├── libs
+│   ├── cloudsdk
+│   ├── apnos
+│   ├── lanforge
+│   ├── perfecto
+│   ├── <future>
+├── tools
+├── docker
+├── pytest          - /* to be migrated */
+├── CICD_AP_CLOUSDK - /* to be migrated */
+├── cicd            - /* to be migrated */
 ├── lanforge        - /* under cleanup consideration */
 ├── testbeds        - /* under cleanup consideration */
-├── unit_tests      - /* to be deleted */
+├── unit_tests      - /* to be migrated */
 ```
 
 ## TO DO
