@@ -32,7 +32,6 @@ import realm
 from realm import Realm
 from lf_lib import *
 import pprint
-import time
 
 OPEN="open"
 WEP="wep"
@@ -301,12 +300,18 @@ class EAPConnect(LFCliBase):
 
         # start cx traffic
         print("\nStarting CX Traffic")
-        self.l3_udp_profile.start_cx()
-        self.l3_tcp_profile.start_cx()
+        # self.l3_udp_profile.start_cx()
+        # self.l3_tcp_profile.start_cx()
 
         self.CreateTraffic_.l3_udp_profile.start_cx()
         self.CreateTraffic_.l3_tcp_profile.start_cx()
         time.sleep(1)
+        self.CreateTraffic_.l3_tcp_profile.refresh_cx()
+        self.CreateTraffic_.l3_udp_profile.refresh_cx()
+        # self.l3_udp_profile.refresh_cx()
+        # self.l3_tcp_profile.refresh_cx()
+
+
         # Refresh stats
         # self.l3_udp_profile.start_cx()
         # self.l3_tcp_profile.start_cx()
