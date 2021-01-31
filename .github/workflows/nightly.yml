@@ -119,7 +119,7 @@ jobs:
                 image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_id }}
                 args: 
                 - "-c"
-                - "pytest --no-testrails --skip-update-firmware; sleep 3000"
+                - "pytest --no-testrails --skip-update-firmware -o lanforge-ip-address=10.28.3.6; sleep 3000"
                 command: [ "bash" ]
               imagePullSecrets:
               - name: tip-docker-registry-key
