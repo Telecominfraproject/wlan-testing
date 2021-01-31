@@ -91,9 +91,11 @@ jobs:
       shell: bash
       run: |
         cd ./wlan-helm/tip-wlan
+        aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+        # temp
         helm del tip -n default
         helm delete ns tip
-        aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+        # start deployment
         helm dependency update
         helm upgrade --install tip . -f resources/environments/aws-cicd.yaml --create-namespace --namespace tip
 
