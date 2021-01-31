@@ -93,7 +93,7 @@ jobs:
         cd ./wlan-helm/tip-wlan
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
         helm dependency update
-        helm upgrade --install tip . -f resources/environments/aws-cicd.yaml --create-namespace --namespace tip
+        helm upgrade --install tip-wlan . -f resources/environments/aws-cicd.yaml --create-namespace --namespace tip
 
   test:
     runs-on: ubuntu-latest
