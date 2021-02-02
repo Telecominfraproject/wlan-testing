@@ -314,20 +314,20 @@ class EAPConnect(LFCliBase):
     def stop(self):
         # stop cx traffic
         print("Stopping CX Traffic")
-        self.l3_udp_profile.stop_cx()
-        self.l3_tcp_profile.stop_cx()
+        self.create_traffic.l3_udp_profile.stop_cx()
+        self.create_traffic.l3_tcp_profile.stop_cx()
 
         # Refresh stats
         print("\nRefresh CX stats")
-        self.l3_udp_profile.refresh_cx()
-        self.l3_tcp_profile.refresh_cx()
+        self.create_traffic.l3_udp_profile.refresh_cx()
+        self.create_traffic.l3_tcp_profile.refresh_cx()
 
         print("Sleeping for 5 seconds")
         time.sleep(5)
 
         # get data for endpoints JSON
-        self.collect_endp_stats(self.l3_udp_profile.created_cx)
-        self.collect_endp_stats(self.l3_tcp_profile.created_cx)
+        self.collect_endp_stats(self.create_traffic.l3_udp_profile.created_cx)
+        self.collect_endp_stats(self.create_traffic.l3_tcp_profile.created_cx)
         # print("\n")
 
     def cleanup(self):
@@ -336,12 +336,12 @@ class EAPConnect(LFCliBase):
             for sta_name in self.station_names:
                 LFUtils.removePort(self.resource, sta_name, self.lfclient_url)
             curr_endp_names = []
-            removeCX(self.lfclient_url, self.l3_udp_profile.get_cx_names())
-            removeCX(self.lfclient_url, self.l3_tcp_profile.get_cx_names())
-            for (cx_name, endp_names) in self.l3_udp_profile.created_cx.items():
+            removeCX(self.lfclient_url, self.create_traffic.l3_udp_profile.get_cx_names())
+            removeCX(self.lfclient_url, self.create_traffic.l3_tcp_profile.get_cx_names())
+            for (cx_name, endp_names) in self.create_traffic.l3_udp_profile.created_cx.items():
                 curr_endp_names.append(endp_names[0])
                 curr_endp_names.append(endp_names[1])
-            for (cx_name, endp_names) in self.l3_tcp_profile.created_cx.items():
+            for (cx_name, endp_names) in self.create_traffic.l3_tcp_profile.created_cx.items():
                 curr_endp_names.append(endp_names[0])
                 curr_endp_names.append(endp_names[1])        
             removeEndps(self.lfclient_url, curr_endp_names, debug= self.debug)

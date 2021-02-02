@@ -3,6 +3,7 @@
 from JfrogHelper import *
 from UnitTestBase import *
 from cloudsdk import CreateAPProfiles
+from lf_tests import *
 
 parser = argparse.ArgumentParser(description="Nightly Combined Tests", add_help=False)
 parser.add_argument("--default_ap_profile", type=str,
@@ -61,89 +62,6 @@ if command_line_args.testbed == None:
 
 client: TestRail_Client = TestRail_Client(command_line_args)
 
-###Class for Tests
-class RunTest:
-    def Single_Client_Connectivity(self, port, radio, ssid_name, ssid_psk, security, station, test_case, rid):
-        '''SINGLE CLIENT CONNECTIVITY using test_connect2.py'''
-        staConnect = StaConnect2(lanforge_ip, lanforge_port, debug_=False)
-        staConnect.sta_mode = 0
-        staConnect.upstream_resource = 1
-        staConnect.upstream_port = port
-        staConnect.radio = radio
-        staConnect.resource = 1
-        staConnect.dut_ssid = ssid_name
-        staConnect.dut_passwd = ssid_psk
-        staConnect.dut_security = security
-        staConnect.station_names = station
-        staConnect.sta_prefix = lanforge_prefix
-        staConnect.runtime_secs = 10
-        staConnect.bringup_time_sec = 60
-        staConnect.cleanup_on_exit = True
-        # staConnect.cleanup()
-        staConnect.setup()
-        staConnect.start()
-        print("napping %f sec" % staConnect.runtime_secs)
-        time.sleep(staConnect.runtime_secs)
-        staConnect.stop()
-        staConnect.cleanup()
-        run_results = staConnect.get_result_list()
-        for result in run_results:
-            print("test result: " + result)
-        # result = 'pass'
-        print("Single Client Connectivity :", staConnect.passes)
-        if staConnect.passes() == True:
-            print("Single client connection to", ssid_name, "successful. Test Passed")
-            client.update_testrail(case_id=test_case, run_id=rid, status_id=1, msg='Client connectivity passed')
-            logger.info("Client connectivity to " + ssid_name + " Passed")
-            return ("passed")
-        else:
-            client.update_testrail(case_id=test_case, run_id=rid, status_id=5, msg='Client connectivity failed')
-            print("Single client connection to", ssid_name, "unsuccessful. Test Failed")
-            logger.warning("Client connectivity to " + ssid_name + " FAILED")
-            return ("failed")
-
-    def Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type, identity, ttls_password, test_case,
-                          rid):
-        eap_connect = EAPConnect(lanforge_ip, lanforge_port, _debug_on=False)
-        eap_connect.upstream_resource = 1
-        eap_connect.upstream_port = port
-        eap_connect.security = security
-        eap_connect.sta_list = sta_list
-        eap_connect.station_names = sta_list
-        eap_connect.sta_prefix = lanforge_prefix
-        eap_connect.ssid = ssid_name
-        eap_connect.radio = radio
-        eap_connect.eap = eap_type
-        eap_connect.identity = identity
-        eap_connect.ttls_passwd = ttls_password
-        eap_connect.runtime_secs = 10
-        eap_connect.setup()
-        eap_connect.start()
-        print("napping %f sec" % eap_connect.runtime_secs)
-        time.sleep(eap_connect.runtime_secs)
-        eap_connect.stop()
-        eap_connect.cleanup()
-        run_results = eap_connect.get_result_list()
-        for result in run_results:
-            print("test result: " + result)
-        # result = 'pass'
-        print("Single Client Connectivity :", eap_connect.passes)
-        if eap_connect.passes() == True:
-            print("Single client connection to", ssid_name, "successful. Test Passed")
-            client.update_testrail(case_id=test_case, run_id=rid, status_id=1, msg='Client connectivity passed')
-            logger.info("Client connectivity to " + ssid_name + " Passed")
-            return ("passed")
-        else:
-            client.update_testrail(case_id=test_case, run_id=rid, status_id=5, msg='Client connectivity failed')
-            print("Single client connection to", ssid_name, "unsuccessful. Test Failed")
-            logger.warning("Client connectivity to " + ssid_name + " FAILED")
-            return ("failed")
-
-    def testrail_retest(self, test_case, rid, ssid_name):
-        client.update_testrail(case_id=test_case, run_id=rid, status_id=4,
-                               msg='Error in Client Connectivity Test. Needs to be Re-run')
-        print("Error in test for single client connection to", ssid_name)
-        logger.warning("ERROR testing Client connectivity to " + ssid_name)
 
 ####Use variables other than defaults for running tests on custom FW etc
 
@@ -177,7 +95,8 @@ if command_line_args.skip_upgrade == True:
 
 ######Testrail Project and Run ID Information ##############################
 
-Test: RunTest = RunTest()
+Test = RunTest(lanforge_ip = lanforge_ip, lanforge_port = lanforge_port, lanforge_prefix=lanforge_prefix);
+
 
 projId = client.get_project_id(project_name=projectId)
 print("TIP WLAN Project ID is:", projId)
@@ -515,11 +434,11 @@ for key in equipment_ids:
             security = "wpa2"
             eap_type = "TTLS"
             try:
-                test_result = RunTest.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type, identity,
-                                                        ttls_password, test_case, rid)
+                test_result = Test.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type,
+                          identity, ttls_password, test_case, rid, client, logger)
             except:
                 test_result = "error"
-                Test.testrail_retest(test_case, rid, ssid_name)
+                Test.testrail_retest(test_case, rid, ssid_name, client, logger)
                 pass
             report_data['tests'][key][int(test_case)] = test_result
             print(report_data['tests'][key])
@@ -535,12 +454,11 @@ for key in equipment_ids:
         ssid_psk = psk_2g_wpa2
         security = "wpa2"
         try:
-            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security, station,
-                                                          test_case,
-                                                          rid)
+            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security,
+                                   station, test_case, rid, client, logger)
         except:
             test_result = "error"
-            Test.testrail_retest(test_case, rid, ssid_name)
+            Test.testrail_retest(test_case, rid, ssid_name, client, logger)
             pass
         report_data['tests'][key][int(test_case)] = test_result
         print(report_data['tests'][key])
@@ -555,12 +473,11 @@ for key in equipment_ids:
         ssid_psk = psk_2g_wpa
         security = "wpa"
         try:
-            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security, station,
-                                                          test_case,
-                                                          rid)
+            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security,
+                                   station, test_case, rid, client, logger)
         except:
             test_result = "error"
-            Test.testrail_retest(test_case, rid, ssid_name)
+            Test.testrail_retest(test_case, rid, ssid_name, client, logger)
             pass
         report_data['tests'][key][int(test_case)] = test_result
         print(report_data['tests'][key])
@@ -576,11 +493,11 @@ for key in equipment_ids:
             security = "wpa2"
             eap_type = "TTLS"
             try:
-                test_result = RunTest.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type, identity,
-                                                        ttls_password, test_case, rid)
+                test_result = Test.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type,
+                          identity, ttls_password, test_case, rid, client, logger)
             except:
                 test_result = "error"
-                Test.testrail_retest(test_case, rid, ssid_name)
+                Test.testrail_retest(test_case, rid, ssid_name, client, logger)
                 pass
             report_data['tests'][key][int(test_case)] = test_result
             print(report_data['tests'][key])
@@ -595,12 +512,11 @@ for key in equipment_ids:
         ssid_psk = psk_5g_wpa2
         security = "wpa2"
         try:
-            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security, station,
-                                                          test_case,
-                                                          rid)
+            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security,
+                                   station, test_case, rid, client, logger)
         except:
             test_result = "error"
-            Test.testrail_retest(test_case, rid, ssid_name)
+            Test.testrail_retest(test_case, rid, ssid_name, client, logger)
             pass
         report_data['tests'][key][int(test_case)] = test_result
         print(report_data['tests'][key])
@@ -615,12 +531,11 @@ for key in equipment_ids:
         ssid_psk = psk_5g_wpa
         security = "wpa"
         try:
-            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security, station,
-                                                          test_case,
-                                                          rid)
+            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security,
+                                   station, test_case, rid, client, logger)
         except:
             test_result = "error"
-            Test.testrail_retest(test_case, rid, ssid_name)
+            Test.testrail_retest(test_case, rid, ssid_name, client, logger)
             pass
         report_data['tests'][key][int(test_case)] = test_result
         print(report_data['tests'][key])
@@ -844,11 +759,11 @@ for key in equipment_ids:
             security = "wpa2"
             eap_type = "TTLS"
             try:
-                test_result = RunTest.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type, identity,
-                                                        ttls_password, test_case, rid)
+                test_result = Test.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type,
+                          identity, ttls_password, test_case, rid, client, logger)
             except:
                 test_result = "error"
-                Test.testrail_retest(test_case, rid, ssid_name)
+                Test.testrail_retest(test_case, rid, ssid_name, client, logger)
                 pass
             report_data['tests'][key][int(test_case)] = test_result
             print(report_data['tests'][key])
@@ -863,12 +778,11 @@ for key in equipment_ids:
         ssid_psk = psk_2g_wpa2_nat
         security = "wpa2"
         try:
-            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security, station,
-                                                          test_case,
-                                                          rid)
+            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security,
+                                   station, test_case, rid, client, logger)
         except:
             test_result = "error"
-            Test.testrail_retest(test_case, rid, ssid_name)
+            Test.testrail_retest(test_case, rid, ssid_name, client, logger)
             pass
         report_data['tests'][key][int(test_case)] = test_result
         print(report_data['tests'][key])
@@ -887,7 +801,7 @@ for key in equipment_ids:
                                                           test_case, rid)
         except:
             test_result = "error"
-            Test.testrail_retest(test_case, rid, ssid_name)
+            Test.testrail_retest(test_case, rid, ssid_name, client, logger)
             pass
         report_data['tests'][key][int(test_case)] = test_result
         print(report_data['tests'][key])
@@ -903,11 +817,11 @@ for key in equipment_ids:
             security = "wpa2"
             eap_type = "TTLS"
             try:
-                test_result = RunTest.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type, identity,
-                                                        ttls_password, test_case, rid)
+                test_result = Test.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type,
+                          identity, ttls_password, test_case, rid, client, logger)
             except:
                 test_result = "error"
-                Test.testrail_retest(test_case, rid, ssid_name)
+                Test.testrail_retest(test_case, rid, ssid_name, client, logger)
                 pass
             report_data['tests'][key][int(test_case)] = test_result
             print(report_data['tests'][key])
@@ -922,12 +836,11 @@ for key in equipment_ids:
         ssid_psk = psk_5g_wpa2_nat
         security = "wpa2"
         try:
-            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security, station,
-                                                          test_case,
-                                                          rid)
+            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security,
+                                   station, test_case, rid, client, logger)
         except:
             test_result = "error"
-            Test.testrail_retest(test_case, rid, ssid_name)
+            Test.testrail_retest(test_case, rid, ssid_name, client, logger)
             pass
         report_data['tests'][key][int(test_case)] = test_result
         print(report_data['tests'][key])
@@ -942,12 +855,11 @@ for key in equipment_ids:
         ssid_psk = psk_5g_wpa_nat
         security = "wpa"
         try:
-            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security, station,
-                                                          test_case,
-                                                          rid)
+            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security,
+                                   station, test_case, rid, client, logger)
         except:
             test_result = "error"
-            Test.testrail_retest(test_case, rid, ssid_name)
+            Test.testrail_retest(test_case, rid, ssid_name, client, logger)
             pass
         report_data['tests'][key][int(test_case)] = test_result
         print(report_data['tests'][key])
@@ -1173,11 +1085,11 @@ for key in equipment_ids:
             security = "wpa2"
             eap_type = "TTLS"
             try:
-                test_result = RunTest.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type, identity,
-                                                        ttls_password, test_case, rid)
+                test_result = Test.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type,
+                          identity, ttls_password, test_case, rid, client, logger)
             except:
                 test_result = "error"
-                Test.testrail_retest(test_case, rid, ssid_name)
+                Test.testrail_retest(test_case, rid, ssid_name, client, logger)
                 pass
             report_data['tests'][key][int(test_case)] = test_result
             print(report_data['tests'][key])
@@ -1192,12 +1104,11 @@ for key in equipment_ids:
         ssid_psk = psk_2g_wpa2_vlan
         security = "wpa2"
         try:
-            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security, station,
-                                                          test_case,
-                                                          rid)
+            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security,
+                                   station, test_case, rid, client, logger)
         except:
             test_result = "error"
-            Test.testrail_retest(test_case, rid, ssid_name)
+            Test.testrail_retest(test_case, rid, ssid_name, client, logger)
             pass
         report_data['tests'][key][int(test_case)] = test_result
         print(report_data['tests'][key])
@@ -1216,7 +1127,7 @@ for key in equipment_ids:
                                                           test_case, rid)
         except:
             test_result = "error"
-            Test.testrail_retest(test_case, rid, ssid_name)
+            Test.testrail_retest(test_case, rid, ssid_name, client, logger)
             pass
         report_data['tests'][key][int(test_case)] = test_result
         print(report_data['tests'][key])
@@ -1232,11 +1143,11 @@ for key in equipment_ids:
             security = "wpa2"
             eap_type = "TTLS"
             try:
-                test_result = RunTest.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type, identity,
-                                                        ttls_password, test_case, rid)
+                test_result = Test.Single_Client_EAP(port, sta_list, ssid_name, radio, security, eap_type,
+                          identity, ttls_password, test_case, rid, client, logger)
             except:
                 test_result = "error"
-                Test.testrail_retest(test_case, rid, ssid_name)
+                Test.testrail_retest(test_case, rid, ssid_name, client, logger)
                 pass
             report_data['tests'][key][int(test_case)] = test_result
             print(report_data['tests'][key])
@@ -1251,12 +1162,11 @@ for key in equipment_ids:
         ssid_psk = psk_5g_wpa2_vlan
         security = "wpa2"
         try:
-            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security, station,
-                                                          test_case,
-                                                          rid)
+            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security,
+                                   station, test_case, rid, client, logger)
         except:
             test_result = "error"
-            Test.testrail_retest(test_case, rid, ssid_name)
+            Test.testrail_retest(test_case, rid, ssid_name, client, logger)
             pass
         report_data['tests'][key][int(test_case)] = test_result
         print(report_data['tests'][key])
@@ -1271,12 +1181,11 @@ for key in equipment_ids:
         ssid_psk = psk_5g_wpa_vlan
         security = "wpa"
         try:
-            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security, station,
-                                                          test_case,
-                                                          rid)
+            test_result = Test.Single_Client_Connectivity(port, radio, ssid_name, ssid_psk, security,
+                                   station, test_case, rid, client, logger)
         except:
             test_result = "error"
-            Test.testrail_retest(test_case, rid, ssid_name)
+            Test.testrail_retest(test_case, rid, ssid_name, client, logger)
             pass
         report_data['tests'][key][int(test_case)] = test_result
         print(report_data['tests'][key])
