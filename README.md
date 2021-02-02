@@ -8,6 +8,9 @@ Automate Automate and Automate!
 *WIP*  
 [![Build Status](https://github.com/Telecominfraproject/wlan-testing/workflows/nightly%20build/badge.svg)]
 
+## Best Practice
+This project is built using python 3 and strongly recommends using virtualenv to ensure that your dev environment sandbox is created.
+
 ## Code style
 All code must be written in python 3 and conform to PEP 8 style guide. The test framework is built using pytest.  
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)   
