@@ -24,7 +24,8 @@ cloud_sdk_models = {
     "ec420": "EC420-G1",
     "ea8300": "EA8300-CA",
     "ecw5211": "ECW5211",
-    "ecw5410": "ECW5410"
+    "ecw5410": "ECW5410",
+    "wf188n": "WF188N"
 }
 
 mimo_5g = {

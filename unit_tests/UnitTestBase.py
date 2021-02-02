@@ -90,7 +90,7 @@ class UnitTestBase:
                             default = False)
         self.parser.add_argument("--force-upgrade", type=bool, help="Force upgrading firmware even if it is already current version",
                             default = False)
-        self.parser.add_argument("-m", "--model", type=str, choices=['ea8300', 'ecw5410', 'ecw5211', 'ec420'],
+        self.parser.add_argument("-m", "--model", type=str, choices=['ea8300', 'ecw5410', 'ecw5211', 'ec420', 'wf188n'],
                             help="AP model to be run", required=True)
         self.parser.add_argument("--equipment_id", type=str,
                                  help="AP model ID, as exists in the cloud-sdk.  -1 to auto-detect.",
