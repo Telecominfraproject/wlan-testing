@@ -5,26 +5,8 @@
 #########################################################################################################
 
 #  create TCP and UDP traffic, run it a short amount of time,
+#  self.l3_udp_profile.start_cx(): To Start UDP
 
-import sys
-
-if sys.version_info[0] != 3:
-    print("This script requires Python 3")
-    exit(1)
-
-if 'py-json' not in sys.path:
-    sys.path.append('../../py-json')
-
-import argparse
-import LANforge
-from LANforge import LFUtils
-# from LANforge import LFCliBase
-from LANforge import lfcli_base
-from LANforge.lfcli_base import LFCliBase
-from LANforge.LFUtils import *
-import realm
-from realm import Realm
-import pprint
 
 class createTraffic:
 
