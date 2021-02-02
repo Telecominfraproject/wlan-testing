@@ -43,6 +43,7 @@ class CloudSDK:
         self.user = command_line_args.sdk_user_id
         self.password = command_line_args.sdk_user_password
         self.assert_bad_response = False
+        self.verbose = command_line_args.verbose
 
     def get_bearer(self, cloudSDK_url, cloud_type):
         cloud_login_url = cloudSDK_url+"/management/"+cloud_type+"/oauth2/token"
@@ -57,19 +58,26 @@ class CloudSDK:
         }
         try:
             token_response = requests.request("POST", cloud_login_url, headers=headers, data=payload)
+            self.check_response("POST", token_response, headers, payload, cloud_login_url)
         except requests.exceptions.RequestException as e:
             raise SystemExit("Exiting Script! Cloud not get bearer token for reason:",e)
         token_data = token_response.json()
         bearer_token = token_data['access_token']
         return(bearer_token)
 
-    def check_response(self, response, headers, data_str, url):
-        if response.status_code >= 500:
-            print("check-response: ERROR, url: ", url)
+    def check_response(self, cmd, response, headers, data_str, url):
+        if response.status_code >= 500 or self.verbose:
+            if response.status_code >= 500:
+                print("check-response: ERROR, url: ", url)
+            else:
+                print("check-response: url: ", url)
+            print("Command: ", cmd)
             print("response-status: ", response.status_code)
             print("response-headers: ", response.headers)
             print("headers: ", headers)
             print("data-str: ", data_str)
+
+        if response.status_code >= 500:
             if self.assert_bad_response:
                 raise NameError("Invalid response code.")
             return False
@@ -115,8 +123,8 @@ class CloudSDK:
 
 
     # client is testrail client
-    def do_upgrade_ap_fw(self, bearer, command_line_args, report_data, test_cases, client, latest_image, cloudModel, model,
-                         jfrog_user, jfrog_pwd, testrails_rid, customer_id, equipment_id, logger, latest_ap_image):
+    def do_upgrade_ap_fw(self, bearer, command_line_args, report_data, test_cases, client, ap_image, cloudModel, model,
+                         jfrog_user, jfrog_pwd, testrails_rid, customer_id, equipment_id, logger):
         ###Test Create Firmware Version
         key = model
         rid = testrails_rid
@@ -126,17 +134,17 @@ class CloudSDK:
         firmware_list_by_model = self.CloudSDK_images(cloudModel, cloudSDK_url, bearer)
         print("Available", cloudModel, "Firmware on CloudSDK:", firmware_list_by_model)
 
-        if latest_image in firmware_list_by_model:
-            print("Latest Firmware", latest_image, "is already on CloudSDK, need to delete to test create FW API")
-            old_fw_id = self.get_firmware_id(latest_image, cloudSDK_url, bearer)
+        if ap_image in firmware_list_by_model:
+            print("Latest Firmware", ap_image, "is already on CloudSDK, need to delete to test create FW API")
+            old_fw_id = self.get_firmware_id(ap_image, cloudSDK_url, bearer)
             delete_fw = self.delete_firmware(str(old_fw_id), cloudSDK_url, bearer)
-            fw_url = "https://" + jfrog_user + ":" + jfrog_pwd + "@tip.jfrog.io/artifactory/tip-wlan-ap-firmware/" + key + "/dev/" + latest_image + ".tar.gz"
-            commit = latest_image.split("-")[-1]
+            fw_url = "https://" + jfrog_user + ":" + jfrog_pwd + "@tip.jfrog.io/artifactory/tip-wlan-ap-firmware/" + key + "/dev/" + ap_image + ".tar.gz"
+            commit = ap_image.split("-")[-1]
             try:
-                fw_upload_status = self.firwmare_upload(commit, cloudModel, latest_image, fw_url, cloudSDK_url,
-                                                            bearer)
+                fw_upload_status = self.firwmare_upload(commit, cloudModel, ap_image, fw_url, cloudSDK_url,
+                                                        bearer)
                 fw_id = fw_upload_status['id']
-                print("Upload Complete.", latest_image, "FW ID is", fw_id)
+                print("Upload Complete.", ap_image, "FW ID is", fw_id)
                 client.update_testrail(case_id=test_id_fw, run_id=rid, status_id=1,
                                        msg='Create new FW version by API successful')
                 if report_data:
@@ -151,13 +159,13 @@ class CloudSDK:
                 return False
         else:
             print("Latest Firmware is not on CloudSDK! Uploading...")
-            fw_url = "https://" + jfrog_user + ":" + jfrog_pwd + "@tip.jfrog.io/artifactory/tip-wlan-ap-firmware/" + key + "/dev/" + latest_image + ".tar.gz"
-            commit = latest_image.split("-")[-1]
+            fw_url = "https://" + jfrog_user + ":" + jfrog_pwd + "@tip.jfrog.io/artifactory/tip-wlan-ap-firmware/" + key + "/dev/" + ap_image + ".tar.gz"
+            commit = ap_image.split("-")[-1]
             try:
-                fw_upload_status = self.firwmare_upload(commit, cloudModel, latest_image, fw_url, cloudSDK_url,
+                fw_upload_status = self.firwmare_upload(commit, cloudModel, ap_image, fw_url, cloudSDK_url,
                                                             bearer)
                 fw_id = fw_upload_status['id']
-                print("Upload Complete.", latest_image, "FW ID is", fw_id)
+                print("Upload Complete.", ap_image, "FW ID is", fw_id)
                 client.update_testrail(case_id=test_id_fw, run_id=rid, status_id=1,
                                        msg='Create new FW version by API successful')
                 if report_data:
@@ -207,12 +215,12 @@ class CloudSDK:
             # Check if upgrade success is displayed on CloudSDK
             test_id_cloud = test_cases["cloud_fw"]
             cloud_ap_fw = self.ap_firmware(customer_id, equipment_id, cloudSDK_url, bearer)
-            print('Current AP Firmware from CloudSDK: %s  latest-image: %s'%(cloud_ap_fw, latest_ap_image))
+            print('Current AP Firmware from CloudSDK: %s  requested-image: %s'%(cloud_ap_fw, ap_image))
             logger.info('AP Firmware from CloudSDK: ' + cloud_ap_fw)
             if cloud_ap_fw == "ERROR":
                 print("AP FW Could not be read from CloudSDK")
                 
-            elif cloud_ap_fw == latest_ap_image:
+            elif cloud_ap_fw == ap_image:
                 print("CloudSDK status shows upgrade successful!")
                 sdk_ok = True
                 break
@@ -230,11 +238,11 @@ class CloudSDK:
                     ap_cli_fw = ap_cli_info['active_fw']
                     print("CLI reporting AP Active FW as:", ap_cli_fw)
                     logger.info('Firmware from CLI: ' + ap_cli_fw)
-                    if ap_cli_fw == latest_image:
+                    if ap_cli_fw == ap_image:
                         cli_ok = True
                         break
                     else:
-                        print("probed api-cli-fw: %s  !=  latest-image: %s"%(ap_cli_fw, latest_image))
+                        print("probed api-cli-fw: %s  !=  requested-image: %s"%(ap_cli_fw, ap_image))
                         continue
                 except Exception as ex:
                     ap_cli_info = "ERROR"
@@ -254,10 +262,10 @@ class CloudSDK:
             return False  # Cannot talk to AP/Cloud, cannot make intelligent decision on pass/fail
 
         # Check status
-        if cloud_ap_fw == latest_ap_image and ap_cli_fw == latest_ap_image:
+        if cloud_ap_fw == ap_image and ap_cli_fw == ap_image:
             print("CloudSDK and AP CLI both show upgrade success, passing upgrade test case")
             client.update_testrail(case_id=test_id_cli, run_id=rid, status_id=1,
-                                   msg='Upgrade to ' + latest_ap_image + ' successful')
+                                   msg='Upgrade to ' + ap_image + ' successful')
             client.update_testrail(case_id=test_id_cloud, run_id=rid, status_id=1,
                                    msg='CLOUDSDK reporting correct firmware version.')
             if report_data:
@@ -266,11 +274,11 @@ class CloudSDK:
                 print(report_data['tests'][key])
             return True
 
-        elif cloud_ap_fw != latest_ap_image and ap_cli_fw == latest_ap_image:
+        elif cloud_ap_fw != ap_image and ap_cli_fw == ap_image:
             print("AP CLI shows upgrade success - CloudSDK reporting error!")
             ##Raise CloudSDK error but continue testing
             client.update_testrail(case_id=test_id_cli, run_id=rid, status_id=1,
-                                   msg='Upgrade to ' + latest_ap_image + ' successful.')
+                                   msg='Upgrade to ' + ap_image + ' successful.')
             client.update_testrail(case_id=test_id_cloud, run_id=rid, status_id=5,
                                    msg='CLOUDSDK reporting incorrect firmware version.')
             if report_data:
@@ -279,11 +287,11 @@ class CloudSDK:
                 print(report_data['tests'][key])
             return True
 
-        elif cloud_ap_fw == latest_ap_image and ap_cli_fw != latest_ap_image:
+        elif cloud_ap_fw == ap_image and ap_cli_fw != ap_image:
             print("AP CLI shows upgrade failed - CloudSDK reporting error!")
             # Testrail TC fail
             client.update_testrail(case_id=test_id_cli, run_id=rid, status_id=5,
-                                   msg='AP failed to download or apply new FW. Upgrade to ' + latest_ap_image + ' Failed')
+                                   msg='AP failed to download or apply new FW. Upgrade to ' + ap_image + ' Failed')
             client.update_testrail(case_id=test_id_cloud, run_id=rid, status_id=5,
                                    msg='CLOUDSDK reporting incorrect firmware version.')
             if report_data:
@@ -292,11 +300,11 @@ class CloudSDK:
                 print(report_data['tests'][key])
             return False
 
-        elif cloud_ap_fw != latest_ap_image and ap_cli_fw != latest_ap_image:
+        elif cloud_ap_fw != ap_image and ap_cli_fw != ap_image:
             print("Upgrade Failed! Confirmed on CloudSDK and AP CLI. Upgrade test case failed.")
             ##fail TR testcase and exit
             client.update_testrail(case_id=test_id_cli, run_id=rid, status_id=5,
-                                   msg='AP failed to download or apply new FW. Upgrade to ' + latest_ap_image + ' Failed')
+                                   msg='AP failed to download or apply new FW. Upgrade to ' + ap_image + ' Failed')
             if report_data:
                 report_data['tests'][key][test_id_cli] = "failed"
                 print(report_data['tests'][key])
@@ -319,6 +327,7 @@ class CloudSDK:
             'Authorization': 'Bearer ' + bearer
         }
         status_response = requests.request("GET", equip_fw_url, headers=headers, data=payload)
+        self.check_response("GET", status_response, headers, payload, equip_fw_url)
         status_code = status_response.status_code
         if status_code == 200:
             status_data = status_response.json()
@@ -326,7 +335,6 @@ class CloudSDK:
             current_ap_fw = status_data[2]['details']['reportedSwVersion']
             return current_ap_fw
         else:
-            self.check_response(status_response, headers, payload, equip_fw_url)
             return("ERROR")
 
     def CloudSDK_images(self, apModel, cloudSDK_url, bearer):
@@ -336,7 +344,7 @@ class CloudSDK:
             'Authorization': 'Bearer ' + bearer
         }
         response = requests.request("GET", getFW_url, headers=headers, data=payload)
-        self.check_response(response, headers, payload, getFW_url)
+        self.check_response("GET", response, headers, payload, getFW_url)
         ap_fw_details = response.json()
         ###return ap_fw_details
         fwlist = []
@@ -355,7 +363,7 @@ class CloudSDK:
         }
 
         response = requests.request("POST", fw_upload_url, headers=headers, data=payload)
-        self.check_response(response, headers, payload, fw_upload_url)
+        self.check_response("POST", response, headers, payload, fw_upload_url)
         #print(response)
         upload_result = response.json()
         return(upload_result)
@@ -369,7 +377,7 @@ class CloudSDK:
             'Authorization': 'Bearer ' + bearer
         }
         response = requests.request("GET", fw_id_url, headers=headers, data=payload)
-        self.check_response(response, headers, payload, fw_id_url)
+        self.check_response("GET", response, headers, payload, fw_id_url)
         fw_data = response.json()
         latest_fw_id = fw_data['id']
         return latest_fw_id
@@ -387,7 +395,7 @@ class CloudSDK:
         while True:
             print("Request %i: in get-paged-url, url: %s"%(req, url))
             response = requests.request("GET", url, headers=headers, data=payload)
-            self.check_response(response, headers, payload, url)
+            self.check_response("GET", response, headers, payload, url)
             rjson = response.json()
             rv.append(rjson)
             if not 'context' in rjson:
@@ -413,7 +421,7 @@ class CloudSDK:
 
         print("Get-url, url: %s"%(url))
         response = requests.request("GET", url, headers=headers, data=payload)
-        self.check_response(response, headers, payload, url)
+        self.check_response("GET", response, headers, payload, url)
         return response.json()
 
     def get_customer_profiles(self, cloudSDK_url, bearer, customer_id, object_id):
@@ -447,7 +455,7 @@ class CloudSDK:
             'Authorization': 'Bearer ' + bearer
         }
         response = requests.request("DELETE", url, headers=headers, data=payload)
-        self.check_response(response, headers, payload, url)
+        self.check_response("DELETE", response, headers, payload, url)
         return(response)
 
     def delete_equipment(self, cloudSDK_url, bearer, eq_id):
@@ -458,7 +466,7 @@ class CloudSDK:
             'Authorization': 'Bearer ' + bearer
         }
         response = requests.request("DELETE", url, headers=headers, data=payload)
-        self.check_response(response, headers, payload, url)
+        self.check_response("DELETE", response, headers, payload, url)
         return(response)
 
     def get_customer_locations(self, cloudSDK_url, bearer, customer_id):
@@ -505,7 +513,7 @@ class CloudSDK:
             'Authorization': 'Bearer ' + bearer
         }
         response = requests.request("GET", fw_id_url, headers=headers, data=payload)
-        self.check_response(response, headers, payload, fw_id_url)
+        self.check_response("GET", response, headers, payload, fw_id_url)
         return response.json()
 
     def delete_firmware(self, fw_id, cloudSDK_url, bearer):
@@ -515,7 +523,7 @@ class CloudSDK:
             'Authorization': 'Bearer ' + bearer
         }
         response = requests.request("DELETE", url, headers=headers, data=payload)
-        self.check_response(response, headers, payload, url)
+        self.check_response("DELETE", response, headers, payload, url)
         return(response)
 
     def update_firmware(self, equipment_id, latest_firmware_id, cloudSDK_url, bearer):
@@ -527,7 +535,7 @@ class CloudSDK:
         }
 
         response = requests.request("POST", url, headers=headers, data=payload)
-        self.check_response(response, headers, payload, url)
+        self.check_response("POST", response, headers, payload, url)
         #print(response.text)
         return response.json()
 
@@ -541,7 +549,7 @@ class CloudSDK:
         }
 
         response = requests.request("POST", url, headers=headers, data=payload)
-        self.check_response(response, headers, payload, url)
+        self.check_response("POST", response, headers, payload, url)
         #print(response.text)
         return response.json()
 
@@ -555,7 +563,7 @@ class CloudSDK:
         }
 
         response = requests.request("POST", url, headers=headers, data=payload)
-        self.check_response(response, headers, payload, url)
+        self.check_response("POST", response, headers, payload, url)
         #print(response.text)
         return response.json()
 
@@ -569,7 +577,7 @@ class CloudSDK:
         }
 
         response = requests.request("POST", url, headers=headers, data=payload)
-        self.check_response(response, headers, payload, url)
+        self.check_response("POST", response, headers, payload, url)
         #print(response.text)
         return response.json()
 
@@ -583,7 +591,7 @@ class CloudSDK:
         }
 
         response = requests.request("POST", url, headers=headers, data=payload)
-        self.check_response(response, headers, payload, url)
+        self.check_response("POST", response, headers, payload, url)
         #print(response.text)
         return response.json()
 
@@ -596,7 +604,7 @@ class CloudSDK:
         }
 
         response = requests.request("GET", url, headers=headers, data=payload)
-        self.check_response(response, headers, payload, url)
+        self.check_response("GET", response, headers, payload, url)
         print(response)
 
         ###Add Lab Profile ID to Equipment
@@ -613,7 +621,7 @@ class CloudSDK:
         }
 
         response = requests.request("PUT", url, headers=headers, data=json.dumps(equipment_info))
-        self.check_response(response, headers, payload, url)
+        self.check_response("PUT", response, headers, payload, url)
         print(response)
 
     def get_cloudsdk_version(self, cloudSDK_url, bearer):
@@ -625,7 +633,7 @@ class CloudSDK:
             'Authorization': 'Bearer ' + bearer
         }
         response = requests.request("GET", url, headers=headers, data=payload)
-        self.check_response(response, headers, payload, url)
+        self.check_response("GET", response, headers, payload, url)
         cloud_sdk_version = response.json()
         return cloud_sdk_version
 
@@ -645,7 +653,7 @@ class CloudSDK:
         data_str = json.dumps(profile)
         print("Creating new ap-profile, data: %s"%(data_str))
         response = requests.request("POST", url, headers=headers, data=data_str)
-        self.check_response(response, headers, data_str, url)
+        self.check_response("POST", response, headers, data_str, url)
         ap_profile = response.json()
         print("New AP profile: ", ap_profile)
         ap_profile_id = ap_profile['id']
@@ -668,7 +676,7 @@ class CloudSDK:
         data_str = json.dumps(profile)
         print("Updating ap-profile, data: %s"%(data_str))
         response = requests.request("PUT", url, headers=headers, data=data_str)
-        self.check_response(response, headers, data_str, url)
+        self.check_response("PUT", response, headers, data_str, url)
         print(response)
         return profile['id']
 
@@ -692,7 +700,7 @@ class CloudSDK:
         }
         data_str = json.dumps(profile)
         response = requests.request("POST", url, headers=headers, data=data_str)
-        self.check_response(response, headers, data_str, url)
+        self.check_response("POST", response, headers, data_str, url)
         ssid_profile = response.json()
         return ssid_profile['id']
         
@@ -724,7 +732,7 @@ class CloudSDK:
         }
         data_str = json.dumps(profile)
         response = requests.request("PUT", url, headers=headers, data=data_str)
-        self.check_response(response, headers, data_str, url)
+        self.check_response("PUT", response, headers, data_str, url)
         return profile['id']
 
     def create_radius_profile(self, cloudSDK_url, bearer, customer_id, template, name, subnet_name, subnet, subnet_mask,
@@ -765,7 +773,7 @@ class CloudSDK:
         data_str = json.dumps(profile)
         print("Sending json to create radius: %s"%(data_str))
         response = requests.request("POST", url, headers=headers, data=data_str)
-        self.check_response(response, headers, data_str, url)
+        self.check_response("POST", response, headers, data_str, url)
         radius_profile = response.json()
         print(radius_profile)
         radius_profile_id = radius_profile['id']
@@ -809,7 +817,7 @@ class CloudSDK:
         }
         data_str = json.dumps(profile)
         response = requests.request("PUT", url, headers=headers, data=data_str)
-        self.check_response(response, headers, data_str, url)
+        self.check_response("PUT", response, headers, data_str, url)
         # TODO:  Commented code below is wrong, obviously in hindsight.  But, need to parse response
         # and throw exception or something if it is an error code.
         #response = requests.request("PUT", url, headers=headers, data=profile)

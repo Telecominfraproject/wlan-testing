@@ -5,6 +5,11 @@
 ./sdk_upgrade_fw.py --testrail-user-id NONE --model wf188n --ap-jumphost-address localhost --ap-jumphost-port 8823 \
   --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --testbed \"NOLA-12\" \
   --sdk-base-url https://wlan-portal-svc-ben-testbed.cicd.lab.wlan.tip.build --force-upgrade true
+
+  # Use specified firmware image, not just the latest.
+  ./sdk_upgrade_fw.py --testrail-user-id NONE --model wf188n --ap-jumphost-address localhost --ap-jumphost-port 8823 \
+  --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --testbed \"NOLA-12\" \
+  --sdk-base-url https://wlan-portal-svc-ben-testbed.cicd.lab.wlan.tip.build --ap-image wf188n-2021-02-01-pending-686c4df --verbose
 """
 
 # Example to upgrade fw on NOLA-01 testbed
@@ -14,7 +19,9 @@ from UnitTestBase import *
 from cloudsdk import CreateAPProfiles
 
 parser = argparse.ArgumentParser(description="SDK Upgrade Firmware", add_help=False)
-
+parser.add_argument("--ap-image", type=str,
+                    help="Specify an AP image to install.  Will use latest found on jfrog if this is not specified.",
+                    default=None)
 base = UnitTestBase("sdk-upgrade-fw", parser)
 
 command_line_args = base.command_line_args
@@ -98,7 +105,6 @@ except Exception as ex:
 
 fw_model = ap_cli_fw.partition("-")[0]
 print('Current Active AP FW from CLI:', ap_cli_fw)
-###Find Latest FW for Current AP Model and Get FW ID
 
 ############################################################################
 #################### Create Report #########################################
@@ -116,7 +122,7 @@ else:
 logger.info('Report data can be found here: ' + report_path + today)
 
 ###Dictionaries
-ap_latest_dict = {}
+ap_image = command_line_args.ap_image
 
 ############################################################################
 #################### Jfrog Firmware Check ##################################
@@ -124,14 +130,15 @@ ap_latest_dict = {}
 
 apModel = model_id
 cloudModel = cloud_sdk_models[apModel]
-# print(cloudModel)
-###Check Latest FW on jFrog
-jfrog_url = 'https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/'
-url = jfrog_url + apModel + "/dev/"
-Build: GetBuild = GetBuild(jfrog_user, jfrog_pwd)
-latest_image = Build.get_latest_image(url, build)
-print(apModel, "Latest FW on jFrog:", latest_image)
-ap_latest_dict[model_id] = latest_image
+if not ap_image:
+    # then get latest from jfrog
+    # print(cloudModel)
+    jfrog_url = 'https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/'
+    url = jfrog_url + apModel + "/dev/"
+    Build: GetBuild = GetBuild(jfrog_user, jfrog_pwd)
+    latest_image = Build.get_latest_image(url, build)
+    print(apModel, "Latest FW on jFrog:", latest_image)
+    ap_image = latest_image
 
 ##Get Bearer Token to make sure its valid (long tests can require re-auth)
 bearer = cloud.get_bearer(cloudSDK_url, cloud_type)
@@ -152,18 +159,15 @@ print('Current Active AP FW from CLI:', ap_cli_fw)
 ###Find Latest FW for Current AP Model and Get FW ID
 
 ##Compare Latest and Current AP FW and Upgrade
-latest_ap_image = ap_latest_dict[fw_model]
-
 report_data = None
 
-do_upgrade = cloud.should_upgrade_ap_fw(bearer, command_line_args, report_data, latest_ap_image, fw_model, ap_cli_fw,
+do_upgrade = cloud.should_upgrade_ap_fw(bearer, command_line_args, report_data, ap_image, fw_model, ap_cli_fw,
                                         logger)
 
-latest_image = ap_latest_dict[model_id]
 cloudModel = cloud_sdk_models[model_id]
 pf = cloud.do_upgrade_ap_fw(bearer, command_line_args, report_data, test_cases, client,
-                            latest_image, cloudModel, model_id, jfrog_user, jfrog_pwd, rid,
-                            customer_id, equipment_id, logger, latest_ap_image)
+                            ap_image, cloudModel, model_id, jfrog_user, jfrog_pwd, rid,
+                            customer_id, equipment_id, logger)
 
 if pf:
     sys.exit(0)

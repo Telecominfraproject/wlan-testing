@@ -177,6 +177,9 @@ class UnitTestBase:
         self.parser.add_argument('--skip-update-firmware', dest='update_firmware', action='store_false')
         self.parser.set_defaults(update_firmware=True)
 
+        self.parser.add_argument('--verbose', dest='verbose', action='store_true')
+        self.parser.set_defaults(verbose=False)
+
         self.command_line_args = self.parser.parse_args()
 
         # cmd line takes precedence over env-vars.

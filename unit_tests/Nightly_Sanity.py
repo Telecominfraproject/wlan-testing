@@ -348,7 +348,7 @@ for key in equipment_ids:
         cloudModel = cloud_sdk_models[key]
         pf = cloud.do_upgrade_ap_fw(bearer, command_line_args, report_data, test_cases, client,
                                     latest_image, cloudModel, key, jfrog_user, jfrog_pwd, rid,
-                                    customer_id, equipment_id, logger, latest_ap_image)
+                                    customer_id, equipment_id, logger)
         print(report_data)
         if not pf:
             continue  # Try next model
