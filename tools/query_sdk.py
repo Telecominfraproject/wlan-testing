@@ -1,5 +1,9 @@
 #!/usr/bin/python3
 
+import sys
+
+sys.path.append(f'../tests')
+
 from UnitTestBase import *
 
 parser = argparse.ArgumentParser(description="Query SDK Objects", add_help=False)

@@ -22,7 +22,6 @@ from os import listdir
 import re
 import requests
 import json
-import testrail_api
 import logging
 import datetime
 import time
@@ -53,6 +52,15 @@ import sys
 for folder in 'py-json','py-scripts':
     if folder not in sys.path:
         sys.path.append(f'../lanforge/lanforge-scripts/{folder}')
+
+sys.path.append(f'../libs/lanforge')
+sys.path.append(f'../libs/testrails')
+sys.path.append(f'../libs/apnos')
+sys.path.append(f'../libs/cloudsdk')
+sys.path.append(f'../libs')
+
+
+import testrail_api
 
 from LANforge.LFUtils import *
 

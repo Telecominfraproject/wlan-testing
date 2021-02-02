@@ -11,6 +11,10 @@
 #   --lanforge-port-number 8802 --default-ap-profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc.cicd.lab.wlan.tip.build \
 #   --skip-radius
 
+import sys
+
+sys.path.append(f'../tests')
+
 from UnitTestBase import *
 from cloudsdk import CreateAPProfiles
 

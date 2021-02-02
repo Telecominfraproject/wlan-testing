@@ -10,12 +10,20 @@
   ./sdk_upgrade_fw.py --testrail-user-id NONE --model wf188n --ap-jumphost-address localhost --ap-jumphost-port 8823 \
   --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --testbed \"NOLA-12\" \
   --sdk-base-url https://wlan-portal-svc-ben-testbed.cicd.lab.wlan.tip.build --ap-image wf188n-2021-02-01-pending-686c4df --verbose
-"""
 
 # Example to upgrade fw on NOLA-01 testbed
+./sdk_upgrade_fw.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 8803 \
+  --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --testbed \"NOLA-01\" \
+  --sdk-base-url https://wlan-portal-svc.cicd.lab.wlan.tip.build --verbose
 
-from JfrogHelper import *
+"""
+
+import sys
+
+sys.path.append(f'../tests')
+
 from UnitTestBase import *
+from JfrogHelper import *
 from cloudsdk import CreateAPProfiles
 
 parser = argparse.ArgumentParser(description="SDK Upgrade Firmware", add_help=False)
