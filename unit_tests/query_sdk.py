@@ -6,7 +6,7 @@ parser = argparse.ArgumentParser(description="Query SDK Objects", add_help=False
 parser.add_argument("--type", type=str, help="Type of thing to query",
                     choices=['profile', 'customer', 'location', 'equipment', 'portalUser',
                              'status', 'client-sessions', 'client-info', 'alarm', 'service-metric',
-                             'event', 'all'],
+                             'event', 'firmware', 'all'],
                     default = "all")
 parser.add_argument("--cmd", type=str, help="Operation to do, default is 'get'",
                     choices=['get', 'delete', 'child_of'],
@@ -90,6 +90,17 @@ if qtype == 'all' or qtype == 'customer':
         print(ex)
         logging.error(logging.traceback.format_exc())
         print("Failed to read Customer %i"%(customer_id))
+
+if qtype == 'all' or qtype == 'firmware':
+    try:
+        rv = base.cloud.CloudSDK_images(base.command_line_args.model, base.cloudSDK_url, base.bearer)
+        print("Firmware for model:", base.command_line_args.model)
+        #jobj = json.load(ssids)
+        print(json.dumps(rv, indent=4, sort_keys=True))
+    except Exception as ex:
+        print(ex)
+        logging.error(logging.traceback.format_exc())
+        print("Failed to read Firmware")
 
 if qtype == 'all' or qtype == 'location':
     # Get location info

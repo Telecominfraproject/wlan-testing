@@ -338,7 +338,10 @@ class CloudSDK:
             return("ERROR")
 
     def CloudSDK_images(self, apModel, cloudSDK_url, bearer):
-        getFW_url = cloudSDK_url+"/portal/firmware/version/byEquipmentType?equipmentType=AP&modelId=" + apModel
+        if apModel and apModel != "None":
+            getFW_url = cloudSDK_url+"/portal/firmware/version/byEquipmentType?equipmentType=AP&modelId=" + apModel
+        else:
+            getFW_url = cloudSDK_url+"/portal/firmware/version/byEquipmentType?equipmentType=AP"
         payload = {}
         headers = {
             'Authorization': 'Bearer ' + bearer
