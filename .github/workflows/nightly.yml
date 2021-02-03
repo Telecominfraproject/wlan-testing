@@ -119,10 +119,14 @@ jobs:
         - number: 04
           ip_address: 10.28.3.12
     steps:
+    - name: Fetch Kubeconfig
+      shell: bash
+      run: |
+        aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
     - name: run tests
       run: |
+        kubectl config set-context $(kubectl config current-context) --namespace nola-${{ matrix.number }}
         today=$(date +"%d-%m-%Y")
-        aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
         kubectl delete job nightly-ci-$today --wait=true --ignore-not-found=true
 
         cat <<EOF | kubectl apply -f -
