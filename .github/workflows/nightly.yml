@@ -53,9 +53,9 @@ jobs:
     strategy:
       matrix:
         include:
-        - number: 01
+        - number: "01"
           ip_address: 10.28.3.6
-        - number: 04
+        - number: "04"
           ip_address: 10.28.3.12
 
     steps:
