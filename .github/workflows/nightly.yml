@@ -106,7 +106,7 @@ jobs:
       run: |
         cd ./wlan-helm/tip-wlan
         helm dependency update
-        helm upgrade --install tip . -f ../../testbed-deployment.yaml --create-namespace --namespace NOLA-${{ matrix.number }}
+        helm upgrade --install tip . -f ../../testbed-deployment.yaml --create-namespace --namespace nola-${{ matrix.number }}
 
   test:
     runs-on: ubuntu-latest
@@ -138,7 +138,7 @@ jobs:
                 image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_id }}
                 args: 
                 - "-c"
-                - "pytest --no-testrails --skip-update-firmware -o lanforge-ip-address=${{ matrix.ip_address }} -o sdk-base-url=wlan-portal-svc-NOLA-${{ matrix.ip_address }}.cicd.lab.wlan.tip.build; sleep 3000"
+                - "pytest --no-testrails --skip-update-firmware -o lanforge-ip-address=${{ matrix.ip_address }} -o sdk-base-url=wlan-portal-svc-nola-${{ matrix.ip_address }}.cicd.lab.wlan.tip.build; sleep 3000"
                 command: [ "bash" ]
               imagePullSecrets:
               - name: tip-docker-registry-key
