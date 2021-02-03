@@ -50,6 +50,13 @@ jobs:
 
   cloudsdk:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+      - number: 01
+        ip_address: 10.28.3.6
+      - number: 04
+        ip_address: 10.28.3.12
+
     steps:
     - name: Checkout pki scripts repo
       uses: actions/checkout@v2
@@ -67,6 +74,7 @@ jobs:
         path: toolsmith
         repository: Telecominfraproject/Toolsmith
         token: ${{ secrets.PAT_TOKEN }}
+        ref: heads/ref/WIFI-1350
 
     - name: Prepare environment
       shell: bash
@@ -78,7 +86,7 @@ jobs:
         echo "01" > ./wlan-pki/testCA/serial.txt
         echo "${{ env.CACERT }}" | base64 -d > ./wlan-pki/testCA/cacert.pem
         echo "${{ env.CAKEY }}" | base64 -d > ./wlan-pki/testCA/private/cakey.pem
-        cp ./toolsmith/helm-values/aws-cicd.yaml ./wlan-helm/tip-wlan/resources/environments/aws-cicd.yaml
+        ./Toolsmith/helm-values/aws-cicd-testbed-deployment.yaml.sh ${{ matrix.number }} > testbed-deployment.yaml
 
     - name: Generate certs
       shell: bash
@@ -94,11 +102,17 @@ jobs:
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
         # start deployment
         helm dependency update
-        helm upgrade --install tip . -f resources/environments/aws-cicd.yaml --create-namespace --namespace tip
+        helm upgrade --install tip . -f ../../testbed-deployment.yaml --create-namespace --namespace NOLA-${{ matrix.number }}
 
   test:
     runs-on: ubuntu-latest
     needs: [ build, cloudsdk ]
+    strategy:
+      matrix:
+      - number: 01
+        ip_address: 10.28.3.6
+      - number: 04
+        ip_address: 10.28.3.12
     steps:
     - name: run tests
       run: |
@@ -119,7 +133,7 @@ jobs:
                 image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_id }}
                 args: 
                 - "-c"
-                - "pytest --no-testrails --skip-update-firmware -o lanforge-ip-address=10.28.3.6; sleep 3000"
+                - "pytest --no-testrails --skip-update-firmware -o lanforge-ip-address=${{ matrix.ip_address }} -o sdk-base-url=wlan-portal-svc-NOLA-${{ matrix.ip_address }}.cicd.lab.wlan.tip.build; sleep 3000"
                 command: [ "bash" ]
               imagePullSecrets:
               - name: tip-docker-registry-key
