@@ -158,11 +158,17 @@ jobs:
           sleep 15
         done
         kubectl logs $podname
-
-        # placeholder for now
-        echo "Grafana Link: https://grafana.lab.wlan.tip.build/TO_BE_PROVIDED"
-        echo "Kibana Link: https://kibana.lab.wlan.tip.build/TO_BE_PROVIDED"
       shell: bash
+    - uses: actions/github-script@v3
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: 'Grafana Link: https://grafana.lab.wlan.tip.build/TO_BE_PROVIDED\n Kibana Link: https://kibana.lab.wlan.tip.build/TO_BE_PROVIDED'
+          })
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1.7
       with:
