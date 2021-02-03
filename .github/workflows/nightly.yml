@@ -75,7 +75,7 @@ jobs:
         path: toolsmith
         repository: Telecominfraproject/Toolsmith
         token: ${{ secrets.PAT_TOKEN }}
-        ref: heads/ref/WIFI-1350
+        ref: feature/WIFI-1350
 
     - name: Prepare environment
       shell: bash
