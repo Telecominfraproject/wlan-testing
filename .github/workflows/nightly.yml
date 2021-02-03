@@ -52,10 +52,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-      - number: 01
-        ip_address: 10.28.3.6
-      - number: 04
-        ip_address: 10.28.3.12
+        include:
+        - number: 01
+          ip_address: 10.28.3.6
+        - number: 04
+          ip_address: 10.28.3.12
 
     steps:
     - name: Checkout pki scripts repo
@@ -109,10 +110,11 @@ jobs:
     needs: [ build, cloudsdk ]
     strategy:
       matrix:
-      - number: 01
-        ip_address: 10.28.3.6
-      - number: 04
-        ip_address: 10.28.3.12
+        include:
+        - number: 01
+          ip_address: 10.28.3.6
+        - number: 04
+          ip_address: 10.28.3.12
     steps:
     - name: run tests
       run: |
