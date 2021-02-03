@@ -87,7 +87,7 @@ jobs:
         echo "01" > ./wlan-pki/testCA/serial.txt
         echo "${{ env.CACERT }}" | base64 -d > ./wlan-pki/testCA/cacert.pem
         echo "${{ env.CAKEY }}" | base64 -d > ./wlan-pki/testCA/private/cakey.pem
-        ./Toolsmith/helm-values/aws-cicd-testbed-deployment.yaml.sh ${{ matrix.number }} > testbed-deployment.yaml
+        ./toolsmith/helm-values/aws-cicd-testbed-deployment.yaml.sh ${{ matrix.number }} > testbed-deployment.yaml
 
     - name: Generate certs
       shell: bash
@@ -96,12 +96,14 @@ jobs:
         ./generate_all.sh true
         ./copy-certs-to-helm.sh "../wlan-helm"
 
+    - name: Fetch Kubeconfig
+      shell: bash
+      run: |
+        aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
     - name: Deploy Cloud SDK
       shell: bash
       run: |
         cd ./wlan-helm/tip-wlan
-        aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-        # start deployment
         helm dependency update
         helm upgrade --install tip . -f ../../testbed-deployment.yaml --create-namespace --namespace NOLA-${{ matrix.number }}
 
