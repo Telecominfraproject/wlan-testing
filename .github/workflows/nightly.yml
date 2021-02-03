@@ -69,6 +69,7 @@ jobs:
       with:
         path: wlan-helm
         repository: Telecominfraproject/wlan-cloud-helm
+        ref: feature/global-secrets
     - name: Checkout helm values repo
       uses: actions/checkout@v2
       with:
