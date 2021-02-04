@@ -16,7 +16,16 @@ env:
   # Cloud SDK certs
   CACERT: ${{ secrets.CACERT }}
   CAKEY: ${{ secrets.CAKEY }}
-  testbeds: '[{"number":"01","ip_address":"10.28.3.6"},{"number":"04","ip_address":"10.28.3.12"}]'
+  testbeds: '[
+    {
+      "number": "01",
+      "ip_address": "10.28.3.6"
+    },
+    {
+      "number": "04",
+      "ip_address": "10.28.3.12"
+    }
+  ]'
 
 on:
   workflow_dispatch:
@@ -33,6 +42,7 @@ jobs:
     - id: set-matrix
       run: |
         echo '::set-output name=matrix::{"include":${{ env.testbeds }}}'
+        echo '{"include":${{ env.testbeds }}}'
 
   build:
     runs-on: ubuntu-latest
