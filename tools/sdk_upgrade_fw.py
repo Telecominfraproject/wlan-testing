@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3 -u
 
 # Example to upgrade firmware on NOLA-12 testbed:
 """
