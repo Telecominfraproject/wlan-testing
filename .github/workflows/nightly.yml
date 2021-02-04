@@ -123,7 +123,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJson( env.testbeds ) }}
+        include: ${{fromJson(env.testbeds)}}
 
     steps:
     - name: Fetch kubeconfig
