@@ -31,7 +31,9 @@ jobs:
     steps:
     - name: set-matrix
       id: diff
-      run: echo '::set-output name=matrix::[{"number":"01","ip_address":"10.28.3.6"},{"number":"04","ip_address":"10.28.3.12"}]'
+      run: |
+        echo '::set-output name=matrix::[{"number":"01","ip_address":"10.28.3.6"},{"number":"04","ip_address":"10.28.3.12"}]'
+        echo '[{"number":"01","ip_address":"10.28.3.6"},{"number":"04","ip_address":"10.28.3.12"}]'
 
   build:
     runs-on: ubuntu-latest
