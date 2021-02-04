@@ -1,11 +1,8 @@
 name: nightly build
 env:
-  # thirdparties
   DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
   DOCKER_USER_NAME: ${{ secrets.DOCKER_USER_NAME }}
   DOCKER_USER_PASSWORD: ${{ secrets.DOCKER_USER_PASSWORD }}
-  TESTRAIL_USER_PASSWORD: ${{ secrets.TESTRAIL_USER_PASSWORD }}
-  JFROG_USER_PASSWORD: ${{ secrets.JFROG_USER_PASSWORD }}
   # AWS credentials
   AWS_EKS_NAME: tip-wlan-main
   AWS_DEFAULT_OUTPUT: json
@@ -16,6 +13,7 @@ env:
   # Cloud SDK certs
   CACERT: ${{ secrets.CACERT }}
   CAKEY: ${{ secrets.CAKEY }}
+  # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
   testbeds: '[
     {
       "number": "01",
@@ -57,7 +55,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    # checkout needed repositories
     - name: Checkout Testing repo
       uses: actions/checkout@v2
       with:
@@ -68,7 +65,6 @@ jobs:
         path: wlan-lanforge-scripts
         repository: Telecominfraproject/wlan-lanforge-scripts
 
-    # build and push docker image
     - name: docker login
       shell: bash
       run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
@@ -193,6 +189,7 @@ jobs:
         msg: "Grafana Link: https://grafana.lab.wlan.tip.build/TO_BE_PROVIDED\n Kibana Link: https://kibana.lab.wlan.tip.build/TO_BE_PROVIDED"
         check_for_duplicate_msg: true
       if: ${{ contains(github.ref, 'pull') }}
+
     - name: Publish test results to PR
       uses: EnricoMi/publish-unit-test-result-action@v1.7
       with:
