@@ -19,15 +19,18 @@ env:
   testbeds: '[
     {
       "number": "01",
-      "ip_address": "10.28.3.6"
+      "ip_address": "10.28.3.6",
+      "ap_model": "ECW5410"
     },
     {
       "number": "03",
-      "ip_address": "10.28.3.10"
+      "ip_address": "10.28.3.10",
+      "ap_model": "ECW5410"
     },
     {
       "number": "04",
-      "ip_address": "10.28.3.12"
+      "ip_address": "10.28.3.12",
+      "ap_model": "ECW5410"
     }
   ]'
 
@@ -145,6 +148,7 @@ jobs:
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
     - name: Run tests
       shell: bash
+      timeout-minutes: 30
       run: |
         kubectl config set-context $(kubectl config current-context) --namespace nola-${{ matrix.number }}
         today=$(date +"%d-%m-%Y")
@@ -163,7 +167,7 @@ jobs:
                 image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_id }}
                 args: 
                 - "-c"
-                - "pytest --no-testrails --skip-update-firmware -o lanforge-ip-address=${{ matrix.ip_address }} -o sdk-base-url=wlan-portal-svc-nola-${{ matrix.number }}.cicd.lab.wlan.tip.build; sleep 3000"
+                - "pytest --no-testrails --skip-update-firmware -o lanforge-ip-address=${{ matrix.ip_address }} -o sdk-base-url=wlan-portal-svc-nola-${{ matrix.number }}.cicd.lab.wlan.tip.build --access-points ${{ matrix.ap_model }}; sleep 75"
                 command: [ "bash" ]
               imagePullSecrets:
               - name: tip-docker-registry-key
