@@ -22,6 +22,10 @@ env:
       "ip_address": "10.28.3.6"
     },
     {
+      "number": "03",
+      "ip_address": "10.28.3.10"
+    },
+    {
       "number": "04",
       "ip_address": "10.28.3.12"
     }
