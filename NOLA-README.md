@@ -8,6 +8,7 @@ sudo pip3 install pandas
 sudo pip3 install paramiko
 sudo pip3 install scp
 sudo pip3 install pexpect
+sudo pip3 install pexpect-serial
 
 # Clone these repositories to get started:
 git@github.com:Telecominfraproject/wlan-testing.git   # This repo
