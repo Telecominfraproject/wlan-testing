@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3 -u
 
 # Example to set profile on NOLA-12 testbed:
 #./sdk_set_profile.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 8823 --ap-jumphost-password pumpkin77 \
@@ -279,8 +279,8 @@ obj = CreateAPProfiles(command_line_args, cloud=cloud, client= client)
 if not command_line_args.skip_profiles:
     if not command_line_args.skip_radius:
         obj.create_radius_profile(radius_name, rid, key)
-    obj.create_ssid_profile(ssid_profile_data= ssid_profile_data, skip_wpa2=command_line_args.skip_wpa2,
-                            skip_wpa=command_line_args.skip_wpa, skip_eap=command_line_args.skip_radius)
+    obj.create_ssid_profiles(ssid_profile_data= ssid_profile_data, skip_wpa2=command_line_args.skip_wpa2,
+                             skip_wpa=command_line_args.skip_wpa, skip_eap=command_line_args.skip_radius)
 
 print("Create AP with equipment-id: ", equipment_id)
 obj.create_ap_bridge_profile(eq_id=equipment_id, fw_model=fw_model)
