@@ -6,7 +6,17 @@
 
 if [ -d ../wlan-lanforge-scripts ]
 then
-    rm -fr lanforge/lanforge-scripts
+    rm -fr libs/lanforge/lanforge-scripts
 
-    cp -ar ../wlan-lanforge-scripts lanforge/lanforge-scripts
+    cp -ar ../wlan-lanforge-scripts libs/lanforge/lanforge-scripts
+fi
+if [ -d tests/logs ]
+then
+  rm -fr tests/logs
+  mkdir tests/logs
+fi
+if [ -d tests/reports ]
+then
+  rm -fr tests/reports
+  mkdir tests/reports
 fi

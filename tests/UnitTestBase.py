@@ -1,5 +1,22 @@
 #!/usr/bin/python3
 
+import sys
+if sys.version_info[0] != 3:
+    print("This script requires Python 3")
+    exit(1)
+
+import sys
+for folder in 'py-json', 'py-scripts':
+    if folder not in sys.path:
+        sys.path.append(f'../libs/lanforge/lanforge-scripts/{folder}')
+
+sys.path.append(f'../libs/lanforge')
+sys.path.append(f'../libs/testrails')
+sys.path.append(f'../libs/apnos')
+sys.path.append(f'../libs/cloudsdk')
+sys.path.append(f'../libs')
+sys.path.append(f'../tests/test_utility/')
+
 import base64
 import urllib.request
 from bs4 import BeautifulSoup
@@ -13,7 +30,7 @@ from scp import SCPClient
 import os
 import pexpect
 from pexpect import pxssh
-import sys
+
 import paramiko
 from scp import SCPClient
 import pprint
@@ -29,6 +46,11 @@ from datetime import date
 from shutil import copyfile
 import argparse
 from unittest.mock import Mock
+from lf_tests import *
+from ap_plus_sdk import *
+from lab_ap_info import *
+from JfrogHelper import *
+from reporting import Reporting
 
 # For finding files
 # https://stackoverflow.com/questions/3207219/how-do-i-list-all-files-of-a-directory
@@ -44,20 +66,6 @@ import glob
 # On local machine:
 #./query_ssids.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 7220 --ap-jumphost-password secret --ap-jumphost-tty /dev/ttyAP1
 
-if sys.version_info[0] != 3:
-    print("This script requires Python 3")
-    exit(1)
-
-import sys
-for folder in 'py-json','py-scripts':
-    if folder not in sys.path:
-        sys.path.append(f'../lanforge/lanforge-scripts/{folder}')
-
-sys.path.append(f'../libs/lanforge')
-sys.path.append(f'../libs/testrails')
-sys.path.append(f'../libs/apnos')
-sys.path.append(f'../libs/cloudsdk')
-sys.path.append(f'../libs')
 
 
 import testrail_api
@@ -74,6 +82,7 @@ import eap_connect
 from eap_connect import EAPConnect
 import cloudsdk
 from cloudsdk import CloudSDK
+from cloudsdk import CreateAPProfiles
 import ap_ssh
 from ap_ssh import *
 
@@ -88,7 +97,7 @@ from lab_ap_info import radius_info
 
 class UnitTestBase:
 
-    def __init__(self, log_name, args):
+    def __init__(self, log_name, args, reporting):
 
         self.parser = argparse.ArgumentParser(description="Sanity Testing on Firmware Build", parents=[args])
 
@@ -222,7 +231,7 @@ class UnitTestBase:
         self.build = self.command_line_args.build_id
 
         self.logger = logging.getLogger(log_name)
-        self.hdlr = logging.FileHandler(self.local_dir + "/log_name.log")
+        self.hdlr = logging.FileHandler(reporting.report_path + "/test_run.log")
         self.formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         self.hdlr.setFormatter(self.formatter)
         self.logger.addHandler(self.hdlr)
