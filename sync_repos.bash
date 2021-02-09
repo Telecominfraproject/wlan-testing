@@ -6,9 +6,9 @@
 
 if [ -d ../wlan-lanforge-scripts ]
 then
-    rm -fr libs/lanforge/lanforge-scripts
+    rm -fr lanforge/lanforge-scripts
 
-    cp -ar ../wlan-lanforge-scripts libs/lanforge/lanforge-scripts
+    cp -ar ../wlan-lanforge-scripts lanforge/lanforge-scripts
 fi
 if [ -d tests/logs ]
 then

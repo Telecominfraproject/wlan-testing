@@ -1,8 +1,8 @@
-
 import os
 from datetime import date, datetime
 from shutil import copyfile
 import json
+
 
 class Reporting:
 
@@ -11,7 +11,7 @@ class Reporting:
         self.reports_root = reports_root
         self.report_id = self.create_report_id()
         self.report_path = self.reports_root + self.report_id
-        self.templates_root = os.path.abspath(self.reports_root+"../templates")
+        self.templates_root = os.path.abspath(self.reports_root + "../templates")
         try:
             os.mkdir(self.report_path)
             print("Successfully created the directory %s " % self.report_path)
@@ -23,10 +23,9 @@ class Reporting:
         except:
             print("No report template created. Report data will still be saved. Continuing with tests...")
 
-
     def create_report_id(self):
         today = str(date.today())
-        now = str(datetime.now()).split(" ")[1].split(".")[0].replace(":","-")
+        now = str(datetime.now()).split(" ")[1].split(".")[0].replace(":", "-")
         id = today + "-" + now
         return id
 
@@ -38,15 +37,10 @@ class Reporting:
         except Exception as e:
             print(e)
 
-    def update_report_instance(self):
-        pass
-
-    def cleanup_report_instance(self):
-        pass
-
 
 def main():
     Reporting()
+
 
 if __name__ == '__main__':
     main()
