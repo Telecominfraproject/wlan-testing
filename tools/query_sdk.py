@@ -19,7 +19,9 @@ parser.add_argument("--brief", type=str, help="Show output in brief mode?",
                     choices=["true", "false"],
                     default = "false")
 
-base = UnitTestBase("query-sdk", parser)
+reporting = Reporting(reports_root=os.getcwd() + "/reports/")
+
+base = UnitTestBase("query-sdk", parser, reporting)
 
 qtype = base.command_line_args.type
 cmd = base.command_line_args.cmd
