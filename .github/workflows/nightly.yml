@@ -86,7 +86,6 @@ jobs:
     needs: [ generate-matrix ]
     strategy:
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
-
     steps:
     - name: Checkout pki scripts repo
       uses: actions/checkout@v2
@@ -136,6 +135,26 @@ jobs:
         helm dependency update
         helm upgrade --install tip . -f ../../testbed-deployment.yaml --create-namespace --namespace nola-${{ matrix.number }}
 
+  wait:
+    name: Wait for access points to reconnect
+    runs-on: ubuntu-latest
+    needs: [ cloudsdk, generate-matrix ]
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
+    steps:
+    - name: Wait for access points to come up
+      shell: bash
+      run: |
+        counter=0
+        until [ $counter -gt 5 ]
+        do
+          echo Counter: $counter
+          ((counter++))
+          sleep 5
+          # do something to check AP connected back
+        done
+
   test:
     name: Run tests
     runs-on: ubuntu-latest
@@ -149,19 +168,6 @@ jobs:
       shell: bash
       run: |
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-    - name: Wait for access points to come up
-      shell: bash
-      run: |
-        counter=0
-        until [ $counter -gt 5 ]
-        do
-          echo Counter: $counter
-          ((counter++))
-          sleep 5
-          # do something to check AP connected back
-        done
-
     - name: Run tests
       shell: bash
       timeout-minutes: 30
@@ -220,20 +226,18 @@ jobs:
   cleanup:
     name: Cleanup CloudSDK instances
     runs-on: ubuntu-latest
-    needs: [ generate-matrix, test ]
+    needs: [ test, generate-matrix ]
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
+    if: always() && matrix.cleanup
 
     steps:
     - name: Fetch kubeconfig
       shell: bash
       run: |
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-      if: always() && matrix.cleanup
-
     - name: Remove temporary Cloud SDK instances
       shell: bash
       run: |
-        helm uninstall  tip --namespace nola-${{ matrix.number }}
-      if: always() && matrix.cleanup
+        helm uninstall tip --namespace nola-${{ matrix.number }}
