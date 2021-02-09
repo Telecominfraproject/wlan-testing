@@ -137,6 +137,9 @@ def ap_ssh_ovsh_nodec(command_line_args, key):
 
         output = str(stdout.read(), 'utf-8')
 
+        #print("ovsdh cmd: ", cmd)
+        #print("ovsh output: ", output)
+
         if key != None:
             for line in output.splitlines():
                 toks = line.split(':', 1)

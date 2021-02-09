@@ -20,6 +20,7 @@ from cloudsdk import CreateAPProfiles
 
 
 
+
 def main():
 
 
@@ -135,7 +136,7 @@ def main():
                     print("Found equipment ID: %s  inventoryId: %s" % (e['id'], e['inventoryId']))
                     equipment_id = str(e['id'])
 
-    if equipment_id == -1:
+    if equipment_id == "-1":
         print("ERROR:  Could not find equipment-id.")
         sys.exit(1)
 
