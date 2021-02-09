@@ -161,7 +161,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
-
     steps:
     - name: Fetch kubeconfig
       shell: bash
@@ -216,20 +215,11 @@ jobs:
     name: Report tests results
     runs-on: ubuntu-latest
     needs: [ tests, generate-matrix ]
+    if: always()
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
-    if: always()
-
     steps:
-    - name: Post links to PR
-      uses: unsplash/comment-on-pr@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        msg: "Grafana Link: https://grafana.lab.wlan.tip.build/TO_BE_PROVIDED\n Kibana Link: https://kibana.lab.wlan.tip.build/TO_BE_PROVIDED"
-        check_for_duplicate_msg: true
-
     - name: Download Artifacts
       uses: actions/download-artifact@v2
       with:
@@ -240,24 +230,33 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         files: "**/*.xml"
-      if: always()
+ 
+    - name: Post links to PR
+      uses: unsplash/comment-on-pr@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        msg: "Grafana Link: https://grafana.lab.wlan.tip.build/TO_BE_PROVIDED\n Kibana Link: https://kibana.lab.wlan.tip.build/TO_BE_PROVIDED"
+        check_for_duplicate_msg: true
+      if: github.event.pull_request.base.ref == 'master'
 
   cleanup:
     name: Cleanup CloudSDK instances
     runs-on: ubuntu-latest
     needs: [ tests, generate-matrix ]
+    if: always()
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
-    if: always()
-
     steps:
     - name: Fetch kubeconfig
       shell: bash
       run: |
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+      if: matrix.cleanup
     - name: Remove temporary Cloud SDK instances
       shell: bash
       run: |
         helm uninstall tip --namespace nola-${{ matrix.number }}
+        kubectl delete namespace nola-${{ matrix.number }}
       if: matrix.cleanup
