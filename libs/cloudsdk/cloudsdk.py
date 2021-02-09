@@ -925,51 +925,51 @@ class CreateAPProfiles:
         profile_data = {
             "5g": {"eap":
                 {
-                    "name": "%s-%s-%s" % (args.testbed, fw_model, "5G_EAP"),
+                    "bridge": "%s-%s-%s" % (args.testbed, fw_model, "5G_EAP"),
                     "nat": "%s-%s-%s" % (args.testbed, fw_model, "5G_EAP_NAT"),
                     "vlan": "%s-%s-%s" % (args.testbed, fw_model, "5G_EAP_VLAN")
                 },
                 "wpa":
                     {
-                        "name": "%s-%s-%s" % (args.testbed, fw_model, "5G_WPA"),
+                        "bridge": "%s-%s-%s" % (args.testbed, fw_model, "5G_WPA"),
                         "nat": "%s-%s-%s" % (args.testbed, fw_model, "5G_WPA_NAT"),
                         "vlan": "%s-%s-%s" % (args.testbed, fw_model, "5G_WPA_VLAN")
                     },
                 "wpa2":
                     {
-                        "name": "%s-%s-%s" % (args.testbed, fw_model, "5G_WPA2"),
+                        "bridge": "%s-%s-%s" % (args.testbed, fw_model, "5G_WPA2"),
                         "nat": "%s-%s-%s" % (args.testbed, fw_model, "5G_WPA2_NAT"),
                         "vlan": "%s-%s-%s" % (args.testbed, fw_model, "5G_WPA2_VLAN")
                     }
             },
             "2g": {"eap":
                 {
-                    "name": "%s-%s-%s" % (args.testbed, fw_model, "2G_EAP"),
+                    "bridge": "%s-%s-%s" % (args.testbed, fw_model, "2G_EAP"),
                     "nat": "%s-%s-%s" % (args.testbed, fw_model, "2G_EAP_NAT"),
                     "vlan": "%s-%s-%s" % (args.testbed, fw_model, "2G_EAP_VLAN")
                 },
                 "wpa":
                     {
-                        "name": "%s-%s-%s" % (args.testbed, fw_model, "2G_WPA"),
+                        "bridge": "%s-%s-%s" % (args.testbed, fw_model, "2G_WPA"),
                         "nat": "%s-%s-%s" % (args.testbed, fw_model, "2G_WPA_NAT"),
                         "vlan": "%s-%s-%s" % (args.testbed, fw_model, "2G_WPA_VLAN")
                     },
                 "wpa2":
                     {
-                        "name": "%s-%s-%s" % (args.testbed, fw_model, "2G_WPA2"),
+                        "bridge": "%s-%s-%s" % (args.testbed, fw_model, "2G_WPA2"),
                         "nat": "%s-%s-%s" % (args.testbed, fw_model, "2G_WPA2_NAT"),
                         "vlan": "%s-%s-%s" % (args.testbed, fw_model, "2G_WPA2_VLAN")
                     }
             }
         }
-        prof_names = [profile_data["5g"]["wpa2"]["name"], profile_data["5g"]["wpa"]["name"],
-                      profile_data["2g"]["wpa2"]["name"], profile_data["2g"]["wpa"]["name"],
+        prof_names = [profile_data["5g"]["wpa2"]["bridge"], profile_data["5g"]["wpa"]["bridge"],
+                      profile_data["2g"]["wpa2"]["bridge"], profile_data["2g"]["wpa"]["bridge"],
                       profile_data["5g"]["wpa2"]["nat"], profile_data["5g"]["wpa"]["nat"],
                       profile_data["2g"]["wpa2"]["nat"], profile_data["2g"]["wpa"]["nat"],
                       profile_data["5g"]["wpa2"]["vlan"], profile_data["5g"]["wpa"]["vlan"],
                       profile_data["2g"]["wpa2"]["vlan"], profile_data["2g"]["wpa"]["vlan"]]
 
-        prof_names_eap = [profile_data["5g"]["eap"]["name"], profile_data["2g"]["eap"]["name"],
+        prof_names_eap = [profile_data["5g"]["eap"]["bridge"], profile_data["2g"]["eap"]["bridge"],
                           profile_data["5g"]["eap"]["nat"], profile_data["2g"]["eap"]["nat"],
                           profile_data["5g"]["eap"]["vlan"], profile_data["2g"]["eap"]["vlan"]]
 
@@ -983,13 +983,13 @@ class CreateAPProfiles:
                 {
                     "wpa":
                         {
-                            "name": "%s-%s" % (fw_model, "5G_WPA"),
+                            "bridge": "%s-%s" % (fw_model, "5G_WPA"),
                             "nat": "%s-%s" % (fw_model, "5G_WPA_NAT"),
                             "vlan": "%s-%s" % (fw_model, "5G_WPA_VLAN")
                         },
                     "wpa2":
                         {
-                            "name": "%s-%s" % (fw_model, "5G_WPA2"),
+                            "bridge": "%s-%s" % (fw_model, "5G_WPA2"),
                             "nat": "%s-%s" % (fw_model, "5G_WPA2_NAT"),
                             "vlan": "%s-%s" % (fw_model, "5G_WPA2_VLAN")
                         }
@@ -998,13 +998,13 @@ class CreateAPProfiles:
                 {
                     "wpa":
                         {
-                            "name": "%s-%s" % (fw_model, "2G_WPA"),
+                            "bridge": "%s-%s" % (fw_model, "2G_WPA"),
                             "nat": "%s-%s" % (fw_model, "2G_WPA_NAT"),
                             "vlan": "%s-%s" % (fw_model, "2G_WPA_VLAN")
                         },
                     "wpa2":
                         {
-                            "name": "%s-%s" % (fw_model, "2G_WPA2"),
+                            "bridge": "%s-%s" % (fw_model, "2G_WPA2"),
                             "nat": "%s-%s" % (fw_model, "2G_WPA2_NAT"),
                             "vlan": "%s-%s" % (fw_model, "2G_WPA2_VLAN")
                         }
@@ -1024,35 +1024,35 @@ class CreateAPProfiles:
                           psk_2g_wpa2=None,
                           psk_5g_wpa2=None):
         if psk_5g_wpa2 is not None:
-            self.psk_data["5g"]["wpa2"]["name"] = psk_5g_wpa2
+            self.psk_data["5g"]["wpa2"]["bridge"] = psk_5g_wpa2
             self.psk_data["5g"]["wpa2"]["nat"] = psk_5g_wpa2
             self.psk_data["5g"]["wpa2"]["vlan"] = psk_5g_wpa2
         if psk_5g_wpa is not None:
-            self.psk_data["5g"]["wpa"]["name"] = psk_5g_wpa
+            self.psk_data["5g"]["wpa"]["bridge"] = psk_5g_wpa
             self.psk_data["5g"]["wpa"]["nat"] = psk_5g_wpa
             self.psk_data["5g"]["wpa"]["vlan"] = psk_5g_wpa
         if psk_2g_wpa2 is not None:
-            self.psk_data["2g"]["wpa2"]["name"] = psk_2g_wpa2
+            self.psk_data["2g"]["wpa2"]["bridge"] = psk_2g_wpa2
             self.psk_data["2g"]["wpa2"]["nat"] = psk_2g_wpa2
             self.psk_data["2g"]["wpa2"]["vlan"] = psk_2g_wpa2
         if psk_2g_wpa is not None:
-            self.psk_data["2g"]["wpa"]["name"] = psk_2g_wpa
+            self.psk_data["2g"]["wpa"]["bridge"] = psk_2g_wpa
             self.psk_data["2g"]["wpa"]["nat"] = psk_2g_wpa
             self.psk_data["2g"]["wpa"]["nat"] = psk_2g_wpa
         if ssid_5g_wpa2 is not None:
-            self.ssid_data["5g"]["wpa2"]["name"] = ssid_5g_wpa2
+            self.ssid_data["5g"]["wpa2"]["bridge"] = ssid_5g_wpa2
             self.ssid_data["5g"]["wpa2"]["nat"] = ssid_5g_wpa2
             self.ssid_data["5g"]["wpa2"]["vlan"] = ssid_5g_wpa2
         if ssid_5g_wpa is not None:
-            self.ssid_data["5g"]["wpa"]["name"] = ssid_5g_wpa
+            self.ssid_data["5g"]["wpa"]["bridge"] = ssid_5g_wpa
             self.ssid_data["5g"]["wpa"]["nat"] = ssid_5g_wpa
             self.ssid_data["5g"]["wpa"]["vlan"] = ssid_5g_wpa
         if ssid_2g_wpa2 is not None:
-            self.ssid_data["2g"]["wpa2"]["name"] = ssid_2g_wpa2
+            self.ssid_data["2g"]["wpa2"]["bridge"] = ssid_2g_wpa2
             self.ssid_data["2g"]["wpa2"]["nat"] = ssid_2g_wpa2
             self.ssid_data["2g"]["wpa2"]["vlan"] = ssid_2g_wpa2
         if ssid_2g_wpa is not None:
-            self.ssid_data["2g"]["wpa"]["name"] = ssid_2g_wpa
+            self.ssid_data["2g"]["wpa"]["bridge"] = ssid_2g_wpa
             self.ssid_data["2g"]["wpa"]["nat"] = ssid_2g_wpa
             self.ssid_data["2g"]["wpa"]["vlan"] = ssid_2g_wpa
 
@@ -1101,10 +1101,7 @@ class CreateAPProfiles:
     def create_ssid_profiles(self, ssid_template=None, skip_wpa2=False, skip_wpa=False, skip_eap=False, mode="bridge"):
 
         self.ssid_template = ssid_template
-        if mode == "bridge":
-            self.mode = "BRIDGE"
-        if mode == "nat":
-            self.mode = "NAT"
+        self.mode = mode
         self.fiveG_eap = None
         self.twoFourG_eap = None
         self.fiveG_wpa2 = None
@@ -1278,10 +1275,10 @@ class CreateAPProfiles:
         self.fw_model = fw_model
         self.rfProfileId = lab_ap_info.rf_profile
         self.child_profiles = [self.rfProfileId]
-        if mode == "bridge":
-            self.mode = "BRIDGE"
-        if mode == "nat":
-            self.mode = "NAT"
+        self.mode = mode
+
+        print("create-ap-bridge-profile:  5G-wpa2: ", self.fiveG_wpa2, " 2g-wpa2: ", self.twoFourG_wpa2)
+
         if self.fiveG_wpa2:
             self.child_profiles.append(self.fiveG_wpa2)
             self.ssid_prof_config.append(self.profile_data['5g']['wpa2'][self.mode])
@@ -1317,6 +1314,8 @@ class CreateAPProfiles:
             # EAP ssid profiles would have been added above if they existed.
 
         name = self.command_line_args.testbed + "-" + self.fw_model + "_" + mode
+
+        print("child profiles: ", self.child_profiles)
 
         try:
             self.create_ap_profile = self.cloud.create_or_update_ap_profile(self.command_line_args.sdk_base_url,

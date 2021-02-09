@@ -478,7 +478,7 @@ def main():
     build_obj = GetBuild(jfrog['user'], jfrog['pass'], build)
 
     # sanity_status = json.load(open("sanity_status.json"))
-    obj = NightlySanity(args=command_line_args, base=base, lanforge_data=lanforge, Test=test, reporting=reporting,
+    obj = NightlySanity(args=command_line_args, base=base, lanforge_data=lanforge, test=test, reporting=reporting,
                         build=build_obj)
     obj.configure_dut()
 
