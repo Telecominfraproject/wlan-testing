@@ -1102,9 +1102,9 @@ class CreateAPProfiles:
 
         self.ssid_template = ssid_template
         if mode == "bridge":
-            self.mode = "name"
+            self.mode = "BRIDGE"
         if mode == "nat":
-            self.mode = "nat"
+            self.mode = "NAT"
         self.fiveG_eap = None
         self.twoFourG_eap = None
         self.fiveG_wpa2 = None
@@ -1279,9 +1279,9 @@ class CreateAPProfiles:
         self.rfProfileId = lab_ap_info.rf_profile
         self.child_profiles = [self.rfProfileId]
         if mode == "bridge":
-            self.mode = "name"
+            self.mode = "BRIDGE"
         if mode == "nat":
-            self.mode = "nat"
+            self.mode = "NAT"
         if self.fiveG_wpa2:
             self.child_profiles.append(self.fiveG_wpa2)
             self.ssid_prof_config.append(self.profile_data['5g']['wpa2'][self.mode])
