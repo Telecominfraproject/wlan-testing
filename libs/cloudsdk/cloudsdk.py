@@ -844,9 +844,10 @@ class CreateAPProfiles:
 
     def __init__(self,
                  command_line_args,
-                 cloud = None,
-                 cloud_type= "v1",
-                 client = None
+                 cloud=None,
+                 cloud_type="v1",
+                 client=None,
+                 fw_model=None
                  ):
 
         self.rid = None
@@ -860,7 +861,7 @@ class CreateAPProfiles:
         self.radius_profile = None
         self.radius_name = None
         self.cloud = cloud
-        self.client= client
+        self.client = client
         self.cloud_type = cloud_type
         self.customer_id = command_line_args.customer_id
         self.ap_cli_info = ssh_cli_active_fw(self.command_line_args)
@@ -868,7 +869,7 @@ class CreateAPProfiles:
             print("cloud cannot be None")
             exit()
         self.ap_cli_fw = self.ap_cli_info['active_fw']
-        self.bearer = self.cloud.get_bearer(self.command_line_args.sdk_base_url  , self.cloud_type)
+        self.bearer = self.cloud.get_bearer(self.command_line_args.sdk_base_url, self.cloud_type)
         self.radius_info = {
 
             "name": "Lab-RADIUS",
@@ -882,22 +883,177 @@ class CreateAPProfiles:
             "auth_port": 1812
         }
         self.ap_models = ["ec420", "ea8300", "ecw5211", "ecw5410"]
+        self.fw_model = fw_model
         self.report_data = {}
         self.report_data['tests'] = dict.fromkeys(self.ap_models, "")
         self.test_cases = {
-            "radius_profile" : None,
-            "ssid_5g_eap_bridge" : None,
-            "ssid_5g_wpa2_bridge" :  None,
-            "ssid_5g_wpa_bridge" : None,
-            "ssid_2g_eap_bridge" : None,
-            "ssid_2g_wpa2_bridge" : None,
-            "ssid_2g_wpa_bridge" : None,
-            "ap_bridge" : None,
-            "bridge_vifc" : None,
-            "bridge_vifs" : None
+            "radius_profile": None,
+
+            "ssid_5g_eap_bridge": None,
+            "ssid_5g_wpa2_bridge": None,
+            "ssid_5g_wpa_bridge": None,
+            "ssid_2g_eap_bridge": None,
+            "ssid_2g_wpa2_bridge": None,
+            "ssid_2g_wpa_bridge": None,
+
+            "ssid_5g_eap_nat": None,
+            "ssid_5g_wpa2_nat": None,
+            "ssid_5g_wpa_nat": None,
+            "ssid_2g_eap_nat": None,
+            "ssid_2g_wpa2_nat": None,
+            "ssid_2g_wpa_nat": None,
+
+            "ap_bridge": None,
+            "ap_nat": None,
+            "ap_vlan": None,
+
+            "bridge_vifc": None,
+            "bridge_vifs": None,
+
+            "nat_vifc": None,
+            "nat_vifs": None,
+
+            "vlan_vifc": None,
+            "vlan_vifs": None
+        }
+        self.profile_data, self.prof_names, self.prof_names_eap = self.create_profile_data(self.command_line_args,
+                                                                                           self.fw_model)
+        self.ssid_data, self.psk_data = self.create_ssid_data(self.command_line_args, self.fw_model)
+
+    def create_profile_data(self, args, fw_model):
+        profile_data = {
+            "5g": {"eap":
+                {
+                    "name": "%s-%s-%s" % (args.testbed, fw_model, "5G_EAP"),
+                    "nat": "%s-%s-%s" % (args.testbed, fw_model, "5G_EAP_NAT"),
+                    "vlan": "%s-%s-%s" % (args.testbed, fw_model, "5G_EAP_VLAN")
+                },
+                "wpa":
+                    {
+                        "name": "%s-%s-%s" % (args.testbed, fw_model, "5G_WPA"),
+                        "nat": "%s-%s-%s" % (args.testbed, fw_model, "5G_WPA_NAT"),
+                        "vlan": "%s-%s-%s" % (args.testbed, fw_model, "5G_WPA_VLAN")
+                    },
+                "wpa2":
+                    {
+                        "name": "%s-%s-%s" % (args.testbed, fw_model, "5G_WPA2"),
+                        "nat": "%s-%s-%s" % (args.testbed, fw_model, "5G_WPA2_NAT"),
+                        "vlan": "%s-%s-%s" % (args.testbed, fw_model, "5G_WPA2_VLAN")
+                    }
+            },
+            "2g": {"eap":
+                {
+                    "name": "%s-%s-%s" % (args.testbed, fw_model, "2G_EAP"),
+                    "nat": "%s-%s-%s" % (args.testbed, fw_model, "2G_EAP_NAT"),
+                    "vlan": "%s-%s-%s" % (args.testbed, fw_model, "2G_EAP_VLAN")
+                },
+                "wpa":
+                    {
+                        "name": "%s-%s-%s" % (args.testbed, fw_model, "2G_WPA"),
+                        "nat": "%s-%s-%s" % (args.testbed, fw_model, "2G_WPA_NAT"),
+                        "vlan": "%s-%s-%s" % (args.testbed, fw_model, "2G_WPA_VLAN")
+                    },
+                "wpa2":
+                    {
+                        "name": "%s-%s-%s" % (args.testbed, fw_model, "2G_WPA2"),
+                        "nat": "%s-%s-%s" % (args.testbed, fw_model, "2G_WPA2_NAT"),
+                        "vlan": "%s-%s-%s" % (args.testbed, fw_model, "2G_WPA2_VLAN")
+                    }
+            }
+        }
+        prof_names = [profile_data["5g"]["wpa2"]["name"], profile_data["5g"]["wpa"]["name"],
+                      profile_data["2g"]["wpa2"]["name"], profile_data["2g"]["wpa"]["name"],
+                      profile_data["5g"]["wpa2"]["nat"], profile_data["5g"]["wpa"]["nat"],
+                      profile_data["2g"]["wpa2"]["nat"], profile_data["2g"]["wpa"]["nat"],
+                      profile_data["5g"]["wpa2"]["vlan"], profile_data["5g"]["wpa"]["vlan"],
+                      profile_data["2g"]["wpa2"]["vlan"], profile_data["2g"]["wpa"]["vlan"]]
+
+        prof_names_eap = [profile_data["5g"]["eap"]["name"], profile_data["2g"]["eap"]["name"],
+                          profile_data["5g"]["eap"]["nat"], profile_data["2g"]["eap"]["nat"],
+                          profile_data["5g"]["eap"]["vlan"], profile_data["2g"]["eap"]["vlan"]]
+
+        return profile_data, prof_names, prof_names_eap
+
+    def create_ssid_data(self, args, fw_model):
+        ssid_data = self.profile_data.copy()
+
+        psk_data = {
+            "5g":
+                {
+                    "wpa":
+                        {
+                            "name": "%s-%s" % (fw_model, "5G_WPA"),
+                            "nat": "%s-%s" % (fw_model, "5G_WPA_NAT"),
+                            "vlan": "%s-%s" % (fw_model, "5G_WPA_VLAN")
+                        },
+                    "wpa2":
+                        {
+                            "name": "%s-%s" % (fw_model, "5G_WPA2"),
+                            "nat": "%s-%s" % (fw_model, "5G_WPA2_NAT"),
+                            "vlan": "%s-%s" % (fw_model, "5G_WPA2_VLAN")
+                        }
+                },
+            "2g":
+                {
+                    "wpa":
+                        {
+                            "name": "%s-%s" % (fw_model, "2G_WPA"),
+                            "nat": "%s-%s" % (fw_model, "2G_WPA_NAT"),
+                            "vlan": "%s-%s" % (fw_model, "2G_WPA_VLAN")
+                        },
+                    "wpa2":
+                        {
+                            "name": "%s-%s" % (fw_model, "2G_WPA2"),
+                            "nat": "%s-%s" % (fw_model, "2G_WPA2_NAT"),
+                            "vlan": "%s-%s" % (fw_model, "2G_WPA2_VLAN")
+                        }
+                }
+
         }
 
+        return ssid_data, psk_data
 
+    def set_ssid_psk_data(self,
+                          ssid_2g_wpa=None,
+                          ssid_5g_wpa=None,
+                          psk_2g_wpa=None,
+                          psk_5g_wpa=None,
+                          ssid_2g_wpa2=None,
+                          ssid_5g_wpa2=None,
+                          psk_2g_wpa2=None,
+                          psk_5g_wpa2=None):
+        if psk_5g_wpa2 is not None:
+            self.psk_data["5g"]["wpa2"]["name"] = psk_5g_wpa2
+            self.psk_data["5g"]["wpa2"]["nat"] = psk_5g_wpa2
+            self.psk_data["5g"]["wpa2"]["vlan"] = psk_5g_wpa2
+        if psk_5g_wpa is not None:
+            self.psk_data["5g"]["wpa"]["name"] = psk_5g_wpa
+            self.psk_data["5g"]["wpa"]["nat"] = psk_5g_wpa
+            self.psk_data["5g"]["wpa"]["vlan"] = psk_5g_wpa
+        if psk_2g_wpa2 is not None:
+            self.psk_data["2g"]["wpa2"]["name"] = psk_2g_wpa2
+            self.psk_data["2g"]["wpa2"]["nat"] = psk_2g_wpa2
+            self.psk_data["2g"]["wpa2"]["vlan"] = psk_2g_wpa2
+        if psk_2g_wpa is not None:
+            self.psk_data["2g"]["wpa"]["name"] = psk_2g_wpa
+            self.psk_data["2g"]["wpa"]["nat"] = psk_2g_wpa
+            self.psk_data["2g"]["wpa"]["nat"] = psk_2g_wpa
+        if ssid_5g_wpa2 is not None:
+            self.ssid_data["5g"]["wpa2"]["name"] = ssid_5g_wpa2
+            self.ssid_data["5g"]["wpa2"]["nat"] = ssid_5g_wpa2
+            self.ssid_data["5g"]["wpa2"]["vlan"] = ssid_5g_wpa2
+        if ssid_5g_wpa is not None:
+            self.ssid_data["5g"]["wpa"]["name"] = ssid_5g_wpa
+            self.ssid_data["5g"]["wpa"]["nat"] = ssid_5g_wpa
+            self.ssid_data["5g"]["wpa"]["vlan"] = ssid_5g_wpa
+        if ssid_2g_wpa2 is not None:
+            self.ssid_data["2g"]["wpa2"]["name"] = ssid_2g_wpa2
+            self.ssid_data["2g"]["wpa2"]["nat"] = ssid_2g_wpa2
+            self.ssid_data["2g"]["wpa2"]["vlan"] = ssid_2g_wpa2
+        if ssid_2g_wpa is not None:
+            self.ssid_data["2g"]["wpa"]["name"] = ssid_2g_wpa
+            self.ssid_data["2g"]["wpa"]["nat"] = ssid_2g_wpa
+            self.ssid_data["2g"]["wpa"]["vlan"] = ssid_2g_wpa
 
     def create_radius_profile(self, radius_name, rid, key):
 
@@ -917,11 +1073,14 @@ class CreateAPProfiles:
         if self.command_line_args.skip_radius == False:
             try:
                 print("Into")
-                self.radius_profile = self.cloud.create_or_update_radius_profile(self.command_line_args.sdk_base_url, self.bearer, self.customer_id,
-                                                                       self.radius_template, self.radius_name, self.subnet_name,
-                                                                       self.subnet,
-                                                                       self.subnet_mask, self.region, self.server_name, self.server_ip,
-                                                                       self.secret, self.auth_port)
+                self.radius_profile = self.cloud.create_or_update_radius_profile(self.command_line_args.sdk_base_url,
+                                                                                 self.bearer, self.customer_id,
+                                                                                 self.radius_template, self.radius_name,
+                                                                                 self.subnet_name,
+                                                                                 self.subnet,
+                                                                                 self.subnet_mask, self.region,
+                                                                                 self.server_name, self.server_ip,
+                                                                                 self.secret, self.auth_port)
                 print("radius profile Id is", self.radius_profile)
                 client.update_testrail(case_id=self.test_cases["radius_profile"], run_id=self.rid, status_id=1,
                                        msg='RADIUS profile created successfully')
@@ -938,215 +1097,253 @@ class CreateAPProfiles:
                                             msg='Failed to create RADIUS profile')
                 self.test_cases["radius_profile"] = "failed"
 
-    def create_ssid_profiles(self, ssid_profile_data= None, skip_wpa2=False, skip_wpa=False, skip_eap=False):
-        self.ssid_profile_data = ssid_profile_data
-        self.ssid_template = ssid_profile_data["ssid_template"]
+    def create_ssid_profiles(self, ssid_template=None, skip_wpa2=False, skip_wpa=False, skip_eap=False, mode="bridge"):
 
+        self.ssid_template = ssid_template
+        if mode == "bridge":
+            self.mode = "name"
+        if mode == "nat":
+            self.mode = "nat"
         self.fiveG_eap = None
         self.twoFourG_eap = None
         self.fiveG_wpa2 = None
         self.twoFourG_wpa2 = None
         self.fiveG_wpa = None
         self.twoFourG_wpa = None
-        
-        # 5G SSID's
-        print("CreateAPProfile::create_ssid_profile, skip-wpa: ", skip_wpa, " skip-wpa2: ", skip_wpa2, " skip-eap: ", skip_eap)
 
-        # 5G eap
+        # 5G SSID's
+        print("CreateAPProfile::create_ssid_profile, skip-wpa: ", skip_wpa, " skip-wpa2: ", skip_wpa2, " skip-eap: ",
+              skip_eap)
+
+
         if not skip_eap:
+            # 5G eap
             try:
-                self.fiveG_eap = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url, self.bearer, self.customer_id, self.ssid_template,
-                                                                ssid_profile_data['5G']['eap']['info'][1],
-                                                                ssid_profile_data['5G']['eap']['info'][0], None,
-                                                                self.radius_name,
-                                                                "wpa2OnlyRadius", "BRIDGE", 1, ["is5GHzU", "is5GHz", "is5GHzL"])
-                print("5G EAP SSID created successfully - bridge mode")
-                self.client.update_testrail(case_id=self.test_cases["ssid_5g_eap_bridge"], run_id=self.rid, status_id=1,
-                                            msg='5G EAP SSID created successfully - bridge mode')
-                self.test_cases["ssid_5g_eap_bridge"] = "passed"
+                self.fiveG_eap = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url,
+                                                                          self.bearer, self.customer_id,
+                                                                          self.ssid_template,
+                                                                          self.profile_data['5g']['eap'][self.mode],
+                                                                          self.ssid_data['5g']['eap'][self.mode],
+                                                                          None,
+                                                                          self.radius_name,
+                                                                          "wpa2OnlyRadius", mode.upper(), 1,
+                                                                          ["is5GHzU", "is5GHz", "is5GHzL"])
+                print("5G EAP SSID created successfully - " + mode + " mode")
+                self.client.update_testrail(case_id=self.test_cases["ssid_5g_eap_" + mode],
+                                            run_id=self.rid,
+                                            status_id=1,
+                                            msg='5G EAP SSID created successfully - ' + mode + ' mode')
+                self.test_cases["ssid_5g_eap_" + mode] = "passed"
             except Exception as ex:
                 print(ex)
                 logging.error(logging.traceback.format_exc())
                 self.fiveG_eap = None
-                print("5G EAP SSID create failed - bridge mode")
-                self.client.update_testrail(case_id=self.test_cases["ssid_5g_eap_bridge"], run_id=self.rid, status_id=5,
-                                            msg='5G EAP SSID create failed - bridge mode')
-                self.test_cases["ssid_5g_eap_bridge"] = "failed"
+                print("5G EAP SSID create failed - " + mode + " mode")
+                self.client.update_testrail(case_id=self.test_cases["ssid_5g_eap_" + mode], run_id=self.rid, status_id=5,
+                                            msg='5G EAP SSID create failed - ' + mode + ' mode')
+                self.test_cases["ssid_5g_eap_" + mode] = "failed"
 
             # 2.4G eap
             try:
-                self.twoFourG_eap = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url, self.bearer, self.customer_id, self.ssid_template,
-                                                                   ssid_profile_data['2G']['eap']['info'][1],
-                                                                   ssid_profile_data['2G']['eap']['info'][0], None,
-                                                                   self.radius_name, "wpa2OnlyRadius", "BRIDGE", 1,
-                                                                   ["is2dot4GHz"])
-                print("2.4G EAP SSID created successfully - bridge mode")
-                self.client.update_testrail(case_id=self.test_cases["ssid_2g_eap_bridge"], run_id=self.rid, status_id=1,
-                                       msg='2.4G EAP SSID created successfully - bridge mode')
-                self.test_cases["ssid_2g_eap_bridge"] = "passed"
+                self.twoFourG_eap = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url,
+                                                                             self.bearer, self.customer_id,
+                                                                             self.ssid_template,
+                                                                             self.profile_data['2g']['eap'][self.mode],
+                                                                             self.ssid_data['2g']['eap'][self.mode],
+                                                                             None,
+                                                                             self.radius_name, "wpa2OnlyRadius",
+                                                                             mode.upper(), 1,
+                                                                             ["is2dot4GHz"])
+                print("2.4G EAP SSID created successfully - " + mode + " mode")
+                self.client.update_testrail(case_id=self.test_cases["ssid_5g_eap_" + mode], run_id=self.rid, status_id=1,
+                                            msg='2.4G EAP SSID created successfully - ' + mode + ' mode')
+                self.test_cases["ssid_5g_eap_" + mode] = "passed"
             except Exception as ex:
                 print(ex)
                 logging.error(logging.traceback.format_exc())
                 self.twoFourG_eap = None
                 print("2.4G EAP SSID create failed - bridge mode")
-                self.client.update_testrail(case_id=self.test_cases["ssid_2g_eap_bridge"], run_id=self.rid, status_id=5,
-                                       msg='2.4G EAP SSID create failed - bridge mode')
-            self.test_cases["ssid_2g_eap_bridge"] = "failed"
+                self.client.update_testrail(case_id=self.test_cases["ssid_5g_eap_" + mode], run_id=self.rid, status_id=5,
+                                            msg='2.4G EAP SSID create failed - bridge mode')
+                self.test_cases["ssid_5g_eap_" + mode] = "failed"
 
-        # 5g wpa2
+
         if not skip_wpa2:
+            # 5g wpa2
             try:
-                self.fiveG_wpa2 = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url, self.bearer, self.customer_id, self.ssid_template,
-                                                                 ssid_profile_data['5G']['wpa2']['info'][1],
-                                                                 ssid_profile_data['5G']['wpa2']['info'][0], ssid_profile_data['5G']['wpa2']['psk'][0],
-                                                                 "Radius-Accounting-Profile", "wpa2OnlyPSK", "BRIDGE", 1,
-                                                                 ["is5GHzU", "is5GHz", "is5GHzL"])
-                print("5G WPA2 SSID created successfully - bridge mode")
-                self.client.update_testrail(case_id=self.test_cases["ssid_5g_wpa2_bridge"], run_id=self.rid, status_id=1,
-                                       msg='5G WPA2 SSID created successfully - bridge mode')
-                self.test_cases["ssid_5g_wpa2_bridge"] = "passed"
+                self.fiveG_wpa2 = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url,
+                                                                           self.bearer, self.customer_id,
+                                                                           self.ssid_template,
+                                                                           self.profile_data['5g']['wpa2'][self.mode],
+                                                                           self.ssid_data['5g']['wpa2'][self.mode],
+                                                                           self.psk_data['5g']['wpa2'][self.mode],
+                                                                           "Radius-Accounting-Profile", "wpa2OnlyPSK",
+                                                                           mode.upper(), 1,
+                                                                           ["is5GHzU", "is5GHz", "is5GHzL"])
+                print("5G WPA2 SSID created successfully - " + mode + " mode")
+                self.client.update_testrail(case_id=self.test_cases["ssid_5g_wpa2_" + mode], run_id=self.rid,
+                                            status_id=1,
+                                            msg='5G WPA2 SSID created successfully - ' + mode + ' mode')
+                self.test_cases["ssid_5g_wpa2_" + mode] = "passed"
             except Exception as ex:
                 print(ex)
                 logging.error(logging.traceback.format_exc())
                 self.fiveG_wpa2 = None
-                print("5G WPA2 SSID create failed - bridge mode")
-                self.client.update_testrail(case_id=test_cases["ssid_5g_wpa2_bridge"], run_id=self.rid, status_id=5,
-                                       msg='5G WPA2 SSID create failed - bridge mode')
-            self.test_cases["ssid_5g_wpa2_bridge"] = "failed"
+                print("5G WPA2 SSID create failed - " + mode + " mode")
+                self.client.update_testrail(case_id=self.test_cases["ssid_5g_wpa2_" + mode], run_id=self.rid, status_id=5,
+                                            msg='5G WPA2 SSID create failed - ' + mode + ' mode')
+                self.test_cases["ssid_5g_wpa2_" + mode] = "failed"
 
             # 2.4G wpa2
             try:
-                self.twoFourG_wpa2 = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url, self.bearer, self.customer_id, self.ssid_template,
-                                                                    ssid_profile_data['2G']['wpa2']['info'][1],
-                                                                    ssid_profile_data['2G']['wpa2']['info'][0], ssid_profile_data['2G']['wpa2']['psk'][0],
-                                                                    "Radius-Accounting-Profile", "wpa2OnlyPSK", "BRIDGE", 1,
-                                                                    ["is2dot4GHz"])
-                print("2.4G WPA2 SSID created successfully - bridge mode")
-                self.client.update_testrail(case_id=self.test_cases["ssid_2g_wpa2_bridge"], run_id=self.rid, status_id=1,
-                                       msg='2.4G WPA2 SSID created successfully - bridge mode')
-                self.test_cases["ssid_2g_wpa2_bridge"] = "passed"
+                self.twoFourG_wpa2 = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url,
+                                                                              self.bearer, self.customer_id,
+                                                                              self.ssid_template,
+                                                                              self.profile_data['2g']['wpa2'][self.mode],
+                                                                              self.ssid_data['2g']['wpa2'][self.mode],
+                                                                              self.psk_data['2g']['wpa2'][self.mode],
+                                                                              "Radius-Accounting-Profile",
+                                                                              "wpa2OnlyPSK", self.mode.upper(), 1,
+                                                                              ["is2dot4GHz"])
+                print("2.4G WPA2 SSID created successfully - " + mode + " mode")
+                self.client.update_testrail(case_id=self.test_cases["ssid_2g_wpa2_" + mode], run_id=self.rid,
+                                            status_id=1,
+                                            msg='2.4G WPA2 SSID created successfully - ' + mode + ' mode')
+                self.test_cases["ssid_2g_wpa2_" + mode] = "passed"
             except Exception as ex:
                 print(ex)
                 logging.error(logging.traceback.format_exc())
                 self.twoFourG_wpa2 = None
-                print("2.4G WPA2 SSID create failed - bridge mode")
-                self.client.update_testrail(case_id=test_cases["ssid_2g_wpa2_bridge"], run_id=self.rid, status_id=5,
-                                       msg='2.4G WPA2 SSID create failed - bridge mode')
-                self.test_cases["ssid_2g_wpa2_bridge"] = "failed"
+                print("2.4G WPA2 SSID create failed - " + mode + " mode")
+                self.client.update_testrail(case_id=test_cases["ssid_2g_wpa2_" + mode], run_id=self.rid, status_id=5,
+                                            msg='2.4G WPA2 SSID create failed - ' + mode + ' mode')
+                self.test_cases["ssid_2g_wpa2_" + mode] = "failed"
 
-
-        # 5g wpa
 
         if not skip_wpa:
+            # 5g wpa
             try:
-                self.fiveG_wpa = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url, self.bearer, self.customer_id, self.ssid_template,
-                                                                ssid_profile_data['5G']['wpa']['info'][1],
-                                                                ssid_profile_data['5G']['wpa']['info'][0], ssid_profile_data['5G']['wpa']['psk'][0],
-                                                                "Radius-Accounting-Profile", "wpaPSK", "BRIDGE", 1,
-                                                                ["is5GHzU", "is5GHz", "is5GHzL"])
-                print("5G WPA SSID created successfully - bridge mode")
-                self.client.update_testrail(case_id=self.test_cases["ssid_5g_wpa_bridge"], run_id=self.rid, status_id=1,
-                                       msg='5G WPA SSID created successfully - bridge mode')
-                self.test_cases["ssid_5g_wpa_bridge"] = "passed"
+                self.fiveG_wpa = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url,
+                                                                          self.bearer, self.customer_id,
+                                                                          self.ssid_template,
+                                                                          self.profile_data['5g']['wpa'][self.mode],
+                                                                          self.ssid_data['5g']['wpa'][self.mode],
+                                                                          self.psk_data['5g']['wpa'][self.mode],
+                                                                          "Radius-Accounting-Profile", "wpaPSK",
+                                                                          mode.upper(), 1,
+                                                                          ["is5GHzU", "is5GHz", "is5GHzL"])
+                print("5G WPA SSID created successfully - " + mode + " mode")
+                self.client.update_testrail(case_id=self.test_cases["ssid_5g_wpa_" + mode],
+                                            run_id=self.rid,
+                                            status_id=1,
+                                            msg='5G WPA SSID created successfully - ' + mode + ' mode')
+                self.test_cases["ssid_5g_wpa_" + mode] = "passed"
             except Exception as ex:
                 print(ex)
                 logging.error(logging.traceback.format_exc())
                 self.fiveG_wpa = None
-                print("5G WPA SSID create failed - bridge mode")
-                self.client.update_testrail(case_id=test_cases["ssid_5g_wpa_bridge"], run_id=self.rid, status_id=5,
-                                       msg='5G WPA SSID create failed - bridge mode')
-                self.test_cases["ssid_5g_wpa_bridge"] = "failed"
+                print("5G WPA SSID create failed - " + mode + " mode")
+                self.client.update_testrail(case_id=test_cases["ssid_5g_wpa_" + mode], run_id=self.rid, status_id=5,
+                                            msg='5G WPA SSID create failed - ' + mode + ' mode')
+                self.test_cases["ssid_5g_wpa_" + mode] = "failed"
 
             # 2.4G wpa
             try:
-                self.twoFourG_wpa = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url, self.bearer, self.customer_id, self.ssid_template,
-                                                                   ssid_profile_data['2G']['wpa']['info'][1],
-                                                                   ssid_profile_data['2G']['wpa']['info'][0], ssid_profile_data['2G']['wpa']['psk'][0],
-                                                                   "Radius-Accounting-Profile", "wpaPSK", "BRIDGE", 1,
-                                                                   ["is2dot4GHz"])
-                print("2.4G WPA SSID created successfully - bridge mode")
-                self.client.update_testrail(case_id=self.test_cases["ssid_2g_wpa_bridge"], run_id=self.rid, status_id=1,
-                                       msg='2.4G WPA SSID created successfully - bridge mode')
-                self.test_cases["ssid_2g_wpa_bridge"] = "passed"
+                self.twoFourG_wpa = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url,
+                                                                             self.bearer, self.customer_id,
+                                                                             self.ssid_template,
+                                                                             self.profile_data['2g']['wpa'][self.mode],
+                                                                             self.ssid_data['2g']['wpa'][self.mode],
+                                                                             self.psk_data['2g']['wpa'][self.mode],
+                                                                             "Radius-Accounting-Profile", "wpaPSK",
+                                                                             mode.upper(), 1,
+                                                                             ["is2dot4GHz"])
+                print("2.4G WPA SSID created successfully - " + mode + " mode")
+                self.client.update_testrail(case_id=self.test_cases["ssid_2g_wpa_" + mode], run_id=self.rid, status_id=1,
+                                            msg='2.4G WPA SSID created successfully - ' + mode + ' mode')
+                self.test_cases["ssid_2g_wpa_" + mode] = "passed"
             except Exception as ex:
                 print(ex)
                 logging.error(logging.traceback.format_exc())
                 self.twoFourG_wpa = None
-                print("2.4G WPA SSID create failed - bridge mode")
-                self.client.update_testrail(case_id=self.test_cases["ssid_2g_wpa_bridge"], run_id=self.rid, status_id=5,
-                                       msg='2.4G WPA SSID create failed - bridge mode')
-            self.test_cases["ssid_2g_wpa_bridge"] = "failed"
+                print("2.4G WPA SSID create failed - " + mode + " mode")
+                self.client.update_testrail(case_id=self.test_cases["ssid_2g_wpa_" + mode], run_id=self.rid, status_id=5,
+                                            msg='2.4G WPA SSID create failed - ' + mode + ' mode')
+                self.test_cases["ssid_2g_wpa_" + mode] = "failed"
 
-
-
-    def create_ap_bridge_profile(self, eq_id=None, fw_model=None):
+    def create_ap_bridge_profile(self, eq_id=None, fw_model=None, mode="bridge"):
         self.ssid_prof_config = []
         self.ssid_config = []
         self.fw_model = fw_model
         self.rfProfileId = lab_ap_info.rf_profile
         self.child_profiles = [self.rfProfileId]
-
+        if mode == "bridge":
+            self.mode = "name"
+        if mode == "nat":
+            self.mode = "nat"
         if self.fiveG_wpa2:
             self.child_profiles.append(self.fiveG_wpa2)
-            self.ssid_prof_config.append(self.ssid_profile_data['5G']['wpa2']['info'][1])
-            self.ssid_config.append(self.ssid_profile_data['5G']['wpa2']['info'][0])
+            self.ssid_prof_config.append(self.profile_data['5g']['wpa2'][self.mode])
+            self.ssid_config.append(self.ssid_data['5g']['wpa2'][self.mode])
 
         if self.twoFourG_wpa2:
             self.child_profiles.append(self.twoFourG_wpa2)
-            self.ssid_prof_config.append(self.ssid_profile_data['2G']['wpa2']['info'][1])
-            self.ssid_config.append(self.ssid_profile_data['2G']['wpa2']['info'][0])
+            self.ssid_prof_config.append(self.profile_data['2g']['wpa2'][self.mode])
+            self.ssid_config.append(self.ssid_data['2g']['wpa2'][self.mode])
 
         if self.fiveG_eap:
             self.child_profiles.append(self.fiveG_eap)
-            self.ssid_prof_config.append(self.ssid_profile_data['5G']['eap']['info'][1])
-            self.ssid_config.append(self.ssid_profile_data['5G']['eap']['info'][0])
+            self.ssid_prof_config.append(self.profile_data['5g']['eap'][self.mode])
+            self.ssid_config.append(self.ssid_data['5g']['eap'][self.mode])
 
         if self.twoFourG_eap:
             self.child_profiles.append(self.twoFourG_eap)
-            self.ssid_prof_config.append(self.ssid_profile_data['2G']['eap']['info'][1])
-            self.ssid_config.append(self.ssid_profile_data['2G']['eap']['info'][0])
+            self.ssid_prof_config.append(self.profile_data['2g']['eap'][self.mode])
+            self.ssid_config.append(self.ssid_data['2g']['eap'][self.mode])
 
         if self.fiveG_wpa:
             self.child_profiles.append(self.fiveG_wpa)
-            self.ssid_prof_config.append(self.ssid_profile_data['5G']['wpa']['info'][1])
-            self.ssid_config.append(self.ssid_profile_data['5G']['wpa']['info'][0])
+            self.ssid_prof_config.append(self.profile_data['5g']['wpa'][self.mode])
+            self.ssid_config.append(self.ssid_data['5g']['wpa'][self.mode])
 
         if self.twoFourG_wpa:
             self.child_profiles.append(self.twoFourG_wpa)
-            self.ssid_prof_config.append(self.ssid_profile_data['2G']['wpa']['info'][1])
-            self.ssid_config.append(self.ssid_profile_data['2G']['wpa']['info'][0])
+            self.ssid_prof_config.append(self.profile_data['2g']['wpa'][self.mode])
+            self.ssid_config.append(self.ssid_data['2g']['wpa'][self.mode])
 
         if self.radius_profile is not None:
             self.child_profiles.append(self.radius_profile)
             # EAP ssid profiles would have been added above if they existed.
 
-        name = self.command_line_args.testbed + "-" + self.fw_model + "_bridge"
+        name = self.command_line_args.testbed + "-" + self.fw_model + "_" + mode
 
         try:
-            self.create_ap_profile = self.cloud.create_or_update_ap_profile(self.command_line_args.sdk_base_url, self.bearer, self.customer_id,
-                                                                  self.command_line_args.default_ap_profile, name,
-                                                                  self.child_profiles)
+            self.create_ap_profile = self.cloud.create_or_update_ap_profile(self.command_line_args.sdk_base_url,
+                                                                            self.bearer, self.customer_id,
+                                                                            self.command_line_args.default_ap_profile,
+                                                                            name,
+                                                                            self.child_profiles)
             self.test_profile_id = self.create_ap_profile
             print("Test Profile ID for Test is:", self.test_profile_id)
-            self.client.update_testrail(case_id=self.test_cases["ap_bridge"], run_id=self.rid, status_id=1,
-                                   msg='AP profile for bridge tests created successfully')
-            self.test_cases["ap_bridge"] = "passed"
+            self.client.update_testrail(case_id=self.test_cases["ap_"+mode], run_id=self.rid, status_id=1,
+                                        msg='AP profile for ' + mode + ' tests created successfully')
+            self.test_cases["ap_"+mode] = "passed"
         except Exception as ex:
             print(ex)
             logging.error(logging.traceback.format_exc())
             create_ap_profile = "error"
             print("Error creating AP profile for bridge tests. Will use existing AP profile")
-            self.client.update_testrail(case_id=self.test_cases["ap_bridge"], run_id=self.rid, status_id=5,
-                                   msg='AP profile for bridge tests could not be created using API')
-            self.test_cases["ap_bridge"] = "failed"
-        self.ap_profile = self.cloud.set_ap_profile(eq_id, self.test_profile_id, self.command_line_args.sdk_base_url, self.bearer)
+            self.client.update_testrail(case_id=self.test_cases["ap_"+mode], run_id=self.rid, status_id=5,
+                                        msg='AP profile for ' + mode + ' tests could not be created using API')
+            self.test_cases["ap_"+mode] = "failed"
 
-
+        self.ap_profile = self.cloud.set_ap_profile(eq_id, self.test_profile_id, self.command_line_args.sdk_base_url,
+                                                    self.bearer)
 
     def cleanup_profile(self):
         pass
 
-    def validate_changes(self):
+    def validate_changes(self, mode="bridge"):
 
         ssid_list_ok = False
         vif_state_ok = False
@@ -1169,23 +1366,23 @@ class CreateAPProfiles:
 
                 if set(ssid_list) == set(self.ssid_config):
                     print("SSIDs in Wifi_VIF_Config Match AP Profile Config")
-                    self.client.update_testrail(case_id=self.test_cases["bridge_vifc"], run_id=self.rid, status_id=1,
-                                           msg='SSIDs in VIF Config matches AP Profile Config')
-                    self.test_cases["bridge_vifc"] = "passed"
+                    self.client.update_testrail(case_id=self.test_cases[mode + "_vifc"], run_id=self.rid, status_id=1,
+                                                msg='SSIDs in VIF Config matches AP Profile Config')
+                    self.test_cases[mode + "_vifc"] = "passed"
                     ssid_list_ok = True
                 else:
                     print("SSIDs in Wifi_VIF_Config do not match desired AP Profile Config")
-                    self.client.update_testrail(case_id=self.test_cases["bridge_vifc"], run_id=self.rid, status_id=5,
-                                           msg='SSIDs in VIF Config do not match AP Profile Config')
-                    self.test_cases["bridge_vifc"] = "failed"
+                    self.client.update_testrail(case_id=self.test_cases[mode + "_vifc"], run_id=self.rid, status_id=5,
+                                                msg='SSIDs in VIF Config do not match AP Profile Config')
+                    self.test_cases[mode + "_vifc"] = "failed"
             except Exception as ex:
                 print(ex)
                 logging.error(logging.traceback.format_exc())
                 ssid_list = "ERROR"
                 print("Error accessing VIF Config from AP CLI")
-                self.client.update_testrail(case_id=self.test_cases["bridge_vifc"], run_id=self.rid, status_id=4,
-                                       msg='Cannot determine VIF Config - re-test required')
-                self.test_cases["bridge_vifc"] = "error"
+                self.client.update_testrail(case_id=self.test_cases[mode + "_vifc"], run_id=self.rid, status_id=4,
+                                            msg='Cannot determine VIF Config - re-test required')
+                self.test_cases[mode + "_vifc"] = "error"
 
             # VIF State
             try:
@@ -1194,22 +1391,22 @@ class CreateAPProfiles:
 
                 if set(ssid_state) == set(self.ssid_config):
                     print("SSIDs properly applied on AP")
-                    self.client.update_testrail(case_id=self.test_cases["bridge_vifs"], run_id=self.rid, status_id=1,
-                                           msg='SSIDs in VIF Config applied to VIF State')
-                    self.test_cases["bridge_vifs"] = "passed"
+                    self.client.update_testrail(case_id=self.test_cases[mode + "_vifs"], run_id=self.rid, status_id=1,
+                                                msg='SSIDs in VIF Config applied to VIF State')
+                    self.test_cases[mode + "_vifs"] = "passed"
                     vif_state_ok = True
                 else:
                     print("SSIDs not applied on AP")
-                    self.client.update_testrail(case_id=self.test_cases["bridge_vifs"], run_id=self.rid, status_id=5,
-                                           msg='SSIDs in VIF Config not applied to VIF State')
-                    self.test_cases["bridge_vifs"] = "failed"
+                    self.client.update_testrail(case_id=self.test_cases[mode + "_vifs"], run_id=self.rid, status_id=5,
+                                                msg='SSIDs in VIF Config not applied to VIF State')
+                    self.test_cases[mode + "_vifs"] = "failed"
             except Exception as ex:
                 print(ex)
                 logging.error(logging.traceback.format_exc())
                 ssid_list = "ERROR"
                 print("Error accessing VIF State from AP CLI")
-                self.client.update_testrail(case_id=self.test_cases["bridge_vifs"], run_id=self.rid, status_id=4,
-                                       msg='Cannot determine VIF State - re-test required')
-                self.test_cases["bridge_vifs"] = "error"
+                self.client.update_testrail(case_id=self.test_cases[mode + "_vifs"], run_id=self.rid, status_id=4,
+                                            msg='Cannot determine VIF State - re-test required')
+                self.test_cases[mode + "_vifs"] = "error"
 
         print("Profiles Created")

@@ -5,7 +5,7 @@
 
 
 from UnitTestBase import *
-
+from sta_connect2 import StaConnect2
 class RunTest:
 
     def __init__(self, lanforge_ip, lanforge_port, lanforge_prefix):
@@ -13,19 +13,19 @@ class RunTest:
         self.lanforge_port = lanforge_port
         self.lanforge_prefix = lanforge_prefix
 
-    def Single_Client_Connectivity(self, port, radio, ssid_name, ssid_psk, security,
-                                   station, test_case, rid, client, logger):
+    def Single_Client_Connectivity(self, upstream_port="eth1", radio="wiphy0", ssid="TestAP", passkey="ssid_psk", security="open",
+                                   station_name="sta0000", test_case=None, rid=None, client=None, logger=None):
         '''SINGLE CLIENT CONNECTIVITY using test_connect2.py'''
         self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=False)
         self.staConnect.sta_mode = 0
         self.staConnect.upstream_resource = 1
-        self.staConnect.upstream_port = port
+        self.staConnect.upstream_port = upstream_port
         self.staConnect.radio = radio
         self.staConnect.resource = 1
-        self.staConnect.dut_ssid = ssid_name
-        self.staConnect.dut_passwd = ssid_psk
+        self.staConnect.dut_ssid = ssid
+        self.staConnect.dut_passwd = passkey
         self.staConnect.dut_security = security
-        self.staConnect.station_names = station
+        self.staConnect.station_names = station_name
         self.staConnect.sta_prefix = self.lanforge_prefix
         self.staConnect.runtime_secs = 10
         self.staConnect.bringup_time_sec = 60
@@ -43,14 +43,14 @@ class RunTest:
         # result = 'pass'
         print("Single Client Connectivity :", self.staConnect.passes)
         if self.staConnect.passes() == True:
-            print("Single client connection to", ssid_name, "successful. Test Passed")
+            print("Single client connection to", self.staConnect.dut_ssid, "successful. Test Passed")
             client.update_testrail(case_id=test_case, run_id=rid, status_id=1, msg='Client connectivity passed')
-            logger.info("Client connectivity to " + ssid_name + " Passed")
+            logger.info("Client connectivity to " + self.staConnect.dut_ssid + " Passed")
             return ("passed")
         else:
             client.update_testrail(case_id=test_case, run_id=rid, status_id=5, msg='Client connectivity failed')
-            print("Single client connection to", ssid_name, "unsuccessful. Test Failed")
-            logger.warning("Client connectivity to " + ssid_name + " FAILED")
+            print("Single client connection to", self.staConnect.dut_ssid, "unsuccessful. Test Failed")
+            logger.warning("Client connectivity to " + self.staConnect.dut_ssid + " FAILED")
             return ("failed")
 
     def Single_Client_EAP(self, port, sta_list, ssid_name, radio, security, eap_type,
