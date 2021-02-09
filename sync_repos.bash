@@ -10,13 +10,4 @@ then
 
     cp -ar ../wlan-lanforge-scripts lanforge/lanforge-scripts
 fi
-if [ -d tests/logs ]
-then
-  rm -fr tests/logs
-  mkdir tests/logs
-fi
-if [ -d tests/reports ]
-then
-  rm -fr tests/reports
-  mkdir tests/reports
-fi
+
