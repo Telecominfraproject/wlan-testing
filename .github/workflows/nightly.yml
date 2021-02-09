@@ -18,17 +18,20 @@ env:
     {
       "number": "01",
       "ip_address": "10.28.3.6",
-      "ap_model": "ECW5410"
+      "ap_model": "ECW5410",
+      "cleanup": true
     },
     {
       "number": "03",
       "ip_address": "10.28.3.10",
-      "ap_model": "ECW5410"
+      "ap_model": "ECW5410",
+      "cleanup": false
     },
     {
       "number": "04",
       "ip_address": "10.28.3.12",
-      "ap_model": "ECW5410"
+      "ap_model": "ECW5410",
+      "cleanup": false
     }
   ]'
 
@@ -142,6 +145,20 @@ jobs:
       shell: bash
       run: |
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+    - name: Wait for access points to come up
+      shell: bash
+      run: |
+        counter=0
+
+        until [ $counter -gt 5 ]
+        do
+          echo Counter: $counter
+          ((counter++))
+          sleep 5
+          # do something to check AP connected back
+        done
+
     - name: Run tests
       shell: bash
       timeout-minutes: 30
@@ -180,6 +197,12 @@ jobs:
         done
         kubectl logs $podname
         echo {{ github.ref }}
+
+    - name: Remove temporary Cloud SDK instances
+      shell: bash
+      run: |
+        helm uninstall  tip --namespace nola-${{ matrix.number }}
+      if: ${{ matrix.cleanup }}
 
     - name: Post links to PR
       uses: unsplash/comment-on-pr@master
