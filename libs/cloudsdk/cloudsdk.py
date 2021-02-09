@@ -191,12 +191,12 @@ class CloudSDK:
                 print("CloudSDK Upgrade Request Success")
                 if report_data:
                     report_data['tests'][key][test_cases["upgrade_api"]] = "passed"
-                client.update_testrail(case_id=test_cases["upgrade_api"], run_id=rid, status_id=1, msg='Upgrade request using API successful')
+                client.update_testrail(case_id=self.test_cases["upgrade_api"], run_id=rid, status_id=1, msg='Upgrade request using API successful')
                 logger.info('Firmware upgrade API successfully sent')
             else:
                 print("Cloud SDK Upgrade Request Error!")
                 # mark upgrade test case as failed with CloudSDK error
-                client.update_testrail(case_id=test_cases["upgrade_api"], run_id=rid, status_id=5, msg='Error requesting upgrade via API')
+                client.update_testrail(case_id=self.test_cases["upgrade_api"], run_id=rid, status_id=5, msg='Error requesting upgrade via API')
                 if report_data:
                     report_data['tests'][key][test_cases["upgrade_api"]] = "failed"
                 logger.warning('Firmware upgrade API failed to send')
@@ -204,7 +204,7 @@ class CloudSDK:
         else:
             print("Cloud SDK Upgrade Request Error!")
             # mark upgrade test case as failed with CloudSDK error
-            client.update_testrail(case_id=test_cases["upgrade_api"], run_id=rid, status_id=5,msg='Error requesting upgrade via API')
+            client.update_testrail(case_id=self.test_cases["upgrade_api"], run_id=rid, status_id=5,msg='Error requesting upgrade via API')
             if report_data:
                 report_data['tests'][key][test_cases["upgrade_api"]] = "failed"
             logger.warning('Firmware upgrade API failed to send')
@@ -1216,7 +1216,7 @@ class CreateAPProfiles:
                 logging.error(logging.traceback.format_exc())
                 self.twoFourG_wpa2 = None
                 print("2.4G WPA2 SSID create failed - " + mode + " mode")
-                self.client.update_testrail(case_id=test_cases["ssid_2g_wpa2_" + mode], run_id=self.rid, status_id=5,
+                self.client.update_testrail(case_id=self.test_cases["ssid_2g_wpa2_" + mode], run_id=self.rid, status_id=5,
                                             msg='2.4G WPA2 SSID create failed - ' + mode + ' mode')
                 self.test_cases["ssid_2g_wpa2_" + mode] = "failed"
 
@@ -1244,7 +1244,7 @@ class CreateAPProfiles:
                 logging.error(logging.traceback.format_exc())
                 self.fiveG_wpa = None
                 print("5G WPA SSID create failed - " + mode + " mode")
-                self.client.update_testrail(case_id=test_cases["ssid_5g_wpa_" + mode], run_id=self.rid, status_id=5,
+                self.client.update_testrail(case_id=self.test_cases["ssid_5g_wpa_" + mode], run_id=self.rid, status_id=5,
                                             msg='5G WPA SSID create failed - ' + mode + ' mode')
                 self.test_cases["ssid_5g_wpa_" + mode] = "failed"
 

@@ -61,12 +61,9 @@ def main():
                         help="Allow over-riding the 2g-wpa SSID value.")
 
 
+    reporting = Reporting(reports_root=os.getcwd() + "/reports/")
 
-
-
-
-
-    base = UnitTestBase("skd-set-profile", parser)
+    base = UnitTestBase("skd-set-profile", parser, reporting)
 
     command_line_args = base.command_line_args
 
