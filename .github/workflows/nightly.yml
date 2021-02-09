@@ -158,7 +158,7 @@ jobs:
   test:
     name: Run tests
     runs-on: ubuntu-latest
-    needs: [ build, cloudsdk, generate-matrix ]
+    needs: [ build, cloudsdk, wait, generate-matrix ]
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
@@ -230,7 +230,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
-    if: always() && matrix.cleanup
+    if: always()
 
     steps:
     - name: Fetch kubeconfig
@@ -241,3 +241,4 @@ jobs:
       shell: bash
       run: |
         helm uninstall tip --namespace nola-${{ matrix.number }}
+      if: matrix.cleanup
