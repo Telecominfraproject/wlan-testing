@@ -74,6 +74,7 @@ class CloudSDK:
             print("Command: ", cmd)
             print("response-status: ", response.status_code)
             print("response-headers: ", response.headers)
+            print("response-content: ", response.content)
             print("headers: ", headers)
             print("data-str: ", data_str)
 
