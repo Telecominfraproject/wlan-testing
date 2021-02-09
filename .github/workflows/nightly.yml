@@ -210,7 +210,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Unit Test Results ( nola-${{ matrix.number }} )
-        path: /ci/test_everything.xml
+        path: test_everything.xml
 
   report:
     name: Report tests results
