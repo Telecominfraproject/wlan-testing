@@ -71,12 +71,12 @@ jobs:
     - name: docker login
       shell: bash
       run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
-    # - name: build docker image
-    #   shell: bash
-    #   run: docker build -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_id }} -f wlan-testing/pytest/Dockerfile .
-    # - name: push docker image
-    #   shell: bash
-    #   run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_id }}
+    - name: build docker image
+      shell: bash
+      run: docker build -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_id }} -f wlan-testing/pytest/Dockerfile .
+    - name: push docker image
+      shell: bash
+      run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_id }}
 
   cloudsdk:
     runs-on: ubuntu-latest
@@ -146,72 +146,72 @@ jobs:
       run: |
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-    # - name: Wait for access points to come up
-    #   shell: bash
-    #   run: |
-    #     counter=0
+    - name: Wait for access points to come up
+      shell: bash
+      run: |
+        counter=0
+        until [ $counter -gt 5 ]
+        do
+          echo Counter: $counter
+          ((counter++))
+          sleep 5
+          # do something to check AP connected back
+        done
 
-    #     until [ $counter -gt 5 ]
-    #     do
-    #       echo Counter: $counter
-    #       ((counter++))
-    #       sleep 5
-    #       # do something to check AP connected back
-    #     done
+    - name: Run tests
+      shell: bash
+      timeout-minutes: 30
+      run: |
+        kubectl config set-context $(kubectl config current-context) --namespace nola-${{ matrix.number }}
+        today=$(date +"%d-%m-%Y")
+        kubectl delete job nightly-ci-$today --wait=true --ignore-not-found=true
 
-    # - name: Run tests
-    #   shell: bash
-    #   timeout-minutes: 30
-    #   run: |
-    #     kubectl config set-context $(kubectl config current-context) --namespace nola-${{ matrix.number }}
-    #     today=$(date +"%d-%m-%Y")
-    #     kubectl delete job nightly-ci-$today --wait=true --ignore-not-found=true
+        cat <<EOF | kubectl apply -f -
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: nightly-ci-$today
+        spec:
+          template:
+            spec:
+              containers:
+              - name: tests
+                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_id }}
+                args: 
+                - "-c"
+                - "pytest --no-testrails --skip-update-firmware -o lanforge-ip-address=${{ matrix.ip_address }} -o sdk-base-url=wlan-portal-svc-nola-${{ matrix.number }}.cicd.lab.wlan.tip.build --access-points ${{ matrix.ap_model }}; sleep 75"
+                command: [ "bash" ]
+              imagePullSecrets:
+              - name: tip-docker-registry-key
+              restartPolicy: Never
+          backoffLimit: 0
+        EOF
+        sleep 60 # needed to wait for the pod to come up
+        podname=$(kubectl get pods -o name -l job-name=nightly-ci-$today | sed "s/pod\///")
+        until [ -s test_everything.xml ]
+        do
+          echo "waiting for tests to complete"
+          kubectl cp $podname:/ci/test_everything.xml test_everything.xml
+          sleep 15
+        done
+        kubectl logs $podname
+        echo {{ github.ref }}
 
-    #     cat <<EOF | kubectl apply -f -
-    #     apiVersion: batch/v1
-    #     kind: Job
-    #     metadata:
-    #       name: nightly-ci-$today
-    #     spec:
-    #       template:
-    #         spec:
-    #           containers:
-    #           - name: tests
-    #             image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_id }}
-    #             args: 
-    #             - "-c"
-    #             - "pytest --no-testrails --skip-update-firmware -o lanforge-ip-address=${{ matrix.ip_address }} -o sdk-base-url=wlan-portal-svc-nola-${{ matrix.number }}.cicd.lab.wlan.tip.build --access-points ${{ matrix.ap_model }}; sleep 75"
-    #             command: [ "bash" ]
-    #           imagePullSecrets:
-    #           - name: tip-docker-registry-key
-    #           restartPolicy: Never
-    #       backoffLimit: 0
-    #     EOF
-    #     sleep 60 # needed to wait for the pod to come up
-    #     podname=$(kubectl get pods -o name -l job-name=nightly-ci-$today | sed "s/pod\///")
-    #     until [ -s test_everything.xml ]
-    #     do
-    #       echo "waiting for tests to complete"
-    #       kubectl cp $podname:/ci/test_everything.xml test_everything.xml
-    #       sleep 15
-    #     done
-    #     kubectl logs $podname
-    #     echo {{ github.ref }}
+    - name: Post links to PR
+      uses: unsplash/comment-on-pr@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        msg: "Grafana Link: https://grafana.lab.wlan.tip.build/TO_BE_PROVIDED\n Kibana Link: https://kibana.lab.wlan.tip.build/TO_BE_PROVIDED"
+        check_for_duplicate_msg: true
+      if: contains(github.ref, 'pull')
 
-    # - name: Post links to PR
-    #   uses: unsplash/comment-on-pr@master
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     msg: "Grafana Link: https://grafana.lab.wlan.tip.build/TO_BE_PROVIDED\n Kibana Link: https://kibana.lab.wlan.tip.build/TO_BE_PROVIDED"
-    #     check_for_duplicate_msg: true
-    #   if: contains(github.ref, 'pull')
-
-    # - name: Publish test results to PR
-    #   uses: EnricoMi/publish-unit-test-result-action@v1.7
-    #   with:
-    #     github_token: ${{ secrets.GITHUB_TOKEN }}
-    #     files: "**/*.xml"
+    - name: Publish test results to PR
+      uses: EnricoMi/publish-unit-test-result-action@v1.7
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        files: "**/*.xml"
+     if: always()
 
   cleanup:
     runs-on: ubuntu-latest
@@ -221,6 +221,12 @@ jobs:
       matrix: ${{fromJson(needs.generate-matrix.outputs.matrix)}}
 
     steps:
+    - name: Fetch kubeconfig
+      shell: bash
+      run: |
+        aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+      if: always() && matrix.cleanup
+
     - name: Remove temporary Cloud SDK instances
       shell: bash
       run: |
