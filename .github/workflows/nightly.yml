@@ -110,7 +110,6 @@ jobs:
         path: toolsmith
         repository: Telecominfraproject/Toolsmith
         token: ${{ secrets.PAT_TOKEN }}
-        ref: feature/WIFI-1350
 
     - name: Prepare environment
       run: |
