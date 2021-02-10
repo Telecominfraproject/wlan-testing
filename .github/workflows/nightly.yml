@@ -1,6 +1,5 @@
 name: nightly build
 defaults:
-  runs-on: ubuntu-latest
   run:
     shell: bash
 
@@ -58,6 +57,7 @@ on:
 jobs:
   generate-matrix:
     name: Generate matrix for build
+    runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -68,6 +68,7 @@ jobs:
 
   build:
     name: Build tests docker image
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout Testing repo
       uses: actions/checkout@v2
@@ -88,6 +89,7 @@ jobs:
 
   cloudsdk:
     name: Update CloudSDK instances
+    runs-on: ubuntu-latest
     needs: [ generate-matrix ]
     strategy:
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
@@ -136,6 +138,7 @@ jobs:
 
   wait:
     name: Wait for access points to reconnect
+    runs-on: ubuntu-latest
     needs: [ cloudsdk, generate-matrix ]
     strategy:
       fail-fast: false
@@ -153,6 +156,7 @@ jobs:
 
   tests:
     name: Run tests
+    runs-on: ubuntu-latest
     needs: [ build, wait, generate-matrix ]
     strategy:
       fail-fast: false
@@ -207,6 +211,7 @@ jobs:
 
   report:
     name: Report tests results
+    runs-on: ubuntu-latest
     needs: [ tests, generate-matrix ]
     if: always()
     strategy:
@@ -235,6 +240,7 @@ jobs:
 
   cleanup:
     name: Cleanup CloudSDK instances
+    runs-on: ubuntu-latest
     needs: [ tests, generate-matrix ]
     if: always()
     strategy:
