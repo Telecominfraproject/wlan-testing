@@ -763,6 +763,44 @@ class CloudSDK:
         self.check_response("PUT", response, headers, data_str, url)
         return profile['id']
 
+    # General usage:  get the default profile, modify it accordingly, pass it back to here
+    # Not tested yet.
+    def create_rf_profile(self, cloudSDK_url, bearer, customer_id, template, name, new_prof):
+        print("create-rf-profile, template: %s"%(template))
+
+        url = cloudSDK_url + "/portal/profile"
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + bearer
+        }
+        data_str = json.dumps(profile)
+        response = requests.request("POST", url, headers=headers, data=data_str)
+        self.check_response("POST", response, headers, data_str, url)
+        ssid_profile = response.json()
+        return ssid_profile['id']
+        
+    # Not tested yet.
+    def create_or_update_rf_profile(self, cloudSDK_url, bearer, customer_id, template, name,
+                                    new_prof):
+        # First, see if profile of this name already exists.
+        profile = self.get_customer_profile_by_name(cloudSDK_url, bearer, customer_id, name)
+        if profile == None:
+            # create one then
+            return self.create_rf_profile(cloudSDK_url, bearer, customer_id, template, name, new_prof)
+
+        # Update then.
+        print("Update existing ssid profile, name: %s"%(name))
+
+        url = cloudSDK_url + "/portal/profile"
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + bearer
+        }
+        data_str = json.dumps(new_profile)
+        response = requests.request("PUT", url, headers=headers, data=data_str)
+        self.check_response("PUT", response, headers, data_str, url)
+        return profile['id']
+
     def create_radius_profile(self, cloudSDK_url, bearer, customer_id, template, name, subnet_name, subnet, subnet_mask,
                               region, server_name, server_ip, secret, auth_port):
         print("Create-radius-profile called, template: %s"%(template))

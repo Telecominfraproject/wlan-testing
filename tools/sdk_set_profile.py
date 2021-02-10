@@ -51,7 +51,13 @@ def main():
                         help="Allow over-riding the 2g-wpa SSID value.")
 
     parser.add_argument("--mode", dest="mode", choices=['bridge', 'nat', 'vlan'], type=str,
-                        help="Mode of AP Profile [bridge/nat/vlan]")
+                        help="Mode of AP Profile [bridge/nat/vlan]", required=True)
+
+    # Not implemented yet.
+    #parser.add_argument("--rf-mode", type=str,
+    #                    choices=["modeN", "modeAC", "modeGN", "modeX", "modeA", "modeB", "modeG", "modeAB"],
+    #                    help="Allow over-riding the 2g-wpa SSID value.")
+
 
     reporting = Reporting(reports_root=os.getcwd() + "/reports/")
 
@@ -189,7 +195,8 @@ def main():
             # Radius Profile needs to be set here
             # obj.create_radius_profile(radius_name, rid, key)
             pass
-        ap_object.create_ssid_profiles(ssid_template=ssid_template, skip_eap=True, mode=args.mode)
+        ap_object.create_ssid_profiles(ssid_template=ssid_template, skip_eap=True, skip_wpa=args.skip_wpa,
+                                       skip_wpa2=args.skip_wpa2, mode=args.mode)
 
         print("Create AP with equipment-id: ", equipment_id)
         ap_object.create_ap_profile(eq_id=equipment_id, fw_model=fw_model, mode=args.mode)

@@ -78,3 +78,8 @@ Testbed 12 (Basic, wf188n)
   --default-ap-profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc-ben-testbed.cicd.lab.wlan.tip.build \
   --skip-radius --skip-wpa --verbose --testbed "NOLA-12" --ssid-5g-wpa2 Default-SSID-5gl --psk-5g-wpa2 12345678 \
   --ssid-2g-wpa2 Default-SSID-2g --psk-2g-wpa2 12345678
+
+# Query an ssid
+./query_sdk.py --testrail-user-id NONE --model wf188n --sdk-base-url https://wlan-portal-svc-ben-testbed.cicd.lab.wlan.tip.build \
+  --sdk-user-id    support@example.com --sdk-user-password support --equipment_id 3 --type profile --cmd get --object_id 11
+
