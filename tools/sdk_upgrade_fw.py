@@ -138,15 +138,12 @@ ap_image = command_line_args.ap_image
 
 apModel = model_id
 cloudModel = cloud_sdk_models[apModel]
+build = command_line_args.build_id  # ie, pending
+
 if not ap_image:
     # then get latest from jfrog
-    # print(cloudModel)
-    jfrog_url = 'https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/'
-    url = jfrog_url + apModel + "/dev/"
-    Build: GetBuild = GetBuild(jfrog_user, jfrog_pwd)
-    latest_image = Build.get_latest_image(url, build)
-    print(apModel, "Latest FW on jFrog:", latest_image)
-    ap_image = latest_image
+    Build: GetBuild = GetBuild(jfrog_user, jfrog_pwd, build)
+    ap_image = Build.get_latest_image(apModel)
 
 ##Get Bearer Token to make sure its valid (long tests can require re-auth)
 bearer = cloud.get_bearer(cloudSDK_url, cloud_type)

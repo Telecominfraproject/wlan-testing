@@ -239,12 +239,13 @@ class UnitTestBase:
 
         self.build = self.command_line_args.build_id
 
+        
         self.logger = logging.getLogger(log_name)
-        if reporting is not None:
-            self.hdlr = logging.FileHandler(reporting.report_path + "/test_run.log")
-        else:
-            self.hdlr = logging.FileHandler("logs/test_run.log")
 
+        if not reporting:
+            self.hdlr = logging.FileHandler("./logs/test_run.log")
+        else:
+            self.hdlr = logging.FileHandler(reporting.report_path + "/test_run.log")
         self.formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         self.hdlr.setFormatter(self.formatter)
         self.logger.addHandler(self.hdlr)

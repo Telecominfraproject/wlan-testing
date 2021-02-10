@@ -15,7 +15,11 @@ class GetBuild:
         self.jfrog_url = 'https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/'
         self.build = build
 
-    def get_latest_image(self, model):
+    def get_latest_image(self, model, for_build=None):
+
+        build_name = self.build
+        if for_build:
+            build_name = for_build
 
         url = self.jfrog_url + model + "/dev/"
 
@@ -35,7 +39,7 @@ class GetBuild:
         soup = BeautifulSoup(html, features="html.parser")
 
         # find the last pending link on dev
-        last_link = soup.find_all('a', href=re.compile(self.build))[-1]
+        last_link = soup.find_all('a', href=re.compile(build_name))[-1]
         latest_file = last_link['href']
         latest_fw = latest_file.replace('.tar.gz', '')
         return latest_fw

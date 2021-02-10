@@ -64,3 +64,17 @@ Testbed 11 (Advanced setup, 2D turntable chamber plus medium chamber, RF attenua
   --default-ap-profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc.cicd.lab.wlan.tip.build \
   --skip-radius --skip-wpa --verbose --testbed "NOLA-11" --ssid-5g-wpa2 Default-SSID-5gl --psk-5g-wpa2 12345678 \
   --ssid-2g-wpa2 Default-SSID-2g --psk-2g-wpa2 12345678
+
+
+Testbed 12 (Basic, wf188n)
+
+# Upgrade firmware to latest
+./sdk_upgrade_fw.py --testrail-user-id NONE --model wf188n --ap-jumphost-address localhost --ap-jumphost-port 8823 \
+   --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --testbed \"NOLA-12\" \
+   --sdk-base-url https://wlan-portal-svc-ben-testbed.cicd.lab.wlan.tip.build --force-upgrade true
+
+./sdk_set_profile.py --testrail-user-id NONE --model wf188n --ap-jumphost-address localhost --ap-jumphost-port 8823 \
+  --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --lanforge-ip-address localhost --lanforge-port-number 8822 \
+  --default-ap-profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc-ben-testbed.cicd.lab.wlan.tip.build \
+  --skip-radius --skip-wpa --verbose --testbed "NOLA-12" --ssid-5g-wpa2 Default-SSID-5gl --psk-5g-wpa2 12345678 \
+  --ssid-2g-wpa2 Default-SSID-2g --psk-2g-wpa2 12345678
