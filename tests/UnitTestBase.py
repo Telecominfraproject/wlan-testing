@@ -97,7 +97,7 @@ from lab_ap_info import radius_info
 
 class UnitTestBase:
 
-    def __init__(self, log_name, args, reporting):
+    def __init__(self, log_name, args, reporting=None):
         self.parser = argparse.ArgumentParser(description="Sanity Testing on Firmware Build", parents=[args])
 
         self.parser.add_argument("-b", "--build-id", type=str,
@@ -239,8 +239,12 @@ class UnitTestBase:
 
         self.build = self.command_line_args.build_id
 
+        
         self.logger = logging.getLogger(log_name)
-        self.hdlr = logging.FileHandler(reporting.report_path + "/test_run.log")
+        if not reporting:
+            self.hdlr = logging.FileHandler("./logs/test_run.log")
+        else:
+            self.hdlr = logging.FileHandler(reporting.report_path + "/test_run.log")
         self.formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         self.hdlr.setFormatter(self.formatter)
         self.logger.addHandler(self.hdlr)
