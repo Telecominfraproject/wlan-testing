@@ -1,4 +1,9 @@
 name: nightly build
+defaults:
+  runs-on: ubuntu-latest
+  run:
+    shell: bash
+
 env:
   DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
   DOCKER_USER_NAME: ${{ secrets.DOCKER_USER_NAME }}
@@ -17,22 +22,28 @@ env:
   # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
   testbeds: '[
     {
+      "number": "ext-01",
+      "ip_address": "192.168.100.20",
+      "ap_model": "EA8300",
+      "cleanup": false
+    },
+    {
+      "number": "ext-02",
+      "ip_address": "192.168.100.20",
+      "ap_model": "ECW5410",
+      "cleanup": false
+    },
+    {
       "number": "01",
       "ip_address": "10.28.3.6",
       "ap_model": "ECW5410",
       "cleanup": false
     },
     {
-      "number": "03",
-      "ip_address": "10.28.3.10",
+      "number": "02",
+      "ip_address": "10.28.3.8",
       "ap_model": "ECW5410",
-      "cleanup": true
-    },
-    {
-      "number": "04",
-      "ip_address": "10.28.3.12",
-      "ap_model": "ECW5410",
-      "cleanup": true
+      "cleanup": false
     }
   ]'
 
@@ -47,7 +58,6 @@ on:
 jobs:
   generate-matrix:
     name: Generate matrix for build
-    runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -58,7 +68,6 @@ jobs:
 
   build:
     name: Build tests docker image
-    runs-on: ubuntu-latest
     steps:
     - name: Checkout Testing repo
       uses: actions/checkout@v2
@@ -71,18 +80,14 @@ jobs:
         repository: Telecominfraproject/wlan-lanforge-scripts
 
     - name: docker login
-      shell: bash
       run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
     - name: build docker image
-      shell: bash
       run: docker build -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_id }} -f wlan-testing/pytest/Dockerfile .
     - name: push docker image
-      shell: bash
       run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_id }}
 
   cloudsdk:
     name: Update CloudSDK instances
-    runs-on: ubuntu-latest
     needs: [ generate-matrix ]
     strategy:
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
@@ -106,11 +111,8 @@ jobs:
         ref: feature/WIFI-1350
 
     - name: Prepare environment
-      shell: bash
       run: |
-        mkdir -p ./wlan-pki/testCA/private
-        mkdir -p ./wlan-pki/testCA/newcerts
-        mkdir -p ./wlan-pki/generated
+        mkdir -p ./wlan-pki/testCA/private ./wlan-pki/testCA/newcerts ./wlan-pki/generated
         touch ./wlan-pki/testCA/index.txt
         echo "01" > ./wlan-pki/testCA/serial.txt
         echo "${{ env.CACERT }}" | base64 -d > ./wlan-pki/testCA/cacert.pem
@@ -118,33 +120,28 @@ jobs:
         ./toolsmith/helm-values/aws-cicd-testbed-deployment.yaml.sh ${{ matrix.number }} > testbed-deployment.yaml
 
     - name: Generate certs
-      shell: bash
+      working-directory: wlan-pki
       run: |
-        cd ./wlan-pki
         ./generate_all.sh true
         ./copy-certs-to-helm.sh "../wlan-helm"
 
     - name: Fetch kubeconfig
-      shell: bash
       run: |
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
     - name: Deploy Cloud SDK
-      shell: bash
+      working-directory: wlan-helm/tip-wlan
       run: |
-        cd ./wlan-helm/tip-wlan
         helm dependency update
         helm upgrade --install tip . -f ../../testbed-deployment.yaml --create-namespace --namespace nola-${{ matrix.number }}
 
   wait:
     name: Wait for access points to reconnect
-    runs-on: ubuntu-latest
     needs: [ cloudsdk, generate-matrix ]
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
     steps:
     - name: Wait for access points to come up
-      shell: bash
       run: |
         counter=0
         until [ $counter -gt 5 ]
@@ -156,18 +153,15 @@ jobs:
 
   tests:
     name: Run tests
-    runs-on: ubuntu-latest
     needs: [ build, wait, generate-matrix ]
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
     steps:
     - name: Fetch kubeconfig
-      shell: bash
       run: |
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
     - name: Run tests
-      shell: bash
       timeout-minutes: 30
       run: |
         kubectl config set-context $(kubectl config current-context) --namespace nola-${{ matrix.number }}
@@ -213,7 +207,6 @@ jobs:
 
   report:
     name: Report tests results
-    runs-on: ubuntu-latest
     needs: [ tests, generate-matrix ]
     if: always()
     strategy:
@@ -242,7 +235,6 @@ jobs:
 
   cleanup:
     name: Cleanup CloudSDK instances
-    runs-on: ubuntu-latest
     needs: [ tests, generate-matrix ]
     if: always()
     strategy:
@@ -250,12 +242,10 @@ jobs:
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
     steps:
     - name: Fetch kubeconfig
-      shell: bash
       run: |
         aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
       if: matrix.cleanup
     - name: Remove temporary Cloud SDK instances
-      shell: bash
       run: |
         helm uninstall tip --namespace nola-${{ matrix.number }}
         kubectl delete namespace nola-${{ matrix.number }}
