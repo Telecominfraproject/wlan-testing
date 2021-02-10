@@ -133,7 +133,7 @@ jobs:
       working-directory: wlan-helm/tip-wlan
       run: |
         helm dependency update
-        helm upgrade --install tip . -f ../../testbed-deployment.yaml --create-namespace --namespace nola-${{ matrix.number }}
+        helm upgrade --install tip . -f ../../testbed-deployment.yaml --create-namespace --namespace nola-${{ matrix.number }} --wait --timeout 20m
 
   wait:
     name: Wait for access points to reconnect
@@ -205,7 +205,7 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v2
       with:
-        name: Unit Test Results ( nola-${{ matrix.number }} )
+        name: nola-${{ matrix.number }}
         path: test_everything.xml
 
   report:
