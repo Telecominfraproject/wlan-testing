@@ -436,6 +436,10 @@ class CloudSDK:
             url_base = cloudSDK_url + "/portal/profile/forCustomer" + "?customerId=" + customer_id
             return self.get_paged_url(bearer, url_base)
 
+    def ping(self, cloudSDK_url, bearer):
+        url_base = cloudSDK_url + "/ping"
+        return [self.get_url(bearer, url_base)]
+
     # This is querys all and filters locally. Maybe there is better way to get cloud to
     # do the filtering?
     def get_customer_profile_by_name(self, cloudSDK_url, bearer, customer_id, name):
