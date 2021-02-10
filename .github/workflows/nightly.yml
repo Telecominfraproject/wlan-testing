@@ -28,7 +28,7 @@ env:
     },
     {
       "number": "ext-02",
-      "ip_address": "192.168.100.20",
+      "ip_address": "192.168.100.200",
       "ap_model": "ECW5410",
       "cleanup": false
     },
