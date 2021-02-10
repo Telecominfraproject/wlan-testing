@@ -18,54 +18,47 @@ sys.path.append(f'../tests')
 from UnitTestBase import *
 from cloudsdk import CreateAPProfiles
 
-
-
-
 def main():
-
-
-
     parser = argparse.ArgumentParser(description="SDK Set Profile", add_help=False)
     parser.add_argument("--default-ap-profile", type=str,
                         help="Default AP profile to use as basis for creating new ones, typically: TipWlan-2-Radios or TipWlan-3-Radios",
                         required=True)
     parser.add_argument("--skip-radius", dest="skip_radius", action='store_true',
-                        help="Should we skip the RADIUS configs or not")
+                        help="Should we skip the RADIUS configs or not", default=False)
     parser.add_argument("--skip-wpa", dest="skip_wpa", action='store_true',
-                        help="Should we skip the WPA ssid or not")
+                        help="Should we skip the WPA ssid or not", default=False)
     parser.add_argument("--skip-wpa2", dest="skip_wpa2", action='store_true',
-                        help="Should we skip the WPA2 ssid or not")
-    parser.set_defaults(skip_radius=False)
-    parser.set_defaults(skip_wpa=False)
-    parser.set_defaults(skip_wpa2=False)
+                        help="Should we skip the WPA2 ssid or not",  default=False)
     parser.add_argument("--skip-profiles", dest="skip_profiles", action='store_true',
-                        help="Should we skip creating new ssid profiles?")
-    parser.set_defaults(skip_profiles=False)
+                        help="Should we skip creating new ssid profiles?", default=False)
 
-    parser.add_argument("--psk-5g-wpa2", type=str,
+    parser.add_argument("--psk-5g-wpa2", dest="psk_5g_wpa2", type=str,
                         help="Allow over-riding the 5g-wpa2 PSK value.")
-    parser.add_argument("--psk-5g-wpa", type=str,
+    parser.add_argument("--psk-5g-wpa", dest="psk_5g_wpa", type=str,
                         help="Allow over-riding the 5g-wpa PSK value.")
-    parser.add_argument("--psk-2g-wpa2", type=str,
+    parser.add_argument("--psk-2g-wpa2", dest="psk_2g_wpa2", type=str,
                         help="Allow over-riding the 2g-wpa2 PSK value.")
-    parser.add_argument("--psk-2g-wpa", type=str,
+    parser.add_argument("--psk-2g-wpa", dest="psk_2g_wpa", type=str,
                         help="Allow over-riding the 2g-wpa PSK value.")
 
-    parser.add_argument("--ssid-5g-wpa2", type=str,
+    parser.add_argument("--ssid-5g-wpa2", dest="ssid_5g_wpa2", type=str,
                         help="Allow over-riding the 5g-wpa2 SSID value.")
-    parser.add_argument("--ssid-5g-wpa", type=str,
+    parser.add_argument("--ssid-5g-wpa", dest="ssid_5g_wpa",  type=str,
                         help="Allow over-riding the 5g-wpa SSID value.")
-    parser.add_argument("--ssid-2g-wpa2", type=str,
+    parser.add_argument("--ssid-2g-wpa2", dest="ssid_2g_wpa2", type=str,
                         help="Allow over-riding the 2g-wpa2 SSID value.")
-    parser.add_argument("--ssid-2g-wpa", type=str,
+    parser.add_argument("--ssid-2g-wpa", dest="ssid_2g_wpa", type=str,
                         help="Allow over-riding the 2g-wpa SSID value.")
 
+    parser.add_argument("--mode", dest="mode", choices=['bridge', 'nat', 'vlan'], type=str,
+                        help="Mode of AP Profile [bridge/nat/vlan]")
 
     reporting = Reporting(reports_root=os.getcwd() + "/reports/")
 
-    base = UnitTestBase("skd-set-profile", parser, reporting)
+    base = UnitTestBase("skd-set-profile", parser)
 
     command_line_args = base.command_line_args
+    print(command_line_args.mode)
 
     # cmd line takes precedence over env-vars.
     cloudSDK_url = command_line_args.sdk_base_url  # was os.getenv('CLOUD_SDK_URL')
@@ -150,14 +143,7 @@ def main():
 
     fw_model = ap_cli_fw.partition("-")[0]
 
-
     print('Current Active AP FW from CLI:', ap_cli_fw)
-
-    ###Find Latest FW for Current AP Model and Get FW ID
-
-    ############################################################################
-    #################### Create Report #########################################
-    ############################################################################
 
     # Create Report Folder for Today
     today = str(date.today())
@@ -170,62 +156,46 @@ def main():
 
     logger.info('Report data can be found here: ' + report_path + today)
 
-    ##Get Bearer Token to make sure its valid (long tests can require re-auth)
+    # Get Bearer Token to make sure its valid (long tests can require re-auth)
     bearer = cloud.get_bearer(cloudSDK_url, cloud_type)
     radius_name = "%s-%s-%s" % (command_line_args.testbed, fw_model, "Radius")
-    obj = CreateAPProfiles(command_line_args, cloud=cloud, client=client, fw_model=fw_model)
 
 
-    # Allow cmd-line to override
-    if command_line_args.psk_5g_wpa2:
-        obj.psk_data["5g"]["wpa2"]["name"] = command_line_args.psk_5g_wpa2
-        obj.psk_data["5g"]["wpa2"]["nat"] = command_line_args.psk_5g_wpa2
-        obj.psk_data["5g"]["wpa2"]["vlan"] = command_line_args.psk_5g_wpa2
-    if command_line_args.psk_5g_wpa:
-        obj.psk_data["5g"]["wpa"]["name"] = command_line_args.psk_5g_wpa
-        obj.psk_data["5g"]["wpa"]["nat"] = command_line_args.psk_5g_wpa
-        obj.psk_data["5g"]["wpa"]["vlan"] = command_line_args.psk_5g_wpa
-    if command_line_args.psk_2g_wpa2:
-        obj.psk_data["2g"]["wpa2"]["name"] = command_line_args.psk_2g_wpa2
-        obj.psk_data["2g"]["wpa2"]["nat"] = command_line_args.psk_2g_wpa2
-        obj.psk_data["2g"]["wpa2"]["vlan"] =command_line_args.psk_2g_wpa2
-    if command_line_args.psk_2g_wpa:
-        obj.psk_data["2g"]["wpa"]["name"] = command_line_args.psk_2g_wpa
-        obj.psk_data["2g"]["wpa"]["nat"] = command_line_args.psk_2g_wpa
-        obj.psk_data["2g"]["wpa"]["nat"] = command_line_args.psk_2g_wpa
-    if command_line_args.ssid_5g_wpa2:
-        obj.ssid_data["5g"]["wpa2"]["name"] = command_line_args.ssid_5g_wpa2
-        obj.ssid_data["5g"]["wpa2"]["nat"] = command_line_args.ssid_5g_wpa2
-        obj.ssid_data["5g"]["wpa2"]["vlan"] = command_line_args.ssid_5g_wpa2
-    if command_line_args.ssid_5g_wpa:
-        obj.ssid_data["5g"]["wpa"]["name"] = command_line_args.ssid_5g_wpa
-        obj.ssid_data["5g"]["wpa"]["nat"] = command_line_args.ssid_5g_wpa
-        obj.ssid_data["5g"]["wpa"]["vlan"] = command_line_args.ssid_5g_wpa
-    if command_line_args.ssid_2g_wpa2:
-        obj.ssid_data["2g"]["wpa2"]["name"] = command_line_args.ssid_2g_wpa2
-        obj.ssid_data["2g"]["wpa2"]["nat"] = command_line_args.ssid_2g_wpa2
-        obj.ssid_data["2g"]["wpa2"]["vlan"] = command_line_args.ssid_2g_wpa2
-    if command_line_args.ssid_2g_wpa:
-        obj.ssid_data["2g"]["wpa"]["name"] = command_line_args.ssid_2g_wpa
-        obj.ssid_data["2g"]["wpa"]["nat"] = command_line_args.ssid_2g_wpa
-        obj.ssid_data["2g"]["wpa"]["vlan"] = command_line_args.ssid_2g_wpa
+
+    args = command_line_args
+
+    print("Profiles Created")
+
+    ap_object = CreateAPProfiles(args, cloud=cloud, client=client, fw_model=fw_model)
+
+    # Logic to create AP Profiles (Bridge Mode)
+
+    ap_object.set_ssid_psk_data(ssid_2g_wpa=args.ssid_2g_wpa,
+                                ssid_5g_wpa=args.ssid_5g_wpa,
+                                psk_2g_wpa=args.psk_2g_wpa,
+                                psk_5g_wpa=args.psk_5g_wpa,
+                                ssid_2g_wpa2=args.ssid_2g_wpa2,
+                                ssid_5g_wpa2=args.ssid_5g_wpa2,
+                                psk_2g_wpa2=args.psk_2g_wpa2,
+                                psk_5g_wpa2=args.psk_5g_wpa2)
+
+    print(ap_object)
 
     print("creating Profiles")
     ssid_template = "TipWlan-Cloud-Wifi"
 
+    if not args.skip_profiles:
+        if not args.skip_radius:
+            # Radius Profile needs to be set here
+            # obj.create_radius_profile(radius_name, rid, key)
+            pass
+        ap_object.create_ssid_profiles(ssid_template=ssid_template, skip_eap=True, mode=args.mode)
 
-
-    if not command_line_args.skip_profiles:
-        if not command_line_args.skip_radius:
-            obj.create_radius_profile(radius_name, rid, key)
-        obj.create_ssid_profiles(ssid_template=ssid_template, skip_wpa2=command_line_args.skip_wpa2,
-                                 skip_wpa=command_line_args.skip_wpa, skip_eap=command_line_args.skip_radius)
-
-    print("Create AP with equipment-id: ", equipment_id)
-    obj.create_ap_bridge_profile(eq_id=equipment_id, fw_model=fw_model)
-    obj.validate_changes()
+        print("Create AP with equipment-id: ", equipment_id)
+        ap_object.create_ap_profile(eq_id=equipment_id, fw_model=fw_model, mode=args.mode)
+        ap_object.validate_changes(mode=args.mode)
 
     print("Profiles Created")
 
-main()
 
+main()

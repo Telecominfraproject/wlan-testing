@@ -57,7 +57,7 @@ class NightlySanity:
                         print("Found equipment ID: %s  inventoryId: %s",
                               e['id'], e['inventoryId'])
                         self.equipment_id = str(e['id'])
-        if self.equipment_id == -1:
+        if self.equipment_id == "-1":
             print("ERROR:  Could not find equipment-id.")
             exit()
 
@@ -158,8 +158,8 @@ class NightlySanity:
             self.reporting.update_json_report(self.report_data)
 
             self.ap_object = CreateAPProfiles(self.args, cloud=self.cloud, client=self.client, fw_model=self.model)
-
-            # Logic to create AP Profiles (Bridge Mode)
+            #
+            # # Logic to create AP Profiles (Bridge Mode)
             nprefix = "%s-Nightly"%(self.args.testbed)
             self.ap_object.set_ssid_psk_data(ssid_2g_wpa="%s-SSID-2G-WPA"%(nprefix),
                                              ssid_5g_wpa="%s-SSID-5G-WPA"%(nprefix),
@@ -181,7 +181,7 @@ class NightlySanity:
                 self.ap_object.create_ssid_profiles(ssid_template=ssid_template, skip_eap=True, mode="bridge")
 
                 print("Create AP with equipment-id: ", self.equipment_id)
-                self.ap_object.create_ap_bridge_profile(eq_id=self.equipment_id, fw_model=self.model, mode="bridge")
+                self.ap_object.create_ap_profile(eq_id=self.equipment_id, fw_model=self.model, mode="bridge")
                 self.ap_object.validate_changes(mode="bridge")
 
             print("Profiles Created")
@@ -191,6 +191,8 @@ class NightlySanity:
 
             time.sleep(10)
             self.reporting.update_json_report(report_data=self.ap_object.report_data)
+
+            self.ap_object = CreateAPProfiles(self.args, cloud=self.cloud, client=self.client, fw_model=self.model)
 
             # Logic to create AP Profiles (NAT Mode)
             self.ap_object.set_ssid_psk_data(ssid_2g_wpa="%s-SSID-NAT-2G-WPA"%(nprefix),
@@ -213,7 +215,7 @@ class NightlySanity:
                 self.ap_object.create_ssid_profiles(ssid_template=ssid_template, skip_eap=True, mode="nat")
 
                 print("Create AP with equipment-id: ", self.equipment_id)
-                self.ap_object.create_ap_bridge_profile(eq_id=self.equipment_id, fw_model=self.model, mode="nat")
+                self.ap_object.create_ap_profile(eq_id=self.equipment_id, fw_model=self.model, mode="nat")
                 self.ap_object.validate_changes(mode="nat")
 
             self.test_2g(mode="nat")

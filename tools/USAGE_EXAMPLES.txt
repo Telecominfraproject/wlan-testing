@@ -24,7 +24,8 @@ The ports are used as:
 Testbed-01
 
 # Set AP profile on NOLA-01
-./sdk_set_profile.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 8803   --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --lanforge-ip-address localhost --lanforge-port-number 8802   --default-ap-profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc.cicd.lab.wlan.tip.build   --skip-radius --skip-wpa --verbose --testbed "NOLA-01" --ssid-5g-wpa2 Default-SSID-5gl --psk-5g-wpa2 12345678   --ssid-2g-wpa2 Default-SSID-2g --psk-2g-wpa2 12345678
+./sdk_set_profile.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 8803   --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --lanforge-ip-address localhost --lanforge-port-number 8802   --default-ap-profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc.cicd.lab.wlan.tip.build   --skip-radius --skip-wpa --verbose --testbed "NOLA-01" --ssid-5g-wpa2 Default-SSID-5gl --psk-5g-wpa2 12345678   --ssid-2g-wpa2 Default-SSID-2g --psk-2g-wpa2 12345678 --mode bridge
+
 
 
 Testbed-09 (perfecto)

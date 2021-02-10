@@ -1269,7 +1269,7 @@ class CreateAPProfiles:
                                             msg='2.4G WPA SSID create failed - ' + mode + ' mode')
                 self.test_cases["ssid_2g_wpa_" + mode] = "failed"
 
-    def create_ap_bridge_profile(self, eq_id=None, fw_model=None, mode="bridge"):
+    def create_ap_profile(self, eq_id=None, fw_model=None, mode="bridge"):
         self.ssid_prof_config = []
         self.ssid_config = []
         self.fw_model = fw_model
@@ -1313,7 +1313,7 @@ class CreateAPProfiles:
             self.child_profiles.append(self.radius_profile)
             # EAP ssid profiles would have been added above if they existed.
 
-        name = self.command_line_args.testbed + "-" + self.fw_model + "_" + mode
+        name = self.command_line_args.testbed + "-" + self.fw_model + "_" + self.mode
 
         print("child profiles: ", self.child_profiles)
 
@@ -1325,17 +1325,17 @@ class CreateAPProfiles:
                                                                             self.child_profiles)
             self.test_profile_id = self.create_ap_profile
             print("Test Profile ID for Test is:", self.test_profile_id)
-            self.client.update_testrail(case_id=self.test_cases["ap_"+mode], run_id=self.rid, status_id=1,
+            self.client.update_testrail(case_id=self.test_cases["ap_"+ self.mode], run_id=self.rid, status_id=1,
                                         msg='AP profile for ' + mode + ' tests created successfully')
-            self.test_cases["ap_"+mode] = "passed"
+            self.test_cases["ap_"+self.mode] = "passed"
         except Exception as ex:
             print(ex)
             logging.error(logging.traceback.format_exc())
             create_ap_profile = "error"
             print("Error creating AP profile for bridge tests. Will use existing AP profile")
-            self.client.update_testrail(case_id=self.test_cases["ap_"+mode], run_id=self.rid, status_id=5,
+            self.client.update_testrail(case_id=self.test_cases["ap_"+self.mode], run_id=self.rid, status_id=5,
                                         msg='AP profile for ' + mode + ' tests could not be created using API')
-            self.test_cases["ap_"+mode] = "failed"
+            self.test_cases["ap_"+self.mode] = "failed"
 
         self.ap_profile = self.cloud.set_ap_profile(eq_id, self.test_profile_id, self.command_line_args.sdk_base_url,
                                                     self.bearer)
