@@ -160,14 +160,15 @@ class NightlySanity:
             self.ap_object = CreateAPProfiles(self.args, cloud=self.cloud, client=self.client, fw_model=self.model)
 
             # Logic to create AP Profiles (Bridge Mode)
-            self.ap_object.set_ssid_psk_data(ssid_2g_wpa="Nightly-SSID-2G-WPA",
-                                             ssid_5g_wpa="Nightly-SSID-5G-WPA",
-                                             psk_2g_wpa="Nightly_2g_wpa",
-                                             psk_5g_wpa="Nightly_5g_wpa",
-                                             ssid_2g_wpa2="Nightly-SSID-2G-WPA2",
-                                             ssid_5g_wpa2="Nightly-SSID-5G-WPA2",
-                                             psk_2g_wpa2="Nightly_2g_wpa2",
-                                             psk_5g_wpa2="Nightly_5g_wpa2")
+            nprefix = "%s-Nightly"%(self.args.testbed)
+            self.ap_object.set_ssid_psk_data(ssid_2g_wpa="%s-SSID-2G-WPA"%(nprefix),
+                                             ssid_5g_wpa="%s-SSID-5G-WPA"%(nprefix),
+                                             psk_2g_wpa="%s_2g_wpa"%(nprefix),
+                                             psk_5g_wpa="%s_5g_wpa"%(nprefix),
+                                             ssid_2g_wpa2="%s-SSID-2G-WPA2"%(nprefix),
+                                             ssid_5g_wpa2="%s-SSID-5G-WPA2"%(nprefix),
+                                             psk_2g_wpa2="%s_2g_wpa2"%(nprefix),
+                                             psk_5g_wpa2="%s_5g_wpa2"%(nprefix))
 
             print("creating Profiles")
             ssid_template = "TipWlan-Cloud-Wifi"
@@ -179,9 +180,9 @@ class NightlySanity:
                     pass
                 self.ap_object.create_ssid_profiles(ssid_template=ssid_template, skip_eap=True, mode="bridge")
 
-            print("Create AP with equipment-id: ", self.equipment_id)
-            self.ap_object.create_ap_bridge_profile(eq_id=self.equipment_id, fw_model=self.model, mode="bridge")
-            self.ap_object.validate_changes(mode="bridge")
+                print("Create AP with equipment-id: ", self.equipment_id)
+                self.ap_object.create_ap_bridge_profile(eq_id=self.equipment_id, fw_model=self.model, mode="bridge")
+                self.ap_object.validate_changes(mode="bridge")
 
             print("Profiles Created")
 
@@ -192,14 +193,14 @@ class NightlySanity:
             self.reporting.update_json_report(report_data=self.ap_object.report_data)
 
             # Logic to create AP Profiles (NAT Mode)
-            self.ap_object.set_ssid_psk_data(ssid_2g_wpa="Nightly-SSID-NAT-2G-WPA",
-                                             ssid_5g_wpa="Nightly-SSID-NAT-5G-WPA",
-                                             psk_2g_wpa="Nightly_2g_nat_wpa",
-                                             psk_5g_wpa="Nightly_5g_nat_wpa",
-                                             ssid_2g_wpa2="Nightly-SSID-NAT-2G-WPA2",
-                                             ssid_5g_wpa2="Nightly-SSID-NAT-5G-WPA2",
-                                             psk_2g_wpa2="Nightly_2g_nat_wpa2",
-                                             psk_5g_wpa2="Nightly_5g_nat_wpa2")
+            self.ap_object.set_ssid_psk_data(ssid_2g_wpa="%s-SSID-NAT-2G-WPA"%(nprefix),
+                                             ssid_5g_wpa="%s-SSID-NAT-5G-WPA"%(nprefix),
+                                             psk_2g_wpa="%s_2g_nat_wpa"%(nprefix),
+                                             psk_5g_wpa="%s_5g_nat_wpa"%(nprefix),
+                                             ssid_2g_wpa2="%s-SSID-NAT-2G-WPA2"%(nprefix),
+                                             ssid_5g_wpa2="%s-SSID-NAT-5G-WPA2"%(nprefix),
+                                             psk_2g_wpa2="%s_2g_nat_wpa2"%(nprefix),
+                                             psk_5g_wpa2="%s_5g_nat_wpa2"%(nprefix))
 
             print("creating Profiles")
             ssid_template = "TipWlan-Cloud-Wifi"
@@ -211,9 +212,9 @@ class NightlySanity:
                     pass
                 self.ap_object.create_ssid_profiles(ssid_template=ssid_template, skip_eap=True, mode="nat")
 
-            print("Create AP with equipment-id: ", self.equipment_id)
-            self.ap_object.create_ap_bridge_profile(eq_id=self.equipment_id, fw_model=self.model, mode="nat")
-            self.ap_object.validate_changes(mode="nat")
+                print("Create AP with equipment-id: ", self.equipment_id)
+                self.ap_object.create_ap_bridge_profile(eq_id=self.equipment_id, fw_model=self.model, mode="nat")
+                self.ap_object.validate_changes(mode="nat")
 
             self.test_2g(mode="nat")
             self.test_5g(mode="nat")
@@ -243,11 +244,6 @@ class NightlySanity:
 
     def test_2g(self, mode="bridge"):
 
-        if mode == "bridge":
-            mode_a = "name"
-        if mode == "nat":
-            mode_a = "nat"
-
         if not self.args.skip_radius:
             # Run Client Single Connectivity Test Cases for Bridge SSIDs
             # TC5214 - 2.4 GHz WPA2-Enterprise
@@ -273,8 +269,8 @@ class NightlySanity:
         # TC - 2.4 GHz WPA2
         test_case = test_cases["2g_wpa2_" + mode]
         station = [self.lanforge_data['prefix'] + "2237"]
-        ssid_name = self.ap_object.ssid_data['2g']['wpa2'][mode_a]
-        ssid_psk = self.ap_object.psk_data['2g']['wpa2'][mode_a]
+        ssid_name = self.ap_object.ssid_data['2g']['wpa2'][mode]
+        ssid_psk = self.ap_object.psk_data['2g']['wpa2'][mode]
         security = "wpa2"
         upstream_port = "eth2"
         print(self.lanforge_data['port'])
@@ -299,8 +295,8 @@ class NightlySanity:
         # TC - 2.4 GHz WPA
         test_case = test_cases["2g_wpa_" + mode]
         station = [self.lanforge_data['prefix'] + "2420"]
-        ssid_name = self.ap_object.ssid_data['2g']['wpa'][mode_a]
-        ssid_psk = self.ap_object.psk_data['2g']['wpa'][mode_a]
+        ssid_name = self.ap_object.ssid_data['2g']['wpa'][mode]
+        ssid_psk = self.ap_object.psk_data['2g']['wpa'][mode]
         security = "wpa"
         upstream_port = "eth2"
         print(self.lanforge_data['port'])
@@ -322,12 +318,6 @@ class NightlySanity:
         time.sleep(10)
 
     def test_5g(self, mode="bridge"):
-
-        if mode == "bridge":
-            mode_a = "name"
-        if mode == "nat":
-            mode_a = "nat"
-
         if not self.args.skip_radius:
             # TC - 5 GHz WPA2-Enterprise
             test_case = self.test_cases["5g_eap_" + mode]
@@ -351,8 +341,8 @@ class NightlySanity:
         # TC 5 GHz WPA2
         test_case = test_cases["5g_wpa2_" + mode]
         station = [self.lanforge_data['prefix'] + "2236"]
-        ssid_name = self.ap_object.ssid_data['5g']['wpa2'][mode_a]
-        ssid_psk = self.ap_object.psk_data['5g']['wpa2'][mode_a]
+        ssid_name = self.ap_object.ssid_data['5g']['wpa2'][mode]
+        ssid_psk = self.ap_object.psk_data['5g']['wpa2'][mode]
         security = "wpa2"
         upstream_port = "eth2"
         try:
@@ -375,8 +365,8 @@ class NightlySanity:
         # # TC - 5 GHz WPA
         test_case = test_cases["5g_wpa_" + mode]
         station = [self.lanforge_data['prefix'] + "2419"]
-        ssid_name = self.ap_object.ssid_data['5g']['wpa'][mode_a]
-        ssid_psk = self.ap_object.psk_data['5g']['wpa'][mode_a]
+        ssid_name = self.ap_object.ssid_data['5g']['wpa'][mode]
+        ssid_psk = self.ap_object.psk_data['5g']['wpa'][mode]
         security = "wpa"
         upstream_port = "eth2"
         try:
