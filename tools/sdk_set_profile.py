@@ -94,8 +94,6 @@ def main():
     lanforge_ip = command_line_args.lanforge_ip_address
     lanforge_port = command_line_args.lanforge_port_number
     lanforge_prefix = command_line_args.lanforge_prefix
-    lanforge_2g_radio = command_line_args.lanforge_2g_radio
-    lanforge_5g_radio = command_line_args.lanforge_5g_radio
 
     build = command_line_args.build_id
 
@@ -124,7 +122,7 @@ def main():
         print("EQ Id: %s" % (eq_id))
 
         # Now, query equipment to find something that matches.
-        eq = cloud.get_customer_equipment(cloudSDK_url, bearer, customer_id)
+        eq = cloud.get_customer_equipment(customer_id)
         for item in eq:
             for e in item['items']:
                 print(e['id'], "  ", e['inventoryId'])

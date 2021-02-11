@@ -92,117 +92,262 @@ from lab_ap_info import cloud_type
 from lab_ap_info import test_cases
 from lab_ap_info import radius_info
 
+# keep in sync with that below.
+def add_base_parse_args(parser):
+    parser.add_argument("-b", "--build-id", type=str,
+                             help="FW commit ID (latest pending build on dev is default)",
+                             default="pending")
+    parser.add_argument("--skip-upgrade", type=bool, help="Skip upgrading firmware",
+                             default=False)
+    parser.add_argument("--force-upgrade", type=bool,
+                             help="Force upgrading firmware even if it is already current version",
+                             default=False)
+    parser.add_argument("-m", "--model", type=str,
+                             choices=['ea8300', 'ecw5410', 'ecw5211', 'ec420', 'wf188n', 'eap102', 'None'],
+                             help="AP model to be run", required=True)
+    parser.add_argument("--equipment-id", type=str,
+                             help="AP model ID, as exists in the cloud-sdk.  -1 to auto-detect.",
+                             default="-1")
+    parser.add_argument("--object-id", type=str,
+                             help="Used when querying and deleting individual objects.",
+                             default=None)
+    parser.add_argument("--customer-id", type=str,
+                             help="Specify cloud customer-id, default is 2",
+                             default="2")
+    parser.add_argument("--testbed", type=str,
+                             help="Testbed name, will be prefixed to profile names and similar",
+                             default=None)
+
+    parser.add_argument("--sdk-base-url", type=str,
+                             help="cloudsdk base url, default: https://wlan-portal-svc.cicd.lab.wlan.tip.build",
+                             default="https://wlan-portal-svc.cicd.lab.wlan.tip.build")
+    parser.add_argument("--sdk-user-id", type=str, help="cloudsdk user id, default: support@example.conf",
+                             default="support@example.com")
+    parser.add_argument("--sdk-user-password", type=str, help="cloudsdk user password, default:  support",
+                             default="support")
+
+    parser.add_argument("--jfrog-base-url", type=str, help="jfrog base url",
+                             default="tip.jFrog.io/artifactory/tip-wlan-ap-firmware")
+    parser.add_argument("--jfrog-user-id", type=str, help="jfrog user id",
+                             default="tip-read")
+    parser.add_argument("--jfrog-user-password", type=str, help="jfrog user password",
+                             default="tip-read")
+
+    parser.add_argument("--testrail-base-url", type=str, help="testrail base url",
+                             # was os.getenv('TESTRAIL_URL')
+                             default="https://telecominfraproject.testrail.com")
+    parser.add_argument("--testrail-project", type=str, help="testrail project name",
+                             default="opsfleet-wlan")
+    parser.add_argument("--testrail-user-id", type=str,
+                             help="testrail user id.  Use 'NONE' to disable use of testrails.",
+                             default="NONE")
+    parser.add_argument("--testrail-user-password", type=str, help="testrail user password",
+                             default="password")
+    parser.add_argument("--testrail-run-prefix", type=str, help="testrail run prefix",
+                             default="prefix-1")
+    parser.add_argument("--milestone", type=str, help="testrail milestone ID",
+                             default="milestone-1")
+
+    parser.add_argument("--lanforge-ip-address", type=str, help="ip address of the lanforge gui",
+                             default="127.0.0.1")
+    parser.add_argument("--lanforge-port-number", type=str, help="port of the lanforge gui",
+                             default="8080")
+    parser.add_argument("--lanforge-prefix", type=str, help="LANforge api prefix string",
+                             default="sdk")
+    parser.add_argument("--lanforge-2g-radio", type=str, help="LANforge 2Ghz radio to use for testing",
+                             default="1.1.wiphy0")
+    parser.add_argument("--lanforge-5g-radio", type=str, help="LANforge 5Ghz radio to use for testing",
+                             default="1.1.wiphy1")
+
+    parser.add_argument("--local_dir", type=str, help="Sanity logging directory",
+                             default="logs")
+    parser.add_argument("--report-path", type=str, help="Sanity report directory",
+                             default="reports")
+    parser.add_argument("--report-template", type=str, help="Sanity report template",
+                             default="reports/report_template.php")
+
+    parser.add_argument("--eap-id", type=str, help="EAP indentity",
+                             default="lanforge")
+    parser.add_argument("--ttls-password", type=str, help="TTLS password",
+                             default="lanforge")
+
+    parser.add_argument("--ap-ip", type=str, help="AP IP Address, for direct ssh access if not using jumphost",
+                             default="127.0.0.1")
+    parser.add_argument("--ap-username", type=str, help="AP username",
+                             default="root")
+    parser.add_argument("--ap-password", type=str, help="AP password",
+                             default="root")
+    parser.add_argument("--ap-jumphost-address", type=str,
+                             help="IP of system that we can ssh in to get serial console access to AP",
+                             default=None)
+    parser.add_argument("--ap-jumphost-port", type=str,
+                             help="SSH port to use in case we are using ssh tunneling or other non-standard ports",
+                             default="22")
+    parser.add_argument("--ap-jumphost-username", type=str,
+                             help="User-ID for system that we can ssh in to get serial console access to AP",
+                             default="lanforge")
+    parser.add_argument("--ap-jumphost-password", type=str,
+                             help="Passwort for system that we can ssh in to get serial console access to AP",
+                             default="lanforge")
+    parser.add_argument("--ap-jumphost-wlan-testing", type=str, help="wlan-testing repo dir on the jumphost",
+                             default="git/wlan-testing")
+    parser.add_argument("--ap-jumphost-tty", type=str, help="Serial port for the AP we wish to talk to",
+                             default="UNCONFIGURED-JUMPHOST-TTY")
+
+    parser.add_argument('--skip-update-firmware', dest='update_firmware', action='store_false')
+    parser.set_defaults(update_firmware=True)
+
+    parser.add_argument('--verbose', dest='verbose', action='store_true')
+    parser.set_defaults(verbose=False)
+
+
+# Keep in sync with that above
+def add_base_parse_args_pytest(parser):
+    parser.addoption("--default-ap-profile", type=str,
+                        help="Default AP profile to use as basis for creating new ones, typically: TipWlan-2-Radios or TipWlan-3-Radios",
+                        default="TipWlan-2-Radios")
+    parser.addoption("--skip-radius", dest="skip_radius", action='store_true',
+                        help="Should we skip the RADIUS configs or not")
+    parser.addoption("--skip-profiles", dest="skip_profiles", action='store_true',
+                        help="Should we skip applying profiles?")
+    parser.addoption("--skip-wpa", dest="skip_wpa", action='store_false',
+                        help="Should we skip applying profiles?")
+    parser.addoption("--skip-wpa2", dest="skip_wpa2", action='store_false',
+                        help="Should we skip applying profiles?")
+
+    parser.addoption("--psk-5g-wpa2", dest="psk_5g_wpa2", type=str,
+                        help="Allow over-riding the 5g-wpa2 PSK value.")
+    parser.addoption("--psk-5g-wpa", dest="psk_5g_wpa", type=str,
+                        help="Allow over-riding the 5g-wpa PSK value.")
+    parser.addoption("--psk-2g-wpa2", dest="psk_2g_wpa2", type=str,
+                        help="Allow over-riding the 2g-wpa2 PSK value.")
+    parser.addoption("--psk-2g-wpa", dest="psk_2g_wpa", type=str,
+                        help="Allow over-riding the 2g-wpa PSK value.")
+
+    parser.addoption("--ssid-5g-wpa2", dest="ssid_5g_wpa2", type=str,
+                        help="Allow over-riding the 5g-wpa2 SSID value.")
+    parser.addoption("--ssid-5g-wpa", dest="ssid_5g_wpa",  type=str,
+                        help="Allow over-riding the 5g-wpa SSID value.")
+    parser.addoption("--ssid-2g-wpa2", dest="ssid_2g_wpa2", type=str,
+                        help="Allow over-riding the 2g-wpa2 SSID value.")
+    parser.addoption("--ssid-2g-wpa", dest="ssid_2g_wpa", type=str,
+                        help="Allow over-riding the 2g-wpa SSID value.")
+
+    parser.addoption("--mode", dest="mode", choices=['bridge', 'nat', 'vlan'], type=str,
+                        help="Mode of AP Profile [bridge/nat/vlan]", default="bridge")
+
+    parser.addoption("--build-id", type=str,
+                             help="FW commit ID (latest pending build on dev is default)",
+                             default="pending")
+    parser.addoption("--skip-upgrade", type=bool, help="Skip upgrading firmware",
+                             default=False)
+    parser.addoption("--force-upgrade", type=bool,
+                             help="Force upgrading firmware even if it is already current version",
+                             default=False)
+    # --access-points instead
+    # parser.addoption("--model", type=str,
+    #                          choices=['ea8300', 'ecw5410', 'ecw5211', 'ec420', 'wf188n', 'eap102', 'None'],
+    #                          help="AP model to be run", required=True)
+    parser.addoption("--equipment-id", type=str,
+                             help="AP model ID, as exists in the cloud-sdk.  -1 to auto-detect.",
+                             default="-1")
+    parser.addoption("--object-id", type=str,
+                             help="Used when querying and deleting individual objects.",
+                             default=None)
+    parser.addoption("--customer-id", type=str,
+                             help="Specify cloud customer-id, default is 2",
+                             default="2")
+    parser.addoption("--testbed", type=str,
+                             help="Testbed name, will be prefixed to profile names and similar",
+                             default=None)
+
+    parser.addoption("--sdk-base-url", type=str,
+                             help="cloudsdk base url, default: https://wlan-portal-svc.cicd.lab.wlan.tip.build",
+                             default="https://wlan-portal-svc.cicd.lab.wlan.tip.build")
+    parser.addoption("--sdk-user-id", type=str, help="cloudsdk user id, default: support@example.conf",
+                             default="support@example.com")
+    parser.addoption("--sdk-user-password", type=str, help="cloudsdk user password, default:  support",
+                             default="support")
+
+    parser.addoption("--jfrog-base-url", type=str, help="jfrog base url",
+                             default="tip.jFrog.io/artifactory/tip-wlan-ap-firmware")
+    parser.addoption("--jfrog-user-id", type=str, help="jfrog user id",
+                             default="tip-read")
+    parser.addoption("--jfrog-user-password", type=str, help="jfrog user password",
+                             default="tip-read")
+
+    parser.addoption("--testrail-base-url", type=str, help="testrail base url",
+                             # was os.getenv('TESTRAIL_URL')
+                             default="https://telecominfraproject.testrail.com")
+    parser.addoption("--testrail-project", type=str, help="testrail project name",
+                             default="opsfleet-wlan")
+    parser.addoption("--testrail-user-id", type=str,
+                             help="testrail user id.  Use 'NONE' to disable use of testrails.",
+                             default="NONE")
+    parser.addoption("--testrail-user-password", type=str, help="testrail user password",
+                             default="password")
+    parser.addoption("--testrail-run-prefix", type=str, help="testrail run prefix",
+                             default="prefix-1")
+    parser.addoption("--milestone", type=str, help="testrail milestone ID",
+                             default="milestone-1")
+
+    parser.addoption("--lanforge-ip-address", type=str, help="ip address of the lanforge gui",
+                             default="127.0.0.1")
+    parser.addoption("--lanforge-port-number", type=str, help="port of the lanforge gui",
+                             default="8080")
+    parser.addoption("--lanforge-prefix", type=str, help="LANforge api prefix string",
+                             default="sdk")
+    parser.addoption("--lanforge-2g-radio", type=str, help="LANforge 2Ghz radio to use for testing",
+                             default="1.1.wiphy0")
+    parser.addoption("--lanforge-5g-radio", type=str, help="LANforge 5Ghz radio to use for testing",
+                             default="1.1.wiphy1")
+
+    parser.addoption("--local_dir", type=str, help="Sanity logging directory",
+                             default="logs")
+    parser.addoption("--report-path", type=str, help="Sanity report directory",
+                             default="reports")
+    parser.addoption("--report-template", type=str, help="Sanity report template",
+                             default="reports/report_template.php")
+
+    parser.addoption("--eap-id", type=str, help="EAP indentity",
+                             default="lanforge")
+    parser.addoption("--ttls-password", type=str, help="TTLS password",
+                             default="lanforge")
+
+    parser.addoption("--ap-ip", type=str, help="AP IP Address, for direct ssh access if not using jumphost",
+                             default="127.0.0.1")
+    parser.addoption("--ap-username", type=str, help="AP username",
+                             default="root")
+    parser.addoption("--ap-password", type=str, help="AP password",
+                             default="root")
+    parser.addoption("--ap-jumphost-address", type=str,
+                             help="IP of system that we can ssh in to get serial console access to AP",
+                             default=None)
+    parser.addoption("--ap-jumphost-port", type=str,
+                             help="SSH port to use in case we are using ssh tunneling or other non-standard ports",
+                             default="22")
+    parser.addoption("--ap-jumphost-username", type=str,
+                             help="User-ID for system that we can ssh in to get serial console access to AP",
+                             default="lanforge")
+    parser.addoption("--ap-jumphost-password", type=str,
+                             help="Passwort for system that we can ssh in to get serial console access to AP",
+                             default="lanforge")
+    parser.addoption("--ap-jumphost-wlan-testing", type=str, help="wlan-testing repo dir on the jumphost",
+                             default="git/wlan-testing")
+    parser.addoption("--ap-jumphost-tty", type=str, help="Serial port for the AP we wish to talk to",
+                             default="UNCONFIGURED-JUMPHOST-TTY")
+
+    parser.addoption('--skip-update-firmware', dest='update_firmware', action='store_false', default=True)
+
+    parser.addoption('--tip-verbose', dest='verbose', action='store_true', default=False)
+
 
 class UnitTestBase:
 
     def __init__(self, log_name, args, reporting=None):
         self.parser = argparse.ArgumentParser(description="Sanity Testing on Firmware Build", parents=[args])
 
-        self.parser.add_argument("-b", "--build-id", type=str,
-                                 help="FW commit ID (latest pending build on dev is default)",
-                                 default="pending")
-        self.parser.add_argument("--skip-upgrade", type=bool, help="Skip upgrading firmware",
-                                 default=False)
-        self.parser.add_argument("--force-upgrade", type=bool,
-                                 help="Force upgrading firmware even if it is already current version",
-                                 default=False)
-        self.parser.add_argument("-m", "--model", type=str,
-                                 choices=['ea8300', 'ecw5410', 'ecw5211', 'ec420', 'wf188n', 'eap102', 'None'],
-                                 help="AP model to be run", required=True)
-        self.parser.add_argument("--equipment_id", type=str,
-                                 help="AP model ID, as exists in the cloud-sdk.  -1 to auto-detect.",
-                                 default="-1")
-        self.parser.add_argument("--object_id", type=str,
-                                 help="Used when querying and deleting individual objects.",
-                                 default=None)
-        self.parser.add_argument("--customer-id", type=str,
-                                 help="Specify cloud customer-id, default is 2",
-                                 default="2")
-        self.parser.add_argument("--testbed", type=str,
-                                 help="Testbed name, will be prefixed to profile names and similar",
-                                 default=None)
-
-        self.parser.add_argument("--sdk-base-url", type=str,
-                                 help="cloudsdk base url, default: https://wlan-portal-svc.cicd.lab.wlan.tip.build",
-                                 default="https://wlan-portal-svc.cicd.lab.wlan.tip.build")
-        self.parser.add_argument("--sdk-user-id", type=str, help="cloudsdk user id, default: support@example.conf",
-                                 default="support@example.com")
-        self.parser.add_argument("--sdk-user-password", type=str, help="cloudsdk user password, default:  support",
-                                 default="support")
-
-        self.parser.add_argument("--jfrog-base-url", type=str, help="jfrog base url",
-                                 default="tip.jFrog.io/artifactory/tip-wlan-ap-firmware")
-        self.parser.add_argument("--jfrog-user-id", type=str, help="jfrog user id",
-                                 default="tip-read")
-        self.parser.add_argument("--jfrog-user-password", type=str, help="jfrog user password",
-                                 default="tip-read")
-
-        self.parser.add_argument("--testrail-base-url", type=str, help="testrail base url",
-                                 # was os.getenv('TESTRAIL_URL')
-                                 default="https://telecominfraproject.testrail.com")
-        self.parser.add_argument("--testrail-project", type=str, help="testrail project name",
-                                 default="opsfleet-wlan")
-        self.parser.add_argument("--testrail-user-id", type=str,
-                                 help="testrail user id.  Use 'NONE' to disable use of testrails.",
-                                 default="gleb@opsfleet.com")
-        self.parser.add_argument("--testrail-user-password", type=str, help="testrail user password",
-                                 default="password")
-        self.parser.add_argument("--testrail-run-prefix", type=str, help="testrail run prefix",
-                                 default="prefix-1")
-        self.parser.add_argument("--milestone", type=str, help="testrail milestone ID",
-                                 default="milestone-1")
-
-        self.parser.add_argument("--lanforge-ip-address", type=str, help="ip address of the lanforge gui",
-                                 default="127.0.0.1")
-        self.parser.add_argument("--lanforge-port-number", type=str, help="port of the lanforge gui",
-                                 default="8080")
-        self.parser.add_argument("--lanforge-prefix", type=str, help="LANforge api prefix string",
-                                 default="sdk")
-        self.parser.add_argument("--lanforge-2g-radio", type=str, help="LANforge 2Ghz radio to use for testing",
-                                 default="1.1.wiphy0")
-        self.parser.add_argument("--lanforge-5g-radio", type=str, help="LANforge 5Ghz radio to use for testing",
-                                 default="1.1.wiphy1")
-
-        self.parser.add_argument("--local_dir", type=str, help="Sanity logging directory",
-                                 default="logs")
-        self.parser.add_argument("--report-path", type=str, help="Sanity report directory",
-                                 default="reports")
-        self.parser.add_argument("--report-template", type=str, help="Sanity report template",
-                                 default="reports/report_template.php")
-
-        self.parser.add_argument("--eap-id", type=str, help="EAP indentity",
-                                 default="lanforge")
-        self.parser.add_argument("--ttls-password", type=str, help="TTLS password",
-                                 default="lanforge")
-
-        self.parser.add_argument("--ap-ip", type=str, help="AP IP Address, for direct ssh access if not using jumphost",
-                                 default="127.0.0.1")
-        self.parser.add_argument("--ap-username", type=str, help="AP username",
-                                 default="root")
-        self.parser.add_argument("--ap-password", type=str, help="AP password",
-                                 default="root")
-        self.parser.add_argument("--ap-jumphost-address", type=str,
-                                 help="IP of system that we can ssh in to get serial console access to AP",
-                                 default=None)
-        self.parser.add_argument("--ap-jumphost-port", type=str,
-                                 help="SSH port to use in case we are using ssh tunneling or other non-standard ports",
-                                 default="22")
-        self.parser.add_argument("--ap-jumphost-username", type=str,
-                                 help="User-ID for system that we can ssh in to get serial console access to AP",
-                                 default="lanforge")
-        self.parser.add_argument("--ap-jumphost-password", type=str,
-                                 help="Passwort for system that we can ssh in to get serial console access to AP",
-                                 default="lanforge")
-        self.parser.add_argument("--ap-jumphost-wlan-testing", type=str, help="wlan-testing repo dir on the jumphost",
-                                 default="git/wlan-testing")
-        self.parser.add_argument("--ap-jumphost-tty", type=str, help="Serial port for the AP we wish to talk to",
-                                 default="UNCONFIGURED-JUMPHOST-TTY")
-
-        self.parser.add_argument('--skip-update-firmware', dest='update_firmware', action='store_false')
-        self.parser.set_defaults(update_firmware=True)
-
-        self.parser.add_argument('--verbose', dest='verbose', action='store_true')
-        self.parser.set_defaults(verbose=False)
+        add_base_parse_args(self.parser)
 
         self.command_line_args = self.parser.parse_args()
 

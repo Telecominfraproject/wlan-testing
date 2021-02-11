@@ -49,7 +49,7 @@ class NightlySanity:
             print("EQ Id: %s" % (eq_id))
 
             # Now, query equipment to find something that matches.
-            eq = self.cloud.get_customer_equipment(args.sdk_base_url, self.bearer, self.customer_id)
+            eq = self.cloud.get_customer_equipment(self.customer_id)
             for item in eq:
                 for e in item['items']:
                     print(e['id'], "  ", e['inventoryId'])

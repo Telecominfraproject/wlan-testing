@@ -136,7 +136,7 @@ if qtype == 'all' or qtype == 'equipment':
     # Get equipment info
     try:
         if cmd == "get":
-            rv = base.cloud.get_customer_equipment(base.cloudSDK_url, base.bearer, base.customer_id)
+            rv = base.cloud.get_customer_equipment(base.customer_id)
             print("Equipment for customer %s:"%(base.customer_id))
             #jobj = json.load(ssids)
             for e in rv:

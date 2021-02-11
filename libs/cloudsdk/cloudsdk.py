@@ -531,9 +531,9 @@ class CloudSDK:
         url_base = cloudSDK_url + "/portal/location/forCustomer" + "?customerId=" + customer_id
         return self.get_paged_url(bearer, url_base)
 
-    def get_customer_equipment(self, cloudSDK_url, bearer, customer_id):
-        url_base = cloudSDK_url + "/portal/equipment/forCustomer" + "?customerId=" + customer_id
-        return self.get_paged_url(bearer, url_base)
+    def get_customer_equipment(self, customer_id):
+        url = self.base_url + "/portal/equipment/forCustomer" + "?customerId=" + customer_id
+        return self.get_paged_url(self.bearer, url)
 
     def get_customer_portal_users(self, cloudSDK_url, bearer, customer_id):
         url_base = cloudSDK_url + "/portal/portalUser/forCustomer" + "?customerId=" + customer_id

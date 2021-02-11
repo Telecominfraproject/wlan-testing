@@ -88,7 +88,7 @@ if equipment_id == "-1":
     print("EQ Id: %s"%(eq_id))
 
     # Now, query equipment to find something that matches.
-    eq = cloud.get_customer_equipment(cloudSDK_url, bearer, customer_id)
+    eq = cloud.get_customer_equipment(customer_id)
     for item in eq:
         for e in item['items']:
             print(e['id'], "  ", e['inventoryId'])

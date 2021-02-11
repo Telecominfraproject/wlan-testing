@@ -1,0 +1,10 @@
+# This assumes you have ssh tunnels set up as suggested in ../tools/USAGE_EXAMPLES.txt
+
+# Attempt to run pytest against nola-12.  Doesn't work, cloud is down, but of course maybe more problems too.
+
+pytest test_24ghz.py --testrail-user-id NONE --ap-jumphost-address localhost --ap-jumphost-port 8823 \
+  --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --lanforge-ip-address localhost --lanforge-port-number 8822 \
+  --default-ap-profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc-ben-testbed.cicd.lab.wlan.tip.build \
+  --skip-radius --skip-wpa --verbose --testbed "NOLA-12c" --ssid-5g-wpa2 Default-SSID-5gl --psk-5g-wpa2 12345678 \
+  --ssid-2g-wpa2 Default-SSID-2g --psk-2g-wpa2 12345678 --mode bridge --access-points wf188n
+
