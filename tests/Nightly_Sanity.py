@@ -78,7 +78,7 @@ class NightlySanity:
 
         # Check if AP needs Upgrade
         if (self.firmware["current"] is not None) and self.firmware["latest"] != self.firmware["current"]:
-            do_upgrade = self.cloud.should_upgrade_ap_fw(self.bearer, self.args, self.report_data,
+            do_upgrade = self.cloud.should_upgrade_ap_fw(self.args.force_upgrade, self.args.skip_upgrade, self.report_data,
                                                          self.firmware["latest"],
                                                          self.args.model,
                                                          self.firmware["current"], self.logger)
@@ -95,7 +95,7 @@ class NightlySanity:
         if do_upgrade:
 
             cloud_model = self.cloud_sdk_models[self.args.model]
-            pf = self.cloud.do_upgrade_ap_fw(self.bearer, self.args, self.report_data, test_cases, self.client,
+            pf = self.cloud.do_upgrade_ap_fw(self.args, self.report_data, test_cases, self.client,
                                              self.firmware["latest"], cloud_model, self.args.model,
                                              self.args.jfrog_user_id, self.args.jfrog_user_password, self.rid,
                                              self.customer_id, self.equipment_id, self.logger)

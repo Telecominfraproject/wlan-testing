@@ -44,6 +44,21 @@ class CloudSDK:
         self.password = command_line_args.sdk_user_password
         self.assert_bad_response = False
         self.verbose = command_line_args.verbose
+        self.base_url = command_line_args.sdk_base_url
+        self.cloud_type = "v1"
+        self.refresh_bearer()
+
+    def __init__(self, id, passwd, url, verbose):
+        self.user = id
+        self.password = passwd
+        self.base_url = url
+        self.assert_bad_response = False
+        self.verbose = verbose
+        self.cloud_type = "v1"
+        self.refresh_bearer()
+
+    def refresh_bearer(self):
+        self.bearer = self.get_bearer(self.base_url, self.cloud_type)
 
     def get_bearer(self, cloudSDK_url, cloud_type):
         cloud_login_url = cloudSDK_url+"/management/"+cloud_type+"/oauth2/token"
@@ -63,6 +78,7 @@ class CloudSDK:
             raise SystemExit("Exiting Script! Cloud not get bearer token for reason:",e)
         token_data = token_response.json()
         bearer_token = token_data['access_token']
+        bearer = bearer_token
         return(bearer_token)
 
     def check_response(self, cmd, response, headers, data_str, url):
@@ -84,14 +100,15 @@ class CloudSDK:
             return False
         return True
 
-    def should_upgrade_ap_fw(self, bearer, command_line_args, report_data, latest_ap_image, fw_model, ap_cli_fw,
+    def should_upgrade_ap_fw(self, force_upgrade, skip_upgrade, report_data, latest_ap_image, fw_model, ap_cli_fw,
                              logger):
         do_upgrade = False
-        if ap_cli_fw == latest_ap_image and command_line_args.force_upgrade != True:
+        if ap_cli_fw == latest_ap_image and force_upgrade != True:
             print('FW does not require updating')
             if report_data:
                 report_data['fw_available'][key] = "No"
-            logger.info(fw_model + " does not require upgrade.")
+            if logger:
+                logger.info(fw_model + " does not require upgrade.")
             cloudsdk_cluster_info = {
                 "date": "N/A",
                 "commitId": "N/A",
@@ -100,11 +117,12 @@ class CloudSDK:
             if report_data:
                 report_data['cloud_sdk'][key] = cloudsdk_cluster_info
 
-        if ap_cli_fw != latest_ap_image and command_line_args.skip_upgrade == True:
+        if ap_cli_fw != latest_ap_image and skip_upgrade == True:
             print('FW needs updating, but skip_upgrade is True, so skipping upgrade')
             if report_data:
                 report_data['fw_available'][key] = "No"
-            logger.info(fw_model + " firmware upgrade skipped, running with " + ap_cli_fw)
+            if logger:
+                logger.info(fw_model + " firmware upgrade skipped, running with " + ap_cli_fw)
             cloudsdk_cluster_info = {
                 "date": "N/A",
                 "commitId": "N/A",
@@ -113,7 +131,7 @@ class CloudSDK:
             if report_data:
                 report_data['cloud_sdk'][key] = cloudsdk_cluster_info
 
-        if (ap_cli_fw != latest_ap_image or command_line_args.force_upgrade == True) and not command_line_args.skip_upgrade:
+        if (ap_cli_fw != latest_ap_image or force_upgrade == True) and not skip_upgrade:
             print('Updating firmware, old: %s  new: %s'%(ap_cli_fw, latest_ap_image))
             do_upgrade = True
             if report_data:
@@ -124,13 +142,15 @@ class CloudSDK:
 
 
     # client is testrail client
-    def do_upgrade_ap_fw(self, bearer, command_line_args, report_data, test_cases, client, ap_image, cloudModel, model,
+    def do_upgrade_ap_fw(self, command_line_args, report_data, test_cases, testrail_client, ap_image, cloudModel, model,
                          jfrog_user, jfrog_pwd, testrails_rid, customer_id, equipment_id, logger):
         ###Test Create Firmware Version
         key = model
         rid = testrails_rid
-        cloudSDK_url = command_line_args.sdk_base_url
-        test_id_fw = test_cases["create_fw"]
+        cloudSDK_url = self.base_url
+        bearer = self.bearer
+        if test_cases:
+            test_id_fw = test_cases["create_fw"]
         print(cloudModel)
         firmware_list_by_model = self.CloudSDK_images(cloudModel, cloudSDK_url, bearer)
         print("Available", cloudModel, "Firmware on CloudSDK:", firmware_list_by_model)
@@ -146,15 +166,17 @@ class CloudSDK:
                                                         bearer)
                 fw_id = fw_upload_status['id']
                 print("Upload Complete.", ap_image, "FW ID is", fw_id)
-                client.update_testrail(case_id=test_id_fw, run_id=rid, status_id=1,
-                                       msg='Create new FW version by API successful')
+                if testrail_client:
+                    testrail_client.update_testrail(case_id=test_id_fw, run_id=rid, status_id=1,
+                                                    msg='Create new FW version by API successful')
                 if report_data:
                     report_data['tests'][key][test_id_fw] = "passed"
             except:
                 fw_upload_status = 'error'
                 print("Unable to upload new FW version. Skipping Sanity on AP Model")
-                client.update_testrail(case_id=test_id_fw, run_id=rid, status_id=5,
-                                       msg='Error creating new FW version by API')
+                if testrail_client:
+                    testrail_client.update_testrail(case_id=test_id_fw, run_id=rid, status_id=5,
+                                                    msg='Error creating new FW version by API')
                 if report_data:
                     report_data['tests'][key][test_id_fw] = "failed"
                 return False
@@ -167,15 +189,17 @@ class CloudSDK:
                                                             bearer)
                 fw_id = fw_upload_status['id']
                 print("Upload Complete.", ap_image, "FW ID is", fw_id)
-                client.update_testrail(case_id=test_id_fw, run_id=rid, status_id=1,
-                                       msg='Create new FW version by API successful')
+                if testrail_client:
+                    testrail_client.update_testrail(case_id=test_id_fw, run_id=rid, status_id=1,
+                                                    msg='Create new FW version by API successful')
                 if report_data:
                     report_data['tests'][key][test_id_fw] = "passed"
             except:
                 fw_upload_status = 'error'
                 print("Unable to upload new FW version. Skipping Sanity on AP Model")
-                client.update_testrail(case_id=test_id_fw, run_id=rid, status_id=5,
-                                       msg='Error creating new FW version by API')
+                if testrail_client:
+                    testrail_client.update_testrail(case_id=test_id_fw, run_id=rid, status_id=5,
+                                                    msg='Error creating new FW version by API')
                 if report_data:
                     report_data['tests'][key][test_id_fw] = "failed"
                 return False
@@ -183,7 +207,8 @@ class CloudSDK:
         # Upgrade AP firmware
         print("Upgrading...firmware ID is: ", fw_id)
         upgrade_fw = self.update_firmware(equipment_id, str(fw_id), cloudSDK_url, bearer)
-        logger.info("Lab " + model + " Requires FW update")
+        if logger:
+            logger.info("Lab " + model + " Requires FW update")
         print(upgrade_fw)
 
         if "success" in upgrade_fw:
@@ -191,25 +216,31 @@ class CloudSDK:
                 print("CloudSDK Upgrade Request Success")
                 if report_data and test_cases:
                     report_data['tests'][key][test_cases["upgrade_api"]] = "passed"
-                client.update_testrail(case_id=test_cases["upgrade_api"], run_id=rid, status_id=1, msg='Upgrade request using API successful')
-                logger.info('Firmware upgrade API successfully sent')
+                if testrail_client:
+                    testrail_client.update_testrail(case_id=test_cases["upgrade_api"], run_id=rid, status_id=1, msg='Upgrade request using API successful')
+                if logger:
+                    logger.info('Firmware upgrade API successfully sent')
             else:
                 print("Cloud SDK Upgrade Request Error!")
                 # mark upgrade test case as failed with CloudSDK error
                 if test_cases:
-                    client.update_testrail(case_id=test_cases["upgrade_api"], run_id=rid, status_id=5, msg='Error requesting upgrade via API')
+                    if testrail_client:
+                        testrail_client.update_testrail(case_id=test_cases["upgrade_api"], run_id=rid, status_id=5, msg='Error requesting upgrade via API')
                     if report_data:
                         report_data['tests'][key][test_cases["upgrade_api"]] = "failed"
-                logger.warning('Firmware upgrade API failed to send')
+                if logger:
+                    logger.warning('Firmware upgrade API failed to send')
                 return False
         else:
             print("Cloud SDK Upgrade Request Error!")
             # mark upgrade test case as failed with CloudSDK error
             if test_cases:
-                client.update_testrail(case_id=test_cases["upgrade_api"], run_id=rid, status_id=5,msg='Error requesting upgrade via API')
+                if testrail_client:
+                    testrail_client.update_testrail(case_id=test_cases["upgrade_api"], run_id=rid, status_id=5,msg='Error requesting upgrade via API')
                 if report_data:
                     report_data['tests'][key][test_cases["upgrade_api"]] = "failed"
-            logger.warning('Firmware upgrade API failed to send')
+            if logger:
+                logger.warning('Firmware upgrade API failed to send')
             return False
 
         sdk_ok = False
@@ -220,7 +251,8 @@ class CloudSDK:
                 test_id_cloud = test_cases["cloud_fw"]
             cloud_ap_fw = self.ap_firmware(customer_id, equipment_id, cloudSDK_url, bearer)
             print('Current AP Firmware from CloudSDK: %s  requested-image: %s'%(cloud_ap_fw, ap_image))
-            logger.info('AP Firmware from CloudSDK: ' + cloud_ap_fw)
+            if logger:
+                logger.info('AP Firmware from CloudSDK: ' + cloud_ap_fw)
             if cloud_ap_fw == "ERROR":
                 print("AP FW Could not be read from CloudSDK")
                 
@@ -242,7 +274,8 @@ class CloudSDK:
                     ap_cli_info = ssh_cli_active_fw(command_line_args)
                     ap_cli_fw = ap_cli_info['active_fw']
                     print("CLI reporting AP Active FW as:", ap_cli_fw)
-                    logger.info('Firmware from CLI: ' + ap_cli_fw)
+                    if logger:
+                        logger.info('Firmware from CLI: ' + ap_cli_fw)
                     if ap_cli_fw == ap_image:
                         cli_ok = True
                         break
@@ -254,10 +287,12 @@ class CloudSDK:
                     print(ex)
                     logging.error(logging.traceback.format_exc())
                     print("Cannot Reach AP CLI to confirm upgrade!")
-                    logger.warning('Cannot Reach AP CLI to confirm upgrade!')
+                    if logger:
+                        logger.warning('Cannot Reach AP CLI to confirm upgrade!')
                     if test_cases:
-                        client.update_testrail(case_id=test_id_cli, run_id=rid, status_id=4,
-                                               msg='Cannot reach AP after upgrade to check CLI - re-test required')
+                        if testrail_client:
+                            testrail_client.update_testrail(case_id=test_id_cli, run_id=rid, status_id=4,
+                                                            msg='Cannot reach AP after upgrade to check CLI - re-test required')
                     continue
 
             time.sleep(30)
@@ -271,10 +306,11 @@ class CloudSDK:
         if cloud_ap_fw == ap_image and ap_cli_fw == ap_image:
             print("CloudSDK and AP CLI both show upgrade success, passing upgrade test case")
             if test_cases:
-                client.update_testrail(case_id=test_id_cli, run_id=rid, status_id=1,
-                                       msg='Upgrade to ' + ap_image + ' successful')
-                client.update_testrail(case_id=test_id_cloud, run_id=rid, status_id=1,
-                                       msg='CLOUDSDK reporting correct firmware version.')
+                if testrail_client:
+                    testrail_client.update_testrail(case_id=test_id_cli, run_id=rid, status_id=1,
+                                                    msg='Upgrade to ' + ap_image + ' successful')
+                    testrail_client.update_testrail(case_id=test_id_cloud, run_id=rid, status_id=1,
+                                                    msg='CLOUDSDK reporting correct firmware version.')
                 if report_data:
                     report_data['tests'][key][test_id_cli] = "passed"
                     report_data['tests'][key][test_id_cloud] = "passed"
@@ -285,10 +321,11 @@ class CloudSDK:
             print("AP CLI shows upgrade success - CloudSDK reporting error!")
             ##Raise CloudSDK error but continue testing
             if test_cases:
-                client.update_testrail(case_id=test_id_cli, run_id=rid, status_id=1,
-                                       msg='Upgrade to ' + ap_image + ' successful.')
-                client.update_testrail(case_id=test_id_cloud, run_id=rid, status_id=5,
-                                       msg='CLOUDSDK reporting incorrect firmware version.')
+                if testrail_client:
+                    testrail_client.update_testrail(case_id=test_id_cli, run_id=rid, status_id=1,
+                                                    msg='Upgrade to ' + ap_image + ' successful.')
+                    testrail_client.update_testrail(case_id=test_id_cloud, run_id=rid, status_id=5,
+                                                    msg='CLOUDSDK reporting incorrect firmware version.')
                 if report_data:
                     report_data['tests'][key][test_id_cli] = "passed"
                     report_data['tests'][key][test_id_cloud] = "failed"
@@ -299,10 +336,11 @@ class CloudSDK:
             print("AP CLI shows upgrade failed - CloudSDK reporting error!")
             # Testrail TC fail
             if test_cases:
-                client.update_testrail(case_id=test_id_cli, run_id=rid, status_id=5,
-                                       msg='AP failed to download or apply new FW. Upgrade to ' + ap_image + ' Failed')
-                client.update_testrail(case_id=test_id_cloud, run_id=rid, status_id=5,
-                                       msg='CLOUDSDK reporting incorrect firmware version.')
+                if testrail_client:
+                    testrail_client.update_testrail(case_id=test_id_cli, run_id=rid, status_id=5,
+                                                    msg='AP failed to download or apply new FW. Upgrade to ' + ap_image + ' Failed')
+                    testrail_client.update_testrail(case_id=test_id_cloud, run_id=rid, status_id=5,
+                                                    msg='CLOUDSDK reporting incorrect firmware version.')
                 if report_data:
                     report_data['tests'][key][test_id_cli] = "failed"
                     report_data['tests'][key][test_id_cloud] = "failed"
@@ -313,8 +351,9 @@ class CloudSDK:
             print("Upgrade Failed! Confirmed on CloudSDK and AP CLI. Upgrade test case failed.")
             ##fail TR testcase and exit
             if test_cases:
-                client.update_testrail(case_id=test_id_cli, run_id=rid, status_id=5,
-                                       msg='AP failed to download or apply new FW. Upgrade to ' + ap_image + ' Failed')
+                if testrail_client:
+                    testrail_client.update_testrail(case_id=test_id_cli, run_id=rid, status_id=5,
+                                                    msg='AP failed to download or apply new FW. Upgrade to ' + ap_image + ' Failed')
                 if report_data:
                     report_data['tests'][key][test_id_cli] = "failed"
                     print(report_data['tests'][key])
@@ -324,8 +363,9 @@ class CloudSDK:
             print("Unable to determine upgrade status. Skipping AP variant")
             # update TR testcase as error
             if test_cases:
-                client.update_testrail(case_id=test_id_cli, run_id=rid, status_id=4,
-                                       msg='Cannot determine upgrade status - re-test required')
+                if testrail_client:
+                    testrail_client.update_testrail(case_id=test_id_cli, run_id=rid, status_id=4,
+                                                    msg='Cannot determine upgrade status - re-test required')
                 if report_data:
                     report_data['tests'][key][test_id_cli] = "error"
                     print(report_data['tests'][key])
@@ -613,12 +653,12 @@ class CloudSDK:
         #print(response.text)
         return response.json()
 
-    def set_ap_profile(self, equipment_id, test_profile_id, cloudSDK_url, bearer):
+    def set_ap_profile(self, equipment_id, test_profile_id):
         ###Get AP Info
-        url = cloudSDK_url+"/portal/equipment?equipmentId="+equipment_id
+        url = self.base_url + "/portal/equipment?equipmentId=" + equipment_id
         payload = {}
         headers = {
-            'Authorization': 'Bearer ' + bearer
+            'Authorization': 'Bearer ' + self.bearer
         }
 
         response = requests.request("GET", url, headers=headers, data=payload)
@@ -635,7 +675,7 @@ class CloudSDK:
         url = cloudSDK_url+"/portal/equipment"
         headers = {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + bearer
+            'Authorization': 'Bearer ' + self.bearer
         }
 
         response = requests.request("PUT", url, headers=headers, data=json.dumps(equipment_info))

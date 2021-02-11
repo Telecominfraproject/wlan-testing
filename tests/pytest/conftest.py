@@ -3,8 +3,27 @@ from time import sleep, gmtime, strftime
 
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), 'helpers'))
-from utils import CloudSDK_Client, TestRail_Client, jFrog_Client
+#sys.path.append(os.path.join(os.path.dirname(__file__), 'helpers'))
+
+sys.path.append(f'..')
+
+for folder in 'py-json', 'py-scripts':
+    if folder not in sys.path:
+        sys.path.append(f'../../lanforge/lanforge-scripts/{folder}')
+
+sys.path.append(f'../../libs/lanforge/')
+sys.path.append(f'../../libs/cloudsdk/')
+sys.path.append(f'../../libs/apnos/')
+sys.path.append(f'../../libs/testrails/')
+sys.path.append(f'../../libs/')
+
+sys.path.append(f'../test_utility/')
+
+from UnitTestBase import *
+from JfrogHelper import *
+from cloudsdk import *
+from testrail_api import TestRail_Client
+
 
 def pytest_addoption(parser):
     parser.addini("jfrog-base-url", "jfrog base url")
@@ -14,6 +33,7 @@ def pytest_addoption(parser):
     parser.addini("sdk-user-id", "cloud sdk username")
     parser.addini("sdk-user-password", "cloud sdk user password")
     parser.addini("sdk-customer-id", "cloud sdk customer id for the access points")
+    parser.addini("sdk-equipment-id", "cloud sdk equipment id for the access point")
     parser.addini("testrail-base-url", "testrail base url")
     parser.addini("testrail-project", "testrail project name to use to generate test reports")
     parser.addini("testrail-user-id", "testrail username")
@@ -28,6 +48,14 @@ def pytest_addoption(parser):
         action="store",
         default="password",
         help="testrail user password",
+        type=str
+    )
+
+    parser.addoption(
+        "--sdk-equipment-id",
+        action="store",
+        default="-1",
+        help="SDK equipment ID for AP",
         type=str
     )
 
@@ -178,62 +206,72 @@ def setup_testrails(request, instantiate_testrail, access_points):
     )
     yield runId
 
+# TODO:  Should not be session wide I think, you will want to run different
+# configurations (bridge, nat, vlan, wpa/wpa2/eap, etc
 @pytest.fixture(scope="session")
 def setup_cloudsdk(request, instantiate_cloudsdk):
     # snippet to do cleanup after all the tests are done
     def fin():
         print("Cloud SDK cleanup done")
     request.addfinalizer(fin)
-    instantiate_cloudsdk.set_ap_profile(3, 6)
-    yield {
-        "LANforge": {
-            "host": request.config.getini("lanforge-ip-address"),
-            "port": request.config.getini("lanforge-port-number"),
-            "radio": request.config.getini("lanforge-radio"),
-            "eth_port": request.config.getini("lanforge-ethernet-port"),
-            "runtime_duration": 15
-        },
-        "24ghz": {
-            "ssid": "TipWlan-cloud-wifi",
-            "password": "w1r3l3ss-fr33d0m",
-            "station_names": [ "sta2237" ]
-        }
-    }
+
+    # This is broken, see sdk_set_profile for correct way to do this.
+    #instantiate_cloudsdk.set_ap_profile(3, 6)
+    #yield {
+    #    "LANforge": {
+    #        "host": request.config.getini("lanforge-ip-address"),
+    #        "port": request.config.getini("lanforge-port-number"),
+    #        "radio": request.config.getini("lanforge-radio"),
+    #        "eth_port": request.config.getini("lanforge-ethernet-port"),
+    #        "runtime_duration": 15
+    #    },
+    #    "24ghz": {
+    #        "ssid": "TipWlan-cloud-wifi",
+    #        "password": "w1r3l3ss-fr33d0m",
+    #        "station_names": [ "sta2237" ]
+    #    }
+    #}
 
 @pytest.fixture(scope="session")
 def update_firmware(request, setup_testrails, instantiate_jFrog, instantiate_cloudsdk, access_points):
     if request.config.getoption("--skip-update-firmware"):
-        return
-    latest_image = instantiate_jFrog.get_latest_image(access_points)
-    if latest_image in instantiate_cloudsdk.get_images(access_points):
-        model_firmware_id = instantiate_cloudsdk.get_firmware_id(latest_image)
-    else:
-        fw_url = instantiate_jFrog.get_latest_image_url(access_points, latest_image)
-        fw_upload_status = instantiate_cloudsdk.firwmare_upload(access_points, latest_image, fw_url)
-        model_firmware_id = fw_upload_status['id']
+        return True
 
-    # Get Current AP Firmware and upgrade\run tests if needed
-    # currently the AP id is hardcoded, but it should be looked up during the tests and not hardcoded in the config files or parameters
-    ap_fw = instantiate_cloudsdk.ap_firmware(request.config.getini("sdk-customer-id"), 3)
-    if ap_fw == latest_image:
-        pytest.skip("Do not need to upgrade firmware")
-    else:
-        instantiate_cloudsdk.update_firmware(3, model_firmware_id)
-        sleep_counter = 0
-        while True:
-            sleep_counter += 1
-            if instantiate_cloudsdk.ap_firmware(2, 3) == latest_image:
-                return
-            if sleep_counter > 0:
-                return
-            sleep(60)
+    #access_points is really a single AP.
+    ap = access_points
+
+    if True:
+        latest_image = instantiate_jFrog.get_latest_image(ap)
+        if latest_image is None:
+            print("AP Model: %s doesn't match the available Models"%(ap))
+            sys.exit(1)  # TODO:  How to return error properly here?
+
+        cloudModel = cloud_sdk_models[ap]
+        logger = None
+        report_data = None
+        test_cases = None
+        testrail_client = None
+        jfrog_user = instantiate_jFrog.get_user()
+        jfrog_pwd = instantiate_jFrog.get_passwd()
+        testrail_rid = 0
+        customer_id = request.config.getini("sdk-customer-id")
+        equipment_id = request.config.getoption("--sdk-equipment-id")
+        if equipment_id == "-1":
+            print("EQ ID invalid: ", equipment_id)
+            sys.exit(1)
+        pf = instantiate_cloudsdk.do_upgrade_ap_fw(request.config, report_data, test_cases, testrail_client,
+                                                   latest_image, cloudModel, ap, jfrog_user, jfrog_pwd, testrail_rid,
+                                                   customer_id, equipment_id, logger)
+
+        return pf
 
 @pytest.fixture(scope="session")
 def instantiate_cloudsdk(request):
-    yield CloudSDK_Client(
-        request.config.getini("sdk-base-url"),
+    yield CloudSDK(
         request.config.getini("sdk-user-id"),
-        request.config.getini("sdk-user-password")
+        request.config.getini("sdk-user-password"),
+        request.config.getini("sdk-base-url"),
+        False  # verbose  TODO:  Make this configurable
     )
 
 @pytest.fixture(scope="session")
@@ -246,8 +284,9 @@ def instantiate_testrail(request):
 
 @pytest.fixture(scope="session")
 def instantiate_jFrog(request):
-    yield jFrog_Client(
-        request.config.getini("jfrog-base-url"),
+    yield GetBuild(
         request.config.getini("jfrog-user-id"),
-        request.config.getini("jfrog-user-password")
+        request.config.getini("jfrog-user-password"),
+        "pending",  # TODO make this optional
+        url=request.config.getini("jfrog-base-url")
     )

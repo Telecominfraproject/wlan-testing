@@ -8,12 +8,21 @@ from lab_ap_info import *
 
 
 class GetBuild:
-    def __init__(self, jfrog_user, jfrog_passwd, build):
+    def __init__(self, jfrog_user, jfrog_passwd, build, url=None):
         self.user = jfrog_user
         self.password = jfrog_passwd
         ssl._create_default_https_context = ssl._create_unverified_context
-        self.jfrog_url = 'https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/'
+        if url:
+            self.jfrog_url = url
+        else:
+            self.jfrog_url = 'https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/'
         self.build = build
+
+    def get_user(self):
+        return self.user
+
+    def get_passwd(self):
+        return self.password
 
     def get_latest_image(self, model, for_build=None):
 
@@ -22,6 +31,7 @@ class GetBuild:
             build_name = for_build
 
         url = self.jfrog_url + model + "/dev/"
+        print("JfrogHelper::get_latest_image, url: ", url)
 
         auth = str(
             base64.b64encode(

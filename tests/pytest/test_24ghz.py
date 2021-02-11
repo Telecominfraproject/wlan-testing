@@ -2,6 +2,8 @@
 # https://docs.pytest.org/en/latest/usage.html
 # http://pythontesting.net/framework/pytest/pytest-introduction/
 
+import sys
+
 import pytest
 from time import sleep, gmtime, strftime
 from sta_connect2 import StaConnect2

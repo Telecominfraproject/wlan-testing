@@ -6,8 +6,6 @@ if sys.version_info[0] != 3:
     print("This script requires Python 3")
     exit(1)
 
-import sys
-
 for folder in 'py-json', 'py-scripts':
     if folder not in sys.path:
         sys.path.append(f'../lanforge/lanforge-scripts/{folder}')

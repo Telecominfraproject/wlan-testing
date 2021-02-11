@@ -109,6 +109,16 @@ class jFrog_Client:
         return f"https://{self.user}:{self.password}@{self.baseUrl}/{model}/dev/{latest_image}.tar.gz"
 
 # Class for CloudSDK Interaction via RestAPI
+
+# Map firmware directory name to cloud's model name.
+cloud_sdk_models = {
+    "ec420": "EC420-G1",
+    "ea8300": "EA8300-CA",
+    "ecw5211": "ECW5211",
+    "ecw5410": "ECW5410",
+    "wf188n": "WF188N"
+    }
+
 class CloudSDK_Client:
     def __init__(self, url, user, password):
         self.baseUrl = f"https://{url}"

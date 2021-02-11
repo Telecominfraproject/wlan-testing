@@ -96,7 +96,7 @@ if equipment_id == "-1":
                 print("Found equipment ID: %s  inventoryId: %s"%(e['id'], e['inventoryId']))
                 equipment_id = str(e['id'])
 
-if equipment_id == -1:
+if equipment_id == "-1":
     print("ERROR:  Could not find equipment-id.")
     sys.exit(1)
 
@@ -166,11 +166,11 @@ print('Current Active AP FW from CLI:', ap_cli_fw)
 ##Compare Latest and Current AP FW and Upgrade
 report_data = None
 
-do_upgrade = cloud.should_upgrade_ap_fw(bearer, command_line_args, report_data, ap_image, fw_model, ap_cli_fw,
-                                        logger)
+do_upgrade = cloud.should_upgrade_ap_fw(command_line_args.force_upgrade, command_line_args.skip_upgrade,
+                                        report_data, ap_image, fw_model, ap_cli_fw, logger)
 
 cloudModel = cloud_sdk_models[model_id]
-pf = cloud.do_upgrade_ap_fw(bearer, command_line_args, report_data, test_cases, client,
+pf = cloud.do_upgrade_ap_fw(command_line_args, report_data, test_cases, client,
                             ap_image, cloudModel, model_id, jfrog_user, jfrog_pwd, rid,
                             customer_id, equipment_id, logger)
 
