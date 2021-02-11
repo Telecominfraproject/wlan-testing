@@ -18,31 +18,36 @@ env:
   # Cloud SDK certs
   CACERT: ${{ secrets.CACERT }}
   CAKEY: ${{ secrets.CAKEY }}
+
   # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
   testbeds: '[
     {
       "number": "ext-01",
       "ip_address": "192.168.100.20",
       "ap_model": "EA8300",
-      "cleanup": false
+      "cleanup": false,
+      "version": "2021-02-10"
     },
     {
       "number": "ext-02",
       "ip_address": "192.168.100.200",
       "ap_model": "ECW5410",
-      "cleanup": false
+      "cleanup": false,
+      "version": "2021-02-10"
     },
     {
       "number": "01",
       "ip_address": "10.28.3.6",
       "ap_model": "ECW5410",
-      "cleanup": false
+      "cleanup": false,
+      "version": "latest"
     },
     {
       "number": "02",
       "ip_address": "10.28.3.8",
       "ap_model": "ECW5410",
-      "cleanup": false
+      "cleanup": false,
+      "version": "latest"
     }
   ]'
 
@@ -111,14 +116,14 @@ jobs:
         repository: Telecominfraproject/Toolsmith
         token: ${{ secrets.PAT_TOKEN }}
 
-    - name: Prepare environment
+    - name: Prepare environment deployment
       run: |
         mkdir -p ./wlan-pki/testCA/private ./wlan-pki/testCA/newcerts ./wlan-pki/generated
         touch ./wlan-pki/testCA/index.txt
         echo "01" > ./wlan-pki/testCA/serial.txt
         echo "${{ env.CACERT }}" | base64 -d > ./wlan-pki/testCA/cacert.pem
         echo "${{ env.CAKEY }}" | base64 -d > ./wlan-pki/testCA/private/cakey.pem
-        ./toolsmith/helm-values/aws-cicd-testbed-deployment.yaml.sh ${{ matrix.number }} > testbed-deployment.yaml
+        ./toolsmith/helm-values/aws-cicd-testbed-deployment.yaml.sh ${{ matrix.number }} ${{ matrix.version }} > testbed-deployment.yaml
 
     - name: Generate certs
       working-directory: wlan-pki
