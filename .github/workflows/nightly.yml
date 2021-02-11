@@ -47,7 +47,7 @@ env:
       "ip_address": "10.28.3.8",
       "ap_model": "ECW5410",
       "cleanup": false,
-      "version": "latest"
+      "version": ""
     }
   ]'
 
