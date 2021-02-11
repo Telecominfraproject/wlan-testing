@@ -26,14 +26,14 @@ env:
       "ip_address": "192.168.100.20",
       "ap_model": "EA8300",
       "cleanup": false,
-      "version": "2021-02-10"
+      "version": "2021-02-09"
     },
     {
       "number": "ext-02",
       "ip_address": "192.168.100.200",
       "ap_model": "ECW5410",
       "cleanup": false,
-      "version": "2021-02-10"
+      "version": "2021-02-09"
     },
     {
       "number": "01",
@@ -47,7 +47,7 @@ env:
       "ip_address": "10.28.3.8",
       "ap_model": "ECW5410",
       "cleanup": false,
-      "version": ""
+      "version": "latest"
     }
   ]'
 
