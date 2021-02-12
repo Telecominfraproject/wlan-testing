@@ -29,13 +29,6 @@ env:
       "version": "2021-02-09"
     },
     {
-      "number": "ext-02",
-      "ip_address": "192.168.100.200",
-      "ap_model": "ECW5410",
-      "cleanup": false,
-      "version": "2021-02-09"
-    },
-    {
       "number": "01",
       "ip_address": "10.28.3.6",
       "ap_model": "ECW5410",
@@ -43,8 +36,8 @@ env:
       "version": "latest"
     },
     {
-      "number": "02",
-      "ip_address": "10.28.3.8",
+      "number": "04",
+      "ip_address": "10.28.3.12",
       "ap_model": "ECW5410",
       "cleanup": false,
       "version": "latest"
