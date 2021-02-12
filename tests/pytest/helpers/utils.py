@@ -53,4 +53,12 @@ def create_command_line_args(request):
     command_line_args.ssid_5g_wpa2 = request.config.getoption("--ssid-5g-wpa2")
     command_line_args.psk_2g_wpa2 = request.config.getoption("--psk-2g-wpa2")
     command_line_args.psk_5g_wpa2 = request.config.getoption("--psk-5g-wpa2")
+
+    command_line_args.testrail_base_url = request.config.getoption("--testrail-base-url")
+    command_line_args.testrail_project = request.config.getoption("--testrail-project")
+    command_line_args.testrail_user_id = request.config.getoption("--testrail-user-id")
+    command_line_args.testrail_user_password = request.config.getoption("--testrail-user-password")
+    command_line_args.testrail_run_prefix = request.config.getoption("--testrail-run-prefix")
+    command_line_args.testrail_milestone = request.config.getoption("--testrail-milestone")
+    
     return command_line_args

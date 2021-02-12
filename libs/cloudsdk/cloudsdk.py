@@ -48,15 +48,6 @@ class CloudSDK:
         self.cloud_type = "v1"
         self.refresh_bearer()
 
-    def __init__(self, id, passwd, url, verbose):
-        self.user = id
-        self.password = passwd
-        self.base_url = url
-        self.assert_bad_response = False
-        self.verbose = verbose
-        self.cloud_type = "v1"
-        self.refresh_bearer()
-
     def refresh_bearer(self):
         self.bearer = self.get_bearer(self.base_url, self.cloud_type)
 
@@ -672,7 +663,7 @@ class CloudSDK:
         print(equipment_info)
 
         ###Update AP Info with Required Profile ID
-        url = cloudSDK_url+"/portal/equipment"
+        url = self.base_url + "/portal/equipment"
         headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + self.bearer
@@ -1429,8 +1420,7 @@ class CreateAPProfiles:
                                         msg='AP profile for ' + mode + ' tests could not be created using API')
             self.test_cases["ap_"+self.mode] = "failed"
 
-        self.ap_profile = self.cloud.set_ap_profile(eq_id, self.test_profile_id, self.command_line_args.sdk_base_url,
-                                                    self.bearer)
+        self.ap_profile = self.cloud.set_ap_profile(eq_id, self.test_profile_id)
 
     def cleanup_profile(self):
         pass

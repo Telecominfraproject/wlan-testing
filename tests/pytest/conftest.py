@@ -124,7 +124,7 @@ def setup_testrails(request, instantiate_testrail, access_points):
 # TODO:  Should not be session wide I think, you will want to run different
 # configurations (bridge, nat, vlan, wpa/wpa2/eap, etc
 @pytest.fixture(scope="session")
-def setup_cloudsdk(request, instantiate_cloudsdk):
+def setup_cloudsdk(request, instantiate_cloudsdk, instantiate_testrail):
     # snippet to do cleanup after all the tests are done
     def fin():
         print("Cloud SDK cleanup done")
@@ -138,7 +138,6 @@ def setup_cloudsdk(request, instantiate_cloudsdk):
 
     cloud.assert_bad_response = True
 
-    model_id = command_line_args.model
     equipment_id = instantiate_cloudsdk.equipment_id
 
     print("equipment-id: %s" % (equipment_id))
@@ -164,7 +163,7 @@ def setup_cloudsdk(request, instantiate_cloudsdk):
     radius_name = "%s-%s-%s" % (command_line_args.testbed, fw_model, "Radius")
 
     print("Create profiles")
-    ap_object = CreateAPProfiles(command_line_args, cloud=cloud, client=client, fw_model=fw_model)
+    ap_object = CreateAPProfiles(command_line_args, cloud=cloud, client=instantiate_testrail, fw_model=fw_model)
 
     # Logic to create AP Profiles (Bridge Mode)
 
@@ -230,16 +229,12 @@ def update_firmware(request, setup_testrails, instantiate_jFrog, instantiate_clo
 
 @pytest.fixture(scope="session")
 def instantiate_cloudsdk(request):
-    rv = CloudSDK(
-        request.config.getini("sdk-user-id"),
-        request.config.getini("sdk-user-password"),
-        request.config.getini("sdk-base-url"),
-        False  # verbose  TODO:  Make this configurable
-    )
+    command_line_args = create_command_line_args(request)
+    rv = CloudSDK(command_line_args)
 
     equipment_id = request.config.getoption("--equipment-id")
     if equipment_id == "-1":
-        eq_id = ap_ssh_ovsh_nodec(create_command_line_args(request), 'id')
+        eq_id = ap_ssh_ovsh_nodec(command_line_args, 'id')
         print("EQ Id: %s" % (eq_id))
 
         # Now, query equipment to find something that matches.
@@ -260,12 +255,8 @@ def instantiate_cloudsdk(request):
     yield rv
 
 @pytest.fixture(scope="session")
-def instantiate_testrail(request):
-    yield TestRail_Client(
-        request.config.getini("testrail-base-url"),
-        request.config.getini("testrail-user-id"),
-        request.config.getoption("--testrail-user-password")
-    )
+def instantiate_testrail(request):    
+    yield TestRail_Client(create_command_line_args(request))
 
 @pytest.fixture(scope="session")
 def instantiate_jFrog(request):

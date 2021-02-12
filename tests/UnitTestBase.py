@@ -145,8 +145,8 @@ def add_base_parse_args(parser):
                              default="password")
     parser.add_argument("--testrail-run-prefix", type=str, help="testrail run prefix",
                              default="prefix-1")
-    parser.add_argument("--milestone", type=str, help="testrail milestone ID",
-                             default="milestone-1")
+    parser.add_argument("--testrail-milestone", type=str, help="testrail milestone ID",
+                        default="milestone-1")
 
     parser.add_argument("--lanforge-ip-address", type=str, help="ip address of the lanforge gui",
                              default="127.0.0.1")
@@ -288,8 +288,8 @@ def add_base_parse_args_pytest(parser):
                              default="password")
     parser.addoption("--testrail-run-prefix", type=str, help="testrail run prefix",
                              default="prefix-1")
-    parser.addoption("--milestone", type=str, help="testrail milestone ID",
-                             default="milestone-1")
+    parser.addoption("--testrail-milestone", type=str, help="testrail milestone ID",
+                     default="milestone-1")
 
     parser.addoption("--lanforge-ip-address", type=str, help="ip address of the lanforge gui",
                              default="127.0.0.1")
@@ -403,3 +403,4 @@ class UnitTestBase:
         self.cloud: CloudSDK = CloudSDK(self.command_line_args)
         self.bearer = self.cloud.get_bearer(self.cloudSDK_url, cloud_type)
         self.customer_id = self.command_line_args.customer_id
+

@@ -41,19 +41,19 @@ class Test24ghz(object):
         if setup_testrails > 0:
             instantiate_testrail.update_testrail(case_id=2835, run_id=setup_testrails, status_id=1, msg="testing")
 
-    @pytest.mark.featureB
-    def test_feature_b(self):
-        pass
+    #@pytest.mark.featureB
+    #def test_feature_b(self):
+    #    pass
 
-    @pytest.mark.featureC
-    def test_feature_c(self):
-        assert 1 == 0
+    #@pytest.mark.featureC
+    #def test_feature_c(self):
+    #    assert 1 == 0
 
-    @pytest.mark.featureD
-    def test_feature_d(self):
-        pytest.skip("speedup")
+    #@pytest.mark.featureD
+    #def test_feature_d(self):
+    #    pytest.skip("speedup")
 
-    @pytest.mark.xfail
-    @pytest.mark.featureE
-    def test_feature_e(self):
-        assert 1 == 0
+    #@pytest.mark.xfail
+    #@pytest.mark.featureE
+    #def test_feature_e(self):
+    #    assert 1 == 0

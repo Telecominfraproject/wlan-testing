@@ -28,15 +28,6 @@ class TestRail_Client:
         if command_line_args.testrail_user_id == "NONE":
             self.use_testrails = False
 
-    def __init__(self, url, id, passwd):
-        self.user = id
-        self.password = passwd
-        base_url = url
-        if not base_url.endswith('/'):
-            base_url += '/'
-        self.__url = base_url + 'index.php?/api/v2/'
-        self.use_testrails = True
-
 
     def send_get(self, uri, filepath=None):
         """Issue a GET request (read) against the API.
