@@ -145,7 +145,7 @@ def add_base_parse_args(parser):
                              default="password")
     parser.add_argument("--testrail-run-prefix", type=str, help="testrail run prefix",
                              default="prefix-1")
-    parser.add_argument("--testrail-milestone", type=str, help="testrail milestone ID",
+    parser.add_argument("--testrail-milestone", dest="milestone", type=str, help="testrail milestone ID",
                         default="milestone-1")
 
     parser.add_argument("--lanforge-ip-address", type=str, help="ip address of the lanforge gui",
@@ -288,7 +288,7 @@ def add_base_parse_args_pytest(parser):
                              default="password")
     parser.addoption("--testrail-run-prefix", type=str, help="testrail run prefix",
                              default="prefix-1")
-    parser.addoption("--testrail-milestone", type=str, help="testrail milestone ID",
+    parser.addoption("--testrail-milestone", dest="milestone", type=str, help="testrail milestone ID",
                      default="milestone-1")
 
     parser.addoption("--lanforge-ip-address", type=str, help="ip address of the lanforge gui",

@@ -184,16 +184,18 @@ def main():
                                 psk_5g_wpa2=args.psk_5g_wpa2)
 
     print(ap_object)
-
+    rid = client.get_run_id(test_run_name=args.testrail_run_prefix + fw_model + "_" + today + "_" + "ecw5410-2021-02-12-pending-e8bb466")
     print("creating Profiles")
     ssid_template = "TipWlan-Cloud-Wifi"
 
     if not args.skip_profiles:
         if not args.skip_radius:
             # Radius Profile needs to be set here
-            # obj.create_radius_profile(radius_name, rid, key)
-            pass
-        ap_object.create_ssid_profiles(ssid_template=ssid_template, skip_eap=True, skip_wpa=args.skip_wpa,
+            radius_name = "Automation_Radius_Nightly-09"
+            radius_template = "templates/radius_profile_template.json"
+            ap_object.create_radius_profile(radius_name=radius_name, radius_template=radius_template, rid=rid, key=fw_model)
+
+        ap_object.create_ssid_profiles(ssid_template=ssid_template, skip_eap=args.skip_radius, skip_wpa=args.skip_wpa,
                                        skip_wpa2=args.skip_wpa2, mode=args.mode)
 
         print("Create AP with equipment-id: ", equipment_id)

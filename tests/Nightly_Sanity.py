@@ -121,7 +121,7 @@ class NightlySanity:
             # Check AP Manager Status
             manager_status = self.ap_cli_info['state']
             print(manager_status)
-
+            """
             if manager_status != "active":
                 print("Manager status is " + manager_status + "! Not connected to the cloud.")
                 print("Waiting 30 seconds and re-checking status")
@@ -132,7 +132,7 @@ class NightlySanity:
                     print("Manager status is", manager_status, "! Not connected to the cloud.")
                     print("Manager status fails multiple checks - failing test case.")
                     # fail cloud connectivity testcase
-                    self.client.update_testrail(case_id=self.test_cases["cloud_connection"], run_id=self.rid,
+                    self.client.update_testrail(case_id=test_cases["cloud_connection"], run_id=self.rid,
                                                 status_id=5,
                                                 msg='CloudSDK connectivity failed')
                     self.report_data['tests'][self.model][test_cases["cloud_connection"]] = "failed"
@@ -153,7 +153,7 @@ class NightlySanity:
                 self.report_data['tests'][self.model][test_cases["cloud_connection"]] = "passed"
                 print(self.report_data['tests'][self.model])
                 # Pass cloud connectivity test case
-
+            """
             # Update in reporting
             self.reporting.update_json_report(self.report_data)
 
@@ -175,9 +175,10 @@ class NightlySanity:
 
             if not self.args.skip_profiles:
                 if not self.args.skip_radius:
-                    # Radius Profile needs to be set here
-                    # obj.create_radius_profile(radius_name, rid, key)
-                    pass
+                    radius_name = "Automation_Radius_Nightly-01"
+                    radius_template = "templates/radius_profile_template.json"
+                    self.ap_object.create_radius_profile(radius_name=radius_name, radius_template=radius_template, rid=self.rid,
+                                                    key=self.model)
                 self.ap_object.create_ssid_profiles(ssid_template=ssid_template, skip_eap=True, mode="bridge")
 
                 print("Create AP with equipment-id: ", self.equipment_id)
@@ -212,7 +213,7 @@ class NightlySanity:
                     # Radius Profile needs to be set here
                     # obj.create_radius_profile(radius_name, rid, key)
                     pass
-                self.ap_object.create_ssid_profiles(ssid_template=ssid_template, skip_eap=True, mode="nat")
+                self.ap_object.create_ssid_profiles(ssid_template=ssid_template, mode="nat")
 
                 print("Create AP with equipment-id: ", self.equipment_id)
                 self.ap_object.create_ap_profile(eq_id=self.equipment_id, fw_model=self.model, mode="nat")
