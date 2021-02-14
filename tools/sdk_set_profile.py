@@ -191,7 +191,7 @@ def main():
     if not args.skip_profiles:
         if not args.skip_radius:
             # Radius Profile needs to be set here
-            radius_name = "Automation_Radius_Nightly-09"
+            radius_name = "Test_Radius" + str(time.time()).split(".")[0]
             radius_template = "templates/radius_profile_template.json"
             ap_object.create_radius_profile(radius_name=radius_name, radius_template=radius_template, rid=rid, key=fw_model)
 
@@ -206,3 +206,4 @@ def main():
 
 
 main()
+

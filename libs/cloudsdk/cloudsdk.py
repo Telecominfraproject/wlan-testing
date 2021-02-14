@@ -882,25 +882,22 @@ class CloudSDK:
     def create_or_update_radius_profile(self, cloudSDK_url, bearer, customer_id, template, name, subnet_name, subnet,
                                         subnet_mask,
                                         region, server_name, server_ip, secret, auth_port):
-        with open(template, 'r+') as radius_profile:
-            profile = json.load(radius_profile)
-
-        # profile = {"model_type": "Profile", "id": 129, "customerId": "2", "profileType": "radius", "name": "Automation_Radius_Nightly", "details": {"model_type": "RadiusProfile", "primaryRadiusAuthServer": {"model_type": "RadiusServer", "ipAddress": "18.189.25.141", "secret": "testing123", "port": 1812, "timeout": 5}, "secondaryRadiusAuthServer": null, "primaryRadiusAccountingServer": null, "secondaryRadiusAccountingServer": null, "profileType": "radius"}, "createdTimestamp": 1602263176599, "lastModifiedTimestamp": 1611708334061, "childProfileIds": []}
+        null = None
+        profile = {"model_type": "Profile", "id": 129, "customerId": "2", "profileType": "radius", "name": "Automation_Radius_Nightly-1553", "details": {"model_type": "RadiusProfile", "primaryRadiusAuthServer": {"model_type": "RadiusServer", "ipAddress": "18.189.25.141", "secret": "testing123", "port": 1812, "timeout": 5}, "secondaryRadiusAuthServer": null, "primaryRadiusAccountingServer": null, "secondaryRadiusAccountingServer": null, "profileType": "radius"}, "createdTimestamp": 1602263176599, "lastModifiedTimestamp": 1611708334061, "childProfileIds": []}
         profile['name'] = name
         profile['customerId'] = customer_id
         profile['details']["primaryRadiusAuthServer"]['ipAddress'] = server_ip
         profile['details']["primaryRadiusAuthServer"]['secret'] = secret
         profile['details']["primaryRadiusAuthServer"]['port'] = auth_port
 
-        with open(template, 'w') as radius_profile:
-            json.dump(profile, radius_profile)
-
         url = cloudSDK_url + "/portal/profile"
         headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + bearer
         }
-        response = requests.request("POST", url, headers=headers, data=open(template, 'rb'))
+
+        json_profile_data = json.dumps(profile).encode("utf-8")
+        response = requests.request("POST", url, headers=headers, data=json_profile_data)
         radius_profile = response.json()
         radius_profile_id = radius_profile['id']
         return radius_profile_id
