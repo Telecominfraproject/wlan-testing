@@ -1,4 +1,4 @@
-name: nightly build
+name: update cloud controllers build
 defaults:
   run:
     shell: bash
