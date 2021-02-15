@@ -41,6 +41,13 @@ env:
       "ap_model": "ECW5410",
       "cleanup": false,
       "version": "latest"
+    },
+    {
+      "number": "15",
+      "ip_address": "10.28.3.34",
+      "ap_model": "ECW5410",
+      "cleanup": false,
+      "version": "latest"
     }
   ]'
 
