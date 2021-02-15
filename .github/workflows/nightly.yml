@@ -20,31 +20,25 @@ env:
   CAKEY: ${{ secrets.CAKEY }}
 
   # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
+  # version can be "" (will use todays date in that case), "latest" (will use snapshot) or a date "2021-02-15"
   testbeds: '[
     {
-      "number": "ext-01",
-      "ip_address": "192.168.100.20",
-      "ap_model": "EA8300",
-      "cleanup": false,
-      "version": "latest"
-    },
-    {
       "number": "01",
-      "ip_address": "10.28.3.6",
+      "lanforge_address": "10.28.3.6",
       "ap_model": "ECW5410",
       "cleanup": false,
       "version": "latest"
     },
     {
       "number": "04",
-      "ip_address": "10.28.3.12",
+      "lanforge_address": "10.28.3.12",
       "ap_model": "ECW5410",
       "cleanup": false,
       "version": "latest"
     },
     {
       "number": "15",
-      "ip_address": "10.28.3.34",
+      "lanforge_address": "10.28.3.34",
       "ap_model": "ECW5410",
       "cleanup": false,
       "version": "latest"
@@ -189,7 +183,7 @@ jobs:
                 image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_id }}
                 args: 
                 - "-c"
-                - "pytest --no-testrails --skip-update-firmware -o lanforge-ip-address=${{ matrix.ip_address }} -o sdk-base-url=wlan-portal-svc-nola-${{ matrix.number }}.cicd.lab.wlan.tip.build --access-points ${{ matrix.ap_model }}; sleep 75"
+                - "pytest --no-testrails --skip-update-firmware -o lanforge-ip-address=${{ matrix.lanforge_address }} -o sdk-base-url=wlan-portal-svc-nola-${{ matrix.number }}.cicd.lab.wlan.tip.build --access-points ${{ matrix.ap_model }}; sleep 75"
                 command: [ "bash" ]
               imagePullSecrets:
               - name: tip-docker-registry-key
