@@ -19,7 +19,7 @@ env:
   testbeds: '[
     {
       "number": "ext-01",
-      "version": "latest"
+      "version": "2021-02-15"
     },
     {
       "number": "01",
