@@ -93,7 +93,7 @@ class CloudSDK:
         return True
 
     def should_upgrade_ap_fw(self, force_upgrade, skip_upgrade, report_data, latest_ap_image, fw_model, ap_cli_fw,
-                             logger):
+                             logger, key):
         do_upgrade = False
         if ap_cli_fw == latest_ap_image and force_upgrade != True:
             print('FW does not require updating')
@@ -135,7 +135,7 @@ class CloudSDK:
     # client is testrail client
     def do_upgrade_ap_fw(self, command_line_args, report_data, test_cases, testrail_client, ap_image, cloudModel, model,
                          jfrog_user, jfrog_pwd, testrails_rid, customer_id, equipment_id, logger):
-        ###Test Create Firmware Version
+        # Test Create Firmware Version
         key = model
         rid = testrails_rid
         cloudSDK_url = self.base_url
