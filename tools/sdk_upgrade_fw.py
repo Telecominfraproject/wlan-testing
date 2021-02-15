@@ -165,9 +165,10 @@ print('Current Active AP FW from CLI:', ap_cli_fw)
 
 ##Compare Latest and Current AP FW and Upgrade
 report_data = None
+key = None  # model name I think, if we are doing reporting?
 
 do_upgrade = cloud.should_upgrade_ap_fw(command_line_args.force_upgrade, command_line_args.skip_upgrade,
-                                        report_data, ap_image, fw_model, ap_cli_fw, logger)
+                                        report_data, ap_image, fw_model, ap_cli_fw, logger, key)
 
 cloudModel = cloud_sdk_models[model_id]
 pf = cloud.do_upgrade_ap_fw(command_line_args, report_data, test_cases, client,
