@@ -40,6 +40,7 @@ on:
   pull_request:
     branches:
     - master
+    - feature/wifi-1350
 
 jobs:
   generate-matrix:
