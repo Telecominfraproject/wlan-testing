@@ -769,7 +769,7 @@ class CloudSDK:
         return ssid_profile['id']
 
     def create_or_update_ssid_profile(self, cloudSDK_url, bearer, customer_id, template, name,
-                                      ssid, passkey, radius, security, mode, vlan, radios):
+                                      ssid, passkey, radius, security, mode, vlan, radios, radius_profile=None):
         # First, see if profile of this name already exists.
         profile = self.get_customer_profile_by_name(cloudSDK_url, bearer, customer_id, name)
         if profile == None:
@@ -787,7 +787,9 @@ class CloudSDK:
         profile['details']['forwardMode'] = mode
         profile['details']['vlanId'] = vlan
         profile['details']['appliedRadios'] = radios
-
+        if radius_profile is not None:
+            profile['details']['radiusServiceId'] = radius_profile
+            profile['childProfileIds'].append(radius_profile)
         url = cloudSDK_url + "/portal/profile"
         headers = {
             'Content-Type': 'application/json',
@@ -796,6 +798,7 @@ class CloudSDK:
         data_str = json.dumps(profile)
         response = requests.request("PUT", url, headers=headers, data=data_str)
         self.check_response("PUT", response, headers, data_str, url)
+        print("SSID SHIVAM TEST", profile)
         return profile['id']
 
     # General usage:  get the default profile, modify it accordingly, pass it back to here
@@ -883,7 +886,7 @@ class CloudSDK:
                                         subnet_mask,
                                         region, server_name, server_ip, secret, auth_port):
         null = None
-        profile = {"model_type": "Profile", "id": 129, "customerId": "2", "profileType": "radius", "name": "Automation_Radius_Nightly-1553", "details": {"model_type": "RadiusProfile", "primaryRadiusAuthServer": {"model_type": "RadiusServer", "ipAddress": "18.189.25.141", "secret": "testing123", "port": 1812, "timeout": 5}, "secondaryRadiusAuthServer": null, "primaryRadiusAccountingServer": null, "secondaryRadiusAccountingServer": null, "profileType": "radius"}, "createdTimestamp": 1602263176599, "lastModifiedTimestamp": 1611708334061, "childProfileIds": []}
+        profile = {"model_type": "Profile", "id": 129, "customerId": 2, "profileType": "radius", "name": "Lab-RADIUS", "details": {"model_type": "RadiusProfile", "primaryRadiusAuthServer": {"model_type": "RadiusServer", "ipAddress": "10.10.10.203", "secret": "testing123", "port": 1812, "timeout": 5}, "secondaryRadiusAuthServer": null, "primaryRadiusAccountingServer": null, "secondaryRadiusAccountingServer": null, "profileType": "radius"}, "createdTimestamp": 1602263176599, "lastModifiedTimestamp": 1611708334061, "childProfileIds": []}
         profile['name'] = name
         profile['customerId'] = customer_id
         profile['details']["primaryRadiusAuthServer"]['ipAddress'] = server_ip
@@ -899,6 +902,7 @@ class CloudSDK:
         json_profile_data = json.dumps(profile).encode("utf-8")
         response = requests.request("POST", url, headers=headers, data=json_profile_data)
         radius_profile = response.json()
+        print("RADIUS SHIVAM TEST", radius_profile)
         radius_profile_id = radius_profile['id']
         return radius_profile_id
 
@@ -1171,7 +1175,8 @@ class CreateAPProfiles:
         self.twoFourG_wpa2 = None
         self.fiveG_wpa = None
         self.twoFourG_wpa = None
-
+        if skip_eap:
+            self.radius_profile = None
         # 5G SSID's
         print("CreateAPProfile::create_ssid_profile, skip-wpa: ", skip_wpa, " skip-wpa2: ", skip_wpa2, " skip-eap: ",
               skip_eap)
@@ -1179,6 +1184,7 @@ class CreateAPProfiles:
         if not skip_eap:
             # 5G eap
             try:
+
                 self.fiveG_eap = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url,
                                                                           self.bearer, self.customer_id,
                                                                           self.ssid_template,
@@ -1187,7 +1193,9 @@ class CreateAPProfiles:
                                                                           None,
                                                                           self.radius_name,
                                                                           "wpa2OnlyRadius", mode.upper(), 1,
-                                                                          ["is5GHzU", "is5GHz", "is5GHzL"])
+                                                                          ["is5GHzU", "is5GHz", "is5GHzL"],
+                                                                          radius_profile=self.radius_profile)
+
                 print("5G EAP SSID created successfully - " + mode + " mode")
                 self.client.update_testrail(case_id=self.test_cases["ssid_5g_eap_" + mode],
                                             run_id=self.rid,
@@ -1214,7 +1222,7 @@ class CreateAPProfiles:
                                                                              None,
                                                                              self.radius_name, "wpa2OnlyRadius",
                                                                              mode.upper(), 1,
-                                                                             ["is2dot4GHz"])
+                                                                             ["is2dot4GHz"], radius_profile=self.radius_profile)
                 print("2.4G EAP SSID created successfully - " + mode + " mode")
                 self.client.update_testrail(case_id=self.test_cases["ssid_5g_eap_" + mode], run_id=self.rid,
                                             status_id=1,
