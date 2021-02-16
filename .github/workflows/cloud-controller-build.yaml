@@ -19,10 +19,14 @@ env:
   testbeds: '[
     {
       "number": "ext-01",
-      "version": "latest"
+      "version": "2021-02-15"
     },
     {
       "number": "01",
+      "version": "latest"
+    },
+    {
+      "number": "02",
       "version": "latest"
     },
     {
@@ -30,8 +34,12 @@ env:
       "version": "latest"
     },
     {
-      "number": "15",
+      "number": "05",
       "version": "latest"
+    },
+    {
+      "number": "15",
+      "version": "2021-2-15"
     }
   ]'
 
