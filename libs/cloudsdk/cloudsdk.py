@@ -798,7 +798,6 @@ class CloudSDK:
         data_str = json.dumps(profile)
         response = requests.request("PUT", url, headers=headers, data=data_str)
         self.check_response("PUT", response, headers, data_str, url)
-        print("SSID SHIVAM TEST", profile)
         return profile['id']
 
     # General usage:  get the default profile, modify it accordingly, pass it back to here
@@ -902,7 +901,6 @@ class CloudSDK:
         json_profile_data = json.dumps(profile).encode("utf-8")
         response = requests.request("POST", url, headers=headers, data=json_profile_data)
         radius_profile = response.json()
-        print("RADIUS SHIVAM TEST", radius_profile)
         radius_profile_id = radius_profile['id']
         return radius_profile_id
 
