@@ -75,13 +75,14 @@ class NightlySanity:
 
         # Create Test session
         self.create_test_run_session()
+        key = self.args.model; # TODO:  Not sure about this.
 
         # Check if AP needs Upgrade
         if (self.firmware["current"] is not None) and self.firmware["latest"] != self.firmware["current"]:
             do_upgrade = self.cloud.should_upgrade_ap_fw(self.args.force_upgrade, self.args.skip_upgrade, self.report_data,
                                                          self.firmware["latest"],
                                                          self.args.model,
-                                                         self.firmware["current"], self.logger)
+                                                         self.firmware["current"], self.logger, key)
 
         elif (self.firmware["current"] is not None) and self.firmware["latest"] == self.firmware["current"]:
             do_upgrade = False
