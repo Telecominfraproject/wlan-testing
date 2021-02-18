@@ -377,8 +377,20 @@ class CloudSDK:
         if status_code == 200:
             status_data = status_response.json()
             # print(status_data)
-            current_ap_fw = status_data[2]['details']['reportedSwVersion']
-            return current_ap_fw
+            try:
+                current_ap_fw = status_data[2]['details']['reportedSwVersion']
+                return current_ap_fw
+            except Exception as ex:
+                ap_cli_info = "ERROR"
+                print(ex)
+                logging.error(logging.traceback.format_exc())
+                if not self.verbose:
+                    # Force full logging for this, result is not as expected.
+                    self.verbose = true;
+                    self.check_response("GET", status_response, headers, payload, equip_fw_url)
+                    self.verbose = False
+            return ("ERROR")
+                
         else:
             return ("ERROR")
 
