@@ -252,7 +252,7 @@ class NightlySanity:
             # Run Client Single Connectivity Test Cases for Bridge SSIDs
             # TC5214 - 2.4 GHz WPA2-Enterprise
             test_case = test_cases["2g_eap_" + mode]
-            radio = lanforge_2g_radio
+            radio = command_line_args.lanforge_2g_radio
             sta_list = [lanforge_prefix + "5214"]
             ssid_name = ssid_2g_eap;
             security = "wpa2"
