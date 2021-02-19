@@ -1,6 +1,15 @@
 ## TIP Open WiFi Testing
 This repository contains the test automation framework and scripts for  TIP Open WiFi.
 
+## Cloud Controller build
+You can provision additional cloud controllers for your tests using [update cloud controllers](https://github.com/Telecominfraproject/wlan-testing/actions?query=workflow%3A%22update+cloud+controllers+build%22) build. To add additional cloud controller add another json object to the `testbeds` variable at line 19, where
+
+1. number == NOLA testbed number this cloud controller is assigned to
+2. version == docker images version to use with this particular deployment. supports 3 options:
+  1. "latest" - will use `0.0.1-SNAPSHOT` images
+  2. "" - will use `0.0.1-SNAPSHOT-yyyy-mm-dd` images from yesterdays date
+  3. "yyyy-mm-dd" - will use `0.0.1-SNAPHOST-yyyy-mm-dd` with the date provided (if they are available, if not build will fail).
+ 
 ## Motivation
 Automate Automate and Automate!
 
