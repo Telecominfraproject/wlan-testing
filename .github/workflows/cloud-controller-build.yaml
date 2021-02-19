@@ -37,10 +37,6 @@ env:
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-    - master
-    - feature/wifi-1350
 
 jobs:
   generate-matrix:
@@ -60,6 +56,7 @@ jobs:
     needs: [ generate-matrix ]
     strategy:
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
+      fail-fast: false
     steps:
     - name: Checkout pki scripts repo
       uses: actions/checkout@v2
