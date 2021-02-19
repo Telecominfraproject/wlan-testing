@@ -191,14 +191,16 @@ def main():
     if not args.skip_profiles:
         if not args.skip_radius:
             # Radius Profile needs to be set here
-            radius_name = "Test_Radius" + str(time.time()).split(".")[0]
+            radius_name = "Test-Radius-" + str(time.time()).split(".")[0]
             radius_template = "templates/radius_profile_template.json"
             ap_object.create_radius_profile(radius_name=radius_name, radius_template=radius_template, rid=rid, key=fw_model)
 
         ap_object.create_ssid_profiles(ssid_template=ssid_template, skip_eap=args.skip_radius, skip_wpa=args.skip_wpa,
                                        skip_wpa2=args.skip_wpa2, mode=args.mode)
 
+
         print("Create AP with equipment-id: ", equipment_id)
+        time.sleep(5)
         ap_object.create_ap_profile(eq_id=equipment_id, fw_model=fw_model, mode=args.mode)
         ap_object.validate_changes(mode=args.mode)
 

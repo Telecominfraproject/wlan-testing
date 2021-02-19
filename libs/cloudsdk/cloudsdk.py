@@ -1148,6 +1148,7 @@ class CreateAPProfiles:
                                                                                  self.server_name, self.server_ip,
                                                                                  self.secret, self.auth_port)
                 print("radius profile Id is", self.radius_profile)
+                time.sleep(5)
                 self.client.update_testrail(case_id=self.test_cases["radius_profile"], run_id=self.rid, status_id=1,
                                             msg='RADIUS profile created successfully')
                 self.test_cases["radius_profile"] = "passed"
@@ -1194,6 +1195,7 @@ class CreateAPProfiles:
                                                                           ["is5GHzU", "is5GHz", "is5GHzL"],
                                                                           radius_profile=self.radius_profile)
 
+                time.sleep(5)
                 print("5G EAP SSID created successfully - " + mode + " mode")
                 self.client.update_testrail(case_id=self.test_cases["ssid_5g_eap_" + mode],
                                             run_id=self.rid,
@@ -1222,6 +1224,7 @@ class CreateAPProfiles:
                                                                              mode.upper(), 1,
                                                                              ["is2dot4GHz"], radius_profile=self.radius_profile)
                 print("2.4G EAP SSID created successfully - " + mode + " mode")
+                time.sleep(5)
                 self.client.update_testrail(case_id=self.test_cases["ssid_5g_eap_" + mode], run_id=self.rid,
                                             status_id=1,
                                             msg='2.4G EAP SSID created successfully - ' + mode + ' mode')
@@ -1249,6 +1252,7 @@ class CreateAPProfiles:
                                                                            mode.upper(), 1,
                                                                            ["is5GHzU", "is5GHz", "is5GHzL"])
                 print("5G WPA2 SSID created successfully - " + mode + " mode")
+                time.sleep(5)
                 self.client.update_testrail(case_id=self.test_cases["ssid_5g_wpa2_" + mode], run_id=self.rid,
                                             status_id=1,
                                             msg='5G WPA2 SSID created successfully - ' + mode + ' mode')
@@ -1276,6 +1280,7 @@ class CreateAPProfiles:
                                                                               "wpa2OnlyPSK", self.mode.upper(), 1,
                                                                               ["is2dot4GHz"])
                 print("2.4G WPA2 SSID created successfully - " + mode + " mode")
+                time.sleep(5)
                 self.client.update_testrail(case_id=self.test_cases["ssid_2g_wpa2_" + mode], run_id=self.rid,
                                             status_id=1,
                                             msg='2.4G WPA2 SSID created successfully - ' + mode + ' mode')
@@ -1303,6 +1308,7 @@ class CreateAPProfiles:
                                                                           mode.upper(), 1,
                                                                           ["is5GHzU", "is5GHz", "is5GHzL"])
                 print("5G WPA SSID created successfully - " + mode + " mode")
+                time.sleep(5)
                 self.client.update_testrail(case_id=self.test_cases["ssid_5g_wpa_" + mode],
                                             run_id=self.rid,
                                             status_id=1,
@@ -1330,6 +1336,7 @@ class CreateAPProfiles:
                                                                              mode.upper(), 1,
                                                                              ["is2dot4GHz"])
                 print("2.4G WPA SSID created successfully - " + mode + " mode")
+                time.sleep(5)
                 self.client.update_testrail(case_id=self.test_cases["ssid_2g_wpa_" + mode], run_id=self.rid,
                                             status_id=1,
                                             msg='2.4G WPA SSID created successfully - ' + mode + ' mode')
@@ -1400,6 +1407,7 @@ class CreateAPProfiles:
                                                                             self.child_profiles)
             self.test_profile_id = self.create_ap_profile
             print("Test Profile ID for Test is:", self.test_profile_id)
+            time.sleep(5)
             self.client.update_testrail(case_id=self.test_cases["ap_" + self.mode], run_id=self.rid, status_id=1,
                                         msg='AP profile for ' + mode + ' tests created successfully')
             self.test_cases["ap_" + self.mode] = "passed"
