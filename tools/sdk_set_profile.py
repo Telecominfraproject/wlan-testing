@@ -31,6 +31,8 @@ def main():
                         help="Should we skip the WPA2 ssid or not",  default=False)
     parser.add_argument("--skip-profiles", dest="skip_profiles", action='store_true',
                         help="Should we skip creating new ssid profiles?", default=False)
+    parser.add_argument("--cleanup-profile", dest="cleanup_profile", action='store_true',
+                        help="Should we clean up profiles after creating them?", default=False)
 
     parser.add_argument("--psk-5g-wpa2", dest="psk_5g_wpa2", type=str,
                         help="Allow over-riding the 5g-wpa2 PSK value.")
@@ -54,7 +56,7 @@ def main():
                         help="Mode of AP Profile [bridge/nat/vlan]", required=True)
 
     parser.add_argument("--sleep-after-profile", dest="sleep", type=int,
-                        help="Enter the sleep interval delay between each profile push", required=False, default=5000)
+                        help="Enter the sleep interval delay in ms between each profile push.  Default is 0", required=False, default=0)
     # Not implemented yet.
     #parser.add_argument("--rf-mode", type=str,
     #                    choices=["modeN", "modeAC", "modeGN", "modeX", "modeA", "modeB", "modeG", "modeAB"],
@@ -206,8 +208,10 @@ def main():
         time.sleep(sleep)
         ap_object.create_ap_profile(eq_id=equipment_id, fw_model=fw_model, mode=args.mode)
         ap_object.validate_changes(mode=args.mode)
-        time.sleep(5)
-        ap_object.cleanup_profile(equipment_id=equipment_id)
+        if args.cleanup_profile:
+            time.sleep(5)
+            print("Removing profile...")
+            ap_object.cleanup_profile(equipment_id=equipment_id)
     print("Profiles Created")
 
 
