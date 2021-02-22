@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser(description="Query SDK Objects", add_help=False
 parser.add_argument("--type", type=str, help="Type of thing to query",
                     choices=['profile', 'customer', 'location', 'equipment', 'portalUser',
                              'status', 'client-sessions', 'client-info', 'alarm', 'service-metric',
-                             'event', 'firmware', 'all'],
+                             'event', 'firmware', 'ping', 'all'],
                     default = "all")
 parser.add_argument("--cmd", type=str, help="Operation to do, default is 'get'",
                     choices=['get', 'delete', 'child_of'],
@@ -19,7 +19,9 @@ parser.add_argument("--brief", type=str, help="Show output in brief mode?",
                     choices=["true", "false"],
                     default = "false")
 
-base = UnitTestBase("query-sdk", parser)
+reporting = Reporting(reports_root=os.getcwd() + "/reports/")
+
+base = UnitTestBase("query-sdk", parser, reporting)
 
 qtype = base.command_line_args.type
 cmd = base.command_line_args.cmd
@@ -95,6 +97,17 @@ if qtype == 'all' or qtype == 'customer':
         logging.error(logging.traceback.format_exc())
         print("Failed to read Customer %i"%(customer_id))
 
+if qtype == 'all' or qtype == 'ping':
+    try:
+        rv = base.cloud.ping(base.cloudSDK_url, base.bearer)
+        print("Cloud Ping %s:"%(base.cloudSDK_url))
+        #jobj = json.load(ssids)
+        print(json.dumps(rv, indent=4, sort_keys=True))
+    except Exception as ex:
+        print(ex)
+        logging.error(logging.traceback.format_exc())
+        print("Failed to read Cloud Ping %i"%(base.cloudSDK_url))
+
 if qtype == 'all' or qtype == 'firmware':
     try:
         rv = base.cloud.CloudSDK_images(base.command_line_args.model, base.cloudSDK_url, base.bearer)
@@ -123,7 +136,7 @@ if qtype == 'all' or qtype == 'equipment':
     # Get equipment info
     try:
         if cmd == "get":
-            rv = base.cloud.get_customer_equipment(base.cloudSDK_url, base.bearer, base.customer_id)
+            rv = base.cloud.get_customer_equipment(base.customer_id)
             print("Equipment for customer %s:"%(base.customer_id))
             #jobj = json.load(ssids)
             for e in rv:
