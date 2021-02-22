@@ -997,6 +997,13 @@ class CreateAPProfiles:
             "ssid_2g_wpa2_nat": None,
             "ssid_2g_wpa_nat": None,
 
+            "ssid_5g_eap_vlan": None,
+            "ssid_5g_wpa2_vlan": None,
+            "ssid_5g_wpa_vlan": None,
+            "ssid_2g_eap_vlan": None,
+            "ssid_2g_wpa2_vlan": None,
+            "ssid_2g_wpa_vlan": None,
+
             "ap_bridge": None,
             "ap_nat": None,
             "ap_vlan": None,
@@ -1194,8 +1201,12 @@ class CreateAPProfiles:
     def create_ssid_profiles(self, ssid_template=None, skip_wpa2=False, skip_wpa=False, skip_eap=False, mode="bridge"):
 
         self.ssid_template = ssid_template
-
-        self.mode = mode
+        if mode == "vlan":
+            self.mode = "bridge"
+            self.value = 100
+        else:
+            self.mode = mode
+            self.value = 1
         self.fiveG_eap = None
         self.twoFourG_eap = None
         self.fiveG_wpa2 = None
@@ -1220,11 +1231,11 @@ class CreateAPProfiles:
                 self.fiveG_eap = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url,
                                                                           self.bearer, self.customer_id,
                                                                           self.ssid_template,
-                                                                          self.profile_data['5g']['eap'][self.mode],
-                                                                          self.ssid_data['5g']['eap'][self.mode],
+                                                                          self.profile_data['5g']['eap'][mode],
+                                                                          self.ssid_data['5g']['eap'][mode],
                                                                           None,
                                                                           self.radius_name,
-                                                                          "wpa2OnlyRadius", mode.upper(), 1,
+                                                                          "wpa2OnlyRadius", self.mode.upper(), self.value,
                                                                           ["is5GHzU", "is5GHz", "is5GHzL"],
                                                                           radius_profile=self.radius_profile)
 
@@ -1251,11 +1262,11 @@ class CreateAPProfiles:
                 self.twoFourG_eap = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url,
                                                                              self.bearer, self.customer_id,
                                                                              self.ssid_template,
-                                                                             self.profile_data['2g']['eap'][self.mode],
-                                                                             self.ssid_data['2g']['eap'][self.mode],
+                                                                             self.profile_data['2g']['eap'][mode],
+                                                                             self.ssid_data['2g']['eap'][mode],
                                                                              None,
                                                                              self.radius_name, "wpa2OnlyRadius",
-                                                                             mode.upper(), 1,
+                                                                             self.mode.upper(), self.value,
                                                                              ["is2dot4GHz"],
                                                                              radius_profile=self.radius_profile)
                 print("2.4G EAP SSID created successfully - " + mode + " mode")
@@ -1285,11 +1296,11 @@ class CreateAPProfiles:
                 self.fiveG_wpa2 = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url,
                                                                            self.bearer, self.customer_id,
                                                                            self.ssid_template,
-                                                                           self.profile_data['5g']['wpa2'][self.mode],
-                                                                           self.ssid_data['5g']['wpa2'][self.mode],
-                                                                           self.psk_data['5g']['wpa2'][self.mode],
+                                                                           self.profile_data['5g']['wpa2'][mode],
+                                                                           self.ssid_data['5g']['wpa2'][mode],
+                                                                           self.psk_data['5g']['wpa2'][mode],
                                                                            "Radius-Accounting-Profile", "wpa2OnlyPSK",
-                                                                           mode.upper(), 1,
+                                                                           self.mode.upper(), self.value,
                                                                            ["is5GHzU", "is5GHz", "is5GHzL"])
                 print("5G WPA2 SSID created successfully - " + mode + " mode")
                 time.sleep(self.sleep)
@@ -1313,11 +1324,11 @@ class CreateAPProfiles:
                                                                               self.bearer, self.customer_id,
                                                                               self.ssid_template,
                                                                               self.profile_data['2g']['wpa2'][
-                                                                                  self.mode],
-                                                                              self.ssid_data['2g']['wpa2'][self.mode],
-                                                                              self.psk_data['2g']['wpa2'][self.mode],
+                                                                                  mode],
+                                                                              self.ssid_data['2g']['wpa2'][mode],
+                                                                              self.psk_data['2g']['wpa2'][mode],
                                                                               "Radius-Accounting-Profile",
-                                                                              "wpa2OnlyPSK", self.mode.upper(), 1,
+                                                                              "wpa2OnlyPSK", self.mode.upper(), self.value,
                                                                               ["is2dot4GHz"])
                 print("2.4G WPA2 SSID created successfully - " + mode + " mode")
                 time.sleep(self.sleep)
@@ -1346,11 +1357,11 @@ class CreateAPProfiles:
                 self.fiveG_wpa = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url,
                                                                           self.bearer, self.customer_id,
                                                                           self.ssid_template,
-                                                                          self.profile_data['5g']['wpa'][self.mode],
-                                                                          self.ssid_data['5g']['wpa'][self.mode],
-                                                                          self.psk_data['5g']['wpa'][self.mode],
+                                                                          self.profile_data['5g']['wpa'][mode],
+                                                                          self.ssid_data['5g']['wpa'][mode],
+                                                                          self.psk_data['5g']['wpa'][mode],
                                                                           "Radius-Accounting-Profile", "wpaPSK",
-                                                                          mode.upper(), 1,
+                                                                          self.mode.upper(), self.value,
                                                                           ["is5GHzU", "is5GHz", "is5GHzL"])
                 print("5G WPA SSID created successfully - " + mode + " mode")
                 time.sleep(self.sleep)
@@ -1374,27 +1385,27 @@ class CreateAPProfiles:
                 self.twoFourG_wpa = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url,
                                                                              self.bearer, self.customer_id,
                                                                              self.ssid_template,
-                                                                             self.profile_data['2g']['wpa'][self.mode],
-                                                                             self.ssid_data['2g']['wpa'][self.mode],
-                                                                             self.psk_data['2g']['wpa'][self.mode],
+                                                                             self.profile_data['2g']['wpa'][mode],
+                                                                             self.ssid_data['2g']['wpa'][mode],
+                                                                             self.psk_data['2g']['wpa'][mode],
                                                                              "Radius-Accounting-Profile", "wpaPSK",
-                                                                             mode.upper(), 1,
+                                                                             self.mode.upper(), self.value,
                                                                              ["is2dot4GHz"])
                 print("2.4G WPA SSID created successfully - " + mode + " mode")
                 time.sleep(self.sleep)
                 self.client.update_testrail(case_id=self.test_cases["ssid_2g_wpa_" + mode], run_id=self.rid,
                                             status_id=1,
                                             msg='2.4G WPA SSID created successfully - ' + mode + ' mode')
-                self.test_cases["ssid_2g_wpa_" + mode] = "passed"
+                self.test_cases["ssid_2g_wpa_" + self.mode] = "passed"
             except Exception as ex:
                 print(ex)
                 logging.error(logging.traceback.format_exc())
                 self.twoFourG_wpa = None
-                print("2.4G WPA SSID create failed - " + mode + " mode")
-                self.client.update_testrail(case_id=self.test_cases["ssid_2g_wpa_" + mode], run_id=self.rid,
+                print("2.4G WPA SSID create failed - " + self.mode + " mode")
+                self.client.update_testrail(case_id=self.test_cases["ssid_2g_wpa_" + self.mode], run_id=self.rid,
                                             status_id=5,
                                             msg='2.4G WPA SSID create failed - ' + mode + ' mode')
-                self.test_cases["ssid_2g_wpa_" + mode] = "failed"
+                self.test_cases["ssid_2g_wpa_" + self.mode] = "failed"
 
     def create_ap_profile(self, eq_id=None, fw_model=None, mode="bridge"):
         self.ssid_prof_config = []

@@ -24,10 +24,10 @@ class Test24ghz(object):
         staConnect.radio = lf_config["2g_radio"]
         # staConnect.runtime_secs = lf_config["runtime_duration"]
         staConnect.resource = 1
-        staConnect.dut_ssid = "NOLA-01g-ecw5410-2G_WPA2'"
+        staConnect.dut_ssid = "NOLA-01g-ecw5410-2G_WPA2"
         staConnect.dut_passwd = "ecw5410-2G_WPA2"
         staConnect.dut_security = "wpa2"
-        staConnect.station_names = ['py0000']
+        staConnect.station_names = ['sta0000']
         staConnect.bringup_time_sec = 60
         staConnect.cleanup_on_exit = True
         staConnect.setup()
