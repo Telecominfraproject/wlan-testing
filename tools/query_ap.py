@@ -15,7 +15,8 @@ parser.add_argument("--cmd", type=str, help="Command-line to run on AP",
 parser.add_argument("--ap_ssh", type=str, help="ap_ssh method to execute.",
                     default = None, choices=["get_vif_config", "get_vif_state"])
 
-base = UnitTestBase("query-ap", parser)
+reporting = Reporting(reports_root=os.getcwd() + "/reports/")
+base = UnitTestBase("query-ap", parser, reporting)
 
 cmd = base.command_line_args.cmd
 
