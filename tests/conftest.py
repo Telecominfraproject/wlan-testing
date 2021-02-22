@@ -53,9 +53,9 @@ def pytest_addoption(parser):
     parser.addini("build-id", "What build flavor to use, ie 'pending'")
     parser.addini("testbed", "Testbed name")
     parser.addini("mode", "AP Mode, bridge/vlan/nat")
-    parser.addini("skip-wpa", "Should we skip setting up WPA?")
-    parser.addini("skip-wpa2", "Should we skip setting up WPA2?")
-    parser.addini("skip-radius", "Should we skip setting up EAP/Radius?")
+    parser.addini("skip-wpa",  "Should we skip setting up WPA?", default=False)
+    parser.addini("skip-wpa2", "Should we skip setting up WPA2?", default=False)
+    parser.addini("skip-radius", "Should we skip setting up EAP/Radius?", default=False)
     parser.addini("skip-profiles", "Should we skip setting up profiles")
 
     parser.addini("ssid-2g-wpa", "Configure ssid-2g-wpa")
@@ -73,7 +73,8 @@ def pytest_addoption(parser):
     parser.addini("testrail-user-password", "testrail user password")
     parser.addini("lanforge-ip-address", "LANforge ip address to connect to")
     parser.addini("lanforge-port-number", "LANforge port number to connect to")
-    parser.addini("lanforge-radio", "LANforge radio to use")
+    parser.addini("lanforge-2g-radio", "LANforge radio to use")
+    parser.addini("lanforge-5g-radio", "LANforge radio to use")
     parser.addini("lanforge-ethernet-port", "LANforge ethernet adapter to use")
 
     add_base_parse_args_pytest(parser)
@@ -156,6 +157,19 @@ def setup_cloudsdk(request, instantiate_cloudsdk, instantiate_testrail):
         print("FAILED:  Cannot Reach AP CLI.");
         sys.exit(1)
 
+    # LANForge Information
+    lanforge = {
+        "ip": "localhost",
+        "port": 8806,
+        # "prefix": command_line_args.lanforge_prefix,
+        "2g_radio": "wiphy4",
+        "5g_radio": "wiphy5",
+        "eth_port": "eth2"
+    }
+
+
+
+
     fw_model = ap_cli_fw.partition("-")[0]
 
     print('Current Active AP FW from CLI:', ap_cli_fw)
@@ -167,35 +181,40 @@ def setup_cloudsdk(request, instantiate_cloudsdk, instantiate_testrail):
 
     # Logic to create AP Profiles (Bridge Mode)
 
-    ap_object.set_ssid_psk_data(ssid_2g_wpa=command_line_args.ssid_2g_wpa,
-                                ssid_5g_wpa=command_line_args.ssid_5g_wpa,
-                                psk_2g_wpa=command_line_args.psk_2g_wpa,
-                                psk_5g_wpa=command_line_args.psk_5g_wpa,
-                                ssid_2g_wpa2=command_line_args.ssid_2g_wpa2,
-                                ssid_5g_wpa2=command_line_args.ssid_5g_wpa2,
-                                psk_2g_wpa2=command_line_args.psk_2g_wpa2,
-                                psk_5g_wpa2=command_line_args.psk_5g_wpa2)
+    # ap_object.set_ssid_psk_data(ssid_2g_wpa="Pytest-run-2g-wpa",
+    #                             ssid_5g_wpa="Pytest-run-2g-wpa",
+    #                             psk_2g_wpa="Pytest-run-2g-wpa",
+    #                             psk_5g_wpa="Pytest-run-2g-wpa",
+    #                             ssid_2g_wpa2="Pytest-run-2g-wpa",
+    #                             ssid_5g_wpa2="Pytest-run-2g-wpa",
+    #                             psk_2g_wpa2="Pytest-run-2g-wpa",
+    #                             psk_5g_wpa2="Pytest-run-2g-wpa")
 
     print(ap_object)
-
+    today = str(date.today())
+    rid = instantiate_testrail.get_run_id(
+        test_run_name=command_line_args.testrail_run_prefix + fw_model + "_" + today + "_" + "ecw5410-2021-02-12-pending-e8bb466")
     print("creating Profiles")
     ssid_template = "TipWlan-Cloud-Wifi"
 
     if not command_line_args.skip_profiles:
         if not command_line_args.skip_radius:
             # Radius Profile needs to be set here
-            # obj.create_radius_profile(radius_name, rid, key)
-            pass
-        ap_object.create_ssid_profiles(ssid_template=ssid_template, skip_eap=True, skip_wpa=command_line_args.skip_wpa,
-                                       skip_wpa2=command_line_args.skip_wpa2, mode=command_line_args.mode)
+            radius_name = "Test-Radius-" + str(time.time()).split(".")[0]
+            radius_template = "templates/radius_profile_template.json"
+            ap_object.create_radius_profile(radius_name=radius_name, radius_template=radius_template, rid=rid,
+                                            key=fw_model)
+        ap_object.create_ssid_profiles(ssid_template=ssid_template, skip_eap=True, skip_wpa=True,
+                                       skip_wpa2=False, mode="bridge")
 
         print("Create AP with equipment-id: ", equipment_id)
         ap_object.create_ap_profile(eq_id=equipment_id, fw_model=fw_model, mode=command_line_args.mode)
         ap_object.validate_changes(mode=command_line_args.mode)
 
     print("Profiles Created")
+    data = {"lanforge": lanforge, "ap_object": ap_object}
 
-    yield ap_object
+    yield data
 
 @pytest.fixture(scope="session")
 def update_firmware(request, setup_testrails, instantiate_jFrog, instantiate_cloudsdk, access_points):
