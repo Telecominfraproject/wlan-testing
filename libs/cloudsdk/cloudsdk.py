@@ -386,7 +386,7 @@ class CloudSDK:
                 logging.error(logging.traceback.format_exc())
                 if not self.verbose:
                     # Force full logging for this, result is not as expected.
-                    self.verbose = true;
+                    self.verbose = True
                     self.check_response("GET", status_response, headers, payload, equip_fw_url)
                     self.verbose = False
             return ("ERROR")
