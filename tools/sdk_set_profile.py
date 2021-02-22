@@ -53,6 +53,8 @@ def main():
     parser.add_argument("--mode", dest="mode", choices=['bridge', 'nat', 'vlan'], type=str,
                         help="Mode of AP Profile [bridge/nat/vlan]", required=True)
 
+    parser.add_argument("--sleep-after-profile", dest="sleep", type=int,
+                        help="Enter the sleep interval delay between each profile push", required=False, default=5000)
     # Not implemented yet.
     #parser.add_argument("--rf-mode", type=str,
     #                    choices=["modeN", "modeAC", "modeGN", "modeX", "modeA", "modeB", "modeG", "modeAB"],
@@ -164,13 +166,14 @@ def main():
     bearer = cloud.get_bearer(cloudSDK_url, cloud_type)
     radius_name = "%s-%s-%s" % (command_line_args.testbed, fw_model, "Radius")
 
-
+    sleep = command_line_args.sleep
+    sleep = sleep/1000
 
     args = command_line_args
 
     print("Profiles Created")
 
-    ap_object = CreateAPProfiles(args, cloud=cloud, client=client, fw_model=fw_model)
+    ap_object = CreateAPProfiles(args, cloud=cloud, client=client, fw_model=fw_model, sleep=sleep)
 
     # Logic to create AP Profiles (Bridge Mode)
 
@@ -200,10 +203,11 @@ def main():
 
 
         print("Create AP with equipment-id: ", equipment_id)
-        time.sleep(5)
+        time.sleep(sleep)
         ap_object.create_ap_profile(eq_id=equipment_id, fw_model=fw_model, mode=args.mode)
         ap_object.validate_changes(mode=args.mode)
-
+        time.sleep(5)
+        ap_object.cleanup_profile(equipment_id=equipment_id)
     print("Profiles Created")
 
 

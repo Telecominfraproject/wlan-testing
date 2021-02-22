@@ -390,7 +390,7 @@ class CloudSDK:
                     self.check_response("GET", status_response, headers, payload, equip_fw_url)
                     self.verbose = False
             return ("ERROR")
-                
+
         else:
             return ("ERROR")
 
@@ -507,13 +507,13 @@ class CloudSDK:
                 prof_type = e['profileType']
                 prof_name = e['name']
                 print("looking for profile: %s  checking prof-id: %s  model-type: %s  type: %s  name: %s" % (
-                name, prof_id, prof_model_type, prof_type, prof_name))
+                    name, prof_id, prof_model_type, prof_type, prof_name))
                 if name == prof_name:
                     return e
         return None
 
     def delete_customer_profile(self, cloudSDK_url, bearer, profile_id):
-        url = cloudSDK_url + '/portal/profile/?profileId=' + profile_id
+        url = cloudSDK_url + '/portal/profile/?profileId=' + str(profile_id)
         print("Deleting customer profile with url: " + url)
         payload = {}
         headers = {
@@ -756,7 +756,7 @@ class CloudSDK:
         return profile['id']
 
     def create_ssid_profile(self, cloudSDK_url, bearer, customer_id, template, name, ssid, passkey, radius, security,
-                            mode, vlan, radios):
+                            mode, vlan, radios, radius_profile=None):
         print("create-ssid-profile, template: %s" % (template))
         profile = self.get_customer_profile_by_name(cloudSDK_url, bearer, customer_id, template)
 
@@ -768,13 +768,17 @@ class CloudSDK:
         profile['details']['forwardMode'] = mode
         profile['details']['vlanId'] = vlan
         profile['details']['appliedRadios'] = radios
-
+        if radius_profile is not None:
+            profile['details']['radiusServiceId'] = radius_profile
+            profile['childProfileIds'].append(radius_profile)
         url = cloudSDK_url + "/portal/profile"
         headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + bearer
         }
         data_str = json.dumps(profile)
+        time.sleep(5)
+        print("shivamgogoshots radius :", radius_profile, "\n\n", profile, "\n\n", data_str)
         response = requests.request("POST", url, headers=headers, data=data_str)
         self.check_response("POST", response, headers, data_str, url)
         ssid_profile = response.json()
@@ -787,7 +791,7 @@ class CloudSDK:
         if profile == None:
             # create one then
             return self.create_ssid_profile(cloudSDK_url, bearer, customer_id, template, name,
-                                            ssid, passkey, radius, security, mode, vlan, radios)
+                                            ssid, passkey, radius, security, mode, vlan, radios, radius_profile)
 
         # Update then.
         print("Update existing ssid profile, name: %s" % (name))
@@ -807,7 +811,10 @@ class CloudSDK:
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + bearer
         }
+
         data_str = json.dumps(profile)
+        time.sleep(10)
+        print("shivamgogoshots radius :", radius_profile, "\n\n", profile, "\n\n", data_str)
         response = requests.request("PUT", url, headers=headers, data=data_str)
         self.check_response("PUT", response, headers, data_str, url)
         return profile['id']
@@ -897,7 +904,13 @@ class CloudSDK:
                                         subnet_mask,
                                         region, server_name, server_ip, secret, auth_port):
         null = None
-        profile = {"model_type": "Profile", "id": 129, "customerId": 2, "profileType": "radius", "name": "Lab-RADIUS", "details": {"model_type": "RadiusProfile", "primaryRadiusAuthServer": {"model_type": "RadiusServer", "ipAddress": "10.10.10.203", "secret": "testing123", "port": 1812, "timeout": 5}, "secondaryRadiusAuthServer": null, "primaryRadiusAccountingServer": null, "secondaryRadiusAccountingServer": null, "profileType": "radius"}, "createdTimestamp": 1602263176599, "lastModifiedTimestamp": 1611708334061, "childProfileIds": []}
+        profile = {"model_type": "Profile", "id": 129, "customerId": 2, "profileType": "radius", "name": "Lab-RADIUS",
+                   "details": {"model_type": "RadiusProfile",
+                               "primaryRadiusAuthServer": {"model_type": "RadiusServer", "ipAddress": "10.10.10.203",
+                                                           "secret": "testing123", "port": 1812, "timeout": 5},
+                               "secondaryRadiusAuthServer": null, "primaryRadiusAccountingServer": null,
+                               "secondaryRadiusAccountingServer": null, "profileType": "radius"},
+                   "createdTimestamp": 1602263176599, "lastModifiedTimestamp": 1611708334061, "childProfileIds": []}
         profile['name'] = name
         profile['customerId'] = customer_id
         profile['details']["primaryRadiusAuthServer"]['ipAddress'] = server_ip
@@ -925,9 +938,11 @@ class CreateAPProfiles:
                  cloud=None,
                  cloud_type="v1",
                  client=None,
-                 fw_model=None
+                 fw_model=None,
+                 sleep=5
                  ):
 
+        self.profile_test_data = {"ssid_config": {}, "vif_config": {}}
         self.rid = None
         self.fiveG_wpa2 = None
         self.fiveG_wpa = None
@@ -963,6 +978,7 @@ class CreateAPProfiles:
         self.ap_models = ["ec420", "ea8300", "ecw5211", "ecw5410"]
         self.fw_model = fw_model
         self.report_data = {}
+        self.sleep = sleep
         self.report_data['tests'] = dict.fromkeys(self.ap_models, "")
         self.test_cases = {
             "radius_profile": None,
@@ -997,6 +1013,7 @@ class CreateAPProfiles:
         self.profile_data, self.prof_names, self.prof_names_eap = self.create_profile_data(self.command_line_args,
                                                                                            self.fw_model)
         self.ssid_data, self.psk_data = self.create_ssid_data(self.command_line_args, self.fw_model)
+        self.profile_ids = []
 
     def create_profile_data(self, args, fw_model):
         profile_data = {
@@ -1054,7 +1071,6 @@ class CreateAPProfiles:
 
     def create_ssid_data(self, args, fw_model):
         ssid_data = self.profile_data.copy()
-
         psk_data = {
             "5g":
                 {
@@ -1088,7 +1104,6 @@ class CreateAPProfiles:
                 }
 
         }
-
         return ssid_data, psk_data
 
     def set_ssid_psk_data(self,
@@ -1160,7 +1175,7 @@ class CreateAPProfiles:
                                                                                  self.server_name, self.server_ip,
                                                                                  self.secret, self.auth_port)
                 print("radius profile Id is", self.radius_profile)
-                time.sleep(5)
+                time.sleep(self.sleep)
                 self.client.update_testrail(case_id=self.test_cases["radius_profile"], run_id=self.rid, status_id=1,
                                             msg='RADIUS profile created successfully')
                 self.test_cases["radius_profile"] = "passed"
@@ -1179,6 +1194,7 @@ class CreateAPProfiles:
     def create_ssid_profiles(self, ssid_template=None, skip_wpa2=False, skip_wpa=False, skip_eap=False, mode="bridge"):
 
         self.ssid_template = ssid_template
+
         self.mode = mode
         self.fiveG_eap = None
         self.twoFourG_eap = None
@@ -1193,9 +1209,14 @@ class CreateAPProfiles:
               skip_eap)
 
         if not skip_eap:
+            self.profile_test_data["vif_config"]["ssid_5g_eap"] = None
+            self.profile_test_data["vif_config"]["ssid_2g_eap"] = None
+            self.profile_test_data["ssid_config"]["ssid_5g_eap"] = None
+            self.profile_test_data["ssid_config"]["ssid_2g_eap"] = None
+
             # 5G eap
             try:
-
+                print("sssss", self.radius_profile)
                 self.fiveG_eap = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url,
                                                                           self.bearer, self.customer_id,
                                                                           self.ssid_template,
@@ -1207,7 +1228,7 @@ class CreateAPProfiles:
                                                                           ["is5GHzU", "is5GHz", "is5GHzL"],
                                                                           radius_profile=self.radius_profile)
 
-                time.sleep(5)
+                time.sleep(self.sleep)
                 print("5G EAP SSID created successfully - " + mode + " mode")
                 self.client.update_testrail(case_id=self.test_cases["ssid_5g_eap_" + mode],
                                             run_id=self.rid,
@@ -1226,6 +1247,7 @@ class CreateAPProfiles:
 
             # 2.4G eap
             try:
+                print("shivamgogoshots", self.radius_profile)
                 self.twoFourG_eap = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url,
                                                                              self.bearer, self.customer_id,
                                                                              self.ssid_template,
@@ -1234,9 +1256,10 @@ class CreateAPProfiles:
                                                                              None,
                                                                              self.radius_name, "wpa2OnlyRadius",
                                                                              mode.upper(), 1,
-                                                                             ["is2dot4GHz"], radius_profile=self.radius_profile)
+                                                                             ["is2dot4GHz"],
+                                                                             radius_profile=self.radius_profile)
                 print("2.4G EAP SSID created successfully - " + mode + " mode")
-                time.sleep(5)
+                time.sleep(self.sleep)
                 self.client.update_testrail(case_id=self.test_cases["ssid_5g_eap_" + mode], run_id=self.rid,
                                             status_id=1,
                                             msg='2.4G EAP SSID created successfully - ' + mode + ' mode')
@@ -1252,6 +1275,11 @@ class CreateAPProfiles:
                 self.test_cases["ssid_5g_eap_" + mode] = "failed"
 
         if not skip_wpa2:
+            self.profile_test_data["vif_config"]["ssid_5g_wpa2"] = None
+            self.profile_test_data["vif_config"]["ssid_2g_wpa2"] = None
+            self.profile_test_data["ssid_config"]["ssid_5g_wpa2"] = None
+            self.profile_test_data["ssid_config"]["ssid_2g_wpa2"] = None
+
             # 5g wpa2
             try:
                 self.fiveG_wpa2 = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url,
@@ -1264,7 +1292,7 @@ class CreateAPProfiles:
                                                                            mode.upper(), 1,
                                                                            ["is5GHzU", "is5GHz", "is5GHzL"])
                 print("5G WPA2 SSID created successfully - " + mode + " mode")
-                time.sleep(5)
+                time.sleep(self.sleep)
                 self.client.update_testrail(case_id=self.test_cases["ssid_5g_wpa2_" + mode], run_id=self.rid,
                                             status_id=1,
                                             msg='5G WPA2 SSID created successfully - ' + mode + ' mode')
@@ -1292,7 +1320,7 @@ class CreateAPProfiles:
                                                                               "wpa2OnlyPSK", self.mode.upper(), 1,
                                                                               ["is2dot4GHz"])
                 print("2.4G WPA2 SSID created successfully - " + mode + " mode")
-                time.sleep(5)
+                time.sleep(self.sleep)
                 self.client.update_testrail(case_id=self.test_cases["ssid_2g_wpa2_" + mode], run_id=self.rid,
                                             status_id=1,
                                             msg='2.4G WPA2 SSID created successfully - ' + mode + ' mode')
@@ -1308,6 +1336,11 @@ class CreateAPProfiles:
                 self.test_cases["ssid_2g_wpa2_" + mode] = "failed"
 
         if not skip_wpa:
+            self.profile_test_data["vif_config"]["ssid_5g_wpa"] = None
+            self.profile_test_data["vif_config"]["ssid_2g_wpa"] = None
+            self.profile_test_data["ssid_config"]["ssid_5g_wpa"] = None
+            self.profile_test_data["ssid_config"]["ssid_2g_wpa"] = None
+
             # 5g wpa
             try:
                 self.fiveG_wpa = self.cloud.create_or_update_ssid_profile(self.command_line_args.sdk_base_url,
@@ -1320,7 +1353,7 @@ class CreateAPProfiles:
                                                                           mode.upper(), 1,
                                                                           ["is5GHzU", "is5GHz", "is5GHzL"])
                 print("5G WPA SSID created successfully - " + mode + " mode")
-                time.sleep(5)
+                time.sleep(self.sleep)
                 self.client.update_testrail(case_id=self.test_cases["ssid_5g_wpa_" + mode],
                                             run_id=self.rid,
                                             status_id=1,
@@ -1348,7 +1381,7 @@ class CreateAPProfiles:
                                                                              mode.upper(), 1,
                                                                              ["is2dot4GHz"])
                 print("2.4G WPA SSID created successfully - " + mode + " mode")
-                time.sleep(5)
+                time.sleep(self.sleep)
                 self.client.update_testrail(case_id=self.test_cases["ssid_2g_wpa_" + mode], run_id=self.rid,
                                             status_id=1,
                                             msg='2.4G WPA SSID created successfully - ' + mode + ' mode')
@@ -1375,36 +1408,43 @@ class CreateAPProfiles:
 
         if self.fiveG_wpa2:
             self.child_profiles.append(self.fiveG_wpa2)
+            self.profile_ids.append(self.fiveG_wpa2)
             self.ssid_prof_config.append(self.profile_data['5g']['wpa2'][self.mode])
             self.ssid_config.append(self.ssid_data['5g']['wpa2'][self.mode])
 
         if self.twoFourG_wpa2:
             self.child_profiles.append(self.twoFourG_wpa2)
+            self.profile_ids.append(self.twoFourG_wpa2)
             self.ssid_prof_config.append(self.profile_data['2g']['wpa2'][self.mode])
             self.ssid_config.append(self.ssid_data['2g']['wpa2'][self.mode])
 
         if self.fiveG_eap:
             self.child_profiles.append(self.fiveG_eap)
+            self.profile_ids.append(self.fiveG_eap)
             self.ssid_prof_config.append(self.profile_data['5g']['eap'][self.mode])
             self.ssid_config.append(self.ssid_data['5g']['eap'][self.mode])
 
         if self.twoFourG_eap:
             self.child_profiles.append(self.twoFourG_eap)
+            self.profile_ids.append(self.twoFourG_eap)
             self.ssid_prof_config.append(self.profile_data['2g']['eap'][self.mode])
             self.ssid_config.append(self.ssid_data['2g']['eap'][self.mode])
 
         if self.fiveG_wpa:
             self.child_profiles.append(self.fiveG_wpa)
+            self.profile_ids.append(self.fiveG_wpa)
             self.ssid_prof_config.append(self.profile_data['5g']['wpa'][self.mode])
             self.ssid_config.append(self.ssid_data['5g']['wpa'][self.mode])
 
         if self.twoFourG_wpa:
             self.child_profiles.append(self.twoFourG_wpa)
+            self.profile_ids.append(self.twoFourG_wpa)
             self.ssid_prof_config.append(self.profile_data['2g']['wpa'][self.mode])
             self.ssid_config.append(self.ssid_data['2g']['wpa'][self.mode])
 
         if self.radius_profile is not None:
             self.child_profiles.append(self.radius_profile)
+            self.profile_ids.append(self.radius_profile)
             # EAP ssid profiles would have been added above if they existed.
 
         name = self.command_line_args.testbed + "-" + self.fw_model + "_" + self.mode
@@ -1433,9 +1473,54 @@ class CreateAPProfiles:
             self.test_cases["ap_" + self.mode] = "failed"
 
         self.ap_profile = self.cloud.set_ap_profile(eq_id, self.test_profile_id)
+        self.profile_ids.append(self.ap_profile)
 
-    def cleanup_profile(self):
-        pass
+    # should be called after test completion
+    def cleanup_profile(self, equipment_id=None):
+        profile_info_dict = {
+            "profile_id": "2",
+            "childProfileIds": [
+                3647,
+                10,
+                11,
+                12,
+                13,
+                190,
+                191
+            ],
+            "fiveG_WPA2_SSID": "ECW5410_5G_WPA2",
+            "fiveG_WPA2_PSK": "Connectus123$",
+            "fiveG_WPA_SSID": "ECW5410_5G_WPA",
+            "fiveG_WPA_PSK": "Connectus123$",
+            "fiveG_OPEN_SSID": "ECW5410_5G_OPEN",
+            "fiveG_WPA2-EAP_SSID": "ECW5410_5G_WPA2-EAP",
+            "twoFourG_OPEN_SSID": "ECW5410_2dot4G_OPEN",
+            "twoFourG_WPA2_SSID": "ECW5410_2dot4G_WPA2",
+            "twoFourG_WPA2_PSK": "Connectus123$",
+            "twoFourG_WPA_SSID": "ECW5410_2dot4G_WPA",
+            "twoFourG_WPA_PSK": "Connectus123$",
+            "twoFourG_WPA2-EAP_SSID": "ECW5410_2dot4G_WPA2-EAP",
+            "fiveG_WPA2_profile": 3647,
+            "fiveG_WPA_profile": 13,
+            "fiveG_WPA2-EAP_profile": 191,
+            "twoFourG_WPA2_profile": 11,
+            "twoFourG_WPA_profile": 12,
+            "twoFourG_WPA2-EAP_profile": 190,
+            "ssid_list": [
+                "ECW5410_5G_WPA2",
+                "ECW5410_5G_WPA",
+                "ECW5410_5G_WPA2-EAP",
+                "ECW5410_2dot4G_WPA2",
+                "ECW5410_2dot4G_WPA",
+                "ECW5410_2dot4G_WPA2-EAP"
+            ]
+        }
+        ap_profile = self.cloud.set_ap_profile(equipment_id, profile_info_dict["profile_id"])
+        time.sleep(5)
+        for i in self.profile_ids:
+            if i is not None:
+                self.cloud.delete_customer_profile(self.command_line_args.sdk_base_url, self.bearer, i)
+            time.sleep(5)
 
     def validate_changes(self, mode="bridge"):
 
@@ -1504,3 +1589,4 @@ class CreateAPProfiles:
                 self.test_cases[mode + "_vifs"] = "error"
 
         print("Profiles Created")
+        self.profile_test_data = {"ssid_config": self.ssid_config, "vif_config": ssid_state}
