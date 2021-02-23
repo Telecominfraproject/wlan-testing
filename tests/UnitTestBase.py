@@ -103,7 +103,7 @@ def add_base_parse_args(parser):
                              help="Force upgrading firmware even if it is already current version",
                              default=False)
     parser.add_argument("-m", "--model", type=str,
-                             choices=['ea8300', 'ecw5410', 'ecw5211', 'ec420', 'wf188n', 'eap102', 'None'],
+                             choices=['ea8300', 'ecw5410', 'ecw5211', 'ec420', 'wf188n', 'eap102', 'eap101', 'cig194c', 'None'],
                              help="AP model to be run", required=True)
     parser.add_argument("--equipment-id", type=str,
                              help="AP model ID, as exists in the cloud-sdk.  -1 to auto-detect.",
