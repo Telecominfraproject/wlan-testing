@@ -111,16 +111,21 @@ Testbed 12 (Basic, wf188n)
 
 Testbed-15
 
-# Set AP profile on NOLA-15
+# Set AP profile on NOLA-15 (ap-1)
 ./sdk_set_profile.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 8953 \
    --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP4 --lanforge-ip-address localhost --lanforge-port-number 8952 \
    --default-ap-profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc-nola-15.cicd.lab.wlan.tip.build \
    --skip-radius --skip-wpa --verbose --testbed "NOLA-15" --ssid-5g-wpa2 Default-SSID-5gl --psk-5g-wpa2 12345678 \
    --ssid-2g-wpa2 Default-SSID-2g --psk-2g-wpa2 12345678 --mode bridge
 
-# Update firmware
+# Update firmware (ap-1)
 ./sdk_upgrade_fw.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 8953 \
    --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP4 --testbed \"NOLA-15\" \
    --sdk-base-url https://wlan-portal-svc-nola-15.cicd.lab.wlan.tip.build --force-upgrade true
 
-
+# Set AP profile on NOLA-15 (ap-2, cig194c)
+./sdk_set_profile.py --testrail-user-id NONE --model cig194c --ap-jumphost-address localhost --ap-jumphost-port 8953 \
+   --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP5 --lanforge-ip-address localhost --lanforge-port-number 8952 \
+   --default-ap-profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc-nola-15.cicd.lab.wlan.tip.build \
+   --skip-radius --skip-wpa --verbose --testbed "NOLA-15b" --ssid-5g-wpa2 Default-SSID-5gl-cig --psk-5g-wpa2 12345678 \
+   --ssid-2g-wpa2 Default-SSID-2g-cig --psk-2g-wpa2 12345678 --mode bridge
