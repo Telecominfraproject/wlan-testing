@@ -27,7 +27,7 @@ def ssh_cli_active_fw(ap_ip, username, password):
             print(cli_active_fw)
 
             ap_cmd = '/usr/opensync/bin/ovsh s Manager -c | grep status'
-            cmd = "ap_connectcd ../../lanforge/lanforge-scripts && python3 openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (owrt_args, ap_ip, ap_cmd)
+            cmd = "cd ../../lanforge/lanforge-scripts && python3 openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (owrt_args, ap_ip, ap_cmd)
             with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True) as p:
                 output, errors = p.communicate()
             status = str(output.decode('utf-8').splitlines())
