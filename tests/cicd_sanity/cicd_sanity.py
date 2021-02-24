@@ -249,6 +249,7 @@ test_info_module = os.path.splitext(test_file)[0]
 test_info = importlib.import_module(test_info_module)
 
 equipment_id_dict = test_info.equipment_id_dict
+equipment_ids = equipment_id_dict
 profile_info_dict = test_info.profile_info_dict
 cloud_sdk_models = test_info.cloud_sdk_models
 equipment_ip_dict = test_info.equipment_ip_dict
@@ -278,11 +279,6 @@ if args.model is not None:
 
 if args.tr_prefix is not None:
     testRunPrefix = args.tr_prefix
-
-
-
-####Use variables other than defaults for running tests on custom FW etc
-equipment_ids = equipment_id_dict
 
 ##LANForge Information
 lanforge_ip = test_info.lanforge_ip
