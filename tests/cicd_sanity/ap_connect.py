@@ -80,7 +80,7 @@ def iwinfo_status(ap_ip, username, password):
     try:
         if 'tty' in ap_ip:
             ap_cmd = 'iwinfo | grep ESSID'
-            cmd = "ap_connectcd ../../lanforge/lanforge-scripts && python3 openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
+            cmd = "cd ../../lanforge/lanforge-scripts && python3 openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
             owrt_args, ap_ip, ap_cmd)
             with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True) as p:
                 output, errors = p.communicate()
@@ -110,7 +110,7 @@ def get_vif_config(ap_ip, username, password):
     try:
         if 'tty' in ap_ip:
             ap_cmd = "/usr/opensync/bin/ovsh s Wifi_VIF_Config -c | grep 'ssid               :'"
-            cmd = "ap_connectcd ../../lanforge/lanforge-scripts && python3 openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
+            cmd = "cd ../../lanforge/lanforge-scripts && python3 openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
             owrt_args, ap_ip, ap_cmd)
             with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True) as p:
                 output, errors = p.communicate()
@@ -150,7 +150,7 @@ def get_vif_state(ap_ip, username, password):
     try:
         if 'tty' in ap_ip:
             ap_cmd = "/usr/opensync/bin/ovsh s Wifi_VIF_State -c | grep 'ssid               :'"
-            cmd = "ap_connectcd ../../lanforge/lanforge-scripts && python3 openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
+            cmd = "cd ../../lanforge/lanforge-scripts && python3 openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
             owrt_args, ap_ip, ap_cmd)
             with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True) as p:
                 output, errors = p.communicate()
