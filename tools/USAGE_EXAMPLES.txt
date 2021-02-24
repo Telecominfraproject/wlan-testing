@@ -5,6 +5,10 @@ into the 'ubuntu' jumphost machine.
 
 ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 -L 8803:lab-ctlr:22 \
        -L 8810:lf4:4002 -L 8811:lf4:5901 -L 8812:lf4:8080 -L 8813:lab-ctlr:22 \
+       -L 8850:lf5:4002 -L 8851:lf5:5901 -L 8852:lf5:8080 -L 8853:lab-ctlr2:22 \
+       -L 8860:lf6:4002 -L 8861:lf6:5901 -L 8862:lf6:8080 -L 8863:lab-ctlr2:22 \
+       -L 8870:lf7:4002 -L 8871:lf7:5901 -L 8872:lf7:8080 -L 8873:lab-ctlr2:22 \
+       -L 8880:lf8:4002 -L 8881:lf8:5901 -L 8882:lf8:8080 -L 8883:lab-ctlr2:22 \
        -L 8890:lf9:4002 -L 8891:lf9:5901 -L 8892:lf9:8080 -L 8893:lab-ctlr3:22 \
        -L 8900:lf10:4002 -L 8901:lf10:5901 -L 8902:lf10:8080 -L 8903:lab-ctlr3:22 \
        -L 8910:lf11:4002 -L 8911:lf11:5901 -L 8912:lf11:8080 -L 8913:lab-ctlr3:22 \
@@ -96,16 +100,16 @@ Testbed 12 (Basic, wf188n)
 # Upgrade firmware to latest
 ./sdk_upgrade_fw.py --testrail-user-id NONE --model wf188n --ap-jumphost-address localhost --ap-jumphost-port 8823 \
    --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --testbed \"NOLA-12\" \
-   --sdk-base-url https://wlan-portal-svc-ben-testbed.cicd.lab.wlan.tip.build --force-upgrade true
+   --sdk-base-url https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build --force-upgrade true
 
 ./sdk_set_profile.py --testrail-user-id NONE --model wf188n --ap-jumphost-address localhost --ap-jumphost-port 8823 \
   --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --lanforge-ip-address localhost --lanforge-port-number 8822 \
-  --default-ap-profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc-ben-testbed.cicd.lab.wlan.tip.build \
+  --default-ap-profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build \
   --skip-radius --skip-wpa --verbose --testbed "NOLA-12" --ssid-5g-wpa2 Default-SSID-5gl --psk-5g-wpa2 12345678 \
-  --ssid-2g-wpa2 Default-SSID-2g --psk-2g-wpa2 12345678
+  --ssid-2g-wpa2 Default-SSID-2g --psk-2g-wpa2 12345678 --mode bridge
 
 # Query an ssid
-./query_sdk.py --testrail-user-id NONE --model wf188n --sdk-base-url https://wlan-portal-svc-ben-testbed.cicd.lab.wlan.tip.build \
+./query_sdk.py --testrail-user-id NONE --model wf188n --sdk-base-url https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build \
   --sdk-user-id    support@example.com --sdk-user-password support --equipment_id 3 --type profile --cmd get --object_id 11
 
 
