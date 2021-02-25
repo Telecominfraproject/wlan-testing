@@ -29,7 +29,22 @@ The ports are used as:
 Testbed-01
 
 # Set AP profile on NOLA-01
-./sdk_set_profile.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 8803   --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --lanforge-ip-address localhost --lanforge-port-number 8802   --default-ap-profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc.cicd.lab.wlan.tip.build   --skip-radius --skip-wpa --verbose --testbed "NOLA-01" --ssid-5g-wpa2 Default-SSID-5gl --psk-5g-wpa2 12345678   --ssid-2g-wpa2 Default-SSID-2g --psk-2g-wpa2 12345678 --mode bridge --sdk-base-url https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build
+./sdk_set_profile.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 8803 \
+  --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --lanforge-ip-address localhost --lanforge-port-number 8802 \
+  --default-ap-profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build \
+  --skip-radius --skip-wpa --verbose --testbed "NOLA-01" --ssid-5g-wpa2 Default-SSID-5gl --psk-5g-wpa2 12345678 \
+  --ssid-2g-wpa2 Default-SSID-2g --psk-2g-wpa2 12345678 --mode bridge
+
+
+./Nightly_Sanity.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 8803 --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --testbed "NOLA-01r" --lanforge-ip-address localhost --lanforge-port-number 8802 --default_ap_profile TipWlan-2-Radios --lanforge-2g-radio 1.1.wiphy4 --lanforge-5g-radio 1.1.wiphy5 --skip-upgrade True --testrail-milestone milestone-1 --sdk-base-url https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build
+
+
+# Set AP profile on NOLA-06 (eap101)
+./sdk_set_profile.py --testrail-user-id NONE --model eap101 --ap-jumphost-address localhost --ap-jumphost-port 8863 \
+  --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP2 --lanforge-ip-address localhost --lanforge-port-number 8862 \
+  --default-ap-profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build \
+  --skip-radius --skip-wpa --verbose --testbed "NOLA-06" --ssid-5g-wpa2 Default-SSID-5gl --psk-5g-wpa2 12345678 \
+  --ssid-2g-wpa2 Default-SSID-2g --psk-2g-wpa2 12345678 --mode bridge
 
 
 ./Nightly_Sanity.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 8803 --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --testbed "NOLA-01r" --lanforge-ip-address localhost --lanforge-port-number 8802 --default_ap_profile TipWlan-2-Radios --lanforge-2g-radio 1.1.wiphy4 --lanforge-5g-radio 1.1.wiphy5 --skip-upgrade True --testrail-milestone milestone-1 --sdk-base-url https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build
