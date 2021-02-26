@@ -114,13 +114,13 @@ jobs:
         apiVersion: batch/v1
         kind: Job
         metadata:
-          name: nightly-ci-$today
+          name: temp-nightly-ci-$today
         spec:
           template:
             spec:
               containers:
               - name: tests
-                image: 4c74356b41/paramiko
+                image: 4c74356b41/paramiko:22
                 args: 
                 - "--nola-number"
                 - "${{ matrix.number }}"
@@ -134,5 +134,5 @@ jobs:
           backoffLimit: 0
         EOF
         sleep 60 # needed to wait for the pod to come up
-        podname=$(kubectl get pods -o name -l job-name=nightly-ci-$today | sed "s/pod\///")
+        podname=$(kubectl get pods -o name -l job-name=temp-nightly-ci-$today | sed "s/pod\///")
         kubectl logs $podname -f
