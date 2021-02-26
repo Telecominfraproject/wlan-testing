@@ -1,5 +1,5 @@
 env:
-  SSHPASS: ${{ secrets.SSHPASS }}
+  sshpass: ${{ secrets.SSHPASS }}
   # AWS credentials
   AWS_EKS_NAME: tip-wlan-main
   AWS_DEFAULT_OUTPUT: json
