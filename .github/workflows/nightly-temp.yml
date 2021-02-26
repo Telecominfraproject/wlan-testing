@@ -1,4 +1,3 @@
-name: nightly build
 env:
   SSHPASS: ${{ secrets.SSHPASS }}
   # AWS credentials
@@ -29,7 +28,7 @@ on:
   schedule:
   - cron: '55 0 * * *'
 
-name: update cloud controllers build
+name: temporary nightly build
 defaults:
   run:
     shell: bash
