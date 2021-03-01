@@ -1,0 +1,10 @@
+# NeighbourScanReports
+
+## Properties
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**model_type** | **str** |  | 
+**neighbour_reports** | [**list[NeighbourReport]**](NeighbourReport.md) |  | [optional] 
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
