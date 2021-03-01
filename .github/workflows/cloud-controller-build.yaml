@@ -122,3 +122,28 @@ jobs:
       run: |
         helm dependency update
         helm upgrade --install tip . -f ../../testbed-deployment.yaml --create-namespace --namespace nola-${{ matrix.number }} --wait --timeout 20m
+
+    - name: Show resource state on deployment failure
+      if: failure()
+      run: |
+        kubectl get pods  --namespace nola-${{ matrix.number }}
+        kubectl get services --namespace nola-${{ matrix.number }}
+        kubectl get persistentvolumeclaims --namespace nola-${{ matrix.number }}
+    - name: Describe pods on deployment failure
+      if: failure()
+      run: |
+        kubectl describe pods --namespace nola-${{ matrix.number }}
+    - name: Describe services on deployment failure
+      if: failure()
+      run: |
+        kubectl describe services --namespace nola-${{ matrix.number }}
+    - name: Describe persistentvolumeclaims on deployment failure
+      if: failure()
+      run: |
+        kubectl describe persistentvolumeclaims --namespace nola-${{ matrix.number }}
+
+    - name: Rollback Cloud SDK
+      if: failure()
+      working-directory: wlan-helm/tip-wlan
+      run: |
+        helm rollback tip --namespace nola-${{ matrix.number }} --wait --timeout 20m
