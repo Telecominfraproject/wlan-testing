@@ -39,23 +39,23 @@ env:
     },
     {
       "number": "01",
-      "version": "2021-02-21"
+      "version": "2021-02-23"
     },
     {
       "number": "02",
-      "version": "2021-02-21"
+      "version": "2021-02-23"
     },
     {
       "number": "04",
-      "version": "2021-02-21"
+      "version": "2021-02-23"
     },
     {
       "number": "05",
-      "version": "2021-02-21"
+      "version": "2021-02-23"
     },
     {
       "number": "15",
-      "version": "2021-02-21"
+      "version": "2021-02-23"
     }
   ]'
 
