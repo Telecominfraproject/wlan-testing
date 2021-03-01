@@ -5,32 +5,50 @@ ap_models = ["ecw5410"]
 
 ##Cloud Type(cloudSDK = v1)
 cloud_type = "v1"
-cloudSDK_url = "https://wlan-portal-svc-nola-ext-02.cicd.lab.wlan.tip.build"
+cloudSDK_url = "https://wlan-portal-svc-nola-04.cicd.lab.wlan.tip.build"
 customer_id = "2"
 cloud_user = "support@example.com"
 cloud_password = "support"
 
-##LANForge Info
-lanforge_ip = "10.10.10.201"
-lanforge_2dot4g = "wiphy6"
-lanforge_5g = "wiphy6"
+#Testrail info
+tr_url = 'https://telecominfraproject.testrail.com'
+tr_prefix = 'Nola_04_'
+tr_user = 'syama.devi@connectus.ai'
+tr_pass = 'Connect123$'
+tr_project_id = 'WLAN'
+milestone = '23'
+#AP Upgrade
+ap_user = 'root'
+jfrog_user = 'tip-read'
+jfrog_pass = 'tip-read'
+#Directory Paths
+sanity_log_dir = 'logs/'
+sanity_report_dir = 'reports/'
+report_template = 'reports/report_template.php'
+deletion_file = 'templates/delete_profile_list.json'
+
+# LANForge Info
+lanforge_ip = "10.28.3.12"
+lanforge_2dot4g = "wiphy4"
+lanforge_5g = "wiphy5"
 # For single client connectivity use cases, use full station name for prefix to only read traffic from client under test
-lanforge_2dot4g_prefix = "wlan6"
-lanforge_5g_prefix = "wlan6"
-lanforge_2dot4g_station = "wlan6"
-lanforge_5g_station = "wlan6"
+lanforge_2dot4g_prefix = "test"
+lanforge_5g_prefix = "test"
+lanforge_2dot4g_station = "test1234"
+lanforge_5g_station = "test1234"
+# Used for bridge and NAT
 lanforge_bridge_port = "eth2"
 # VLAN interface on LANForge - must be configured to use alias of "vlan###" to accommodate sta_connect2 library
 lanforge_vlan_port = "vlan100"
 vlan = 100
 
-# Equipment IDs for Lab APs under test - for test to loop through multiple APs put additional keys in the dictionary
+##Equipment IDs for Lab APs under test
 equipment_id_dict = {
-    "ecw5410": "5",
+    "ecw5410": "1",
 }
 # Equipment IPs for SSH or serial connection information
 equipment_ip_dict = {
-    "ecw5410": "10.10.10.105"
+    "ecw5410": "/dev/ttyAP4"
 }
 
 equipment_credentials_dict = {
@@ -39,18 +57,12 @@ equipment_credentials_dict = {
 
 ##RADIUS Info
 radius_info = {
-    "server_ip": "10.10.10.203",
+    "server_ip": "10.28.3.100",
     "secret": "testing123",
     "auth_port": 1812,
-    "eap_identity": "testing",
-    "eap_pwd": "admin123"
+    "eap_identity": "nolaradius",
+    "eap_pwd": "nolastart"
 }
-
-## Other profiles
-radius_profile = 9  # used as backup
-rf_profile_wifi5 = 10
-rf_profile_wifi6 = 762
-
 ##AP Models for firmware upload
 cloud_sdk_models = {
     "ec420": "EC420-G1",
@@ -176,6 +188,11 @@ test_cases = {
     "vlan_ssid_update": 8744
 }
 
+## Other profiles
+radius_profile = 9
+rf_profile_wifi5 = 10
+rf_profile_wifi6 = 762
+
 ###Testing AP Profile Information
 profile_info_dict = {
     "ecw5410": {
@@ -245,32 +262,5 @@ profile_info_dict = {
             "ECW5410_2dot4G_WPA_VLAN",
             "ECW5410_2dot4G_WPA2-EAP_VLAN"
         ]
-    },
-    # example for tri-radio AP
-    "ea8300": {
-        "fiveG_WPA2_SSID": "EA8300_5G_WPA2",
-        "fiveG_WPA2_PSK": "Connectus123$",
-        "fiveG_WPA_SSID": "EA8300_5G_WPA",
-        "fiveG_WPA_PSK": "Connectus123$",
-        "fiveG_OPEN_SSID": "EA8300_5G_OPEN",
-        "fiveG_WPA2-EAP_SSID": "EA8300_5G_WPA2-EAP",
-        "twoFourG_OPEN_SSID": "EA8300_2dot4G_OPEN",
-        "twoFourG_WPA2_SSID": "EA8300_2dot4G_WPA2",
-        "twoFourG_WPA2_PSK": "Connectus123$",
-        "twoFourG_WPA_SSID": "EA8300_2dot4G_WPA",
-        "twoFourG_WPA_PSK": "Connectus123$",
-        "twoFourG_WPA2-EAP_SSID": "EA8300_2dot4G_WPA2-EAP",
-        # EA8300 has 2x 5GHz SSIDs because it is a tri-radio AP!
-        "ssid_list": [
-            "EA8300_5G_WPA2",
-            "EA8300_5G_WPA2",
-            "EA8300_5G_WPA",
-            "EA8300_5G_WPA",
-            "EA8300_5G_WPA2-EAP",
-            "EA8300_5G_WPA2-EAP",
-            "EA8300_2dot4G_WPA2",
-            "EA8300_2dot4G_WPA",
-            "EA8300_2dot4G_WPA2-EAP"
-        ]
-    },
+    }
 }

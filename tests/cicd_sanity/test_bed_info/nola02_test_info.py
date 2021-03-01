@@ -5,20 +5,22 @@ ap_models = ["ecw5410"]
 
 ##Cloud Type(cloudSDK = v1)
 cloud_type = "v1"
-cloudSDK_url = "https://wlan-portal-svc-nola-04.cicd.lab.wlan.tip.build"
+cloudSDK_url = "https://wlan-portal-svc-nola-02.cicd.lab.wlan.tip.build"
 customer_id = "2"
 cloud_user = "support@example.com"
 cloud_password = "support"
+milestone = '7'
+tr_prefix = 'Nola_02_'
 
 # LANForge Info
-lanforge_ip = "10.28.3.12"
-lanforge_2dot4g = "wiphy4"
-lanforge_5g = "wiphy5"
+lanforge_ip = "10.28.3.8"
+lanforge_2dot4g = "wiphy1"
+lanforge_5g = "wiphy0"
 # For single client connectivity use cases, use full station name for prefix to only read traffic from client under test
-lanforge_2dot4g_prefix = "test"
-lanforge_5g_prefix = "test"
-lanforge_2dot4g_station = "test1234"
-lanforge_5g_station = "test1234"
+lanforge_2dot4g_prefix = "wlan1"
+lanforge_5g_prefix = "wlan0"
+lanforge_2dot4g_station = "wlan1"
+lanforge_5g_station = "wlan0"
 # Used for bridge and NAT
 lanforge_bridge_port = "eth2"
 # VLAN interface on LANForge - must be configured to use alias of "vlan###" to accommodate sta_connect2 library
@@ -31,7 +33,7 @@ equipment_id_dict = {
 }
 # Equipment IPs for SSH or serial connection information
 equipment_ip_dict = {
-    "ecw5410": "/dev/ttyAP4"
+    "ecw5410": "/dev/ttyAP2"
 }
 
 equipment_credentials_dict = {
