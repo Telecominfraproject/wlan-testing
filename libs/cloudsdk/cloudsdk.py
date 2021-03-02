@@ -1,23 +1,33 @@
+# !/usr/local/lib64/python3.8
 from __future__ import print_function
-from swagger import swagger_client
-from swagger.swagger_client.rest import ApiException
-from pprint import pprint
+
+import swagger_client
 
 login_credentials = {
     "userId": "support@example.com",
     "password": "support"
 }
+sdk_base_urls = {
+    "nola-01": "https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build",
+    "nola-02": "https://wlan-portal-svc-nola-02.cicd.lab.wlan.tip.build",
+    "nola-04": "https://wlan-portal-svc-nola-04.cicd.lab.wlan.tip.build",
 
+}
 
 class cloudsdk:
-
     """
     constructor for cloudsdk library : can be used from pytest framework
     """
-    def __init__(self):
-        self.api_client = swagger_client.ApiClient()
-        self.api_client.configuration.username = login_credentials["userId"]
-        self.api_client.configuration.password = login_credentials["password"]
+
+    def __init__(self, testbed="nola-01"):
+        self.configuration = swagger_client.Configuration()
+        self.configuration.host = sdk_base_urls[testbed]
+        self.configuration.refresh_api_key_hook = self.get_bearer_token
+        self.configuration.username = login_credentials['userId']
+        self.configuration.password = login_credentials['password']
+
+        self.api_client = swagger_client.ApiClient(self.configuration)
+
         self.login_client = swagger_client.LoginApi(api_client=self.api_client)
         self.bearer = self.get_bearer_token()
         self.api_client.default_headers['Authorization'] = "Bearer " + self.bearer._access_token
@@ -28,8 +38,8 @@ class cloudsdk:
         }
         self.api_client.configuration.refresh_api_key_hook = self.get_bearer_token()
         self.ping_response = self.portal_ping()
-        #print(self.bearer)
-        #print(self.ping_response)
+        print(self.bearer)
+        # print(self.ping_response)
 
     """
     Login Utilities
@@ -65,19 +75,25 @@ class cloudsdk:
     """
 
     def get_profile_by_id(self, profile_id=None):
-        #print(self.profile_client.get_profile_by_id(profile_id=profile_id))
+        # print(self.profile_client.get_profile_by_id(profile_id=profile_id))
         pass
 
     def get_profiles_by_customer_id(self, customer_id=None):
-        pagination_context= """{
+        pagination_context = """{
                 "model_type": "PaginationContext",
                 "maxItemsPerPage": 100
         }"""
         self.default_profiles = {}
-        print(len((self.profile_client.get_profiles_by_customer_id(customer_id=customer_id, pagination_context=pagination_context))._items))
-        for i in self.profile_client.get_profiles_by_customer_id(customer_id=customer_id, pagination_context=pagination_context)._items:
+        print(len((self.profile_client.get_profiles_by_customer_id(customer_id=customer_id,
+                                                                   pagination_context=pagination_context))._items))
+        for i in self.profile_client.get_profiles_by_customer_id(customer_id=customer_id,
+                                                                 pagination_context=pagination_context)._items:
             print(i._name, i._id)
-            if i._name is "TipWlan-Cloud-Wifi":
+            if i._name == "TipWlan-Cloud-Wifi":
+                self.default_profiles['ssid'] = i
+            if i._name == "TipWlan-Cloud-Wifi":
+                self.default_profiles['ssid'] = i
+            if i._name == "TipWlan-Cloud-Wifi":
                 self.default_profiles['ssid'] = i
 
     def create_profile(self, profile_type=None, customer_id=None, profile_name=None):
@@ -92,8 +108,9 @@ class cloudsdk:
         return "Profile Created Successfully!"
 
 
-obj = cloudsdk()
+obj = cloudsdk(testbed="nola-01")
 obj.portal_ping()
 obj.get_equipment_by_customer_id(customer_id=2)
 obj.get_profiles_by_customer_id(customer_id=2)
+print(obj.default_profiles)
 obj.api_client.__del__()
