@@ -16,3 +16,24 @@ pip3 install -r requirements.txt
 ```
 
 Now your cloud sdk code is downloaded
+
+### Docker
+
+Alternatively you can use provided dockerfiles to develop\lint your code:
+
+```
+docker build -t wlan-cloud-test -f dockerfile .
+docker build -t wlan-cloud-lint -f dockerfile-lint .
+```
+
+and then you can do something like this to lint your code:
+
+```
+docker run -it --rm -v %path_to_this_dir%/tests wlan-tip-lint cloudsdk.py
+```
+
+and you can use something like this to develop your code:
+
+```
+docker run -it -v %path_to_this_dir%/tests wlan-tip-test
+```

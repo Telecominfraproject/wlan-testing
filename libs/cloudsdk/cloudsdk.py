@@ -1,6 +1,4 @@
 # !/usr/local/lib64/python3.8
-from __future__ import print_function
-
 import swagger_client
 
 login_credentials = {
@@ -11,10 +9,9 @@ sdk_base_urls = {
     "nola-01": "https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build",
     "nola-02": "https://wlan-portal-svc-nola-02.cicd.lab.wlan.tip.build",
     "nola-04": "https://wlan-portal-svc-nola-04.cicd.lab.wlan.tip.build",
-
 }
 
-class cloudsdk:
+class CloudSdk:
     """
     constructor for cloudsdk library : can be used from pytest framework
     """
@@ -107,10 +104,10 @@ class cloudsdk:
         }
         return "Profile Created Successfully!"
 
-
-obj = cloudsdk(testbed="nola-01")
-obj.portal_ping()
-obj.get_equipment_by_customer_id(customer_id=2)
-obj.get_profiles_by_customer_id(customer_id=2)
-print(obj.default_profiles)
-obj.api_client.__del__()
+if __name__ == "__main__":
+    obj = CloudSdk(testbed="nola-01")
+    obj.portal_ping()
+    obj.get_equipment_by_customer_id(customer_id=2)
+    obj.get_profiles_by_customer_id(customer_id=2)
+    print(obj.default_profiles)
+    obj.api_client.__del__()
