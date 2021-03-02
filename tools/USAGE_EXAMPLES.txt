@@ -4,6 +4,7 @@ All of this assumes you are running on some developer system, with ssh tunnels
 into the 'ubuntu' jumphost machine.
 
 ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 -L 8803:lab-ctlr:22 \
+       -L 8720:lf2:4002 -L 8721:lf2:5901 -L 8722:lf2:8080 -L 8723:lab-ctlr:22 \
        -L 8830:lf3:4002 -L 8831:lf3:5901 -L 8832:lf3:8080 -L 8833:lab-ctlr:22 \
        -L 8810:lf4:4002 -L 8811:lf4:5901 -L 8812:lf4:8080 -L 8813:lab-ctlr:22 \
        -L 8850:lf5:4002 -L 8851:lf5:5901 -L 8852:lf5:8080 -L 8853:lab-ctlr2:22 \
@@ -41,6 +42,17 @@ Testbed-01
 
 ./Nightly_Sanity.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 8803 --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --testbed "NOLA-01r" --lanforge-ip-address localhost --lanforge-port-number 8802 --default_ap_profile TipWlan-2-Radios --lanforge-2g-radio 1.1.wiphy4 --lanforge-5g-radio 1.1.wiphy5 --skip-upgrade True --testrail-milestone milestone-1 --sdk-base-url https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build
 
+Testbed 02 (eap101)
+
+# Set AP profile on NOLA-02 (eap101)
+./sdk_set_profile.py --testrail-user-id NONE --model eap101 --ap-jumphost-address localhost --ap-jumphost-port 8723 \
+  --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP2 --lanforge-ip-address localhost --lanforge-port-number 8722 \
+  --default-ap-profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc-nola-04.cicd.lab.wlan.tip.build \
+  --skip-radius --skip-wpa --verbose --testbed "NOLA-02" --ssid-5g-wpa2 Default-SSID-5gl --psk-5g-wpa2 12345678 \
+  --ssid-2g-wpa2 Default-SSID-2g --psk-2g-wpa2 12345678 --mode bridge
+
+
+Testbed 06
 
 # Set AP profile on NOLA-06 (eap101)
 ./sdk_set_profile.py --testrail-user-id NONE --model eap101 --ap-jumphost-address localhost --ap-jumphost-port 8863 \
