@@ -4,6 +4,7 @@ All of this assumes you are running on some developer system, with ssh tunnels
 into the 'ubuntu' jumphost machine.
 
 ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 -L 8803:lab-ctlr:22 \
+       -L 8830:lf3:4002 -L 8831:lf3:5901 -L 8832:lf3:8080 -L 8833:lab-ctlr:22 \
        -L 8810:lf4:4002 -L 8811:lf4:5901 -L 8812:lf4:8080 -L 8813:lab-ctlr:22 \
        -L 8850:lf5:4002 -L 8851:lf5:5901 -L 8852:lf5:8080 -L 8853:lab-ctlr2:22 \
        -L 8860:lf6:4002 -L 8861:lf6:5901 -L 8862:lf6:8080 -L 8863:lab-ctlr2:22 \
@@ -12,6 +13,8 @@ ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 -L 8803:lab-ctlr:22 \
        -L 8890:lf9:4002 -L 8891:lf9:5901 -L 8892:lf9:8080 -L 8893:lab-ctlr3:22 \
        -L 8900:lf10:4002 -L 8901:lf10:5901 -L 8902:lf10:8080 -L 8903:lab-ctlr3:22 \
        -L 8910:lf11:4002 -L 8911:lf11:5901 -L 8912:lf11:8080 -L 8913:lab-ctlr3:22 \
+       -L 8930:lf13:4002 -L 8931:lf13:5901 -L 8932:lf13:8080 -L 8933:lab-ctlr4:22 \
+       -L 8940:lf14:4002 -L 8941:lf14:5901 -L 8942:lf14:8080 -L 8943:lab-ctlr4:22 \
        -L 8950:lf15:4002 -L 8951:lf15:5901 -L 8952:lf115:8080 -L 8953:lab-ctlr4:22 \
        -L 8820:lf12:4002 -L 8821:lf12:5901 -L 8822:lf12:8080 -L 8823:lab-ctlr4:22 \
        ubuntu@orch
@@ -45,9 +48,6 @@ Testbed-01
   --default-ap-profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build \
   --skip-radius --skip-wpa --verbose --testbed "NOLA-06" --ssid-5g-wpa2 Default-SSID-5gl --psk-5g-wpa2 12345678 \
   --ssid-2g-wpa2 Default-SSID-2g --psk-2g-wpa2 12345678 --mode bridge
-
-
-./Nightly_Sanity.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 8803 --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --testbed "NOLA-01r" --lanforge-ip-address localhost --lanforge-port-number 8802 --default_ap_profile TipWlan-2-Radios --lanforge-2g-radio 1.1.wiphy4 --lanforge-5g-radio 1.1.wiphy5 --skip-upgrade True --testrail-milestone milestone-1 --sdk-base-url https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build
 
 
 Testbed-09 (perfecto)
@@ -126,6 +126,32 @@ Testbed 12 (Basic, wf188n)
 # Query an ssid
 ./query_sdk.py --testrail-user-id NONE --model wf188n --sdk-base-url https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build \
   --sdk-user-id    support@example.com --sdk-user-password support --equipment_id 3 --type profile --cmd get --object_id 11
+
+Testbed 13 (Basic, eap102)  Needs testing and more setup.
+
+# Upgrade firmware to latest
+./sdk_upgrade_fw.py --testrail-user-id NONE --model eap102 --ap-jumphost-address localhost --ap-jumphost-port 8933 \
+   --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP2 --testbed \"NOLA-13\" \
+   --sdk-base-url https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build --force-upgrade true
+
+./sdk_set_profile.py --testrail-user-id NONE --model eap102 --ap-jumphost-address localhost --ap-jumphost-port 8933 \
+  --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP2 --lanforge-ip-address localhost --lanforge-port-number 8932 \
+  --default-ap-profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build \
+  --skip-radius --skip-wpa --verbose --testbed "NOLA-13" --ssid-5g-wpa2 Default-SSID-5gl --psk-5g-wpa2 12345678 \
+  --ssid-2g-wpa2 Default-SSID-2g --psk-2g-wpa2 12345678 --mode bridge
+
+Testbed 14 (Basic, eap102)  Needs testing and more setup.
+
+# Upgrade firmware to latest
+./sdk_upgrade_fw.py --testrail-user-id NONE --model eap102 --ap-jumphost-address localhost --ap-jumphost-port 8943 \
+   --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP3 --testbed \"NOLA-14\" \
+   --sdk-base-url https://wlan-portal-svc-nola-15.cicd.lab.wlan.tip.build --force-upgrade true
+
+./sdk_set_profile.py --testrail-user-id NONE --model eap102 --ap-jumphost-address localhost --ap-jumphost-port 8943 \
+  --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP3 --lanforge-ip-address localhost --lanforge-port-number 8942 \
+  --default-ap-profile TipWlan-2-Radios --sdk-base-url https://wlan-portal-svc-nola-15.cicd.lab.wlan.tip.build \
+  --skip-radius --skip-wpa --verbose --testbed "NOLA-14" --ssid-5g-wpa2 Default-SSID-5gl --psk-5g-wpa2 12345678 \
+  --ssid-2g-wpa2 Default-SSID-2g --psk-2g-wpa2 12345678 --mode bridge
 
 
 Testbed-15
