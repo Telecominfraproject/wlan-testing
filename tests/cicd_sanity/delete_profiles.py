@@ -25,8 +25,16 @@ cloud_type = test_info.cloud_type
 deletion_file = test_info.deletion_file
 cloud_user = test_info.cloud_user
 cloud_password = test_info.cloud_password
+equipment_id_dict = test_info.equipment_id_dict
+
 
 bearer = CloudSDK.get_bearer(cloudSDK_url, cloud_type, cloud_user, cloud_password)
+
+
+print("Switching AP's to default profile")
+for id in equipment_id_dict.values():
+    ap_profile = CloudSDK.set_ap_profile(id, 6, cloudSDK_url, bearer)
+print('Profile change successful')
 
 with open(deletion_file) as infile:
     data = json.load(infile)
