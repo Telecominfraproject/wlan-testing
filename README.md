@@ -6,9 +6,8 @@ You can provision additional cloud controllers for your tests using [update clou
 
 1. number == NOLA testbed number this cloud controller is assigned to
 2. version == docker images version to use with this particular deployment. supports 3 options:
-  1. "latest" - will use `0.0.1-SNAPSHOT` images
-  2. "" - will use `0.0.1-SNAPSHOT-yyyy-mm-dd` images from yesterdays date
-  3. "yyyy-mm-dd" - will use `0.0.1-SNAPHOST-yyyy-mm-dd` with the date provided (if they are available, if not build will fail).
+  1. "%arbitrary_text%" - will use `%arbitrary_text%` images
+  2. "" - will use `1.0.0-SNAPSHOT-yyyy-mm-dd` images from yesterdays date
  
 ## Motivation
 Automate Automate and Automate!
