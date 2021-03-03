@@ -19,43 +19,43 @@ env:
   testbeds: '[
     {
       "number": "ext-01",
-      "version": "latest"
+      "version": "1.0.0-SNAPSHOT"
     },
     {
       "number": "ext-02",
-      "version": "latest"
+      "version": "1.0.0-SNAPSHOT"
     },
     {
       "number": "ext-03",
-      "version": "latest"
+      "version": "1.0.0-SNAPSHOT"
     },
     {
       "number": "ext-04",
-      "version": "latest"
+      "version": "1.0.0-SNAPSHOT"
     },
     {
       "number": "ext-05",
-      "version": "latest"
+      "version": "1.0.0-SNAPSHOT"
     },
     {
       "number": "01",
-      "version": "latest"
+      "version": "1.0.0-SNAPSHOT"
     },
     {
       "number": "02",
-      "version": "latest"
+      "version": "1.0.0-SNAPSHOT"
     },
     {
       "number": "04",
-      "version": "latest"
+      "version": "1.0.0-SNAPSHOT"
     },
     {
       "number": "05",
-      "version": "latest"
+      "version": "1.0.0-SNAPSHOT"
     },
     {
       "number": "15",
-      "version": "latest"
+      "version": "1.0.0-SNAPSHOT"
     }
   ]'
 
