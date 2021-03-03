@@ -29,17 +29,17 @@ deletion_file = 'templates/delete_profile_list.json'
 
 # LANForge Info
 lanforge_ip = "10.28.3.12"
-lanforge_2dot4g = "wiphy4"
-lanforge_5g = "wiphy5"
+lanforge_2dot4g = "wiphy1"
+lanforge_5g = "wiphy1"
 # For single client connectivity use cases, use full station name for prefix to only read traffic from client under test
-lanforge_2dot4g_prefix = "test"
-lanforge_5g_prefix = "test"
-lanforge_2dot4g_station = "test1234"
-lanforge_5g_station = "test1234"
+lanforge_2dot4g_prefix = "wlan1"
+lanforge_5g_prefix = "wlan1"
+lanforge_2dot4g_station = "wlan1"
+lanforge_5g_station = "wlan1"
 # Used for bridge and NAT
 lanforge_bridge_port = "eth2"
 # VLAN interface on LANForge - must be configured to use alias of "vlan###" to accommodate sta_connect2 library
-lanforge_vlan_port = "vlan100"
+lanforge_vlan_port = "rddVR1"
 vlan = 100
 
 ##Equipment IDs for Lab APs under test

@@ -31,24 +31,25 @@ equipment_id_dict = test_info.equipment_id_dict
 bearer = CloudSDK.get_bearer(cloudSDK_url, cloud_type, cloud_user, cloud_password)
 
 
-print("Switching AP's to default profile")
-for id in equipment_id_dict.values():
-    ap_profile = CloudSDK.set_ap_profile(id, 6, cloudSDK_url, bearer)
-print('Profile change successful')
-
 with open(deletion_file) as infile:
     data = json.load(infile)
 
 delete_list = data[cloudSDK_url]
 
-for x in delete_list:
-    delete_profile = CloudSDK.delete_profile(cloudSDK_url, bearer, str(x))
-    if delete_profile == "SUCCESS":
-        print("profile", x, "delete successful")
-    else:
-        print("Error deleting profile")
+if len(delete_list) > 0:
+    print("Switching AP's to default profile")
+    for id in equipment_id_dict.values():
+        ap_profile = CloudSDK.set_ap_profile(id, 6, cloudSDK_url, bearer)
+    print('Profile change successful')
 
-data[cloudSDK_url] = []
+    for x in delete_list:
+        delete_profile = CloudSDK.delete_profile(cloudSDK_url, bearer, str(x))
+        if delete_profile == "SUCCESS":
+            print("profile", x, "delete successful")
+        else:
+            print("Error deleting profile")
 
-with open(deletion_file, 'w') as outfile:
-    json.dump(data, outfile)
+    data[cloudSDK_url] = []
+
+    with open(deletion_file, 'w') as outfile:
+        json.dump(data, outfile)
