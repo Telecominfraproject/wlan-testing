@@ -1,32 +1,76 @@
 # !/usr/local/lib64/python3.8
 import swagger_client
+from testbed_info import SDK_BASE_URLS
+from testbed_info import LOGIN_CREDENTIALS
 
-login_credentials = {
-    "userId": "support@example.com",
-    "password": "support"
-}
-sdk_base_urls = {
-    "nola-01": "https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build",
-    "nola-02": "https://wlan-portal-svc-nola-02.cicd.lab.wlan.tip.build",
-    "nola-04": "https://wlan-portal-svc-nola-04.cicd.lab.wlan.tip.build",
-}
+"""
+    Library for setting up the configuration for cloud connectivity
+        1. testbed/ sdk_base_url
+        2. login credentials
+"""
 
-class CloudSdk:
+
+class ConfigureCloudSDK:
+
+    def __init__(self):
+        self.configuration = swagger_client.Configuration()
+
+    def set_credentials(self, userId=None, password=None):
+        if userId is None or password is None:
+            self.configuration.username = LOGIN_CREDENTIALS['userId']
+            self.configuration.password = LOGIN_CREDENTIALS['password']
+            print("Login Credentials set to default: \n userID: %s\n password: %s\n" % (LOGIN_CREDENTIALS['userId'],
+                                                                                        LOGIN_CREDENTIALS['password']))
+            return False
+        else:
+            LOGIN_CREDENTIALS['userId'] = userId
+            self.configuration.username = userId
+            LOGIN_CREDENTIALS['password'] = password
+            self.configuration.password = password
+            print("Login Credentials set to custom: \n userID: %s\n password: %s\n" % (LOGIN_CREDENTIALS['userId'],
+                                                                                       LOGIN_CREDENTIALS['password']))
+            return True
+
+    def select_testbed(self, testbed=None):
+        if testbed is None:
+            print("No Testbed Selected")
+            exit()
+        self.configuration.host = SDK_BASE_URLS[testbed]
+        print("Testbed Selected: %s\n SDK_BASE_URL: %s\n" % (testbed, SDK_BASE_URLS[testbed]))
+        return True
+
+    def set_sdk_base_url(self, sdk_base_url=None):
+        if sdk_base_url is None:
+            print("URL is None")
+            exit()
+        self.configuration.host = sdk_base_url
+        return True
+
+
+"""
+    Library for cloudSDK generic usages, it instantiate the bearer and credentials.
+    It provides the connectivity to the cloud.
+"""
+
+
+class CloudSDK(ConfigureCloudSDK):
     """
     constructor for cloudsdk library : can be used from pytest framework
     """
 
-    def __init__(self, testbed="nola-01"):
-        self.configuration = swagger_client.Configuration()
-        self.configuration.host = sdk_base_urls[testbed]
+    def __init__(self, testbed=None):
+        super().__init__()
+
+        # Setting the CloudSDK Client Configuration
+        self.select_testbed(testbed=testbed)
+        self.set_credentials()
         self.configuration.refresh_api_key_hook = self.get_bearer_token
-        self.configuration.username = login_credentials['userId']
-        self.configuration.password = login_credentials['password']
 
+        # Connecting to CloudSDK
         self.api_client = swagger_client.ApiClient(self.configuration)
-
         self.login_client = swagger_client.LoginApi(api_client=self.api_client)
         self.bearer = self.get_bearer_token()
+
         self.api_client.default_headers['Authorization'] = "Bearer " + self.bearer._access_token
         self.equipment_client = swagger_client.EquipmentApi(self.api_client)
         self.profile_client = swagger_client.ProfileApi(self.api_client)
@@ -35,18 +79,24 @@ class CloudSdk:
         }
         self.api_client.configuration.refresh_api_key_hook = self.get_bearer_token()
         self.ping_response = self.portal_ping()
-        print(self.bearer)
-        # print(self.ping_response)
+        # print(self.bearer)
+        if self.ping_response._application_name != 'PortalServer':
+            print("Server not Reachable")
+            exit()
+        print("Connected to CloudSDK Server")
 
     """
     Login Utilities
     """
 
     def get_bearer_token(self):
-        return self.login_client.get_access_token(body=login_credentials)
+        return self.login_client.get_access_token(LOGIN_CREDENTIALS)
 
     def portal_ping(self):
         return self.login_client.portal_ping()
+
+    def disconnect_cloudsdk(self):
+        self.api_client.__del__()
 
     """
     Equipment Utilities
@@ -104,10 +154,70 @@ class CloudSdk:
         }
         return "Profile Created Successfully!"
 
+
+class APUtils:
+    """
+       constructor for Access Point Utility library : can be used from pytest framework
+                                                      to control Access Points
+    """
+
+    def __init__(self):
+        pass
+
+    """
+        method call: used to create the rf profile and push set the parameters accordingly and update
+    """
+
+    def set_rf_profile(self):
+        pass
+
+    """
+        method call: used to create a ssid profile with the given parameters
+    """
+
+    def set_ssid_profile(self):
+        pass
+
+    """
+        method call: used to create a ap profile that contains the given ssid profiles
+    """
+
+    def set_ap_profile(self):
+        pass
+
+    """
+        method call: used to create a radius profile with the settings given
+    """
+
+    def set_radius_profile(self):
+        pass
+
+    """
+        method call: used to create the ssid and psk data that can be used in creation of ssid profile
+    """
+
+    def set_ssid_psk_data(self):
+        pass
+
+    """
+        method to push the profile to the given equipment 
+    """
+
+    def push_profile(self):
+        pass
+
+    """
+        method to verify if the expected ssid's are loaded in the ap vif config
+    """
+
+    def monitor_vif_conf(self):
+        pass
+
+
 if __name__ == "__main__":
-    obj = CloudSdk(testbed="nola-01")
-    obj.portal_ping()
-    obj.get_equipment_by_customer_id(customer_id=2)
-    obj.get_profiles_by_customer_id(customer_id=2)
-    print(obj.default_profiles)
-    obj.api_client.__del__()
+    obj = CloudSDK(testbed="nola-01")
+    # obj.portal_ping()
+    # obj.get_equipment_by_customer_id(customer_id=2)
+    # obj.get_profiles_by_customer_id(customer_id=2)
+    # print(obj.default_profiles)
+    obj.disconnect_cloudsdk()
