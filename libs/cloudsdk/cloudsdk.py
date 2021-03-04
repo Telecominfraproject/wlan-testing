@@ -16,6 +16,7 @@ class ConfigureCloudSDK:
 
     def __init__(self):
         self.configuration = swagger_client.Configuration()
+        self.configuration.logger_file = "logs.log"
 
     def set_credentials(self, userId=None, password=None):
         if userId is None or password is None:
@@ -354,7 +355,6 @@ class APUtils:
         default_profile = self.profile_client.create_profile(body=default_profile)
         self.profile_creation_ids['ap'] = default_profile._id
         self.profile_ids.append(default_profile._id)
-        pass
 
     """
         method call: used to create a radius profile with the settings given
@@ -382,11 +382,10 @@ class APUtils:
     """
 
     def push_profile(self, equipment_id=None):
-        default_equipment_data =self.sdk_client.equipment_client.get_equipment_by_id(equipment_id=equipment_id)
+        default_equipment_data = self.sdk_client.equipment_client.get_equipment_by_id(equipment_id=equipment_id)
         default_equipment_data._profile_id = self.profile_creation_ids['ap']
         print(default_equipment_data)
-        self.sdk_client.equipment_client.update_equipment(body=default_equipment_data)
-
+        print(self.sdk_client.equipment_client.update_equipment(body=default_equipment_data, async_req=True))
 
     """
         method to verify if the expected ssid's are loaded in the ap vif config
@@ -409,6 +408,8 @@ if __name__ == "__main__":
     sdk_client = CloudSDK(testbed="nola-ext-03")
     # sdk_client.get_equipment_by_customer_id(customer_id=2)
     ap_utils = APUtils(sdk_client=sdk_client)
+
+    # sdk_client.get_profile_template()
     ap_utils.select_rf_profile(profile_data=None)
     # radius_info = {
     #     "name": "Radius-Profile-" + str(datetime.datetime.now()),
@@ -418,39 +419,44 @@ if __name__ == "__main__":
     # }
     #
     # ap_utils.set_radius_profile(radius_info=radius_info)
-    profile_data = {
-        "profile_name": "test-ssid-open",
-        "ssid_name": "test_open",
-        "mode": "BRIDGE"
-    }
+    # profile_data = {
+    #     "profile_name": "test-ssid-open",
+    #     "ssid_name": "test_open",
+    #     "mode": "BRIDGE"
+    # }
+    #
+    # ap_utils.create_open_ssid_profile(profile_data=profile_data)
+    # profile_data = {
+    #     "profile_name": "test-ssid-wpa",
+    #     "ssid_name": "test_wpa",
+    #     "mode": "BRIDGE",
+    #     "security_key": "testing12345"
+    # }
+    #
+    # ap_utils.create_wpa_ssid_profile(profile_data=profile_data)
 
-    ap_utils.create_open_ssid_profile(profile_data=profile_data)
-    profile_data = {
-        "profile_name": "test-ssid-wpa",
-        "ssid_name": "test_wpa",
-        "mode": "BRIDGE",
-        "security_key": "testing12345"
-    }
-
-    ap_utils.create_wpa_ssid_profile(profile_data=profile_data)
+    # Change the profile data if ssid/profile already exists
     profile_data = {
         "profile_name": "test-ssid-wpa2",
-        "ssid_name": "test_wpa2",
+        "ssid_name": "test_wpa2_test",
         "mode": "BRIDGE",
         "security_key": "testing12345"
     }
 
-    ap_utils.create_wpa2_personal_ssid_profile(profile_data=profile_data)
+    ap_utils.create_wpa2_personal_ssid_profile(profile_data=profile_data, fiveg=False)
     #
     # obj.portal_ping()
     # obj.get_equipment_by_customer_id(customer_id=2)
     # obj.get_profiles_by_customer_id(customer_id=2)
     # print(obj.default_profiles)
     profile_data = {
-        "profile_name": "test-ap-library",
+        "profile_name": "test-ap-profile",
     }
     ap_utils.set_ap_profile(profile_data=profile_data)
-    ap_utils.push_profile(equipment_id=1)
+    time.sleep(20)
+    # Please change the equipment ID with the respective testbed
+    ap_utils.push_profile(equipment_id=12)
+    # time.sleep(20)
     sdk_client.disconnect_cloudsdk()
     # ap_utils.delete_profile(profile_id=ap_utils.profile_ids)
 
