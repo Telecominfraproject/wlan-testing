@@ -39,7 +39,7 @@ lanforge_5g_station = "wlan1"
 # Used for bridge and NAT
 lanforge_bridge_port = "eth2"
 # VLAN interface on LANForge - must be configured to use alias of "vlan###" to accommodate sta_connect2 library
-lanforge_vlan_port = "rddVR1"
+lanforge_vlan_port = "vlan100"
 vlan = 100
 
 ##Equipment IDs for Lab APs under test
