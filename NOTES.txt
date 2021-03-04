@@ -1,4 +1,4 @@
-Notes for TIP WiFi testing related topics.
+Notes for TIP WiFi testing related topics
 
 
 # To pull the latest upstream lanforge-scripts repo into the wlan-lanforge-scripts
