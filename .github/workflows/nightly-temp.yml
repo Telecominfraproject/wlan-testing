@@ -133,6 +133,6 @@ jobs:
               restartPolicy: Never
           backoffLimit: 0
         EOF
-        sleep 60 # needed to wait for the pod to come up
+        sleep 45 # needed to wait for the pod to come up
         podname=$(kubectl get pods -o name -l job-name=temp-nightly-ci-$today | sed "s/pod\///")
         kubectl logs $podname -f
