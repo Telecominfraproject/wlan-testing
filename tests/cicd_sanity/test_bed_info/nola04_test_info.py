@@ -10,19 +10,36 @@ customer_id = "2"
 cloud_user = "support@example.com"
 cloud_password = "support"
 
+#Testrail info
+tr_url = 'https://telecominfraproject.testrail.com'
+tr_prefix = 'Nola_04_'
+tr_user = 'syama.devi@connectus.ai'
+tr_pass = 'Connect123$'
+tr_project_id = 'WLAN'
+milestone = '23'
+#AP Upgrade
+ap_user = 'root'
+jfrog_user = 'tip-read'
+jfrog_pass = 'tip-read'
+#Directory Paths
+sanity_log_dir = 'logs/'
+sanity_report_dir = 'reports/'
+report_template = 'reports/report_template.php'
+deletion_file = 'templates/delete_profile_list.json'
+
 # LANForge Info
 lanforge_ip = "10.28.3.12"
-lanforge_2dot4g = "wiphy4"
-lanforge_5g = "wiphy5"
+lanforge_2dot4g = "wiphy1"
+lanforge_5g = "wiphy1"
 # For single client connectivity use cases, use full station name for prefix to only read traffic from client under test
-lanforge_2dot4g_prefix = "test"
-lanforge_5g_prefix = "test"
-lanforge_2dot4g_station = "test1234"
-lanforge_5g_station = "test1234"
+lanforge_2dot4g_prefix = "wlan1"
+lanforge_5g_prefix = "wlan1"
+lanforge_2dot4g_station = "wlan1"
+lanforge_5g_station = "wlan1"
 # Used for bridge and NAT
 lanforge_bridge_port = "eth2"
 # VLAN interface on LANForge - must be configured to use alias of "vlan###" to accommodate sta_connect2 library
-lanforge_vlan_port = "vlan100"
+lanforge_vlan_port = "rddVR1"
 vlan = 100
 
 ##Equipment IDs for Lab APs under test

@@ -44,13 +44,15 @@ for folder in 'py-json', 'py-scripts':
     if folder not in sys.path:
         sys.path.append(f'../../lanforge/lanforge-scripts/{folder}')
 
-sys.path.append(f'../../libs/lanforge')
+
+
 #sys.path.append(f'../../libs/testrails')
 #sys.path.append(f'../../libs/apnos')
 #sys.path.append(f'../../libs/cloudsdk')
 sys.path.append(f'../../libs')
 #sys.path.append(f'../test_utility/')
 sys.path.append(f'../')
+sys.path.append('test_bed_info')
 
 from LANforge.LFUtils import *
 
@@ -62,7 +64,6 @@ if 'py-json' not in sys.path:
 import sta_connect2
 from sta_connect2 import StaConnect2
 import testrail
-from testrail import APIClient
 import eap_connect
 from eap_connect import EAPConnect
 import cloud_connect
@@ -184,37 +185,6 @@ class RunTest:
         print("Error in test for single client connection to", ssid_name)
         logger.warning("ERROR testing Client connectivity to " + ssid_name)
 
-### Directories
-local_dir = os.getenv('SANITY_LOG_DIR')
-report_path = os.getenv('SANITY_REPORT_DIR')
-report_template = os.getenv('REPORT_TEMPLATE')
-
-## TestRail Information
-tr_user = os.getenv('TR_USER')
-tr_pw = os.getenv('TR_PWD')
-milestoneId = os.getenv('MILESTONE')
-projectId = os.getenv('PROJECT_ID')
-testRunPrefix = os.getenv('TEST_RUN_PREFIX')
-
-##Jfrog credentials
-jfrog_user = os.getenv('JFROG_USER')
-jfrog_pwd = os.getenv('JFROG_PWD')
-
-
-## AP Credentials
-ap_username = os.getenv('AP_USER')
-
-logger = logging.getLogger('Nightly_Sanity')
-hdlr = logging.FileHandler(local_dir + "/Nightly_Sanity.log")
-formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-hdlr.setFormatter(formatter)
-logger.addHandler(hdlr)
-logger.setLevel(logging.INFO)
-
-testrail_url = os.getenv('TR_URL')
-client: APIClient = APIClient(testrail_url)
-client.user = tr_user
-client.password = tr_pw
 
 # Command Line Args
 parser = argparse.ArgumentParser(description="Sanity Testing on Firmware Build")
@@ -222,11 +192,11 @@ parser.add_argument("-b", "--build", type=str, default="pending",
                     help="FW commit ID (latest pending build on dev is default)")
 parser.add_argument("-i", "--ignore", type=str, default='no', choices=['yes', 'no'],
                     help="Set to 'no' to ignore current running version on AP and run sanity including upgrade")
-parser.add_argument("-r", "--report", type=str, default=report_path, help="Report directory path other than default - directory must already exist!")
+# parser.add_argument("-r", "--report", type=str, default=report_path, help="Report directory path other than default - directory must already exist!")
 parser.add_argument("-m", "--model", type=str, choices=['ea8300', 'ecw5410', 'ecw5211', 'ec420', "wf188n", "wf194c", "ex227", "ex447", "eap101", "eap102"],
                     help="AP model to be run")
 parser.add_argument("-f", "--file", type=str, help="Test Info file name", default="test_info")
-parser.add_argument("--tr_prefix", type=str, default=testRunPrefix, help="Testrail test run prefix override (default is Env variable)")
+# parser.add_argument("--tr_prefix", type=str, default=testRunPrefix, help="Testrail test run prefix override (default is Env variable)")
 parser.add_argument("--skip_upgrade", dest="skip_upgrade", action='store_true', help="Skip Upgrade testing")
 parser.set_defaults(skip_eap=False)
 parser.add_argument("--skip_eap", dest="skip_eap", action='store_true', help="Skip EAP testing")
@@ -241,13 +211,39 @@ args = parser.parse_args()
 
 build = args.build
 ignore = args.ignore
-report_path = args.report
+# report_path = args.report
 test_file = args.file
 
 # Import info for lab setup and APs under test
-test_info_module = os.path.splitext(test_file)[0]
-test_info = importlib.import_module(test_info_module)
+test_file = os.path.splitext(test_file)[0]
+if '/' in test_file:
+    path, file = os.path.split(test_file)
+    sys.path.append(path)
+    test_info = importlib.import_module(file)
+else:
+    test_info = importlib.import_module(test_file)
 
+# AP Upgrade
+jfrog_user = test_info.jfrog_user
+jfrog_pwd = test_info.jfrog_pass
+ap_username = test_info.ap_user
+
+# Testrail info
+testrail_url = test_info.tr_url
+tr_user = test_info.tr_user
+tr_pw = test_info.tr_pass
+milestoneId = test_info.milestone
+testRunPrefix = test_info.tr_prefix
+projectId = test_info.tr_project_id
+client = testrail.APIClient(testrail_url, tr_user, tr_pw, projectId)
+
+# Directory Paths
+local_dir = test_info.sanity_log_dir
+report_path = test_info.sanity_report_dir
+report_template = test_info.report_template
+deletion_file = test_info.deletion_file
+
+# Equipment info
 equipment_id_dict = test_info.equipment_id_dict
 equipment_ids = equipment_id_dict
 profile_info_dict = test_info.profile_info_dict
@@ -259,9 +255,8 @@ customer_id = test_info.customer_id
 cloud_type = test_info.cloud_type
 test_cases = test_info.test_cases
 
-# Set CloudSDK URL
+# CloudSDK info
 cloudSDK_url = test_info.cloudSDK_url
-# CloudSDK credentials
 cloud_user = test_info.cloud_user
 cloud_password = test_info.cloud_password
 
@@ -277,8 +272,15 @@ if args.model is not None:
     }
     print("User requested test on equipment ID:",equipment_ids)
 
-if args.tr_prefix is not None:
-    testRunPrefix = args.tr_prefix
+logger = logging.getLogger('Nightly_Sanity')
+hdlr = logging.FileHandler(local_dir + "/Nightly_Sanity.log")
+formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+hdlr.setFormatter(formatter)
+logger.addHandler(hdlr)
+logger.setLevel(logging.INFO)
+
+# if args.tr_prefix is not None:
+#     testRunPrefix = args.tr_prefix
 
 ##LANForge Information
 lanforge_ip = test_info.lanforge_ip
@@ -742,6 +744,12 @@ for key in equipment_ids:
 
         # Create List of Created Profiles to Delete After Test
         delete_list = []
+        with open(deletion_file) as infile:
+            delete_data = json.load(infile)
+        if cloudSDK_url not in delete_data:
+            delete_data[cloudSDK_url] = []
+            with open(deletion_file, 'w') as outfile:
+                json.dump(delete_data, outfile)
 
         # Create RADIUS profile - used for all EAP SSIDs
         if args.skip_eap != True:
@@ -760,6 +768,9 @@ for key in equipment_ids:
                 report_data['tests'][key][test_cases["radius_profile"]] = "passed"
                 # Add created RADIUS profile to list for deletion at end of test
                 delete_list.append(radius_profile)
+                delete_data[cloudSDK_url].append(radius_profile)
+                with open(deletion_file, 'w') as outfile:
+                    json.dump(delete_data, outfile)
             except:
                 radius_profile = 'error'
                 print("RADIUS Profile Create Error, will use existing profile for tests")
@@ -795,7 +806,7 @@ for key in equipment_ids:
             if args.skip_eap != True:
                 try:
                     fiveG_eap = CloudSDK.create_ssid_profile(cloudSDK_url, bearer, ssid_template,
-                                                             fw_model + '_5G_EAP_' + today, customer_id,                                                             profile_info_dict[fw_model]["fiveG_WPA2-EAP_SSID"], None,
+                                                             fw_model + '_5G_EAP_' + today, customer_id, profile_info_dict[fw_model]["fiveG_WPA2-EAP_SSID"], None,
                                                              radius_profile,
                                                              "wpa2OnlyRadius", "BRIDGE", 1,
                                                              ["is5GHzU", "is5GHz", "is5GHzL"])
@@ -807,6 +818,9 @@ for key in equipment_ids:
                     child_profiles.append(fiveG_eap)
                     # Add created profile to list for deletion at end of test
                     delete_list.append(fiveG_eap)
+                    delete_data[cloudSDK_url].append(fiveG_eap)
+                    with open(deletion_file, 'w') as outfile:
+                        json.dump(delete_data, outfile)
                 except:
                     fiveG_eap = "error"
                     print("5G EAP SSID create failed - bridge mode")
@@ -832,6 +846,9 @@ for key in equipment_ids:
                 child_profiles.append(fiveG_wpa2)
                 # Add created profile to list for deletion at end of test
                 delete_list.append(fiveG_wpa2)
+                delete_data[cloudSDK_url].append(fiveG_wpa2)
+                with open(deletion_file, 'w') as outfile:
+                    json.dump(delete_data, outfile)
             except:
                 fiveG_wpa2 = "error"
                 print("5G WPA2 SSID create failed - bridge mode")
@@ -854,6 +871,9 @@ for key in equipment_ids:
                 child_profiles.append(fiveG_wpa)
                 # Add created profile to list for deletion at end of test
                 delete_list.append(fiveG_wpa)
+                delete_data[cloudSDK_url].append(fiveG_wpa)
+                with open(deletion_file, 'w') as outfile:
+                    json.dump(delete_data, outfile)
             except:
                 fiveG_wpa = "error"
                 print("5G WPA SSID create failed - bridge mode")
@@ -878,6 +898,9 @@ for key in equipment_ids:
                     child_profiles.append(twoFourG_eap)
                     # Add created profile to list for deletion at end of test
                     delete_list.append(twoFourG_eap)
+                    delete_data[cloudSDK_url].append(twoFourG_eap)
+                    with open(deletion_file, 'w') as outfile:
+                        json.dump(delete_data, outfile)
                 except:
                     twoFourG_eap = "error"
                     print("2.4G EAP SSID create failed - bridge mode")
@@ -902,6 +925,9 @@ for key in equipment_ids:
                 child_profiles.append(twoFourG_wpa2)
                 # Add created profile to list for deletion at end of test
                 delete_list.append(twoFourG_wpa2)
+                delete_data[cloudSDK_url].append(twoFourG_wpa2)
+                with open(deletion_file, 'w') as outfile:
+                    json.dump(delete_data, outfile)
             except:
                 twoFourG_wpa2 = "error"
                 print("2.4G WPA2 SSID create failed - bridge mode")
@@ -924,6 +950,9 @@ for key in equipment_ids:
                 child_profiles.append(twoFourG_wpa)
                 # Add created profile to list for deletion at end of test
                 delete_list.append(twoFourG_wpa)
+                delete_data[cloudSDK_url].append(twoFourG_wpa)
+                with open(deletion_file, 'w') as outfile:
+                    json.dump(delete_data, outfile)
             except:
                 twoFourG_wpa = "error"
                 print("2.4G WPA SSID create failed - bridge mode")
@@ -946,6 +975,9 @@ for key in equipment_ids:
                 report_data['tests'][key][test_cases["ap_bridge"]] = "passed"
                 # Add created profile to list for deletion at end of test
                 delete_list.append(test_profile_id)
+                delete_data[cloudSDK_url].append(test_profile_id)
+                with open(deletion_file, 'w') as outfile:
+                    json.dump(delete_data, outfile)
             except:
                 create_ap_profile = "error"
                 #test_profile_id = profile_info_dict[fw_model]["profile_id"]
@@ -1208,6 +1240,9 @@ for key in equipment_ids:
                     child_profiles.append(fiveG_eap)
                     # Add created profile to list for deletion at end of test
                     delete_list.append(fiveG_eap)
+                    delete_data[cloudSDK_url].append(fiveG_eap)
+                    with open(deletion_file, 'w') as outfile:
+                        json.dump(delete_data, outfile)
 
                 except:
                     fiveG_eap = "error"
@@ -1233,6 +1268,9 @@ for key in equipment_ids:
                 child_profiles.append(fiveG_wpa2)
                 # Add created profile to list for deletion at end of test
                 delete_list.append(fiveG_wpa2)
+                delete_data[cloudSDK_url].append(fiveG_wpa2)
+                with open(deletion_file, 'w') as outfile:
+                    json.dump(delete_data, outfile)
             except:
                 fiveG_wpa2 = "error"
                 print("5G WPA2 SSID create failed - NAT mode")
@@ -1255,6 +1293,9 @@ for key in equipment_ids:
                 child_profiles.append(fiveG_wpa)
                 # Add created profile to list for deletion at end of test
                 delete_list.append(fiveG_wpa)
+                delete_data[cloudSDK_url].append(fiveG_wpa)
+                with open(deletion_file, 'w') as outfile:
+                    json.dump(delete_data, outfile)
             except:
                 fiveG_wpa = "error"
                 print("5G WPA SSID create failed - NAT mode")
@@ -1279,6 +1320,9 @@ for key in equipment_ids:
                     child_profiles.append(twoFourG_eap)
                     # Add created profile to list for deletion at end of test
                     delete_list.append(twoFourG_eap)
+                    delete_data[cloudSDK_url].append(twoFourG_eap)
+                    with open(deletion_file, 'w') as outfile:
+                        json.dump(delete_data, outfile)
                 except:
                     twoFourG_eap = "error"
                     print("2.4G EAP SSID create failed - NAT mode")
@@ -1303,6 +1347,9 @@ for key in equipment_ids:
                 child_profiles.append(twoFourG_wpa2)
                 # Add created profile to list for deletion at end of test
                 delete_list.append(twoFourG_wpa2)
+                delete_data[cloudSDK_url].append(twoFourG_wpa2)
+                with open(deletion_file, 'w') as outfile:
+                    json.dump(delete_data, outfile)
             except:
                 twoFourG_wpa2 = "error"
                 print("2.4G WPA2 SSID create failed - NAT mode")
@@ -1324,6 +1371,9 @@ for key in equipment_ids:
                 child_profiles.append(twoFourG_wpa)
                 # Add created profile to list for deletion at end of test
                 delete_list.append(twoFourG_wpa)
+                delete_data[cloudSDK_url].append(twoFourG_wpa)
+                with open(deletion_file, 'w') as outfile:
+                    json.dump(delete_data, outfile)
             except:
                 twoFourG_wpa = "error"
                 print("2.4G WPA SSID create failed - NAT mode")
@@ -1346,6 +1396,9 @@ for key in equipment_ids:
                 # Add created profile to list for AP profile
                 # Add created profile to list for deletion at end of test
                 delete_list.append(test_profile_id)
+                delete_data[cloudSDK_url].append(test_profile_id)
+                with open(deletion_file, 'w') as outfile:
+                    json.dump(delete_data, outfile)
             except:
                 create_ap_profile = "error"
                 #test_profile_id = profile_info_dict[fw_model + '_nat']["profile_id"]
@@ -1604,6 +1657,9 @@ for key in equipment_ids:
                     child_profiles.append(fiveG_eap)
                     # Add created profile to list for deletion at end of test
                     delete_list.append(fiveG_eap)
+                    delete_data[cloudSDK_url].append(fiveG_eap)
+                    with open(deletion_file, 'w') as outfile:
+                        json.dump(delete_data, outfile)
 
                 except:
                     fiveG_eap = "error"
@@ -1629,6 +1685,9 @@ for key in equipment_ids:
                 child_profiles.append(fiveG_wpa2)
                 # Add created profile to list for deletion at end of test
                 delete_list.append(fiveG_wpa2)
+                delete_data[cloudSDK_url].append(fiveG_wpa2)
+                with open(deletion_file, 'w') as outfile:
+                    json.dump(delete_data, outfile)
             except:
                 fiveG_wpa2 = "error"
                 print("5G WPA2 SSID create failed - custom VLAN mode")
@@ -1651,6 +1710,9 @@ for key in equipment_ids:
                 child_profiles.append(fiveG_wpa)
                 # Add created profile to list for deletion at end of test
                 delete_list.append(fiveG_wpa)
+                delete_data[cloudSDK_url].append(fiveG_wpa)
+                with open(deletion_file, 'w') as outfile:
+                    json.dump(delete_data, outfile)
             except:
                 fiveG_wpa = "error"
                 print("5G WPA SSID create failed - custom VLAN mode")
@@ -1676,6 +1738,9 @@ for key in equipment_ids:
                     child_profiles.append(twoFourG_eap)
                     # Add created profile to list for deletion at end of test
                     delete_list.append(twoFourG_eap)
+                    delete_data[cloudSDK_url].append(twoFourG_eap)
+                    with open(deletion_file, 'w') as outfile:
+                        json.dump(delete_data, outfile)
                 except:
                     twoFourG_eap = "error"
                     print("2.4G EAP SSID create failed - custom VLAN mode")
@@ -1701,6 +1766,9 @@ for key in equipment_ids:
                 child_profiles.append(twoFourG_wpa2)
                 # Add created profile to list for deletion at end of test
                 delete_list.append(twoFourG_wpa2)
+                delete_data[cloudSDK_url].append(twoFourG_wpa2)
+                with open(deletion_file, 'w') as outfile:
+                    json.dump(delete_data, outfile)
             except:
                 twoFourG_wpa2 = "error"
                 print("2.4G WPA2 SSID create failed - custom VLAN mode")
@@ -1723,6 +1791,9 @@ for key in equipment_ids:
                 child_profiles.append(twoFourG_wpa)
                 # Add created profile to list for deletion at end of test
                 delete_list.append(twoFourG_wpa)
+                delete_data[cloudSDK_url].append(twoFourG_wpa)
+                with open(deletion_file, 'w') as outfile:
+                    json.dump(delete_data, outfile)
             except:
                 twoFourG_wpa = "error"
                 print("2.4G WPA SSID create failed - custom VLAN mode")
@@ -1744,6 +1815,9 @@ for key in equipment_ids:
                 report_data['tests'][key][test_cases["ap_vlan"]] = "passed"
                 # Add created profile to list for deletion at end of test
                 delete_list.append(test_profile_id)
+                delete_data[cloudSDK_url].append(test_profile_id)
+                with open(deletion_file, 'w') as outfile:
+                    json.dump(delete_data, outfile)
             except:
                 create_ap_profile = "error"
                 #test_profile_id = profile_info_dict[fw_model + '_vlan']["profile_id"]
@@ -2019,6 +2093,10 @@ for key in equipment_ids:
                 print("profile", x, "delete successful")
             else:
                 print("Error deleting profile")
+
+        delete_data[cloudSDK_url] = []
+        with open(deletion_file, 'w') as outfile:
+            json.dump(delete_data, outfile)
 
 # Dump all sanity test results to external json file again just to be sure
 with open('sanity_status.json', 'w') as json_file:

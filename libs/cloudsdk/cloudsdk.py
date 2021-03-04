@@ -29,13 +29,13 @@ from os import listdir
 import re
 import requests
 import json
-import testrail_api
+# import testrail_api
 import logging
 import datetime
 import time
-from ap_ssh import ssh_cli_active_fw
-import lab_ap_info
-import ap_ssh
+# from ap_ssh import ssh_cli_active_fw
+# import lab_ap_info
+# import ap_ssh
 
 
 ###Class for CloudSDK Interaction via RestAPI
