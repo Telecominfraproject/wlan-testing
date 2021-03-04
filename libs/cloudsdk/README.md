@@ -15,25 +15,63 @@ after that do the following in this folder
 pip3 install -r requirements.txt
 ```
 
-Now your cloud sdk code is downloaded
+Now your cloud sdk code is downloaded with all of the dependencies and you can start working on the solution
 
 ### Docker
 
 Alternatively you can use provided dockerfiles to develop\lint your code:
 
-```
+```shell
 docker build -t wlan-cloud-test -f dockerfile .
 docker build -t wlan-cloud-lint -f dockerfile-lint .
 ```
 
 and then you can do something like this to lint your code:
 
+```shell
+docker run -it --rm -v %path_to_this_dir%/tests wlan-tip-lint -d protected-access *py # for now
+docker run -it --rm -v %path_to_this_dir%/tests wlan-tip-lint *py # for future
 ```
-docker run -it --rm -v %path_to_this_dir%/tests wlan-tip-lint cloudsdk.py
+
+to have a better output (sorted by line numbers) you can do something like this:
+
+```shell
+docker run -it --rm --entrypoint sh -v %path_to_this_dir%/tests wlan-tip-lint -- -c 'pylint *py | sort -t ":" -k 2,2n'
 ```
 
 and you can use something like this to develop your code:
 
-```
+```shell
 docker run -it -v %path_to_this_dir%/tests wlan-tip-test
 ```
+
+### General guidelines
+
+This testing code adheres to generic [pep8](https://www.python.org/dev/peps/pep-0008/#introduction) style guidelines, most notably:
+
+1. [Documentation strings](https://www.python.org/dev/peps/pep-0008/#documentation-strings)
+2. [Naming conventions](https://www.python.org/dev/peps/pep-0008/#prescriptive-naming-conventions)
+3. [Sphynx docstring format](https://sphinx-rtd-tutorial.readthedocs.io/en/latest/docstrings.html)
+
+We are using the `pylint` package to do the linting. Documentation for it can be found [here](http://pylint.pycqa.org/en/latest/).
+In general, the customizations are possible via the `.pylintrc` file:
+
+1. Line length below 120 characters is fine (search for max-line-length)
+2. No new line at the end of file is fine (search for missing-final-newline)
+3. Multiple new lines at the end of file are fine (search for trailing-newlines)
+4. Indent using 4 spaces (search for indent-string)
+5. todo
+
+In future we should enforce a policy, where we cannot merge a code where the pylint scoe goes below 7:
+
+```shell
+pylint --fail-under=7 *py
+```
+
+the command above would produce a non-zero exit code if the score drops below 7.
+
+### Miscelanneous
+
+1. Do not use old style string formatting: `"Hello %s" % var`; use `f"Hello {var}` instead
+2. use `"""` in Docstrings
+3. todo
