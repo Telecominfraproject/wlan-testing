@@ -1,3 +1,7 @@
+"""
+    A set of constants to use throughtout the tests
+"""
+
 SDK_BASE_URLS = {
     "nola-01": "https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build",
     "nola-02": "https://wlan-portal-svc-nola-02.cicd.lab.wlan.tip.build",
@@ -8,6 +12,6 @@ SDK_BASE_URLS = {
 }
 
 LOGIN_CREDENTIALS = {
-    "userId": "support@example.com",
+    "user_id": "support@example.com",
     "password": "support"
 }

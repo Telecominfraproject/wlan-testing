@@ -1,15 +1,15 @@
 # !/usr/local/lib64/python3.8
-import swagger_client
-from testbed_info import SDK_BASE_URLS
-from testbed_info import LOGIN_CREDENTIALS
-import datetime
-import time
-
 """
     Library for setting up the configuration for cloud connectivity
         1. testbed/ sdk_base_url
         2. login credentials
 """
+
+import datetime
+import time
+import swagger_client
+from testbed_info import SDK_BASE_URLS
+from testbed_info import LOGIN_CREDENTIALS
 
 
 class ConfigureCloudSDK:
@@ -18,19 +18,19 @@ class ConfigureCloudSDK:
         self.configuration = swagger_client.Configuration()
         self.configuration.logger_file = "logs.log"
 
-    def set_credentials(self, userId=None, password=None):
-        if userId is None or password is None:
-            self.configuration.username = LOGIN_CREDENTIALS['userId']
+    def set_credentials(self, user_id=None, password=None):
+        if user_id is None or password is None:
+            self.configuration.username = LOGIN_CREDENTIALS['user_id']
             self.configuration.password = LOGIN_CREDENTIALS['password']
-            print("Login Credentials set to default: \n userID: %s\n password: %s\n" % (LOGIN_CREDENTIALS['userId'],
+            print("Login Credentials set to default: \n user_id: %s\n password: %s\n" % (LOGIN_CREDENTIALS['user_id'],
                                                                                         LOGIN_CREDENTIALS['password']))
             return False
         else:
-            LOGIN_CREDENTIALS['userId'] = userId
-            self.configuration.username = userId
+            LOGIN_CREDENTIALS['user_id'] = user_id
+            self.configuration.username = user_id
             LOGIN_CREDENTIALS['password'] = password
             self.configuration.password = password
-            print("Login Credentials set to custom: \n userID: %s\n password: %s\n" % (LOGIN_CREDENTIALS['userId'],
+            print("Login Credentials set to custom: \n user_id: %s\n password: %s\n" % (LOGIN_CREDENTIALS['user_id'],
                                                                                        LOGIN_CREDENTIALS['password']))
             return True
 
