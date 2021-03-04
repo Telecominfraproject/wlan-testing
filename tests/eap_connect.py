@@ -30,7 +30,7 @@ from LANforge.lfcli_base import LFCliBase
 from LANforge.LFUtils import *
 import realm
 from realm import Realm
-from lf_lib import *
+# from lf_lib import *
 import pprint
 
 OPEN="open"
