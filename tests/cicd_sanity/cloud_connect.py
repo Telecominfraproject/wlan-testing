@@ -7,31 +7,8 @@
 # Used by Nightly_Sanity and Throughput_Test #####################################
 ##################################################################################
 
-import base64
-import urllib.request
-from bs4 import BeautifulSoup
-import ssl
-import subprocess, os
-from artifactory import ArtifactoryPath
-import tarfile
-import paramiko
-from paramiko import SSHClient
-from scp import SCPClient
-import os
-import pexpect
-from pexpect import pxssh
-import sys
-import paramiko
-from scp import SCPClient
-import pprint
-from pprint import pprint
-from os import listdir
-import re
 import requests
 import json
-import logging
-import datetime
-import time
 
 ###Class for CloudSDK Interaction via RestAPI
 class CloudSDK:
@@ -224,7 +201,7 @@ class CloudSDK:
         }
         response = requests.request("POST", url, headers=headers, data=open(template, 'rb'))
         ssid_profile = response.json()
-        #print(ssid_profile)
+        print(ssid_profile)
         ssid_profile_id = ssid_profile['id']
         return ssid_profile_id
 

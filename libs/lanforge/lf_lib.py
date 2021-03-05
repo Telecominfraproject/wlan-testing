@@ -9,7 +9,6 @@
 
 
 class createTraffic:
-
     def __init__(self,localrealm, sta_prefix, resource, upstream_port):
         self.localrealm = localrealm
         self.sta_prefix = sta_prefix
