@@ -44,7 +44,7 @@ vlan = 100
 
 ##Equipment IDs for Lab APs under test
 equipment_id_dict = {
-    "ecw5410": "1",
+    "ecw5410": "5",
 }
 # Equipment IPs for SSH or serial connection information
 equipment_ip_dict = {
