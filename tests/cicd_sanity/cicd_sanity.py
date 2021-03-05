@@ -51,7 +51,7 @@ for folder in 'py-json', 'py-scripts':
 #sys.path.append(f'../../libs/cloudsdk')
 sys.path.append(f'../../libs')
 #sys.path.append(f'../test_utility/')
-sys.path.appened(f'../../libs/lanforge')
+sys.path.append(f'../../libs/lanforge')
 sys.path.append(f'../')
 sys.path.append('test_bed_info')
 
