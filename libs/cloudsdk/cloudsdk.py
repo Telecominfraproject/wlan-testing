@@ -133,8 +133,35 @@ class CloudSDK:
         return do_upgrade
 
 
+    def upload_to_cloud(self, report_data, testrail_client, ap_image, cloudModel, jfrog_user, jfrog_pwd,
+                        key, cloudSDK_url, bearer, test_id_fw , rid):
+
+        fw_url = "https://" + jfrog_user + ":" + jfrog_pwd + "@tip.jfrog.io/artifactory/tip-wlan-ap-firmware/" + key + "/dev/" + ap_image + ".tar.gz"
+        commit = ap_image.split("-")[-1]
+        try:
+            fw_upload_status = self.firwmare_upload(commit, cloudModel, ap_image, fw_url, cloudSDK_url,
+                                                    bearer)
+            fw_id = fw_upload_status['id']
+            print("Upload Complete.", ap_image, "FW ID is", fw_id)
+            if testrail_client:
+                testrail_client.update_testrail(case_id=test_id_fw, run_id=rid, status_id=1,
+                                                msg='Create new FW version by API successful')
+            if report_data:
+                report_data['tests'][key][test_id_fw] = "passed"
+
+            return fw_id
+        except:
+            fw_upload_status = 'error'
+            print("Unable to upload new FW version. Skipping Sanity on AP Model")
+            if testrail_client:
+                testrail_client.update_testrail(case_id=test_id_fw, run_id=rid, status_id=5,
+                                                msg='Error creating new FW version by API')
+            if report_data:
+                report_data['tests'][key][test_id_fw] = "failed"
+            return False
+
     # client is testrail client
-   
+
     def do_upgrade_ap_fw(self, command_line_args, report_data, test_cases, testrail_client, ap_image, cloudModel, model,
                          jfrog_user, jfrog_pwd, testrails_rid, customer_id, equipment_id, logger):
         # Test Create Firmware Version
@@ -148,80 +175,27 @@ class CloudSDK:
         firmware_list_by_model = self.CloudSDK_images(cloudModel, cloudSDK_url, bearer)
         print("Available", cloudModel, "Firmware on CloudSDK:", firmware_list_by_model)
 
-        if (command_line_args.force_upload):
-            if ap_image in firmware_list_by_model:
+        if ap_image in firmware_list_by_model:
+            if (command_line_args.force_upload):
                 print("Latest Firmware", ap_image, "is already on CloudSDK, need to delete to test create FW API")
                 old_fw_id = self.get_firmware_id(ap_image, cloudSDK_url, bearer)
                 delete_fw = self.delete_firmware(str(old_fw_id), cloudSDK_url, bearer)
-                fw_url = "https://" + jfrog_user + ":" + jfrog_pwd + "@tip.jfrog.io/artifactory/tip-wlan-ap-firmware/" + key + "/dev/" + ap_image + ".tar.gz"
-                commit = ap_image.split("-")[-1]
-                try:
-                    fw_upload_status = self.firwmare_upload(commit, cloudModel, ap_image, fw_url, cloudSDK_url,
-                                                            bearer)
-                    fw_id = fw_upload_status['id']
-                    print("Upload Complete.", ap_image, "FW ID is", fw_id)
-                    if testrail_client:
-                        testrail_client.update_testrail(case_id=test_id_fw, run_id=rid, status_id=1,
-                                                        msg='Create new FW version by API successful')
-                    if report_data:
-                        report_data['tests'][key][test_id_fw] = "passed"
-                except:
-                    fw_upload_status = 'error'
-                    print("Unable to upload new FW version. Skipping Sanity on AP Model")
-                    if testrail_client:
-                        testrail_client.update_testrail(case_id=test_id_fw, run_id=rid, status_id=5,
-                                                        msg='Error creating new FW version by API')
-                    if report_data:
-                        report_data['tests'][key][test_id_fw] = "failed"
+
+                fw_id =  self.upload_to_cloud(report_data, testrail_client, ap_image, cloudModel, jfrog_user, jfrog_pwd,
+                        key, cloudSDK_url, bearer, test_id_fw , rid)
+
+                if (fw_id == False):
                     return False
-            else: #If not in cloud
-                fw_url = "https://" + jfrog_user + ":" + jfrog_pwd + "@tip.jfrog.io/artifactory/tip-wlan-ap-firmware/" + key + "/dev/" + ap_image + ".tar.gz"
-                commit = ap_image.split("-")[-1]
-                try:
-                    fw_upload_status = self.firwmare_upload(commit, cloudModel, ap_image, fw_url, cloudSDK_url,
-                                                            bearer)
-                    fw_id = fw_upload_status['id']
-                    print("Upload Complete.", ap_image, "FW ID is", fw_id)
-                    if testrail_client:
-                        testrail_client.update_testrail(case_id=test_id_fw, run_id=rid, status_id=1,
-                                                        msg='Create new FW version by API successful')
-                    if report_data:
-                        report_data['tests'][key][test_id_fw] = "passed"
-                except:
-                    fw_upload_status = 'error'
-                    print("Unable to upload new FW version. Skipping Sanity on AP Model")
-                    if testrail_client:
-                        testrail_client.update_testrail(case_id=test_id_fw, run_id=rid, status_id=5,
-                                                        msg='Error creating new FW version by API')
-                    if report_data:
-                        report_data['tests'][key][test_id_fw] = "failed"
-                    return False
-        else: #Force upload is not selected
-            if ap_image in firmware_list_by_model:
-                fw_id = self.get_firmware_id(ap_image, cloudSDK_url, bearer);
             else:
-                print("Latest Firmware is not on CloudSDK! Uploading...")
-                fw_url = "https://" + jfrog_user + ":" + jfrog_pwd + "@tip.jfrog.io/artifactory/tip-wlan-ap-firmware/" + key + "/dev/" + ap_image + ".tar.gz"
-                commit = ap_image.split("-")[-1]
-                try:
-                    fw_upload_status = self.firwmare_upload(commit, cloudModel, ap_image, fw_url, cloudSDK_url,
-                                                            bearer)
-                    fw_id = fw_upload_status['id']
-                    print("Upload Complete.", ap_image, "FW ID is", fw_id)
-                    if testrail_client:
-                        testrail_client.update_testrail(case_id=test_id_fw, run_id=rid, status_id=1,
-                                                        msg='Create new FW version by API successful')
-                    if report_data:
-                        report_data['tests'][key][test_id_fw] = "passed"
-                except:
-                    fw_upload_status = 'error'
-                    print("Unable to upload new FW version. Skipping Sanity on AP Model")
-                    if testrail_client:
-                        testrail_client.update_testrail(case_id=test_id_fw, run_id=rid, status_id=5,
-                                                        msg='Error creating new FW version by API')
-                    if report_data:
-                        report_data['tests'][key][test_id_fw] = "failed"
-                    return False
+                fw_id = self.get_firmware_id(ap_image, cloudSDK_url, bearer)
+
+        else:
+
+            fw_id = self.upload_to_cloud(report_data, testrail_client, ap_image, cloudModel, jfrog_user, jfrog_pwd,
+                        key, cloudSDK_url, bearer, test_id_fw , rid)
+
+            if (fw_id == False):
+                return False
 
         #update AP Firmware
         print("Upgrading...firmware ID is: ", fw_id)
