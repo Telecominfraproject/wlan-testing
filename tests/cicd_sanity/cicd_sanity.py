@@ -45,7 +45,6 @@ for folder in 'py-json', 'py-scripts':
         sys.path.append(f'../../lanforge/lanforge-scripts/{folder}')
 
 
-
 #sys.path.append(f'../../libs/testrails')
 #sys.path.append(f'../../libs/apnos')
 #sys.path.append(f'../../libs/cloudsdk')
