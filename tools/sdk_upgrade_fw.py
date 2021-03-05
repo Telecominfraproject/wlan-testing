@@ -14,7 +14,7 @@
 # Example to upgrade fw on NOLA-01 testbed
 ./sdk_upgrade_fw.py --testrail-user-id NONE --model ecw5410 --ap-jumphost-address localhost --ap-jumphost-port 8803 \
   --ap-jumphost-password pumpkin77 --ap-jumphost-tty /dev/ttyAP1 --testbed \"NOLA-01\" \
-  --sdk-base-url https://wlan-portal-svc.cicd.lab.wlan.tip.build --verbose
+  --sdk-base-url https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build --verbose
 
 """
 
@@ -84,6 +84,7 @@ equipment_id = command_line_args.equipment_id
 print("equipment-id: %s"%(equipment_id))
 
 if equipment_id == "-1":
+    # eq_id = "1"
     eq_id = ap_ssh_ovsh_nodec(command_line_args, 'id')
     print("EQ Id: %s"%(eq_id))
 
@@ -167,10 +168,16 @@ print('Current Active AP FW from CLI:', ap_cli_fw)
 report_data = None
 key = None  # model name I think, if we are doing reporting?
 
+
+
+
 do_upgrade = cloud.should_upgrade_ap_fw(command_line_args.force_upgrade, command_line_args.skip_upgrade,
                                         report_data, ap_image, fw_model, ap_cli_fw, logger, key)
 
+
 cloudModel = cloud_sdk_models[model_id]
+
+
 pf = cloud.do_upgrade_ap_fw(command_line_args, report_data, test_cases, client,
                             ap_image, cloudModel, model_id, jfrog_user, jfrog_pwd, rid,
                             customer_id, equipment_id, logger)

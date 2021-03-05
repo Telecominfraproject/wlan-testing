@@ -102,6 +102,9 @@ def add_base_parse_args(parser):
     parser.add_argument("--force-upgrade", type=bool,
                              help="Force upgrading firmware even if it is already current version",
                              default=False)
+    parser.add_argument("--force-upload", type=bool,
+                        help="Force upploading image",
+                        default=False)
     parser.add_argument("-m", "--model", type=str,
                              choices=['ea8300', 'ecw5410', 'ecw5211', 'ec420', 'wf188n', 'eap102', 'eap101', 'cig194c', 'None'],
                              help="AP model to be run", required=True)
@@ -244,6 +247,9 @@ def add_base_parse_args_pytest(parser):
     parser.addoption("--force-upgrade", type=bool,
                              help="Force upgrading firmware even if it is already current version",
                              default=False)
+    parser.add_argument("--force-upload", type=bool,
+                        help="Force upploading image",
+                        default=False)
     # --access-points instead
     # parser.addoption("--model", type=str,
     #                          choices=['ea8300', 'ecw5410', 'ecw5211', 'ec420', 'wf188n', 'eap102', 'None'],
