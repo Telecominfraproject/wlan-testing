@@ -1,17 +1,17 @@
 #!/usr/bin/python3
 
 ##AP Models Under Test
-ap_models = ["ecw5211", 'ecw5410', 'eap102', 'wf188n']
+ap_models = ["wf188n", 'eap102', 'eap101', 'wf194c']
 
 ##Cloud Type(cloudSDK = v1)
 cloud_type = "cmap"
-cloudSDK_url = "https://cmap-portal-svc.rtl.lab.netexperience.com"
+cloudSDK_url = "https://cmap-portal-svc.dev1.netexperience.com"
 customer_id = "2"
-cloud_user = "lucas.rahn@netexperience.com"
-cloud_password = "Lucas0609"
+cloud_user = "syama.devi@netexperience.com"
+cloud_password = "Admin123"
 #Testrail info
 tr_url = 'https://connectus.testrail.com'
-tr_prefix = 'RTL_Sanity_'
+tr_prefix = 'CMAP_Sanity_'
 tr_user = 'syama.devi@connectus.ai'
 tr_pass = 'Connect123$'
 tr_project_id = 'CMAP'
@@ -27,14 +27,14 @@ report_template = 'reports/report_template.php'
 deletion_file = 'templates/delete_profile_list.json'
 
 ##LANForge Info
-lanforge_ip = "10.10.10.201"
-lanforge_2dot4g = "wiphy2"
-lanforge_5g = "wiphy1"
+lanforge_ip = "10.10.255.10"
+lanforge_2dot4g = "wiphy5"
+lanforge_5g = "wiphy5"
 # For single client connectivity use cases, use full station name for prefix to only read traffic from client under test
-lanforge_2dot4g_prefix = "test"
-lanforge_5g_prefix = "test"
-lanforge_2dot4g_station = "test1235"
-lanforge_5g_station = "test1235"
+lanforge_2dot4g_prefix = "wlan5"
+lanforge_5g_prefix = "wlan5"
+lanforge_2dot4g_station = "wlan5"
+lanforge_5g_station = "wlan5"
 lanforge_bridge_port = "eth2"
 # VLAN interface on LANForge - must be configured to use alias of "vlan###" to accommodate sta_connect2 library
 lanforge_vlan_port = "vlan100"
@@ -42,29 +42,29 @@ vlan = 100
 
 # Equipment IDs for Lab APs under test - for test to loop through multiple APs put additional keys in the dictionary
 equipment_id_dict = {
-    "ecw5211": '5',
-    'ecw5410': '6',
-    'eap102': '11',
-    'wf188n': '10'
+    "wf188n": '250',
+    'eap102': '252',
+    'eap101': '199',
+    'wf194c': '268'
 }
 # Equipment IPs for SSH or serial connection information
 equipment_ip_dict = {
-    "ecw5211": "10.10.10.181",
-    'ecw5410': '10.10.10.180',
-    'eap102': '10.10.10.186',
-    'wf188n': '10.10.10.179'
+    "wf188n": '10.10.6.1',
+    'eap102': '10.10.6.2',
+    'eap101': '10.10.6.3',
+    'wf194c': '10.10.6.4'
 }
 
 equipment_credentials_dict = {
-    "ecw5211": "openwifi",
-    'ecw5410': 'openwifi',
-    'wf188n': 'openwifi',
-    'eap102': 'openwifi'
+    "wf188n": 'openwifi',
+    'eap102': 'openwifi',
+    'eap101': 'openwifi',
+    'wf194c': 'openwifi'
 }
 
 ##RADIUS Info
 radius_info = {
-    "server_ip": "10.10.10.203",
+    "server_ip": "10.10.255.101",
     "secret": "testing123",
     "auth_port": 1812,
     "eap_identity": "testing",
@@ -74,7 +74,7 @@ radius_info = {
 ## Other profiles
 radius_profile = 9  # used as backup
 rf_profile_wifi5 = 10
-rf_profile_wifi6 = 762
+rf_profile_wifi6 = 2566
 
 ##AP Models for firmware upload
 cloud_sdk_models = {
@@ -203,140 +203,140 @@ test_cases = {
 
 ###Testing AP Profile Information
 profile_info_dict = {
-    "ecw5410": {
-        "fiveG_WPA2_SSID": "ECW5410_5G_WPA2",
+    "eap101": {
+        "fiveG_WPA2_SSID": "EAP101_5G_WPA2",
         "fiveG_WPA2_PSK": "Connectus123$",
-        "fiveG_WPA_SSID": "ECW5410_5G_WPA",
+        "fiveG_WPA_SSID": "EAP101_5G_WPA",
         "fiveG_WPA_PSK": "Connectus123$",
-        "fiveG_OPEN_SSID": "ECW5410_5G_OPEN",
-        "fiveG_WPA2-EAP_SSID": "ECW5410_5G_WPA2-EAP",
-        "twoFourG_OPEN_SSID": "ECW5410_2dot4G_OPEN",
-        "twoFourG_WPA2_SSID": "ECW5410_2dot4G_WPA2",
+        "fiveG_OPEN_SSID": "EAP101_5G_OPEN",
+        "fiveG_WPA2-EAP_SSID": "EAP101_5G_WPA2-EAP",
+        "twoFourG_OPEN_SSID": "EAP101_2dot4G_OPEN",
+        "twoFourG_WPA2_SSID": "EAP101_2dot4G_WPA2",
         "twoFourG_WPA2_PSK": "Connectus123$",
-        "twoFourG_WPA_SSID": "ECW5410_2dot4G_WPA",
+        "twoFourG_WPA_SSID": "EAP101_2dot4G_WPA",
         "twoFourG_WPA_PSK": "Connectus123$",
-        "twoFourG_WPA2-EAP_SSID": "ECW5410_2dot4G_WPA2-EAP",
+        "twoFourG_WPA2-EAP_SSID": "EAP101_2dot4G_WPA2-EAP",
         "ssid_list": [
-            "ECW5410_5G_WPA2",
-            "ECW5410_5G_WPA",
-            "ECW5410_5G_WPA2-EAP",
-            "ECW5410_2dot4G_WPA2",
-            "ECW5410_2dot4G_WPA",
-            "ECW5410_2dot4G_WPA2-EAP"
+            "EAP101_5G_WPA2",
+            "EAP101_5G_WPA",
+            "EAP101_5G_WPA2-EAP",
+            "EAP101_2dot4G_WPA2",
+            "EAP101_2dot4G_WPA",
+            "EAP101_2dot4G_WPA2-EAP"
         ]
     },
 
-    "ecw5410_nat": {
-        "fiveG_WPA2_SSID": "ECW5410_5G_WPA2_NAT",
+    "eap101_nat": {
+        "fiveG_WPA2_SSID": "EAP101_5G_WPA2_NAT",
         "fiveG_WPA2_PSK": "Connectus123$",
-        "fiveG_WPA_SSID": "ECW5410_5G_WPA_NAT",
+        "fiveG_WPA_SSID": "EAP101_5G_WPA_NAT",
         "fiveG_WPA_PSK": "Connectus123$",
-        "fiveG_OPEN_SSID": "ECW5410_5G_OPEN_NAT",
-        "fiveG_WPA2-EAP_SSID": "ECW5410_5G_WPA2-EAP_NAT",
-        "twoFourG_OPEN_SSID": "ECW5410_2dot4G_OPEN_NAT",
-        "twoFourG_WPA2_SSID": "ECW5410_2dot4G_WPA2_NAT",
+        "fiveG_OPEN_SSID": "EAP101_5G_OPEN_NAT",
+        "fiveG_WPA2-EAP_SSID": "EAP101_5G_WPA2-EAP_NAT",
+        "twoFourG_OPEN_SSID": "EAP101_2dot4G_OPEN_NAT",
+        "twoFourG_WPA2_SSID": "EAP101_2dot4G_WPA2_NAT",
         "twoFourG_WPA2_PSK": "Connectus123$",
-        "twoFourG_WPA_SSID": "ECW5410_2dot4G_WPA_NAT",
+        "twoFourG_WPA_SSID": "EAP101_2dot4G_WPA_NAT",
         "twoFourG_WPA_PSK": "Connectus123$",
-        "twoFourG_WPA2-EAP_SSID": "ECW5410_2dot4G_WPA2-EAP_NAT",
+        "twoFourG_WPA2-EAP_SSID": "EAP101_2dot4G_WPA2-EAP_NAT",
         "ssid_list": [
-            "ECW5410_5G_WPA2_NAT",
-            "ECW5410_5G_WPA_NAT",
-            "ECW5410_5G_WPA2-EAP_NAT",
-            "ECW5410_2dot4G_WPA2_NAT",
-            "ECW5410_2dot4G_WPA_NAT",
-            "ECW5410_2dot4G_WPA2-EAP_NAT"
+            "EAP101_5G_WPA2_NAT",
+            "EAP101_5G_WPA_NAT",
+            "EAP101_5G_WPA2-EAP_NAT",
+            "EAP101_2dot4G_WPA2_NAT",
+            "EAP101_2dot4G_WPA_NAT",
+            "EAP101_2dot4G_WPA2-EAP_NAT"
         ]
     },
 
-    "ecw5410_vlan": {
-        "fiveG_WPA2_SSID": "ECW5410_5G_WPA2_VLAN",
+    "eap101_vlan": {
+        "fiveG_WPA2_SSID": "EAP101_5G_WPA2_VLAN",
         "fiveG_WPA2_PSK": "Connectus123$",
-        "fiveG_WPA_SSID": "ECW5410_5G_WPA_VLAN",
+        "fiveG_WPA_SSID": "EAP101_5G_WPA_VLAN",
         "fiveG_WPA_PSK": "Connectus123$",
-        "fiveG_OPEN_SSID": "ECW5410_5G_OPEN_VLAN",
-        "fiveG_WPA2-EAP_SSID": "ECW5410_5G_WPA2-EAP_VLAN",
-        "twoFourG_OPEN_SSID": "ECW5410_2dot4G_OPEN_VLAN",
-        "twoFourG_WPA2_SSID": "ECW5410_2dot4G_WPA2_VLAN",
+        "fiveG_OPEN_SSID": "EAP101_5G_OPEN_VLAN",
+        "fiveG_WPA2-EAP_SSID": "EAP101_5G_WPA2-EAP_VLAN",
+        "twoFourG_OPEN_SSID": "EAP101_2dot4G_OPEN_VLAN",
+        "twoFourG_WPA2_SSID": "EAP101_2dot4G_WPA2_VLAN",
         "twoFourG_WPA2_PSK": "Connectus123$",
-        "twoFourG_WPA_SSID": "ECW5410_2dot4G_WPA_VLAN",
+        "twoFourG_WPA_SSID": "EAP101_2dot4G_WPA_VLAN",
         "twoFourG_WPA_PSK": "Connectus123$",
-        "twoFourG_WPA2-EAP_SSID": "ECW5410_2dot4G_WPA2-EAP_VLAN",
+        "twoFourG_WPA2-EAP_SSID": "EAP101_2dot4G_WPA2-EAP_VLAN",
         "ssid_list": [
-            "ECW5410_5G_WPA2_VLAN",
-            "ECW5410_5G_WPA_VLAN",
-            "ECW5410_5G_WPA2-EAP_VLAN",
-            "ECW5410_2dot4G_WPA2_VLAN",
-            "ECW5410_2dot4G_WPA_VLAN",
-            "ECW5410_2dot4G_WPA2-EAP_VLAN"
+            "EAP101_5G_WPA2_VLAN",
+            "EAP101_5G_WPA_VLAN",
+            "EAP101_5G_WPA2-EAP_VLAN",
+            "EAP101_2dot4G_WPA2_VLAN",
+            "EAP101_2dot4G_WPA_VLAN",
+            "EAP101_2dot4G_WPA2-EAP_VLAN"
         ]
     },
-    "ecw5211": {
-        "fiveG_WPA2_SSID": "ECW5211_5G_WPA2",
+    "wf194c": {
+        "fiveG_WPA2_SSID": "WF194C_5G_WPA2",
         "fiveG_WPA2_PSK": "Connectus123$",
-        "fiveG_WPA_SSID": "ECW5211_5G_WPA",
+        "fiveG_WPA_SSID": "WF194C_5G_WPA",
         "fiveG_WPA_PSK": "Connectus123$",
-        "fiveG_OPEN_SSID": "ECW5211_5G_OPEN",
-        "fiveG_WPA2-EAP_SSID": "ECW5211_5G_WPA2-EAP",
-        "twoFourG_OPEN_SSID": "ECW5211_2dot4G_OPEN",
-        "twoFourG_WPA2_SSID": "ECW5211_2dot4G_WPA2",
+        "fiveG_OPEN_SSID": "WF194C_5G_OPEN",
+        "fiveG_WPA2-EAP_SSID": "WF194C_5G_WPA2-EAP",
+        "twoFourG_OPEN_SSID": "WF194C_2dot4G_OPEN",
+        "twoFourG_WPA2_SSID": "WF194C_2dot4G_WPA2",
         "twoFourG_WPA2_PSK": "Connectus123$",
-        "twoFourG_WPA_SSID": "ECW5211_2dot4G_WPA",
+        "twoFourG_WPA_SSID": "WF194C_2dot4G_WPA",
         "twoFourG_WPA_PSK": "Connectus123$",
-        "twoFourG_WPA2-EAP_SSID": "ECW5211_2dot4G_WPA2-EAP",
+        "twoFourG_WPA2-EAP_SSID": "WF194C_2dot4G_WPA2-EAP",
         "ssid_list": [
-            "ECW5211_5G_WPA2",
-            "ECW5211_5G_WPA",
-            "ECW5211_5G_WPA2-EAP",
-            "ECW5211_2dot4G_WPA2",
-            "ECW5211_2dot4G_WPA",
-            "ECW5211_2dot4G_WPA2-EAP"
-        ]
-    },
-
-    "ecw5211_nat": {
-        "fiveG_WPA2_SSID": "ECW5211_5G_WPA2_NAT",
-        "fiveG_WPA2_PSK": "Connectus123$",
-        "fiveG_WPA_SSID": "ECW5211_5G_WPA_NAT",
-        "fiveG_WPA_PSK": "Connectus123$",
-        "fiveG_OPEN_SSID": "ECW5211_5G_OPEN_NAT",
-        "fiveG_WPA2-EAP_SSID": "ECW5211_5G_WPA2-EAP_NAT",
-        "twoFourG_OPEN_SSID": "ECW5211_2dot4G_OPEN_NAT",
-        "twoFourG_WPA2_SSID": "ECW5211_2dot4G_WPA2_NAT",
-        "twoFourG_WPA2_PSK": "Connectus123$",
-        "twoFourG_WPA_SSID": "ECW5211_2dot4G_WPA_NAT",
-        "twoFourG_WPA_PSK": "Connectus123$",
-        "twoFourG_WPA2-EAP_SSID": "ECW5211_2dot4G_WPA2-EAP_NAT",
-        "ssid_list": [
-            "ECW5211_5G_WPA2_NAT",
-            "ECW5211_5G_WPA_NAT",
-            "ECW5211_5G_WPA2-EAP_NAT",
-            "ECW5211_2dot4G_WPA2_NAT",
-            "ECW5211_2dot4G_WPA_NAT",
-            "ECW5211_2dot4G_WPA2-EAP_NAT"
+            "WF194C_5G_WPA2",
+            "WF194C_5G_WPA",
+            "WF194C_5G_WPA2-EAP",
+            "WF194C_2dot4G_WPA2",
+            "WF194C_2dot4G_WPA",
+            "WF194C_2dot4G_WPA2-EAP"
         ]
     },
 
-    "ecw5211_vlan": {
-        "fiveG_WPA2_SSID": "ECW5211_5G_WPA2_VLAN",
+    "wf194c_nat": {
+        "fiveG_WPA2_SSID": "WF194C_5G_WPA2_NAT",
         "fiveG_WPA2_PSK": "Connectus123$",
-        "fiveG_WPA_SSID": "ECW5211_5G_WPA_VLAN",
+        "fiveG_WPA_SSID": "WF194C_5G_WPA_NAT",
         "fiveG_WPA_PSK": "Connectus123$",
-        "fiveG_OPEN_SSID": "ECW5211_5G_OPEN_VLAN",
-        "fiveG_WPA2-EAP_SSID": "ECW5211_5G_WPA2-EAP_VLAN",
-        "twoFourG_OPEN_SSID": "ECW5211_2dot4G_OPEN_VLAN",
-        "twoFourG_WPA2_SSID": "ECW5211_2dot4G_WPA2_VLAN",
+        "fiveG_OPEN_SSID": "WF194C_5G_OPEN_NAT",
+        "fiveG_WPA2-EAP_SSID": "WF194C_5G_WPA2-EAP_NAT",
+        "twoFourG_OPEN_SSID": "WF194C_2dot4G_OPEN_NAT",
+        "twoFourG_WPA2_SSID": "WF194C_2dot4G_WPA2_NAT",
         "twoFourG_WPA2_PSK": "Connectus123$",
-        "twoFourG_WPA_SSID": "ECW5211_2dot4G_WPA_VLAN",
+        "twoFourG_WPA_SSID": "WF194C_2dot4G_WPA_NAT",
         "twoFourG_WPA_PSK": "Connectus123$",
-        "twoFourG_WPA2-EAP_SSID": "ECW5211_2dot4G_WPA2-EAP_VLAN",
+        "twoFourG_WPA2-EAP_SSID": "WF194C_2dot4G_WPA2-EAP_NAT",
         "ssid_list": [
-            "ECW5211_5G_WPA2_VLAN",
-            "ECW5211_5G_WPA_VLAN",
-            "ECW5211_5G_WPA2-EAP_VLAN",
-            "ECW5211_2dot4G_WPA2_VLAN",
-            "ECW5211_2dot4G_WPA_VLAN",
-            "ECW5211_2dot4G_WPA2-EAP_VLAN"
+            "WF194C_5G_WPA2_NAT",
+            "WF194C_5G_WPA_NAT",
+            "WF194C_5G_WPA2-EAP_NAT",
+            "WF194C_2dot4G_WPA2_NAT",
+            "WF194C_2dot4G_WPA_NAT",
+            "WF194C_2dot4G_WPA2-EAP_NAT"
+        ]
+    },
+
+    "wf194c_vlan": {
+        "fiveG_WPA2_SSID": "WF194C_5G_WPA2_VLAN",
+        "fiveG_WPA2_PSK": "Connectus123$",
+        "fiveG_WPA_SSID": "WF194C_5G_WPA_VLAN",
+        "fiveG_WPA_PSK": "Connectus123$",
+        "fiveG_OPEN_SSID": "WF194C_5G_OPEN_VLAN",
+        "fiveG_WPA2-EAP_SSID": "WF194C_5G_WPA2-EAP_VLAN",
+        "twoFourG_OPEN_SSID": "WF194C_2dot4G_OPEN_VLAN",
+        "twoFourG_WPA2_SSID": "WF194C_2dot4G_WPA2_VLAN",
+        "twoFourG_WPA2_PSK": "Connectus123$",
+        "twoFourG_WPA_SSID": "WF194C_2dot4G_WPA_VLAN",
+        "twoFourG_WPA_PSK": "Connectus123$",
+        "twoFourG_WPA2-EAP_SSID": "WF194C_2dot4G_WPA2-EAP_VLAN",
+        "ssid_list": [
+            "WF194C_5G_WPA2_VLAN",
+            "WF194C_5G_WPA_VLAN",
+            "WF194C_5G_WPA2-EAP_VLAN",
+            "WF194C_2dot4G_WPA2_VLAN",
+            "WF194C_2dot4G_WPA_VLAN",
+            "WF194C_2dot4G_WPA2-EAP_VLAN"
         ]
     },
     "eap102": {

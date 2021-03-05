@@ -21,6 +21,7 @@ if sys.version_info[0] != 3:
 if 'py-json' not in sys.path:
     sys.path.append('../../py-json')
 
+
 import argparse
 import LANforge
 from LANforge import LFUtils
@@ -30,7 +31,7 @@ from LANforge.lfcli_base import LFCliBase
 from LANforge.LFUtils import *
 import realm
 from realm import Realm
-# from lf_lib import *
+from lf_lib import *
 import pprint
 
 OPEN="open"
