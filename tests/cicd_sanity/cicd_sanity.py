@@ -751,6 +751,26 @@ for key in equipment_ids:
             with open(deletion_file, 'w') as outfile:
                 json.dump(delete_data, outfile)
 
+        # PROFILE CLEANUP BY NAME
+        profile_delete_list = CloudSDK.get_profile_by_name(cloudSDK_url, bearer, customer_id, fw_model + '_5G_EAP_') + \
+                              CloudSDK.get_profile_by_name(cloudSDK_url, bearer, customer_id, fw_model + '_5G_WPA2_') + \
+                              CloudSDK.get_profile_by_name(cloudSDK_url, bearer, customer_id, fw_model + '_5G_WPA_') + \
+                              CloudSDK.get_profile_by_name(cloudSDK_url, bearer, customer_id, fw_model + '_2G_EAP_') + \
+                              CloudSDK.get_profile_by_name(cloudSDK_url, bearer, customer_id, fw_model + '_2G_WPA2_') + \
+                              CloudSDK.get_profile_by_name(cloudSDK_url, bearer, customer_id, fw_model + '_2G_WPA_') + \
+                              CloudSDK.get_profile_by_name(cloudSDK_url, bearer, customer_id, fw_model +
+                                                           'Automation_RADIUS_'+today) + \
+                              CloudSDK.get_profile_by_name(cloudSDK_url, bearer, customer_id, "Nightly_Sanity_"
+                                                           + fw_model + "_")
+
+        for x in profile_delete_list:
+            delete_profile = CloudSDK.delete_profile(cloudSDK_url, bearer, str(x))
+            if delete_profile == "SUCCESS":
+                print("profile", x, "delete successful")
+            else:
+                print("Error deleting profile")
+
+
         # Create RADIUS profile - used for all EAP SSIDs
         if args.skip_eap != True:
             radius_template = "templates/radius_profile_template.json"
@@ -793,6 +813,7 @@ for key in equipment_ids:
         else:
             rfProfileId = 10
             print("Unknown AP radio spec, using default RF profile")
+
 
         ###########################################################################
         ############## Bridge Mode Client Connectivity ############################
