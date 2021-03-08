@@ -751,6 +751,11 @@ for key in equipment_ids:
             with open(deletion_file, 'w') as outfile:
                 json.dump(delete_data, outfile)
 
+        print("Switching AP's to default profile")
+        for id in equipment_id_dict.values():
+            ap_profile = CloudSDK.set_ap_profile(id, 6, cloudSDK_url, bearer)
+        print('Profile change successful. Deleting profiles that cause potential conflicts...')
+
         # PROFILE CLEANUP BY NAME
         profile_delete_list = CloudSDK.get_profile_by_name(cloudSDK_url, bearer, customer_id, fw_model + '_5G_EAP_') + \
                               CloudSDK.get_profile_by_name(cloudSDK_url, bearer, customer_id, fw_model + '_5G_WPA2_') + \
