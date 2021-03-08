@@ -267,3 +267,20 @@ class CloudSDK:
         print(response)
         updated_profile = response.json()
         return updated_profile
+
+    def get_profile_by_name(cloudSDK_url, bearer, customer_id, profile_name):
+        id_list = []
+        url = cloudSDK_url + "/portal/profile/forCustomer?customerId=" + customer_id + "&nameSubstring=" + profile_name
+
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer ' + bearer
+        }
+
+        response = requests.request("GET", url, headers=headers, data=payload)
+        profile_list = response.json()
+        # print(profile_list)
+        for x in profile_list['items']:
+            prof_id = str(x['id'])
+            id_list.append(prof_id)
+        return id_list
