@@ -1,5 +1,5 @@
 """
-    A set of constants to use throughtout the tests
+    A set of constants describing cloud controllers properties
 """
 
 SDK_BASE_URLS = {

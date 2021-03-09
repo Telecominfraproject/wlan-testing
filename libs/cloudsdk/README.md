@@ -82,3 +82,9 @@ Currently the plan is to use pytest integrated with [allure](https://docs.qameta
 1. Do not use old style string formatting: `"Hello %s" % var`; use `f"Hello {var}` instead
 2. use `"""` in Docstrings
 3. todo
+
+### Useful links
+
+https://docs.pytest.org/en/latest/example/markers.html  
+https://docs.pytest.org/en/latest/usage.html  
+http://pythontesting.net/framework/pytest/pytest-introduction/
