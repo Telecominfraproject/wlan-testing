@@ -185,3 +185,45 @@ def get_vif_state(ap_ip, username, password):
     except socket.timeout:
         print("AP Unreachable")
         return "ERROR"
+
+def copy_logread_dmesg(ap_ip, username, password):
+    try:
+        if 'tty' in ap_ip:
+            ap_cmd = "logread"
+            cmd = "cd ../../lanforge/lanforge-scripts && python3 openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
+                owrt_args, ap_ip, ap_cmd)
+            with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True) as p:
+                output, errors = p.communicate()
+            logread_output = output.decode('utf-8')
+
+            ap_cmd = "dmesg"
+            cmd = "cd ../../lanforge/lanforge-scripts && python3 openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
+                owrt_args, ap_ip, ap_cmd)
+            with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True) as p:
+                output, errors = p.communicate()
+            dmesg_output = output.decode('utf-8')
+
+            return logread_output, dmesg_output
+
+        else:
+            client = paramiko.SSHClient()
+            client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            client.connect(ap_ip, username=username, password=password, timeout=5)
+            stdin, stdout, stderr = client.exec_command('logread')
+            logread_output = str(stdout.read(), 'utf-8')
+
+            stdin, stdout, stderr = client.exec_command('dmesg')
+            dmesg_output = str(stdout.read(), 'utf-8')
+
+            return logread_output, dmesg_output
+
+    except paramiko.ssh_exception.AuthenticationException:
+        print("Authentication Error, Check Credentials")
+        return "ERROR"
+    except paramiko.SSHException:
+        print("Cannot SSH to the AP")
+        return "ERROR"
+    except socket.timeout:
+        print("AP Unreachable")
+        return "ERROR"
+
