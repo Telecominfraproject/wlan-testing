@@ -54,7 +54,7 @@ class ConfigureCloudSDK:
 
 
 """
-    Library for cloudSDK generic usages, it instantiate the bearer and credentials.
+    Library for cloudsdk generic usages, it instantiate the bearer and credentials.
     It provides the connectivity to the cloud.
 """
 
@@ -64,9 +64,12 @@ class CloudSDK(ConfigureCloudSDK):
     constructor for cloudsdk library : can be used from pytest framework
     """
 
-    def __init__(self, testbed=None):
+    def __init__(self, testbed=None, customer_id=None):
         super().__init__()
-
+        if customer_id is None:
+            print("Invalid Customer Id")
+            exit()
+        self.customer_id = customer_id
         # Setting the CloudSDK Client Configuration
         self.select_testbed(testbed=testbed)
         self.set_credentials()
@@ -85,6 +88,7 @@ class CloudSDK(ConfigureCloudSDK):
         }
         self.api_client.configuration.refresh_api_key_hook = self.get_bearer_token()
         self.ping_response = self.portal_ping()
+        self.default_profiles = {}
         # print(self.bearer)
         if self.ping_response._application_name != 'PortalServer':
             print("Server not Reachable")
@@ -108,14 +112,16 @@ class CloudSDK(ConfigureCloudSDK):
     Equipment Utilities
     """
 
-    def get_equipment_by_customer_id(self, customer_id=None, max_items=10):
+    # Returns a List of All the Equipments that are available
+    def get_equipment_by_customer_id(self, max_items=10):
         pagination_context = """{
                 "model_type": "PaginationContext",
-                "maxItemsPerPage": """+str(max_items)+"""
+                "maxItemsPerPage": """ + str(max_items) + """
         }"""
 
-        print(self.equipment_client.get_equipment_by_customer_id(customer_id=customer_id,
-                                                                 pagination_context=pagination_context))
+        equipment_data = self.equipment_client.get_equipment_by_customer_id(customer_id=self.customer_id,
+                                                                            pagination_context=pagination_context)
+        return equipment_data._items
 
     def request_ap_reboot(self):
         pass
@@ -141,57 +147,16 @@ class CloudSDK(ConfigureCloudSDK):
                         Captive-Portal
     """
 
-    def get_profile_template(self, customer_id=None, profile_name=None):
-        pagination_context = """{
-                        "model_type": "PaginationContext",
-                        "maxItemsPerPage": 100
-                }"""
-        profiles = self.profile_client.get_profiles_by_customer_id(customer_id=customer_id,
-                                                                   pagination_context=pagination_context)._items
-        for i in profiles:
-            if i._name == profile_name:
-                return i
-        return None
 
-    def get_profiles_by_customer_id(self, customer_id=None):
-        pagination_context = """{
-                "model_type": "PaginationContext",
-                "maxItemsPerPage": 100
-        }"""
-        self.default_profiles = {}
-        print(len((self.profile_client.get_profiles_by_customer_id(customer_id=customer_id,
-                                                                   pagination_context=pagination_context))._items))
-        for i in self.profile_client.get_profiles_by_customer_id(customer_id=customer_id,
-                                                                 pagination_context=pagination_context)._items:
-            print(i._name, i._id)
-            if i._name == "TipWlan-Cloud-Wifi":
-                self.default_profiles['ssid'] = i
-            if i._name == "TipWlan-Cloud-Wifi":
-                self.default_profiles['ssid'] = i
-            if i._name == "TipWlan-Cloud-Wifi":
-                self.default_profiles['ssid'] = i
-
-    def create_profile(self, profile_type=None, customer_id=None, profile_name=None):
-        if profile_type is None or customer_id is None or profile_name is None:
-            return "Invalid profile_type/customer_id/profile_name"
-
-        profile_data = {
-            "profileType": profile_type,  # eg. ("equipment_ap", "ssid", "rf", "radius", "captive_portal")
-            "customerId": customer_id,
-            "name": profile_name
-        }
-        return "Profile Created Successfully!"
-
-
-class APUtils:
+class ProfileUtility:
     """
        constructor for Access Point Utility library : can be used from pytest framework
                                                       to control Access Points
     """
 
-    def __init__(self, sdk_client=None, testbed=None):
+    def __init__(self, sdk_client=None, testbed=None, customer_id=None):
         if sdk_client is None:
-            sdk_client = CloudSDK(testbed=testbed)
+            sdk_client = CloudSDK(testbed=testbed, customer_id=customer_id)
         self.sdk_client = sdk_client
         self.profile_client = swagger_client.ProfileApi(api_client=self.sdk_client.api_client)
         self.profile_creation_ids = {
@@ -200,14 +165,52 @@ class APUtils:
             "radius": [],
             "rf": []
         }
+        self.default_profiles = {}
         self.profile_ids = []
+
+    def get_profile_by_name(self, profile_name=None):
+        pagination_context = """{
+                        "model_type": "PaginationContext",
+                        "maxItemsPerPage": 1000
+                }"""
+        profiles = self.profile_client.get_profiles_by_customer_id(customer_id=self.sdk_client.customer_id,
+                                                                   pagination_context=pagination_context)
+
+        for i in profiles._items:
+            if i._name == profile_name:
+                return i
+        return None
+
+    def get_default_profiles(self):
+        pagination_context = """{
+                "model_type": "PaginationContext",
+                "maxItemsPerPage": 100
+        }"""
+        items = self.profile_client.get_profiles_by_customer_id(customer_id=self.sdk_client.customer_id,
+                                                                pagination_context=pagination_context)
+
+        for i in items._items:
+            # print(i._name, i._id)
+            if i._name == "TipWlan-Cloud-Wifi":
+                self.default_profiles['ssid'] = i
+            if i._name == "TipWlan-3-Radios":
+                self.default_profiles['equipment_ap_3_radios'] = i
+            if i._name == "TipWlan-2-Radios":
+                self.default_profiles['equipment_ap_3_radios'] = i
+            if i._name == "Captive-Portal":
+                self.default_profiles['captive_portal'] = i
+            if i._name == "Radius-Profile":
+                self.default_profiles['radius'] = i
+            if i._name == "TipWlan-rf":
+                self.default_profiles['rf'] = i
 
     """
         method call: used to create the rf profile and push set the parameters accordingly and update
     """
 
-    def select_rf_profile(self, profile_data=None):
-        default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-rf")
+    def set_rf_profile(self, profile_data=None):
+        default_profile = self.default_profiles['rf']
+        # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-rf")
         if profile_data is None:
             self.profile_creation_ids['rf'].append(default_profile._id)
         # Need to add functionality to add similar Profile and modify accordingly
@@ -219,7 +222,8 @@ class APUtils:
     def create_open_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
         if profile_data is None:
             return False
-        default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
+        default_profile = self.default_profiles['ssid']
+        # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
         default_profile._details['appliedRadios'] = []
         if two4g is True:
             default_profile._details['appliedRadios'].append("is2dot4GHz")
@@ -239,7 +243,8 @@ class APUtils:
     def create_wpa_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
         if profile_data is None:
             return False
-        default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
+        default_profile = self.default_profiles['ssid']
+        # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
         default_profile._details['appliedRadios'] = []
         if two4g is True:
             default_profile._details['appliedRadios'].append("is2dot4GHz")
@@ -260,7 +265,8 @@ class APUtils:
     def create_wpa2_personal_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
         if profile_data is None:
             return False
-        default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
+        default_profile = self.default_profiles['ssid']
+        # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
         default_profile._details['appliedRadios'] = []
         if two4g is True:
             default_profile._details['appliedRadios'].append("is2dot4GHz")
@@ -282,7 +288,8 @@ class APUtils:
     def create_wpa3_personal_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
         if profile_data is None:
             return False
-        default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
+        default_profile = self.default_profiles['ssid']
+        # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
         default_profile._details['appliedRadios'] = []
         if two4g is True:
             default_profile._details['appliedRadios'].append("is2dot4GHz")
@@ -303,7 +310,8 @@ class APUtils:
     def create_wpa2_enterprise_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
         if profile_data is None:
             return False
-        default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
+        default_profile = self.default_profiles['ssid']
+        # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
         default_profile._details['appliedRadios'] = []
         if two4g is True:
             default_profile._details['appliedRadios'].append("is2dot4GHz")
@@ -323,7 +331,8 @@ class APUtils:
     def create_wpa3_enterprise_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
         if profile_data is None:
             return False
-        default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
+        default_profile = self.default_profiles['ssid']
+        # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
         default_profile._details['appliedRadios'] = []
         if two4g is True:
             default_profile._details['appliedRadios'].append("is2dot4GHz")
@@ -348,7 +357,8 @@ class APUtils:
     def set_ap_profile(self, profile_data=None):
         if profile_data is None:
             return False
-        default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-2-Radios")
+        default_profile = self.default_profiles['equipment_ap_2_radios']
+        # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-2-Radios")
         default_profile._child_profile_ids = []
         for i in self.profile_creation_ids:
             for j in self.profile_creation_ids[i]:
@@ -432,10 +442,44 @@ class APUtils:
         response = requests.request("PUT", url, headers=headers, data=json.dumps(equipment_info))
 
 
+class JFrogUtility:
+
+    def __init__(self, credentials=None):
+        if credentials is None:
+            exit()
+        self.user = credentials["user"]
+        self.password = credentials["password"]
+        self.jfrog_url = "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/"
+        self.build = "pending"
+
+    def list_revisions(self):
+        pass
+
+    def get_latest_build(self):
+        pass
+
+
 if __name__ == "__main__":
-    sdk_client = CloudSDK(testbed="nola-ext-04")
-    print(sdk_client.get_equipment_by_customer_id(customer_id=2))
-    sdk_client.disconnect_cloudsdk()
+    testbeds = ["nola-01", "nola-02", "nola-04", "nola-ext-01", "nola-ext-02", "nola-ext-03", "nola-ext-04",
+                "nola-ext-05"]
+    for i in testbeds:
+        sdk_client = CloudSDK(testbed=i, customer_id=2)
+        print(sdk_client.get_equipment_by_customer_id())
+        print(sdk_client.portal_ping() is None)
+        break
+        # ap_utils = ProfileUtility(sdk_client=sdk_client)
+        # ap_utils.get_default_profiles()
+        # for j in ap_utils.default_profiles:
+        #     print(ap_utils.default_profiles[j]._id)
+
+        # data = sdk_client.get_equipment_by_customer_id()
+        # equipment_ids = []
+        # for i in data:
+        #     equipment_ids.append(i)
+        # print(equipment_ids[0]._details._equipment_model)
+        sdk_client.disconnect_cloudsdk()
+        time.sleep(2)
+
     # sdk_client.get_equipment_by_customer_id(customer_id=2)
     # ap_utils = APUtils(sdk_client=sdk_client)
     # print(sdk_client.configuration.api_key_prefix)
@@ -494,7 +538,6 @@ if __name__ == "__main__":
     # # # obj.get_profiles_by_customer_id(customer_id=2)
     # # # print(obj.default_profiles)
 
-
     # # time.sleep(20)
     # # # Please change the equipment ID with the respective testbed
     # #ap_utils.push_profile(equipment_id=11)
@@ -503,6 +546,7 @@ if __name__ == "__main__":
     # time.sleep(1)
 
     # ap_utils.delete_profile(profile_id=ap_utils.profile_ids)
+
 
 def test_open_ssid():
     sdk_client = CloudSDK(testbed="nola-ext-04")
@@ -522,13 +566,23 @@ def test_open_ssid():
     ap_utils.push_profile_old_method(equipment_id='12')
     sdk_client.disconnect_cloudsdk()
     pass
+
+
 def test_wpa_ssid():
     pass
+
+
 def test_wpa2_personal_ssid():
     pass
+
+
 def test_wpa3_personal_ssid():
     pass
+
+
 def test_wpa2_enterprise_ssid():
     pass
+
+
 def test_wpa3_enterprise_ssid():
     pass

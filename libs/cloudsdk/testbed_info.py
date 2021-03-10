@@ -1,6 +1,7 @@
 """
     A set of constants describing cloud controllers properties
 """
+import os
 
 SDK_BASE_URLS = {
     "nola-01": "https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build",
@@ -12,6 +13,11 @@ SDK_BASE_URLS = {
 }
 
 LOGIN_CREDENTIALS = {
-    "user_id": "support@example.com",
+    "userId": "support@example.com",
     "password": "support"
+}
+
+JFROG_CREDENTIALS = {
+    "userId": os.getenv('JFROG_USER'),
+    "password": os.getenv('JFROG_PWD')
 }
