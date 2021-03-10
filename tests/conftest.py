@@ -77,3 +77,11 @@ def instantiate_cloudsdk(request):
 @pytest.fixture(scope="session")
 def instantiate_jFrog(request):
     yield "instantiate_jFrog"
+
+@pytest.fixture(scope="session")
+def get_customer_id(request):
+    yield request.config.getini("sdk-customer-id")
+
+@pytest.fixture(scope="session")
+def get_testbed_name(request):
+    yield request.config.getini("testbed-name")
