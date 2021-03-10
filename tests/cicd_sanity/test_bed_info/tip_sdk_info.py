@@ -12,8 +12,8 @@ cloud_password = "support"
 #Testrail info
 tr_url = 'https://telecominfraproject.testrail.com'
 tr_prefix = 'Daily_Sanity_'
-tr_user = 'test@example.com'
-tr_pass = 'test123'
+tr_user = 'syama.devi@connectus.ai'
+tr_pass = 'Connect123$'
 tr_project_id = 'WLAN'
 milestone = '7'
 #AP Upgrade
