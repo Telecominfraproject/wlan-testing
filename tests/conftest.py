@@ -85,3 +85,6 @@ def get_customer_id(request):
 @pytest.fixture(scope="session")
 def get_testbed_name(request):
     yield request.config.getini("testbed-name")
+
+
+
