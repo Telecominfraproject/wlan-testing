@@ -7,6 +7,15 @@ sys.path.append(
     )
 )
 
+
+if 'cloudsdk' not in sys.path:
+    sys.path.append(f'../libs/cloudsdk')
+if 'apnos' not in sys.path:
+    sys.path.append(f'../libs/apnos')
+
+from apnos import APNOS
+from cloudsdk import CloudSDK
+from cloudsdk import ProfileUtility
 import pytest
 from configuration_data import PROFILE_DATA
 
@@ -14,20 +23,35 @@ def pytest_addoption(parser):
     parser.addini("jfrog-base-url", "jfrog base url")
     parser.addini("jfrog-user-id", "jfrog username")
     parser.addini("jfrog-user-password", "jfrog password")
+
     parser.addini("testbed-name", "cloud sdk base url")
+
     parser.addini("sdk-user-id", "cloud sdk username")
     parser.addini("sdk-user-password", "cloud sdk user password")
+
     parser.addini("sdk-customer-id", "cloud sdk customer id for the access points")
+    parser.addini("sdk-equipment-id", "cloud sdk customer id for the access points")
+
     parser.addini("testrail-base-url", "testrail base url")
     parser.addini("testrail-project", "testrail project name to use to generate test reports")
     parser.addini("testrail-user-id", "testrail username")
     parser.addini("testrail-user-password", "testrail user password")
+
     parser.addini("lanforge-ip-address", "LANforge ip address to connect to")
     parser.addini("lanforge-port-number", "LANforge port number to connect to")
     parser.addini("lanforge-radio", "LANforge radio to use")
     parser.addini("lanforge-ethernet-port", "LANforge ethernet adapter to use")
 
-    # change behaviour
+    parser.addini("jumphost_ip", "APNOS Jumphost IP Address")
+    parser.addini("jumphost_username", "APNOS Jumphost Username")
+    parser.addini("jumphost_password", "APNOS Jumphost password")
+    parser.addini("jumphost_port", "APNOS Jumphost ssh Port")
+
+    parser.addini("skip-open", "skip open ssid mode")
+    parser.addini("skip-wpa", "skip wpa ssid mode")
+    parser.addini("skip-wpa2", "skip wpa2 ssid mode")
+    parser.addini("skip-eap", "skip eap ssid mode")
+   # change behaviour
     parser.addoption(
         "--skip-update-firmware",
         action="store_true",
@@ -53,10 +77,11 @@ def pytest_unconfigure(config):
 
 @pytest.fixture(scope="function")
 def setup_cloudsdk(request, instantiate_cloudsdk):
-    def fin():
-        print(f"Cloud SDK cleanup for {request.node.originalname}")
-    request.addfinalizer(fin)
-    yield PROFILE_DATA[request.node.originalname]
+    equipment_id = instantiate_cloudsdk.validate_equipment_availability(equipment_id=int(request.config.getini("sdk-equipment-id")))
+    if equipment_id == -1:
+        yield -1
+    else:
+        yield equipment_id
 
 @pytest.fixture(scope="session")
 def update_firmware(request, instantiate_jFrog, instantiate_cloudsdk, retrieve_latest_image, access_points):
@@ -72,10 +97,12 @@ def retrieve_latest_image(request, access_points):
 
 @pytest.fixture(scope="session")
 def instantiate_cloudsdk(request):
-    yield "instantiate_cloudsdk"
+    sdk_client = CloudSDK(testbed=request.config.getini("testbed-name"), customer_id=request.config.getini("sdk-customer-id"))
+    yield sdk_client
 
 @pytest.fixture(scope="session")
 def instantiate_jFrog(request):
+
     yield "instantiate_jFrog"
 
 @pytest.fixture(scope="session")
@@ -86,5 +113,218 @@ def get_customer_id(request):
 def get_testbed_name(request):
     yield request.config.getini("testbed-name")
 
+@pytest.fixture(scope="session")
+def get_equipment_model(request, instantiate_cloudsdk):
+    yield request.config.getini("testbed-name")
+
+@pytest.fixture(scope="session")
+def get_current_firmware(request, instantiate_cloudsdk, get_equipment_model):
+    yield request.config.getini("testbed-name")
+
+@pytest.fixture(scope="session")
+def get_latest_firmware(request, instantiate_cloudsdk, get_equipment_model):
+    yield request.config.getini("testbed-name")
+
+@pytest.fixture(scope="function")
+def disconnect_cloudsdk(instantiate_cloudsdk):
+    instantiate_cloudsdk.disconnect_cloudsdk()
+
+@pytest.fixture(scope="function")
+def setup_bridge_mode(request, instantiate_cloudsdk, setup_profile_data, create_bridge_profile):
+    # vif config and vif state logic here
+    APNOS_CREDENTIAL_DATA = {
+        'jumphost_ip': request.config.getini("jumphost_ip"),
+        'jumphost_username': request.config.getini("jumphost_username"),
+        'jumphost_password': request.config.getini("jumphost_password"),
+        'jumphost_port': request.config.getini("jumphost_port")
+    }
+    obj = APNOS(APNOS_CREDENTIAL_DATA)
+    obj.get_vif_config_ssids()
+    condition = ""
+    if condition:   # Condition that matches the vif config data with pushed profile data
+        yield True
+    else:
+        yield False
+
+@pytest.fixture(scope="function")
+def setup_profile_data(request, setup_profile_data):
+    # logic to setup bridge mode ssid and parameters
+    pass
 
 
+
+@pytest.fixture(scope="function")
+def create_bridge_profile(request, instantiate_cloudsdk, get_testbed_name):
+    # SSID and AP name shall be used as testbed_name and mode
+    profile_object = ProfileUtility(sdk_client=instantiate_cloudsdk)
+    profile_object.get_default_profiles()
+    profile_object.set_rf_profile()
+    if request.config.getini("skip-open") == 'False':
+        profile_data = {
+            "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '2G_O_BR'),
+            "ssid_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '2G_O_BR'),
+            "mode": "BRIDGE"
+        }
+        profile_object.create_open_ssid_profile(profile_data=profile_data, fiveg=False)
+        profile_data = {
+            "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '5G_O_BR'),
+            "ssid_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '5G_O_BR'),
+            "mode": "BRIDGE"
+        }
+        profile_object.create_open_ssid_profile(profile_data=profile_data, two4g=False)
+        # Create an open ssid profile
+    if request.config.getini("skip-wpa") == 'False':
+        profile_data = {
+            "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '2G_WPA_BR'),
+            "ssid_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '2G_WPA_BR'),
+            "mode": "BRIDGE",
+            "security_key": "%s-%s" % ("ecw5410", "2G_WPA_BR")
+        }
+        profile_object.create_wpa_ssid_profile(profile_data=profile_data, fiveg=False)
+        profile_data = {
+            "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '5G_WPA_BR'),
+            "ssid_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '5G_WPA_BR'),
+            "mode": "BRIDGE",
+            "security_key": "%s-%s" % ("ecw5410", "5G_WPA_BR")
+        }
+        profile_object.create_wpa_ssid_profile(profile_data=profile_data, two4g=False)
+        # Create a wpa profile
+        pass
+    if request.config.getini("skip-wpa2") == 'False':
+        profile_data = {
+            "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '5G_WPA2_BR'),
+            "ssid_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '5G_WPA2_BR'),
+            "mode": "BRIDGE",
+            "security_key": "%s-%s" % ("ecw5410", "5G_WPA2_BR")
+        }
+        profile_object.create_wpa2_personal_ssid_profile(profile_data=profile_data, fiveg=False)
+        profile_data = {
+            "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '2G_WPA2_BR'),
+            "ssid_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '2G_WPA2_BR'),
+            "mode": "BRIDGE",
+            "security_key": "%s-%s" % ("ecw5410", "2G_WPA2_BR")
+        }
+        profile_object.create_wpa2_personal_ssid_profile(profile_data=profile_data, two4g=False)
+        # Create a wpa2 profile
+        pass
+    if request.config.getini("skip-eap") == 'False':
+        radius_info = {
+            "name": request.config.getini("testbed-name") + "-RADIUS-Nightly",
+            "ip": "192.168.200.75",
+            "port": 1812,
+            "secret": "testing123"
+        }
+        # create a eap profile
+        pass
+    profile_data = {
+        "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", 'BRIDGE'),
+    }
+    profile_object.set_ap_profile(profile_data=profile_data)
+    profile_object.push_profile_old_method(equipment_id='13')
+    # create an equipment ap profile
+    yield profile_object
+
+@pytest.fixture(scope="function")
+def setup_nat_profile(request, instantiate_cloudsdk, get_testbed_name):
+    # SSID and AP name shall be used as testbed_name and mode
+    profile_object = ProfileUtility(sdk_client=instantiate_cloudsdk)
+    profile_object.get_default_profiles()
+    profile_object.set_rf_profile()
+    if request.config.getini("skip-open") == 'False':
+        profile_data = {
+            "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '2G_O_NAT'),
+            "ssid_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '2G_O_NAT'),
+            "mode": "NAT"
+        }
+        profile_object.create_open_ssid_profile(profile_data=profile_data, fiveg=False)
+        profile_data = {
+            "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '5G_O_NAT'),
+            "ssid_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '5G_O_NAT'),
+            "mode": "NAT"
+        }
+        profile_object.create_open_ssid_profile(profile_data=profile_data, two4g=False)
+        # Create an open ssid profile
+    if request.config.getini("skip-wpa") == 'False':
+        profile_data = {
+            "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '2G_WPA_NAT'),
+            "ssid_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '2G_WPA_NAT'),
+            "mode": "NAT",
+            "security_key": "%s-%s" % ("ecw5410", "2G_WPA_NAT")
+        }
+        profile_object.create_wpa_ssid_profile(profile_data=profile_data, fiveg=False)
+        profile_data = {
+            "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '5G_WPA_NAT'),
+            "ssid_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '5G_WPA_NAT'),
+            "mode": "NAT",
+            "security_key": "%s-%s" % ("ecw5410", "5G_WPA_NAT")
+        }
+        profile_object.create_wpa_ssid_profile(profile_data=profile_data, two4g=False)
+        # Create a wpa profile
+        pass
+    if request.config.getini("skip-wpa2") == 'False':
+        profile_data = {
+            "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '5G_WPA2_NAT'),
+            "ssid_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '5G_WPA2_NAT'),
+            "mode": "NAT",
+            "security_key": "%s-%s" % ("ecw5410", "5G_WPA2_NAT")
+        }
+        profile_object.create_wpa2_personal_ssid_profile(profile_data=profile_data, fiveg=False)
+        profile_data = {
+            "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '2G_WPA2_NAT'),
+            "ssid_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '2G_WPA2_NAT'),
+            "mode": "NAT",
+            "security_key": "%s-%s" % ("ecw5410", "2G_WPA2_NAT")
+        }
+        profile_object.create_wpa2_personal_ssid_profile(profile_data=profile_data, two4g=False)
+        # Create a wpa2 profile
+        pass
+    if request.config.getini("skip-eap") == 'False':
+        radius_info = {
+            "name": get_testbed_name + "-RADIUS-Nightly",
+            "ip": "192.168.200.75",
+            "port": 1812,
+            "secret": "testing123"
+        }
+        # create a eap profile
+        pass
+    profile_data = {
+        "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", 'NAT'),
+    }
+    profile_object.set_ap_profile(profile_data=profile_data)
+    profile_object.push_profile_old_method(equipment_id='13')
+    # create an equipment ap profile
+    yield profile_object
+
+@pytest.fixture(scope="function")
+def setup_vlan_profile(request, instantiate_cloudsdk):
+    # SSID and AP name shall be used as testbed_name and mode
+    profile_object = ProfileUtility(sdk_client=instantiate_cloudsdk)
+    # profile_object.select_rf_profile(profile_data=None)
+    if request.config.getini("skip-open") is False:
+        # Create an open ssid profile
+        pass
+    if request.config.getini("skip-wpa") is False:
+        # Create a wpa profile
+        pass
+    if request.config.getini("skip-wpa2") is False:
+        # Create a wpa2 profile
+        pass
+    if request.config.getini("skip-eap") is False:
+        # create a radius profile
+        # create a eap profile
+        pass
+    # create an equipment ap profile
+    yield profile_object
+
+@pytest.fixture(scope="function")
+def apply_default_profile(instantiate_cloudsdk):
+    profile_object = ProfileUtility(sdk_client=instantiate_cloudsdk)
+    profile_object.get_default_profiles()
+    profile_object.profile_creation_ids['ap'] = profile_object.default_profiles['equipment_ap_3_radios']
+    profile_object.push_profile_old_method(equipment_id='13')
+
+@pytest.fixture(scope="function")
+def delete_profiles(instantiate_cloudsdk):
+    profile_object = ProfileUtility(sdk_client=instantiate_cloudsdk)
+    profile_object.get_default_profiles()
+    profile_object.profile_creation_ids['ap'] = profile_object.default_profiles['equipment_ap_3_radios']

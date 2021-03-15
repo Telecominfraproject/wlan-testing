@@ -3,15 +3,43 @@
 """
 
 PROFILE_DATA = {
-    "test_single_client_wpa2": {
-        "profile_name": "test-ssid-wpa2",
-        "ssid_name": "test_wpa2_test",
-        "mode": "BRIDGE",
-        "security_key": "testing12345"
+    "OPEN": {
+        "2G": {
+
+        },
+        "5G": {
+
+        }
     },
-    "test_single_client_open": {
-        "profile_name": "test-ssid-open",
-        "ssid_name": "test_open",
-        "mode": "BRIDGE"
+    "WPA": {
+        "2G": {
+
+        },
+        "5G": {
+
+        }
+    },
+    "WPA2-PERSONAL": {
+        "2G": {
+
+        },
+        "5G": {
+
+        }
+    },
+    "WPA2-ENTERPRISE": {
+        "2G": {
+
+        },
+        "5G": {
+
+        }
     }
+}
+
+APNOS_CREDENTIAL_DATA = {
+    'jumphost_ip': "192.168.200.80",
+    'jumphost_username': "lanforge",
+    'jumphost_password': "lanforge",
+    'jumphost_port':  22
 }
