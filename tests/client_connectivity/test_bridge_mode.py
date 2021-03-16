@@ -10,30 +10,13 @@ class TestBridgeModeClientConnectivity(object):
     @pytest.mark.nightly
     @pytest.mark.nightly_bridge
     def test_single_client(self, setup_cloudsdk, update_firmware, setup_bridge_mode, disconnect_cloudsdk):
-        print("I am Iron Man")
-        assert setup_bridge_mode is True
+        print("Run Client Connectivity Here - BRIDGE Mode")
+        if setup_bridge_mode[0] == setup_bridge_mode[1]:
+            assert True
+        else:
+            assert False
+
 
     @pytest.mark.bridge_mode_multi_client_connectivity
     def test_multi_client(self):
-        pass
-
-# """
-# Bridge mode:
-#     testbed name, customer_id, equipment_id, jfrog-credentials, cloudsdk_tests-credentials, skip-open, skip-wpa, skip-wpa2, skip-radius
-#     Create a CloudSDK Instance and verify login
-#     Get Equipment by Id
-#     upgrade firmware if not latest
-#     create bridge mode ssid's
-#     LANforge Tests
-#
-# NAT mode:
-#
-# """
-# """
-#
-# Cloudsdk and AP Test cases are seperate
-#
-# Bridge Mode:
-#     WPA, WPA2-PERSONAL, WPA2-ENTERPRISE
-#     2.4/5, 2.4/5, 2.4/5
-# """
+        assert 1 == 1

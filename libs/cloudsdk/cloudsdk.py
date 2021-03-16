@@ -166,6 +166,10 @@ class CloudSDK(ConfigureCloudSDK):
     """
 
 
+"""
+    Library for Profile Utility, Creating Profiles and Pushing and Deleting them
+"""
+
 class ProfileUtility:
     """
        constructor for Access Point Utility library : can be used from pytest framework
@@ -198,17 +202,10 @@ class ProfileUtility:
             if i._name == profile_name:
                 return i
         return None
+
     def get_profile_by_id(self, profile_id=None):
-        # pagination_context = """{
-        #                 "model_type": "PaginationContext",
-        #                 "maxItemsPerPage": 10
-        #         }"""
         profiles = self.profile_client.get_profile_by_id(profile_id=profile_id)
         print(profiles)
-        # for i in profiles._items:
-        #     if i._name == profile_name:
-        #         return i
-        # return None
 
     def get_default_profiles(self):
         pagination_context = """{
@@ -233,6 +230,22 @@ class ProfileUtility:
             if i._name == "TipWlan-rf":
                 self.default_profiles['rf'] = i
 
+    def delete_current_profile(self, equipment_id=None):
+        equipment_data = self.sdk_client.equipment_client.get_equipment_by_id(equipment_id=equipment_id)
+
+        data = self.profile_client.get_profile_with_children(profile_id=equipment_data._profile_id)
+        delete_ids = []
+        for i in data:
+            if i._name == "TipWlan-rf":
+                continue
+            else:
+                delete_ids.append(i._id)
+        print(delete_ids)
+        self.get_default_profiles()
+        self.profile_creation_ids['ap'] = self.default_profiles['equipment_ap_3_radios']._id
+        print(self.profile_creation_ids)
+        self.push_profile_old_method(equipment_id=equipment_id)
+        self.delete_profile(profile_id=delete_ids)
     """
         method call: used to create the rf profile and push set the parameters accordingly and update
     """
@@ -261,6 +274,7 @@ class ProfileUtility:
             default_profile._details['appliedRadios'].append("is5GHz")
             default_profile._details['appliedRadios'].append("is5GHzL")
         default_profile._name = profile_data['profile_name']
+        default_profile._details['vlanId'] = profile_data['vlan']
         default_profile._details['ssid'] = profile_data['ssid_name']
         default_profile._details['forwardMode'] = profile_data['mode']
         default_profile._details['secureMode'] = 'open'
@@ -282,6 +296,7 @@ class ProfileUtility:
             default_profile._details['appliedRadios'].append("is5GHz")
             default_profile._details['appliedRadios'].append("is5GHzL")
         default_profile._name = profile_data['profile_name']
+        default_profile._details['vlanId'] = profile_data['vlan']
         default_profile._details['ssid'] = profile_data['ssid_name']
         default_profile._details['keyStr'] = profile_data['security_key']
         default_profile._details['forwardMode'] = profile_data['mode']
@@ -304,6 +319,7 @@ class ProfileUtility:
             default_profile._details['appliedRadios'].append("is5GHz")
             default_profile._details['appliedRadios'].append("is5GHzL")
         default_profile._name = profile_data['profile_name']
+        default_profile._details['vlanId'] = profile_data['vlan']
         default_profile._details['ssid'] = profile_data['ssid_name']
         default_profile._details['keyStr'] = profile_data['security_key']
         default_profile._details['forwardMode'] = profile_data['mode']
@@ -327,6 +343,7 @@ class ProfileUtility:
             default_profile._details['appliedRadios'].append("is5GHz")
             default_profile._details['appliedRadios'].append("is5GHzL")
         default_profile._name = profile_data['profile_name']
+        default_profile._details['vlanId'] = profile_data['vlan']
         default_profile._details['ssid'] = profile_data['ssid_name']
         default_profile._details['keyStr'] = profile_data['security_key']
         default_profile._details['forwardMode'] = profile_data['mode']
@@ -349,6 +366,7 @@ class ProfileUtility:
             default_profile._details['appliedRadios'].append("is5GHz")
             default_profile._details['appliedRadios'].append("is5GHzL")
         default_profile._name = profile_data['profile_name']
+        default_profile._details['vlanId'] = profile_data['vlan']
         default_profile._details['ssid'] = profile_data['ssid_name']
         default_profile._details['forwardMode'] = profile_data['mode']
         default_profile._details['secureMode'] = 'wpa2OnlyRadius'
@@ -370,6 +388,7 @@ class ProfileUtility:
             default_profile._details['appliedRadios'].append("is5GHz")
             default_profile._details['appliedRadios'].append("is5GHzL")
         default_profile._name = profile_data['profile_name']
+        default_profile._details['vlanId'] = profile_data['vlan']
         default_profile._details['ssid'] = profile_data['ssid_name']
         default_profile._details['keyStr'] = profile_data['security_key']
         default_profile._details['forwardMode'] = profile_data['mode']
@@ -450,13 +469,12 @@ class ProfileUtility:
     def delete_profile(self, profile_id=None):
         for i in profile_id:
             self.profile_client.delete_profile(profile_id=i)
-        pass
 
     # Need to be depreciated by using push_profile method
     def push_profile_old_method(self, equipment_id=None):
         if equipment_id is None:
             return 0
-        url = self.sdk_client.configuration.host + "/portal/equipment?equipmentId=" + equipment_id
+        url = self.sdk_client.configuration.host + "/portal/equipment?equipmentId=" + str(equipment_id)
         payload = {}
         headers = self.sdk_client.configuration.api_key_prefix
         response = requests.request("GET", url, headers=headers, data=payload)
@@ -470,6 +488,10 @@ class ProfileUtility:
 
         response = requests.request("PUT", url, headers=headers, data=json.dumps(equipment_info))
 
+
+"""
+    Jfrog Utility for Artifactory Management
+"""
 
 class JFrogUtility:
 
@@ -507,182 +529,3 @@ class JFrogUtility:
     def get_revisions(self, model=None):
         pass
 
-
-def create_bridge_profile(get_testbed_name="nola-ext-04"):
-    # SSID and AP name shall be used as testbed_name and mode
-    sdk_client = CloudSDK(testbed=get_testbed_name, customer_id=2)
-    profile_object = ProfileUtility(sdk_client=sdk_client)
-    profile_object.get_default_profiles()
-    profile_object.set_rf_profile()
-    ssid_list = []
-
-
-    profile_data = {
-        "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '5G_WPA2_BR'),
-        "ssid_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '5G_WPA2_BR'),
-        "mode": "BRIDGE",
-        "security_key": "%s-%s" % ("ecw5410", "5G_WPA2_BR")
-    }
-    profile_object.create_wpa2_personal_ssid_profile(profile_data=profile_data, fiveg=False)
-    ssid_list.append(profile_data["profile_name"])
-    profile_data = {
-        "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '2G_WPA2_BR'),
-        "ssid_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", '2G_WPA2_BR'),
-        "mode": "BRIDGE",
-        "security_key": "%s-%s" % ("ecw5410", "2G_WPA2_BR")
-    }
-    profile_object.create_wpa2_personal_ssid_profile(profile_data=profile_data, two4g=False)
-    ssid_list.append(profile_data["profile_name"])
-    # Create a wpa2 profile
-    pass
-    profile_data = {
-        "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", 'BRIDGE'),
-    }
-    profile_object.set_ap_profile(profile_data=profile_data)
-    profile_object.push_profile_old_method(equipment_id='13')
-
-    # create an equipment ap profile
-    return ssid_list
-def vif(profile_data=[]):
-    import sys
-    if 'apnos' not in sys.path:
-        sys.path.append(f'../apnos')
-
-    from apnos import APNOS
-    APNOS_CREDENTIAL_DATA = {
-        'jumphost_ip': "192.168.200.80",
-        'jumphost_username': "lanforge",
-        'jumphost_password': "lanforge",
-        'jumphost_port': 22
-    }
-    obj = APNOS(APNOS_CREDENTIAL_DATA)
-    # data = obj.get_vif_config_ssids()
-    cur_time = datetime.datetime.now()
-    print(profile_data)
-    for i in range(18):
-        vif_config = list(obj.get_vif_config_ssids())
-        vif_config.sort()
-        vif_state = list(obj.get_vif_state_ssids())
-        vif_state.sort()
-        profile_data = list(profile_data)
-        profile_data.sort()
-        print("create_bridge_profile: ", profile_data)
-        print("vif config data: ", vif_config)
-        print("vif state data: ", vif_state)
-        if profile_data == vif_config:
-            print("matched")
-            if vif_config == vif_state:
-                status = True
-                print("matched 1")
-                break
-            else:
-                print("matched 2")
-                status = False
-        else:
-            status = False
-        time.sleep(10)
-def main():
-    # credentials = {
-    #     "user": "tip-read",
-    #     "password": "tip-read"
-    # }
-    # obj = JFrogUtility(credentials=credentials)
-    # print(obj.get_latest_build(model="ecw5410"))
-    # sdk_client = CloudSDK(testbed="nola-ext-04", customer_id=2)
-    # ap_utils = ProfileUtility(sdk_client=sdk_client)
-    # ap_utils.get_profile_by_id(profile_id=5)
-    # # sdk_client.get_model_name()
-    # sdk_client.disconnect_cloudsdk()
-    cur_time = datetime.datetime.now()
-    data = create_bridge_profile()
-    vif(profile_data=data)
-    print(cur_time)
-
-if __name__ == "__main__":
-    main()
-    # testbeds = ["nola-01", "nola-02", "nola-04", "nola-ext-01", "nola-ext-02", "nola-ext-03", "nola-ext-04",
-    #             "nola-ext-05"]
-    # for i in testbeds:
-    #     sdk_client = CloudSDK(testbed=i, customer_id=2)
-    #     print(sdk_client.get_equipment_by_customer_id())
-    #     print(sdk_client.portal_ping() is None)
-    #     break
-    #     # ap_utils = ProfileUtility(sdk_client=sdk_client)
-    # ap_utils.get_default_profiles()
-    # for j in ap_utils.default_profiles:
-    #     print(ap_utils.default_profiles[j]._id)
-
-    # data = sdk_client.get_equipment_by_customer_id()
-    # equipment_ids = []
-    # for i in data:
-    #     equipment_ids.append(i)
-    # print(equipment_ids[0]._details._equipment_model)
-    # sdk_client.disconnect_cloudsdk()
-    # time.sleep(2)
-
-    # sdk_client.get_equipment_by_customer_id(customer_id=2)
-    # ap_utils = APUtils(sdk_client=sdk_client)
-    # print(sdk_client.configuration.api_key_prefix)
-    # ap_utils.select_rf_profile(profile_data=None)
-    # profile_data = {
-    #     "profile_name": "test-ssid-open",
-    #     "ssid_name": "test_open",
-    #     "mode": "BRIDGE"
-    # }
-
-    # ap_utils.create_open_ssid_profile(profile_data=profile_data)
-    # profile_data = {
-    #     "profile_name": "test-ssid-wpa",
-    #     "ssid_name": "test_wpa_test",
-    #     "mode": "BRIDGE",
-    #     "security_key": "testing12345"
-    # }
-    # ap_utils.create_wpa_ssid_profile(profile_data=profile_data, fiveg=False)
-    # profile_data = {
-    #     "profile_name": "test-ap-profile",
-    # }
-    # ap_utils.set_ap_profile(profile_data=profile_data)
-    # ap_utils.push_profile_old_method(equipment_id='12')
-
-    # sdk_client.get_profile_template()
-    # ap_utils.select_rf_profile(profile_data=None)
-    # # radius_info = {
-    # #     "name": "Radius-Profile-" + str(datetime.datetime.now()),
-    # #     "ip": "192.168.200.75",
-    # #     "port": 1812,
-    # #     "secret": "testing123"
-    # # }
-    # #
-    # # ap_utils.set_radius_profile(radius_info=radius_info)
-    # # profile_data = {
-    # #     "profile_name": "test-ssid-open",
-    # #     "ssid_name": "test_open",
-    # #     "mode": "BRIDGE"
-    # # }
-    # #
-    # # # ap_utils.create_open_ssid_profile(profile_data=profile_data)
-    # profile_data = {
-    #     "profile_name": "test-ssid-wpa",
-    #     "ssid_name": "test_wpa",
-    #     "mode": "BRIDGE",
-    #     "security_key": "testing12345"
-    # }
-    # # #
-    # ap_utils.create_wpa_ssid_profile(profile_data=profile_data)
-    # #
-    # # # Change the profile data if ssid/profile already exists
-
-    # # #
-    # # # obj.portal_ping()
-    # # # obj.get_equipment_by_customer_id(customer_id=2)
-    # # # obj.get_profiles_by_customer_id(customer_id=2)
-    # # # print(obj.default_profiles)
-
-    # # time.sleep(20)
-    # # # Please change the equipment ID with the respective testbed
-    # #ap_utils.push_profile(equipment_id=11)
-    # # ap ssh
-    # ap_utils.push_profile_old_method(equipment_id='12')
-    # time.sleep(1)
-
-    # ap_utils.delete_profile(profile_id=ap_utils.profile_ids)

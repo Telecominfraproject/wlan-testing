@@ -1,9 +1,15 @@
+
+"""
+About: It contains some Functional Unit Tests for CloudSDK and to run and test them on per unit level
+"""
+
 import pytest
 import sys
 
 if 'cloudsdk_tests' not in sys.path:
     sys.path.append(f'../../libs/cloudsdk')
 from cloudsdk import CloudSDK
+
 
 
 @pytest.mark.userfixtures('get_customer_id')
@@ -27,6 +33,10 @@ class TestLogin(object):
         except:
             value = True
         assert value == False
+
+
+
+
 
 
 @pytest.mark.userfixtures('get_customer_id')
@@ -111,9 +121,3 @@ class TestEquipmentAPProfile(object):
 
     def test_equipment_ap_profile_creation(self):
         pass
-
-
-
-
-
-

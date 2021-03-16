@@ -29,7 +29,7 @@ All code must be written in python 3 and conform to PEP 8 style guide. The test 
 ```bash
 ├── tests
 ├── libs
-│   ├── cloudsdk
+│   ├── cloudsdk_tests
 │   ├── apnos
 │   ├── lanforge
 │   ├── perfecto
