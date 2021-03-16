@@ -18,7 +18,7 @@ class APNOS:
         print("Connecting to jumphost: %s@%s:%s with password: %s" % (
             self.jumphost_username, self.jumphost_ip, self.jumphost_port, self.jumphost_password))
         client.connect(self.jumphost_ip, username=self.jumphost_username, password=self.jumphost_password,
-                       port=self.jumphost_port, timeout=10)
+                       port=self.jumphost_port, timeout=10, allow_agent=False, banner_timeout=200)
 
         return client
 
@@ -73,5 +73,13 @@ class APNOS:
         return ssid_list
 
 
+APNOS_CREDENTIAL_DATA = {
+        'jumphost_ip': "192.168.200.80",
+        'jumphost_username': "lanforge",
+        'jumphost_password': "lanforge",
+        'jumphost_port': 22
+}
+obj = APNOS(jumphost_cred=APNOS_CREDENTIAL_DATA)
+print(obj.get_vif_config_ssids())
 # print(get_vif_config_ssids())
 # print(get_vif_state_ssids())
