@@ -3,7 +3,7 @@
 ##AP Models Under Test
 ap_models = ["ec420","ea8300","ecw5211","ecw5410", "wf188n", "wf194c", "ex227", "ex447", "eap101", "eap102"]
 
-##Cloud Type(cloudSDK = v1, CMAP = cmap)
+##Cloud Type(cloudsdk_tests = v1, CMAP = cmap)
 cloud_type = "v1"
 
 ##LANForge Info

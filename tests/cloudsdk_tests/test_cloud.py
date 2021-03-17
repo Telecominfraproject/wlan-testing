@@ -1,4 +1,3 @@
-
 """
 About: It contains some Functional Unit Tests for CloudSDK and to run and test them on per unit level
 """
@@ -11,12 +10,12 @@ if 'cloudsdk_tests' not in sys.path:
 from cloudsdk import CloudSDK
 
 
-
 @pytest.mark.userfixtures('get_customer_id')
 @pytest.mark.userfixtures('get_testbed_name')
-@pytest.mark.login
+@pytest.mark.test_login
 class TestLogin(object):
 
+    @pytest.mark.test_bearer_token
     def test_token_login(self, get_customer_id, get_testbed_name):
         try:
             obj = CloudSDK(testbed=get_testbed_name, customer_id=get_customer_id)
@@ -26,6 +25,7 @@ class TestLogin(object):
             value = True
         assert value == False
 
+    @pytest.mark.test_portal_ping
     def test_ping(self, get_customer_id, get_testbed_name):
         try:
             obj = CloudSDK(testbed=get_testbed_name, customer_id=get_customer_id)
@@ -33,10 +33,6 @@ class TestLogin(object):
         except:
             value = True
         assert value == False
-
-
-
-
 
 
 @pytest.mark.userfixtures('get_customer_id')

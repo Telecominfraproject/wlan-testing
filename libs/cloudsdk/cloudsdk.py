@@ -301,6 +301,7 @@ class ProfileUtility:
         default_profile._details['keyStr'] = profile_data['security_key']
         default_profile._details['forwardMode'] = profile_data['mode']
         default_profile._details['secureMode'] = 'wpaPSK'
+        print(default_profile)
         profile_id = self.profile_client.create_profile(body=default_profile)._id
         self.profile_creation_ids['ssid'].append(profile_id)
         self.profile_ids.append(profile_id)
@@ -528,4 +529,5 @@ class JFrogUtility:
 
     def get_revisions(self, model=None):
         pass
+
 
