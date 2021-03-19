@@ -12,24 +12,37 @@
 ### Note: Run all the tests from "tests" directory
 
 ## Examples:
-Following are the examples for Running Client Connectivity Test with different Combinations
+Following are the examples for Running Client Connectivity Test with different Combinations:
 
-    pytest -m nightly -s
-    pytest -m nightly_bridge -s
-    pytest -m nightly_nat -s
-    pytest -m nightly_vlan -s
-    pytest -m bridge_mode_single_client_connectivity -s
-    pytest -m nat_mode_single_client_connectivity -s
-    pytest -m vlan_mode_single_client_connectivity -s
-    pytest -m bridge_mode_client_connectivity -s
-    pytest -m nat_mode_client_connectivity -s
-    pytest -m vlan_mode_client_connectivity -s
+    # Run the sanity test in all modes across wpa, wpa2 and eap)
+    pytest -m "sanity and wpa and wpa2 and eap" -s
+
+    # Run the sanity test in all modes across wpa, wpa2)
+    pytest -m "sanity and wpa and wpa2" -s
+
+    # Run the bridge test in all modes across wpa, wpa2 and eap)
+    pytest -m "bridge and wpa and wpa2 and eap" -s
+
+    # Run the bridge test in all modes across wpa, wpa2)
+    pytest -m "bridge and wpa and wpa2" -s
+
+    # Run the nat test in all modes across wpa, wpa2 and eap)
+    pytest -m "nat and wpa and wpa2 and eap" -s
+
+    # Run the nat test in all modes across wpa, wpa2)
+    pytest -m "nat and wpa and wpa2" -s
+
 
 Following are the examples for cloudSDK standalone tests
     
-    pytest -m test_login -s
-    pytest -m test_bearer_token -s 
-    pytest -m test_portal_ping -s
+    # Run cloud connection test, it executes the two tests, bearer and ping
+    pytest -m cloud -s
+    
+    # Run cloud connection test, gets the bearer
+    pytest -m bearer -s 
+    
+    # Run cloud connection test, pings the portal
+    pytest -m ping -s
     
     more to be added ...
 

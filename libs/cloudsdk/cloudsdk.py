@@ -14,6 +14,8 @@ import urllib
 
 import requests
 import swagger_client
+from swagger_client import FirmwareManagementApi
+from swagger_client import EquipmentGatewayApi
 from bs4 import BeautifulSoup
 
 from testbed_info import SDK_BASE_URLS
@@ -170,6 +172,7 @@ class CloudSDK(ConfigureCloudSDK):
     Library for Profile Utility, Creating Profiles and Pushing and Deleting them
 """
 
+
 class ProfileUtility:
     """
        constructor for Access Point Utility library : can be used from pytest framework
@@ -246,6 +249,7 @@ class ProfileUtility:
         print(self.profile_creation_ids)
         self.push_profile_old_method(equipment_id=equipment_id)
         self.delete_profile(profile_id=delete_ids)
+
     """
         method call: used to create the rf profile and push set the parameters accordingly and update
     """
@@ -494,6 +498,7 @@ class ProfileUtility:
     Jfrog Utility for Artifactory Management
 """
 
+
 class JFrogUtility:
 
     def __init__(self, credentials=None):
@@ -531,3 +536,109 @@ class JFrogUtility:
         pass
 
 
+class FirmwareUtility(JFrogUtility):
+
+    def __init__(self, sdk_client=None, jfrog_credentials=None, testbed=None, customer_id=None):
+        super().__init__(credentials=jfrog_credentials)
+        if sdk_client is None:
+            sdk_client = CloudSDK(testbed=testbed, customer_id=customer_id)
+        self.sdk_client = sdk_client
+        self.firmware_client = FirmwareManagementApi(api_client=sdk_client.api_client)
+        self.jfrog_client = JFrogUtility(credentials=jfrog_credentials)
+        self.equipment_gateway_client = EquipmentGatewayApi(api_client=sdk_client.api_client)
+    def get_current_fw_version(self, equipment_id=None):
+        # Write a logic to get the currently loaded firmware on the equipment
+        self.current_fw = "something"
+        return self.current_fw
+
+    def get_latest_fw_version(self, model="ecw5410"):
+        # Get The equipment model
+
+        self.latest_fw = self.get_latest_build(model=model)
+        return self.latest_fw
+
+    def upload_fw_on_cloud(self, fw_version=None, force_upload=False):
+        # if fw_latest available and force upload is False -- Don't upload
+        # if fw_latest available and force upload is True -- Upload
+        # if fw_latest is not available -- Upload
+        fw_id = self.is_fw_available(fw_version=fw_version)
+        if fw_id and (force_upload is False):
+            print("Force Upload :", force_upload, "  Skipping upload")
+            # Don't Upload the fw
+            pass
+        else:
+            if fw_id and (force_upload is True):
+                self.firmware_client.delete_firmware_version(firmware_version_id=fw_id)
+                print("Force Upload :", force_upload, "  Deleted current Image")
+                time.sleep(2)
+                # if force_upload is true and latest image available, then delete the image
+            firmware_data = {
+                "id": 0,
+                "equipmentType": "AP",
+                "modelId": fw_version.split("-")[0],
+                "versionName": fw_version + ".tar.gz",
+                "description": "ECW5410 FW VERSION TEST",
+                "filename": "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/" + fw_version.split("-")[
+                    0] + "/dev/" + fw_version + ".tar.gz",
+                "commit": fw_version.split("-")[5]
+            }
+            firmware_id = self.firmware_client.create_firmware_version(body=firmware_data)
+            print("Force Upload :", force_upload, "  Uploaded Image")
+            return firmware_id._id
+
+    def upgrade_fw(self, equipment_id=None, force_upgrade=False, force_upload=False):
+        if equipment_id is None:
+            print("No Equipment Id Given")
+            exit()
+        if (force_upgrade is True) or (self.should_upgrade_ap_fw(equipment_id=equipment_id)):
+            model = self.sdk_client.get_model_name(equipment_id=equipment_id).lower()
+            latest_fw = self.get_latest_fw_version(model=model)
+            firmware_id = self.upload_fw_on_cloud(fw_version=latest_fw, force_upload=force_upload)
+            time.sleep(5)
+            try:
+                obj = self.equipment_gateway_client.request_firmware_update(equipment_id=equipment_id, firmware_version_id=firmware_id)
+            except Exception as e:
+                obj = False
+            return obj
+            # Write the upgrade fw logic here
+
+    def should_upgrade_ap_fw(self, equipment_id=None):
+        current_fw = self.get_current_fw_version(equipment_id=equipment_id)
+        model = self.sdk_client.get_model_name(equipment_id=equipment_id).lower()
+        latest_fw = self.get_latest_fw_version(model=model)
+        if current_fw == latest_fw:
+            return False
+        else:
+            return True
+
+    def is_fw_available(self, fw_version=None):
+        if fw_version is None:
+            exit()
+        try:
+            firmware_version = self.firmware_client.get_firmware_version_by_name(
+                firmware_version_name=fw_version + ".tar.gz")
+            firmware_version = firmware_version._id
+            print("Firmware already Available: ", firmware_version)
+        except Exception as e:
+            firmware_version = False
+            print("firmware not available: ", firmware_version)
+        return firmware_version
+
+
+# from testbed_info import JFROG_CREDENTIALS
+#
+# sdk_client = CloudSDK(testbed="nola-ext-05", customer_id=2)
+# obj = FirmwareUtility(jfrog_credentials=JFROG_CREDENTIALS, sdk_client=sdk_client)
+# obj.upgrade_fw(equipment_id=7, force_upload=False, force_upgrade=False)
+
+"""
+Check the ap model
+Check latest revision of a model
+Check the firmware version on AP
+Check if latest version is available on cloud
+    if not:
+        Upload to cloud
+    if yes:
+        continue
+Upgrade the Firmware on AP
+"""
