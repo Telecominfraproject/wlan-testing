@@ -266,13 +266,18 @@ def create_bridge_profile(request, instantiate_cloudsdk, setup_profile_data, get
         profile_list.append(profile_data)
     if get_markers.__contains__("eap"):
         radius_info = {
-            "name": get_testbed_name + "-RADIUS-Nightly",
+            "name": "nola-ext-03" + "-RADIUS-Sanity",
             "ip": "192.168.200.75",
             "port": 1812,
             "secret": "testing123"
         }
-        # create a eap profile
-        pass
+        profile_object.create_radius_profile(radius_info=radius_info)
+        profile_data = setup_profile_data['EAP']['2G']
+        profile_object.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, fiveg=False)
+        profile_list.append(profile_data)
+        profile_data = setup_profile_data['EAP']['5G']
+        profile_object.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, two4g=False)
+        profile_list.append(profile_data)
     profile_data = {
         "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", 'BRIDGE'),
     }
@@ -360,12 +365,18 @@ def create_nat_profile(request, instantiate_cloudsdk, setup_profile_data, get_te
         profile_list.append(profile_data)
     if get_markers.__contains__("eap"):
         radius_info = {
-            "name": get_testbed_name + "-RADIUS-Nightly",
+            "name": "nola-ext-03" + "-RADIUS-Sanity",
             "ip": "192.168.200.75",
             "port": 1812,
             "secret": "testing123"
         }
-        # create a eap profile
+        profile_object.create_radius_profile(radius_info=radius_info)
+        profile_data = setup_profile_data['EAP']['2G']
+        profile_object.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, fiveg=False)
+        profile_list.append(profile_data)
+        profile_data = setup_profile_data['EAP']['5G']
+        profile_object.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, two4g=False)
+        profile_list.append(profile_data)
     profile_data = {
         "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", "NAT")
     }
@@ -456,13 +467,18 @@ def create_vlan_profile(request, instantiate_cloudsdk, setup_profile_data, get_t
         profile_list.append(profile_data)
     if request.config.getini("skip-eap") == 'False':
         radius_info = {
-            "name": get_testbed_name + "-RADIUS-Nightly",
+            "name": "nola-ext-03" + "-RADIUS-Sanity",
             "ip": "192.168.200.75",
             "port": 1812,
             "secret": "testing123"
         }
-        # create a eap profile
-        pass
+        profile_object.create_radius_profile(radius_info=radius_info)
+        profile_data = setup_profile_data['EAP']['2G']
+        profile_object.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, fiveg=False)
+        profile_list.append(profile_data)
+        profile_data = setup_profile_data['EAP']['5G']
+        profile_object.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, two4g=False)
+        profile_list.append(profile_data)
     profile_data = {
         "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", 'VLAN')
     }

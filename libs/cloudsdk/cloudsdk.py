@@ -103,7 +103,7 @@ class CloudSDK(ConfigureCloudSDK):
         print("Connected to CloudSDK Server")
 
     """
-    Login Utilities
+    Login Utilitiesdefault_profile = self.default_profiles['ssid']
     """
 
     def get_bearer_token(self):
@@ -115,7 +115,7 @@ class CloudSDK(ConfigureCloudSDK):
     def disconnect_cloudsdk(self):
         self.api_client.__del__()
 
-    """
+    """default_profile = self.default_profiles['ssid']
     Equipment Utilities
     """
 
@@ -208,7 +208,7 @@ class ProfileUtility:
 
     def get_profile_by_id(self, profile_id=None):
         profiles = self.profile_client.get_profile_by_id(profile_id=profile_id)
-        print(profiles)
+        print(profiles._child_profile_ids)
 
     def get_default_profiles(self):
         pagination_context = """{
@@ -374,6 +374,8 @@ class ProfileUtility:
         default_profile._details['vlanId'] = profile_data['vlan']
         default_profile._details['ssid'] = profile_data['ssid_name']
         default_profile._details['forwardMode'] = profile_data['mode']
+        default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
+        default_profile._child_profile_ids = self.profile_creation_ids["radius"]
         default_profile._details['secureMode'] = 'wpa2OnlyRadius'
         profile_id = self.profile_client.create_profile(body=default_profile)._id
         self.profile_creation_ids['ssid'].append(profile_id)
@@ -398,6 +400,8 @@ class ProfileUtility:
         default_profile._details['keyStr'] = profile_data['security_key']
         default_profile._details['forwardMode'] = profile_data['mode']
         default_profile._details['secureMode'] = 'wpa3OnlyRadius'
+        default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
+        default_profile._child_profile_ids = self.profile_creation_ids["radius"]
         profile_id = self.profile_client.create_profile(body=default_profile)._id
         self.profile_creation_ids['ssid'].append(profile_id)
         self.profile_ids.append(profile_id)
@@ -428,14 +432,15 @@ class ProfileUtility:
         method call: used to create a radius profile with the settings given
     """
 
-    def set_radius_profile(self, radius_info=None):
-        default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="Radius-Profile")
+    def create_radius_profile(self, radius_info=None):
+        # default_profile = self.sdk_client.get_profile_template(customer_id=self.sdk_client.customer_id, profile_name="Radius-Profile")
+        default_profile = self.default_profiles['radius']
         default_profile._name = radius_info['name']
         default_profile._details['primaryRadiusAuthServer']['ipAddress'] = radius_info['ip']
         default_profile._details['primaryRadiusAuthServer']['port'] = radius_info['port']
         default_profile._details['primaryRadiusAuthServer']['secret'] = radius_info['secret']
         default_profile = self.profile_client.create_profile(body=default_profile)
-        self.profile_creation_ids['radius'].append(default_profile._id)
+        self.profile_creation_ids['radius'] = [default_profile._id]
         self.profile_ids.append(default_profile._id)
 
     """
@@ -625,11 +630,40 @@ class FirmwareUtility(JFrogUtility):
         return firmware_version
 
 
-# from testbed_info import JFROG_CREDENTIALS
+# sdk_client = CloudSDK(testbed="nola-ext-03", customer_id=2)
+# profile_obj = ProfileUtility(sdk_client=sdk_client)
+# profile_obj.get_default_profiles()
+# profile_obj.set_rf_profile()
+# # print(profile_obj.default_profiles["ssid"]._id)
+# # profile_obj.get_profile_by_id(profile_id=profile_obj.default_profiles["ssid"]._id)
+# #
+# # print(profile_obj.default_profiles)default_profiles
+# radius_info = {
+#     "name": "nola-ext-03" + "-RADIUS-Sanity",
+#     "ip": "192.168.200.75",
+#     "port": 1812,
+#     "secret": "testing123"
+# }
+# profile_obj.create_radius_profile(radius_info=radius_info)
+# profile_data = {
+#     "profile_name": "NOLA-ext-03-WPA2-Enterprise-2G",
+#     "ssid_name": "NOLA-ext-03-WPA2-Enterprise-2G",
+#     "vlan": 1,
+#     "mode": "BRIDGE"
+# }
+# profile_obj.create_wpa2_enterprise_ssid_profile(profile_data=profile_data)
+# profile_data = {
+#     "profile_name": "%s-%s-%s" % ("Nola-ext-03", "ecw5410", 'Bridge')
+# }
+# profile_obj.set_ap_profile(profile_data=profile_data)
+# profile_obj.push_profile_old_method(equipment_id=23)
+# sdk_client.disconnect_cloudsdk()
 #
-# sdk_client = CloudSDK(testbed="nola-ext-05", customer_id=2)
-# obj = FirmwareUtility(jfrog_credentials=JFROG_CREDENTIALS, sdk_client=sdk_client)
-# obj.upgrade_fw(equipment_id=7, force_upload=False, force_upgrade=False)
+# # from testbed_info import JFROG_CREDENTIALS
+# #
+# # sdk_client = CloudSDK(testbed="nola-ext-05", customer_id=2)
+# # obj = FirmwareUtility(jfrog_credentials=JFROG_CREDENTIALS, sdk_client=sdk_client)
+# # obj.upgrade_fw(equipment_id=7, force_upload=False, force_upgrade=False)
 
 """
 Check the ap model
