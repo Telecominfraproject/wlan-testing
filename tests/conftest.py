@@ -29,6 +29,7 @@ def pytest_addoption(parser):
     parser.addini("jfrog-user-password", "jfrog password")
 
     parser.addini("testbed-name", "cloud sdk base url")
+    parser.addini("equipment-model", "Equipment Model")
 
     parser.addini("sdk-user-id", "cloud sdk username")
     parser.addini("sdk-user-password", "cloud sdk user password")
@@ -59,7 +60,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--skip-update-firmware",
         action="store_true",
-        default=False,
+        default=True,
         help="skip updating firmware on the AP (useful for local testing)"
     )
     # this has to be the last argument
@@ -120,7 +121,7 @@ Fixtures for CloudSDK Utilities
 
 @pytest.fixture(scope="session")
 def get_equipment_model(request, instantiate_cloudsdk, get_equipment_id):
-    yield request.config.getini("testbed-name")
+    yield request.config.getini("equipment-model")
 
 
 @pytest.fixture(scope="session")
@@ -168,8 +169,8 @@ def upgrade_firmware(request, instantiate_jFrog, instantiate_cloudsdk, retrieve_
 @pytest.fixture(scope="session")
 def retrieve_latest_image(request, access_points):
     if request.config.getoption("--skip-update-firmware"):
-        return
-    yield "retrieve_latest_image"
+        yield True
+    yield True
 
 
 @pytest.fixture(scope="session")
@@ -187,7 +188,7 @@ Fixtures to Create Profiles and Push to vif config and delete after the test com
 """
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="class")
 def setup_bridge_mode(request, instantiate_cloudsdk, create_bridge_profile, get_equipment_id):
     # vif config and vif state logic here
     logging.basicConfig(level=logging.DEBUG)
@@ -200,7 +201,9 @@ def setup_bridge_mode(request, instantiate_cloudsdk, create_bridge_profile, get_
     obj = APNOS(APNOS_CREDENTIAL_DATA)
     profile_data = []
     for i in create_bridge_profile:
-        profile_data.append(i['ssid_name'])
+        for j in create_bridge_profile[i]:
+            if create_bridge_profile[i][j] != {}:
+                profile_data.append(create_bridge_profile[i][j]['ssid_name'])
     log = logging.getLogger('test_1')
     vif_config = list(obj.get_vif_config_ssids())
     vif_config.sort()
@@ -235,58 +238,71 @@ def setup_bridge_mode(request, instantiate_cloudsdk, create_bridge_profile, get_
     delete_profiles(instantiate_cloudsdk, get_equipment_id)
 
 
-@pytest.fixture(scope="function")
-def create_bridge_profile(request, instantiate_cloudsdk, setup_profile_data, get_testbed_name, get_equipment_id, get_markers):
-    print(setup_profile_data)
+@pytest.fixture(scope="class")
+def create_bridge_profile(instantiate_cloudsdk, setup_bridge_profile_data, get_testbed_name, get_equipment_id,
+                          get_equipment_model,
+                          get_bridge_testcases):
+    print(setup_bridge_profile_data)
     # SSID and AP name shall be used as testbed_name and mode
     profile_object = ProfileUtility(sdk_client=instantiate_cloudsdk)
     profile_object.get_default_profiles()
     profile_object.set_rf_profile()
-    profile_list = []
-    if get_markers.__contains__("open"):
-        profile_data = setup_profile_data['OPEN']['2G']
+    profile_list = {"open": {"2g": {}, "5g": {}}, "wpa": {"2g": {}, "5g": {}}, "wpa2_personal": {"2g": {}, "5g": {}},
+                    "wpa2_enterprise": {"2g": {}, "5g": {}}}
+
+    if get_bridge_testcases["open"]:
+        profile_data = setup_bridge_profile_data['OPEN']['2G']
+        profile_list["open"]["2g"] = profile_data
         profile_object.create_open_ssid_profile(profile_data=profile_data, fiveg=False)
-        profile_list.append(profile_data)
-        profile_data = setup_profile_data['OPEN']['5G']
+
+        profile_data = setup_bridge_profile_data['OPEN']['5G']
+        profile_list["open"]["5g"] = profile_data
         profile_object.create_open_ssid_profile(profile_data=profile_data, two4g=False)
-        profile_list.append(profile_data)
-    if get_markers.__contains__("wpa"):
-        profile_data = setup_profile_data['WPA']['2G']
+
+    if get_bridge_testcases["wpa"]:
+        profile_data = setup_bridge_profile_data['WPA']['2G']
+        profile_list["wpa"]["2g"] = profile_data
         profile_object.create_wpa_ssid_profile(profile_data=profile_data, fiveg=False)
-        profile_list.append(profile_data)
-        profile_data = setup_profile_data['WPA']['5G']
+
+        profile_data = setup_bridge_profile_data['WPA']['5G']
+        profile_list["wpa"]["5g"] = profile_data
         profile_object.create_wpa_ssid_profile(profile_data=profile_data, two4g=False)
-        profile_list.append(profile_data)
-    if get_markers.__contains__("wpa2"):
-        profile_data = setup_profile_data['WPA2']['2G']
+
+    if get_bridge_testcases["wpa2_personal"]:
+        profile_data = setup_bridge_profile_data['WPA2']['2G']
+        profile_list["wpa2_personal"]["2g"] = profile_data
         profile_object.create_wpa2_personal_ssid_profile(profile_data=profile_data, fiveg=False)
-        profile_list.append(profile_data)
-        profile_data = setup_profile_data['WPA2']['5G']
+
+        profile_data = setup_bridge_profile_data['WPA2']['5G']
+        profile_list["wpa2_personal"]["5g"] = profile_data
         profile_object.create_wpa2_personal_ssid_profile(profile_data=profile_data, two4g=False)
-        profile_list.append(profile_data)
-    if get_markers.__contains__("eap"):
+
+    if get_bridge_testcases["wpa2_enterprise"]:
         radius_info = {
-            "name": "nola-ext-03" + "-RADIUS-Sanity",
+            "name": get_testbed_name + "-RADIUS-Sanity",
             "ip": "192.168.200.75",
             "port": 1812,
             "secret": "testing123"
         }
         profile_object.create_radius_profile(radius_info=radius_info)
-        profile_data = setup_profile_data['EAP']['2G']
+
+        profile_data = setup_bridge_profile_data['EAP']['2G']
+        profile_list["wpa2_enterprise"]["2g"] = profile_data
         profile_object.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, fiveg=False)
-        profile_list.append(profile_data)
-        profile_data = setup_profile_data['EAP']['5G']
+
+        profile_data = setup_bridge_profile_data['EAP']['5G']
+        profile_list["wpa2_enterprise"]["5g"] = profile_data
         profile_object.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, two4g=False)
-        profile_list.append(profile_data)
+
     profile_data = {
-        "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", 'BRIDGE'),
+        "profile_name": "%s-%s-%s" % (get_testbed_name, get_equipment_model, 'BRIDGE'),
     }
     profile_object.set_ap_profile(profile_data=profile_data)
     profile_object.push_profile_old_method(equipment_id=get_equipment_id)
     yield profile_list
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="class")
 def setup_nat_mode(request, instantiate_cloudsdk, create_nat_profile, get_equipment_id):
     # vif config and vif state logic here
     logging.basicConfig(level=logging.DEBUG)
@@ -300,7 +316,9 @@ def setup_nat_mode(request, instantiate_cloudsdk, create_nat_profile, get_equipm
     obj = APNOS(APNOS_CREDENTIAL_DATA)
     profile_data = []
     for i in create_nat_profile:
-        profile_data.append(i['ssid_name'])
+        for j in create_nat_profile[i]:
+            if create_nat_profile[i][j] != {}:
+                profile_data.append(create_nat_profile[i][j]['ssid_name'])
     vif_config = list(obj.get_vif_config_ssids())
     vif_config.sort()
     vif_state = list(obj.get_vif_state_ssids())
@@ -334,59 +352,70 @@ def setup_nat_mode(request, instantiate_cloudsdk, create_nat_profile, get_equipm
     delete_profiles(instantiate_cloudsdk, get_equipment_id)
 
 
-@pytest.fixture(scope="function")
-def create_nat_profile(request, instantiate_cloudsdk, setup_profile_data, get_testbed_name, get_equipment_id, get_markers):
-    print(setup_profile_data)
+@pytest.fixture(scope="class")
+def create_nat_profile(instantiate_cloudsdk, setup_nat_profile_data, get_testbed_name, get_equipment_id,
+                       get_nat_testcases):
+    print(setup_nat_profile_data)
     # SSID and AP name shall be used as testbed_name and mode
     profile_object = ProfileUtility(sdk_client=instantiate_cloudsdk)
     profile_object.get_default_profiles()
     profile_object.set_rf_profile()
-    profile_list = []
-    if get_markers.__contains__("open"):
-        profile_data = setup_profile_data['OPEN']['2G']
+    profile_list = {"open": {"2g": {}, "5g": {}}, "wpa": {"2g": {}, "5g": {}}, "wpa2_personal": {"2g": {}, "5g": {}},
+                    "wpa2_enterprise": {"2g": {}, "5g": {}}}
+
+    if get_nat_testcases["open"]:
+        profile_data = setup_nat_profile_data['OPEN']['2G']
+        profile_list["open"]["2g"] = profile_data
         profile_object.create_open_ssid_profile(profile_data=profile_data, fiveg=False)
-        profile_list.append(profile_data)
-        profile_data = setup_profile_data['OPEN']['5G']
+
+        profile_data = setup_nat_profile_data['OPEN']['5G']
+        profile_list["open"]["5g"] = profile_data
         profile_object.create_open_ssid_profile(profile_data=profile_data, two4g=False)
-        profile_list.append(profile_data)
-    if get_markers.__contains__("wpa"):
-        profile_data = setup_profile_data['WPA']['2G']
+
+    if get_nat_testcases["wpa"]:
+        profile_data = setup_nat_profile_data['WPA']['2G']
+        profile_list["wpa"]["2g"] = profile_data
         profile_object.create_wpa_ssid_profile(profile_data=profile_data, fiveg=False)
-        profile_list.append(profile_data)
-        profile_data = setup_profile_data['WPA']['5G']
+
+        profile_data = setup_nat_profile_data['WPA']['5G']
+        profile_list["wpa"]["5g"] = profile_data
         profile_object.create_wpa_ssid_profile(profile_data=profile_data, two4g=False)
-        profile_list.append(profile_data)
-    if get_markers.__contains__("wpa2"):
-        profile_data = setup_profile_data['WPA2']['2G']
+
+    if get_nat_testcases["wpa2_personal"]:
+        profile_data = setup_nat_profile_data['WPA2']['2G']
+        profile_list["wpa2_personal"]["2g"] = profile_data
         profile_object.create_wpa2_personal_ssid_profile(profile_data=profile_data, fiveg=False)
-        profile_list.append(profile_data)
-        profile_data = setup_profile_data['WPA2']['5G']
+
+        profile_data = setup_nat_profile_data['WPA2']['5G']
+        profile_list["wpa2_personal"]["5g"] = profile_data
         profile_object.create_wpa2_personal_ssid_profile(profile_data=profile_data, two4g=False)
-        profile_list.append(profile_data)
-    if get_markers.__contains__("eap"):
+
+    if get_nat_testcases["wpa2_enterprise"]:
         radius_info = {
-            "name": "nola-ext-03" + "-RADIUS-Sanity",
+            "name": get_testbed_name + "-RADIUS-Sanity",
             "ip": "192.168.200.75",
             "port": 1812,
             "secret": "testing123"
         }
         profile_object.create_radius_profile(radius_info=radius_info)
-        profile_data = setup_profile_data['EAP']['2G']
+
+        profile_data = setup_nat_profile_data['EAP']['2G']
+        profile_list["wpa2_enterprise"]["2g"] = profile_data
         profile_object.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, fiveg=False)
-        profile_list.append(profile_data)
-        profile_data = setup_profile_data['EAP']['5G']
+
+        profile_data = setup_nat_profile_data['EAP']['5G']
+        profile_list["wpa2_enterprise"]["5g"] = profile_data
         profile_object.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, two4g=False)
-        profile_list.append(profile_data)
+
     profile_data = {
-        "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", "NAT")
+        "profile_name": "%s-%s-%s" % (get_testbed_name, get_equipment_model, 'NAT'),
     }
     profile_object.set_ap_profile(profile_data=profile_data)
     profile_object.push_profile_old_method(equipment_id=get_equipment_id)
-
     yield profile_list
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="class")
 def setup_vlan_mode(request, instantiate_cloudsdk, create_vlan_profile, get_equipment_id):
     # vif config and vif state logic here
     logging.basicConfig(level=logging.DEBUG)
@@ -400,7 +429,9 @@ def setup_vlan_mode(request, instantiate_cloudsdk, create_vlan_profile, get_equi
     obj = APNOS(APNOS_CREDENTIAL_DATA)
     profile_data = []
     for i in create_vlan_profile:
-        profile_data.append(i['ssid_name'])
+        for j in create_vlan_profile[i]:
+            if create_vlan_profile[i][j] != {}:
+                profile_data.append(create_vlan_profile[i][j]['ssid_name'])
     log = logging.getLogger('test_1')
     vif_config = list(obj.get_vif_config_ssids())
     vif_config.sort()
@@ -436,61 +467,137 @@ def setup_vlan_mode(request, instantiate_cloudsdk, create_vlan_profile, get_equi
     delete_profiles(instantiate_cloudsdk, get_equipment_id)
 
 
-@pytest.fixture(scope="function")
-def create_vlan_profile(request, instantiate_cloudsdk, setup_profile_data, get_testbed_name, get_equipment_id):
-    print(setup_profile_data)
+@pytest.fixture(scope="class")
+def create_vlan_profile(instantiate_cloudsdk, setup_vlan_profile_data, get_testbed_name, get_equipment_id,
+                        get_vlan_testcases):
+    print(setup_vlan_profile_data)
     # SSID and AP name shall be used as testbed_name and mode
     profile_object = ProfileUtility(sdk_client=instantiate_cloudsdk)
     profile_object.get_default_profiles()
     profile_object.set_rf_profile()
-    profile_list = []
-    if request.config.getini("skip-open") == 'False':
-        profile_data = setup_profile_data['OPEN']['2G']
+    profile_list = {"open": {"2g": {}, "5g": {}}, "wpa": {"2g": {}, "5g": {}}, "wpa2_personal": {"2g": {}, "5g": {}},
+                    "wpa2_enterprise": {"2g": {}, "5g": {}}}
+
+    if get_vlan_testcases["open"]:
+        profile_data = setup_vlan_profile_data['OPEN']['2G']
+        profile_list["open"]["2g"] = profile_data
         profile_object.create_open_ssid_profile(profile_data=profile_data, fiveg=False)
-        profile_list.append(profile_data)
-        profile_data = setup_profile_data['OPEN']['5G']
+
+        profile_data = setup_vlan_profile_data['OPEN']['5G']
+        profile_list["open"]["5g"] = profile_data
         profile_object.create_open_ssid_profile(profile_data=profile_data, two4g=False)
-        profile_list.append(profile_data)
-    if request.config.getini("skip-wpa") == 'False':
-        profile_data = setup_profile_data['WPA']['2G']
+
+    if get_vlan_testcases["wpa"]:
+        profile_data = setup_vlan_profile_data['WPA']['2G']
+        profile_list["wpa"]["2g"] = profile_data
         profile_object.create_wpa_ssid_profile(profile_data=profile_data, fiveg=False)
-        profile_list.append(profile_data)
-        profile_data = setup_profile_data['WPA']['5G']
+
+        profile_data = setup_vlan_profile_data['WPA']['5G']
+        profile_list["wpa"]["5g"] = profile_data
         profile_object.create_wpa_ssid_profile(profile_data=profile_data, two4g=False)
-        profile_list.append(profile_data)
-    if request.config.getini("skip-wpa2") == 'False':
-        profile_data = setup_profile_data['WPA2']['2G']
+
+    if get_vlan_testcases["wpa2_personal"]:
+        profile_data = setup_vlan_profile_data['WPA2']['2G']
+        profile_list["wpa2_personal"]["2g"] = profile_data
         profile_object.create_wpa2_personal_ssid_profile(profile_data=profile_data, fiveg=False)
-        profile_list.append(profile_data)
-        profile_data = setup_profile_data['WPA2']['5G']
+
+        profile_data = setup_vlan_profile_data['WPA2']['5G']
+        profile_list["wpa2_personal"]["5g"] = profile_data
         profile_object.create_wpa2_personal_ssid_profile(profile_data=profile_data, two4g=False)
-        profile_list.append(profile_data)
-    if request.config.getini("skip-eap") == 'False':
+
+    if get_vlan_testcases["wpa2_enterprise"]:
         radius_info = {
-            "name": "nola-ext-03" + "-RADIUS-Sanity",
+            "name": get_testbed_name + "-RADIUS-Sanity",
             "ip": "192.168.200.75",
             "port": 1812,
             "secret": "testing123"
         }
         profile_object.create_radius_profile(radius_info=radius_info)
-        profile_data = setup_profile_data['EAP']['2G']
+
+        profile_data = setup_vlan_profile_data['EAP']['2G']
+        profile_list["wpa2_enterprise"]["2g"] = profile_data
         profile_object.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, fiveg=False)
-        profile_list.append(profile_data)
-        profile_data = setup_profile_data['EAP']['5G']
+
+        profile_data = setup_vlan_profile_data['EAP']['5G']
+        profile_list["wpa2_enterprise"]["5g"] = profile_data
         profile_object.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, two4g=False)
-        profile_list.append(profile_data)
+
     profile_data = {
-        "profile_name": "%s-%s-%s" % (get_testbed_name, "ecw5410", 'VLAN')
+        "profile_name": "%s-%s-%s" % (get_testbed_name, get_equipment_model, 'VLAN'),
     }
     profile_object.set_ap_profile(profile_data=profile_data)
     profile_object.push_profile_old_method(equipment_id=get_equipment_id)
     yield profile_list
 
 
-@pytest.fixture(scope="function")
-def setup_profile_data(request, get_testbed_name):
+@pytest.fixture(scope="class")
+def setup_bridge_profile_data(request, get_testbed_name, get_equipment_model):
     profile_data = {}
-    equipment_model = "ecw5410"
+    equipment_model = get_equipment_model
+    mode = str(request._parent_request.fixturename).split("_")[1].upper()
+    if mode == "BRIDGE":
+        mode_str = "BR"
+        vlan_id = 1
+    elif mode == "VLAN":
+        mode_str = "VLAN"
+        mode = "BRIDGE"
+        vlan_id = 100
+    else:
+        mode_str = mode
+        vlan_id = 1
+    for security in "OPEN", "WPA", "WPA2", "EAP":
+        profile_data[security] = {}
+        for radio in "2G", "5G":
+            name_string = "%s-%s-%s_%s_%s" % (get_testbed_name, equipment_model, radio, security, mode_str)
+            passkey_string = "%s-%s_%s" % (radio, security, mode)
+            profile_data[security][radio] = {}
+            profile_data[security][radio]["profile_name"] = name_string
+            profile_data[security][radio]["ssid_name"] = name_string
+            profile_data[security][radio]["mode"] = mode
+            profile_data[security][radio]["vlan"] = vlan_id
+            if security != "OPEN":
+                profile_data[security][radio]["security_key"] = passkey_string
+            else:
+                profile_data[security][radio]["security_key"] = "[BLANK]"
+    yield profile_data
+
+
+@pytest.fixture(scope="class")
+def setup_nat_profile_data(request, get_testbed_name, get_equipment_model):
+    profile_data = {}
+    equipment_model = get_equipment_model
+    mode = str(request._parent_request.fixturename).split("_")[1].upper()
+    if mode == "BRIDGE":
+        mode_str = "BR"
+        vlan_id = 1
+    elif mode == "VLAN":
+        mode_str = "VLAN"
+        mode = "BRIDGE"
+        vlan_id = 100
+    else:
+        mode_str = mode
+        vlan_id = 1
+    for security in "OPEN", "WPA", "WPA2", "EAP":
+        profile_data[security] = {}
+        for radio in "2G", "5G":
+            name_string = "%s-%s-%s_%s_%s" % (get_testbed_name, equipment_model, radio, security, mode_str)
+            passkey_string = "%s-%s_%s" % (radio, security, mode)
+            profile_data[security][radio] = {}
+            profile_data[security][radio]["profile_name"] = name_string
+            profile_data[security][radio]["ssid_name"] = name_string
+            profile_data[security][radio]["mode"] = mode
+            profile_data[security][radio]["vlan"] = vlan_id
+            if security != "OPEN":
+                profile_data[security][radio]["security_key"] = passkey_string
+            else:
+                profile_data[security][radio]["security_key"] = "[BLANK]"
+    yield profile_data
+
+
+@pytest.fixture(scope="class")
+def setup_vlan_profile_data(request, get_testbed_name, get_equipment_model):
+    profile_data = {}
+    equipment_model = get_equipment_model
     mode = str(request._parent_request.fixturename).split("_")[1].upper()
     if mode == "BRIDGE":
         mode_str = "BR"
@@ -535,20 +642,109 @@ def get_lanforge_data(request):
         "lanforge_2dot4g_station": "wlan1",
         "lanforge_5g_station": "wlan1",
         "lanforge_bridge_port": "eth1",
-        "lanforge_vlan_port": "vlan100",
+        "lanforge_vlan_port": "eth1.100",
         "vlan": 100
     }
     yield lanforge_data
 
 
-@pytest.fixture(scope="function")
-def get_markers(request):
-    mode = request.config.getoption("-m")
-    markers = []
-    for i in request.node.iter_markers():
-        markers.append(i.name)
-    a = set(mode.split(" "))
-    b = set(markers)
-    markers = a.intersection(b)
-    yield list(markers)
+# @pytest.fixture(scope="session")
+# def get_testcase(request):
+#     import pdb
+#     pdb.set_trace()
+#
+#     # mode = request.config.getoption("-m")
+#     # markers = []
+#     # for i in request.node.iter_markers():
+#     #     markers.append(i.name)
+#     # a = set(mode.split(" "))
+#     # b = set(markers)
+#     # markers = a.intersection(b)
+#     # yield list(markers)
 
+
+@pytest.fixture(scope="session")
+def get_bridge_testcases(request):
+    # import pdb
+    # pdb.set_trace()
+    print("callattr_ahead_of_alltests called")
+    security = {"open": False,
+                "wpa": False,
+                "wpa2_personal": False,
+                "wpa2_enterprise": False
+                }
+    session = request.node
+    for item in session.items:
+        for i in item.iter_markers():
+            if str(i.name).__eq__("wpa"):
+                print(i)
+                security["wpa"] = True
+                pass
+            if str(i.name).__eq__("wpa2_personal"):
+                print(i)
+                security["wpa2_personal"] = True
+                pass
+            if str(i.name).__eq__("wpa2_enterprise"):
+                print(i)
+                security["wpa2_enterprise"] = True
+                pass
+
+    yield security
+
+
+@pytest.fixture(scope="session")
+def get_nat_testcases(request):
+    # import pdb
+    # pdb.set_trace()
+    print("callattr_ahead_of_alltests called")
+    security = {"open": False,
+                "wpa": False,
+                "wpa2_personal": False,
+                "wpa2_enterprise": False
+                }
+    session = request.node
+    for item in session.items:
+        for i in item.iter_markers():
+            if str(i.name).__eq__("wpa"):
+                print(i)
+                security["wpa"] = True
+                pass
+            if str(i.name).__eq__("wpa2_personal"):
+                print(i)
+                security["wpa2_personal"] = True
+                pass
+            if str(i.name).__eq__("wpa2_enterprise"):
+                print(i)
+                security["wpa2_enterprise"] = True
+                pass
+
+    yield security
+
+
+@pytest.fixture(scope="session")
+def get_vlan_testcases(request):
+    # import pdb
+    # pdb.set_trace()
+    print("callattr_ahead_of_alltests called")
+    security = {"open": False,
+                "wpa": False,
+                "wpa2_personal": False,
+                "wpa2_enterprise": False
+                }
+    session = request.node
+    for item in session.items:
+        for i in item.iter_markers():
+            if str(i.name).__eq__("wpa"):
+                print(i)
+                security["wpa"] = True
+                pass
+            if str(i.name).__eq__("wpa2_personal"):
+                print(i)
+                security["wpa2_personal"] = True
+                pass
+            if str(i.name).__eq__("wpa2_enterprise"):
+                print(i)
+                security["wpa2_enterprise"] = True
+                pass
+
+    yield security
