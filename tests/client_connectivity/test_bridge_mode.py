@@ -5,6 +5,8 @@ for folder in 'py-json', 'py-scripts':
     if folder not in sys.path:
         sys.path.append(f'../lanforge/lanforge-scripts/{folder}')
 
+sys.path.append(f"../lanforge/lanforge-scripts/py-scripts/tip-cicd-sanity")
+
 sys.path.append(f'../libs')
 sys.path.append(f'../libs/lanforge/')
 
@@ -29,7 +31,8 @@ class TestBridgeModeClientConnectivity(object):
     def test_single_client_wpa2_personal_5g(self, setup_cloudsdk, upgrade_firmware, setup_bridge_mode,
                                             disconnect_cloudsdk, get_lanforge_data):
         profile_data = setup_bridge_mode[3]['wpa2_personal']['5g']
-        staConnect = StaConnect2(get_lanforge_data["lanforge_ip"], 8080, debug_=False)
+        staConnect = StaConnect2(get_lanforge_data["lanforge_ip"], int(get_lanforge_data["lanforge-port-number"]),
+                                 debug_=False)
         staConnect.sta_mode = 0
         staConnect.upstream_resource = 1
         staConnect.upstream_port = get_lanforge_data["lanforge_bridge_port"]
@@ -64,7 +67,8 @@ class TestBridgeModeClientConnectivity(object):
     def test_single_client_wpa2_personal_2g(self, setup_cloudsdk, upgrade_firmware, setup_bridge_mode,
                                             disconnect_cloudsdk, get_lanforge_data):
         profile_data = setup_bridge_mode[3]['wpa2_personal']['2g']
-        staConnect = StaConnect2(get_lanforge_data["lanforge_ip"], 8080, debug_=False)
+        staConnect = StaConnect2(get_lanforge_data["lanforge_ip"], int(get_lanforge_data["lanforge-port-number"]),
+                                 debug_=False)
         staConnect.sta_mode = 0
         staConnect.upstream_resource = 1
         staConnect.upstream_port = get_lanforge_data["lanforge_bridge_port"]
@@ -99,7 +103,8 @@ class TestBridgeModeClientConnectivity(object):
     def test_single_client_wpa_5g(self, setup_cloudsdk, upgrade_firmware, setup_bridge_mode,
                                   disconnect_cloudsdk, get_lanforge_data):
         profile_data = setup_bridge_mode[3]['wpa']['5g']
-        staConnect = StaConnect2(get_lanforge_data["lanforge_ip"], 8080, debug_=False)
+        staConnect = StaConnect2(get_lanforge_data["lanforge_ip"], int(get_lanforge_data["lanforge-port-number"]),
+                                 debug_=False)
         staConnect.sta_mode = 0
         staConnect.upstream_resource = 1
         staConnect.upstream_port = get_lanforge_data["lanforge_bridge_port"]
@@ -134,7 +139,8 @@ class TestBridgeModeClientConnectivity(object):
     def test_single_client_wpa_2g(self, setup_cloudsdk, upgrade_firmware, setup_bridge_mode,
                                   disconnect_cloudsdk, get_lanforge_data):
         profile_data = setup_bridge_mode[3]['wpa']['2g']
-        staConnect = StaConnect2(get_lanforge_data["lanforge_ip"], 8080, debug_=False)
+        staConnect = StaConnect2(get_lanforge_data["lanforge_ip"], int(get_lanforge_data["lanforge-port-number"]),
+                                 debug_=False)
         staConnect.sta_mode = 0
         staConnect.upstream_resource = 1
         staConnect.upstream_port = get_lanforge_data["lanforge_bridge_port"]
@@ -169,7 +175,7 @@ class TestBridgeModeClientConnectivity(object):
     def test_single_client_wpa2_enterprise_5g(self, setup_cloudsdk, upgrade_firmware, setup_bridge_mode,
                                               disconnect_cloudsdk, get_lanforge_data):
         profile_data = setup_bridge_mode[3]['wpa2_enterprise']['5g']
-        eap_connect = EAPConnect(get_lanforge_data["lanforge_ip"], 8080)
+        eap_connect = EAPConnect(get_lanforge_data["lanforge_ip"], get_lanforge_data["lanforge-port-number"])
         eap_connect.upstream_resource = 1
         eap_connect.upstream_port = get_lanforge_data["lanforge_bridge_port"]
         eap_connect.security = "wpa2"
@@ -195,7 +201,6 @@ class TestBridgeModeClientConnectivity(object):
         print("Single Client Connectivity :", eap_connect.passes)
         assert eap_connect.passes()
 
-
     @pytest.mark.sanity
     @pytest.mark.bridge
     @pytest.mark.wpa2_enterprise
@@ -203,7 +208,7 @@ class TestBridgeModeClientConnectivity(object):
     def test_single_client_wpa2_enterprise_2g(self, setup_cloudsdk, upgrade_firmware, setup_bridge_mode,
                                               disconnect_cloudsdk, get_lanforge_data):
         profile_data = setup_bridge_mode[3]['wpa2_enterprise']['2g']
-        eap_connect = EAPConnect(get_lanforge_data["lanforge_ip"], 8080)
+        eap_connect = EAPConnect(get_lanforge_data["lanforge_ip"], get_lanforge_data["lanforge-port-number"])
         eap_connect.upstream_resource = 1
         eap_connect.upstream_port = get_lanforge_data["lanforge_bridge_port"]
         eap_connect.security = "wpa2"

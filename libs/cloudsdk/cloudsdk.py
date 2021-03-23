@@ -602,6 +602,7 @@ class FirmwareUtility(JFrogUtility):
             time.sleep(5)
             try:
                 obj = self.equipment_gateway_client.request_firmware_update(equipment_id=equipment_id, firmware_version_id=firmware_id)
+                time.sleep(60)
             except Exception as e:
                 obj = False
             return obj
