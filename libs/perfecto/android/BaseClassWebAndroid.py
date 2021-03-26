@@ -42,7 +42,7 @@ class TestConf(unittest.TestCase):
         
         #self.driver = webdriver.Remote('https://tip.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
         
-        self.driver = webdriver.Remote('https://ps.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
+        self.driver = webdriver.Remote('https://tip.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
         self.driver.implicitly_wait(30)
       #  self.create_reporting_client()
     #    self.reporting_client.test_start(self.id(), TestContext('Python', 'unittest'))
