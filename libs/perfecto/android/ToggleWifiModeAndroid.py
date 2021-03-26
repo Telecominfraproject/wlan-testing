@@ -2,7 +2,7 @@ import time
 import unittest
 import warnings
 
-#from perfecto import TestResultFactory
+from perfecto import TestResultFactory
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 import argparse
@@ -11,28 +11,32 @@ from BaseClassAndroid import TestConf
 
 class ReportingTests(TestConf):
 
+    #reportTagStart = reportTagStart()
+
     def test_navigation(self):
         warnings.simplefilter("ignore", ResourceWarning)
         try:
            # assert 'Perfecto' in self.driver.title
             print("-------------------------------------------")
              #REPORTIUM TEST START
-            #self.reporting_client.step_start("BasicConnectionTest") 
- 
+            
             #Open Setting Application 
             print("Opening Settings App..")
+            #self.reportTagStart()
+            self.reporting_client.step_start("Opening Settings App..")
             params = {'identifier': 'com.android.settings'}
             self.driver.execute_script('mobile:application:close', params)
             self.driver.execute_script('mobile:application:open', params)
 
-
+            self.reporting_client.step_start("Load Wifi/BlueTooth/AirplaneMode Connection Settings..")
             print("Load Wifi/BlueTooth/AirplaneMode Connection Settings..")
             element = self.driver.find_element_by_xpath("//*[@text='Connections']")
             element.click()
 
 
             #Verifies if AP is connected to Wifi status
-            print("Verify Wifi Connection Status..")
+            print("Verify Wifi Connection Status..") 
+            self.reporting_client.step_start("Verify Wifi Connection Status..")
             try:
                 WifiXpath = "//*[@text='Wi-Fi']/parent::*/android.widget.TextView[2]"
                 elementWifName = self.driver.find_element_by_xpath(WifiXpath)
@@ -42,6 +46,7 @@ class ReportingTests(TestConf):
             
 
             print("Toggle Wifi AP Mode..")
+            self.reporting_client.step_start("Toggle Wifi AP Mode..")
             try:
                 WifiInternet = self.driver.find_element_by_xpath("//*[@content-desc='Wi-Fi']")
                 WifiInternet.click()
@@ -51,6 +56,7 @@ class ReportingTests(TestConf):
 
             #Ensure Wifi Radio Button Disabled 
             print("Verify Wifi Disconnected Status..")
+            self.reporting_client.step_start("Verify Wifi Disconnected Status..")
             try:
                 WifiXpathDisconnected = "//*[@text='Wi-Fi']/parent::*/android.widget.TextView[2]"
                 elementWifiDiscont = self.driver.find_element_by_xpath(WifiXpathDisconnected)
@@ -58,7 +64,9 @@ class ReportingTests(TestConf):
             except NoSuchElementException:
                 print("Warning...No Wifi Disconnected Msg...Check Xpath")
             
+
             print("Toggle Wifi Radio Button On..")
+            self.reporting_client.step_start("Toggle Wifi Radio Button On..")
             try:
                 #Toggle Wifi Radio Button 
                 WifiInternet2 = self.driver.find_element_by_xpath("//*[@content-desc='Wi-Fi']")
@@ -68,6 +76,7 @@ class ReportingTests(TestConf):
 
             #Verifies if AP is connected to Wifi status
             print("Verify Wifi ReConnection Status..")
+            self.reporting_client.step_start("Verify Wifi ReConnection Status..")
             try:
                 WifiXpathToggle = "//*[@text='Wi-Fi']/parent::*/android.widget.TextView[2]"
                 elementWifNameToggle = self.driver.find_element_by_xpath(WifiXpathToggle)
@@ -81,7 +90,7 @@ class ReportingTests(TestConf):
             self.currentResult = False
             #self.reporting_client.test_stop(TestResultFactory.create_failure("NoSuchElementException", ex))
             print (ex.message)
-            self.currentResult = True
+            #self.currentResult = True
         #self.reporting_client.test_stop(Tes
 
 if __name__ == '__main__':
@@ -112,3 +121,6 @@ if __name__ == '__main__':
     #print(str(args["cloud_name"]))     
 
     unittest.main()
+
+    #def reportTagStart(self, stepName):
+       # self.reporting_client.step_start(stepName)
