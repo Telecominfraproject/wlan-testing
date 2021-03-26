@@ -21,11 +21,13 @@ class ReportingTests(TestConf):
  
             #Open Setting Application 
             print("Opening Settings App..")
+            self.reporting_client.step_start("Opening Settings App..")
             params = {'identifier': 'com.android.settings'}
             self.driver.execute_script('mobile:application:close', params)
             self.driver.execute_script('mobile:application:open', params)
 
             print("Load Wifi/BlueTooth/AirplaneMode Connection Settings..")
+            self.reporting_client.step_start("Load Connection Settings")
             element = self.driver.find_element_by_xpath("//*[@text='Connections']")
             element.click()
 
@@ -40,6 +42,7 @@ class ReportingTests(TestConf):
             
 
             print("Toggle Airplane AP Mode..")
+            self.reporting_client.step_start("Toggle Airplane AP Mode")
             try:
                 WifiInternet = self.driver.find_element_by_xpath("//*[@content-desc='Airplane mode']")
                 WifiInternet.click()
@@ -49,6 +52,7 @@ class ReportingTests(TestConf):
 
             #Ensure Wifi Radio Button Disabled 
             print("Verify Airplane Disconnected Status..")
+            self.reporting_client.step_start("Verify Airplane Disconnected Status")
             try:
                 WifiXpathDisconnected = "//*[@text='Airplane mode']/parent::*/android.widget.TextView[2]"
                 elementWifiDiscont = self.driver.find_element_by_xpath(WifiXpathDisconnected)
@@ -57,6 +61,7 @@ class ReportingTests(TestConf):
                 print("Warning...No Airplane Mode Msg...Check Xpath")
             
             print("Toggle Airplane Radio Button On..")
+            self.reporting_client.step_start("Toggle Airplane Radio Button On")
             try:
                 #Toggle Wifi Radio Button 
                 WifiInternet2 = self.driver.find_element_by_xpath("//*[@content-desc='Airplane mode']")
@@ -66,10 +71,12 @@ class ReportingTests(TestConf):
 
             #Verifies if AP is connected to Wifi status
             print("Verify Wifi ReConnection Status..")
+            self.reporting_client.step_start("Verify Wifi ReConnection Status..")
             try:
                 WifiXpathToggle = "//*[@text='Wi-Fi']/parent::*/android.widget.TextView[2]"
                 elementWifNameToggle = self.driver.find_element_by_xpath(WifiXpathToggle)
                 print("Wifi Connected AP Status: " + elementWifNameToggle.text)
+                self.reporting_client.step_start("Connection Status Successfull")
                 #self.assertEqual("elementWifName.text","elementWifNameToggle.text","Connection Successfull Reconnected")
                 print("Connection Successfull Reconnected")
             except NoSuchElementException:
