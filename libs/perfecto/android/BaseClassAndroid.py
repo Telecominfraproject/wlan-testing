@@ -14,7 +14,7 @@ import pytest
 class TestConf(unittest.TestCase):
     projectname = 'TIP Project'
     projectversion = '1.0'
-    jobname = 'Tip-CI-Android-Regression'
+    jobname = 'Tip-CI-Regression'
     jobnumber = 1
     tags = 'TestTag'
     
