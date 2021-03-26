@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 import argparse
 
 from urllib3.exceptions import HeaderParsingError
-from BaseClassWeb import TestConf
+from BaseClassWebiOS import TestConf
 
 
 class ReportingTests(TestConf):
@@ -21,7 +21,8 @@ class ReportingTests(TestConf):
             #self.reporting_client.step_start("BasicConnectionTest") 
 
             #Search
-            try:       
+            try:  
+                self.reporting_client.step_start("Google Home Page")     
                 self.driver.get('https://www.google.com') 
                 lblSearch = "//*[@class='gLFyf']"
                 elementFindTxt = self.driver.find_element_by_xpath(lblSearch)
@@ -32,12 +33,14 @@ class ReportingTests(TestConf):
                     elelSearch.click()
                 except NoSuchElementException:
                     print("Enter Not Active...")
-                       
+
+                self.reporting_client.step_start("Verify Run Button")           
                 BtnRunSpeedTest = "//*[text()='RUN SPEED TEST']"
                 self.driver.find_element_by_xpath(BtnRunSpeedTest).click()
 
                 #Get upload/Download Speed
                 try:
+                    self.reporting_client.step_start("Get upload/Download Speed")   
                     time.sleep(60)
                     downloadMbps = self.driver.find_element_by_xpath("//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']")
                     downloadSpeed = downloadMbps.text

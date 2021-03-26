@@ -35,7 +35,7 @@ class ReportingTests(TestConf):
            # params = {'property': 'All'}
            # deviceProperty = self.driver.execute_script('mobile:handset:info', params)
            # print("ModelName: " + deviceProperty)  
-
+            self.reporting_client.step_start("Pass Point Verification")
             params = {'property': 'deviceId'}
             deviceID = self.driver.execute_script('mobile:handset:info', params)
             params = {'property': 'model'}
