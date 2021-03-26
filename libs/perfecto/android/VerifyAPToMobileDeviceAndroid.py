@@ -22,24 +22,28 @@ class ReportingTests(TestConf):
             #self.reporting_client.step_start("BasicConnectionTest") 
 
             #Search
-            try:       
+            try:  
+                self.reporting_client.step_start("Go to URL..")     
                 self.driver.get('https://www.google.com') 
                 lblSearch = "//*[@class='gLFyf']"
                 elementFindTxt = self.driver.find_element_by_xpath(lblSearch)
                 elementFindTxt.send_keys("Internet Speed Test")
 
                 try:
+                    self.reporting_client.step_start("Verify Speed Test Page Btn")     
                     elelSearch = self.driver.find_element_by_xpath("(//*[@class='sbic sb43'])[1]")  
                     elelSearch.click()
                 except NoSuchElementException:
                     print("Enter Not Active...")
                 time.sleep(15)    
-                   
+                
+                self.reporting_client.step_start("Start Speed Test") 
                 BtnRunSpeedTest = "//*[@id='knowledge-verticals-internetspeedtest__test_button']"
                 self.driver.find_element_by_xpath(BtnRunSpeedTest).click()
 
                 #Get upload/Download Speed
                 try:
+                    self.reporting_client.step_start("Verify Upload/Download Speed") 
                     time.sleep(60)
                     downloadMbps = self.driver.find_element_by_xpath("//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']")
                     downloadSpeed = downloadMbps.text

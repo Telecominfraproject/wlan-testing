@@ -22,32 +22,38 @@ class ReportingTests(TestConf):
            # print("Device-DefaultGateWay-AP: " + "'"+ DefaultGateWayAccessPoint + "'")    
             #self.assertNotEqual(DefaultGateWayAccessPoint, "N/A", "Check Wifi Access Point")
             print("Verify Internet Connection..")
+            self.reporting_client.step_start("Verify Internet Connection")     
             networkAccessPoint = self.driver.find_element_by_xpath("//*[@label='Network Connected']/parent::*/XCUIElementTypeButton").text
             print("Network-AccessPoint-Connected: " + "'"+ networkAccessPoint + "'")
 
             #Open Setting Application 
             print("Opening Settings App..")
+            self.reporting_client.step_start("Opening Settings App")     
             params = {'identifier': 'com.apple.Preferences'}
             self.driver.execute_script('mobile:application:open', params)
             self.driver.execute_script('mobile:application:close', params)
             self.driver.execute_script('mobile:application:open', params)
 
             print("Verify Wifi Connection Name..")
+            self.reporting_client.step_start("Verify Wifi Connection Name") 
             element = self.driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']/XCUIElementTypeStaticText[2]")
             Wifi_AP_Name = element.text
             print("Wifi_AP_ConnName: " + "'"+ Wifi_AP_Name + "'")
 
             #Verify if Ap is connected with Wifi
+            self.reporting_client.step_start("Click Wifi Connection")
             print("Click Wifi Connection..")
             element.click()
 
             #Verifies if AP is connected to Wifi status
             print("Verify Wifi Connection Status..")
+            self.reporting_client.step_start("Verify Wifi Connection Status")
             WifiXpath = "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeStaticText[@label='"+ Wifi_AP_Name + "']"
             elementWifName = self.driver.find_element_by_xpath(WifiXpath)
             
             #Check AP Internet Error Msg 
             print("Checking Internet Connection Error..")
+            self.reporting_client.step_start("Checking Internet Connection Error")
            # self.driver.implicitly_wait(5)
             try:
                 WifiInternetErrMsg = self.driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
@@ -55,11 +61,13 @@ class ReportingTests(TestConf):
                 print("Connected-Wifi-AP..Connection Successfull")
             
             #Close/Open App resets the settings app back to home page
+            self.reporting_client.step_start("Close/Open App Reset Settings")
             self.driver.execute_script('mobile:application:close', params)
             self.driver.execute_script('mobile:application:open', params)
 
             #Toggle Airplane Mode
             print("Toggle Airplane Mode..")
+            self.reporting_client.step_start("Toggle Airplane Mode..")
             try:
                 AirplaneMode = self.driver.find_element_by_xpath("//XCUIElementTypeSwitch[@label='Airplane Mode']")
                 #Toggle Airplane Mode
@@ -67,9 +75,9 @@ class ReportingTests(TestConf):
 
                 #Verify Cellular Mode Text
                 try:
+                    self.reporting_client.step_start("Verify Cellular Mode..")
                     CellularMsgEle = self.driver.find_element_by_xpath("//*[@name='Airplane Mode' and @value='Airplane Mode']")
-                    self.assertEqual(CellularMsgEle.text, "Airplane Mode", "Airplane Mode Not Triggerd")
-                    print("Verify Cellular Mode Text: Airplane Mode Success")
+                    self.assertEqual(CellularMsgEle.text, "Airplane Mode", "Airplane Mode Not Triggerd")             
                 except NoSuchElementException:
                     print("Exception Cellular Mode Not in Airplane Mode: CheckPhoneStatus") 
 
@@ -80,6 +88,7 @@ class ReportingTests(TestConf):
                 
             #Verify No Sim Card Installed Msg Popup
             print("Verify No Sim Card Installed Msg Popup..")
+            self.reporting_client.step_start("Verify No Sim Card Installed Msg Popup")
             try:
                 NoSimCardErrorMsg = self.driver.find_element_by_xpath("//*[@value='No SIM Card Installed']")
             except NoSuchElementException:
@@ -87,6 +96,7 @@ class ReportingTests(TestConf):
                
             #Click ok on No Sim Card Msg Popup
             print("Click ok on No Sim Card Msg Popup..")
+            self.reporting_client.step_start("Click ok on No Sim Card Msg Popup..")
             try:
                 NoSimCardErrorMsgOK = self.driver.find_element_by_xpath("//*[@label='OK']")
                 NoSimCardErrorMsgOK.click()
@@ -94,10 +104,12 @@ class ReportingTests(TestConf):
                 print(" -----  No Sim Card AlertMsg  -----")
        
             #Close/Open App resets the settings app back to home page
+            self.reporting_client.step_start("Close/Open App resets the settings")
             self.driver.execute_script('mobile:application:close', params)
             self.driver.execute_script('mobile:application:open', params)
            
             #time.sleep(5)
+            self.reporting_client.step_start("Verify Wifi Connection Name after Toggle Mode")
             print("Verify Wifi Connection Name after Airplane Toggle Mode..")
             element22 = self.driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']/XCUIElementTypeStaticText[2]")
             Wifi_AP_NameNew = element22.text
@@ -107,24 +119,27 @@ class ReportingTests(TestConf):
             #self.assertEqual(Wifi_AP_Name, Wifi_AP_NameNew, "AP Connection Successfull")
 
             #Verify if Ap is connected with Wifi
+            self.reporting_client.step_start("Click Wifi Connection after Airplane Toggle Mode")
             print("Click Wifi Connection after Airplane Toggle Mode..")
             element22.click()
 
             #Verifies if AP is connected to Wifi status
             print("Verify Wifi Connection Status..")
+            self.reporting_client.step_start("Verify Wifi Connection Status")
             WifiXpath = "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeStaticText[@label='"+ Wifi_AP_Name + "']"
             elementWifName = self.driver.find_element_by_xpath(WifiXpath)
             
             #Check AP Internet Error Msg 
             print("Checking Internet Connection Error..")
+            self.reporting_client.step_start("Checking Internet Connection Error")
            # self.driver.implicitly_wait(5)
             try:
                 WifiInternetErrMsg = self.driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
             except NoSuchElementException:
                 print("Connected-Wifi-AP..Connection Successfull")
             
-
             #Close Settings App
+            self.reporting_client.step_start("Close Settings App")
             print("Close Settings App")
             self.driver.execute_script('mobile:application:close', params)
 
