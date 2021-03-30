@@ -1,44 +1,62 @@
-# """
-# About: It contains some Functional Unit Tests for CloudSDK+APNOS and to run and test them on per unit level
-# """
-# import pytest
-#
-#
-# # Note: Use Reusable Fixtures, Create SSID Profile, Equipment_AP Profile, Use RF Profile, Radius Profile,
-# # Push and Verify
-# @pytest.mark.test_apnos_profiles
-# class TestProfiles(object):
-#
-#     @pytest.mark.test_apnos_open_ssid
-#     def test_open_ssid(self):
-#         # Write a Test case that creates Open ssid and pushes it to AP, and verifies that profile is applied properly
-#         yield True
-#
-#     @pytest.mark.test_apnos_wpa_ssid
-#     def test_wpa_ssid(self):
-#         # Write a Test case that creates WPA ssid and pushes it to AP, and verifies that profile is applied properly
-#         yield True
-#
-#     @pytest.mark.test_apnos_wpa2_personal_ssid
-#     def test_wpa2_personal_ssid(self):
-#         # Write a Test case that creates WPA2-PERSONAL ssid and pushes it to AP, and verifies that profile is applied
-#         # properly
-#         yield True
-#
-#     @pytest.mark.test_apnos_wpa2_enterprise_ssid
-#     def test_wpa2_enterprise_ssid(self):
-#         # Write a Test case that creates WPA2-ENTERPRISE ssid and pushes it to AP, and verifies that profile is
-#         # applied properly
-#         yield True
-#
-#     @pytest.mark.test_apnos_wpa3_personal_ssid
-#     def test_wpa3_personal_ssid(self):
-#         # Write a Test case that creates WPA3-PERSONAL ssid and pushes it to AP, and verifies that profile is applied
-#         # properly
-#         yield True
-#
-#     @pytest.mark.test_apnos_wpa3_enterprise_ssid
-#     def test_wpa3_enterprise_ssid(self):
-#         # Write a Test case that creates WPA3-ENTERPRISE ssid and pushes it to AP, and verifies that profile is
-#         # applied properly
-#         yield True
+import pytest
+
+from configuration_data import TEST_CASES
+
+
+@pytest.mark.shivamy(after='test_something_1')
+def test_something_2():
+    assert True
+
+
+@pytest.mark.sanity(depends=['TestFirmware'])
+@pytest.mark.bridge(order=3)
+@pytest.mark.nat(order=3)
+@pytest.mark.vlan(order=3)
+@pytest.mark.ap_firmware
+class TestFirmwareAPNOS(object):
+
+    @pytest.mark.check_active_firmware_ap
+    def test_ap_firmware(self, check_ap_firmware_ssh, get_latest_firmware):
+        print("5")
+        if check_ap_firmware_ssh == get_latest_firmware:
+            status = True
+            # instantiate_testrail.update_testrail(case_id=TEST_CASES["ap_upgrade"], run_id=instantiate_project,
+            #                                      status_id=1,
+            #                                      msg='Upgrade to ' + get_latest_firmware + ' successful')
+        else:
+            status = False
+            # instantiate_testrail.update_testrail(case_id=TEST_CASES["ap_upgrade"], run_id=instantiate_project,
+            #                                      status_id=4,
+            #                                      msg='Cannot reach AP after upgrade to check CLI - re-test required')
+
+        assert status
+
+
+@pytest.mark.basic
+@pytest.mark.bridge(order=4)
+@pytest.mark.nat(order=4)
+@pytest.mark.vlan(order=4)
+@pytest.mark.ap_connection
+class TestConnection(object):
+
+    @pytest.mark.ap_manager_state
+    @pytest.mark.sanity(depends=['TestFirmwareAPNOS'])
+    def test_ap_manager_state(self, get_ap_manager_status):
+        print("4")
+        if "ACTIVE" not in get_ap_manager_status:
+            # instantiate_testrail.update_testrail(case_id=TEST_CASES["cloud_connection"], run_id=instantiate_project,
+            #                                      status_id=5,
+            #                                      msg='CloudSDK connectivity failed')
+            status = False
+        else:
+            # instantiate_testrail.update_testrail(case_id=TEST_CASES["cloud_connection"], run_id=instantiate_project,
+            #                                      status_id=1,
+            #                                      msg='Manager status is Active')
+            status = True
+        assert status
+        # break test session if test case is false
+
+
+@pytest.mark.shivamy(after='test_something_2')
+def test_something_3():
+    assert True

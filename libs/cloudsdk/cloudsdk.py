@@ -47,7 +47,7 @@ class ConfigureCloudSDK:
         if testbed is None:
             print("No Testbed Selected")
             exit()
-        self.sdk_base_url = "https://wlan-portal-svc-" + testbed + ".cicd.lab.wlan.tip.build"
+        self.sdk_base_url = testbed
         self.configuration.host = self.sdk_base_url
         print("Testbed Selected: %s\n SDK_BASE_URL: %s\n" % (testbed, self.sdk_base_url))
         return True
@@ -88,6 +88,7 @@ class CloudSDK(ConfigureCloudSDK):
         self.bearer = self.get_bearer_token()
 
         self.api_client.default_headers['Authorization'] = "Bearer " + self.bearer._access_token
+        self.status_client = swagger_client.StatusApi(api_client=self.api_client)
         self.equipment_client = swagger_client.EquipmentApi(self.api_client)
         self.profile_client = swagger_client.ProfileApi(self.api_client)
         self.api_client.configuration.api_key_prefix = {
@@ -149,6 +150,34 @@ class CloudSDK(ConfigureCloudSDK):
         data = self.equipment_client.get_equipment_by_id(equipment_id=equipment_id)
         return str(data._details._equipment_model)
 
+    # Needs Bug fix from swagger code generation side
+    def get_ap_firmware_new_method(self, equipment_id=None):
+
+        response = self.status_client.get_status_by_customer_equipment(customer_id=self.customer_id,
+                                                                       equipment_id=equipment_id)
+        print(response[2])
+
+    # Old Method, will be depreciated in future
+    def get_ap_firmware_old_method(self, equipment_id=None):
+        url = self.configuration.host + "/portal/status/forEquipment?customerId=" + str(
+            self.customer_id) + "&equipmentId=" + str(equipment_id)
+        payload = {}
+        headers = self.configuration.api_key_prefix
+        response = requests.request("GET", url, headers=headers, data=payload)
+        if response.status_code == 200:
+            status_data = response.json()
+            # print(status_data)
+            try:
+                current_ap_fw = status_data[2]['details']['reportedSwVersion']
+                print(current_ap_fw)
+                return current_ap_fw
+            except:
+                current_ap_fw = "error"
+                return False
+
+        else:
+            return False
+
     """
     Profile Utilities
     """
@@ -193,6 +222,16 @@ class ProfileUtility:
         self.default_profiles = {}
         self.profile_ids = []
 
+    def cleanup_objects(self):
+        self.profile_creation_ids = {
+            "ssid": [],
+            "ap": [],
+            "radius": [],
+            "rf": []
+        }
+        self.default_profiles = {}
+        self.profile_ids = []
+
     def get_profile_by_name(self, profile_name=None):
         pagination_context = """{
                         "model_type": "PaginationContext",
@@ -208,7 +247,7 @@ class ProfileUtility:
 
     def get_profile_by_id(self, profile_id=None):
         profiles = self.profile_client.get_profile_by_id(profile_id=profile_id)
-        print(profiles._child_profile_ids)
+        # print(profiles._child_profile_ids)
 
     def get_default_profiles(self):
         pagination_context = """{
@@ -243,14 +282,78 @@ class ProfileUtility:
                 continue
             else:
                 delete_ids.append(i._id)
-        print(delete_ids)
+        # print(delete_ids)
         self.get_default_profiles()
         self.profile_creation_ids['ap'] = self.default_profiles['equipment_ap_3_radios']._id
-        print(self.profile_creation_ids)
+        # print(self.profile_creation_ids)
         self.push_profile_old_method(equipment_id=equipment_id)
         self.delete_profile(profile_id=delete_ids)
 
-    """
+    def cleanup_profiles(self):
+        try:
+            self.get_default_profiles()
+            pagination_context = """{
+                            "model_type": "PaginationContext",
+                            "maxItemsPerPage": 5000
+                    }"""
+            skip_delete_id = []
+            for i in self.default_profiles:
+                skip_delete_id.append(self.default_profiles[i]._id)
+
+            all_profiles = self.profile_client.get_profiles_by_customer_id(customer_id=self.sdk_client.customer_id,
+                                                                           pagination_context=pagination_context)
+
+            delete_ids = []
+            for i in all_profiles._items:
+                delete_ids.append(i._id)
+            skip_delete_id = []
+            for i in self.default_profiles:
+                skip_delete_id.append(self.default_profiles[i]._id)
+            delete_ids = list(set(delete_ids) - set(delete_ids).intersection(set(skip_delete_id)))
+            for i in delete_ids:
+                self.set_equipment_to_profile(profile_id=i)
+            try:
+                self.delete_profile(profile_id=delete_ids)
+            except Exception as e:
+                pass
+            status = True
+        except:
+            status = False
+        return status
+
+    def delete_profile_by_name(self, profile_name=None):
+        pagination_context = """{
+                                                "model_type": "PaginationContext",
+                                                "maxItemsPerPage": 5000
+                                        }"""
+        all_profiles = self.profile_client.get_profiles_by_customer_id(customer_id=self.sdk_client.customer_id,
+                                                                       pagination_context=pagination_context)
+        for i in all_profiles._items:
+            if i._name == profile_name:
+                counts = self.profile_client.get_counts_of_equipment_that_use_profiles([i._id])[0]
+                # print(counts._value2)
+                if counts._value2:
+                    self.set_equipment_to_profile(profile_id=i._id)
+                else:
+                    self.delete_profile(profile_id=[i._id])
+
+    # This method will set all the equipments to default equipment_ap profile, those having the profile_id passed in
+    # argument
+    def set_equipment_to_profile(self, profile_id=None):
+        pagination_context = """{
+                                                "model_type": "PaginationContext",
+                                                "maxItemsPerPage": 5000
+                                        }"""
+        equipment_data = self.sdk_client.equipment_client.get_equipment_by_customer_id(customer_id=2,
+                                                                                       pagination_context=pagination_context)
+
+        for i in equipment_data._items:
+            if i._profile_id == profile_id:
+                self.profile_creation_ids['ap'] = self.default_profiles['equipment_ap_2_radios']._id
+                self.push_profile_old_method(equipment_id=i._id)
+                time.sleep(2)
+
+    """ 
         method call: used to create the rf profile and push set the parameters accordingly and update
     """
 
@@ -260,80 +363,91 @@ class ProfileUtility:
         if profile_data is None:
             self.profile_creation_ids['rf'].append(default_profile._id)
         # Need to add functionality to add similar Profile and modify accordingly
-
+        return True
     """
         method call: used to create a ssid profile with the given parameters
     """
 
     def create_open_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
-        if profile_data is None:
-            return False
-        default_profile = self.default_profiles['ssid']
-        # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
-        default_profile._details['appliedRadios'] = []
-        if two4g is True:
-            default_profile._details['appliedRadios'].append("is2dot4GHz")
-        if fiveg is True:
-            default_profile._details['appliedRadios'].append("is5GHzU")
-            default_profile._details['appliedRadios'].append("is5GHz")
-            default_profile._details['appliedRadios'].append("is5GHzL")
-        default_profile._name = profile_data['profile_name']
-        default_profile._details['vlanId'] = profile_data['vlan']
-        default_profile._details['ssid'] = profile_data['ssid_name']
-        default_profile._details['forwardMode'] = profile_data['mode']
-        default_profile._details['secureMode'] = 'open'
-        profile_id = self.profile_client.create_profile(body=default_profile)._id
-        self.profile_creation_ids['ssid'].append(profile_id)
-        self.profile_ids.append(profile_id)
-        return True
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
+            default_profile._details['appliedRadios'] = []
+            if two4g is True:
+                default_profile._details['appliedRadios'].append("is2dot4GHz")
+            if fiveg is True:
+                default_profile._details['appliedRadios'].append("is5GHzU")
+                default_profile._details['appliedRadios'].append("is5GHz")
+                default_profile._details['appliedRadios'].append("is5GHzL")
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details['secureMode'] = 'open'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            profile = "error"
+
+        return profile
 
     def create_wpa_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
-        if profile_data is None:
-            return False
-        default_profile = self.default_profiles['ssid']
-        # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
-        default_profile._details['appliedRadios'] = []
-        if two4g is True:
-            default_profile._details['appliedRadios'].append("is2dot4GHz")
-        if fiveg is True:
-            default_profile._details['appliedRadios'].append("is5GHzU")
-            default_profile._details['appliedRadios'].append("is5GHz")
-            default_profile._details['appliedRadios'].append("is5GHzL")
-        default_profile._name = profile_data['profile_name']
-        default_profile._details['vlanId'] = profile_data['vlan']
-        default_profile._details['ssid'] = profile_data['ssid_name']
-        default_profile._details['keyStr'] = profile_data['security_key']
-        default_profile._details['forwardMode'] = profile_data['mode']
-        default_profile._details['secureMode'] = 'wpaPSK'
-        print(default_profile)
-        profile_id = self.profile_client.create_profile(body=default_profile)._id
-        self.profile_creation_ids['ssid'].append(profile_id)
-        self.profile_ids.append(profile_id)
-        return True
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
+            default_profile._details['appliedRadios'] = []
+            if two4g is True:
+                default_profile._details['appliedRadios'].append("is2dot4GHz")
+            if fiveg is True:
+                default_profile._details['appliedRadios'].append("is5GHzU")
+                default_profile._details['appliedRadios'].append("is5GHz")
+                default_profile._details['appliedRadios'].append("is5GHzL")
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['keyStr'] = profile_data['security_key']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details['secureMode'] = 'wpaPSK'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            profile = False
+        return profile
 
     def create_wpa2_personal_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
-        if profile_data is None:
-            return False
-        default_profile = self.default_profiles['ssid']
-        # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
-        default_profile._details['appliedRadios'] = []
-        if two4g is True:
-            default_profile._details['appliedRadios'].append("is2dot4GHz")
-        if fiveg is True:
-            default_profile._details['appliedRadios'].append("is5GHzU")
-            default_profile._details['appliedRadios'].append("is5GHz")
-            default_profile._details['appliedRadios'].append("is5GHzL")
-        default_profile._name = profile_data['profile_name']
-        default_profile._details['vlanId'] = profile_data['vlan']
-        default_profile._details['ssid'] = profile_data['ssid_name']
-        default_profile._details['keyStr'] = profile_data['security_key']
-        default_profile._details['forwardMode'] = profile_data['mode']
-        default_profile._details['secureMode'] = 'wpa2OnlyPSK'
-        profile_id = self.profile_client.create_profile(body=default_profile)._id
-        self.profile_creation_ids['ssid'].append(profile_id)
-        self.profile_ids.append(profile_id)
-        # print(default_profile)
-        return True
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
+            default_profile._details['appliedRadios'] = []
+            if two4g is True:
+                default_profile._details['appliedRadios'].append("is2dot4GHz")
+            if fiveg is True:
+                default_profile._details['appliedRadios'].append("is5GHzU")
+                default_profile._details['appliedRadios'].append("is5GHz")
+                default_profile._details['appliedRadios'].append("is5GHzL")
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['keyStr'] = profile_data['security_key']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details['secureMode'] = 'wpa2OnlyPSK'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            profile = False
+        return profile
 
     def create_wpa3_personal_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
         if profile_data is None:
@@ -359,28 +473,34 @@ class ProfileUtility:
         return True
 
     def create_wpa2_enterprise_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
-        if profile_data is None:
-            return False
-        default_profile = self.default_profiles['ssid']
-        # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
-        default_profile._details['appliedRadios'] = []
-        if two4g is True:
-            default_profile._details['appliedRadios'].append("is2dot4GHz")
-        if fiveg is True:
-            default_profile._details['appliedRadios'].append("is5GHzU")
-            default_profile._details['appliedRadios'].append("is5GHz")
-            default_profile._details['appliedRadios'].append("is5GHzL")
-        default_profile._name = profile_data['profile_name']
-        default_profile._details['vlanId'] = profile_data['vlan']
-        default_profile._details['ssid'] = profile_data['ssid_name']
-        default_profile._details['forwardMode'] = profile_data['mode']
-        default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
-        default_profile._child_profile_ids = self.profile_creation_ids["radius"]
-        default_profile._details['secureMode'] = 'wpa2OnlyRadius'
-        profile_id = self.profile_client.create_profile(body=default_profile)._id
-        self.profile_creation_ids['ssid'].append(profile_id)
-        self.profile_ids.append(profile_id)
-        return True
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            # print(default_profile)
+            # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
+            default_profile._details['appliedRadios'] = []
+            if two4g is True:
+                default_profile._details['appliedRadios'].append("is2dot4GHz")
+            if fiveg is True:
+                default_profile._details['appliedRadios'].append("is5GHzU")
+                default_profile._details['appliedRadios'].append("is5GHz")
+                default_profile._details['appliedRadios'].append("is5GHzL")
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
+            default_profile._child_profile_ids = self.profile_creation_ids["radius"]
+            default_profile._details['secureMode'] = 'wpa2OnlyRadius'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
 
     def create_wpa3_enterprise_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
         if profile_data is None:
@@ -415,18 +535,17 @@ class ProfileUtility:
         if profile_data is None:
             return False
         default_profile = self.default_profiles['equipment_ap_2_radios']
-        # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-2-Radios")
         default_profile._child_profile_ids = []
         for i in self.profile_creation_ids:
             for j in self.profile_creation_ids[i]:
                 default_profile._child_profile_ids.append(j)
-        # default_profile._details['radiusServiceId'] = self.profile_creation_ids['radius']
+
         default_profile._name = profile_data['profile_name']
-        print(default_profile)
+        # print(default_profile)
         default_profile = self.profile_client.create_profile(body=default_profile)
         self.profile_creation_ids['ap'] = default_profile._id
         self.profile_ids.append(default_profile._id)
-        # print(default_profile)
+        return default_profile
 
     """
         method call: used to create a radius profile with the settings given
@@ -442,13 +561,7 @@ class ProfileUtility:
         default_profile = self.profile_client.create_profile(body=default_profile)
         self.profile_creation_ids['radius'] = [default_profile._id]
         self.profile_ids.append(default_profile._id)
-
-    """
-        method call: used to create the ssid and psk data that can be used in creation of ssid profile
-    """
-
-    def set_ssid_psk_data(self):
-        pass
+        return default_profile
 
     """
         method to push the profile to the given equipment 
@@ -462,7 +575,7 @@ class ProfileUtility:
                         }"""
         default_equipment_data = self.sdk_client.equipment_client.get_equipment_by_id(equipment_id=11, async_req=False)
         # default_equipment_data._details[] = self.profile_creation_ids['ap']
-        print(default_equipment_data)
+        # print(default_equipment_data)
         # print(self.sdk_client.equipment_client.update_equipment(body=default_equipment_data, async_req=True))
 
     """
@@ -551,6 +664,7 @@ class FirmwareUtility(JFrogUtility):
         self.firmware_client = FirmwareManagementApi(api_client=sdk_client.api_client)
         self.jfrog_client = JFrogUtility(credentials=jfrog_credentials)
         self.equipment_gateway_client = EquipmentGatewayApi(api_client=sdk_client.api_client)
+
     def get_current_fw_version(self, equipment_id=None):
         # Write a logic to get the currently loaded firmware on the equipment
         self.current_fw = "something"
@@ -558,7 +672,6 @@ class FirmwareUtility(JFrogUtility):
 
     def get_latest_fw_version(self, model="ecw5410"):
         # Get The equipment model
-
         self.latest_fw = self.get_latest_build(model=model)
         return self.latest_fw
 
@@ -567,12 +680,13 @@ class FirmwareUtility(JFrogUtility):
         # if fw_latest available and force upload is True -- Upload
         # if fw_latest is not available -- Upload
         fw_id = self.is_fw_available(fw_version=fw_version)
-        if fw_id and (force_upload is False):
-            print("Force Upload :", force_upload, "  Skipping upload")
+        if fw_id and not force_upload:
+            print("Firmware Version Already Available, Skipping upload", "Force Upload :", force_upload)
             # Don't Upload the fw
-            pass
+            return fw_id
         else:
-            if fw_id and (force_upload is True):
+            if fw_id and force_upload:
+                print("Firmware Version Already Available, Deleting and Uploading Again")
                 self.firmware_client.delete_firmware_version(firmware_version_id=fw_id)
                 print("Force Upload :", force_upload, "  Deleted current Image")
                 time.sleep(2)
@@ -588,7 +702,7 @@ class FirmwareUtility(JFrogUtility):
                 "commit": fw_version.split("-")[5]
             }
             firmware_id = self.firmware_client.create_firmware_version(body=firmware_data)
-            print("Force Upload :", force_upload, "  Uploaded Image")
+            print("Force Upload :", force_upload, "  Uploaded the Image")
             return firmware_id._id
 
     def upgrade_fw(self, equipment_id=None, force_upgrade=False, force_upload=False):
@@ -601,8 +715,10 @@ class FirmwareUtility(JFrogUtility):
             firmware_id = self.upload_fw_on_cloud(fw_version=latest_fw, force_upload=force_upload)
             time.sleep(5)
             try:
-                obj = self.equipment_gateway_client.request_firmware_update(equipment_id=equipment_id, firmware_version_id=firmware_id)
-                time.sleep(60)
+                obj = self.equipment_gateway_client.request_firmware_update(equipment_id=equipment_id,
+                                                                            firmware_version_id=firmware_id)
+                print("Request firmware upgrade Success! waiting for 100 sec")
+                time.sleep(100)
             except Exception as e:
                 obj = False
             return obj
@@ -624,12 +740,32 @@ class FirmwareUtility(JFrogUtility):
             firmware_version = self.firmware_client.get_firmware_version_by_name(
                 firmware_version_name=fw_version + ".tar.gz")
             firmware_version = firmware_version._id
-            print("Firmware already Available: ", firmware_version)
+            print("Firmware ID: ", firmware_version)
         except Exception as e:
             firmware_version = False
             print("firmware not available: ", firmware_version)
         return firmware_version
 
+
+# sdk_client = CloudSDK(testbed="https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build", customer_id=2)
+# profile_obj = ProfileUtility(sdk_client=sdk_client)
+# profile_data = {'profile_name': 'Sanity-ecw5410-2G_WPA2_E_BRIDGE', 'ssid_name': 'Sanity-ecw5410-2G_WPA2_E_BRIDGE', 'vlan': 1, 'mode': 'BRIDGE', 'security_key': '2G-WPA2_E_BRIDGE'}
+# profile_obj.get_default_profiles()
+# radius_info = {
+#     "name" : "something",
+#     "ip": "192.168.200.75",
+#     "port": 1812,
+#     "secret": "testing123"
+#
+# }
+# profile_obj.create_radius_profile(radius_info=radius_info)
+# profile_obj.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, fiveg=False)
+# # # profile_obj.delete_profile_by_name(profile_name="Test_Delete")
+# sdk_client.disconnect_cloudsdk()
+# # #
+# sdk_client = CloudSDK(testbed="nola-ext-03", customer_id=2)
+# sdk_client.get_ap_firmware_old_method(equipment_id=23)
+# sdk_client.disconnect_cloudsdk()
 
 # sdk_client = CloudSDK(testbed="nola-ext-03", customer_id=2)
 # profile_obj = ProfileUtility(sdk_client=sdk_client)
@@ -662,10 +798,14 @@ class FirmwareUtility(JFrogUtility):
 #
 # # from testbed_info import JFROG_CREDENTIALS
 # #
-# # sdk_client = CloudSDK(testbed="nola-ext-05", customer_id=2)
-# # obj = FirmwareUtility(jfrog_credentials=JFROG_CREDENTIALS, sdk_client=sdk_client)
-# # obj.upgrade_fw(equipment_id=7, force_upload=False, force_upgrade=False)
-
+# JFROG_CREDENTIALS = {
+#     "user": "tip-read",
+#     "password": "tip-read"
+# }
+# sdk_client = CloudSDK(testbed="nola-ext-03", customer_id=2)
+# obj = FirmwareUtility(jfrog_credentials=JFROG_CREDENTIALS, sdk_client=sdk_client)
+# obj.upgrade_fw(equipment_id=23, force_upload=False, force_upgrade=False)
+# sdk_client.disconnect_cloudsdk()
 """
 Check the ap model
 Check latest revision of a model
