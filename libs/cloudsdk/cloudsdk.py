@@ -182,10 +182,28 @@ class CloudSDK(ConfigureCloudSDK):
     Profile Utilities
     """
 
-    def get_profile_by_id(self, profile_id=None):
-        # print(self.profile_client.get_profile_by_id(profile_id=profile_id))
-        pass
+    def get_current_profile_on_equipment(self, equipment_id=None):
+        default_equipment_data = self.equipment_client.get_equipment_by_id(equipment_id=equipment_id, async_req=False)
+        return default_equipment_data._profile_id
 
+    def get_ssids_on_equipment(self, equipment_id=None):
+        profile_id = self.get_current_profile_on_equipment(equipment_id=equipment_id)
+        all_profiles = self.profile_client.get_profile_with_children(profile_id=profile_id)
+        ssid_name_list = []
+        for i in all_profiles:
+            if i._profile_type == "ssid":
+                ssid_name_list.append(i._details['ssid'])
+        return all_profiles
+
+    def get_ssid_profiles_from_equipment_profile(self, profile_id=None):
+        equipment_ap_profile = self.profile_client.get_profile_by_id(profile_id=profile_id)
+        ssid_name_list = []
+        child_profile_ids = equipment_ap_profile.child_profile_ids
+        for i in child_profile_ids:
+            profile = self.profile_client.get_profile_by_id(profile_id=i)
+            if profile._profile_type == "ssid":
+                ssid_name_list.append(profile._details['ssid'])
+        return ssid_name_list
     """ 
     default templates are as follows : 
         profile_name=   TipWlan-rf/
@@ -245,9 +263,9 @@ class ProfileUtility:
                 return i
         return None
 
-    def get_profile_by_id(self, profile_id=None):
+    def get_ssid_name_by_profile_id(self, profile_id=None):
         profiles = self.profile_client.get_profile_by_id(profile_id=profile_id)
-        # print(profiles._child_profile_ids)
+        return profiles._details["ssid"]
 
     def get_default_profiles(self):
         pagination_context = """{
@@ -331,9 +349,9 @@ class ProfileUtility:
         for i in all_profiles._items:
             if i._name == profile_name:
                 counts = self.profile_client.get_counts_of_equipment_that_use_profiles([i._id])[0]
-                # print(counts._value2)
                 if counts._value2:
                     self.set_equipment_to_profile(profile_id=i._id)
+                    self.delete_profile(profile_id=[i._id])
                 else:
                     self.delete_profile(profile_id=[i._id])
 
@@ -346,7 +364,7 @@ class ProfileUtility:
                                         }"""
         equipment_data = self.sdk_client.equipment_client.get_equipment_by_customer_id(customer_id=2,
                                                                                        pagination_context=pagination_context)
-
+        self.get_default_profiles()
         for i in equipment_data._items:
             if i._profile_id == profile_id:
                 self.profile_creation_ids['ap'] = self.default_profiles['equipment_ap_2_radios']._id
@@ -537,8 +555,9 @@ class ProfileUtility:
         default_profile = self.default_profiles['equipment_ap_2_radios']
         default_profile._child_profile_ids = []
         for i in self.profile_creation_ids:
-            for j in self.profile_creation_ids[i]:
-                default_profile._child_profile_ids.append(j)
+            if i != 'ap':
+                for j in self.profile_creation_ids[i]:
+                    default_profile._child_profile_ids.append(j)
 
         default_profile._name = profile_data['profile_name']
         # print(default_profile)
@@ -746,7 +765,9 @@ class FirmwareUtility(JFrogUtility):
             print("firmware not available: ", firmware_version)
         return firmware_version
 
-
+# sdk_client = CloudSDK(testbed="https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build", customer_id=2)
+# print(sdk_client.get_ssid_profiles_from_equipment_profile(profile_id=1256))
+# sdk_client.disconnect_cloudsdk()
 # sdk_client = CloudSDK(testbed="https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build", customer_id=2)
 # profile_obj = ProfileUtility(sdk_client=sdk_client)
 # profile_data = {'profile_name': 'Sanity-ecw5410-2G_WPA2_E_BRIDGE', 'ssid_name': 'Sanity-ecw5410-2G_WPA2_E_BRIDGE', 'vlan': 1, 'mode': 'BRIDGE', 'security_key': '2G-WPA2_E_BRIDGE'}

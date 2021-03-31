@@ -11,7 +11,7 @@ from cloudsdk import CloudSDK
 from configuration_data import TEST_CASES
 
 
-@pytest.mark.sanity
+@pytest.mark.run(order=1)
 @pytest.mark.bridge
 @pytest.mark.nat
 @pytest.mark.vlan
@@ -40,7 +40,7 @@ class TestCloudSDK(object):
         assert PASS, cloudsdk_cluster_info
 
 
-@pytest.mark.sanity(depends=['TestCloudSDK'])
+@pytest.mark.run(order=2)
 @pytest.mark.bridge
 @pytest.mark.nat
 @pytest.mark.vlan
@@ -64,7 +64,7 @@ class TestFirmware(object):
 
     @pytest.mark.firmware_upgrade
     def test_firmware_upgrade_request(self, upgrade_firmware):
-        print("2")
+        print("3")
         if not upgrade_firmware:
             # instantiate_testrail.update_testrail(case_id=TEST_CASES["upgrade_api"], run_id=instantiate_project,
             #                                      status_id=0,
@@ -79,7 +79,7 @@ class TestFirmware(object):
 
     @pytest.mark.check_active_firmware_cloud
     def test_active_version_cloud(self, check_ap_firmware_cloud):
-        print("3")
+        print("4")
         if not check_ap_firmware_cloud:
             # instantiate_testrail.update_testrail(case_id=TEST_CASES["cloud_fw"], run_id=instantiate_project,
             #                                      status_id=5,
@@ -93,7 +93,3 @@ class TestFirmware(object):
 
         assert PASS
 
-
-@pytest.mark.shivamy(before='test_something_2')
-def test_something_1():
-    assert True

@@ -168,7 +168,7 @@ def instantiate_testrail(request):
 
 @pytest.fixture(scope="session")
 def instantiate_project(request, instantiate_testrail, get_equipment_model, get_latest_firmware):
-    #(instantiate_testrail)
+    # (instantiate_testrail)
 
     projId = instantiate_testrail.get_project_id(project_name=request.config.getini("tr_project_id"))
     test_run_name = request.config.getini("tr_prefix") + get_equipment_model + "_" + str(
@@ -208,7 +208,7 @@ def check_ap_firmware_ssh(request, testrun_session):
         active_fw = ap_ssh.get_active_firmware()
     except Exception as e:
         active_fw = False
-    #(active_fw)
+    # (active_fw)
     yield active_fw
 
 
@@ -331,6 +331,7 @@ def set_rf_profile(instantiate_profile):
         profile = False
     yield profile
 
+
 """
 BRIDGE MOde
 """
@@ -387,7 +388,7 @@ def create_wpa2_e_ssid_2g_profile_bridge(instantiate_profile, setup_profile_data
         instantiate_profile.get_default_profiles()
         profile = instantiate_profile.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, fiveg=False)
     except Exception as e:
-        #(e)
+        # (e)
         profile = False
     yield profile
 
@@ -399,7 +400,7 @@ def create_wpa2_e_ssid_5g_profile_bridge(instantiate_profile, setup_profile_data
         instantiate_profile.get_default_profiles()
         profile = instantiate_profile.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, two4g=False)
     except Exception as e:
-        #(e)
+        # (e)
         profile = False
     yield profile
 
@@ -548,10 +549,14 @@ def create_wpa2_e_ssid_5g_profile_vlan(instantiate_profile, setup_profile_data):
 
 @pytest.fixture(scope="session")
 def create_ap_profile_bridge(instantiate_profile, testrun_session):
-    profile_data = {
-        "profile_name": "%s-%s-%s" % ("Sanity", testrun_session, 'BRIDGE'),
-    }
-    profile_obj = instantiate_profile.set_ap_profile(profile_data=profile_data)
+    try:
+        profile_data = {
+            "profile_name": "%s-%s-%s" % ("Sanity", testrun_session, 'BRIDGE'),
+        }
+        profile_obj = instantiate_profile.set_ap_profile(profile_data=profile_data)
+    except Exception as e:
+        profile_obj = e
+    print(profile_obj)
     yield profile_obj
 
 
@@ -571,6 +576,32 @@ def create_ap_profile_vlan(instantiate_profile, testrun_session):
     }
     profile_obj = instantiate_profile.set_ap_profile(profile_data=profile_data)
     yield profile_obj
+
+
+@pytest.fixture(scope="function")
+def get_current_profile_cloud(instantiate_profile):
+    ssid_names = []
+    print(instantiate_profile.profile_creation_ids["ssid"])
+    for i in instantiate_profile.profile_creation_ids["ssid"]:
+        ssid_names.append(instantiate_profile.get_ssid_name_by_profile_id(profile_id=i))
+
+    yield ssid_names
+
+
+"""
+Profile Push Fixtures
+"""
+
+
+@pytest.fixture(scope="function")
+def push_profile(instantiate_profile, get_equipment_id, setup_profile_data):
+    try:
+        instantiate_profile.push_profile_old_method(equipment_id=get_equipment_id)
+        status = True
+    except Exception as e:
+        status = False
+
+    yield status
 
 
 @pytest.fixture(scope="function")

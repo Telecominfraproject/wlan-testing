@@ -122,7 +122,9 @@ RADIUS_SERVER_DATA = {
     "port": 1812,
     "secret": "testing123"
 }
-
+RADIUS_CLIENT_CRED = {
+    ""
+}
 """
 orch
     lab-ctlr
