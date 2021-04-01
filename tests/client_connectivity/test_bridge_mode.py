@@ -102,11 +102,11 @@ class TestBridgeModeClientConnectivity(object):
         # result = 'pass'
         print("Single Client Connectivity :", staConnect.passes)
         if staConnect.passes():
-            instantiate_testrail.update_testrail(case_id=TEST_CASES["25_wpa_bridge"], run_id=instantiate_project,
+            instantiate_testrail.update_testrail(case_id=TEST_CASES["5g_wpa_bridge"], run_id=instantiate_project,
                                                  status_id=1,
                                                  msg='5G WPA Client Connectivity Passed successfully - bridge mode')
         else:
-            instantiate_testrail.update_testrail(case_id=TEST_CASES["2g_wpa_bridge"], run_id=instantiate_project,
+            instantiate_testrail.update_testrail(case_id=TEST_CASES["5g_wpa_bridge"], run_id=instantiate_project,
                                                  status_id=5,
                                                  msg='5G WPA Client Connectivity Failed - bridge mode')
         assert staConnect.passes()

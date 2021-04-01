@@ -35,7 +35,7 @@ class TestNatModeClientConnectivity(object):
                                  debug_=False)
         staConnect.sta_mode = 0
         staConnect.upstream_resource = 1
-        staConnect.upstream_port = get_lanforge_data["lanforge_nat_port"]
+        staConnect.upstream_port = get_lanforge_data["lanforge_bridge_port"]
         staConnect.radio = get_lanforge_data["lanforge_2dot4g"]
         staConnect.resource = 1
         staConnect.dut_ssid = profile_data["ssid_name"]
@@ -67,7 +67,7 @@ class TestNatModeClientConnectivity(object):
                                                  status_id=5,
                                                  msg='2G WPA Client Connectivity Failed - nat mode')
         assert staConnect.passes()
-        # C2420
+
 
     @pytest.mark.wpa
     @pytest.mark.fiveg
@@ -78,7 +78,7 @@ class TestNatModeClientConnectivity(object):
                                  debug_=False)
         staConnect.sta_mode = 0
         staConnect.upstream_resource = 1
-        staConnect.upstream_port = get_lanforge_data["lanforge_nat_port"]
+        staConnect.upstream_port = get_lanforge_data["lanforge_bridge_port"]
         staConnect.radio = get_lanforge_data["lanforge_5g"]
         staConnect.resource = 1
         staConnect.dut_ssid = profile_data["ssid_name"]
@@ -102,11 +102,11 @@ class TestNatModeClientConnectivity(object):
         # result = 'pass'
         print("Single Client Connectivity :", staConnect.passes)
         if staConnect.passes():
-            instantiate_testrail.update_testrail(case_id=TEST_CASES["25_wpa_nat"], run_id=instantiate_project,
+            instantiate_testrail.update_testrail(case_id=TEST_CASES["5g_wpa_nat"], run_id=instantiate_project,
                                                  status_id=1,
                                                  msg='5G WPA Client Connectivity Passed successfully - nat mode')
         else:
-            instantiate_testrail.update_testrail(case_id=TEST_CASES["2g_wpa_nat"], run_id=instantiate_project,
+            instantiate_testrail.update_testrail(case_id=TEST_CASES["5g_wpa_nat"], run_id=instantiate_project,
                                                  status_id=5,
                                                  msg='5G WPA Client Connectivity Failed - nat mode')
         assert staConnect.passes()
@@ -120,7 +120,7 @@ class TestNatModeClientConnectivity(object):
                                  debug_=False)
         staConnect.sta_mode = 0
         staConnect.upstream_resource = 1
-        staConnect.upstream_port = get_lanforge_data["lanforge_nat_port"]
+        staConnect.upstream_port = get_lanforge_data["lanforge_bridge_port"]
         staConnect.radio = get_lanforge_data["lanforge_2dot4g"]
         staConnect.resource = 1
         staConnect.dut_ssid = profile_data["ssid_name"]
@@ -162,7 +162,7 @@ class TestNatModeClientConnectivity(object):
                                  debug_=False)
         staConnect.sta_mode = 0
         staConnect.upstream_resource = 1
-        staConnect.upstream_port = get_lanforge_data["lanforge_nat_port"]
+        staConnect.upstream_port = get_lanforge_data["lanforge_bridge_port"]
         staConnect.radio = get_lanforge_data["lanforge_5g"]
         staConnect.resource = 1
         staConnect.dut_ssid = profile_data["ssid_name"]
@@ -202,7 +202,7 @@ class TestNatModeClientConnectivity(object):
         profile_data = setup_profile_data["NAT"]["WPA2_E"]["2G"]
         eap_connect = EAPConnect(get_lanforge_data["lanforge_ip"], get_lanforge_data["lanforge-port-number"])
         eap_connect.upstream_resource = 1
-        eap_connect.upstream_port = get_lanforge_data["lanforge_nat_port"]
+        eap_connect.upstream_port = get_lanforge_data["lanforge_bridge_port"]
         eap_connect.security = "wpa2"
         eap_connect.sta_list = [get_lanforge_data["lanforge_2dot4g_station"]]
         eap_connect.station_names = [get_lanforge_data["lanforge_2dot4g_station"]]
@@ -242,7 +242,7 @@ class TestNatModeClientConnectivity(object):
         profile_data = setup_profile_data["NAT"]["WPA2_E"]["5G"]
         eap_connect = EAPConnect(get_lanforge_data["lanforge_ip"], get_lanforge_data["lanforge-port-number"])
         eap_connect.upstream_resource = 1
-        eap_connect.upstream_port = get_lanforge_data["lanforge_nat_port"]
+        eap_connect.upstream_port = get_lanforge_data["lanforge_bridge_port"]
         eap_connect.security = "wpa2"
         eap_connect.sta_list = [get_lanforge_data["lanforge_5g_station"]]
         eap_connect.station_names = [get_lanforge_data["lanforge_5g_station"]]
