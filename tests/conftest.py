@@ -167,17 +167,17 @@ def instantiate_testrail(request):
 
 
 @pytest.fixture(scope="session")
-def instantiate_project(request, instantiate_testrail, get_equipment_model, get_latest_firmware):
+def instantiate_project(request, instantiate_testrail, testrun_session, get_latest_firmware):
     # (instantiate_testrail)
 
     projId = instantiate_testrail.get_project_id(project_name=request.config.getini("tr_project_id"))
-    test_run_name = request.config.getini("tr_prefix") + get_equipment_model + "_" + str(
+    test_run_name = request.config.getini("tr_prefix") + testrun_session + "_" + str(
         datetime.date.today()) + "_" + get_latest_firmware
     instantiate_testrail.create_testrun(name=test_run_name, case_ids=list(TEST_CASES.values()), project_id=projId,
                                         milestone_id=request.config.getini("milestone"),
                                         description="Automated Nightly Sanity test run for new firmware build")
     rid = instantiate_testrail.get_run_id(
-        test_run_name=request.config.getini("tr_prefix") + get_equipment_model + "_" + str(
+        test_run_name=request.config.getini("tr_prefix") + testrun_session + "_" + str(
             datetime.date.today()) + "_" + get_latest_firmware)
     yield rid
 
@@ -508,7 +508,7 @@ def create_wpa2_p_ssid_2g_profile_vlan(instantiate_profile, setup_profile_data):
     try:
         profile_data = setup_profile_data["VLAN"]['WPA2_P']['2G']
         instantiate_profile.get_default_profiles()
-        profile = instantiate_profile.create_wpa_ssid_profile(profile_data=profile_data, fiveg=False)
+        profile = instantiate_profile.create_wpa2_personal_ssid_profile(profile_data=profile_data, fiveg=False)
     except:
         profile = False
     yield profile
@@ -519,7 +519,7 @@ def create_wpa2_p_ssid_5g_profile_vlan(instantiate_profile, setup_profile_data):
     try:
         profile_data = setup_profile_data["VLAN"]['WPA2_P']['5G']
         instantiate_profile.get_default_profiles()
-        profile = instantiate_profile.create_wpa_ssid_profile(profile_data=profile_data, two4g=False)
+        profile = instantiate_profile.create_wpa2_personal_ssid_profile(profile_data=profile_data, two4g=False)
     except:
         profile = False
     yield profile
@@ -530,7 +530,7 @@ def create_wpa2_e_ssid_2g_profile_vlan(instantiate_profile, setup_profile_data):
     try:
         profile_data = setup_profile_data["VLAN"]['WPA2_E']['2G']
         instantiate_profile.get_default_profiles()
-        profile = instantiate_profile.create_wpa_ssid_profile(profile_data=profile_data, fiveg=False)
+        profile = instantiate_profile.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, fiveg=False)
     except:
         profile = False
     yield profile
@@ -541,7 +541,7 @@ def create_wpa2_e_ssid_5g_profile_vlan(instantiate_profile, setup_profile_data):
     try:
         profile_data = setup_profile_data["VLAN"]['WPA2_E']['5G']
         instantiate_profile.get_default_profiles()
-        profile = instantiate_profile.create_wpa_ssid_profile(profile_data=profile_data, two4g=False)
+        profile = instantiate_profile.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, two4g=False)
     except:
         profile = False
     yield profile

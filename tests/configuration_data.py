@@ -22,7 +22,7 @@ NOLA = {
     "ecw5410": {
         "cloudsdk_url": "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",
         "customer_id": 2,
-        "equipment_id": 23
+        "equipment_id": 24
     },
     "ecw5211": {
         "cloudsdk_url": "",

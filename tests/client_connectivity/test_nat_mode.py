@@ -11,7 +11,7 @@ sys.path.append(f'../libs')
 sys.path.append(f'../libs/lanforge/')
 
 from LANforge.LFUtils import *
-
+from configuration_data import TEST_CASES
 if 'py-json' not in sys.path:
     sys.path.append('../py-scripts')
 
@@ -24,18 +24,18 @@ import time
 
 @pytest.mark.run(order=19)
 @pytest.mark.nat
-class TestNATModeClientConnectivity(object):
+class TestNatModeClientConnectivity(object):
 
     @pytest.mark.wpa
     @pytest.mark.twog
-    def test_single_client_wpa_2g(self, get_lanforge_data, setup_profile_data):
+    def test_single_client_wpa_2g(self, get_lanforge_data, setup_profile_data, instantiate_testrail, instantiate_project):
         profile_data = setup_profile_data["NAT"]["WPA"]["2G"]
         print(profile_data, get_lanforge_data)
         staConnect = StaConnect2(get_lanforge_data["lanforge_ip"], int(get_lanforge_data["lanforge-port-number"]),
                                  debug_=False)
         staConnect.sta_mode = 0
         staConnect.upstream_resource = 1
-        staConnect.upstream_port = get_lanforge_data["lanforge_bridge_port"]
+        staConnect.upstream_port = get_lanforge_data["lanforge_nat_port"]
         staConnect.radio = get_lanforge_data["lanforge_2dot4g"]
         staConnect.resource = 1
         staConnect.dut_ssid = profile_data["ssid_name"]
@@ -58,19 +58,27 @@ class TestNATModeClientConnectivity(object):
             print("test result: " + result)
         # result = 'pass'
         print("Single Client Connectivity :", staConnect.passes)
+        if staConnect.passes():
+            instantiate_testrail.update_testrail(case_id=TEST_CASES["2g_wpa_nat"], run_id=instantiate_project,
+                                                 status_id=1,
+                                                 msg='2G WPA Client Connectivity Passed successfully - nat mode')
+        else:
+            instantiate_testrail.update_testrail(case_id=TEST_CASES["2g_wpa_nat"], run_id=instantiate_project,
+                                                 status_id=5,
+                                                 msg='2G WPA Client Connectivity Failed - nat mode')
         assert staConnect.passes()
         # C2420
 
     @pytest.mark.wpa
     @pytest.mark.fiveg
-    def test_single_client_wpa_5g(self, get_lanforge_data, setup_profile_data):
+    def test_single_client_wpa_5g(self, get_lanforge_data, setup_profile_data, instantiate_project, instantiate_testrail):
         profile_data = setup_profile_data["NAT"]["WPA"]["5G"]
         print(profile_data, get_lanforge_data)
         staConnect = StaConnect2(get_lanforge_data["lanforge_ip"], int(get_lanforge_data["lanforge-port-number"]),
                                  debug_=False)
         staConnect.sta_mode = 0
         staConnect.upstream_resource = 1
-        staConnect.upstream_port = get_lanforge_data["lanforge_bridge_port"]
+        staConnect.upstream_port = get_lanforge_data["lanforge_nat_port"]
         staConnect.radio = get_lanforge_data["lanforge_5g"]
         staConnect.resource = 1
         staConnect.dut_ssid = profile_data["ssid_name"]
@@ -93,18 +101,26 @@ class TestNATModeClientConnectivity(object):
             print("test result: " + result)
         # result = 'pass'
         print("Single Client Connectivity :", staConnect.passes)
+        if staConnect.passes():
+            instantiate_testrail.update_testrail(case_id=TEST_CASES["25_wpa_nat"], run_id=instantiate_project,
+                                                 status_id=1,
+                                                 msg='5G WPA Client Connectivity Passed successfully - nat mode')
+        else:
+            instantiate_testrail.update_testrail(case_id=TEST_CASES["2g_wpa_nat"], run_id=instantiate_project,
+                                                 status_id=5,
+                                                 msg='5G WPA Client Connectivity Failed - nat mode')
         assert staConnect.passes()
         # C2419
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    def test_single_client_wpa2_personal_2g(self, get_lanforge_data, setup_profile_data):
+    def test_single_client_wpa2_personal_2g(self, get_lanforge_data, setup_profile_data, instantiate_project, instantiate_testrail):
         profile_data = setup_profile_data["NAT"]["WPA2_P"]["2G"]
         staConnect = StaConnect2(get_lanforge_data["lanforge_ip"], int(get_lanforge_data["lanforge-port-number"]),
                                  debug_=False)
         staConnect.sta_mode = 0
         staConnect.upstream_resource = 1
-        staConnect.upstream_port = get_lanforge_data["lanforge_bridge_port"]
+        staConnect.upstream_port = get_lanforge_data["lanforge_nat_port"]
         staConnect.radio = get_lanforge_data["lanforge_2dot4g"]
         staConnect.resource = 1
         staConnect.dut_ssid = profile_data["ssid_name"]
@@ -127,18 +143,26 @@ class TestNATModeClientConnectivity(object):
             print("test result: " + result)
         # result = 'pass'
         print("Single Client Connectivity :", staConnect.passes)
+        if staConnect.passes():
+            instantiate_testrail.update_testrail(case_id=TEST_CASES["2g_wpa2_nat"], run_id=instantiate_project,
+                                                 status_id=1,
+                                                 msg='2G WPA2 Client Connectivity Passed successfully - nat mode')
+        else:
+            instantiate_testrail.update_testrail(case_id=TEST_CASES["2g_wpa2_nat"], run_id=instantiate_project,
+                                                 status_id=5,
+                                                 msg='2G WPA2 Client Connectivity Failed - nat mode')
         assert staConnect.passes()
         # C2237
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    def test_single_client_wpa2_personal_5g(self, get_lanforge_data, setup_profile_data):
+    def test_single_client_wpa2_personal_5g(self, get_lanforge_data, setup_profile_data, instantiate_project, instantiate_testrail):
         profile_data = setup_profile_data["NAT"]["WPA2_P"]["5G"]
         staConnect = StaConnect2(get_lanforge_data["lanforge_ip"], int(get_lanforge_data["lanforge-port-number"]),
                                  debug_=False)
         staConnect.sta_mode = 0
         staConnect.upstream_resource = 1
-        staConnect.upstream_port = get_lanforge_data["lanforge_bridge_port"]
+        staConnect.upstream_port = get_lanforge_data["lanforge_nat_port"]
         staConnect.radio = get_lanforge_data["lanforge_5g"]
         staConnect.resource = 1
         staConnect.dut_ssid = profile_data["ssid_name"]
@@ -161,16 +185,24 @@ class TestNATModeClientConnectivity(object):
             print("test result: " + result)
         # result = 'pass'
         print("Single Client Connectivity :", staConnect.passes)
+        if staConnect.passes():
+            instantiate_testrail.update_testrail(case_id=TEST_CASES["5g_wpa2_nat"], run_id=instantiate_project,
+                                                 status_id=1,
+                                                 msg='5G WPA2 Client Connectivity Passed successfully - nat mode')
+        else:
+            instantiate_testrail.update_testrail(case_id=TEST_CASES["5g_wpa2_nat"], run_id=instantiate_project,
+                                                 status_id=5,
+                                                 msg='5G WPA2 Client Connectivity Failed - nat mode')
         assert staConnect.passes()
         # C2236
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
-    def test_single_client_wpa2_enterprise_2g(self, get_lanforge_data, setup_profile_data):
+    def test_single_client_wpa2_enterprise_2g(self, get_lanforge_data, setup_profile_data, instantiate_project, instantiate_testrail):
         profile_data = setup_profile_data["NAT"]["WPA2_E"]["2G"]
         eap_connect = EAPConnect(get_lanforge_data["lanforge_ip"], get_lanforge_data["lanforge-port-number"])
         eap_connect.upstream_resource = 1
-        eap_connect.upstream_port = get_lanforge_data["lanforge_bridge_port"]
+        eap_connect.upstream_port = get_lanforge_data["lanforge_nat_port"]
         eap_connect.security = "wpa2"
         eap_connect.sta_list = [get_lanforge_data["lanforge_2dot4g_station"]]
         eap_connect.station_names = [get_lanforge_data["lanforge_2dot4g_station"]]
@@ -192,16 +224,25 @@ class TestNATModeClientConnectivity(object):
             print("test result: " + result)
         # result = 'pass'
         print("Single Client Connectivity :", eap_connect.passes)
+        if eap_connect.passes():
+            instantiate_testrail.update_testrail(case_id=TEST_CASES["2g_eap_nat"], run_id=instantiate_project,
+                                                 status_id=1,
+                                                 msg='5G WPA2 ENTERPRISE Client Connectivity Passed successfully - '
+                                                     'nat mode')
+        else:
+            instantiate_testrail.update_testrail(case_id=TEST_CASES["2g_eap_nat"], run_id=instantiate_project,
+                                                 status_id=5,
+                                                 msg='5G WPA2 ENTERPRISE Client Connectivity Failed - nat mode')
         assert eap_connect.passes()
         # C5214
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
-    def test_single_client_wpa2_enterprise_5g(self, get_lanforge_data, setup_profile_data):
+    def test_single_client_wpa2_enterprise_5g(self, get_lanforge_data, setup_profile_data, instantiate_project, instantiate_testrail):
         profile_data = setup_profile_data["NAT"]["WPA2_E"]["5G"]
         eap_connect = EAPConnect(get_lanforge_data["lanforge_ip"], get_lanforge_data["lanforge-port-number"])
         eap_connect.upstream_resource = 1
-        eap_connect.upstream_port = get_lanforge_data["lanforge_bridge_port"]
+        eap_connect.upstream_port = get_lanforge_data["lanforge_nat_port"]
         eap_connect.security = "wpa2"
         eap_connect.sta_list = [get_lanforge_data["lanforge_5g_station"]]
         eap_connect.station_names = [get_lanforge_data["lanforge_5g_station"]]
@@ -223,5 +264,13 @@ class TestNATModeClientConnectivity(object):
             print("test result: " + result)
         # result = 'pass'
         print("Single Client Connectivity :", eap_connect.passes)
+        if eap_connect.passes():
+            instantiate_testrail.update_testrail(case_id=TEST_CASES["5g_eap_nat"], run_id=instantiate_project,
+                                                 status_id=1,
+                                                 msg='5G WPA2 ENTERPRISE Client Connectivity Passed successfully - '
+                                                     'nat mode')
+        else:
+            instantiate_testrail.update_testrail(case_id=TEST_CASES["5g_eap_nat"], run_id=instantiate_project,
+                                                 status_id=5,
+                                                 msg='5G WPA2 ENTERPRISE Client Connectivity Failed - nat mode')
         assert eap_connect.passes()
-    #     # C5215
