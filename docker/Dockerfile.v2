@@ -1,0 +1,4 @@
+FROM python:3.8
+RUN pip3 install paramiko
+COPY test.py /test.py
+ENTRYPOINT ["/test.py"]
