@@ -1,2 +1,0 @@
-
-DUT is an TP-Link EC420, running TIP OpenWrt.

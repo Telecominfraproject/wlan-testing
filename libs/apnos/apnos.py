@@ -3,14 +3,15 @@ import paramiko
 
 class APNOS:
 
-    def __init__(self, jumphost_cred=None):
+    def __init__(self, credentials=None):
         self.owrt_args = "--prompt root@OpenAp -s serial --log stdout --user root --passwd openwifi"
-        if jumphost_cred is None:
+        if credentials is None:
             exit()
-        self.jumphost_ip = jumphost_cred['jumphost_ip']  # "192.168.200.80"
-        self.jumphost_username = jumphost_cred['jumphost_username']  # "lanforge"
-        self.jumphost_password = jumphost_cred['jumphost_password']  # "lanforge"
-        self.jumphost_port = jumphost_cred['jumphost_port']  # 22
+        self.jumphost_ip = credentials['ip']  # "192.168.200.80"
+        self.jumphost_username = credentials['username']  # "lanforge"
+        self.jumphost_password = credentials['password']  # "lanforge"
+        self.jumphost_port = credentials['port']  # 22
+        self.mode = credentials['mode']  # 1 for jumphost, 0 for direct ssh
 
     def ssh_cli_connect(self):
         client = paramiko.SSHClient()
@@ -24,8 +25,11 @@ class APNOS:
 
     def iwinfo_status(self):
         client = self.ssh_cli_connect()
-        cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
-            '/home', self.owrt_args, '/dev/ttyAP1', 'iwinfo')
+        if self.mode == 1:
+            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
+                '/home', self.owrt_args, '/dev/ttyAP1', 'iwinfo')
+        else:
+            cmd = 'iwinfo'
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
@@ -33,8 +37,11 @@ class APNOS:
 
     def get_vif_config(self):
         client = self.ssh_cli_connect()
-        cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
-            '/home', self.owrt_args, '/dev/ttyAP1', "/usr/opensync/bin/ovsh s Wifi_VIF_Config -c")
+        if self.mode == 1:
+            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
+                '/home', self.owrt_args, '/dev/ttyAP1', "/usr/opensync/bin/ovsh s Wifi_VIF_Config -c")
+        else:
+            cmd = "/usr/opensync/bin/ovsh s Wifi_VIF_Config -c"
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
@@ -42,8 +49,11 @@ class APNOS:
 
     def get_vif_state(self):
         client = self.ssh_cli_connect()
-        cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
-            '/home', self.owrt_args, '/dev/ttyAP1', "/usr/opensync/bin/ovsh s Wifi_VIF_State -c")
+        if self.mode == 1:
+            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
+                '/home', self.owrt_args, '/dev/ttyAP1', "/usr/opensync/bin/ovsh s Wifi_VIF_State -c")
+        else:
+            cmd = "/usr/opensync/bin/ovsh s Wifi_VIF_State -c"
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
@@ -70,8 +80,11 @@ class APNOS:
     def get_active_firmware(self):
         try:
             client = self.ssh_cli_connect()
-            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
-                '/home', self.owrt_args, '/dev/ttyAP1', '/usr/opensync/bin/ovsh s AWLAN_Node -c | grep FW_IMAGE_ACTIVE')
+            if self.mode == 1:
+                cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
+                    '/home', self.owrt_args, '/dev/ttyAP1', '/usr/opensync/bin/ovsh s AWLAN_Node -c | grep FW_IMAGE_ACTIVE')
+            else:
+                cmd = '/usr/opensync/bin/ovsh s AWLAN_Node -c | grep FW_IMAGE_ACTIVE'
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
             # print(output)
@@ -86,8 +99,11 @@ class APNOS:
     def get_manager_state(self):
         try:
             client = self.ssh_cli_connect()
-            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
-                '/home', self.owrt_args, '/dev/ttyAP1', '/usr/opensync/bin/ovsh s Manager -c | grep status')
+            if self.mode == 1:
+                cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
+                    '/home', self.owrt_args, '/dev/ttyAP1', '/usr/opensync/bin/ovsh s Manager -c | grep status')
+            else:
+                cmd = '/usr/opensync/bin/ovsh s Manager -c | grep status'
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
             status = str(output.decode('utf-8').splitlines())
@@ -98,8 +114,11 @@ class APNOS:
 
     def get_status(self):
         client = self.ssh_cli_connect()
-        cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
-            '/home', self.owrt_args, '/dev/ttyAP1', "/usr/opensync/bin/ovsh s Wifi_VIF_State -c")
+        if self.mode == 1:
+            cmd = "cd %s/lanforge/lanforge-scripts/ && ./openwrt_ctl.py %s -t %s --action cmd --value \"%s\"" % (
+                '/home', self.owrt_args, '/dev/ttyAP1', "/usr/opensync/bin/ovsh s Wifi_VIF_State -c")
+        else:
+            cmd = "/usr/opensync/bin/ovsh s Wifi_VIF_State -c"
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
@@ -111,7 +130,9 @@ class APNOS:
 #         'jumphost_username': "lanforge",
 #         'jumphost_password': "lanforge",
 #         'jumphost_port': 22
+#         'mode': 1
 # }
+# mode can me 1 for ap direct ssh, and 0 for jumphost
 # obj = APNOS(jumphost_cred=APNOS_CREDENTIAL_DATA)
 # print(obj.get_active_firmware())
 # print(obj.get_vif_config_ssids())

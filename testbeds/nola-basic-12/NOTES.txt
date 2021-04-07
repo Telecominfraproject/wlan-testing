@@ -1,2 +1,0 @@
-
-DUT is an cig 188n wifi-6, running TIP OpenWrt.

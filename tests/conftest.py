@@ -28,6 +28,7 @@ from configuration_data import RADIUS_SERVER_DATA
 from configuration_data import TEST_CASES
 from configuration_data import NOLA
 from testrail_api import APIClient
+from reporting import Reporting
 
 
 def pytest_addoption(parser):
@@ -82,6 +83,8 @@ def pytest_addoption(parser):
     parser.addini("tr_project_id", "Testrail Project ID")
     parser.addini("milestone", "milestone Id")
 
+    parser.addini("num_stations", "Number of Stations/Clients for testing")
+
     # change behaviour
     parser.addoption(
         "--skip-upgrade",
@@ -94,7 +97,13 @@ def pytest_addoption(parser):
         "--force-upgrade",
         action="store_true",
         default=False,
-        help="Stop Upgrading Firmware if already latest"
+        help="force Upgrading Firmware even if it is already latest version"
+    )
+    parser.addoption(
+        "--force-upload",
+        action="store_true",
+        default=False,
+        help="force Uploading Firmware even if it is already latest version"
     )
     # this has to be the last argument
     # example: --access-points ECW5410 EA8300-EU
@@ -104,8 +113,12 @@ def pytest_addoption(parser):
         default="ecw5410",
         help="AP Model which is needed to test"
     )
-
-
+    parser.addoption(
+        "--skip-testrail",
+        action="store_true",
+        default=False,
+        help="Stop using Testrails"
+    )
 """
 Test session base fixture
 """
@@ -161,24 +174,28 @@ def instantiate_profile(instantiate_cloudsdk):
 
 @pytest.fixture(scope="session")
 def instantiate_testrail(request):
-    tr_client = APIClient(request.config.getini("tr_url"), request.config.getini("tr_user"),
-                          request.config.getini("tr_pass"), request.config.getini("tr_project_id"))
+    if request.config.getoption("--skip-testrail"):
+        tr_client = Reporting()
+    else:
+        tr_client = APIClient(request.config.getini("tr_url"), request.config.getini("tr_user"),
+                              request.config.getini("tr_pass"), request.config.getini("tr_project_id"))
     yield tr_client
 
 
 @pytest.fixture(scope="session")
 def instantiate_project(request, instantiate_testrail, testrun_session, get_latest_firmware):
-    # (instantiate_testrail)
-
-    projId = instantiate_testrail.get_project_id(project_name=request.config.getini("tr_project_id"))
-    test_run_name = request.config.getini("tr_prefix") + testrun_session + "_" + str(
-        datetime.date.today()) + "_" + get_latest_firmware
-    instantiate_testrail.create_testrun(name=test_run_name, case_ids=list(TEST_CASES.values()), project_id=projId,
-                                        milestone_id=request.config.getini("milestone"),
-                                        description="Automated Nightly Sanity test run for new firmware build")
-    rid = instantiate_testrail.get_run_id(
-        test_run_name=request.config.getini("tr_prefix") + testrun_session + "_" + str(
-            datetime.date.today()) + "_" + get_latest_firmware)
+    if request.config.getoption("--skip-testrail"):
+        rid = "skip testrails"
+    else:
+        projId = instantiate_testrail.get_project_id(project_name=request.config.getini("tr_project_id"))
+        test_run_name = request.config.getini("tr_prefix") + testrun_session + "_" + str(
+            datetime.date.today()) + "_" + get_latest_firmware
+        instantiate_testrail.create_testrun(name=test_run_name, case_ids=list(TEST_CASES.values()), project_id=projId,
+                                            milestone_id=request.config.getini("milestone"),
+                                            description="Automated Nightly Sanity test run for new firmware build")
+        rid = instantiate_testrail.get_run_id(
+            test_run_name=request.config.getini("tr_prefix") + testrun_session + "_" + str(
+                datetime.date.today()) + "_" + get_latest_firmware)
     yield rid
 
 
@@ -230,7 +247,7 @@ def get_ap_manager_status():
 
 @pytest.fixture(scope="session")
 def should_upload_firmware(request):
-    yield request.config.getini("force-upload")
+    yield request.config.getoption("--force-upload")
 
 
 @pytest.fixture(scope="session")

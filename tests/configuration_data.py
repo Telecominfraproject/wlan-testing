@@ -3,10 +3,11 @@
 """
 
 APNOS_CREDENTIAL_DATA = {
-    'jumphost_ip': "192.168.200.80",
-    'jumphost_username': "lanforge",
-    'jumphost_password': "lanforge",
-    'jumphost_port': 22
+    'ip': "192.168.200.80",
+    'username': "lanforge",
+    'password': "lanforge",
+    'port': 22,
+    'mode': 1
 }
 
 """

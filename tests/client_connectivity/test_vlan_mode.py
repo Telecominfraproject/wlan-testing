@@ -28,9 +28,11 @@ class TestVlanModeClientConnectivity(object):
 
     @pytest.mark.wpa
     @pytest.mark.twog
-    def test_single_client_wpa_2g(self, get_lanforge_data, setup_profile_data, instantiate_testrail,
-                                  instantiate_project):
+    def test_client_wpa_2g(self, request, get_lanforge_data, setup_profile_data, instantiate_testrail, instantiate_project):
         profile_data = setup_profile_data["VLAN"]["WPA"]["2G"]
+        station_names = []
+        for i in range(0, int(request.config.getini("num_stations"))):
+            station_names.append(get_lanforge_data["lanforge_2dot4g_prefix"] + "0" + str(i))
         print(profile_data, get_lanforge_data)
         staConnect = StaConnect2(get_lanforge_data["lanforge_ip"], int(get_lanforge_data["lanforge-port-number"]),
                                  debug_=False)
@@ -42,7 +44,7 @@ class TestVlanModeClientConnectivity(object):
         staConnect.dut_ssid = profile_data["ssid_name"]
         staConnect.dut_passwd = profile_data["security_key"]
         staConnect.dut_security = "wpa"
-        staConnect.station_names = [get_lanforge_data["lanforge_2dot4g_station"]]
+        staConnect.station_names = station_names
         staConnect.sta_prefix = get_lanforge_data["lanforge_2dot4g_prefix"]
         staConnect.runtime_secs = 10
         staConnect.bringup_time_sec = 60
@@ -72,10 +74,11 @@ class TestVlanModeClientConnectivity(object):
 
     @pytest.mark.wpa
     @pytest.mark.fiveg
-    def test_single_client_wpa_5g(self, get_lanforge_data, setup_profile_data, instantiate_project,
-                                  instantiate_testrail):
+    def test_client_wpa_5g(self, request, get_lanforge_data, setup_profile_data, instantiate_project, instantiate_testrail):
         profile_data = setup_profile_data["VLAN"]["WPA"]["5G"]
-        print(profile_data, get_lanforge_data)
+        station_names = []
+        for i in range(0, int(request.config.getini("num_stations"))):
+            station_names.append(get_lanforge_data["lanforge_5g_prefix"] + "0" + str(i))
         staConnect = StaConnect2(get_lanforge_data["lanforge_ip"], int(get_lanforge_data["lanforge-port-number"]),
                                  debug_=False)
         staConnect.sta_mode = 0
@@ -86,7 +89,7 @@ class TestVlanModeClientConnectivity(object):
         staConnect.dut_ssid = profile_data["ssid_name"]
         staConnect.dut_passwd = profile_data["security_key"]
         staConnect.dut_security = "wpa"
-        staConnect.station_names = [get_lanforge_data["lanforge_5g_station"]]
+        staConnect.station_names = station_names
         staConnect.sta_prefix = get_lanforge_data["lanforge_5g_prefix"]
         staConnect.runtime_secs = 10
         staConnect.bringup_time_sec = 60
@@ -116,9 +119,11 @@ class TestVlanModeClientConnectivity(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    def test_single_client_wpa2_personal_2g(self, get_lanforge_data, setup_profile_data, instantiate_project,
-                                            instantiate_testrail):
+    def test_client_wpa2_personal_2g(self, request, get_lanforge_data, setup_profile_data, instantiate_project, instantiate_testrail):
         profile_data = setup_profile_data["VLAN"]["WPA2_P"]["2G"]
+        station_names = []
+        for i in range(0, int(request.config.getini("num_stations"))):
+            station_names.append(get_lanforge_data["lanforge_2dot4g_prefix"] + "0" + str(i))
         staConnect = StaConnect2(get_lanforge_data["lanforge_ip"], int(get_lanforge_data["lanforge-port-number"]),
                                  debug_=False)
         staConnect.sta_mode = 0
@@ -129,7 +134,7 @@ class TestVlanModeClientConnectivity(object):
         staConnect.dut_ssid = profile_data["ssid_name"]
         staConnect.dut_passwd = profile_data["security_key"]
         staConnect.dut_security = "wpa2"
-        staConnect.station_names = [get_lanforge_data["lanforge_2dot4g_station"]]
+        staConnect.station_names = station_names
         staConnect.sta_prefix = get_lanforge_data["lanforge_2dot4g_prefix"]
         staConnect.runtime_secs = 10
         staConnect.bringup_time_sec = 60
@@ -159,9 +164,11 @@ class TestVlanModeClientConnectivity(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    def test_single_client_wpa2_personal_5g(self, get_lanforge_data, setup_profile_data, instantiate_project,
-                                            instantiate_testrail):
+    def test_client_wpa2_personal_5g(self, request, get_lanforge_data, setup_profile_data, instantiate_project, instantiate_testrail):
         profile_data = setup_profile_data["VLAN"]["WPA2_P"]["5G"]
+        station_names = []
+        for i in range(0, int(request.config.getini("num_stations"))):
+            station_names.append(get_lanforge_data["lanforge_5g_prefix"] + "0" + str(i))
         staConnect = StaConnect2(get_lanforge_data["lanforge_ip"], int(get_lanforge_data["lanforge-port-number"]),
                                  debug_=False)
         staConnect.sta_mode = 0
@@ -172,7 +179,7 @@ class TestVlanModeClientConnectivity(object):
         staConnect.dut_ssid = profile_data["ssid_name"]
         staConnect.dut_passwd = profile_data["security_key"]
         staConnect.dut_security = "wpa2"
-        staConnect.station_names = [get_lanforge_data["lanforge_5g_station"]]
+        staConnect.station_names = station_names
         staConnect.sta_prefix = get_lanforge_data["lanforge_5g_prefix"]
         staConnect.runtime_secs = 10
         staConnect.bringup_time_sec = 60
@@ -202,15 +209,17 @@ class TestVlanModeClientConnectivity(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
-    def test_single_client_wpa2_enterprise_2g(self, get_lanforge_data, setup_profile_data, instantiate_project,
-                                              instantiate_testrail):
+    def test_client_wpa2_enterprise_2g(self, request, get_lanforge_data, setup_profile_data, instantiate_project, instantiate_testrail):
         profile_data = setup_profile_data["VLAN"]["WPA2_E"]["2G"]
+        station_names = []
+        for i in range(0, int(request.config.getini("num_stations"))):
+            station_names.append(get_lanforge_data["lanforge_2dot4g_prefix"] + "0" + str(i))
         eap_connect = EAPConnect(get_lanforge_data["lanforge_ip"], get_lanforge_data["lanforge-port-number"])
         eap_connect.upstream_resource = 1
         eap_connect.upstream_port = get_lanforge_data["lanforge_vlan_port"]
         eap_connect.security = "wpa2"
-        eap_connect.sta_list = [get_lanforge_data["lanforge_2dot4g_station"]]
-        eap_connect.station_names = [get_lanforge_data["lanforge_2dot4g_station"]]
+        eap_connect.sta_list = station_names
+        eap_connect.station_names = station_names
         eap_connect.sta_prefix = get_lanforge_data["lanforge_2dot4g_prefix"]
         eap_connect.ssid = profile_data["ssid_name"]
         eap_connect.radio = get_lanforge_data["lanforge_2dot4g"]
@@ -223,7 +232,11 @@ class TestVlanModeClientConnectivity(object):
         print("napping %f sec" % eap_connect.runtime_secs)
         time.sleep(eap_connect.runtime_secs)
         eap_connect.stop()
-        eap_connect.cleanup()
+        try:
+            eap_connect.cleanup()
+            eap_connect.cleanup()
+        except:
+            pass
         run_results = eap_connect.get_result_list()
         for result in run_results:
             print("test result: " + result)
@@ -243,15 +256,17 @@ class TestVlanModeClientConnectivity(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
-    def test_single_client_wpa2_enterprise_5g(self, get_lanforge_data, setup_profile_data, instantiate_project,
-                                              instantiate_testrail):
+    def test_client_wpa2_enterprise_5g(self, request, get_lanforge_data, setup_profile_data, instantiate_project, instantiate_testrail):
         profile_data = setup_profile_data["VLAN"]["WPA2_E"]["5G"]
+        station_names = []
+        for i in range(0, int(request.config.getini("num_stations"))):
+            station_names.append(get_lanforge_data["lanforge_5g_prefix"] + "0" + str(i))
         eap_connect = EAPConnect(get_lanforge_data["lanforge_ip"], get_lanforge_data["lanforge-port-number"])
         eap_connect.upstream_resource = 1
         eap_connect.upstream_port = get_lanforge_data["lanforge_vlan_port"]
         eap_connect.security = "wpa2"
-        eap_connect.sta_list = [get_lanforge_data["lanforge_5g_station"]]
-        eap_connect.station_names = [get_lanforge_data["lanforge_5g_station"]]
+        eap_connect.sta_list = station_names
+        eap_connect.station_names = station_names
         eap_connect.sta_prefix = get_lanforge_data["lanforge_5g_prefix"]
         eap_connect.ssid = profile_data["ssid_name"]
         eap_connect.radio = get_lanforge_data["lanforge_5g"]
@@ -264,7 +279,11 @@ class TestVlanModeClientConnectivity(object):
         print("napping %f sec" % eap_connect.runtime_secs)
         time.sleep(eap_connect.runtime_secs)
         eap_connect.stop()
-        eap_connect.cleanup()
+        try:
+            eap_connect.cleanup()
+            eap_connect.cleanup()
+        except:
+            pass
         run_results = eap_connect.get_result_list()
         for result in run_results:
             print("test result: " + result)

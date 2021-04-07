@@ -78,9 +78,9 @@ class TestFirmware(object):
         assert PASS
 
     @pytest.mark.check_active_firmware_cloud
-    def test_active_version_cloud(self, check_ap_firmware_cloud, instantiate_testrail, instantiate_project):
+    def test_active_version_cloud(self, get_latest_firmware, check_ap_firmware_cloud, instantiate_testrail, instantiate_project):
         print("4")
-        if not check_ap_firmware_cloud:
+        if get_latest_firmware != check_ap_firmware_cloud:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["cloud_fw"], run_id=instantiate_project,
                                                  status_id=5,
                                                  msg='CLOUDSDK reporting incorrect firmware version.')
@@ -91,5 +91,5 @@ class TestFirmware(object):
                                                  status_id=1,
                                                  msg='CLOUDSDK reporting correct firmware version.')
 
-        assert PASS
+        assert get_latest_firmware == check_ap_firmware_cloud
 

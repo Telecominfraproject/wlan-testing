@@ -19,16 +19,31 @@ class TestCloudPush(object):
 
     @pytest.mark.run(order=10)
     @pytest.mark.bridge
+    @pytest.mark.fiveg
+    @pytest.mark.wpa
+    @pytest.mark.twog
+    @pytest.mark.wpa2_personal
+    @pytest.mark.wpa2_enterprise
     def test_apnos_profile_push_bridge(self, push_profile):
         assert push_profile
 
     @pytest.mark.run(order=16)
     @pytest.mark.nat
+    @pytest.mark.fiveg
+    @pytest.mark.wpa
+    @pytest.mark.twog
+    @pytest.mark.wpa2_personal
+    @pytest.mark.wpa2_enterprise
     def test_apnos_profile_push_nat(self, push_profile):
         assert push_profile
 
     @pytest.mark.run(order=22)
     @pytest.mark.vlan
+    @pytest.mark.fiveg
+    @pytest.mark.wpa
+    @pytest.mark.twog
+    @pytest.mark.wpa2_personal
+    @pytest.mark.wpa2_enterprise
     def test_apnos_profile_push_vlan(self, push_profile):
         assert push_profile
 
@@ -117,6 +132,11 @@ class TestCloudVifState(object):
 
     @pytest.mark.run(order=12)
     @pytest.mark.bridge
+    @pytest.mark.fiveg
+    @pytest.mark.wpa
+    @pytest.mark.twog
+    @pytest.mark.wpa2_personal
+    @pytest.mark.wpa2_enterprise
     def test_vif_state_cloud_bridge(self, instantiate_testrail, instantiate_project):
         ap_ssh = APNOS(APNOS_CREDENTIAL_DATA)
         PASS = False
@@ -143,6 +163,11 @@ class TestCloudVifState(object):
 
     @pytest.mark.run(order=18)
     @pytest.mark.nat
+    @pytest.mark.fiveg
+    @pytest.mark.wpa
+    @pytest.mark.twog
+    @pytest.mark.wpa2_personal
+    @pytest.mark.wpa2_enterprise
     def test_vif_state_cloud_nat(self, instantiate_testrail, instantiate_project):
         ap_ssh = APNOS(APNOS_CREDENTIAL_DATA)
         PASS = False
@@ -169,6 +194,11 @@ class TestCloudVifState(object):
 
     @pytest.mark.run(order=24)
     @pytest.mark.vlan
+    @pytest.mark.fiveg
+    @pytest.mark.wpa
+    @pytest.mark.twog
+    @pytest.mark.wpa2_personal
+    @pytest.mark.wpa2_enterprise
     def test_vif_state_cloud_vlan(self, instantiate_testrail, instantiate_project):
         ap_ssh = APNOS(APNOS_CREDENTIAL_DATA)
         PASS = False

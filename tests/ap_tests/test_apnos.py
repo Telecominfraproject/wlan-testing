@@ -48,6 +48,6 @@ class TestFirmwareAPNOS(object):
                                                  status_id=4,
                                                  msg='Cannot reach AP after upgrade to check CLI - re-test required')
 
-        assert status
+        assert check_ap_firmware_ssh == get_latest_firmware
 
 

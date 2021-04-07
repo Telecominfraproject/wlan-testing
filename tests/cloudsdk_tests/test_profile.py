@@ -31,6 +31,11 @@ class TestProfileCleanup(object):
     @pytest.mark.bridge
     @pytest.mark.nat
     @pytest.mark.vlan
+    @pytest.mark.fiveg
+    @pytest.mark.wpa
+    @pytest.mark.twog
+    @pytest.mark.wpa2_personal
+    @pytest.mark.wpa2_enterprise
     def test_profile_cleanup(self, setup_profile_data, instantiate_profile, testrun_session):
         print("6")
         try:
@@ -55,6 +60,11 @@ class TestProfileCleanup(object):
 @pytest.mark.bridge
 @pytest.mark.nat
 @pytest.mark.vlan
+@pytest.mark.fiveg
+@pytest.mark.wpa
+@pytest.mark.twog
+@pytest.mark.wpa2_personal
+@pytest.mark.wpa2_enterprise
 class TestRfProfile(object):
 
     @pytest.mark.rf
@@ -72,6 +82,9 @@ class TestRfProfile(object):
 @pytest.mark.bridge
 @pytest.mark.nat
 @pytest.mark.vlan
+@pytest.mark.wpa2_enterprise
+@pytest.mark.twog
+@pytest.mark.fiveg
 class TestRadiusProfile(object):
 
     @pytest.mark.radius
@@ -208,6 +221,11 @@ class TestEquipmentAPProfile(object):
 
     @pytest.mark.run(order=9)
     @pytest.mark.bridge
+    @pytest.mark.fiveg
+    @pytest.mark.wpa
+    @pytest.mark.twog
+    @pytest.mark.wpa2_personal
+    @pytest.mark.wpa2_enterprise
     def test_equipment_ap_profile_bridge_mode(self, instantiate_profile, create_ap_profile_bridge, instantiate_testrail, instantiate_project):
         profile_data = create_ap_profile_bridge
         if profile_data:
@@ -224,6 +242,11 @@ class TestEquipmentAPProfile(object):
 
     @pytest.mark.run(order=15)
     @pytest.mark.nat
+    @pytest.mark.fiveg
+    @pytest.mark.wpa
+    @pytest.mark.twog
+    @pytest.mark.wpa2_personal
+    @pytest.mark.wpa2_enterprise
     def test_equipment_ap_profile_nat_mode(self, create_ap_profile_nat, instantiate_testrail, instantiate_project):
         profile_data = create_ap_profile_nat
         if profile_data:
@@ -240,6 +263,11 @@ class TestEquipmentAPProfile(object):
 
     @pytest.mark.run(order=21)
     @pytest.mark.vlan
+    @pytest.mark.fiveg
+    @pytest.mark.wpa
+    @pytest.mark.twog
+    @pytest.mark.wpa2_personal
+    @pytest.mark.wpa2_enterprise
     def test_equipment_ap_profile_vlan_mode(self, create_ap_profile_vlan, instantiate_testrail, instantiate_project):
         profile_data = create_ap_profile_vlan
         if profile_data:
