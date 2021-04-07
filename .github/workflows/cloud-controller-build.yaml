@@ -19,43 +19,43 @@ env:
   testbeds: '[
     {
       "number": "ext-01",
-      "version": "1.0.0-SNAPSHOT"
+      "version": "1.0.0-SNAPSHOT-2021-04-06"
     },
     {
       "number": "ext-02",
-      "version": "1.0.0-SNAPSHOT"
+      "version": "1.0.0-SNAPSHOT-2021-04-06"
     },
     {
       "number": "ext-03",
-      "version": "1.0.0-SNAPSHOT"
+      "version": "1.0.0-SNAPSHOT-2021-04-06"
     },
     {
       "number": "ext-04",
-      "version": "1.0.0-SNAPSHOT"
+      "version": "1.0.0-SNAPSHOT-2021-04-06"
     },
     {
       "number": "ext-05",
-      "version": "1.0.0-SNAPSHOT"
+      "version": "1.0.0-SNAPSHOT-2021-04-06T"
     },
     {
       "number": "01",
-      "version": "1.0.0-SNAPSHOT"
+      "version": "1.0.0-SNAPSHOT-2021-04-06"
     },
     {
       "number": "02",
-      "version": "1.0.0-SNAPSHOT"
+      "version": "1.0.0-SNAPSHOT-2021-04-06"
     },
     {
       "number": "04",
-      "version": "1.0.0-SNAPSHOT"
+      "version": "1.0.0-SNAPSHOT-2021-04-06"
     },
     {
       "number": "05",
-      "version": "1.0.0-SNAPSHOT"
+      "version": "1.0.0-SNAPSHOT-2021-04-06"
     },
     {
       "number": "15",
-      "version": "1.0.0-SNAPSHOT"
+      "version": "1.0.0-SNAPSHOT-2021-04-06"
     }
   ]'
 
