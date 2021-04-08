@@ -7,7 +7,8 @@ APNOS_CREDENTIAL_DATA = {
     'username': "lanforge",
     'password': "lanforge",
     'port': 22,
-    'mode': 1
+    'mode': 1,
+    'jumphost_tty': '/dev/ttyAP1'
 }
 
 """
