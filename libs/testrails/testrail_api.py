@@ -1,4 +1,5 @@
-"""TestRail API binding for Python 3.x.
+"""
+TestRail API binding for Python 3.x.
 
 """
 
@@ -187,9 +188,6 @@ class APIClient:
             'update_run/%s' % (runid),
             {'description': description})
         print("result in post", result)
-
-
-# client: APIClient = APIClient(os.getenv('TR_URL'))
 
 
 class APIError(Exception):

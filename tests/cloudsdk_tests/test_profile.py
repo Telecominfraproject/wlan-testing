@@ -110,13 +110,11 @@ class TestRadiusProfile(object):
 class TestProfilesBridge(object):
 
     def test_reset_profile(self, reset_profile):
-        print("9")
         assert reset_profile
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_ssid_wpa_5g(self, instantiate_profile, create_wpa_ssid_5g_profile_bridge, instantiate_testrail, instantiate_project):
-        print("10")
         profile_data = create_wpa_ssid_5g_profile_bridge
         if profile_data:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["ssid_5g_wpa_bridge"], run_id=instantiate_project,
@@ -133,7 +131,6 @@ class TestProfilesBridge(object):
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_ssid_wpa_2g(self, instantiate_profile, create_wpa_ssid_2g_profile_bridge, instantiate_testrail, instantiate_project):
-        print("11")
         profile_data = create_wpa_ssid_2g_profile_bridge
         if profile_data:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["ssid_2g_wpa_bridge"], run_id=instantiate_project,
@@ -150,7 +147,6 @@ class TestProfilesBridge(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_ssid_wpa2_personal_2g(self, instantiate_profile, create_wpa2_p_ssid_2g_profile_bridge, instantiate_testrail, instantiate_project):
-        print("12")
         profile_data = create_wpa2_p_ssid_2g_profile_bridge
         if profile_data:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["ssid_2g_wpa2_bridge"], run_id=instantiate_project,
@@ -167,7 +163,6 @@ class TestProfilesBridge(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_ssid_wpa2_personal_5g(self, instantiate_profile, create_wpa2_p_ssid_5g_profile_bridge, instantiate_testrail, instantiate_project):
-        print("13")
         profile_data = create_wpa2_p_ssid_5g_profile_bridge
         if profile_data:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["ssid_5g_wpa2_bridge"], run_id=instantiate_project,
@@ -184,7 +179,6 @@ class TestProfilesBridge(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_enterprise
     def test_ssid_wpa2_enterprise_2g(self, instantiate_profile, create_wpa2_e_ssid_2g_profile_bridge, instantiate_testrail, instantiate_project):
-        print("14")
         profile_data = create_wpa2_e_ssid_2g_profile_bridge
         if profile_data:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["ssid_2g_eap_bridge"], run_id=instantiate_project,
@@ -201,7 +195,6 @@ class TestProfilesBridge(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_enterprise
     def test_ssid_wpa2_enterprise_5g(self, instantiate_profile, create_wpa2_e_ssid_5g_profile_bridge, instantiate_testrail, instantiate_project):
-        print("15")
         profile_data = create_wpa2_e_ssid_5g_profile_bridge
         if profile_data:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["ssid_5g_eap_bridge"], run_id=instantiate_project,
@@ -289,13 +282,11 @@ class TestEquipmentAPProfile(object):
 class TestProfilesNAT(object):
 
     def test_reset_profile(self, reset_profile):
-        print("9")
         assert reset_profile
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_ssid_wpa_5g(self, instantiate_profile, create_wpa_ssid_5g_profile_nat, instantiate_testrail, instantiate_project):
-        print("10")
         profile_data = create_wpa_ssid_5g_profile_nat
         if profile_data:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["ssid_5g_wpa_nat"], run_id=instantiate_project,
@@ -312,7 +303,6 @@ class TestProfilesNAT(object):
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_ssid_wpa_2g(self, instantiate_profile, create_wpa_ssid_2g_profile_nat, instantiate_testrail, instantiate_project):
-        print("11")
         profile_data = create_wpa_ssid_2g_profile_nat
         if profile_data:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["ssid_2g_wpa_nat"], run_id=instantiate_project,
@@ -329,7 +319,6 @@ class TestProfilesNAT(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_ssid_wpa2_personal_2g(self, instantiate_profile, create_wpa2_p_ssid_2g_profile_nat, instantiate_testrail, instantiate_project):
-        print("12")
         profile_data = create_wpa2_p_ssid_2g_profile_nat
         if profile_data:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["ssid_2g_wpa2_nat"], run_id=instantiate_project,
@@ -346,7 +335,6 @@ class TestProfilesNAT(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_ssid_wpa2_personal_5g(self, instantiate_profile, create_wpa2_p_ssid_5g_profile_nat, instantiate_testrail, instantiate_project):
-        print("13")
         profile_data = create_wpa2_p_ssid_5g_profile_nat
         if profile_data:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["ssid_5g_wpa2_nat"], run_id=instantiate_project,
@@ -363,7 +351,6 @@ class TestProfilesNAT(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_enterprise
     def test_ssid_wpa2_enterprise_2g(self, instantiate_profile, create_wpa2_e_ssid_2g_profile_nat, instantiate_testrail, instantiate_project):
-        print("14")
         profile_data = create_wpa2_e_ssid_2g_profile_nat
         if profile_data:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["ssid_2g_eap_nat"], run_id=instantiate_project,
@@ -380,7 +367,6 @@ class TestProfilesNAT(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_enterprise
     def test_ssid_wpa2_enterprise_5g(self, instantiate_profile, create_wpa2_e_ssid_5g_profile_nat, instantiate_testrail, instantiate_project):
-        print("15")
         profile_data = create_wpa2_e_ssid_5g_profile_nat
         if profile_data:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["ssid_5g_eap_nat"], run_id=instantiate_project,
@@ -401,13 +387,11 @@ class TestProfilesNAT(object):
 class TestProfilesVLAN(object):
 
     def test_reset_profile(self, reset_profile):
-        print("9")
         assert reset_profile
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_ssid_wpa_5g(self, instantiate_profile, create_wpa_ssid_5g_profile_vlan, instantiate_testrail, instantiate_project):
-        print("10")
         profile_data = create_wpa_ssid_5g_profile_vlan
         if profile_data:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["ssid_5g_wpa_vlan"], run_id=instantiate_project,
@@ -424,7 +408,6 @@ class TestProfilesVLAN(object):
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_ssid_wpa_2g(self, instantiate_profile, create_wpa_ssid_2g_profile_vlan, instantiate_testrail, instantiate_project):
-        print("11")
         profile_data = create_wpa_ssid_2g_profile_vlan
         if profile_data:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["ssid_2g_wpa_vlan"], run_id=instantiate_project,
@@ -441,7 +424,6 @@ class TestProfilesVLAN(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_ssid_wpa2_personal_2g(self, instantiate_profile, create_wpa2_p_ssid_2g_profile_vlan, instantiate_testrail, instantiate_project):
-        print("12")
         profile_data = create_wpa2_p_ssid_2g_profile_vlan
         if profile_data:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["ssid_2g_wpa2_vlan"], run_id=instantiate_project,
@@ -458,7 +440,6 @@ class TestProfilesVLAN(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_ssid_wpa2_personal_5g(self, instantiate_profile, create_wpa2_p_ssid_5g_profile_vlan, instantiate_testrail, instantiate_project):
-        print("13")
         profile_data = create_wpa2_p_ssid_5g_profile_vlan
         if profile_data:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["ssid_5g_wpa2_vlan"], run_id=instantiate_project,
@@ -475,7 +456,6 @@ class TestProfilesVLAN(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_enterprise
     def test_ssid_wpa2_enterprise_2g(self, instantiate_profile, create_wpa2_e_ssid_2g_profile_vlan, instantiate_testrail, instantiate_project):
-        print("14")
         profile_data = create_wpa2_e_ssid_2g_profile_vlan
         if profile_data:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["ssid_2g_eap_vlan"], run_id=instantiate_project,
@@ -492,7 +472,6 @@ class TestProfilesVLAN(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_enterprise
     def test_ssid_wpa2_enterprise_5g(self, instantiate_profile, create_wpa2_e_ssid_5g_profile_vlan, instantiate_testrail, instantiate_project):
-        print("15")
         profile_data = create_wpa2_e_ssid_5g_profile_vlan
         if profile_data:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["ssid_5g_eap_vlan"], run_id=instantiate_project,

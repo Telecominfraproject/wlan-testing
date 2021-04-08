@@ -119,6 +119,8 @@ def pytest_addoption(parser):
         default=False,
         help="Stop using Testrails"
     )
+
+
 """
 Test session base fixture
 """
@@ -225,7 +227,6 @@ def check_ap_firmware_ssh(request, testrun_session):
         active_fw = ap_ssh.get_active_firmware()
     except Exception as e:
         active_fw = False
-    # (active_fw)
     yield active_fw
 
 
@@ -289,8 +290,8 @@ def setup_profile_data(testrun_session):
             profile_data[mode][security] = {}
             for radio in "2G", "5G":
                 profile_data[mode][security][radio] = {}
-                name_string = "%s-%s-%s_%s_%s" % ("Sanity", testrun_session, radio, security, mode)
-                passkey_string = "%s-%s_%s" % (radio, security, mode)
+                name_string = f"{'Sanity'}-{testrun_session}-{radio}_{security}_{mode}"
+                passkey_string = f"{radio}-{security}_{mode}"
                 profile_data[mode][security][radio]["profile_name"] = name_string
                 profile_data[mode][security][radio]["ssid_name"] = name_string
                 if mode == "VLAN":
@@ -637,3 +638,14 @@ def get_lanforge_data(request):
         "vlan": 100
     }
     yield lanforge_data
+
+
+@pytest.fixture(scope="function")
+def update_ssid(request, instantiate_profile, setup_profile_data):
+    requested_profile = str(request.param).replace(" ","").split(",")
+    profile = setup_profile_data[requested_profile[0]][requested_profile[1]][requested_profile[2]]
+    status = instantiate_profile.update_ssid_name(profile_name=profile["profile_name"], new_profile_name=requested_profile[3])
+    setup_profile_data[requested_profile[0]][requested_profile[1]][requested_profile[2]]["profile_name"] = requested_profile[3]
+    setup_profile_data[requested_profile[0]][requested_profile[1]][requested_profile[2]]["ssid_name"] = requested_profile[3]
+    time.sleep(90)
+    yield status

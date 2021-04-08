@@ -204,6 +204,7 @@ class CloudSDK(ConfigureCloudSDK):
             if profile._profile_type == "ssid":
                 ssid_name_list.append(profile._details['ssid'])
         return ssid_name_list
+
     """ 
     default templates are as follows : 
         profile_name=   TipWlan-rf/
@@ -377,11 +378,10 @@ class ProfileUtility:
 
     def set_rf_profile(self, profile_data=None):
         default_profile = self.default_profiles['rf']
-        # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-rf")
         if profile_data is None:
             self.profile_creation_ids['rf'].append(default_profile._id)
-        # Need to add functionality to add similar Profile and modify accordingly
         return True
+
     """
         method call: used to create a ssid profile with the given parameters
     """
@@ -391,7 +391,6 @@ class ProfileUtility:
             if profile_data is None:
                 return False
             default_profile = self.default_profiles['ssid']
-            # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
             default_profile._details['appliedRadios'] = []
             if two4g is True:
                 default_profile._details['appliedRadios'].append("is2dot4GHz")
@@ -418,7 +417,6 @@ class ProfileUtility:
             if profile_data is None:
                 return False
             default_profile = self.default_profiles['ssid']
-            # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
             default_profile._details['appliedRadios'] = []
             if two4g is True:
                 default_profile._details['appliedRadios'].append("is2dot4GHz")
@@ -445,7 +443,6 @@ class ProfileUtility:
             if profile_data is None:
                 return False
             default_profile = self.default_profiles['ssid']
-            # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
             default_profile._details['appliedRadios'] = []
             if two4g is True:
                 default_profile._details['appliedRadios'].append("is2dot4GHz")
@@ -471,7 +468,6 @@ class ProfileUtility:
         if profile_data is None:
             return False
         default_profile = self.default_profiles['ssid']
-        # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
         default_profile._details['appliedRadios'] = []
         if two4g is True:
             default_profile._details['appliedRadios'].append("is2dot4GHz")
@@ -495,8 +491,6 @@ class ProfileUtility:
             if profile_data is None:
                 return False
             default_profile = self.default_profiles['ssid']
-            # print(default_profile)
-            # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
             default_profile._details['appliedRadios'] = []
             if two4g is True:
                 default_profile._details['appliedRadios'].append("is2dot4GHz")
@@ -524,7 +518,6 @@ class ProfileUtility:
         if profile_data is None:
             return False
         default_profile = self.default_profiles['ssid']
-        # default_profile = self.sdk_client.get_profile_template(customer_id=2, profile_name="TipWlan-Cloud-Wifi")
         default_profile._details['appliedRadios'] = []
         if two4g is True:
             default_profile._details['appliedRadios'].append("is2dot4GHz")
@@ -571,7 +564,6 @@ class ProfileUtility:
     """
 
     def create_radius_profile(self, radius_info=None):
-        # default_profile = self.sdk_client.get_profile_template(customer_id=self.sdk_client.customer_id, profile_name="Radius-Profile")
         default_profile = self.default_profiles['radius']
         default_profile._name = radius_info['name']
         default_profile._details['primaryRadiusAuthServer']['ipAddress'] = radius_info['ip']
@@ -601,7 +593,14 @@ class ProfileUtility:
         method to verify if the expected ssid's are loaded in the ap vif config
     """
 
-    def monitor_vif_conf(self):
+    def update_ssid_name(self, profile_name="Sanity-ecw5410-2G_WPA2_E_VLAN", new_profile_name="Shivam-Thakur"):
+        try:
+            profile = self.get_profile_by_name(profile_name=profile_name)
+            profile._details['ssid'] = new_profile_name
+            self.profile_client.update_profile(profile)
+            return True
+        except:
+            return False
         pass
 
     """
@@ -764,4 +763,5 @@ class FirmwareUtility(JFrogUtility):
             firmware_version = False
             print("firmware not available: ", firmware_version)
         return firmware_version
+
 

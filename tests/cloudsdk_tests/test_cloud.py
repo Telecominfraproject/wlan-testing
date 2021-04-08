@@ -20,7 +20,6 @@ class TestCloudSDK(object):
 
     @pytest.mark.sdk_version_check
     def test_cloud_sdk_version(self, instantiate_cloudsdk, instantiate_testrail, instantiate_project):
-        print("1")
         cloudsdk_cluster_info = {}  # Needed in Test Result
         try:
             response = instantiate_cloudsdk.portal_ping()
@@ -49,7 +48,6 @@ class TestFirmware(object):
 
     @pytest.mark.firmware_create
     def test_firmware_create(self, upload_firmware, instantiate_testrail, instantiate_project):
-        print("2")
         if upload_firmware != 0:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["create_fw"], run_id=instantiate_project,
                                                  status_id=1,
@@ -64,7 +62,6 @@ class TestFirmware(object):
 
     @pytest.mark.firmware_upgrade
     def test_firmware_upgrade_request(self, upgrade_firmware, instantiate_testrail, instantiate_project):
-        print("3")
         if not upgrade_firmware:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["upgrade_api"], run_id=instantiate_project,
                                                  status_id=0,
@@ -79,14 +76,11 @@ class TestFirmware(object):
 
     @pytest.mark.check_active_firmware_cloud
     def test_active_version_cloud(self, get_latest_firmware, check_ap_firmware_cloud, instantiate_testrail, instantiate_project):
-        print("4")
         if get_latest_firmware != check_ap_firmware_cloud:
             instantiate_testrail.update_testrail(case_id=TEST_CASES["cloud_fw"], run_id=instantiate_project,
                                                  status_id=5,
                                                  msg='CLOUDSDK reporting incorrect firmware version.')
-            PASS = False
         else:
-            PASS = True
             instantiate_testrail.update_testrail(case_id=TEST_CASES["cloud_fw"], run_id=instantiate_project,
                                                  status_id=1,
                                                  msg='CLOUDSDK reporting correct firmware version.')
