@@ -1,4 +1,0 @@
-TESTBED_HW=ecw5410
-
-# Controller's view of the test bed, from wlan-testing/cicd/[testbed] directory
-TESTBED_DIR=../../testbeds/ben-home-ecw5410

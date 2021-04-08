@@ -150,3 +150,5 @@ pytest/*
 !pytest/helpers
 !pytest/pytest.ini
 pytest/nightly*log
+
+test_everything.xml

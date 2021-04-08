@@ -1,287 +1,651 @@
-import pytest
-from time import sleep, gmtime, strftime
-
+# import files in the current directory
+import datetime
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), 'helpers'))
+import time
 
-sys.path.append(f'..')
+sys.path.append(
+    os.path.dirname(
+        os.path.realpath(__file__)
+    )
+)
 
-for folder in 'py-json', 'py-scripts':
-    if folder not in sys.path:
-        sys.path.append(f'../../lanforge/lanforge-scripts/{folder}')
+if 'cloudsdk' not in sys.path:
+    sys.path.append(f'../libs/cloudsdk')
+if 'apnos' not in sys.path:
+    sys.path.append(f'../libs/apnos')
+if 'testrails' not in sys.path:
+    sys.path.append(f'../libs/testrails')
 
-sys.path.append(f'../../libs/lanforge/')
-sys.path.append(f'../../libs/cloudsdk/')
-sys.path.append(f'../../libs/apnos/')
-sys.path.append(f'../../libs/testrails/')
-sys.path.append(f'../../libs/')
-
-sys.path.append(f'../test_utility/')
-
-from utils import *
-from UnitTestBase import *
-from JfrogHelper import *
-from cloudsdk import *
-from testrail_api import TestRail_Client
+from apnos import APNOS
+from cloudsdk import CloudSDK
+from cloudsdk import ProfileUtility
+from cloudsdk import FirmwareUtility
+import pytest
+import logging
+from configuration_data import APNOS_CREDENTIAL_DATA
+from configuration_data import RADIUS_SERVER_DATA
+from configuration_data import TEST_CASES
+from configuration_data import NOLA
+from testrail_api import APIClient
+from reporting import Reporting
 
 
 def pytest_addoption(parser):
+    parser.addini("force-upload", "firmware-upload option")
+
     parser.addini("jfrog-base-url", "jfrog base url")
     parser.addini("jfrog-user-id", "jfrog username")
     parser.addini("jfrog-user-password", "jfrog password")
 
-    parser.addini("sdk-base-url", "cloud sdk base url")
+    parser.addini("testbed-name", "cloud sdk base url")
+    parser.addini("equipment-model", "Equipment Model")
+
     parser.addini("sdk-user-id", "cloud sdk username")
     parser.addini("sdk-user-password", "cloud sdk user password")
-    parser.addini("customer-id", "cloud sdk customer id for the access points")
-    parser.addini("equipment-id", "cloud sdk equipment id for the access point")
-    parser.addini("default-ap-profile", "cloud sdk default AP profile name")
 
-    parser.addini("verbose", "Enable verbose logs?")
-
-    parser.addini("ap-ip", "AP IP address (or can use serial)")
-    parser.addini("ap-username", "AP username")
-    parser.addini("ap-password", "AP password")
-    parser.addini("ap-jumphost-address", "AP jumphost IP address")
-    parser.addini("ap-jumphost-username", "AP jumphost username")
-    parser.addini("ap-jumphost-password", "AP jumphost password")
-    parser.addini("ap-jumphost-port", "AP jumphost port")
-    parser.addini("ap-jumphost-wlan-testing", "AP jumphost wlan-testing code directory")
-    parser.addini("ap-jumphost-tty", "AP jumphost TTY")
-
-    parser.addini("build-id", "What build flavor to use, ie 'pending'")
-    parser.addini("testbed", "Testbed name")
-    parser.addini("mode", "AP Mode, bridge/vlan/nat")
-    parser.addini("skip-wpa",  "Should we skip setting up WPA?", default=False)
-    parser.addini("skip-wpa2", "Should we skip setting up WPA2?", default=False)
-    parser.addini("skip-radius", "Should we skip setting up EAP/Radius?", default=False)
-    parser.addini("skip-profiles", "Should we skip setting up profiles")
-
-    parser.addini("ssid-2g-wpa", "Configure ssid-2g-wpa")
-    parser.addini("psk-2g-wpa", "Configure psk-2g-wpa")
-    parser.addini("ssid-5g-wpa", "Configure ssid-5g-wpa")
-    parser.addini("psk-5g-wpa", "Configure psk-5g-wpa")
-    parser.addini("ssid-2g-wpa2", "Configure ssid-2g-wpa2")
-    parser.addini("psk-2g-wpa2", "Configure psk-2g-wpa2")
-    parser.addini("ssid-5g-wpa2", "Configure ssid-5g-wpa2")
-    parser.addini("psk-5g-wpa2", "Configure psk-5g-wpa2")
+    parser.addini("sdk-customer-id", "cloud sdk customer id for the access points")
+    parser.addini("sdk-equipment-id", "cloud sdk customer id for the access points")
 
     parser.addini("testrail-base-url", "testrail base url")
     parser.addini("testrail-project", "testrail project name to use to generate test reports")
     parser.addini("testrail-user-id", "testrail username")
     parser.addini("testrail-user-password", "testrail user password")
+
     parser.addini("lanforge-ip-address", "LANforge ip address to connect to")
     parser.addini("lanforge-port-number", "LANforge port number to connect to")
-    parser.addini("lanforge-2g-radio", "LANforge radio to use")
-    parser.addini("lanforge-5g-radio", "LANforge radio to use")
-    parser.addini("lanforge-ethernet-port", "LANforge ethernet adapter to use")
+    parser.addini("lanforge-bridge-port", "LANforge port for bridge mode testing")
+    parser.addini("lanforge-2dot4g-prefix", "LANforge 2.4g prefix")
+    parser.addini("lanforge-5g-prefix", "LANforge 5g prefix")
+    parser.addini("lanforge-2dot4g-station", "LANforge station name for 2.4g")
+    parser.addini("lanforge-5g-station", "LANforge station name for 5g")
+    parser.addini("lanforge-2dot4g-radio", "LANforge radio for 2.4g")
+    parser.addini("lanforge-5g-radio", "LANforge radio for 5g")
 
-    add_base_parse_args_pytest(parser)
+    parser.addini("jumphost_ip", "APNOS Jumphost IP Address")
+    parser.addini("jumphost_username", "APNOS Jumphost Username")
+    parser.addini("jumphost_password", "APNOS Jumphost password")
+    parser.addini("jumphost_port", "APNOS Jumphost ssh Port")
 
+    parser.addini("skip-open", "skip open ssid mode")
+    parser.addini("skip-wpa", "skip wpa ssid mode")
+    parser.addini("skip-wpa2", "skip wpa2 ssid mode")
+    parser.addini("skip-eap", "skip eap ssid mode")
+
+    parser.addini("radius_server_ip", "Radius server IP")
+    parser.addini("radius_port", "Radius Port")
+    parser.addini("radius_secret", "Radius shared Secret")
+
+    parser.addini("tr_url", "Test Rail URL")
+    parser.addini("tr_prefix", "Test Rail Prefix (Generally Testbed_name_)")
+    parser.addini("tr_user", "Testrail Username")
+    parser.addini("tr_pass", "Testrail Password")
+    parser.addini("tr_project_id", "Testrail Project ID")
+    parser.addini("milestone", "milestone Id")
+
+    parser.addini("num_stations", "Number of Stations/Clients for testing")
+
+    # change behaviour
+    parser.addoption(
+        "--skip-upgrade",
+        action="store_true",
+        default=False,
+        help="skip updating firmware on the AP (useful for local testing)"
+    )
+    # change behaviour
+    parser.addoption(
+        "--force-upgrade",
+        action="store_true",
+        default=False,
+        help="force Upgrading Firmware even if it is already latest version"
+    )
+    parser.addoption(
+        "--force-upload",
+        action="store_true",
+        default=False,
+        help="force Uploading Firmware even if it is already latest version"
+    )
     # this has to be the last argument
     # example: --access-points ECW5410 EA8300-EU
     parser.addoption(
-        "--access-points",
-        nargs="+",
-        default=[ "ECW5410" ],
-        help="list of access points to test"
+        "--model",
+        # nargs="+",
+        default="ecw5410",
+        help="AP Model which is needed to test"
+    )
+    parser.addoption(
+        "--skip-testrail",
+        action="store_true",
+        default=False,
+        help="Stop using Testrails"
     )
 
-def pytest_generate_tests(metafunc):
-    metafunc.parametrize("access_points", metafunc.config.getoption('--access-points'), scope="session")
 
-# run something after all tests are done regardless of the outcome
-def pytest_unconfigure(config):
-    print("Tests cleanup done")
+"""
+Test session base fixture
+"""
+
 
 @pytest.fixture(scope="session")
-def setup_testrails(request, instantiate_testrail, access_points):
-    if request.config.getoption("--testrail-user-id") == "NONE":
-        yield -1
-        return # needed to stop fixture execution
+def testrun_session(request):
+    var = request.config.getoption("model")
+    yield var
 
-    if request.config.getoption("--skip-update-firmware"):
-        firmware_update_case = []
-    else:
-        firmware_update_case = [ 2831 ]
-    seen = {None}
-    test_data = []
-    session = request.node
-    for item in session.items:
-        cls = item.getparent(pytest.Class)
-        if cls not in seen:
-            if hasattr(cls.obj, "get_test_data"):
-                test_data.append(cls.obj.get_test_data())
-            seen.add(cls)
-    testrail_project_id = instantiate_testrail.get_project_id(request.config.getini("testrail-project"))
-    runId = instantiate_testrail.create_testrun(
-        name=f'Nightly_model_{access_points}_{strftime("%Y-%m-%d", gmtime())}',
-        case_ids=( [*test_data] + firmware_update_case ),
-        project_id=testrail_project_id
-    )
-    yield runId
 
-# TODO:  Should not be session wide I think, you will want to run different
-# configurations (bridge, nat, vlan, wpa/wpa2/eap, etc
+"""
+Instantiate Objects for Test session
+"""
+
+
 @pytest.fixture(scope="session")
-def setup_cloudsdk(request, instantiate_cloudsdk, instantiate_testrail):
-    # snippet to do cleanup after all the tests are done
-    def fin():
-        print("Cloud SDK cleanup done")
-    request.addfinalizer(fin)
-
-    # Set up bridged setup by default.
-
-    command_line_args = create_command_line_args(request)
-
-    cloud = instantiate_cloudsdk
-
-    cloud.assert_bad_response = True
-
-    equipment_id = instantiate_cloudsdk.equipment_id
-
-    print("equipment-id: %s" % (equipment_id))
-    if equipment_id == "-1":
-        print("ERROR:  Could not find equipment-id.")
-        sys.exit(1)
-
-    ###Get Current AP info
+def instantiate_cloudsdk(testrun_session):
     try:
-        ap_cli_info = ssh_cli_active_fw(command_line_args)
-        ap_cli_fw = ap_cli_info['active_fw']
-    except Exception as ex:
-        print(ex)
-        logging.error(logging.traceback.format_exc())
-        ap_cli_info = "ERROR"
-        print("FAILED:  Cannot Reach AP CLI.");
-        sys.exit(1)
+        sdk_client = CloudSDK(testbed=NOLA[testrun_session]["cloudsdk_url"],
+                              customer_id=NOLA[testrun_session]["customer_id"])
+    except:
+        sdk_client = False
+    yield sdk_client
 
-    # LANForge Information
-    lanforge = {
-        "ip": "localhost",
-        "port": 8806,
-        # "prefix": command_line_args.lanforge_prefix,
-        "2g_radio": "wiphy4",
-        "5g_radio": "wiphy5",
-        "eth_port": "eth2"
-    }
-
-
-
-
-    fw_model = ap_cli_fw.partition("-")[0]
-
-    print('Current Active AP FW from CLI:', ap_cli_fw)
-
-    radius_name = "%s-%s-%s" % (command_line_args.testbed, fw_model, "Radius")
-
-    print("Create profiles")
-    ap_object = CreateAPProfiles(command_line_args, cloud=cloud, client=instantiate_testrail, fw_model=fw_model)
-
-    # Logic to create AP Profiles (Bridge Mode)
-
-    # ap_object.set_ssid_psk_data(ssid_2g_wpa="Pytest-run-2g-wpa",
-    #                             ssid_5g_wpa="Pytest-run-2g-wpa",
-    #                             psk_2g_wpa="Pytest-run-2g-wpa",
-    #                             psk_5g_wpa="Pytest-run-2g-wpa",
-    #                             ssid_2g_wpa2="Pytest-run-2g-wpa",
-    #                             ssid_5g_wpa2="Pytest-run-2g-wpa",
-    #                             psk_2g_wpa2="Pytest-run-2g-wpa",
-    #                             psk_5g_wpa2="Pytest-run-2g-wpa")
-
-    print(ap_object)
-    today = str(date.today())
-    rid = instantiate_testrail.get_run_id(
-        test_run_name=command_line_args.testrail_run_prefix + fw_model + "_" + today + "_" + "ecw5410-2021-02-12-pending-e8bb466")
-    print("creating Profiles")
-    ssid_template = "TipWlan-Cloud-Wifi"
-
-    if not command_line_args.skip_profiles:
-        if not command_line_args.skip_radius:
-            # Radius Profile needs to be set here
-            radius_name = "Test-Radius-" + str(time.time()).split(".")[0]
-            radius_template = "templates/radius_profile_template.json"
-            ap_object.create_radius_profile(radius_name=radius_name, radius_template=radius_template, rid=rid,
-                                            key=fw_model)
-        ap_object.create_ssid_profiles(ssid_template=ssid_template, skip_eap=True, skip_wpa=True,
-                                       skip_wpa2=False, mode="bridge")
-
-        print("Create AP with equipment-id: ", equipment_id)
-        ap_object.create_ap_profile(eq_id=equipment_id, fw_model=fw_model, mode=command_line_args.mode)
-        ap_object.validate_changes(mode=command_line_args.mode)
-
-    print("Profiles Created")
-    data = {"lanforge": lanforge, "ap_object": ap_object}
-
-    yield data
-
-@pytest.fixture(scope="session")
-def update_firmware(request, setup_testrails, instantiate_jFrog, instantiate_cloudsdk, access_points):
-    if request.config.getoption("--skip-update-firmware"):
-        return True
-
-    #access_points is really a single AP.
-    ap = access_points
-
-    if True:
-        latest_image = instantiate_jFrog.get_latest_image(ap)
-        if latest_image is None:
-            print("AP Model: %s doesn't match the available Models"%(ap))
-            sys.exit(1)  # TODO:  How to return error properly here?
-
-        cloudModel = cloud_sdk_models[ap]
-        logger = None
-        report_data = None
-        test_cases = None
-        testrail_client = None
-        jfrog_user = instantiate_jFrog.get_user()
-        jfrog_pwd = instantiate_jFrog.get_passwd()
-        testrail_rid = 0
-        customer_id = request.config.getoption("--customer-id")
-        equipment_id = instantiate_cloudsdk.equipment_id
-        pf = instantiate_cloudsdk.do_upgrade_ap_fw(request.config, report_data, test_cases, testrail_client,
-                                                   latest_image, cloudModel, ap, jfrog_user, jfrog_pwd, testrail_rid,
-                                                   customer_id, equipment_id, logger)
-
-        return pf
-
-@pytest.fixture(scope="session")
-def instantiate_cloudsdk(request):
-    command_line_args = create_command_line_args(request)
-    rv = CloudSDK(command_line_args)
-
-    equipment_id = request.config.getoption("--equipment-id")
-    if equipment_id == "-1":
-        eq_id = ap_ssh_ovsh_nodec(command_line_args, 'id')
-        print("EQ Id: %s" % (eq_id))
-
-        # Now, query equipment to find something that matches.
-        eq = rv.get_customer_equipment(customer_id)
-        for item in eq:
-            for e in item['items']:
-                print(e['id'], "  ", e['inventoryId'])
-                if e['inventoryId'].endswith("_%s" % (eq_id)):
-                    print("Found equipment ID: %s  inventoryId: %s" % (e['id'], e['inventoryId']))
-                    equipment_id = str(e['id'])
-
-    rv.equipment_id = equipment_id
-
-    if equipment_id == "-1":
-        print("EQ ID invalid: ", equipment_id)
-        sys.exit(1)
-
-    yield rv
-
-@pytest.fixture(scope="session")
-def instantiate_testrail(request):    
-    yield TestRail_Client(create_command_line_args(request))
 
 @pytest.fixture(scope="session")
 def instantiate_jFrog(request):
-    yield GetBuild(
-        request.config.getini("jfrog-user-id"),
-        request.config.getini("jfrog-user-password"),
-        "pending",  # TODO make this optional
-        url=request.config.getini("jfrog-base-url")
-    )
+    jfrog_cred = {
+        "user": request.config.getini("jfrog-user-id"),
+        "password": request.config.getini("jfrog-user-password")
+    }
+    yield jfrog_cred
+
+
+@pytest.fixture(scope="session")
+def instantiate_firmware(instantiate_cloudsdk, instantiate_jFrog):
+    try:
+        firmware_client = FirmwareUtility(jfrog_credentials=instantiate_jFrog, sdk_client=instantiate_cloudsdk)
+    except:
+        firmware_client = False
+    yield firmware_client
+
+
+@pytest.fixture(scope="session")
+def instantiate_profile(instantiate_cloudsdk):
+    try:
+        profile_object = ProfileUtility(sdk_client=instantiate_cloudsdk)
+    except:
+        profile_object = False
+    yield profile_object
+
+
+@pytest.fixture(scope="session")
+def instantiate_testrail(request):
+    if request.config.getoption("--skip-testrail"):
+        tr_client = Reporting()
+    else:
+        tr_client = APIClient(request.config.getini("tr_url"), request.config.getini("tr_user"),
+                              request.config.getini("tr_pass"), request.config.getini("tr_project_id"))
+    yield tr_client
+
+
+@pytest.fixture(scope="session")
+def instantiate_project(request, instantiate_testrail, testrun_session, get_latest_firmware):
+    if request.config.getoption("--skip-testrail"):
+        rid = "skip testrails"
+    else:
+        projId = instantiate_testrail.get_project_id(project_name=request.config.getini("tr_project_id"))
+        test_run_name = request.config.getini("tr_prefix") + testrun_session + "_" + str(
+            datetime.date.today()) + "_" + get_latest_firmware
+        instantiate_testrail.create_testrun(name=test_run_name, case_ids=list(TEST_CASES.values()), project_id=projId,
+                                            milestone_id=request.config.getini("milestone"),
+                                            description="Automated Nightly Sanity test run for new firmware build")
+        rid = instantiate_testrail.get_run_id(
+            test_run_name=request.config.getini("tr_prefix") + testrun_session + "_" + str(
+                datetime.date.today()) + "_" + get_latest_firmware)
+    yield rid
+
+
+"""
+Utility Fixtures
+"""
+
+
+@pytest.fixture(scope="session")
+def get_equipment_id(testrun_session):
+    yield NOLA[testrun_session]["equipment_id"]
+
+
+@pytest.fixture(scope="session")
+def get_latest_firmware(testrun_session, instantiate_firmware):
+    try:
+        latest_firmware = instantiate_firmware.get_latest_fw_version(testrun_session)
+    except:
+        latest_firmware = False
+    yield latest_firmware
+
+
+@pytest.fixture(scope="session")
+def check_ap_firmware_ssh(request, testrun_session):
+    try:
+        ap_ssh = APNOS(APNOS_CREDENTIAL_DATA)
+        active_fw = ap_ssh.get_active_firmware()
+    except Exception as e:
+        active_fw = False
+    yield active_fw
+
+
+@pytest.fixture(scope="session")
+def check_ap_firmware_cloud(instantiate_cloudsdk, get_equipment_id):
+    yield instantiate_cloudsdk.get_ap_firmware_old_method(equipment_id=get_equipment_id)
+
+
+@pytest.fixture(scope="function")
+def get_ap_manager_status():
+    ap_ssh = APNOS(APNOS_CREDENTIAL_DATA)
+    status = ap_ssh.get_manager_state()
+    if "ACTIVE" not in status:
+        time.sleep(30)
+        ap_ssh = APNOS(APNOS_CREDENTIAL_DATA)
+        status = ap_ssh.get_manager_state()
+    yield status
+
+
+@pytest.fixture(scope="session")
+def should_upload_firmware(request):
+    yield request.config.getoption("--force-upload")
+
+
+@pytest.fixture(scope="session")
+def should_upgrade_firmware(request):
+    yield request.config.getoption("--force-upgrade")
+
+
+@pytest.fixture(scope="session")
+def upload_firmware(should_upload_firmware, instantiate_firmware, get_latest_firmware):
+    firmware_id = instantiate_firmware.upload_fw_on_cloud(fw_version=get_latest_firmware,
+                                                          force_upload=should_upload_firmware)
+    yield firmware_id
+
+
+@pytest.fixture(scope="session")
+def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_firmware_cloud, get_latest_firmware,
+                     should_upgrade_firmware):
+    if get_latest_firmware != check_ap_firmware_cloud:
+        if request.config.getoption("--skip-upgrade"):
+            status = "skip-upgrade"
+        else:
+            status = instantiate_firmware.upgrade_fw(equipment_id=get_equipment_id, force_upload=False,
+                                                     force_upgrade=should_upgrade_firmware)
+    else:
+        if should_upgrade_firmware:
+            status = instantiate_firmware.upgrade_fw(equipment_id=get_equipment_id, force_upload=False,
+                                                     force_upgrade=should_upgrade_firmware)
+        else:
+            status = "skip-upgrade"
+    yield status
+
+
+@pytest.fixture(scope="session")
+def setup_profile_data(testrun_session):
+    profile_data = {}
+    for mode in "BRIDGE", "NAT", "VLAN":
+        profile_data[mode] = {}
+        for security in "OPEN", "WPA", "WPA2_P", "WPA2_E":
+            profile_data[mode][security] = {}
+            for radio in "2G", "5G":
+                profile_data[mode][security][radio] = {}
+                name_string = f"{'Sanity'}-{testrun_session}-{radio}_{security}_{mode}"
+                passkey_string = f"{radio}-{security}_{mode}"
+                profile_data[mode][security][radio]["profile_name"] = name_string
+                profile_data[mode][security][radio]["ssid_name"] = name_string
+                if mode == "VLAN":
+                    profile_data[mode][security][radio]["vlan"] = 100
+                else:
+                    profile_data[mode][security][radio]["vlan"] = 1
+                if mode != "NAT":
+                    profile_data[mode][security][radio]["mode"] = "BRIDGE"
+                else:
+                    profile_data[mode][security][radio]["mode"] = "NAT"
+                if security != "OPEN":
+                    profile_data[mode][security][radio]["security_key"] = passkey_string
+                else:
+                    profile_data[mode][security][radio]["security_key"] = "[BLANK]"
+    yield profile_data
+
+
+"""
+Profile Utility
+"""
+
+
+@pytest.fixture(scope="class")
+def reset_profile(instantiate_profile):
+    instantiate_profile.profile_creation_ids["ssid"] = []
+    yield True
+
+
+@pytest.fixture(scope="function")
+def cleanup_cloud_profiles(instantiate_cloudsdk):
+    profile_object = ProfileUtility(sdk_client=instantiate_cloudsdk)
+    yield profile_object.cleanup_profiles()
+
+
+@pytest.fixture(scope="session")
+def create_radius_profile(instantiate_profile, testrun_session):
+    radius_info = {
+        "name": testrun_session + "-RADIUS-Sanity",
+        "ip": RADIUS_SERVER_DATA["ip"],
+        "port": RADIUS_SERVER_DATA["port"],
+        "secret": RADIUS_SERVER_DATA["secret"]
+    }
+    instantiate_profile.delete_profile_by_name(radius_info["name"])
+    instantiate_profile.get_default_profiles()
+    profile_info = instantiate_profile.create_radius_profile(radius_info=radius_info)
+    yield profile_info
+
+
+@pytest.fixture(scope="session")
+def set_rf_profile(instantiate_profile):
+    try:
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.set_rf_profile()
+    except:
+        profile = False
+    yield profile
+
+
+"""
+BRIDGE MOde
+"""
+
+
+@pytest.fixture(scope="session")
+def create_wpa_ssid_2g_profile_bridge(instantiate_profile, setup_profile_data):
+    try:
+        profile_data = setup_profile_data["BRIDGE"]['WPA']['2G']
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.create_wpa_ssid_profile(profile_data=profile_data, fiveg=False)
+    except:
+        profile = False
+    yield profile
+
+
+@pytest.fixture(scope="session")
+def create_wpa_ssid_5g_profile_bridge(instantiate_profile, setup_profile_data):
+    try:
+        profile_data = setup_profile_data["BRIDGE"]['WPA']['5G']
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.create_wpa_ssid_profile(profile_data=profile_data, two4g=False)
+    except:
+        profile = False
+    yield profile
+
+
+@pytest.fixture(scope="session")
+def create_wpa2_p_ssid_2g_profile_bridge(instantiate_profile, setup_profile_data):
+    try:
+        profile_data = setup_profile_data["BRIDGE"]['WPA2_P']['2G']
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.create_wpa2_personal_ssid_profile(profile_data=profile_data, fiveg=False)
+    except:
+        profile = False
+    yield profile
+
+
+@pytest.fixture(scope="session")
+def create_wpa2_p_ssid_5g_profile_bridge(instantiate_profile, setup_profile_data):
+    try:
+        profile_data = setup_profile_data["BRIDGE"]['WPA2_P']['5G']
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.create_wpa2_personal_ssid_profile(profile_data=profile_data, two4g=False)
+    except:
+        profile = False
+    yield profile
+
+
+@pytest.fixture(scope="session")
+def create_wpa2_e_ssid_2g_profile_bridge(instantiate_profile, setup_profile_data):
+    try:
+        profile_data = setup_profile_data["BRIDGE"]['WPA2_E']['2G']
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, fiveg=False)
+    except Exception as e:
+        # (e)
+        profile = False
+    yield profile
+
+
+@pytest.fixture(scope="session")
+def create_wpa2_e_ssid_5g_profile_bridge(instantiate_profile, setup_profile_data):
+    try:
+        profile_data = setup_profile_data["BRIDGE"]['WPA2_E']['5G']
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, two4g=False)
+    except Exception as e:
+        # (e)
+        profile = False
+    yield profile
+
+
+"""
+NAT MOde
+"""
+
+
+@pytest.fixture(scope="session")
+def create_wpa_ssid_2g_profile_nat(instantiate_profile, setup_profile_data):
+    try:
+        profile_data = setup_profile_data["NAT"]['WPA']['2G']
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.create_wpa_ssid_profile(profile_data=profile_data, fiveg=False)
+    except:
+        profile = False
+    yield profile
+
+
+@pytest.fixture(scope="session")
+def create_wpa_ssid_5g_profile_nat(instantiate_profile, setup_profile_data):
+    try:
+        profile_data = setup_profile_data["NAT"]['WPA']['5G']
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.create_wpa_ssid_profile(profile_data=profile_data, two4g=False)
+    except:
+        profile = False
+    yield profile
+
+
+@pytest.fixture(scope="session")
+def create_wpa2_p_ssid_2g_profile_nat(instantiate_profile, setup_profile_data):
+    try:
+        profile_data = setup_profile_data["NAT"]['WPA2_P']['2G']
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.create_wpa2_personal_ssid_profile(profile_data=profile_data, fiveg=False)
+    except:
+        profile = False
+    yield profile
+
+
+@pytest.fixture(scope="session")
+def create_wpa2_p_ssid_5g_profile_nat(instantiate_profile, setup_profile_data):
+    try:
+        profile_data = setup_profile_data["NAT"]['WPA2_P']['5G']
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.create_wpa2_personal_ssid_profile(profile_data=profile_data, two4g=False)
+    except:
+        profile = False
+    yield profile
+
+
+@pytest.fixture(scope="session")
+def create_wpa2_e_ssid_2g_profile_nat(instantiate_profile, setup_profile_data):
+    try:
+        profile_data = setup_profile_data["NAT"]['WPA2_E']['2G']
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, fiveg=False)
+    except:
+        profile = False
+    yield profile
+
+
+@pytest.fixture(scope="session")
+def create_wpa2_e_ssid_5g_profile_nat(instantiate_profile, setup_profile_data):
+    try:
+        profile_data = setup_profile_data["NAT"]['WPA2_E']['5G']
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, two4g=False)
+    except:
+        profile = False
+    yield profile
+
+
+"""
+VLAN MOde
+"""
+
+
+@pytest.fixture(scope="session")
+def create_wpa_ssid_2g_profile_vlan(instantiate_profile, setup_profile_data):
+    try:
+        profile_data = setup_profile_data["VLAN"]['WPA']['2G']
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.create_wpa_ssid_profile(profile_data=profile_data, fiveg=False)
+    except:
+        profile = False
+    yield profile
+
+
+@pytest.fixture(scope="session")
+def create_wpa_ssid_5g_profile_vlan(instantiate_profile, setup_profile_data):
+    try:
+        profile_data = setup_profile_data["VLAN"]['WPA']['5G']
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.create_wpa_ssid_profile(profile_data=profile_data, two4g=False)
+    except:
+        profile = False
+    yield profile
+
+
+@pytest.fixture(scope="session")
+def create_wpa2_p_ssid_2g_profile_vlan(instantiate_profile, setup_profile_data):
+    try:
+        profile_data = setup_profile_data["VLAN"]['WPA2_P']['2G']
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.create_wpa2_personal_ssid_profile(profile_data=profile_data, fiveg=False)
+    except:
+        profile = False
+    yield profile
+
+
+@pytest.fixture(scope="session")
+def create_wpa2_p_ssid_5g_profile_vlan(instantiate_profile, setup_profile_data):
+    try:
+        profile_data = setup_profile_data["VLAN"]['WPA2_P']['5G']
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.create_wpa2_personal_ssid_profile(profile_data=profile_data, two4g=False)
+    except:
+        profile = False
+    yield profile
+
+
+@pytest.fixture(scope="session")
+def create_wpa2_e_ssid_2g_profile_vlan(instantiate_profile, setup_profile_data):
+    try:
+        profile_data = setup_profile_data["VLAN"]['WPA2_E']['2G']
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, fiveg=False)
+    except:
+        profile = False
+    yield profile
+
+
+@pytest.fixture(scope="session")
+def create_wpa2_e_ssid_5g_profile_vlan(instantiate_profile, setup_profile_data):
+    try:
+        profile_data = setup_profile_data["VLAN"]['WPA2_E']['5G']
+        instantiate_profile.get_default_profiles()
+        profile = instantiate_profile.create_wpa2_enterprise_ssid_profile(profile_data=profile_data, two4g=False)
+    except:
+        profile = False
+    yield profile
+
+
+@pytest.fixture(scope="session")
+def create_ap_profile_bridge(instantiate_profile, testrun_session):
+    try:
+        profile_data = {
+            "profile_name": "%s-%s-%s" % ("Sanity", testrun_session, 'BRIDGE'),
+        }
+        profile_obj = instantiate_profile.set_ap_profile(profile_data=profile_data)
+    except Exception as e:
+        profile_obj = e
+    print(profile_obj)
+    yield profile_obj
+
+
+@pytest.fixture(scope="session")
+def create_ap_profile_nat(instantiate_profile, testrun_session):
+    profile_data = {
+        "profile_name": "%s-%s-%s" % ("Sanity", testrun_session, 'NAT'),
+    }
+    profile_obj = instantiate_profile.set_ap_profile(profile_data=profile_data)
+    yield profile_obj
+
+
+@pytest.fixture(scope="session")
+def create_ap_profile_vlan(instantiate_profile, testrun_session):
+    profile_data = {
+        "profile_name": "%s-%s-%s" % ("Sanity", testrun_session, 'VLAN'),
+    }
+    profile_obj = instantiate_profile.set_ap_profile(profile_data=profile_data)
+    yield profile_obj
+
+
+@pytest.fixture(scope="function")
+def get_current_profile_cloud(instantiate_profile):
+    ssid_names = []
+    print(instantiate_profile.profile_creation_ids["ssid"])
+    for i in instantiate_profile.profile_creation_ids["ssid"]:
+        ssid_names.append(instantiate_profile.get_ssid_name_by_profile_id(profile_id=i))
+
+    yield ssid_names
+
+
+"""
+Profile Push Fixtures
+"""
+
+
+@pytest.fixture(scope="function")
+def push_profile(instantiate_profile, get_equipment_id, setup_profile_data):
+    try:
+        instantiate_profile.push_profile_old_method(equipment_id=get_equipment_id)
+        status = True
+    except Exception as e:
+        status = False
+
+    yield status
+
+
+@pytest.fixture(scope="function")
+def get_lanforge_data(request):
+    lanforge_data = {
+        "lanforge_ip": request.config.getini("lanforge-ip-address"),
+        "lanforge-port-number": request.config.getini("lanforge-port-number"),
+        "lanforge_2dot4g": request.config.getini("lanforge-2dot4g-radio"),
+        "lanforge_5g": request.config.getini("lanforge-5g-radio"),
+        "lanforge_2dot4g_prefix": request.config.getini("lanforge-2dot4g-prefix"),
+        "lanforge_5g_prefix": request.config.getini("lanforge-5g-prefix"),
+        "lanforge_2dot4g_station": request.config.getini("lanforge-2dot4g-station"),
+        "lanforge_5g_station": request.config.getini("lanforge-5g-station"),
+        "lanforge_bridge_port": request.config.getini("lanforge-bridge-port"),
+        "lanforge_vlan_port": "eth1.100",
+        "vlan": 100
+    }
+    yield lanforge_data
+
+
+@pytest.fixture(scope="function")
+def update_ssid(request, instantiate_profile, setup_profile_data):
+    requested_profile = str(request.param).replace(" ","").split(",")
+    profile = setup_profile_data[requested_profile[0]][requested_profile[1]][requested_profile[2]]
+    status = instantiate_profile.update_ssid_name(profile_name=profile["profile_name"], new_profile_name=requested_profile[3])
+    setup_profile_data[requested_profile[0]][requested_profile[1]][requested_profile[2]]["profile_name"] = requested_profile[3]
+    setup_profile_data[requested_profile[0]][requested_profile[1]][requested_profile[2]]["ssid_name"] = requested_profile[3]
+    time.sleep(90)
+    yield status
