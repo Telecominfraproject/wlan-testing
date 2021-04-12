@@ -5,7 +5,7 @@ About: It contains some Functional Unit Tests for CloudSDK and to run and test t
 import pytest
 import sys
 
-if 'cloudsdk_tests' not in sys.path:
+if 'cloud_controller_tests' not in sys.path:
     sys.path.append(f'../../libs/cloudsdk')
 from cloudsdk import CloudSDK
 from configuration_data import TEST_CASES

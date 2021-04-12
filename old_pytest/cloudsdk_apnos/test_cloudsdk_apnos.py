@@ -6,7 +6,7 @@ import sys
 if 'apnos' not in sys.path:
     sys.path.append(f'../libs/apnos')
 
-if 'cloudsdk_tests' not in sys.path:
+if 'cloud_controller_tests' not in sys.path:
     sys.path.append(f'../../libs/cloudsdk')
 from cloudsdk import CloudSDK
 from configuration_data import TEST_CASES
