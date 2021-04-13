@@ -61,14 +61,14 @@ class ConfigureCloudSDK:
 
 
 """
-    Library for cloudsdk_tests generic usages, it instantiate the bearer and credentials.
+    Library for cloud_controller_tests generic usages, it instantiate the bearer and credentials.
     It provides the connectivity to the cloud.
 """
 
 
 class CloudSDK(ConfigureCloudSDK):
     """
-    constructor for cloudsdk_tests library : can be used from pytest framework
+    constructor for cloud_controller_tests library : can be used from pytest framework
     """
 
     def __init__(self, testbed=None, customer_id=None):

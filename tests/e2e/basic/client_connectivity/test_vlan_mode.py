@@ -215,6 +215,7 @@ class TestVlanModeClientConnectivity(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
+    @pytest.mark.radius
     def test_client_wpa2_enterprise_2g(self, request, get_lanforge_data, setup_profile_data, instantiate_project, instantiate_testrail):
         profile_data = setup_profile_data["VLAN"]["WPA2_E"]["2G"]
         station_names = []
@@ -262,6 +263,7 @@ class TestVlanModeClientConnectivity(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
+    @pytest.mark.radius
     def test_client_wpa2_enterprise_5g(self, request, get_lanforge_data, setup_profile_data, instantiate_project, instantiate_testrail):
         profile_data = setup_profile_data["VLAN"]["WPA2_E"]["5G"]
         station_names = []

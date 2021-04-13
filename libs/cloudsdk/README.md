@@ -35,27 +35,27 @@ Now your cloud sdk code is downloaded with all of the dependencies and you can s
 Alternatively you can use provided dockerfiles to develop\lint your code:
 
 ```shell
-docker build -t wlan-cloud-test -f dockerfile .
-docker build -t wlan-cloud-lint -f dockerfile-lint .
+docker build -t wlan-cloud-test -f Dockerfile .
+docker build -t wlan-cloud-lint -f Dockerfile-lint .
 ```
 
 and then you can do something like this to lint your code:
 
 ```shell
-docker run -it --rm -v %path_to_this_dir%/tests wlan-tip-lint -d protected-access *py # for now
-docker run -it --rm -v %path_to_this_dir%/tests wlan-tip-lint *py # for future
+docker run -it --rm -v %path_to_this_dir%/old_pytest wlan-tip-lint -d protected-access *py # for now
+docker run -it --rm -v %path_to_this_dir%/old_pytest wlan-tip-lint *py # for future
 ```
 
 to have a better output (sorted by line numbers) you can do something like this:
 
 ```shell
-docker run -it --rm --entrypoint sh -v %path_to_this_dir%/tests wlan-tip-lint -- -c 'pylint *py | sort -t ":" -k 2,2n'
+docker run -it --rm --entrypoint sh -v %path_to_this_dir%/old_pytest wlan-tip-lint -- -c 'pylint *py | sort -t ":" -k 2,2n'
 ```
 
 and you can use something like this to develop your code:
 
 ```shell
-docker run -it -v %path_to_this_dir%/tests wlan-tip-test
+docker run -it -v %path_to_this_dir%/old_pytest wlan-tip-test
 ```
 
 ### General guidelines

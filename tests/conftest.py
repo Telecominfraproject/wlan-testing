@@ -26,6 +26,7 @@ import logging
 from configuration import APNOS_CREDENTIAL_DATA
 from configuration import RADIUS_SERVER_DATA
 from configuration import TEST_CASES
+from configuration import Controller
 from configuration import NOLA
 from testrail_api import APIClient
 from reporting import Reporting
@@ -138,23 +139,84 @@ Instantiate Objects for Test session
 
 
 @pytest.fixture(scope="session")
-def instantiate_cloudsdk(testrun_session):
+def instantiate_cloudsdk(request, testrun_session):
     try:
-        sdk_client = CloudSDK(testbed=NOLA[testrun_session]["cloudsdk_url"],
-                              customer_id=NOLA[testrun_session]["customer_id"])
+        sdk_client = CloudSDK(testbed=Controller["url"],
+                              customer_id=2)
+
+        def teardown_session():
+            print("\nTest session Completed")
+            sdk_client.disconnect_cloudsdk()
+
+        request.addfinalizer(teardown_session)
     except Exception as e:
         print(e)
         sdk_client = False
     yield sdk_client
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="class")
 def instantiate_profile(instantiate_cloudsdk):
     try:
         profile_object = ProfileUtility(sdk_client=instantiate_cloudsdk)
     except:
         profile_object = False
     yield profile_object
+
+
+@pytest.fixture(scope="session")
+def instantiate_testrail(request):
+    if request.config.getoption("--skip-testrail"):
+        tr_client = Reporting()
+    else:
+        tr_client = APIClient(request.config.getini("tr_url"), request.config.getini("tr_user"),
+                              request.config.getini("tr_pass"), request.config.getini("tr_project_id"))
+    yield tr_client
+
+
+@pytest.fixture(scope="session")
+def instantiate_firmware(instantiate_cloudsdk, instantiate_jFrog):
+    try:
+        firmware_client = FirmwareUtility(jfrog_credentials=instantiate_jFrog, sdk_client=instantiate_cloudsdk)
+    except:
+        firmware_client = False
+    yield firmware_client
+
+
+@pytest.fixture(scope="session")
+def instantiate_jFrog(request):
+    jfrog_cred = {
+        "user": request.config.getini("jfrog-user-id"),
+        "password": request.config.getini("jfrog-user-password")
+    }
+    yield jfrog_cred
+
+
+@pytest.fixture(scope="session")
+def instantiate_project(request, instantiate_testrail, testrun_session, get_latest_firmware):
+    if request.config.getoption("--skip-testrail"):
+        rid = "skip testrails"
+    else:
+        projId = instantiate_testrail.get_project_id(project_name=request.config.getini("tr_project_id"))
+        test_run_name = request.config.getini("tr_prefix") + testrun_session + "_" + str(
+            datetime.date.today()) + "_" + get_latest_firmware
+        instantiate_testrail.create_testrun(name=test_run_name, case_ids=list(TEST_CASES.values()), project_id=projId,
+                                            milestone_id=request.config.getini("milestone"),
+                                            description="Automated Nightly Sanity test run for new firmware build")
+        rid = instantiate_testrail.get_run_id(
+            test_run_name=request.config.getini("tr_prefix") + testrun_session + "_" + str(
+                datetime.date.today()) + "_" + get_latest_firmware)
+    yield rid
+
+
+@pytest.fixture(scope="session")
+def setup_lanforge(request):
+    yield True
+
+
+@pytest.fixture(scope="session")
+def setup_perfecto_devices(request):
+    yield True
 
 
 @pytest.fixture(scope="session")
@@ -216,9 +278,39 @@ def get_equipment_id(testrun_session):
 
 
 @pytest.fixture(scope="class")
-def setup_profiles(create_profiles, instantiate_profile, get_equipment_id):
+def get_current_profile_cloud(instantiate_profile):
+    ssid_names = []
+    print(instantiate_profile.profile_creation_ids["ssid"])
+    for i in instantiate_profile.profile_creation_ids["ssid"]:
+        ssid_names.append(instantiate_profile.get_ssid_name_by_profile_id(profile_id=i))
+    yield ssid_names
+
+
+@pytest.fixture(scope="class")
+def setup_profiles(create_profiles, instantiate_profile, get_equipment_id, get_current_profile_cloud):
     instantiate_profile.push_profile_old_method(equipment_id=get_equipment_id)
     print(create_profiles)
+    ap_ssh = APNOS(APNOS_CREDENTIAL_DATA)
+    get_current_profile_cloud.sort()
+    for i in range(0, 18):
+        vif_config = list(ap_ssh.get_vif_config_ssids())
+        vif_config.sort()
+        print(vif_config)
+        print(get_current_profile_cloud)
+        if get_current_profile_cloud == vif_config:
+            break
+        time.sleep(10)
+    ap_ssh = APNOS(APNOS_CREDENTIAL_DATA)
+    for i in range(0, 18):
+        vif_state = list(ap_ssh.get_vif_state_ssids())
+        vif_state.sort()
+        vif_config = list(ap_ssh.get_vif_config_ssids())
+        vif_config.sort()
+        print(vif_config)
+        print(vif_state)
+        if vif_state == vif_config:
+            break
+        time.sleep(10)
     yield "set(markers)"
 
 
@@ -226,7 +318,12 @@ def setup_profiles(create_profiles, instantiate_profile, get_equipment_id):
 def create_profiles(request, get_security_flags, get_markers, instantiate_profile, setup_profile_data):
     profile_id = {"ssid": [], "rf": None, "radius": None, "equipment_ap": None}
     mode = str(request._parent_request.param)
-    instantiate_profile.cleanup_profiles()
+    instantiate_profile.delete_profile_by_name(profile_name="Equipment-AP-" + mode)
+    for i in setup_profile_data[mode]:
+        for j in setup_profile_data[mode][i]:
+            instantiate_profile.delete_profile_by_name(
+                profile_name=setup_profile_data[mode][i][j]['profile_name'])
+    instantiate_profile.delete_profile_by_name(profile_name="Automation-Radius-Profile-" + mode)
     instantiate_profile.get_default_profiles()
     # if get_markers["wifi5"]:
     #     # Create Radius Profile
@@ -239,7 +336,7 @@ def create_profiles(request, get_security_flags, get_markers, instantiate_profil
     instantiate_profile.set_rf_profile()
     if get_markers["radius"]:
         radius_info = RADIUS_SERVER_DATA
-        radius_info["name"] = "Automation-Radius-Profile"
+        radius_info["name"] = "Automation-Radius-Profile-" + mode
         instantiate_profile.create_radius_profile(radius_info=radius_info)
     for i in get_security_flags:
         if get_markers[i] and i == "open":
@@ -289,3 +386,46 @@ def create_profiles(request, get_security_flags, get_markers, instantiate_profil
     }
     instantiate_profile.set_ap_profile(profile_data=profile_data)
     yield profile_id
+
+
+@pytest.fixture(scope="function")
+def get_lanforge_data(request):
+    lanforge_data = {
+        "lanforge_ip": request.config.getini("lanforge-ip-address"),
+        "lanforge-port-number": request.config.getini("lanforge-port-number"),
+        "lanforge_2dot4g": request.config.getini("lanforge-2dot4g-radio"),
+        "lanforge_5g": request.config.getini("lanforge-5g-radio"),
+        "lanforge_2dot4g_prefix": request.config.getini("lanforge-2dot4g-prefix"),
+        "lanforge_5g_prefix": request.config.getini("lanforge-5g-prefix"),
+        "lanforge_2dot4g_station": request.config.getini("lanforge-2dot4g-station"),
+        "lanforge_5g_station": request.config.getini("lanforge-5g-station"),
+        "lanforge_bridge_port": request.config.getini("lanforge-bridge-port"),
+        "lanforge_vlan_port": "eth1.100",
+        "vlan": 100
+    }
+    yield lanforge_data
+
+
+@pytest.fixture(scope="session")
+def get_latest_firmware(testrun_session, instantiate_firmware):
+    try:
+        latest_firmware = instantiate_firmware.get_latest_fw_version(testrun_session)
+    except:
+        latest_firmware = False
+    yield latest_firmware
+
+
+@pytest.fixture(scope="function")
+def update_ssid(request, instantiate_profile, setup_profile_data):
+    requested_profile = str(request.param).replace(" ", "").split(",")
+    profile = setup_profile_data[requested_profile[0]][requested_profile[1]][requested_profile[2]]
+    status = instantiate_profile.update_ssid_name(profile_name=profile["profile_name"],
+                                                  new_profile_name=requested_profile[3])
+    setup_profile_data[requested_profile[0]][requested_profile[1]][requested_profile[2]]["profile_name"] = \
+        requested_profile[3]
+    setup_profile_data[requested_profile[0]][requested_profile[1]][requested_profile[2]]["ssid_name"] = \
+        requested_profile[3]
+    time.sleep(90)
+    yield status
+
+
