@@ -12,7 +12,12 @@ APTTY=/dev/ttyAP1
 MODEL=ecw5410
 
 # cloud sdk profile dump
-./query_sdk.py --testrail-user-id NONE --model $MODEL --sdk-base-url https://$PORTAL --sdk-user-id support@example.com --sdk-user-password support --type profile --cmd get > /tmp/nola-$NOLANUM-profiles.txt
+./query_sdk.py --testrail-user-id NONE --model $MODEL --sdk-base-url https://$PORTAL --sdk-user-id support@example.com \
+   --sdk-user-password support --type profile --cmd get > /tmp/nola-$NOLANUM-profiles.txt
+
+# cloud version info
+./query_sdk.py --testrail-user-id NONE --model $MODEL --sdk-base-url https://$PORTAL --sdk-user-id support@example.com \
+   --sdk-user-password support --type ping > /tmp/nola-$NOLANUM-sdk-ping.txt
 
 # ovsdb-client dump
 ./query_ap.py --ap-jumphost-address localhost --ap-jumphost-port $APPORT --ap-jumphost-password pumpkin77 --ap-jumphost-tty $APTTY -m $MODEL --cmd "ovsdb-client dump" > /tmp/nola-$NOLANUM-ap.txt
@@ -20,6 +25,7 @@ MODEL=ecw5410
 # interface info
 ./query_ap.py --ap-jumphost-address localhost --ap-jumphost-port $APPORT --ap-jumphost-password pumpkin77 --ap-jumphost-tty $APTTY -m $MODEL --cmd "iwinfo && brctl show" > /tmp/nola-$NOLANUM-ap-if.txt
 
+
 # TODO:  Add more things here as we learn what better provides debug info to cloud.
 
-echo "Grab:  /tmp/nola-$NOLANUM-profiles.txt /tmp/nola-$NOLANUM-ap.txt /tmp/nola-$NOLANUM-ap-if.txt"
+echo "Grab:  /tmp/nola-$NOLANUM-profiles.txt /tmp/nola-$NOLANUM-ap.txt /tmp/nola-$NOLANUM-ap-if.txt /tmp/nola-$NOLANUM-sdk-ping.txt"

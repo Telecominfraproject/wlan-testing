@@ -88,7 +88,7 @@ if equipment_id == "-1":
     print("EQ Id: %s"%(eq_id))
 
     # Now, query equipment to find something that matches.
-    eq = cloud.get_customer_equipment(cloudSDK_url, bearer, customer_id)
+    eq = cloud.get_customer_equipment(customer_id)
     for item in eq:
         for e in item['items']:
             print(e['id'], "  ", e['inventoryId'])
@@ -96,7 +96,7 @@ if equipment_id == "-1":
                 print("Found equipment ID: %s  inventoryId: %s"%(e['id'], e['inventoryId']))
                 equipment_id = str(e['id'])
 
-if equipment_id == -1:
+if equipment_id == "-1":
     print("ERROR:  Could not find equipment-id.")
     sys.exit(1)
 
@@ -138,15 +138,12 @@ ap_image = command_line_args.ap_image
 
 apModel = model_id
 cloudModel = cloud_sdk_models[apModel]
+build = command_line_args.build_id  # ie, pending
+
 if not ap_image:
     # then get latest from jfrog
-    # print(cloudModel)
-    jfrog_url = 'https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/'
-    url = jfrog_url + apModel + "/dev/"
-    Build: GetBuild = GetBuild(jfrog_user, jfrog_pwd)
-    latest_image = Build.get_latest_image(url, build)
-    print(apModel, "Latest FW on jFrog:", latest_image)
-    ap_image = latest_image
+    Build: GetBuild = GetBuild(jfrog_user, jfrog_pwd, build)
+    ap_image = Build.get_latest_image(apModel)
 
 ##Get Bearer Token to make sure its valid (long tests can require re-auth)
 bearer = cloud.get_bearer(cloudSDK_url, cloud_type)
@@ -168,12 +165,13 @@ print('Current Active AP FW from CLI:', ap_cli_fw)
 
 ##Compare Latest and Current AP FW and Upgrade
 report_data = None
+key = None  # model name I think, if we are doing reporting?
 
-do_upgrade = cloud.should_upgrade_ap_fw(bearer, command_line_args, report_data, ap_image, fw_model, ap_cli_fw,
-                                        logger)
+do_upgrade = cloud.should_upgrade_ap_fw(command_line_args.force_upgrade, command_line_args.skip_upgrade,
+                                        report_data, ap_image, fw_model, ap_cli_fw, logger, key)
 
 cloudModel = cloud_sdk_models[model_id]
-pf = cloud.do_upgrade_ap_fw(bearer, command_line_args, report_data, test_cases, client,
+pf = cloud.do_upgrade_ap_fw(command_line_args, report_data, test_cases, client,
                             ap_image, cloudModel, model_id, jfrog_user, jfrog_pwd, rid,
                             customer_id, equipment_id, logger)
 
