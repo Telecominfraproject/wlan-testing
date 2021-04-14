@@ -1,5 +1,5 @@
 Controller = {
-    'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
+    'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
     'username': 'support@example.com',
     'password': 'support',
     'version': '1.0.0-SNAPSHOT',
@@ -24,7 +24,7 @@ AccessPoints = [
       'model': 'ecw5410',
       'serial number': 'serial-number',
       'jumphost': True,
-      'ip': "192.168.200.80",
+      'ip': "192.168.200.81",
       'username': "lanforge",
       'password': "lanforge",
       'port': 22,
@@ -35,7 +35,7 @@ AccessPoints = [
       'model': 'ecw5410',
       'serial number' : 'serial-number',
       'jumphost': True,
-      'ip': "192.168.200.80",
+      'ip': "192.168.200.81",
       'username': "lanforge",
       'password': "lanforge",
       'port': 22,
@@ -47,7 +47,7 @@ AccessPoints = [
 CLOUDSDK_VERSION = {}
 TrafficGenerator = {
     "lanforge": {
-        "ip": "192.168.200.80",
+        "ip": "192.168.200.81",
         "port": 8080,
         "2.4G-Radio": "wihpy0",
         "5G-Radio": "wiphy1",
@@ -71,7 +71,7 @@ RADIUS_SERVER_DATA = {
 
 LAB_INFO = {
     "ap_model": "ecw5410",
-    "cloudsdk_url": "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",
+    "cloudsdk_url": "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",
     "equipment_details": {
         "serial_number_1": {
             "ip": "",
@@ -91,7 +91,7 @@ LAB_INFO = {
 
 
 APNOS_CREDENTIAL_DATA = {
-    'ip': "192.168.200.80",
+    'ip': "192.168.200.81",
     'username': "lanforge",
     'password': "lanforge",
     'port': 22,
@@ -110,9 +110,9 @@ ssh tunnel --- localhost:8800
 NOLA = {
     # It is in NOLA-01 equipment 4 lab-ctlr minicom ap1
     "ecw5410": {
-        "cloudsdk_url": "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",
+        "cloudsdk_url": "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",
         "customer_id": 2,
-        "equipment_id": 24
+        "equipment_id": 21
     },
     "ecw5211": {
         "cloudsdk_url": "",

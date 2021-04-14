@@ -25,7 +25,9 @@ import time
 
 
 @pytest.mark.sanity
-@pytest.mark.bridge
+@pytest.mark.client_connectivity
+@pytest.mark.wifi5
+@pytest.mark.wifi6
 @pytest.mark.parametrize(
         'setup_profiles',
         (["BRIDGE"]),
@@ -36,6 +38,7 @@ class TestBridgeModeClientConnectivity(object):
 
     @pytest.mark.wpa
     @pytest.mark.twog
+    @pytest.mark.test_client_wpa_2g
     def test_client_wpa_2g(self, request, get_lanforge_data, setup_profile_data, instantiate_testrail,
                            instantiate_project):
         profile_data = setup_profile_data["BRIDGE"]["WPA"]["2G"]

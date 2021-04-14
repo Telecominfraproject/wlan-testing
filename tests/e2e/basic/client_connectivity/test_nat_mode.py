@@ -21,14 +21,18 @@ from sta_connect2 import StaConnect2
 import eap_connect
 from eap_connect import EAPConnect
 import time
+
+
 #
 
 @pytest.mark.sanity
 @pytest.mark.nat
+@pytest.mark.wifi5
+@pytest.mark.wifi6
 @pytest.mark.parametrize(
-        'setup_profiles',
-        (["NAT"]),
-        indirect=True
+    'setup_profiles',
+    (["NAT"]),
+    indirect=True
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestNatModeClientConnectivity(object):

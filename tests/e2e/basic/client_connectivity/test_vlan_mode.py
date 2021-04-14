@@ -24,6 +24,8 @@ import time
 
 @pytest.mark.sanity
 @pytest.mark.vlan
+@pytest.mark.wifi5
+@pytest.mark.wifi6
 @pytest.mark.parametrize(
         'setup_profiles',
         (["VLAN"]),

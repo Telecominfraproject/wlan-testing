@@ -27,9 +27,9 @@ All code must be written in python 3 and conform to PEP 8 style guide. The test 
 
 ## Proposed Directory Structure
 ```bash
-├── tests
+├── old_pytest
 ├── libs
-│   ├── cloudsdk_tests
+│   ├── cloud_controller_tests
 │   ├── apnos
 │   ├── lanforge
 │   ├── perfecto

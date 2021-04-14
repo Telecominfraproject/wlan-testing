@@ -155,7 +155,7 @@ def instantiate_cloudsdk(request, testrun_session):
     yield sdk_client
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="module")
 def instantiate_profile(instantiate_cloudsdk):
     try:
         profile_object = ProfileUtility(sdk_client=instantiate_cloudsdk)
@@ -261,6 +261,7 @@ def get_markers(request, get_security_flags):
     security_dict = dict().fromkeys(security)
     for item in session.items:
         for j in item.iter_markers():
+            print(j)
             markers.append(j.name)
     print(set(markers))
     for i in security:
@@ -277,7 +278,7 @@ def get_equipment_id(testrun_session):
     yield NOLA[testrun_session]["equipment_id"]
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="module")
 def get_current_profile_cloud(instantiate_profile):
     ssid_names = []
     print(instantiate_profile.profile_creation_ids["ssid"])
@@ -286,7 +287,7 @@ def get_current_profile_cloud(instantiate_profile):
     yield ssid_names
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="module")
 def setup_profiles(create_profiles, instantiate_profile, get_equipment_id, get_current_profile_cloud):
     instantiate_profile.push_profile_old_method(equipment_id=get_equipment_id)
     print(create_profiles)
@@ -314,7 +315,7 @@ def setup_profiles(create_profiles, instantiate_profile, get_equipment_id, get_c
     yield "set(markers)"
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="module")
 def create_profiles(request, get_security_flags, get_markers, instantiate_profile, setup_profile_data):
     profile_id = {"ssid": [], "rf": None, "radius": None, "equipment_ap": None}
     mode = str(request._parent_request.param)
