@@ -31,7 +31,7 @@ All code must be written in python 3 and conform to PEP 8 style guide. The test 
 ├── lanforge      - /* to be migrated */
 ├── libs
 │   ├── controller  -/* Library Support for controller part  */
-    │   ├── apnos   -/* Library Support for Access Points (uses AP SSH)  */
+    ├── apnos   -/* Library Support for Access Points (uses AP SSH)  */
 │   ├── lanforge    
 │   ├── perfecto    -/* Library Support for Perfecto Traffic Generator*/
 │   ├── testrails   -/* Result Visualization (will be depreciated )*/
