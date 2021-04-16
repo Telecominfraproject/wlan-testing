@@ -1,13 +1,12 @@
 import pytest
-from configuration import CLOUDSDK_VERSION
+from configuration import CONFIGURATION
 
 
 @pytest.mark.sdk_version_check
-def test_cloud_sdk_version(instantiate_cloudsdk):
+def test_cloud_sdk_version(instantiate_cloudsdk, testbed):
     try:
         response = instantiate_cloudsdk.portal_ping()
-        if CLOUDSDK_VERSION['project_version'] == response._project_version and \
-                CLOUDSDK_VERSION['commit_id'] == response._commit_id:
+        if CONFIGURATION[testbed]['controller']['version'] == response._project_version:
             PASS = True
         else:
             PASS = False
