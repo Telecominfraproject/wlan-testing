@@ -1,4 +1,5 @@
 import pytest
+pytestmark = [pytest.mark.client_connectivity_test, pytest.mark.vlan]
 import sys
 
 for folder in 'py-json', 'py-scripts':
@@ -27,11 +28,13 @@ import time
 @pytest.mark.wifi5
 @pytest.mark.wifi6
 @pytest.mark.parametrize(
-        'setup_profiles',
-        (["VLAN"]),
-        indirect=True
+    'setup_profiles, create_profiles',
+    [(["VLAN"], ["VLAN"])],
+    indirect=True,
+    scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("create_profiles")
 class TestVlanModeClientConnectivity(object):
 
     @pytest.mark.wpa

@@ -12,11 +12,18 @@ class TestConnection:
     def test_cloud_connectivity(self, instantiate_cloudsdk):
         assert instantiate_cloudsdk
 
-    def test_access_points_connectivity(self, instantiate_cloudsdk):
-        assert instantiate_cloudsdk
+    @pytest.mark.ap_conn
+    def test_access_points_connectivity(self, test_access_point):
+        PASS = True
+        if "ACTIVE" not in test_access_point:
+            PASS = False
+            import sys
+            sys.exit()
+        assert PASS
 
     def test_lanforge_connectivity(self, setup_lanforge):
         assert "instantiate_cloudsdk"
 
     def test_perfecto_connectivity(self, setup_perfecto_devices):
         assert "instantiate_cloudsdk"
+

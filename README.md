@@ -22,35 +22,51 @@ This project is built using python 3 and strongly recommends using virtualenv to
 
 ## Code style
 All code must be written in python 3 and conform to PEP 8 style guide. The test framework is built using pytest.  
+
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)   
 [![PEP8](https://img.shields.io/badge/code%20style-pep8-orange.svg)](https://www.python.org/dev/peps/pep-0008/)  
 
-## Proposed Directory Structure
+## Pytest Directory Structure
 ```bash
-├── old_pytest
+├── lanforge      - /* to be migrated */
 ├── libs
-│   ├── cloud_controller_tests
-│   ├── apnos
-│   ├── lanforge
-│   ├── perfecto
-│   ├── <future>
-├── tools
-├── docker
-├── pytest          - /* to be migrated */
-├── CICD_AP_CLOUSDK - /* to be migrated */
-├── cicd            - /* to be migrated */
-├── lanforge        - /* under cleanup consideration */
-├── testbeds        - /* under cleanup consideration */
-├── unit_tests      - /* to be migrated */
+│   ├── controller  -/* Library Support for controller part  */
+    │   ├── apnos   -/* Library Support for Access Points (uses AP SSH)  */
+│   ├── lanforge    
+│   ├── perfecto    -/* Library Support for Perfecto Traffic Generator*/
+│   ├── testrails   -/* Result Visualization (will be depreciated )*/
+├── tests            - /* Pytest cases Directory */
+│   ├── _basic_test_setup
+│   ├── access_point
+│   ├── controller
+│   ├── e2e
+      ├── advanced
+      ├── basic
+      ├── interOp
+      ├── mdu
+      |── mesh
+      |── scale
+    |── README.md  - /* Pytest framework and setup instructions */
+```
+
+## BASIC SETUP
+
+wlan-testing requires a sync with wlan-lanforge-scripts
+So we have sync_repos.bash, that can do that
+
+```bash
+
+git clone https://github.com/Telecominfraproject/wlan-lanforge-scripts
+Make sure this structure exists
+├── wlan-lanforge-scripts
+├── wlan-testing
+
+./sync_repos.bash
 ```
 
 ## TO DO
-- [x] Pytest proof of concept
-- [ ] Pytest documentation
-- [x] Dockerized test framework PoC
-- [x] Github nightly trigger - PoC
-- [ ] Deprecate uni_tests script and move methods into pytest Directory
-- [ ] Move Java Selenium to python/Selenium
-- [ ] Deprecate cicd scripts and move to Pytest
-- [ ] lanforge needs to be ingested as python module
-- [ ] testbeds cleanup based on Lab Orchestration
+- [x] Pytest documentation
+- [ ] Dockerized test framework PoC
+- [ ] Github nightly trigger - PoC
+- [x] lanforge needs to be ingested as python module
+- [x] testbeds cleanup based on Lab Orchestration

@@ -1,152 +1,137 @@
-Controller = {
-    'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
-    'username': 'support@example.com',
-    'password': 'support',
-    'version': '1.0.0-SNAPSHOT',
-    'commit_date': '2021-03-01'
+
+
+CONFIGURATION = {
+   "nola-ext-03":  {
+        "controller": {
+            'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
+            'username': 'support@example.com',
+            'password': 'support',
+            'version': '1.0.0-SNAPSHOT',
+            'commit_date': '2021-03-01'
+        },
+        'access_point': [
+            {
+                'model': 'ecw5410',
+                'serial': '903cb3944857',
+                'jumphost': True,
+                'ip': "192.168.200.80",
+                'username': "lanforge",
+                'password': "lanforge",
+                'port': 22,
+                'jumphost_tty': '/dev/ttyAP1',
+                'version': "version"
+            }
+        ],
+        "traffic_generator":  {
+            "name": "lanforge",
+            "details": {
+                "ip": "localhost",
+                "port": 8080,
+                "2.4G-Radio": ["wiphy0"],
+                "5G-Radio": ["wiphy1"],
+                "AX-Radio": ["wiphy2"],
+                "upstream": "eth1",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan1",
+                "AX-Station-Name": "ax",
+            }
+        }
+    },
+   "nola-ext-04":  {
+        "controller": {
+            'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
+            'username': 'support@example.com',
+            'password': 'support',
+            'version': '1.0.0-SNAPSHOT',
+            'commit_date': '2021-03-01'
+        },
+        'access_point': [
+            {
+                'model': 'ecw5410',
+                'serial': '903cb394486f',
+                'jumphost': True,
+                'ip': "192.168.200.81",
+                'username': "lanforge",
+                'password': "lanforge",
+                'port': 22,
+                'jumphost_tty': '/dev/ttyAP1',
+                'version': "version"
+            }
+        ],
+        "traffic_generator":  {
+            "name": "lanforge",
+            "details": {
+                "ip": "192.168.200.81",
+                "port": 8080,
+                "2.4G-Radio": ["wiphy0"],
+                "5G-Radio": ["wiphy1"],
+                "AX-Radio": ["wiphy2"],
+                "upstream": "eth1",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan1",
+                "AX-Station-Name": "ax",
+            }
+        }
+    },
+   "nola-ext-05":  {
+        "controller": {
+            'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
+            'username': 'support@example.com',
+            'password': 'support',
+            'version': '1.0.0-SNAPSHOT',
+            'commit_date': '2021-03-01'
+        },
+        'access_point': [
+            {
+                'model': 'ecw5410',
+                'serial': '903cb3944817',
+                'jumphost': True,
+                'ip': "192.168.200.82",
+                'username': "lanforge",
+                'password': "lanforge",
+                'port': 22,
+                'jumphost_tty': '/dev/ttyAP1',
+                'version': "version"
+            }
+        ],
+        "traffic_generator":  {
+            "name": "lanforge",
+            "details": {
+                "ip": "192.168.200.82",
+                "port": 8080,
+                "2.4G-Radio": ["wiphy0"],
+                "5G-Radio": ["wiphy1"],
+                "AX-Radio": ["wiphy2"],
+                "upstream": "eth1",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan1",
+                "AX-Station-Name": "ax",
+            }
+        }
+    }
+
 }
 
-LabController = [
-    {
-        'ip': "ip address of the controller",
-        'Username': "<username>",
-        'Password': "<password>"
-    },
-    {
-        'ip': "ip address of the controller",
-        'Username': "<username>",
-        'Password': "<password>"
-    }
-]
 
-AccessPoints = [
-    {
-      'model': 'ecw5410',
-      'serial number': 'serial-number',
-      'jumphost': True,
-      'ip': "192.168.200.81",
-      'username': "lanforge",
-      'password': "lanforge",
-      'port': 22,
-      'jumphost_tty': '/dev/ttyAP1',
-      'version': "version"
-    },
-    {
-      'model': 'ecw5410',
-      'serial number' : 'serial-number',
-      'jumphost': True,
-      'ip': "192.168.200.81",
-      'username': "lanforge",
-      'password': "lanforge",
-      'port': 22,
-      'jumphost_tty': '/dev/ttyAP1',
-      'version': "version"
-    }
-]
+FIRMWARE = {
+    # jFrog parameters
+    "JFROG":
+        {
+            "jfrog-base-url": "https://tip.jFrog.io/artifactory/tip-wlan-ap-firmware",
+            "username": "tip-read",
+            "password": "tip-read",
+            "build": "pending",
+            "branch": "dev"
+        }
 
-CLOUDSDK_VERSION = {}
-TrafficGenerator = {
-    "lanforge": {
-        "ip": "192.168.200.81",
-        "port": 8080,
-        "2.4G-Radio": "wihpy0",
-        "5G-Radio": "wiphy1",
-        "AX-Radio": "wiphy2",
-        "upstream": "eth1",
-        "2.4G-Station-Name": "two",
-        "5G-Station-Name": "five",
-        "AX-Station-Name": "ax",
-    },
-    "perfecto": {
-
-    }
 }
 
 RADIUS_SERVER_DATA = {
     "ip": "192.168.200.75",
     "port": 1812,
-    "secret": "testing123"
-}
-
-
-LAB_INFO = {
-    "ap_model": "ecw5410",
-    "cloudsdk_url": "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",
-    "equipment_details": {
-        "serial_number_1": {
-            "ip": "",
-            "firmware_ver": ""
-
-        },
-        "serial_number_2": {
-            "ip": "",
-            "firmware_ver": ""
-        },
-        "serial_number_3": {
-            "ip": "",
-            "firmware_ver": ""
-        }
-    }
-}
-
-
-APNOS_CREDENTIAL_DATA = {
-    'ip': "192.168.200.81",
-    'username': "lanforge",
-    'password': "lanforge",
-    'port': 22,
-    'mode': 1,
-    'jumphost_tty': '/dev/ttyAP1',
-
-}
-
-"""
-AP --- ssh
-
-ssh tunnel --- localhost:8800
-
-"""
-
-NOLA = {
-    # It is in NOLA-01 equipment 4 lab-ctlr minicom ap1
-    "ecw5410": {
-        "cloudsdk_url": "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",
-        "customer_id": 2,
-        "equipment_id": 21
-    },
-    "ecw5211": {
-        "cloudsdk_url": "",
-        "customer_id": 2,
-        "equipment_id": ""
-    },
-    # WORKS     # NOLA -03 lab-ctlr minicom ap3, lf4
-    "ec420": {
-        "cloudsdk_url": "http://wlan-ui.nola-qa.lab.wlan.tip.build",
-        "customer_id": 2,
-        "equipment_id": 7
-    },
-    "wf194c": {
-        "cloudsdk_url": "",
-        "customer_id": 2,
-        "equipment_id": ""
-    },
-    # NOLA -01 lab-ctlr3 minicom ap3
-    "eap102": {
-        "cloudsdk_url": "http://wlan-ui.nola-qa.lab.wlan.tip.build",
-        "customer_id": 2,
-        "equipment_id": ""
-    },
-    # WORKS    # NOLA -02 lab-ctlr minicom ap2, lf2
-    "eap101": {
-        "cloudsdk_url": "http://wlan-ui.nola-qa.lab.wlan.tip.build",
-        "customer_id": 2,
-        "equipment_id": 8
-    },
-    "wf188n": {
-        "cloudsdk_url": "",
-        "customer_id": 2,
-        "equipment_id": ""
-    }
+    "secret": "testing123",
+    "user": "nolaradius",
+    "pk_password": "whatever"
 }
 
 TEST_CASES = {
@@ -206,12 +191,3 @@ TEST_CASES = {
     "nat_ssid_update": 8743,
     "vlan_ssid_update": 8744
 }
-
-
-"""
-orch
-    lab-ctlr
-    lab-ctlr2
-    lab-ctlr3
-    lab-ctlr4
-"""

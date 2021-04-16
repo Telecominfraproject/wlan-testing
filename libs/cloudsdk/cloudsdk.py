@@ -144,6 +144,12 @@ class CloudSDK(ConfigureCloudSDK):
     def request_firmware_update(self):
         pass
 
+    def get_equipment_id(self, serial_number=None):
+        equipment_data = self.get_equipment_by_customer_id(max_items=100)
+        for equipment in equipment_data:
+            if equipment._serial == serial_number:
+                return equipment._id
+
     def get_model_name(self, equipment_id=None):
         if equipment_id is None:
             return None
@@ -640,14 +646,15 @@ class JFrogUtility:
     def __init__(self, credentials=None):
         if credentials is None:
             exit()
-        self.user = credentials["user"]
+        self.user = credentials["username"]
         self.password = credentials["password"]
-        self.jfrog_url = "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/"
-        self.build = "pending"
+        self.jfrog_url = credentials["jfrog-base-url"]
+        self.build = credentials["build"]
+        self.branch = credentials["branch"]
         ssl._create_default_https_context = ssl._create_unverified_context
 
     def get_latest_build(self, model=None):
-        jfrog_url = self.jfrog_url + model + "/dev/"
+        jfrog_url = self.jfrog_url + "/" + model + "/" + self.branch + "/"
         auth = str(
             base64.b64encode(
                 bytes('%s:%s' % (self.user, self.password), 'utf-8')
@@ -735,8 +742,8 @@ class FirmwareUtility(JFrogUtility):
             try:
                 obj = self.equipment_gateway_client.request_firmware_update(equipment_id=equipment_id,
                                                                             firmware_version_id=firmware_id)
-                print("Request firmware upgrade Success! waiting for 100 sec")
-                time.sleep(100)
+                print("Request firmware upgrade Success! waiting for 300 sec")
+                time.sleep(300)
             except Exception as e:
                 obj = False
             return obj
@@ -759,9 +766,7 @@ class FirmwareUtility(JFrogUtility):
                 firmware_version_name=fw_version + ".tar.gz")
             firmware_version = firmware_version._id
             print("Firmware ID: ", firmware_version)
-        except Exception as e:
+        except:
             firmware_version = False
             print("firmware not available: ", firmware_version)
         return firmware_version
-
-

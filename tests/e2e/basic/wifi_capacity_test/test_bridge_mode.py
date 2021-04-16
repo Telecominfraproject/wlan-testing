@@ -1,7 +1,7 @@
 import pytest
 
 
-@pytest.mark.sanity
+# @pytest.mark.sanity
 @pytest.mark.wifi_capacity_test
 @pytest.mark.wifi5
 @pytest.mark.wifi6
