@@ -251,7 +251,7 @@ def get_latest_firmware(testbed, instantiate_firmware):
     except:
         latest_firmware = False
     yield latest_firmware
-`
+
 
 @pytest.fixture(scope="function")
 def check_ap_firmware_ssh(testbed):
