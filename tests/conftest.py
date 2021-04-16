@@ -179,7 +179,7 @@ def test_cases():
     yield TEST_CASES
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def test_access_point(testbed):
     ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
     status = ap_ssh.get_manager_state()
@@ -251,3 +251,20 @@ def get_latest_firmware(testbed, instantiate_firmware):
     except:
         latest_firmware = False
     yield latest_firmware
+`
+
+@pytest.fixture(scope="function")
+def check_ap_firmware_ssh(testbed):
+    try:
+        ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
+        active_fw = ap_ssh.get_active_firmware()
+        print(active_fw)
+    except Exception as e:
+        print(e)
+        active_fw = False
+    yield active_fw
+
+
+@pytest.fixture(scope="session")
+def radius_info():
+    yield RADIUS_SERVER_DATA

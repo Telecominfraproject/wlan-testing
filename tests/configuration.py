@@ -1,7 +1,7 @@
 
 
 CONFIGURATION = {
-   "nola-ext-03":  {
+   "ext-03":  {
         "controller": {
             'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
             'username': 'support@example.com',
@@ -37,7 +37,7 @@ CONFIGURATION = {
             }
         }
     },
-   "nola-ext-04":  {
+   "ext-04":  {
         "controller": {
             'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
             'username': 'support@example.com',
@@ -73,7 +73,7 @@ CONFIGURATION = {
             }
         }
     },
-   "nola-ext-05":  {
+   "ext-05":  {
         "controller": {
             'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
             'username': 'support@example.com',
@@ -131,6 +131,7 @@ RADIUS_SERVER_DATA = {
     "port": 1812,
     "secret": "testing123",
     "user": "nolaradius",
+    "password": "nolastart",
     "pk_password": "whatever"
 }
 

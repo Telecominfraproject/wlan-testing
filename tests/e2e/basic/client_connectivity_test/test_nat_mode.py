@@ -229,7 +229,7 @@ class TestNatModeClientConnectivity(object):
     @pytest.mark.twog
     @pytest.mark.radius
     def test_client_wpa2_enterprise_2g(self, request, get_lanforge_data, setup_profile_data, instantiate_project,
-                                       instantiate_testrail):
+                                       instantiate_testrail, radius_info):
         profile_data = setup_profile_data["NAT"]["WPA2_E"]["2G"]
         station_names = []
         for i in range(0, int(request.config.getini("num_stations"))):
@@ -244,8 +244,8 @@ class TestNatModeClientConnectivity(object):
         eap_connect.ssid = profile_data["ssid_name"]
         eap_connect.radio = get_lanforge_data["lanforge_2dot4g"]
         eap_connect.eap = "TTLS"
-        eap_connect.identity = "nolaradius"
-        eap_connect.ttls_passwd = "nolastart"
+        eap_connect.identity = radius_info["user"]
+        eap_connect.ttls_passwd = radius_info["password"]
         eap_connect.runtime_secs = 10
         eap_connect.setup()
         eap_connect.start()
@@ -278,7 +278,7 @@ class TestNatModeClientConnectivity(object):
     @pytest.mark.fiveg
     @pytest.mark.radius
     def test_client_wpa2_enterprise_5g(self, request, get_lanforge_data, setup_profile_data, instantiate_project,
-                                       instantiate_testrail):
+                                       instantiate_testrail, radius_info):
         profile_data = setup_profile_data["NAT"]["WPA2_E"]["5G"]
         station_names = []
         for i in range(0, int(request.config.getini("num_stations"))):
@@ -293,8 +293,8 @@ class TestNatModeClientConnectivity(object):
         eap_connect.ssid = profile_data["ssid_name"]
         eap_connect.radio = get_lanforge_data["lanforge_5g"]
         eap_connect.eap = "TTLS"
-        eap_connect.identity = "nolaradius"
-        eap_connect.ttls_passwd = "nolastart"
+        eap_connect.identity = radius_info["user"]
+        eap_connect.ttls_passwd = radius_info["password"]
         eap_connect.runtime_secs = 10
         eap_connect.setup()
         eap_connect.start()
