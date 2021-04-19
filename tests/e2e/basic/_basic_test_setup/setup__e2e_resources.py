@@ -1,3 +1,8 @@
+"""
+    Test Case Module:  setup test cases for basic test cases
+    Details:    Firmware Upgrade
+
+"""
 import pytest
 
 
@@ -24,6 +29,7 @@ class TestFirmware(object):
 
     @pytest.mark.firmware_upgrade
     def test_firmware_upgrade_request(self, upgrade_firmware, instantiate_testrail, instantiate_project, test_cases):
+        print()
         if not upgrade_firmware:
             instantiate_testrail.update_testrail(case_id=test_cases["upgrade_api"], run_id=instantiate_project,
                                                  status_id=0,
@@ -49,3 +55,22 @@ class TestFirmware(object):
                                                  msg='CLOUDSDK reporting correct firmware version.')
 
         assert get_latest_firmware == check_ap_firmware_cloud
+
+
+@pytest.mark.sanity
+@pytest.mark.bridge
+@pytest.mark.nat
+@pytest.mark.vlan
+@pytest.mark.check_active_firmware_ap
+def test_ap_firmware(check_ap_firmware_ssh, get_latest_firmware, instantiate_testrail, instantiate_project,
+                     test_cases):
+    if check_ap_firmware_ssh == get_latest_firmware:
+        instantiate_testrail.update_testrail(case_id=test_cases["ap_upgrade"], run_id=instantiate_project,
+                                             status_id=1,
+                                             msg='Upgrade to ' + get_latest_firmware + ' successful')
+    else:
+        instantiate_testrail.update_testrail(case_id=test_cases["ap_upgrade"], run_id=instantiate_project,
+                                             status_id=4,
+                                             msg='Cannot reach AP after upgrade to check CLI - re-test required')
+
+    assert check_ap_firmware_ssh == get_latest_firmware

@@ -1,6 +1,30 @@
-import pytest
+"""
+conftest.py : Contains fixtures that are specific to basic testbed environment
 
-import datetime
+Basic Test Scenario : 1 AP, 1 LANforge, 1 Controller Instance
+
+Includes:
+
+    Setup:
+        setup_profiles
+        create_profiles
+
+    Utilities:
+        update_ssid
+
+Information:
+    Setup Fixtures: Every Test case Needs to use setup fixtures
+                    Setup Fixtures can be customised for all different levels of execution:
+                        session level
+                        package level
+                        module level
+                        class level
+                        function level
+
+"""
+
+
+
 import sys
 import os
 import time
@@ -10,22 +34,22 @@ sys.path.append(
         os.path.realpath(__file__)
     )
 )
+if "libs" not in sys.path:
+    sys.path.append(f'../libs')
 
-if 'cloudsdk' not in sys.path:
-    sys.path.append(f'../libs/cloudsdk')
-if 'apnos' not in sys.path:
-    sys.path.append(f'../libs/apnos')
-if 'testrails' not in sys.path:
-    sys.path.append(f'../libs/testrails')
-
-from apnos import APNOS
-from cloudsdk import CloudSDK
-from cloudsdk import ProfileUtility
-from cloudsdk import FirmwareUtility
-
+from apnos.apnos import APNOS
+from controller.controller import Controller
+from controller.controller import ProfileUtility
+from controller.controller import FirmwareUtility
+import pytest
+import logging
 from configuration import RADIUS_SERVER_DATA
 from configuration import TEST_CASES
 from configuration import CONFIGURATION
+from configuration import FIRMWARE
+from testrails.testrail_api import APIClient
+from testrails.reporting import Reporting
+
 
 """
 Basic Setup Collector
@@ -46,27 +70,27 @@ def get_lanforge_data(testbed):
             "lanforge_2dot4g_station": CONFIGURATION[testbed]['traffic_generator']['details']['2.4G-Station-Name'],
             "lanforge_5g_station": CONFIGURATION[testbed]['traffic_generator']['details']['5G-Station-Name'],
             "lanforge_bridge_port": CONFIGURATION[testbed]['traffic_generator']['details']['upstream'],
-            "lanforge_vlan_port": "eth1.100",
+            "lanforge_vlan_port": CONFIGURATION[testbed]['traffic_generator']['details']['upstream'] + ".100",
             "vlan": 100
         }
     yield lanforge_data
 
 
 @pytest.fixture(scope="module")
-def instantiate_profile(instantiate_cloudsdk):
+def instantiate_profile(instantiate_controller):
     try:
-        profile_object = ProfileUtility(sdk_client=instantiate_cloudsdk)
+        profile_object = ProfileUtility(sdk_client=instantiate_controller)
     except:
         profile_object = False
     yield profile_object
 
 
 @pytest.fixture(scope="session")
-def get_equipment_id(instantiate_cloudsdk, testbed):
+def get_equipment_id(instantiate_controller, testbed):
     equipment_id = 0
-    if len(CONFIGURATION[testbed]['access_point']) == 1:
-        equipment_id = instantiate_cloudsdk.get_equipment_id(
-            serial_number=CONFIGURATION[testbed]['access_point'][0]['serial'])
+    if len(CONFIGURATION[testbed]['access_point_tests']) == 1:
+        equipment_id = instantiate_controller.get_equipment_id(
+            serial_number=CONFIGURATION[testbed]['access_point_tests'][0]['serial'])
     yield equipment_id
 
 
@@ -96,8 +120,8 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
 
 
 @pytest.fixture(scope="session")
-def check_ap_firmware_cloud(instantiate_cloudsdk, get_equipment_id):
-    yield instantiate_cloudsdk.get_ap_firmware_old_method(equipment_id=get_equipment_id)
+def check_ap_firmware_cloud(instantiate_controller, get_equipment_id):
+    yield instantiate_controller.get_ap_firmware_old_method(equipment_id=get_equipment_id)
 
 
 """
@@ -110,7 +134,6 @@ Profiles Related Fixtures
 @pytest.fixture(scope="module")
 def get_current_profile_cloud(instantiate_profile):
     ssid_names = []
-    # print(instantiate_profile.profile_creation_ids["ssid"])
     for i in instantiate_profile.profile_creation_ids["ssid"]:
         ssid_names.append(instantiate_profile.get_ssid_name_by_profile_id(profile_id=i))
     yield ssid_names
@@ -124,7 +147,7 @@ def setup_profiles(request, create_profiles, instantiate_profile, get_equipment_
         instantiate_profile.push_profile_old_method(equipment_id=get_equipment_id)
     except:
         print("failed to create AP Profile")
-    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
+    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point_tests'][0])
     get_current_profile_cloud.sort()
     # This loop will check the VIF Config with cloud profile
     for i in range(0, 18):
@@ -136,7 +159,7 @@ def setup_profiles(request, create_profiles, instantiate_profile, get_equipment_
             test_cases[mode + '_vifc'] = True
             break
         time.sleep(10)
-    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
+    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point_tests'][0])
     # This loop will check the VIF Config with VIF State
     for i in range(0, 18):
         vif_state = list(ap_ssh.get_vif_state_ssids())

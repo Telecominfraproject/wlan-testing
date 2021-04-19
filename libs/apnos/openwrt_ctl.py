@@ -79,8 +79,8 @@ def main():
     global prompt
 
     parser = argparse.ArgumentParser(description="OpenWrt AP Control Script")
-    parser.add_argument("-d", "--dest", type=str, help="address of the cisco controller")
-    parser.add_argument("-o", "--port", type=int, help="control port on the controller")
+    parser.add_argument("-d", "--dest", type=str, help="address of the cisco controller_tests")
+    parser.add_argument("-o", "--port", type=int, help="control port on the controller_tests")
     parser.add_argument("-u", "--user", type=str, help="credential login/username")
     parser.add_argument("-p", "--passwd", type=str, help="credential password")
     parser.add_argument("-P", "--prompt", type=str, help="Prompt to look for")

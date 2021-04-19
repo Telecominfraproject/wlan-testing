@@ -1,25 +1,29 @@
+"""
+    Test Case Module:  Client Connectivity Test
+    Mode:       NAT
+
+"""
+
 import pytest
-pytestmark = [pytest.mark.client_connectivity_test, pytest.mark.nat]
 import sys
+
+pytestmark = [pytest.mark.client_connectivity_test, pytest.mark.nat]
 
 for folder in 'py-json', 'py-scripts':
     if folder not in sys.path:
         sys.path.append(f'../lanforge/lanforge-scripts/{folder}')
 
-sys.path.append(f"../lanforge/lanforge-scripts/py-scripts/tip-cicd-something")
+sys.path.append(f"../lanforge/lanforge-scripts/py-scripts/tip-cicd-sanity")
 
 sys.path.append(f'../libs')
 sys.path.append(f'../libs/lanforge/')
 
 from LANforge.LFUtils import *
-from configuration import TEST_CASES
 
 if 'py-json' not in sys.path:
     sys.path.append('../py-scripts')
 
-import sta_connect2
 from sta_connect2 import StaConnect2
-import eap_connect
 from eap_connect import EAPConnect
 import time
 
@@ -43,7 +47,7 @@ class TestNatModeClientConnectivity(object):
     @pytest.mark.wpa
     @pytest.mark.twog
     def test_client_wpa_2g(self, request, get_lanforge_data, setup_profile_data, instantiate_testrail,
-                           instantiate_project):
+                           instantiate_project, test_cases):
         profile_data = setup_profile_data["NAT"]["WPA"]["2G"]
         station_names = []
         for i in range(0, int(request.config.getini("num_stations"))):
@@ -77,11 +81,11 @@ class TestNatModeClientConnectivity(object):
         # result = 'pass'
         print("Single Client Connectivity :", staConnect.passes)
         if staConnect.passes():
-            instantiate_testrail.update_testrail(case_id=TEST_CASES["2g_wpa_nat"], run_id=instantiate_project,
+            instantiate_testrail.update_testrail(case_id=test_cases["2g_wpa_nat"], run_id=instantiate_project,
                                                  status_id=1,
                                                  msg='2G WPA Client Connectivity Passed successfully - nat mode')
         else:
-            instantiate_testrail.update_testrail(case_id=TEST_CASES["2g_wpa_nat"], run_id=instantiate_project,
+            instantiate_testrail.update_testrail(case_id=test_cases["2g_wpa_nat"], run_id=instantiate_project,
                                                  status_id=5,
                                                  msg='2G WPA Client Connectivity Failed - nat mode')
         assert staConnect.passes()
@@ -90,7 +94,7 @@ class TestNatModeClientConnectivity(object):
     @pytest.mark.wpa
     @pytest.mark.fiveg
     def test_client_wpa_5g(self, request, get_lanforge_data, setup_profile_data, instantiate_project,
-                           instantiate_testrail):
+                           instantiate_testrail, test_cases):
         profile_data = setup_profile_data["NAT"]["WPA"]["5G"]
         station_names = []
         for i in range(0, int(request.config.getini("num_stations"))):
@@ -123,11 +127,11 @@ class TestNatModeClientConnectivity(object):
         # result = 'pass'
         print("Single Client Connectivity :", staConnect.passes)
         if staConnect.passes():
-            instantiate_testrail.update_testrail(case_id=TEST_CASES["5g_wpa_nat"], run_id=instantiate_project,
+            instantiate_testrail.update_testrail(case_id=test_cases["5g_wpa_nat"], run_id=instantiate_project,
                                                  status_id=1,
                                                  msg='5G WPA Client Connectivity Passed successfully - nat mode')
         else:
-            instantiate_testrail.update_testrail(case_id=TEST_CASES["5g_wpa_nat"], run_id=instantiate_project,
+            instantiate_testrail.update_testrail(case_id=test_cases["5g_wpa_nat"], run_id=instantiate_project,
                                                  status_id=5,
                                                  msg='5G WPA Client Connectivity Failed - nat mode')
         assert staConnect.passes()
@@ -136,7 +140,7 @@ class TestNatModeClientConnectivity(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     def test_client_wpa2_personal_2g(self, request, get_lanforge_data, setup_profile_data, instantiate_project,
-                                     instantiate_testrail):
+                                     instantiate_testrail, test_cases):
         profile_data = setup_profile_data["NAT"]["WPA2_P"]["2G"]
         station_names = []
         for i in range(0, int(request.config.getini("num_stations"))):
@@ -169,11 +173,11 @@ class TestNatModeClientConnectivity(object):
         # result = 'pass'
         print("Single Client Connectivity :", staConnect.passes)
         if staConnect.passes():
-            instantiate_testrail.update_testrail(case_id=TEST_CASES["2g_wpa2_nat"], run_id=instantiate_project,
+            instantiate_testrail.update_testrail(case_id=test_cases["2g_wpa2_nat"], run_id=instantiate_project,
                                                  status_id=1,
                                                  msg='2G WPA2 Client Connectivity Passed successfully - nat mode')
         else:
-            instantiate_testrail.update_testrail(case_id=TEST_CASES["2g_wpa2_nat"], run_id=instantiate_project,
+            instantiate_testrail.update_testrail(case_id=test_cases["2g_wpa2_nat"], run_id=instantiate_project,
                                                  status_id=5,
                                                  msg='2G WPA2 Client Connectivity Failed - nat mode')
         assert staConnect.passes()
@@ -182,7 +186,7 @@ class TestNatModeClientConnectivity(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     def test_client_wpa2_personal_5g(self, request, get_lanforge_data, setup_profile_data, instantiate_project,
-                                     instantiate_testrail):
+                                     instantiate_testrail, test_cases):
         profile_data = setup_profile_data["NAT"]["WPA2_P"]["5G"]
         station_names = []
         for i in range(0, int(request.config.getini("num_stations"))):
@@ -215,11 +219,11 @@ class TestNatModeClientConnectivity(object):
         # result = 'pass'
         print("Single Client Connectivity :", staConnect.passes)
         if staConnect.passes():
-            instantiate_testrail.update_testrail(case_id=TEST_CASES["5g_wpa2_nat"], run_id=instantiate_project,
+            instantiate_testrail.update_testrail(case_id=test_cases["5g_wpa2_nat"], run_id=instantiate_project,
                                                  status_id=1,
                                                  msg='5G WPA2 Client Connectivity Passed successfully - nat mode')
         else:
-            instantiate_testrail.update_testrail(case_id=TEST_CASES["5g_wpa2_nat"], run_id=instantiate_project,
+            instantiate_testrail.update_testrail(case_id=test_cases["5g_wpa2_nat"], run_id=instantiate_project,
                                                  status_id=5,
                                                  msg='5G WPA2 Client Connectivity Failed - nat mode')
         assert staConnect.passes()
@@ -229,7 +233,7 @@ class TestNatModeClientConnectivity(object):
     @pytest.mark.twog
     @pytest.mark.radius
     def test_client_wpa2_enterprise_2g(self, request, get_lanforge_data, setup_profile_data, instantiate_project,
-                                       instantiate_testrail, radius_info):
+                                       instantiate_testrail, radius_info, test_cases):
         profile_data = setup_profile_data["NAT"]["WPA2_E"]["2G"]
         station_names = []
         for i in range(0, int(request.config.getini("num_stations"))):
@@ -263,12 +267,12 @@ class TestNatModeClientConnectivity(object):
         # result = 'pass'
         print("Single Client Connectivity :", eap_connect.passes)
         if eap_connect.passes():
-            instantiate_testrail.update_testrail(case_id=TEST_CASES["2g_eap_nat"], run_id=instantiate_project,
+            instantiate_testrail.update_testrail(case_id=test_cases["2g_eap_nat"], run_id=instantiate_project,
                                                  status_id=1,
                                                  msg='5G WPA2 ENTERPRISE Client Connectivity Passed successfully - '
                                                      'nat mode')
         else:
-            instantiate_testrail.update_testrail(case_id=TEST_CASES["2g_eap_nat"], run_id=instantiate_project,
+            instantiate_testrail.update_testrail(case_id=test_cases["2g_eap_nat"], run_id=instantiate_project,
                                                  status_id=5,
                                                  msg='5G WPA2 ENTERPRISE Client Connectivity Failed - nat mode')
         assert eap_connect.passes()
@@ -278,7 +282,7 @@ class TestNatModeClientConnectivity(object):
     @pytest.mark.fiveg
     @pytest.mark.radius
     def test_client_wpa2_enterprise_5g(self, request, get_lanforge_data, setup_profile_data, instantiate_project,
-                                       instantiate_testrail, radius_info):
+                                       instantiate_testrail, radius_info, test_cases):
         profile_data = setup_profile_data["NAT"]["WPA2_E"]["5G"]
         station_names = []
         for i in range(0, int(request.config.getini("num_stations"))):
@@ -312,12 +316,12 @@ class TestNatModeClientConnectivity(object):
         # result = 'pass'
         print("Single Client Connectivity :", eap_connect.passes)
         if eap_connect.passes():
-            instantiate_testrail.update_testrail(case_id=TEST_CASES["5g_eap_nat"], run_id=instantiate_project,
+            instantiate_testrail.update_testrail(case_id=test_cases["5g_eap_nat"], run_id=instantiate_project,
                                                  status_id=1,
                                                  msg='5G WPA2 ENTERPRISE Client Connectivity Passed successfully - '
                                                      'nat mode')
         else:
-            instantiate_testrail.update_testrail(case_id=TEST_CASES["5g_eap_nat"], run_id=instantiate_project,
+            instantiate_testrail.update_testrail(case_id=test_cases["5g_eap_nat"], run_id=instantiate_project,
                                                  status_id=5,
                                                  msg='5G WPA2 ENTERPRISE Client Connectivity Failed - nat mode')
         assert eap_connect.passes()
@@ -329,7 +333,7 @@ class TestNatModeClientConnectivity(object):
         indirect=True
     )
     def test_modify_ssid(self, request, update_ssid, get_lanforge_data, setup_profile_data, instantiate_testrail,
-                         instantiate_project):
+                         instantiate_project, test_cases):
         profile_data = setup_profile_data["NAT"]["WPA"]["5G"]
         station_names = []
         for i in range(0, int(request.config.getini("num_stations"))):
@@ -362,12 +366,12 @@ class TestNatModeClientConnectivity(object):
         # result = 'pass'
         print("Single Client Connectivity :", staConnect.passes)
         if staConnect.passes():
-            instantiate_testrail.update_testrail(case_id=TEST_CASES["nat_ssid_update"], run_id=instantiate_project,
+            instantiate_testrail.update_testrail(case_id=test_cases["nat_ssid_update"], run_id=instantiate_project,
                                                  status_id=1,
                                                  msg='5G WPA Client Connectivity Passed successfully - nat mode '
                                                      'updated ssid')
         else:
-            instantiate_testrail.update_testrail(case_id=TEST_CASES["nat_ssid_update"], run_id=instantiate_project,
+            instantiate_testrail.update_testrail(case_id=test_cases["nat_ssid_update"], run_id=instantiate_project,
                                                  status_id=5,
                                                  msg='5G WPA Client Connectivity Failed - nat mode updated ssid')
         assert staConnect.passes()

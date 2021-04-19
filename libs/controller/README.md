@@ -1,8 +1,8 @@
-# Cloud SDK Library
+# Controller Library
 
 ###cloudsdk.py : This Library Consists of the following-
-    1. class ConfigureCloudSDK : Base Configuration Class
-    2. class CloudSDK(ConfigureCloudSDK) : Main Cloudsdk Class
+    1. class ConfigureController : Base Configuration Class
+    2. class Controller(ConfigureController) : Main Cloudsdk Class
     3. class ProfileUtility : Used to CRUD over CloudSDK Profiles Utility
     4. class JFrogUtility : Used for Artifactory Utils, Get latest Build, Upload Firmware etc.
 

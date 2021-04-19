@@ -1,3 +1,8 @@
+"""
+    Test Case Module:  setup test cases for bridge mode sanity
+    Details:    bridge mode setup
+
+"""
 import pytest
 
 
@@ -13,22 +18,6 @@ import pytest
 @pytest.mark.usefixtures("setup_profiles")
 @pytest.mark.usefixtures("create_profiles")
 class TestSetupBridge:
-
-    # @pytest.mark.open
-    # @pytest.mark.twog
-    # def test_setup_open_2g_ssid_profile(self, create_profiles):
-    #     try:
-    #         assert create_profiles['ssid_2g_open_bridge']
-    #     except:
-    #         assert False
-    #
-    # @pytest.mark.open
-    # @pytest.mark.fiveg
-    # def test_setup_open_5g_ssid_profile(self, create_profiles):
-    #     try:
-    #         assert create_profiles['ssid_5g_open_bridge']
-    #     except:
-    #         assert False
 
     @pytest.mark.wpa
     @pytest.mark.twog

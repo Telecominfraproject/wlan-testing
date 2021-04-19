@@ -1,7 +1,7 @@
 # !/usr/local/lib64/python3.8
 """
-    Library for setting up the configuration for cloud connectivity
-        1. testbed/ sdk_base_url
+    Controller Library
+        1. controller_data/sdk_base_url
         2. login credentials
 """
 import base64
@@ -18,38 +18,33 @@ from swagger_client import FirmwareManagementApi
 from swagger_client import EquipmentGatewayApi
 from bs4 import BeautifulSoup
 
-from testbed_info import SDK_BASE_URLS
-from testbed_info import LOGIN_CREDENTIALS
 
-
-class ConfigureCloudSDK:
+class ConfigureController:
 
     def __init__(self):
         self.configuration = swagger_client.Configuration()
 
-    def set_credentials(self, user_id=None, password=None):
-        if user_id is None or password is None:
-            self.configuration.username = LOGIN_CREDENTIALS['userId']
-            self.configuration.password = LOGIN_CREDENTIALS['password']
-            print("Login Credentials set to default: \n user_id: %s\n password: %s\n" % (LOGIN_CREDENTIALS['userId'],
-                                                                                         LOGIN_CREDENTIALS['password']))
+    def set_credentials(self, controller_data=None):
+        if dict(controller_data).keys().__contains__("username") and dict(controller_data).keys().__contains__("password"):
+            self.configuration.username = "support@example.com"
+            self.configuration.password = "support"
+            print("Login Credentials set to default: \n user_id: %s\n password: %s\n" % ("support@example.com",
+                                                                                         "support"))
             return False
         else:
-            LOGIN_CREDENTIALS['user_id'] = user_id
-            self.configuration.username = user_id
-            LOGIN_CREDENTIALS['password'] = password
-            self.configuration.password = password
-            print("Login Credentials set to custom: \n user_id: %s\n password: %s\n" % (LOGIN_CREDENTIALS['userId'],
-                                                                                        LOGIN_CREDENTIALS['password']))
+            self.configuration.username = controller_data["username"]
+            self.configuration.password = controller_data["password"]
+            print("Login Credentials set to custom: \n user_id: %s\n password: %s\n" % (controller_data['userId'],
+                                                                                        controller_data['password']))
             return True
 
-    def select_testbed(self, testbed=None):
-        if testbed is None:
-            print("No Testbed Selected")
+    def select_controller_data(self, controller_data=None):
+        if dict(controller_data).keys().__contains__("url") is None:
+            print("No controller_data Selected")
             exit()
-        self.sdk_base_url = testbed
+        self.sdk_base_url = controller_data["url"]
         self.configuration.host = self.sdk_base_url
-        print("Testbed Selected: %s\n SDK_BASE_URL: %s\n" % (testbed, self.sdk_base_url))
+        print("controller_data Selected: %s\n SDK_BASE_URL: %s\n" % (controller_data["url"], self.sdk_base_url))
         return True
 
     def set_sdk_base_url(self, sdk_base_url=None):
@@ -63,26 +58,29 @@ class ConfigureCloudSDK:
 """
     Library for cloud_controller_tests generic usages, it instantiate the bearer and credentials.
     It provides the connectivity to the cloud.
+    Instantiate the Object by providing the controller_data=controller_url, customer_id=2
 """
 
 
-class CloudSDK(ConfigureCloudSDK):
+class Controller(ConfigureController):
     """
     constructor for cloud_controller_tests library : can be used from pytest framework
     """
 
-    def __init__(self, testbed=None, customer_id=None):
+    def __init__(self, controller_data=None, customer_id=None):
         super().__init__()
-        if customer_id is None:
-            print("Invalid Customer Id")
-            exit()
+        self.controller_data = controller_data
         self.customer_id = customer_id
-        # Setting the CloudSDK Client Configuration
-        self.select_testbed(testbed=testbed)
-        self.set_credentials()
+        if customer_id is None:
+            self.customer_id = 2
+            print("Setting to default Customer ID 2")
+
+        # Setting the Controller Client Configuration
+        self.select_controller_data(controller_data=controller_data)
+        self.set_credentials(controller_data=controller_data)
         # self.configuration.refresh_api_key_hook = self.get_bearer_token
 
-        # Connecting to CloudSDK
+        # Connecting to Controller
         self.api_client = swagger_client.ApiClient(self.configuration)
         self.login_client = swagger_client.LoginApi(api_client=self.api_client)
         self.bearer = self.get_bearer_token()
@@ -101,26 +99,22 @@ class CloudSDK(ConfigureCloudSDK):
         if self.ping_response._application_name != 'PortalServer':
             print("Server not Reachable")
             exit()
-        print("Connected to CloudSDK Server")
-
-    """
-    Login Utilitiesdefault_profile = self.default_profiles['ssid']
-    """
+        print("Connected to Controller Server")
 
     def get_bearer_token(self):
-        return self.login_client.get_access_token(LOGIN_CREDENTIALS)
+        request_body = {
+            "userId": self.configuration.username,
+            "password": self.configuration.password
+        }
+        return self.login_client.get_access_token(request_body)
 
     def portal_ping(self):
         return self.login_client.portal_ping()
 
-    def disconnect_cloudsdk(self):
+    def disconnect_Controller(self):
         self.api_client.__del__()
 
-    """default_profile = self.default_profiles['ssid']
-    Equipment Utilities
-    """
-
-    # Returns a List of All the Equipments that are available
+    # Returns a List of All the Equipments that are available in the cloud instances
     def get_equipment_by_customer_id(self, max_items=10):
         pagination_context = """{
                 "model_type": "PaginationContext",
@@ -131,6 +125,7 @@ class CloudSDK(ConfigureCloudSDK):
                                                                             pagination_context=pagination_context)
         return equipment_data._items
 
+    # check if equipment with the given equipment_id is available in cloud instance or not
     def validate_equipment_availability(self, equipment_id=None):
         data = self.get_equipment_by_customer_id()
         for i in data:
@@ -138,18 +133,19 @@ class CloudSDK(ConfigureCloudSDK):
                 return i._id
         return -1
 
+    # Need to be added in future
     def request_ap_reboot(self):
         pass
 
-    def request_firmware_update(self):
-        pass
-
+    # Get the equipment id, of a equipment with a serial number
     def get_equipment_id(self, serial_number=None):
         equipment_data = self.get_equipment_by_customer_id(max_items=100)
+        print(len(equipment_data))
         for equipment in equipment_data:
             if equipment._serial == serial_number:
                 return equipment._id
 
+    # Get the equipment model name of a given equipment_id
     def get_model_name(self, equipment_id=None):
         if equipment_id is None:
             return None
@@ -192,6 +188,7 @@ class CloudSDK(ConfigureCloudSDK):
         default_equipment_data = self.equipment_client.get_equipment_by_id(equipment_id=equipment_id, async_req=False)
         return default_equipment_data._profile_id
 
+    # Get the ssid's that are used by the equipment
     def get_ssids_on_equipment(self, equipment_id=None):
         profile_id = self.get_current_profile_on_equipment(equipment_id=equipment_id)
         all_profiles = self.profile_client.get_profile_with_children(profile_id=profile_id)
@@ -201,6 +198,7 @@ class CloudSDK(ConfigureCloudSDK):
                 ssid_name_list.append(i._details['ssid'])
         return all_profiles
 
+    # Get the child ssid profiles that are used by equipment ap profile of given profile id
     def get_ssid_profiles_from_equipment_profile(self, profile_id=None):
         equipment_ap_profile = self.profile_client.get_profile_by_id(profile_id=profile_id)
         ssid_name_list = []
@@ -211,19 +209,17 @@ class CloudSDK(ConfigureCloudSDK):
                 ssid_name_list.append(profile._details['ssid'])
         return ssid_name_list
 
-    """ 
-    default templates are as follows : 
-        profile_name=   TipWlan-rf/
-                        Radius-Profile/
-                        TipWlan-2-Radios/
-                        TipWlan-3-Radios/
-                        TipWlan-Cloud-Wifi/
-                        Captive-Portal
-    """
-
 
 """
     Library for Profile Utility, Creating Profiles and Pushing and Deleting them
+    Steps to create a Profile on Controller:
+        create a RF Profile
+        create a Radius Profile
+        create ssid profiles, and add the radius profile in them, if needed (only used by eap ssid's)
+        
+        create equipment_ap profile, and add the rf profile and ssid profiles
+    Now using push profile method, equipment_ap profile will be pushed to an AP of given equipment_id
+    
 """
 
 
@@ -233,9 +229,9 @@ class ProfileUtility:
                                                       to control Access Points
     """
 
-    def __init__(self, sdk_client=None, testbed=None, customer_id=None):
+    def __init__(self, sdk_client=None, controller_data=None, customer_id=None):
         if sdk_client is None:
-            sdk_client = CloudSDK(testbed=testbed, customer_id=customer_id)
+            sdk_client = Controller(controller_data=controller_data, customer_id=customer_id)
         self.sdk_client = sdk_client
         self.profile_client = swagger_client.ProfileApi(api_client=self.sdk_client.api_client)
         self.profile_creation_ids = {
@@ -274,6 +270,16 @@ class ProfileUtility:
         profiles = self.profile_client.get_profile_by_id(profile_id=profile_id)
         return profiles._details["ssid"]
 
+    """ 
+    default templates are as follows : 
+        profile_name=   TipWlan-rf/
+                        Radius-Profile/
+                        TipWlan-2-Radios/
+                        TipWlan-3-Radios/
+                        TipWlan-Cloud-Wifi/
+                        Captive-Portal
+    """
+
     def get_default_profiles(self):
         pagination_context = """{
                 "model_type": "PaginationContext",
@@ -297,6 +303,8 @@ class ProfileUtility:
             if i._name == "TipWlan-rf":
                 self.default_profiles['rf'] = i
 
+    # This will delete the Profiles associated with an equipment of givwn equipment_id, and associate it to default
+    # equipment_ap profile
     def delete_current_profile(self, equipment_id=None):
         equipment_data = self.sdk_client.equipment_client.get_equipment_by_id(equipment_id=equipment_id)
 
@@ -314,6 +322,7 @@ class ProfileUtility:
         self.push_profile_old_method(equipment_id=equipment_id)
         self.delete_profile(profile_id=delete_ids)
 
+    # This will delete all the profiles on an controller_tests instance, except the default profiles
     def cleanup_profiles(self):
         try:
             self.get_default_profiles()
@@ -346,6 +355,7 @@ class ProfileUtility:
             status = False
         return status
 
+    # Delete any profile with the given name
     def delete_profile_by_name(self, profile_name=None):
         pagination_context = """{
                                                 "model_type": "PaginationContext",
@@ -380,13 +390,14 @@ class ProfileUtility:
 
     """ 
         method call: used to create the rf profile and push set the parameters accordingly and update
+        Library method to create a new rf profile: Now using default profile
     """
 
     def set_rf_profile(self, profile_data=None):
         default_profile = self.default_profiles['rf']
         if profile_data is None:
             self.profile_creation_ids['rf'].append(default_profile._id)
-        return True
+        return default_profile
 
     """
         method call: used to create a ssid profile with the given parameters
@@ -599,15 +610,21 @@ class ProfileUtility:
         method to verify if the expected ssid's are loaded in the ap vif config
     """
 
-    def update_ssid_name(self, profile_name="Sanity-ecw5410-2G_WPA2_E_VLAN", new_profile_name="Shivam-Thakur"):
+    def update_ssid_name(self, profile_name=None, new_profile_name=None):
+        if profile_name is None:
+            print("profile name is None, Please specify the ssid profile name that you want to modify")
+            return False
+        if new_profile_name is None:
+            print("Please specify the new name for ssid profile that you want to make to")
+            return False
+
         try:
             profile = self.get_profile_by_name(profile_name=profile_name)
             profile._details['ssid'] = new_profile_name
             self.profile_client.update_profile(profile)
             return True
-        except:
+        except Exception as e:
             return False
-        pass
 
     """
         method to delete a profile by its id
@@ -634,10 +651,18 @@ class ProfileUtility:
         }
 
         response = requests.request("PUT", url, headers=headers, data=json.dumps(equipment_info))
+        return response
 
 
 """
-    Jfrog Utility for Artifactory Management
+    JfrogUtility base class used for FirmwareUtility for Artifactory Management
+    Used for getting the latest firmware image
+    credentials required are as follows:
+        username
+        password
+        jfrog-base-url
+        build   [pending]
+        branch  [dev, trunk]
 """
 
 
@@ -664,36 +689,35 @@ class JFrogUtility:
         headers = {'Authorization': 'Basic ' + auth}
 
         ''' FIND THE LATEST FILE NAME'''
-        # print(url)
         req = urllib.request.Request(jfrog_url, headers=headers)
         response = urllib.request.urlopen(req)
         html = response.read()
         soup = BeautifulSoup(html, features="html.parser")
-        ##find the last pending link on dev
         last_link = soup.find_all('a', href=re.compile(self.build))[-1]
         latest_file = last_link['href']
         latest_fw = latest_file.replace('.tar.gz', '')
         return latest_fw
 
-    def get_revisions(self, model=None):
-        pass
+
+"""
+    FirmwareUtility class
+        uses JfrogUtility base class
+        sdk_client  [ controller_tests instance ]
+        controller_data     [ sdk_base_url ]    needed only if sdk_instance is not passed
+        customer_id     [ 2 ]           needed only if sdk_instance is not passed
+"""
 
 
 class FirmwareUtility(JFrogUtility):
 
-    def __init__(self, sdk_client=None, jfrog_credentials=None, testbed=None, customer_id=None):
+    def __init__(self, sdk_client=None, jfrog_credentials=None, controller_data=None, customer_id=None):
         super().__init__(credentials=jfrog_credentials)
         if sdk_client is None:
-            sdk_client = CloudSDK(testbed=testbed, customer_id=customer_id)
+            sdk_client = Controller(controller_data=controller_data, customer_id=customer_id)
         self.sdk_client = sdk_client
         self.firmware_client = FirmwareManagementApi(api_client=sdk_client.api_client)
         self.jfrog_client = JFrogUtility(credentials=jfrog_credentials)
         self.equipment_gateway_client = EquipmentGatewayApi(api_client=sdk_client.api_client)
-
-    def get_current_fw_version(self, equipment_id=None):
-        # Write a logic to get the currently loaded firmware on the equipment
-        self.current_fw = "something"
-        return self.current_fw
 
     def get_latest_fw_version(self, model="ecw5410"):
         # Get The equipment model

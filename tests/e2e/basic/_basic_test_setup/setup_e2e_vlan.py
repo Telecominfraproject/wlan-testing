@@ -1,3 +1,9 @@
+"""
+    Test Case Module:  setup test cases for vlan mode sanity
+    Details:    vlan mode setup
+
+"""
+
 import pytest
 
 
@@ -14,21 +20,6 @@ import pytest
 @pytest.mark.usefixtures("create_profiles")
 class TestSetupvlan:
 
-    # @pytest.mark.open
-    # @pytest.mark.twog
-    # def test_setup_open_2g_ssid_profile(self, create_profiles):
-    #     try:
-    #         assert create_profiles['ssid_2g_open_vlan']
-    #     except:
-    #         assert False
-    #
-    # @pytest.mark.open
-    # @pytest.mark.fiveg
-    # def test_setup_open_5g_ssid_profile(self, create_profiles):
-    #     try:
-    #         assert create_profiles['ssid_5g_open_vlan']
-    #     except:
-    #         assert False
 
     @pytest.mark.wpa
     @pytest.mark.twog

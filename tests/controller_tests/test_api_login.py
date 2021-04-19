@@ -1,3 +1,7 @@
+"""
+    Test Case Module:  Testing Basic Cloud
+
+"""
 import pytest
 from configuration import CONFIGURATION
 
@@ -14,11 +18,13 @@ def test_cloud_sdk_version(instantiate_cloudsdk, testbed, test_cases, instantiat
             PASS = True
         else:
             instantiate_testrail.update_testrail(case_id=test_cases["cloud_ver"], run_id=instantiate_project,
-                                                 status_id=0, msg='Could not read CloudSDK version from API -  version missmatch')
+                                                 status_id=0, msg='Could not read CloudSDK version from API -  '
+                                                                  'version missmatch')
             PASS = False
     except Exception as e:
         print(e)
         instantiate_testrail.update_testrail(case_id=test_cases["cloud_ver"], run_id=instantiate_project,
-                                             status_id=0, msg='Could not read CloudSDK version from API - Exception occured')
+                                             status_id=0, msg='Could not read CloudSDK version from API - Exception '
+                                                              'occured')
         PASS = False
     assert PASS
