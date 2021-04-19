@@ -9,26 +9,21 @@ sys.path.append(
         os.path.realpath(__file__)
     )
 )
+if "libs" not in sys.path:
+    sys.path.append(f'../libs')
 
-if 'cloudsdk' not in sys.path:
-    sys.path.append(f'../libs/cloudsdk')
-if 'apnos' not in sys.path:
-    sys.path.append(f'../libs/apnos')
-if 'testrails' not in sys.path:
-    sys.path.append(f'../libs/testrails')
-
-from apnos import APNOS
-from cloudsdk import CloudSDK
-from cloudsdk import ProfileUtility
-from cloudsdk import FirmwareUtility
+from apnos.apnos import APNOS
+from controller.controller import Controller
+from controller.controller import ProfileUtility
+from controller.controller import FirmwareUtility
 import pytest
 import logging
 from configuration import RADIUS_SERVER_DATA
 from configuration import TEST_CASES
 from configuration import CONFIGURATION
 from configuration import FIRMWARE
-from testrail_api import APIClient
-from reporting import Reporting
+from testrails.testrail_api import APIClient
+from testrails.reporting import Reporting
 
 
 def pytest_addoption(parser):
@@ -110,14 +105,12 @@ Instantiate Objects for Test session
 
 
 @pytest.fixture(scope="session")
-def instantiate_cloudsdk(request, testbed):
+def instantiate_controller(request, testbed):
     try:
-        sdk_client = CloudSDK(testbed=CONFIGURATION[testbed]["controller"]["url"],
-                              customer_id=2)
-
+        sdk_client = Controller(controller_data=CONFIGURATION[testbed]["controller"])
         def teardown_session():
             print("\nTest session Completed")
-            sdk_client.disconnect_cloudsdk()
+            sdk_client.disconnect_Controller()
 
         request.addfinalizer(teardown_session)
     except Exception as e:
@@ -137,8 +130,8 @@ def instantiate_testrail(request):
 
 
 @pytest.fixture(scope="session")
-def instantiate_firmware(instantiate_cloudsdk, instantiate_jFrog):
-    firmware_client = FirmwareUtility(jfrog_credentials=instantiate_jFrog, sdk_client=instantiate_cloudsdk)
+def instantiate_firmware(instantiate_controller, instantiate_jFrog):
+    firmware_client = FirmwareUtility(jfrog_credentials=instantiate_jFrog, sdk_client=instantiate_controller)
     yield firmware_client
 
 
@@ -153,14 +146,12 @@ def instantiate_project(request, instantiate_testrail, testbed, get_latest_firmw
         rid = "skip testrails"
     else:
         projId = instantiate_testrail.get_project_id(project_name=request.config.getini("tr_project_id"))
-        test_run_name = testbed + "_" + str(
+        test_run_name = "TIP_" + testbed + "_" + str(
             datetime.date.today()) + "_" + get_latest_firmware
         instantiate_testrail.create_testrun(name=test_run_name, case_ids=list(TEST_CASES.values()), project_id=projId,
                                             milestone_id=request.config.getini("milestone"),
                                             description="Automated Nightly Sanity test run for new firmware build")
-        rid = instantiate_testrail.get_run_id(
-            test_run_name=request.config.getini("tr_prefix") + testbed + "_" + str(
-                datetime.date.today()) + "_" + get_latest_firmware)
+        rid = instantiate_testrail.get_run_id(test_run_name=test_run_name)
     yield rid
 
 
@@ -181,18 +172,18 @@ def test_cases():
 
 @pytest.fixture(scope="function")
 def test_access_point(testbed):
-    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
+    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point_tests'][0])
     status = ap_ssh.get_manager_state()
     if "ACTIVE" not in status:
         time.sleep(30)
-        ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
+        ap_ssh = APNOS(CONFIGURATION[testbed]['access_point_tests'][0])
         status = ap_ssh.get_manager_state()
     yield status
 
 
 @pytest.fixture(scope="session")
 def setup_profile_data(testbed):
-    model = CONFIGURATION[testbed]["access_point"][0]["model"]
+    model = CONFIGURATION[testbed]["access_point_tests"][0]["model"]
     profile_data = {}
     for mode in "BRIDGE", "NAT", "VLAN":
         profile_data[mode] = {}
@@ -247,7 +238,7 @@ def get_markers(request, get_security_flags):
 @pytest.fixture(scope="session")
 def get_latest_firmware(testbed, instantiate_firmware):
     try:
-        latest_firmware = instantiate_firmware.get_latest_fw_version(CONFIGURATION[testbed]["access_point"][0]["model"])
+        latest_firmware = instantiate_firmware.get_latest_fw_version(CONFIGURATION[testbed]["access_point_tests"][0]["model"])
     except:
         latest_firmware = False
     yield latest_firmware
@@ -256,7 +247,7 @@ def get_latest_firmware(testbed, instantiate_firmware):
 @pytest.fixture(scope="function")
 def check_ap_firmware_ssh(testbed):
     try:
-        ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
+        ap_ssh = APNOS(CONFIGURATION[testbed]['access_point_tests'][0])
         active_fw = ap_ssh.get_active_firmware()
         print(active_fw)
     except Exception as e:
