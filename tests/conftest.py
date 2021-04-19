@@ -172,18 +172,18 @@ def test_cases():
 
 @pytest.fixture(scope="function")
 def test_access_point(testbed):
-    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point_tests'][0])
+    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
     status = ap_ssh.get_manager_state()
     if "ACTIVE" not in status:
         time.sleep(30)
-        ap_ssh = APNOS(CONFIGURATION[testbed]['access_point_tests'][0])
+        ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
         status = ap_ssh.get_manager_state()
     yield status
 
 
 @pytest.fixture(scope="session")
 def setup_profile_data(testbed):
-    model = CONFIGURATION[testbed]["access_point_tests"][0]["model"]
+    model = CONFIGURATION[testbed]["access_point"][0]["model"]
     profile_data = {}
     for mode in "BRIDGE", "NAT", "VLAN":
         profile_data[mode] = {}
@@ -238,7 +238,7 @@ def get_markers(request, get_security_flags):
 @pytest.fixture(scope="session")
 def get_latest_firmware(testbed, instantiate_firmware):
     try:
-        latest_firmware = instantiate_firmware.get_latest_fw_version(CONFIGURATION[testbed]["access_point_tests"][0]["model"])
+        latest_firmware = instantiate_firmware.get_latest_fw_version(CONFIGURATION[testbed]["access_point"][0]["model"])
     except:
         latest_firmware = False
     yield latest_firmware
@@ -247,7 +247,7 @@ def get_latest_firmware(testbed, instantiate_firmware):
 @pytest.fixture(scope="function")
 def check_ap_firmware_ssh(testbed):
     try:
-        ap_ssh = APNOS(CONFIGURATION[testbed]['access_point_tests'][0])
+        ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
         active_fw = ap_ssh.get_active_firmware()
         print(active_fw)
     except Exception as e:
