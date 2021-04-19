@@ -88,9 +88,9 @@ def instantiate_profile(instantiate_controller):
 @pytest.fixture(scope="session")
 def get_equipment_id(instantiate_controller, testbed):
     equipment_id = 0
-    if len(CONFIGURATION[testbed]['access_point_tests']) == 1:
+    if len(CONFIGURATION[testbed]['access_point']) == 1:
         equipment_id = instantiate_controller.get_equipment_id(
-            serial_number=CONFIGURATION[testbed]['access_point_tests'][0]['serial'])
+            serial_number=CONFIGURATION[testbed]['access_point'][0]['serial'])
     yield equipment_id
 
 
@@ -147,7 +147,7 @@ def setup_profiles(request, create_profiles, instantiate_profile, get_equipment_
         instantiate_profile.push_profile_old_method(equipment_id=get_equipment_id)
     except:
         print("failed to create AP Profile")
-    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point_tests'][0])
+    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
     get_current_profile_cloud.sort()
     # This loop will check the VIF Config with cloud profile
     for i in range(0, 18):
@@ -159,7 +159,7 @@ def setup_profiles(request, create_profiles, instantiate_profile, get_equipment_
             test_cases[mode + '_vifc'] = True
             break
         time.sleep(10)
-    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point_tests'][0])
+    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
     # This loop will check the VIF Config with VIF State
     for i in range(0, 18):
         vif_state = list(ap_ssh.get_vif_state_ssids())
