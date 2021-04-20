@@ -24,7 +24,7 @@ Test Framework is implemented in pytest
       |── scale
     |── README.md  - /* Pytest framework and testcases information */
 ```
-##Follow the below instructions to setup the Testing and Development Environment
+## Follow the below instructions to setup the Testing and Development Environment
 
 ```bash
 STEP 1
@@ -90,23 +90,8 @@ email: shivam.thakur@candelatech.com
 ```
 
 
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-=======
-1. number == NOLA testbed number this cloud controller is assigned to
-2. version == docker images version to use with this particular deployment. supports 3 options:
-  1. "%arbitrary_text%" - will use `%arbitrary_text%` images
-  2. "" - will use `1.0.0-SNAPSHOT-yyyy-mm-dd` images from yesterdays date
- 
-## Motivation
-Automate Automate and Automate!
->>>>>>> master
-
-=======
->>>>>>> 40e63f29a1c06630d44b33d890c96a5b7e3bcac3
 ## Build status
-*WIP*  
+  
 [![Build Status](https://github.com/Telecominfraproject/wlan-testing/workflows/nightly%20build/badge.svg)]
 
 ## Best Practice
