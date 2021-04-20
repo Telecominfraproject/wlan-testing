@@ -90,8 +90,6 @@ email: shivam.thakur@candelatech.com
 ```
 
 
-
-
 ## Build status
 *WIP*  
 [![Build Status](https://github.com/Telecominfraproject/wlan-testing/workflows/nightly%20build/badge.svg)]
