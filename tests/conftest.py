@@ -146,7 +146,7 @@ def instantiate_project(request, instantiate_testrail, testbed, get_latest_firmw
         rid = "skip testrails"
     else:
         projId = instantiate_testrail.get_project_id(project_name=request.config.getini("tr_project_id"))
-        test_run_name = "TIP_" + testbed + "_" + str(
+        test_run_name = request.config.getini("tr_prefix") + testbed + "_" + str(
             datetime.date.today()) + "_" + get_latest_firmware
         instantiate_testrail.create_testrun(name=test_run_name, case_ids=list(TEST_CASES.values()), project_id=projId,
                                             milestone_id=request.config.getini("milestone"),
