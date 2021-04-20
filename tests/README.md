@@ -1,7 +1,7 @@
-# wlan-testing framework Information
+## wlan-testing framework Information
 
-## pytest  uses setup > test > tear_down
-#### Fixtures : Code that needs to be part of more than 1 test cases, Setup and teardown is Implemented in Fixtures
+**_pytest  uses setup > test > tear_down_** <br>
+**_Fixtures : Code that needs to be part of more than 1 test cases, Setup and teardown is Implemented in Fixtures_**
 
 
 ###Test cases are structured across different directories
