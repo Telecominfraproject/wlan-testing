@@ -4,7 +4,7 @@
 **_Fixtures : Code that needs to be part of more than 1 test cases, Setup and teardown is Implemented in Fixtures_**
 
 
-###Test cases are structured across different directories
+### Test cases are structured across different directories
 ```
 ├── wlan-testing                 
     ├── tests       /* Root directory for tests  */                
