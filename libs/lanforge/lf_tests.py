@@ -1,11 +1,11 @@
 #########################################################################################################
 # Used by Nightly_Sanity
-# This has different types of tests like Single client connectivity, Single_Client_EAP, testrail_retest
+# This has different types of old_pytest like Single client connectivity, Single_Client_EAP, testrail_retest
 #########################################################################################################
 
-
-from UnitTestBase import *
 from sta_connect2 import StaConnect2
+
+
 class RunTest:
 
     def __init__(self, lanforge_ip, lanforge_port, lanforge_prefix):
@@ -13,7 +13,8 @@ class RunTest:
         self.lanforge_port = lanforge_port
         self.lanforge_prefix = lanforge_prefix
 
-    def Single_Client_Connectivity(self, upstream_port="eth1", radio="wiphy0", ssid="TestAP", passkey="ssid_psk", security="open",
+    def Single_Client_Connectivity(self, upstream_port="eth1", radio="wiphy0", ssid="TestAP", passkey="ssid_psk",
+                                   security="open",
                                    station_name="sta0000", test_case=None, rid=None, client=None, logger=None):
         '''SINGLE CLIENT CONNECTIVITY using test_connect2.py'''
         self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=False)
