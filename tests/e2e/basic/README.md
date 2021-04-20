@@ -12,7 +12,7 @@ There are 3 different Configuration Modes in an Access Point
 3. VLAN
 
 ####Any one mode of setup can be done in an Access Point at a time.
-#### Within each mode, n number of SSID's can be provisioned from the controller to the cloud
+#### Within each mode, n number of SSID's can be provisioned from the controller to the AP
 
 
 setup will take the inputs from the Test cases
