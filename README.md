@@ -90,6 +90,7 @@ email: shivam.thakur@candelatech.com
 ```
 
 
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 =======
@@ -102,6 +103,8 @@ email: shivam.thakur@candelatech.com
 Automate Automate and Automate!
 >>>>>>> master
 
+=======
+>>>>>>> 40e63f29a1c06630d44b33d890c96a5b7e3bcac3
 ## Build status
 *WIP*  
 [![Build Status](https://github.com/Telecominfraproject/wlan-testing/workflows/nightly%20build/badge.svg)]
