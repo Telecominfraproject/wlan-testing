@@ -137,7 +137,7 @@ pip3 install xlsxwriter
 ```
 #### Step 3
 
-Please ensure you follow the steps outlined in [here](./libs/README.md)
+Please ensure you follow the steps outlined in [here](./libs/controller/README.md)
 
 ```shell
 Lets Install Controller Libraries, follow below steps:
