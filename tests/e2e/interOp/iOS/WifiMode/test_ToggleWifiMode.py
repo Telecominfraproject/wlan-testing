@@ -1,3 +1,4 @@
+from logging import exception
 import unittest
 import warnings
 from perfecto.test import TestResultFactory
@@ -8,7 +9,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from appium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-from conftest import closeApp, openApp, Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS
+from conftest import closeApp, openApp, Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
 #from conftest import 
 
 class TestToggleAirplaneMode(object):
@@ -35,8 +36,8 @@ class TestToggleAirplaneMode(object):
             assert value
            
 
-        except NoSuchElementException as ex:
-            assert False
-            print (ex.message)
+        except exception as e:
+            print (e.message)
+            tearDown(setup_perfectoMobile_iOS)
           
      

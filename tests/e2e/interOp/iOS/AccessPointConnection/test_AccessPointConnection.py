@@ -11,12 +11,11 @@ from selenium.common.exceptions import NoSuchElementException
 from conftest import closeApp, openApp, ping_deftapps_iOS, Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, get_WifiIPAddress_iOS
 #from conftest import 
 
-class TestAccessPointConnection(object):
+class TestPassPointConnectivetyIOS(object):
 
     #@pytest.mark.sanity
     #@pytest.mark.wpa2_personal
-    #@pytest.mark.VerifyApTo_MobileDeviceWeb
-    #@pytest.mark.parametrize('bundleID-iOS', [net.techet.netanalyzerlite])
+    @pytest.mark.TestPassPointConnectivetyIOS
     def test_AccessPointConnection(self, get_AccessPointConn_data, setup_perfectoMobile_iOS):
         
         try:

@@ -13,7 +13,7 @@ from conftest import tearDown
 
 class TestVerifyAPToMobileDevice(object):
 
-    #@pytest.mark.sanity
+    @pytest.mark.sanity
     #@pytest.mark.wpa2_personal
     #@pytest.mark.VerifyApTo_MobileDeviceWeb
     def test_VerifyApTo_MobileDeviceWeb(self, get_APToMobileDevice_data, setup_perfectoMobileWeb):
@@ -37,8 +37,8 @@ class TestVerifyAPToMobileDevice(object):
                 report.step_start("Verify Run Button")           
                 driver.find_element_by_xpath(get_APToMobileDevice_data["BtnRunSpeedTest"]).click()
 
-                get_APToMobileDevice_data["BtnRunSpeedTest"]
-                get_APToMobileDevice_data["BtnRunSpeedTest"]
+                #get_APToMobileDevice_data["BtnRunSpeedTest"]
+                #get_APToMobileDevice_data["BtnRunSpeedTest"]
 
                 #Get upload/Download Speed
                 try:
