@@ -1,3 +1,0 @@
-FROM wlan-tip-tests
-RUN pip3 install pylint
-ENTRYPOINT [ "pylint" ]
