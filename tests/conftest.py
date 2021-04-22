@@ -130,8 +130,8 @@ def instantiate_testrail(request):
 
 
 @pytest.fixture(scope="session")
-def instantiate_firmware(instantiate_controller, instantiate_jFrog):
-    firmware_client = FirmwareUtility(jfrog_credentials=instantiate_jFrog, sdk_client=instantiate_controller)
+def instantiate_firmware(instantiate_controller, instantiate_jFrog, testbed):
+    firmware_client = FirmwareUtility(jfrog_credentials=instantiate_jFrog, sdk_client=instantiate_controller, model=CONFIGURATION[testbed]["access_point"][0]["model"])
     yield firmware_client
 
 
@@ -236,11 +236,11 @@ def get_markers(request, get_security_flags):
 
 
 @pytest.fixture(scope="session")
-def get_latest_firmware(testbed, instantiate_firmware):
-    try:
-        latest_firmware = instantiate_firmware.get_latest_fw_version(CONFIGURATION[testbed]["access_point"][0]["model"])
-    except:
-        latest_firmware = False
+def get_latest_firmware(instantiate_firmware):
+    # try:
+    latest_firmware = instantiate_firmware.get_latest_fw_version()
+    # except:
+    #     latest_firmware = False
     yield latest_firmware
 
 

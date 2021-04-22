@@ -31,12 +31,13 @@ def test_access_points_connectivity(test_access_point, instantiate_testrail, ins
                                              status_id=5,
                                              msg='CloudSDK connectivity failed')
         status = False
+        sys.exit()
     else:
         instantiate_testrail.update_testrail(case_id=test_cases["cloud_connection"], run_id=instantiate_project,
                                              status_id=1,
                                              msg='Manager status is Active')
         status = True
-        sys.exit()
+
     assert status
 
 

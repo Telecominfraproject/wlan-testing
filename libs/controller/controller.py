@@ -150,6 +150,7 @@ class Controller(ConfigureController):
         if equipment_id is None:
             return None
         data = self.equipment_client.get_equipment_by_id(equipment_id=equipment_id)
+        print(str(data._details._equipment_model))
         return str(data._details._equipment_model)
 
     # Needs Bug fix from swagger code generation side
@@ -689,8 +690,10 @@ class JFrogUtility:
         headers = {'Authorization': 'Basic ' + auth}
 
         ''' FIND THE LATEST FILE NAME'''
+        print(jfrog_url)
         req = urllib.request.Request(jfrog_url, headers=headers)
         response = urllib.request.urlopen(req)
+        # print(response)
         html = response.read()
         soup = BeautifulSoup(html, features="html.parser")
         last_link = soup.find_all('a', href=re.compile(self.build))[-1]
@@ -710,7 +713,7 @@ class JFrogUtility:
 
 class FirmwareUtility(JFrogUtility):
 
-    def __init__(self, sdk_client=None, jfrog_credentials=None, controller_data=None, customer_id=None):
+    def __init__(self, sdk_client=None, jfrog_credentials=None, controller_data=None, customer_id=None,model=None):
         super().__init__(credentials=jfrog_credentials)
         if sdk_client is None:
             sdk_client = Controller(controller_data=controller_data, customer_id=customer_id)
@@ -718,10 +721,11 @@ class FirmwareUtility(JFrogUtility):
         self.firmware_client = FirmwareManagementApi(api_client=sdk_client.api_client)
         self.jfrog_client = JFrogUtility(credentials=jfrog_credentials)
         self.equipment_gateway_client = EquipmentGatewayApi(api_client=sdk_client.api_client)
+        self.model = model
 
-    def get_latest_fw_version(self, model="ecw5410"):
+    def get_latest_fw_version(self):
         # Get The equipment model
-        self.latest_fw = self.get_latest_build(model=model)
+        self.latest_fw = self.get_latest_build(model=self.model)
         return self.latest_fw
 
     def upload_fw_on_cloud(self, fw_version=None, force_upload=False):
@@ -745,7 +749,7 @@ class FirmwareUtility(JFrogUtility):
                 "equipmentType": "AP",
                 "modelId": fw_version.split("-")[0],
                 "versionName": fw_version + ".tar.gz",
-                "description": "ECW5410 FW VERSION TEST",
+                "description": fw_version + "  FW VERSION",
                 "filename": "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/" + fw_version.split("-")[
                     0] + "/dev/" + fw_version + ".tar.gz",
                 "commit": fw_version.split("-")[5]
@@ -760,7 +764,7 @@ class FirmwareUtility(JFrogUtility):
             exit()
         if (force_upgrade is True) or (self.should_upgrade_ap_fw(equipment_id=equipment_id)):
             model = self.sdk_client.get_model_name(equipment_id=equipment_id).lower()
-            latest_fw = self.get_latest_fw_version(model=model)
+            latest_fw = self.get_latest_fw_version()
             firmware_id = self.upload_fw_on_cloud(fw_version=latest_fw, force_upload=force_upload)
             time.sleep(5)
             try:
@@ -774,9 +778,9 @@ class FirmwareUtility(JFrogUtility):
             # Write the upgrade fw logic here
 
     def should_upgrade_ap_fw(self, equipment_id=None):
-        current_fw = self.get_current_fw_version(equipment_id=equipment_id)
-        model = self.sdk_client.get_model_name(equipment_id=equipment_id).lower()
-        latest_fw = self.get_latest_fw_version(model=model)
+        current_fw = self.sdk_client.get_ap_firmware_old_method(equipment_id=equipment_id)
+        latest_fw = self.get_latest_fw_version()
+        print(self.model, current_fw, latest_fw)
         if current_fw == latest_fw:
             return False
         else:
