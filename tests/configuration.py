@@ -1,7 +1,6 @@
 
-
 CONFIGURATION = {
-   "ext-03":  {
+    "ext-03":  {
         "controller": {
             'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
             'username': 'support@example.com',
@@ -12,6 +11,7 @@ CONFIGURATION = {
         'access_point': [
             {
                 'model': 'ecw5410',
+                'mode' : "wifi5",
                 'serial': '903cb3944857',
                 'jumphost': True,
                 'ip': "192.168.200.80",
@@ -25,7 +25,7 @@ CONFIGURATION = {
         "traffic_generator":  {
             "name": "lanforge",
             "details": {
-                "ip": "localhost",
+                "ip": "192.168.200.80",
                 "port": 8080,
                 "2.4G-Radio": ["wiphy0"],
                 "5G-Radio": ["wiphy1"],
@@ -37,7 +37,7 @@ CONFIGURATION = {
             }
         }
     },
-   "ext-04":  {
+    "ext-04":  {
         "controller": {
             'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
             'username': 'support@example.com',
@@ -48,6 +48,7 @@ CONFIGURATION = {
         'access_point': [
             {
                 'model': 'ecw5410',
+                'mode': 'wifi5',
                 'serial': '903cb394486f',
                 'jumphost': True,
                 'ip': "192.168.200.81",
@@ -73,7 +74,7 @@ CONFIGURATION = {
             }
         }
     },
-   "ext-05":  {
+    "ext-05":  {
         "controller": {
             'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
             'username': 'support@example.com',
@@ -84,12 +85,13 @@ CONFIGURATION = {
         'access_point': [
             {
                 'model': 'ecw5410',
+                'mode': 'wifi5',
                 'serial': '903cb3944817',
                 'jumphost': True,
                 'ip': "192.168.200.82",
                 'username': "lanforge",
                 'password': "lanforge",
-                'port': 22,
+                'port': 8809,
                 'jumphost_tty': '/dev/ttyAP1',
                 'version': "version"
             }
@@ -111,6 +113,7 @@ CONFIGURATION = {
     }
 
 }
+
 
 
 FIRMWARE = {
@@ -192,3 +195,6 @@ TEST_CASES = {
     "nat_ssid_update": 8743,
     "vlan_ssid_update": 8744
 }
+# cmd = /bin/wlan_ap_redirector.sh ssl:opensync-redirector-nola-01.cicd.lab.wlan.tip.build:6643
+# radius server
+# radsec

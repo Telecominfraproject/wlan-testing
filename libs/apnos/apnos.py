@@ -126,6 +126,7 @@ class APNOS:
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
             status = str(output.decode('utf-8').splitlines())
+            print(output, stderr.read())
             client.close()
         except Exception as e:
             print(e)

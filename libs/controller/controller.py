@@ -323,13 +323,13 @@ class ProfileUtility:
         self.push_profile_old_method(equipment_id=equipment_id)
         self.delete_profile(profile_id=delete_ids)
 
-    # This will delete all the profiles on an controller_tests instance, except the default profiles
+    # This will delete all the profiles on an controller instance, except the default profiles
     def cleanup_profiles(self):
         try:
             self.get_default_profiles()
             pagination_context = """{
                             "model_type": "PaginationContext",
-                            "maxItemsPerPage": 5000
+                            "maxItemsPerPage": 10000
                     }"""
             skip_delete_id = []
             for i in self.default_profiles:
@@ -345,14 +345,13 @@ class ProfileUtility:
             for i in self.default_profiles:
                 skip_delete_id.append(self.default_profiles[i]._id)
             delete_ids = list(set(delete_ids) - set(delete_ids).intersection(set(skip_delete_id)))
+            print(delete_ids)
             for i in delete_ids:
                 self.set_equipment_to_profile(profile_id=i)
-            try:
-                self.delete_profile(profile_id=delete_ids)
-            except Exception as e:
-                pass
+            self.delete_profile(profile_id=delete_ids)
             status = True
-        except:
+        except Exception as e:
+            print(e)
             status = False
         return status
 
@@ -394,11 +393,36 @@ class ProfileUtility:
         Library method to create a new rf profile: Now using default profile
     """
 
-    def set_rf_profile(self, profile_data=None):
-        default_profile = self.default_profiles['rf']
-        if profile_data is None:
-            self.profile_creation_ids['rf'].append(default_profile._id)
-        return default_profile
+    def set_rf_profile(self, profile_data=None, mode=None):
+        self.get_default_profiles()
+        if mode == "wifi5":
+            default_profile = self.default_profiles['rf']
+            default_profile._name = profile_data["name"]
+
+            default_profile._details["rfConfigMap"]["is2dot4GHz"]["rf"] = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is5GHz"]["rf"] = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is5GHzL"]["rf"] = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is5GHzU"]["rf"] = profile_data["name"]
+            profile = self.profile_client.create_profile(body=default_profile)
+            self.profile_creation_ids['rf'].append(profile._id)
+            return profile
+
+        if mode == "wifi6":
+            default_profile = self.default_profiles['rf']
+            default_profile._name = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is2dot4GHz"]["activeScanSettings"]["enabled"] = False
+            default_profile._details["rfConfigMap"]["is2dot4GHz"]["radioMode"] = 'modeAX'
+            default_profile._details["rfConfigMap"]["is5GHz"]["radioMode"] = 'modeAX'
+            default_profile._details["rfConfigMap"]["is5GHzL"]["radioMode"] = 'modeAX'
+            default_profile._details["rfConfigMap"]["is5GHzU"]["radioMode"] = 'modeAX'
+            default_profile._details["rfConfigMap"]["is2dot4GHz"]["rf"] = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is5GHz"]["rf"] = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is5GHzL"]["rf"] = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is5GHzU"]["rf"] = profile_data["name"]
+            default_profile._name = profile_data["name"]
+            profile = self.profile_client.create_profile(body=default_profile)
+            self.profile_creation_ids['rf'].append(profile._id)
+            return profile
 
     """
         method call: used to create a ssid profile with the given parameters
@@ -798,3 +822,4 @@ class FirmwareUtility(JFrogUtility):
             firmware_version = False
             print("firmware not available: ", firmware_version)
         return firmware_version
+

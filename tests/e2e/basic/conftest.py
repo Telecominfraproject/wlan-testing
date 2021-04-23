@@ -176,7 +176,7 @@ def setup_profiles(request, create_profiles, instantiate_profile, get_equipment_
 
 
 @pytest.fixture(scope="module")
-def create_profiles(request, get_security_flags, get_markers, instantiate_profile, setup_profile_data):
+def create_profiles(request, testbed, get_security_flags, get_markers, instantiate_profile, setup_profile_data):
     profile_id = {"ssid": [], "rf": None, "radius": None, "equipment_ap": None}
     mode = str(request.param[0])
     test_cases = {}
@@ -190,15 +190,12 @@ def create_profiles(request, get_security_flags, get_markers, instantiate_profil
                 profile_name=setup_profile_data[mode][i][j]['profile_name'])
     instantiate_profile.delete_profile_by_name(profile_name="Automation-Radius-Profile-" + mode)
     instantiate_profile.get_default_profiles()
-    # if get_markers["wifi5"]:
-    #     # Create RF Profile
-    #     pass
-    # if get_markers["wifi6"]:
-    #     # Create RF Profile
-    #     pass
-
+    profile_data = {
+        "name": "RF-Profile-"+CONFIGURATION[testbed]['access_point'][0]['mode']+CONFIGURATION[testbed]['access_point'][0]['model'] + mode
+    }
+    instantiate_profile.delete_profile_by_name(profile_name=profile_data['name'])
+    instantiate_profile.set_rf_profile(profile_data=profile_data, mode=CONFIGURATION[testbed]['access_point'][0]['mode'])
     # Create RF Profile Here
-    instantiate_profile.set_rf_profile()
     if get_markers["radius"]:
         radius_info = RADIUS_SERVER_DATA
         radius_info["name"] = "Automation-Radius-Profile-" + mode
