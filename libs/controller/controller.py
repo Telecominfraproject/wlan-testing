@@ -25,7 +25,8 @@ class ConfigureController:
         self.configuration = swagger_client.Configuration()
 
     def set_credentials(self, controller_data=None):
-        if dict(controller_data).keys().__contains__("username") and dict(controller_data).keys().__contains__("password"):
+        if dict(controller_data).keys().__contains__("username") and dict(controller_data).keys().__contains__(
+                "password"):
             self.configuration.username = "support@example.com"
             self.configuration.password = "support"
             print("Login Credentials set to default: \n user_id: %s\n password: %s\n" % ("support@example.com",
@@ -703,7 +704,7 @@ class JFrogUtility:
         self.branch = credentials["branch"]
         ssl._create_default_https_context = ssl._create_unverified_context
 
-    def get_latest_build(self, model=None):
+    def get_latest_build(self, model=None, version=None):
         jfrog_url = self.jfrog_url + "/" + model + "/" + self.branch + "/"
         auth = str(
             base64.b64encode(
@@ -720,9 +721,14 @@ class JFrogUtility:
         # print(response)
         html = response.read()
         soup = BeautifulSoup(html, features="html.parser")
-        last_link = soup.find_all('a', href=re.compile(self.build))[-1]
-        latest_file = last_link['href']
-        latest_fw = latest_file.replace('.tar.gz', '')
+        last_link = soup.find_all('a', href=re.compile(self.build))
+        latest_fw = None
+        for i in last_link:
+            if str(i['href']).__contains__(version):
+                latest_fw = i['href']
+
+        # latest_file = last_link['href']
+        latest_fw = latest_fw.replace('.tar.gz', '')
         return latest_fw
 
 
@@ -737,7 +743,13 @@ class JFrogUtility:
 
 class FirmwareUtility(JFrogUtility):
 
-    def __init__(self, sdk_client=None, jfrog_credentials=None, controller_data=None, customer_id=None,model=None):
+    def __init__(self,
+                 sdk_client=None,
+                 jfrog_credentials=None,
+                 controller_data=None,
+                 customer_id=None,
+                 model=None,
+                 version=None):
         super().__init__(credentials=jfrog_credentials)
         if sdk_client is None:
             sdk_client = Controller(controller_data=controller_data, customer_id=customer_id)
@@ -746,10 +758,11 @@ class FirmwareUtility(JFrogUtility):
         self.jfrog_client = JFrogUtility(credentials=jfrog_credentials)
         self.equipment_gateway_client = EquipmentGatewayApi(api_client=sdk_client.api_client)
         self.model = model
+        self.fw_version = version
 
-    def get_latest_fw_version(self):
+    def get_fw_version(self):
         # Get The equipment model
-        self.latest_fw = self.get_latest_build(model=self.model)
+        self.latest_fw = self.get_latest_build(model=self.model, version=self.fw_version)
         return self.latest_fw
 
     def upload_fw_on_cloud(self, fw_version=None, force_upload=False):
@@ -788,7 +801,7 @@ class FirmwareUtility(JFrogUtility):
             exit()
         if (force_upgrade is True) or (self.should_upgrade_ap_fw(equipment_id=equipment_id)):
             model = self.sdk_client.get_model_name(equipment_id=equipment_id).lower()
-            latest_fw = self.get_latest_fw_version()
+            latest_fw = self.get_fw_version()
             firmware_id = self.upload_fw_on_cloud(fw_version=latest_fw, force_upload=force_upload)
             time.sleep(5)
             try:
@@ -803,7 +816,7 @@ class FirmwareUtility(JFrogUtility):
 
     def should_upgrade_ap_fw(self, equipment_id=None):
         current_fw = self.sdk_client.get_ap_firmware_old_method(equipment_id=equipment_id)
-        latest_fw = self.get_latest_fw_version()
+        latest_fw = self.get_fw_version()
         print(self.model, current_fw, latest_fw)
         if current_fw == latest_fw:
             return False
@@ -822,4 +835,3 @@ class FirmwareUtility(JFrogUtility):
             firmware_version = False
             print("firmware not available: ", firmware_version)
         return firmware_version
-

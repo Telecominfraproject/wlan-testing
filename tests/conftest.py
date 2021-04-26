@@ -246,10 +246,11 @@ def get_markers(request, get_security_flags):
 
 @pytest.fixture(scope="session")
 def get_latest_firmware(instantiate_firmware):
-    # try:
-    latest_firmware = instantiate_firmware.get_fw_version()
-    # except:
-    #     latest_firmware = False
+    try:
+        latest_firmware = instantiate_firmware.get_fw_version()
+    except Exception as e:
+        print(e)
+        latest_firmware = False
     yield latest_firmware
 
 
