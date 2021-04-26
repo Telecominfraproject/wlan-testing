@@ -101,7 +101,7 @@ def upload_firmware(should_upload_firmware, instantiate_firmware, get_latest_fir
     yield firmware_id
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_firmware_cloud, get_latest_firmware,
                      should_upgrade_firmware):
     if get_latest_firmware != check_ap_firmware_cloud:
@@ -119,7 +119,7 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
     yield status
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def check_ap_firmware_cloud(instantiate_controller, get_equipment_id):
     yield instantiate_controller.get_ap_firmware_old_method(equipment_id=get_equipment_id)
 

@@ -108,6 +108,7 @@ Instantiate Objects for Test session
 def instantiate_controller(request, testbed):
     try:
         sdk_client = Controller(controller_data=CONFIGURATION[testbed]["controller"])
+
         def teardown_session():
             print("\nTest session Completed")
             sdk_client.disconnect_Controller()
@@ -131,7 +132,9 @@ def instantiate_testrail(request):
 
 @pytest.fixture(scope="session")
 def instantiate_firmware(instantiate_controller, instantiate_jFrog, testbed):
-    firmware_client = FirmwareUtility(jfrog_credentials=instantiate_jFrog, sdk_client=instantiate_controller, model=CONFIGURATION[testbed]["access_point"][0]["model"])
+    firmware_client = FirmwareUtility(jfrog_credentials=instantiate_jFrog, sdk_client=instantiate_controller,
+                                      model=CONFIGURATION[testbed]["access_point"][0]["model"],
+                                      version=CONFIGURATION[testbed]["access_point"][0]["version"])
     yield firmware_client
 
 
@@ -170,8 +173,14 @@ def test_cases():
     yield TEST_CASES
 
 
+@pytest.fixture(scope="session")
+def instantiate_access_point(testbed):
+    APNOS(CONFIGURATION[testbed]['access_point'][0], pwd="../libs/apnos/")
+    yield True
+
+
 @pytest.fixture(scope="function")
-def test_access_point(testbed):
+def test_access_point(testbed, instantiate_access_point):
     ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
     status = ap_ssh.get_manager_state()
     if "ACTIVE" not in status:
@@ -238,7 +247,7 @@ def get_markers(request, get_security_flags):
 @pytest.fixture(scope="session")
 def get_latest_firmware(instantiate_firmware):
     # try:
-    latest_firmware = instantiate_firmware.get_latest_fw_version()
+    latest_firmware = instantiate_firmware.get_fw_version()
     # except:
     #     latest_firmware = False
     yield latest_firmware

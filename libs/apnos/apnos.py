@@ -11,11 +11,12 @@ Currently Having Methods:
 """
 
 import paramiko
-
+from scp import SCPClient
+import os
 
 class APNOS:
 
-    def __init__(self, credentials=None):
+    def __init__(self, credentials=None, pwd=os.getcwd()):
         self.owrt_args = "--prompt root@OpenAp -s serial --log stdout --user root --passwd openwifi"
         if credentials is None:
             print("No credentials Given")
@@ -27,6 +28,25 @@ class APNOS:
         self.mode = credentials['jumphost']  # 1 for jumphost, 0 for direct ssh
         if self.mode:
             self.tty = credentials['jumphost_tty']  # /dev/ttyAP1
+            client = self.ssh_cli_connect()
+            cmd = '[ -f ~/cicd-git/ ] && echo "True" || echo "False"'
+            stdin, stdout, stderr = client.exec_command(cmd)
+            if str(stdout.read()).__contains__("False"):
+                cmd = 'mkdir ~/cicd-git/'
+                client.exec_command(cmd)
+            cmd = '[ -f ~/cicd-git/openwrt_ctl.py ] && echo "True" || echo "False"'
+            stdin, stdout, stderr = client.exec_command(cmd)
+            if str(stdout.read()).__contains__("False"):
+                print("Copying openwrt_ctl serial control Script...")
+                with SCPClient(client.get_transport()) as scp:
+                    scp.put(pwd+'openwrt_ctl.py', '~/cicd-git/openwrt_ctl.py')  # Copy my_file.txt to the server
+            cmd = '[ -f ~/cicd-git/openwrt_ctl.py ] && echo "True" || echo "False"'
+            stdin, stdout, stderr = client.exec_command(cmd)
+            var = str(stdout.read())
+            if var.__contains__("True"):
+                print("APNOS Serial Setup OK")
+            else:
+                print("APNOS Serial Setup Fail")
 
     # Method to connect AP-CLI/ JUMPHOST-CLI
     def ssh_cli_connect(self):
@@ -44,7 +64,7 @@ class APNOS:
         client = self.ssh_cli_connect()
         cmd = 'iwinfo'
         if self.mode:
-            cmd = f"cd /home/lanforge/lanforge-scripts/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+            cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                   f"cmd --value \"{cmd}\" "
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
@@ -56,7 +76,7 @@ class APNOS:
         client = self.ssh_cli_connect()
         cmd = "/usr/opensync/bin/ovsh s Wifi_VIF_Config -c"
         if self.mode:
-            cmd = f"cd /home/lanforge/lanforge-scripts/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+            cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                   f"cmd --value \"{cmd}\" "
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
@@ -68,7 +88,7 @@ class APNOS:
         client = self.ssh_cli_connect()
         cmd = "/usr/opensync/bin/ovsh s Wifi_VIF_State -c"
         if self.mode:
-            cmd = f"cd /home/lanforge/lanforge-scripts/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+            cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                   f"cmd --value \"{cmd}\" "
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
@@ -101,7 +121,7 @@ class APNOS:
             client = self.ssh_cli_connect()
             cmd = '/usr/opensync/bin/ovsh s AWLAN_Node -c | grep FW_IMAGE_ACTIVE'
             if self.mode:
-                cmd = f"cd /home/lanforge/lanforge-scripts/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty}" \
+                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty}" \
                       f" --action cmd --value \"{cmd}\" "
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
@@ -121,15 +141,17 @@ class APNOS:
             client = self.ssh_cli_connect()
             cmd = '/usr/opensync/bin/ovsh s Manager -c | grep status'
             if self.mode:
-                cmd = f"cd /home/lanforge/lanforge-scripts/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty}" \
+                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty}" \
                       f" --action cmd --value \"{cmd}\" "
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
             status = str(output.decode('utf-8').splitlines())
-            print(output, stderr.read())
+            # print(output, stderr.read())
             client.close()
         except Exception as e:
             print(e)
             status = "Error"
         return status
+
+
 

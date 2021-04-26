@@ -6,7 +6,7 @@
 import pytest
 import sys
 
-pytestmark = [pytest.mark.test_connection]
+pytestmark = [pytest.mark.test_connectivity]
 
 
 @pytest.mark.sanity

@@ -30,7 +30,7 @@ import pytest
 pytestmark = [pytest.mark.test_featureA, pytest.mark.bridge]
 
 
-@pytest.mark.wifi_capacity_test
+@pytest.mark.test_featureA
 @pytest.mark.wifi5
 @pytest.mark.wifi6
 @pytest.mark.parametrize(
@@ -53,7 +53,7 @@ class TestFeatureABridge(object):
         security_key = profile_data["security_key"]
         security = "wpa"
         upstream = get_lanforge_data["lanforge_bridge_port"]
-        radio = get_lanforge_data["lanforge_2g"]
+        radio = get_lanforge_data["lanforge_2dot4g"]
         # Write Your test case Here
         PASS = True
         assert PASS
@@ -84,7 +84,7 @@ class TestFeatureABridge(object):
         security_key = profile_data["security_key"]
         security = "wpa2"
         upstream = get_lanforge_data["lanforge_bridge_port"]
-        radio = get_lanforge_data["lanforge_2g"]
+        radio = get_lanforge_data["lanforge_2dot4g"]
         # Write Your test case Here
         PASS = True
         assert PASS

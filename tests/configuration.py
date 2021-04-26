@@ -19,7 +19,7 @@ CONFIGURATION = {
                 'password': "lanforge",
                 'port': 22,
                 'jumphost_tty': '/dev/ttyAP1',
-                'version': "version"
+                'version': "ecw5410-2021-04-26-pending-3fc41fa"
             }
         ],
         "traffic_generator":  {
@@ -56,7 +56,7 @@ CONFIGURATION = {
                 'password': "lanforge",
                 'port': 22,
                 'jumphost_tty': '/dev/ttyAP1',
-                'version': "version"
+                'version': "ecw5410-2021-04-26-pending-3fc41fa"
             }
         ],
         "traffic_generator":  {
@@ -91,9 +91,9 @@ CONFIGURATION = {
                 'ip': "192.168.200.82",
                 'username': "lanforge",
                 'password': "lanforge",
-                'port': 8809,
+                'port': 22,
                 'jumphost_tty': '/dev/ttyAP1',
-                'version': "version"
+                'version': "ecw5410-2021-04-26-pending-3fc41fa"
             }
         ],
         "traffic_generator":  {
