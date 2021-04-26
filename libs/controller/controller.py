@@ -25,7 +25,8 @@ class ConfigureController:
         self.configuration = swagger_client.Configuration()
 
     def set_credentials(self, controller_data=None):
-        if dict(controller_data).keys().__contains__("username") and dict(controller_data).keys().__contains__("password"):
+        if dict(controller_data).keys().__contains__("username") and dict(controller_data).keys().__contains__(
+                "password"):
             self.configuration.username = "support@example.com"
             self.configuration.password = "support"
             print("Login Credentials set to default: \n user_id: %s\n password: %s\n" % ("support@example.com",
@@ -150,6 +151,7 @@ class Controller(ConfigureController):
         if equipment_id is None:
             return None
         data = self.equipment_client.get_equipment_by_id(equipment_id=equipment_id)
+        print(str(data._details._equipment_model))
         return str(data._details._equipment_model)
 
     # Needs Bug fix from swagger code generation side
@@ -322,13 +324,13 @@ class ProfileUtility:
         self.push_profile_old_method(equipment_id=equipment_id)
         self.delete_profile(profile_id=delete_ids)
 
-    # This will delete all the profiles on an controller_tests instance, except the default profiles
+    # This will delete all the profiles on an controller instance, except the default profiles
     def cleanup_profiles(self):
         try:
             self.get_default_profiles()
             pagination_context = """{
                             "model_type": "PaginationContext",
-                            "maxItemsPerPage": 5000
+                            "maxItemsPerPage": 10000
                     }"""
             skip_delete_id = []
             for i in self.default_profiles:
@@ -344,14 +346,13 @@ class ProfileUtility:
             for i in self.default_profiles:
                 skip_delete_id.append(self.default_profiles[i]._id)
             delete_ids = list(set(delete_ids) - set(delete_ids).intersection(set(skip_delete_id)))
+            print(delete_ids)
             for i in delete_ids:
                 self.set_equipment_to_profile(profile_id=i)
-            try:
-                self.delete_profile(profile_id=delete_ids)
-            except Exception as e:
-                pass
+            self.delete_profile(profile_id=delete_ids)
             status = True
-        except:
+        except Exception as e:
+            print(e)
             status = False
         return status
 
@@ -393,11 +394,36 @@ class ProfileUtility:
         Library method to create a new rf profile: Now using default profile
     """
 
-    def set_rf_profile(self, profile_data=None):
-        default_profile = self.default_profiles['rf']
-        if profile_data is None:
-            self.profile_creation_ids['rf'].append(default_profile._id)
-        return default_profile
+    def set_rf_profile(self, profile_data=None, mode=None):
+        self.get_default_profiles()
+        if mode == "wifi5":
+            default_profile = self.default_profiles['rf']
+            default_profile._name = profile_data["name"]
+
+            default_profile._details["rfConfigMap"]["is2dot4GHz"]["rf"] = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is5GHz"]["rf"] = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is5GHzL"]["rf"] = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is5GHzU"]["rf"] = profile_data["name"]
+            profile = self.profile_client.create_profile(body=default_profile)
+            self.profile_creation_ids['rf'].append(profile._id)
+            return profile
+
+        if mode == "wifi6":
+            default_profile = self.default_profiles['rf']
+            default_profile._name = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is2dot4GHz"]["activeScanSettings"]["enabled"] = False
+            default_profile._details["rfConfigMap"]["is2dot4GHz"]["radioMode"] = 'modeAX'
+            default_profile._details["rfConfigMap"]["is5GHz"]["radioMode"] = 'modeAX'
+            default_profile._details["rfConfigMap"]["is5GHzL"]["radioMode"] = 'modeAX'
+            default_profile._details["rfConfigMap"]["is5GHzU"]["radioMode"] = 'modeAX'
+            default_profile._details["rfConfigMap"]["is2dot4GHz"]["rf"] = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is5GHz"]["rf"] = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is5GHzL"]["rf"] = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is5GHzU"]["rf"] = profile_data["name"]
+            default_profile._name = profile_data["name"]
+            profile = self.profile_client.create_profile(body=default_profile)
+            self.profile_creation_ids['rf'].append(profile._id)
+            return profile
 
     """
         method call: used to create a ssid profile with the given parameters
@@ -678,7 +704,7 @@ class JFrogUtility:
         self.branch = credentials["branch"]
         ssl._create_default_https_context = ssl._create_unverified_context
 
-    def get_latest_build(self, model=None):
+    def get_build(self, model=None, version=None):
         jfrog_url = self.jfrog_url + "/" + model + "/" + self.branch + "/"
         auth = str(
             base64.b64encode(
@@ -689,13 +715,20 @@ class JFrogUtility:
         headers = {'Authorization': 'Basic ' + auth}
 
         ''' FIND THE LATEST FILE NAME'''
+        print(jfrog_url)
         req = urllib.request.Request(jfrog_url, headers=headers)
         response = urllib.request.urlopen(req)
+        # print(response)
         html = response.read()
         soup = BeautifulSoup(html, features="html.parser")
-        last_link = soup.find_all('a', href=re.compile(self.build))[-1]
-        latest_file = last_link['href']
-        latest_fw = latest_file.replace('.tar.gz', '')
+        last_link = soup.find_all('a', href=re.compile(self.build))
+        latest_fw = None
+        for i in last_link:
+            if str(i['href']).__contains__(version):
+                latest_fw = i['href']
+
+        # latest_file = last_link['href']
+        latest_fw = latest_fw.replace('.tar.gz', '')
         return latest_fw
 
 
@@ -710,7 +743,13 @@ class JFrogUtility:
 
 class FirmwareUtility(JFrogUtility):
 
-    def __init__(self, sdk_client=None, jfrog_credentials=None, controller_data=None, customer_id=None):
+    def __init__(self,
+                 sdk_client=None,
+                 jfrog_credentials=None,
+                 controller_data=None,
+                 customer_id=None,
+                 model=None,
+                 version=None):
         super().__init__(credentials=jfrog_credentials)
         if sdk_client is None:
             sdk_client = Controller(controller_data=controller_data, customer_id=customer_id)
@@ -718,10 +757,12 @@ class FirmwareUtility(JFrogUtility):
         self.firmware_client = FirmwareManagementApi(api_client=sdk_client.api_client)
         self.jfrog_client = JFrogUtility(credentials=jfrog_credentials)
         self.equipment_gateway_client = EquipmentGatewayApi(api_client=sdk_client.api_client)
+        self.model = model
+        self.fw_version = version
 
-    def get_latest_fw_version(self, model="ecw5410"):
+    def get_fw_version(self):
         # Get The equipment model
-        self.latest_fw = self.get_latest_build(model=model)
+        self.latest_fw = self.get_build(model=self.model, version=self.fw_version)
         return self.latest_fw
 
     def upload_fw_on_cloud(self, fw_version=None, force_upload=False):
@@ -745,7 +786,7 @@ class FirmwareUtility(JFrogUtility):
                 "equipmentType": "AP",
                 "modelId": fw_version.split("-")[0],
                 "versionName": fw_version + ".tar.gz",
-                "description": "ECW5410 FW VERSION TEST",
+                "description": fw_version + "  FW VERSION",
                 "filename": "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/" + fw_version.split("-")[
                     0] + "/dev/" + fw_version + ".tar.gz",
                 "commit": fw_version.split("-")[5]
@@ -760,7 +801,7 @@ class FirmwareUtility(JFrogUtility):
             exit()
         if (force_upgrade is True) or (self.should_upgrade_ap_fw(equipment_id=equipment_id)):
             model = self.sdk_client.get_model_name(equipment_id=equipment_id).lower()
-            latest_fw = self.get_latest_fw_version(model=model)
+            latest_fw = self.get_fw_version()
             firmware_id = self.upload_fw_on_cloud(fw_version=latest_fw, force_upload=force_upload)
             time.sleep(5)
             try:
@@ -774,9 +815,9 @@ class FirmwareUtility(JFrogUtility):
             # Write the upgrade fw logic here
 
     def should_upgrade_ap_fw(self, equipment_id=None):
-        current_fw = self.get_current_fw_version(equipment_id=equipment_id)
-        model = self.sdk_client.get_model_name(equipment_id=equipment_id).lower()
-        latest_fw = self.get_latest_fw_version(model=model)
+        current_fw = self.sdk_client.get_ap_firmware_old_method(equipment_id=equipment_id)
+        latest_fw = self.get_fw_version()
+        print(self.model, current_fw, latest_fw)
         if current_fw == latest_fw:
             return False
         else:
