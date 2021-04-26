@@ -704,7 +704,7 @@ class JFrogUtility:
         self.branch = credentials["branch"]
         ssl._create_default_https_context = ssl._create_unverified_context
 
-    def get_latest_build(self, model=None, version=None):
+    def get_build(self, model=None, version=None):
         jfrog_url = self.jfrog_url + "/" + model + "/" + self.branch + "/"
         auth = str(
             base64.b64encode(
@@ -762,7 +762,7 @@ class FirmwareUtility(JFrogUtility):
 
     def get_fw_version(self):
         # Get The equipment model
-        self.latest_fw = self.get_latest_build(model=self.model, version=self.fw_version)
+        self.latest_fw = self.get_build(model=self.model, version=self.fw_version)
         return self.latest_fw
 
     def upload_fw_on_cloud(self, fw_version=None, force_upload=False):
