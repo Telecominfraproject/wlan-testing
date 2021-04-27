@@ -59,6 +59,17 @@ class APNOS:
 
         return client
 
+    def reboot(self):
+        client = self.ssh_cli_connect()
+        cmd = "reboot"
+        if self.mode:
+            cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                  f"cmd --value \"{cmd}\" "
+        stdin, stdout, stderr = client.exec_command(cmd)
+        output = stdout.read()
+        client.close()
+        return output
+
     # Method to get the iwinfo status of AP using AP-CLI/ JUMPHOST-CLI
     def iwinfo_status(self):
         client = self.ssh_cli_connect()

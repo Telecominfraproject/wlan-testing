@@ -23,8 +23,6 @@ Information:
 
 """
 
-
-
 import sys
 import os
 import time
@@ -49,7 +47,6 @@ from configuration import CONFIGURATION
 from configuration import FIRMWARE
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
-
 
 """
 Basic Setup Collector
@@ -172,6 +169,7 @@ def setup_profiles(request, create_profiles, instantiate_profile, get_equipment_
             test_cases[mode + '_vifs'] = True
             break
         time.sleep(10)
+        #
     yield test_cases
 
 
@@ -183,22 +181,24 @@ def create_profiles(request, testbed, get_security_flags, get_markers, instantia
     if mode not in ["BRIDGE", "NAT", "VLAN"]:
         print("Invalid Mode: ", mode)
         yield False
-    instantiate_profile.delete_profile_by_name(profile_name="Equipment-AP-" + mode)
+    instantiate_profile.delete_profile_by_name(profile_name=testbed + "-Equipment-AP-" + mode)
     for i in setup_profile_data[mode]:
         for j in setup_profile_data[mode][i]:
             instantiate_profile.delete_profile_by_name(
                 profile_name=setup_profile_data[mode][i][j]['profile_name'])
-    instantiate_profile.delete_profile_by_name(profile_name="Automation-Radius-Profile-" + mode)
+    instantiate_profile.delete_profile_by_name(profile_name=testbed + "-Automation-Radius-Profile-" + mode)
     instantiate_profile.get_default_profiles()
     profile_data = {
-        "name": "RF-Profile-"+CONFIGURATION[testbed]['access_point'][0]['mode']+CONFIGURATION[testbed]['access_point'][0]['model'] + mode
+        "name": "RF-Profile-" + CONFIGURATION[testbed]['access_point'][0]['mode'] +
+                CONFIGURATION[testbed]['access_point'][0]['model'] + mode
     }
     instantiate_profile.delete_profile_by_name(profile_name=profile_data['name'])
-    instantiate_profile.set_rf_profile(profile_data=profile_data, mode=CONFIGURATION[testbed]['access_point'][0]['mode'])
+    instantiate_profile.set_rf_profile(profile_data=profile_data,
+                                       mode=CONFIGURATION[testbed]['access_point'][0]['mode'])
     # Create RF Profile Here
     if get_markers["radius"]:
         radius_info = RADIUS_SERVER_DATA
-        radius_info["name"] = "Automation-Radius-Profile-" + mode
+        radius_info["name"] = testbed + "-Automation-Radius-Profile-" + mode
         try:
             instantiate_profile.create_radius_profile(radius_info=radius_info)
             test_cases['radius_profile'] = True
@@ -282,7 +282,7 @@ def create_profiles(request, testbed, get_security_flags, get_markers, instantia
 
     # Create Equipment AP Profile Here
     profile_data = {
-        "profile_name": "Equipment-AP-" + mode
+        "profile_name": testbed + "-Equipment-AP-" + mode
     }
     try:
         instantiate_profile.set_ap_profile(profile_data=profile_data)
@@ -304,3 +304,24 @@ def update_ssid(request, instantiate_profile, setup_profile_data):
         requested_profile[3]
     time.sleep(90)
     yield status
+
+
+@pytest.fixture(scope="package")
+def configure_lanforge(instantiate_dut):
+    # Scenario build
+    #
+    scenario_obj = Class()
+    yield scenario_obj
+
+
+@pytest.fixture(scope="package")
+def instantiate_dut():
+    dut_obj = DUT("")
+    dut_obj.update()
+    #
+    yield dut_obj
+
+@pytest.fixture(scope="package")
+def setup_vlan(scenario_obj):
+    scenario_obj.create_vlan()
+    yield scenario_obj

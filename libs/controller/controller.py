@@ -835,3 +835,15 @@ class FirmwareUtility(JFrogUtility):
             firmware_version = False
             print("firmware not available: ", firmware_version)
         return firmware_version
+
+# data = {
+#     'url': "https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build",  # API base url for the controller
+#     'username': 'support@example.com',
+#     'password': 'support',
+#     'version': '1.0.0-SNAPSHOT',
+#     'commit_date': '2021-03-01'
+# }
+# sdk_client = Controller(controller_data=data)
+# profile = ProfileUtility(sdk_client=sdk_client)
+# profile.cleanup_profiles()
+# sdk_client.disconnect_Controller()

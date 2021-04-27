@@ -159,7 +159,8 @@ def instantiate_project(request, instantiate_testrail, testbed, get_latest_firmw
 
 
 @pytest.fixture(scope="session")
-def setup_lanforge():
+def check_lanforge_connectivity(testbed):
+    # Check port
     yield True
 
 
@@ -182,6 +183,8 @@ def instantiate_access_point(testbed):
 @pytest.fixture(scope="function")
 def test_access_point(testbed, instantiate_access_point):
     ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
+    ap_ssh.reboot()
+    time.sleep(100)
     status = ap_ssh.get_manager_state()
     if "ACTIVE" not in status:
         time.sleep(30)
@@ -200,10 +203,11 @@ def setup_profile_data(testbed):
             profile_data[mode][security] = {}
             for radio in "2G", "5G":
                 profile_data[mode][security][radio] = {}
-                name_string = f"{'Sanity'}-{model}-{radio}_{security}_{mode}"
+                name_string = f"{'Sanity'}-{testbed}-{model}-{radio}_{security}_{mode}"
+                ssid_name = f"{'Sanity'}-{model}-{radio}_{security}_{mode}"
                 passkey_string = f"{radio}-{security}_{mode}"
                 profile_data[mode][security][radio]["profile_name"] = name_string
-                profile_data[mode][security][radio]["ssid_name"] = name_string
+                profile_data[mode][security][radio]["ssid_name"] = ssid_name
                 if mode == "VLAN":
                     profile_data[mode][security][radio]["vlan"] = 100
                 else:

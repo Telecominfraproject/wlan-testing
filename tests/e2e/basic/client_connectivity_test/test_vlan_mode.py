@@ -64,7 +64,7 @@ class TestVlanModeClientConnectivity(object):
         staConnect.dut_security = "wpa"
         staConnect.station_names = station_names
         staConnect.sta_prefix = get_lanforge_data["lanforge_2dot4g_prefix"]
-        staConnect.runtime_secs = 30
+        staConnect.runtime_secs = 10
         staConnect.bringup_time_sec = 60
         staConnect.cleanup_on_exit = True
         staConnect.setup()
@@ -109,7 +109,7 @@ class TestVlanModeClientConnectivity(object):
         staConnect.dut_security = "wpa"
         staConnect.station_names = station_names
         staConnect.sta_prefix = get_lanforge_data["lanforge_5g_prefix"]
-        staConnect.runtime_secs = 30
+        staConnect.runtime_secs = 10
         staConnect.bringup_time_sec = 60
         staConnect.cleanup_on_exit = True
         # staConnect.cleanup()
@@ -155,7 +155,7 @@ class TestVlanModeClientConnectivity(object):
         staConnect.dut_security = "wpa2"
         staConnect.station_names = station_names
         staConnect.sta_prefix = get_lanforge_data["lanforge_2dot4g_prefix"]
-        staConnect.runtime_secs = 30
+        staConnect.runtime_secs = 10
         staConnect.bringup_time_sec = 60
         staConnect.cleanup_on_exit = True
         # staConnect.cleanup()
@@ -201,7 +201,7 @@ class TestVlanModeClientConnectivity(object):
         staConnect.dut_security = "wpa2"
         staConnect.station_names = station_names
         staConnect.sta_prefix = get_lanforge_data["lanforge_5g_prefix"]
-        staConnect.runtime_secs = 30
+        staConnect.runtime_secs = 10
         staConnect.bringup_time_sec = 60
         staConnect.cleanup_on_exit = True
         # staConnect.cleanup()
@@ -348,7 +348,7 @@ class TestVlanModeClientConnectivity(object):
         staConnect.dut_security = "wpa"
         staConnect.station_names = station_names
         staConnect.sta_prefix = get_lanforge_data["lanforge_5g_prefix"]
-        staConnect.runtime_secs = 30
+        staConnect.runtime_secs = 10
         staConnect.bringup_time_sec = 60
         staConnect.cleanup_on_exit = True
         # staConnect.cleanup()

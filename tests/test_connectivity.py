@@ -10,6 +10,9 @@ pytestmark = [pytest.mark.test_connectivity]
 
 
 @pytest.mark.sanity
+@pytest.mark.bridge
+@pytest.mark.nat
+@pytest.mark.vlan
 @pytest.mark.test_controller_connectivity
 def test_controller_connectivity(instantiate_controller, instantiate_testrail, instantiate_project, test_cases):
     try:
@@ -24,6 +27,9 @@ def test_controller_connectivity(instantiate_controller, instantiate_testrail, i
 
 
 @pytest.mark.sanity
+@pytest.mark.bridge
+@pytest.mark.nat
+@pytest.mark.vlan
 @pytest.mark.test_access_points_connectivity
 def test_access_points_connectivity(test_access_point, instantiate_testrail, instantiate_project, test_cases):
     if "ACTIVE" not in test_access_point:
@@ -41,11 +47,19 @@ def test_access_points_connectivity(test_access_point, instantiate_testrail, ins
     assert status
 
 
+@pytest.mark.sanity
+@pytest.mark.bridge
+@pytest.mark.nat
+@pytest.mark.vlan
 @pytest.mark.test_lanforge_connectivity
-def test_lanforge_connectivity(setup_lanforge):
+def test_lanforge_connectivity(check_lanforge_connectivity):
     assert "instantiate_cloudsdk"
 
 
+@pytest.mark.sanity
+@pytest.mark.bridge
+@pytest.mark.nat
+@pytest.mark.vlan
 @pytest.mark.test_perfecto_connectivity
 def test_perfecto_connectivity(setup_perfecto_devices):
     assert "instantiate_cloudsdk"
