@@ -42,7 +42,7 @@ def test_access_points_connectivity(test_access_point, instantiate_testrail, ins
 
 
 @pytest.mark.test_lanforge_connectivity
-def test_lanforge_connectivity(setup_lanforge):
+def test_lanforge_connectivity(check_lanforge_connectivity):
     assert "instantiate_cloudsdk"
 
 

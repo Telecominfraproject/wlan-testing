@@ -6,6 +6,15 @@
 import pytest
 
 
+@pytest.mark.lanforge_scenario_setup
+def test_lanforge_scenario_setup(create_lanforge_chamberview):
+    raw_line = [
+        ["profile_link 1.1 vlan-100 1 NA NA eth2,AUTO -1 100"]
+    ]
+    print(create_lanforge_chamberview.setup(create_scenario="TIP-test",raw_line=raw_line))
+    create_lanforge_chamberview.build("TIP-test")
+    assert True
+
 @pytest.mark.sanity
 @pytest.mark.bridge
 @pytest.mark.nat
@@ -74,3 +83,4 @@ def test_ap_firmware(check_ap_firmware_ssh, get_latest_firmware, instantiate_tes
                                              msg='Cannot reach AP after upgrade to check CLI - re-test required')
 
     assert check_ap_firmware_ssh == get_latest_firmware
+

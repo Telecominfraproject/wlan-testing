@@ -4,6 +4,21 @@ import sys
 import os
 import time
 
+for folder in 'py-json', 'py-scripts':
+    if folder not in sys.path:
+        sys.path.append(f'../lanforge/lanforge-scripts/{folder}')
+
+sys.path.append(f"../lanforge/lanforge-scripts/py-scripts/tip-cicd-sanity")
+
+sys.path.append(f'../libs')
+sys.path.append(f'../libs/lanforge/')
+
+from LANforge.LFUtils import *
+
+if 'py-json' not in sys.path:
+    sys.path.append('../py-scripts')
+
+
 sys.path.append(
     os.path.dirname(
         os.path.realpath(__file__)
@@ -24,7 +39,7 @@ from configuration import CONFIGURATION
 from configuration import FIRMWARE
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
-
+from cv_test_manager import cv_test
 
 def pytest_addoption(parser):
     parser.addini("tr_url", "Test Rail URL")
@@ -159,8 +174,23 @@ def instantiate_project(request, instantiate_testrail, testbed, get_latest_firmw
 
 
 @pytest.fixture(scope="session")
-def setup_lanforge():
-    yield True
+def check_lanforge_connectivity(testbed):
+    lanforge_ip = CONFIGURATION[testbed]['traffic_generator']['details']['ip']
+    lanforge_port = CONFIGURATION[testbed]['traffic_generator']['details']['port']
+
+    try:
+        cv = cv_test(lanforge_ip,lanforge_port)
+        url_data = cv.get_ports("/")
+        lanforge_GUI_version = url_data["VersionInfo"]["BuildVersion"]
+        lanforge_gui_git_version = url_data["VersionInfo"]["GitVersion"]
+        lanforge_gui_build_date = url_data["VersionInfo"]["BuildDate"]
+        print(lanforge_GUI_version,lanforge_gui_build_date,lanforge_gui_git_version)
+        if not (lanforge_GUI_version or lanforge_gui_build_date or lanforge_gui_git_version):
+            yield False
+        else:
+            yield True
+    except:
+        yield False
 
 
 @pytest.fixture(scope="session")

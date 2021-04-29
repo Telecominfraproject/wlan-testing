@@ -29,6 +29,21 @@ import sys
 import os
 import time
 
+for folder in 'py-json', 'py-scripts':
+    if folder not in sys.path:
+        sys.path.append(f'../lanforge/lanforge-scripts/{folder}')
+
+sys.path.append(f"../lanforge/lanforge-scripts/py-scripts/tip-cicd-sanity")
+
+sys.path.append(f'../libs')
+sys.path.append(f'../libs/lanforge/')
+
+from LANforge.LFUtils import *
+
+if 'py-json' not in sys.path:
+    sys.path.append('../py-scripts')
+
+
 sys.path.append(
     os.path.dirname(
         os.path.realpath(__file__)
@@ -49,14 +64,14 @@ from configuration import CONFIGURATION
 from configuration import FIRMWARE
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
-
-
+from cv_test_manager import cv_test
+from create_chamberview import CreateChamberview
 """
 Basic Setup Collector
 """
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="session")
 def get_lanforge_data(testbed):
     lanforge_data = {}
     if CONFIGURATION[testbed]['traffic_generator']['name'] == 'lanforge':
@@ -304,3 +319,24 @@ def update_ssid(request, instantiate_profile, setup_profile_data):
         requested_profile[3]
     time.sleep(90)
     yield status
+
+@pytest.fixture(scope="package")
+def create_lanforge_chamberview(get_lanforge_data):
+    ip = get_lanforge_data["lanforge_ip"]
+    port = get_lanforge_data["lanforge-port-number"]
+    upstream_port = get_lanforge_data["lanforge_bridge_port"]#eth2
+    eth_vlan = get_lanforge_data["lanforge_vlan_port"]#eth2.100
+    vlan = get_lanforge_data["vlan"]
+    scenario_name = "TIP-test"
+    # "profile_link 1.1 upstream-dhcp 1 NA NA eth2,AUTO -1 NA"
+    # "profile_link 1.1 uplink-nat 1 'DUT: upstream LAN 10.28.2.1/24' NA eth1,eth2 -1 NA"
+    raw_line = [
+        ["profile_link 1.1 upstream-dhcp 1 NA NA eth2,AUTO -1 NA"],
+        ["profile_link 1.1 uplink-nat 1 'DUT: upstream LAN 10.28.2.1/24' NA eth1,eth2 -1 NA"]
+        ]
+    Create_Chamberview = CreateChamberview(ip, port)
+    Create_Chamberview.setup(create_scenario=scenario_name,
+                             raw_line=raw_line)
+
+    Create_Chamberview.build(scenario_name)
+    yield Create_Chamberview
