@@ -1,3 +1,4 @@
+from logging import exception
 import unittest
 import warnings
 from perfecto.test import TestResultFactory
@@ -8,44 +9,52 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from appium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-from conftest import closeApp, openApp, ping_deftapps_iOS, Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, get_WifiIPAddress_iOS
-#from conftest import 
 
+import sys
+
+if 'perfecto_libs' not in sys.path:
+    sys.path.append(f'../libs/perfecto_libs')
+
+from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ping_deftapps_iOS, Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
+
+@pytest.mark.TestPassPointConnectivetyIOS
+@pytest.mark.wifi5
+@pytest.mark.wifi6
+@pytest.mark.parametrize(
+    'setup_profiles, create_profiles',
+    [(["NAT"], ["NAT"])],
+    indirect=True,
+    scope="class"
+)
+
+@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("create_profiles")
 class TestPassPointConnectivetyIOS(object):
 
-    #@pytest.mark.sanity
-    #@pytest.mark.wpa2_personal
-    @pytest.mark.TestPassPointConnectivetyIOS
-    def test_AccessPointConnection(self, get_AccessPointConn_data, setup_perfectoMobile_iOS):
+    def test_AccessPointConnection(self, setup_profile_data, get_AccessPointConn_data, setup_perfectoMobile_iOS):
         
-        try:
-            report = setup_perfectoMobile_iOS[1]
-            driver = setup_perfectoMobile_iOS[0]
-            connData = get_AccessPointConn_data
+        profile_data = setup_profile_data["NAT"]["WPA"]["5G"]
+        ssidName = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
 
-            #Set Wifi/AP Mode
-            set_APconnMobileDevice_iOS(connData["Default-SSID-perfecto-b"], setup_perfectoMobile_iOS, connData)
+        profile_data = setup_profile_data["NAT"]["WPA"]["2G"]
+        ssidPassword = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+      
+        print ("SSID_NAME: " + ssidName)
+        print ("SSID_PASS: " + ssidPassword)
 
-            #Need An ip To ping
-            wifi_ip = get_WifiIPAddress_iOS(setup_perfectoMobile_iOS, connData)
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
+        connData = get_AccessPointConn_data
 
-            #Open Ping Application
-            openApp(connData["bundleId-iOS-Ping"], setup_perfectoMobile_iOS)
+        #Set Wifi/AP Mode
+        set_APconnMobileDevice_iOS(ssidName, setup_perfectoMobile_iOS, connData)
 
-            ping_deftapps_iOS(setup_perfectoMobile_iOS, wifi_ip)
+        #Need An ip To ping
+        wifi_ip = get_WifiIPAddress_iOS(setup_perfectoMobile_iOS, connData)
 
+        #Open Ping Application
+        openApp(connData["bundleId-iOS-Ping"], setup_perfectoMobile_iOS)
 
-
-            #Toggle AirplaneMode
-            #Toggle_AirplaneMode_iOS(setup_perfectoMobile_iOS, get_ToggleAirplaneMode_data)
-       
-            #Verify AP After AirplaneMode
-            #assert verify_APconnMobileDevice_iOS("Default-SSID-5gl-perfecto-b", setup_perfectoMobile_iOS, get_ToggleAirplaneMode_data)
-         
-
-        except NoSuchElementException as ex:
-            self.currentResult = False
-            #report.test_stop(TestResultFactory.create_failure("NoSuchElementException", ex))
-            print (ex.message)
-            self.currentResult = True
-     
+        ping_deftapps_iOS(setup_perfectoMobile_iOS, wifi_ip)

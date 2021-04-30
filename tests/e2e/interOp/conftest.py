@@ -10,37 +10,41 @@ from perfecto import (PerfectoExecutionContext, PerfectoReportiumClient,TestCont
 import pytest
 import logging
 
+
+sys.path.append(
+    os.path.dirname(
+        os.path.realpath(__file__)
+    )
+)
+if "libs" not in sys.path:
+    sys.path.append(f'../libs')
+
+from apnos.apnos import APNOS
+from controller.controller import Controller
+from controller.controller import ProfileUtility
+from controller.controller import FirmwareUtility
+import pytest
+import logging
+from configuration import RADIUS_SERVER_DATA
+from configuration import TEST_CASES
+from configuration import CONFIGURATION
+from configuration import FIRMWARE
+from testrails.testrail_api import APIClient
+from testrails.reporting import Reporting
+
+sys.path.append(
+    os.path.dirname(
+        os.path.realpath(__file__)
+    )
+)
+if "tests" not in sys.path:
+    sys.path.append(f'../tests')
+
+from configuration import CONFIGURATION
+
 from urllib3 import exceptions
 
-def pytest_addoption(parser):
-    parser.addini("perfectoURL", "Cloud URL")
-    parser.addini("securityToken", "Security Token")
-    parser.addini("platformName-iOS", "iOS Platform")
-    parser.addini("platformName-android", "Android Platform")
-    parser.addini("model-iOS", "iOS Devices")
-    parser.addini("model-android", "Android Devices")
-    parser.addini("bundleId-iOS", "iOS Devices")
-    parser.addini("bundleId-iOS-Settings", "iOS Settings App")
-    parser.addini("appPackage-android", "Android Devices")
-    parser.addini("wifi-SSID-5gl-Pwd", "Wifi 5g Password")
-    parser.addini("wifi-SSID-2g-Pwd", "Wifi 2g Password")
-    parser.addini("Default-SSID-5gl-perfecto-b", "Wifi 5g AP Name")
-    parser.addini("Default-SSID-2g-perfecto-b", "Wifi 2g AP Name")
-    parser.addini("Default-SSID-perfecto-b", "Wifi AP Name")
-    parser.addini("bundleId-iOS-Ping", "Ping Bundle ID")
-    parser.addini("browserType-iOS", "Mobile Browser Name")    
-    parser.addini("projectName", "Project Name")
-    parser.addini("projectVersion", "Project Version")
-    parser.addini("jobName", "CI Job Name")
-    parser.addini("jobNumber", "CI Job Number")
-    parser.addini("reportTags", "Report Tags")
 
-    parser.addoption(
-        "--access-points",
-        # nargs="+",
-        default=["Perfecto"],
-        help="list of access points to test"
-    )
 
 @pytest.fixture(scope="class")
 def setup_perfectoMobileWeb(request):
@@ -200,336 +204,257 @@ def get_ToggleWifiMode_data(request):
     }
     yield passPoint_data
 
-def openApp(appName, setup_perfectoMobile):
-    #print("Refreshing App: " + appName)
-    setup_perfectoMobile[1].step_start("Opening App: " + appName)  
-    params = {'identifier': appName}
-    #Open/Close/Open Action is performed to ensure the app is back to its Original Settings
-    setup_perfectoMobile[0].execute_script('mobile:application:open', params)
-    setup_perfectoMobile[0].execute_script('mobile:application:close', params)
-    setup_perfectoMobile[0].execute_script('mobile:application:open', params)
-    
-def closeApp(appName, setup_perfectoMobile):
-    #print("Closing App.." + appName)
-    setup_perfectoMobile[1].step_start("Closing App: " + appName)  
-    params = {'identifier': appName}
-    setup_perfectoMobile[0].execute_script('mobile:application:close', params)
 
-def set_APconnMobileDevice_iOS(WifiName, setup_perfectoMobile, connData):
-    
-    print("Verifying Wifi/AP Connection Details....") 
-    report = setup_perfectoMobile[1]    
-    driver = setup_perfectoMobile[0]
 
-    report.step_start("Set Wifi Network to " + WifiName)  
 
-    #Open Settings Application
-    openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+@pytest.fixture(scope="function")
+def get_lanforge_data(testbed):
+    lanforge_data = {}
+    if CONFIGURATION[testbed]['traffic_generator']['name'] == 'lanforge':
+        lanforge_data = {
+            "lanforge_ip": CONFIGURATION[testbed]['traffic_generator']['details']['ip'],
+            "lanforge-port-number": CONFIGURATION[testbed]['traffic_generator']['details']['port'],
+            "lanforge_2dot4g": CONFIGURATION[testbed]['traffic_generator']['details']['2.4G-Radio'][0],
+            "lanforge_5g": CONFIGURATION[testbed]['traffic_generator']['details']['5G-Radio'][0],
+            "lanforge_2dot4g_prefix": CONFIGURATION[testbed]['traffic_generator']['details']['2.4G-Station-Name'],
+            "lanforge_5g_prefix": CONFIGURATION[testbed]['traffic_generator']['details']['5G-Station-Name'],
+            "lanforge_2dot4g_station": CONFIGURATION[testbed]['traffic_generator']['details']['2.4G-Station-Name'],
+            "lanforge_5g_station": CONFIGURATION[testbed]['traffic_generator']['details']['5G-Station-Name'],
+            "lanforge_bridge_port": CONFIGURATION[testbed]['traffic_generator']['details']['upstream'],
+            "lanforge_vlan_port": CONFIGURATION[testbed]['traffic_generator']['details']['upstream'] + ".100",
+            "vlan": 100
+        }
+    yield lanforge_data
 
-    try:
-    # print("Verifying Connected Wifi Connection")
-        report.step_start("Verifying Connected Wifi Connection")  
-        element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']/XCUIElementTypeStaticText[2]")
-        Wifi_AP_Name = element.text
-    except NoSuchElementException:
-        print("Exception: Verify Xpath - UpdateXpath") 
 
-        #NEED to fail if Wifi AP NAME isn't in the approved list AKA 5g & 2g.  
-    #print("Wifi Name Matches - Already Connected To: " + Wifi_AP_Name)
-    #print("Wifi Name Matches - Already Connected To: " + WifiName)
+@pytest.fixture(scope="module")
+def instantiate_profile(instantiate_controller):
+    #try:
+    profile_object = ProfileUtility(sdk_client=instantiate_controller)
+    #except:
+    #profile_object = False
+    yield profile_object
 
-    if Wifi_AP_Name.__eq__(WifiName):
-        print("Wifi Name Matches - Already Connected To: " + Wifi_AP_Name) 
-    
-        #Verify if Ap is connected with Wifi
-        report.step_start("Verify Wifi Connection Status..")  
-        #print("Click Wifi Connection..")
-        element.click()
 
-        #Verifies if AP is connected to Wifi status
-        #print("Verify Wifi Connection Status..")
-        report.step_start("Verify Wifi Connected Status")
-        WifiXpath = "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeStaticText[@label='"+ Wifi_AP_Name + "']"
-        elementWifName = driver.find_element_by_xpath(WifiXpath)
-    
-        #Check AP Internet Error Msg 
-        print("Checking Internet Connection Error..")
-        report.step_start("Checking Internet Connection Error..")
+@pytest.fixture(scope="session")
+def get_equipment_id(instantiate_controller, testbed):
+    equipment_id = 0
+    if len(CONFIGURATION[testbed]['access_point']) == 1:
+        equipment_id = instantiate_controller.get_equipment_id(
+            serial_number=CONFIGURATION[testbed]['access_point'][0]['serial'])
+    yield equipment_id
 
-        try:
-            WifiInternetErrMsg = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
-        except NoSuchElementException:
-            report.assertSoft
-            print("Wifi-AP Connected Successfully: " + Wifi_AP_Name)
 
-    else:
-        try:
-            report.step_start("Selecting Wifi...: " + WifiName)
-            element.click()
-        except NoSuchElementException:
-            print("Exception: Selection Wifi Network")
+@pytest.fixture(scope="session")
+def upload_firmware(should_upload_firmware, instantiate_firmware, get_latest_firmware):
+    firmware_id = instantiate_firmware.upload_fw_on_cloud(fw_version=get_latest_firmware,
+                                                          force_upload=should_upload_firmware)
+    yield firmware_id
 
-        try:
-            wifiXpath2 = driver.find_element_by_xpath("//*[@label='"+ WifiName + "']")
-            wifiXpath2.click()
-        
-        except NoSuchElementException:
-            print("\n Can't find Wifi/AP NAME.....CheckXpath & Wifi Name")
-        # print (e.message)
 
-        #Set password if Needed
-        try:
-            wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
-            wifiPassword.send_keys(connData["wifi-SSID-2g-Pwd"])
-        except NoSuchElementException:
-            print("Enter Password Page Not Loaded  ")
-        
-        try:
-            joinBTN = driver.find_element_by_xpath("//*[@label='Join']")
-            joinBTN.click()
-        except NoSuchElementException:
-            print("Join Button Not Enabled...Verify if Password is set properly  ")
-
-        try:
-            WifiInternetErrMsg2 = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
-        except NoSuchElementException:
-            print("Wifi-AP Connected Successfully: " + WifiName)
-
-def Toggle_AirplaneMode_iOS(setup_perfectoMobile, connData):
-    report = setup_perfectoMobile[1]    
-    driver = setup_perfectoMobile[0]
-
-    #Open Settings Application
-    openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-
-    #Toggle Airplane Mode
-    print("Toggle Airplane Mode..")
-    report.step_start("Toggle Airplane Mode")
-    try:
-        AirplaneMode = driver.find_element_by_xpath("//XCUIElementTypeSwitch[@label='Airplane Mode']")
-        #Toggle Airplane Mode
-        AirplaneMode.click()
-
-        #Verify Cellular Mode Text
-        report.step_start("Verify Cellular Mode")
-        try:
-            CellularMsgEle = driver.find_element_by_xpath("//*[@name='Airplane Mode' and @value='Airplane Mode']")
-            #ssertEqual(CellularMsgEle.text, "Airplane Mode", "Airplane Mode Not Triggerd")
-            print("Verify Cellular Mode Text: Airplane Mode Success")
-        except NoSuchElementException:
-            print("Cellular Mode Not in Airplane Mode: ERROR") 
-
-        #Set Airplane Mode Back
-        AirplaneMode.click()         
-    except NoSuchElementException:
-        print("Airplane Wifi Button not loaded...")
-        
-    #Verify No Sim Card Installed Msg Popup
-    report.step_start("Verify No Sim Card Installed Msg Popup")
-    print("Verify No Sim Card Installed Msg Popup..")
-    try:
-        NoSimCardErrorMsg = driver.find_element_by_xpath("//*[@value='No SIM Card Installed']")
-    except NoSuchElementException:
-        print("No Sim Card AlertMsg")
-        
-    #Click ok on No Sim Card Msg Popup
-    print("Click ok on No Sim Card Msg Popup..")
-    report.step_start("Click ok on No Sim Card Msg Popup")
-    try:
-        NoSimCardErrorMsgOK = driver.find_element_by_xpath("//*[@label='OK']")
-        NoSimCardErrorMsgOK.click()
-    except NoSuchElementException:
-        print("No Sim Card AlertMsg")
-
-def verify_APconnMobileDevice_iOS(WifiName, setup_perfectoMobile, connData):
-    report = setup_perfectoMobile[1]    
-    driver = setup_perfectoMobile[0]
-
-    report.step_start("Verifying WifiName: " + WifiName)  
-
-    #Refresh Settings Application
-    openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-
-    #Verifies if AP is connected to Wifi status
-    try:
-       # print("Verifying Connected Wifi Connection")
-        report.step_start("Verifying Connected Wifi Connection")  
-        element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']/XCUIElementTypeStaticText[2]")
-        Wifi_AP_Name = element.text
-       
-    except NoSuchElementException:
-        print("Exception: Verify Xpath - UpdateXpath") 
-
-    try: 
-        if Wifi_AP_Name.__eq__(WifiName):
-            print("Wifi Name Matched Successful ") 
-            #print("Wifi_AP_ConnName: " + "'"+ Wifi_AP_Name + "'" +  "   Not Equal To: " + WifiName + "....Check AP Name Syntax")
-            return True
+@pytest.fixture(scope="session")
+def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_firmware_cloud, get_latest_firmware,
+                     should_upgrade_firmware):
+    if get_latest_firmware != check_ap_firmware_cloud:
+        if request.config.getoption("--skip-upgrade"):
+            status = "skip-upgrade"
         else:
-            print ("-- Wifi Don't Match Match -- ") 
-            #print("Wifi_AP_ConnName: " + "'"+ Wifi_AP_Name + "'" +  "   Not Equal To: " + WifiName + "....Check AP Name Syntax")
-            return False
-    except NoSuchElementException:
-        print("Exception Checking Wifi/AP connection NAME...")    
-        return None
+            status = instantiate_firmware.upgrade_fw(equipment_id=get_equipment_id, force_upload=False,
+                                                     force_upgrade=should_upgrade_firmware)
+    else:
+        if should_upgrade_firmware:
+            status = instantiate_firmware.upgrade_fw(equipment_id=get_equipment_id, force_upload=False,
+                                                     force_upgrade=should_upgrade_firmware)
+        else:
+            status = "skip-upgrade"
+    yield status
 
-def Toggle_WifiMode_iOS(setup_perfectoMobile, connData):
-    report = setup_perfectoMobile[1]    
-    driver = setup_perfectoMobile[0]
 
-    #Open Settings Application
-    #openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-    
-    report.step_start("Toggle Wifi Mode")    
-    print("Toggle Wifi Mode..")
+@pytest.fixture(scope="session")
+def check_ap_firmware_cloud(instantiate_controller, get_equipment_id):
+    yield instantiate_controller.get_ap_firmware_old_method(equipment_id=get_equipment_id)
+
+
+"""
+
+Profiles Related Fixtures
+
+"""
+
+
+@pytest.fixture(scope="module")
+def get_current_profile_cloud(instantiate_profile):
+    ssid_names = []
+    for i in instantiate_profile.profile_creation_ids["ssid"]:
+        ssid_names.append(instantiate_profile.get_ssid_name_by_profile_id(profile_id=i))
+    yield ssid_names
+
+
+@pytest.fixture(scope="module")
+def setup_profiles(request, create_profiles, instantiate_profile, get_equipment_id, get_current_profile_cloud, testbed):
+    test_cases = {}
+    mode = str(request.param[0]).lower()
     try:
-        WifiMode = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
-        #Toggle Wifi Mode
-        WifiMode.click()
-        #Verify Radio Button Mode
-        try:
-            WifiDissconnected = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
-            #self.assertEqual(WifiDissconnected.text, "Airplane Mode", "Airplane Mode Not Triggerd")
-            print("Wifi Radio Button Toggled to Disable")
-        except NoSuchElementException:
-            print("Wifi Radio Button Not Disabled...") 
-        
-        #Set Airplane Mode Back
-        WifiDissconnected.click()     
-        print("Wifi Radio Button Toggled to Enabled")    
-    except NoSuchElementException:
-        print("Airplane Wifi Button not loaded...")
-
-def get_WifiIPAddress_iOS(setup_perfectoMobile, connData):
-    report = setup_perfectoMobile[1]    
-    driver = setup_perfectoMobile[0]
-
-    openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-
-    try:
-       # print("Verifying Connected Wifi Connection")
-        report.step_start("Loading Wifi Page")  
-        element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']/XCUIElementTypeStaticText[2]")
-        element.click()
-    except NoSuchElementException:
-        print("Exception: Verify Xpath - unable to click on Wifi") 
-
-    report.step_start("Wifi Page")
-    WifiXpath = "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeStaticText[@label='"+ connData["Default-SSID-perfecto-b"] + "']"
-    elementWifName = driver.find_element_by_xpath(WifiXpath)
-     #Check AP Internet Error Msg 
-    print("Checking Internet Connection Error...")
-    report.step_start("Checking Internet Connection Error..")
-
-    try:
-        driver.implicitly_wait(5)
-        WifiInternetErrMsg = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
-    except NoSuchElementException:
-        #Need to fail test case
-        driver.implicitly_wait(25)
-        print("Wifi Connected without any errors: " + connData["Default-SSID-perfecto-b"])
-        #Fail TEST CASE
-
-    try:   
-        WifiInternetInfo=driver.find_element_by_xpath("(//XCUIElementTypeButton[@label='More Info'])[1]")
-        WifiInternetInfo.click()
-    except NoSuchElementException:
-        print("Wifi-AP Connected Successfully: " + connData["Default-SSID-perfecto-b"])
-
-    try:   
-        WifiIPaddress= driver.find_element_by_xpath("(//*[@label='Router']/parent::*/XCUIElementTypeStaticText)[2]").text
-        return WifiIPaddress
-    except NoSuchElementException:
-        print("Wifi-AP Connected Successfully: " + connData["Default-SSID-perfecto-b"])
-
-    return None
-
-def ping_deftapps_iOS(setup_perfectoMobile, AP_IPaddress):
-    report = setup_perfectoMobile[1]    
-    driver = setup_perfectoMobile[0]
-
-    report.step_start("Pinging deftapps....")
-    try:
-        pingHost = "//*[@value='<Hostname or IP address>']"
-        element2 = driver.find_element_by_xpath(pingHost)
-        element2.clear()
-        #element2.send_keys(AP_IPaddress)
-        element2.send_keys("8.8.8.8")
-
-        #Ping Enable
-        report.step_start("Pingin Host")
-        print("Pingin Host..")
-        element3 = driver.find_element_by_xpath("//*[@label='go']")
-        element3.click()
-
+        instantiate_profile.push_profile_old_method(equipment_id=get_equipment_id)
+    except:
+        print("failed to create AP Profile")
+    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
+    get_current_profile_cloud.sort()
+    # This loop will check the VIF Config with cloud profile
+    for i in range(0, 18):
+        vif_config = list(ap_ssh.get_vif_config_ssids())
+        vif_config.sort()
+        print(vif_config)
+        print(get_current_profile_cloud)
+        if get_current_profile_cloud == vif_config:
+            test_cases[mode + '_vifc'] = True
+            break
         time.sleep(10)
+    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
+    # This loop will check the VIF Config with VIF State
+    for i in range(0, 18):
+        vif_state = list(ap_ssh.get_vif_state_ssids())
+        vif_state.sort()
+        vif_config = list(ap_ssh.get_vif_config_ssids())
+        vif_config.sort()
+        print(vif_config)
+        print(vif_state)
+        if vif_state == vif_config:
+            test_cases[mode + '_vifs'] = True
+            break
+        time.sleep(10)
+    yield test_cases
 
-        #handle any popup
 
-        report.step_start("Stop Ping Host")
-        print("Stop Ping Host..")
-        element4 = driver.find_element_by_xpath("//*[@label='Stop']")
-        element4.click()
+@pytest.fixture(scope="module")
+def create_profiles(request, get_security_flags, get_markers, instantiate_profile, setup_profile_data):
+    profile_id = {"ssid": [], "rf": None, "radius": None, "equipment_ap": None}
+    mode = str(request.param[0])
+    test_cases = {}
+    if mode not in ["BRIDGE", "NAT", "VLAN"]:
+        print("Invalid Mode: ", mode)
+        yield False
+    instantiate_profile.delete_profile_by_name(profile_name="Equipment-AP-" + mode)
+    for i in setup_profile_data[mode]:
+        for j in setup_profile_data[mode][i]:
+            instantiate_profile.delete_profile_by_name(
+                profile_name=setup_profile_data[mode][i][j]['profile_name'])
+    instantiate_profile.delete_profile_by_name(profile_name="Automation-Radius-Profile-" + mode)
+    instantiate_profile.get_default_profiles()
+    # if get_markers["wifi5"]:
+    #     # Create RF Profile
+    #     pass
+    # if get_markers["wifi6"]:
+    #     # Create RF Profile
+    #     pass
 
-        # /* Check Packet Loss */
-        report.step_start("Verifying Packet Loss..")
-        print("Verifying Packet Loss..")
+    # Create RF Profile Here
+    instantiate_profile.set_rf_profile()
+    if get_markers["radius"]:
+        radius_info = RADIUS_SERVER_DATA
+        radius_info["name"] = "Automation-Radius-Profile-" + mode
         try:
-            element5 = driver.find_element_by_xpath("//XCUIElementTypeStaticText[@label='0']")  
-            #assertEqual(element5.text, "0", "Packet Loss Exist, Please Check Device")
-        except NoSuchElementException:
-            print("No Packet Loss Detected 1st Attempt")
+            instantiate_profile.create_radius_profile(radius_info=radius_info)
+            test_cases['radius_profile'] = True
+        except:
+            test_cases['radius_profile'] = False
+    for i in get_security_flags:
+        if get_markers[i] and i == "open":
+            if get_markers["twog"]:
+                profile_data = setup_profile_data[mode]["OPEN"]["2G"]
+                try:
+                    id = instantiate_profile.create_open_ssid_profile(two4g=True, fiveg=False,
+                                                                      profile_data=profile_data)
+                    profile_id["ssid"].append(profile_data['ssid_name'])
+                    test_cases['ssid_2g_open_' + mode.lower()] = True
+                except:
+                    test_cases['ssid_2g_open_' + mode.lower()] = False
+            if get_markers["fiveg"]:
+                profile_data = setup_profile_data[mode]["OPEN"]["5G"]
+                try:
+                    id = instantiate_profile.create_open_ssid_profile(two4g=False, fiveg=True,
+                                                                      profile_data=profile_data)
+                    profile_id["ssid"].append(profile_data['ssid_name'])
+                    test_cases['ssid_5g_open_' + mode.lower()] = True
+                except:
+                    test_cases['ssid_5g_open_' + mode.lower()] = False
+        if get_markers[i] and i == "wpa":
+            if get_markers["twog"]:
+                profile_data = setup_profile_data[mode]["WPA"]["2G"]
+                try:
+                    id = instantiate_profile.create_wpa_ssid_profile(two4g=True, fiveg=False, profile_data=profile_data)
+                    profile_id["ssid"].append(profile_data['ssid_name'])
+                    test_cases['ssid_2g_wpa_' + mode.lower()] = True
+                except:
+                    test_cases['ssid_5g_wpa_' + mode.lower()] = False
+            if get_markers["fiveg"]:
+                profile_data = setup_profile_data[mode]["WPA"]["5G"]
+                try:
+                    id = instantiate_profile.create_wpa_ssid_profile(two4g=False, fiveg=True, profile_data=profile_data)
+                    profile_id["ssid"].append(profile_data['ssid_name'])
+                    test_cases['ssid_5g_wpa_' + mode.lower()] = True
+                except:
+                    test_cases['ssid_5g_wpa_' + mode.lower()] = False
+        if get_markers[i] and i == "wpa2_personal":
+            if get_markers["twog"]:
+                profile_data = setup_profile_data[mode]["WPA2_P"]["2G"]
+                try:
+                    id = instantiate_profile.create_wpa2_personal_ssid_profile(two4g=True, fiveg=False,
+                                                                               profile_data=profile_data)
+                    profile_id["ssid"].append(profile_data['ssid_name'])
+                    test_cases['ssid_2g_wpa2_' + mode.lower()] = True
+                except:
+                    test_cases['ssid_2g_wpa2_' + mode.lower()] = False
+            if get_markers["fiveg"]:
+                profile_data = setup_profile_data[mode]["WPA2_P"]["5G"]
+                try:
+                    id = instantiate_profile.create_wpa2_personal_ssid_profile(two4g=False, fiveg=True,
+                                                                               profile_data=profile_data)
+                    profile_id["ssid"].append(profile_data['ssid_name'])
+                    test_cases['ssid_5g_wpa2_' + mode.lower()] = True
+                except:
+                    test_cases['ssid_5g_wpa2_' + mode.lower()] = False
+        if get_markers[i] and i == "wpa2_enterprise":
+            if get_markers["twog"]:
+                profile_data = setup_profile_data[mode]["WPA2_E"]["2G"]
+                try:
+                    id = instantiate_profile.create_wpa2_enterprise_ssid_profile(two4g=True, fiveg=False,
+                                                                                 profile_data=profile_data)
+                    profile_id["ssid"].append(profile_data['ssid_name'])
+                    test_cases['ssid_2g_eap_' + mode.lower()] = True
+                except:
+                    test_cases['ssid_2g_eap_' + mode.lower()] = False
+            if get_markers["fiveg"]:
+                profile_data = setup_profile_data[mode]["WPA2_E"]["5G"]
+                try:
+                    id = instantiate_profile.create_wpa2_enterprise_ssid_profile(two4g=False, fiveg=True,
+                                                                                 profile_data=profile_data)
+                    profile_id["ssid"].append(profile_data['ssid_name'])
+                    test_cases['ssid_5g_eap_' + mode.lower()] = True
+                except:
+                    test_cases['ssid_5g_eap_' + mode.lower()] = False
 
-        report.step_start("Verifying Packet Sent..")
-        print("Verifying Packet Sent..")
-        try:
-            packetSent = driver.find_element_by_xpath("//XCUIElementTypeStaticText[@label='Sent']/parent::*/XCUIElementTypeStaticText[2]").text          
-            #assertEqual(element5.text, "0", "Packet Loss Exist, Please Check Device")
-        except NoSuchElementException:
-            print("-------Exception: Packet Sent Error, check object ID")
-
-        report.step_start("Verifying Packet Received..")
-        print("Verifying Packet Received..")
-        try:
-            packetReceived = driver.find_element_by_xpath("//XCUIElementTypeStaticText[@label='Received']/parent::*/XCUIElementTypeStaticText[2]").text          
-            #assertEqual(element5.text, "0", "Packet Loss Exist, Please Check Device")
-        except NoSuchElementException:
-            print("-------Exception: Packet Sent Error, check object ID")
-
-        print("Total Packet Sent: " + packetSent + " Packed Recieved: " + packetReceived)
-
-        # Also Check #Sendto: No route to host
-        print("Verifying No route to host Error Msg....")
-        report.step_start("Verifying No route to host Error Msg..")
-        try:
-            element7 = driver.find_element_by_xpath("(//XCUIElementTypeStaticText[@label='Sendto: No route to host'])[2]")  
-            print("Packet Loss Detected on AP!!!!!: " + AP_IPaddress)
-            #self.assertNotEqual(element7.text, "Sendto: No route to host", "Packet Loss Exist, Please Check Device AP: " + Wifi_AP_Name)
-        except NoSuchElementException:
-            print("\nNo Packet Loss Detected on AP!!!!!: " + AP_IPaddress)
-
-    except NoSuchElementException:
-        print("Exception while ping Deft App on iOS")
-
-    return None
-
-def tearDown(setup_perfectoMobile):
-    report = setup_perfectoMobile[1]    
-    driver = setup_perfectoMobile[0]
-
-    report.step_start("Exception Failure Tear Down....")
-
+    # Create Equipment AP Profile Here
+    profile_data = {
+        "profile_name": "Equipment-AP-" + mode
+    }
     try:
-        print(" -- Tear Down --")     
-        report.test_stop(TestResultFactory.create_failure)
-        print('Report-Url: ' + report.report_url() + '\n')
-        driver.close()
-    except Exception as e:
-        print(" -- Exception Not Able To close --")    
-        print (e.message)
-    finally:
-        try:
-            driver.quit()
-        except Exception as e:
-            print(" -- Exception Not Able To Quit --")    
-            print (e.message)
+        instantiate_profile.set_ap_profile(profile_data=profile_data)
+        test_cases['ap_' + mode.lower()] = True
+    except:
+        test_cases['ap_' + mode.lower()] = False
+    yield test_cases
+
+
+@pytest.fixture(scope="function")
+def update_ssid(request, instantiate_profile, setup_profile_data):
+    requested_profile = str(request.param).replace(" ", "").split(",")
+    profile = setup_profile_data[requested_profile[0]][requested_profile[1]][requested_profile[2]]
+    status = instantiate_profile.update_ssid_name(profile_name=profile["profile_name"],
+                                                  new_profile_name=requested_profile[3])
+    setup_profile_data[requested_profile[0]][requested_profile[1]][requested_profile[2]]["profile_name"] = \
+        requested_profile[3]
+    setup_profile_data[requested_profile[0]][requested_profile[1]][requested_profile[2]]["ssid_name"] = \
+        requested_profile[3]
+    time.sleep(90)
+    yield status
