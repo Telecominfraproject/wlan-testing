@@ -83,11 +83,11 @@ class TestNatModeClientConnectivity(object):
         if staConnect.passes():
             instantiate_testrail.update_testrail(case_id=test_cases["2g_wpa_nat"], run_id=instantiate_project,
                                                  status_id=1,
-                                                 msg='2G WPA Client Connectivity Passed successfully - nat mode')
+                                                 msg='2G WPA Client Connectivity Passed successfully - nat mode' + str(run_results))
         else:
             instantiate_testrail.update_testrail(case_id=test_cases["2g_wpa_nat"], run_id=instantiate_project,
                                                  status_id=5,
-                                                 msg='2G WPA Client Connectivity Failed - nat mode')
+                                                 msg='2G WPA Client Connectivity Failed - nat mode' + str(run_results))
         assert staConnect.passes()
         # C2420
 
@@ -129,11 +129,11 @@ class TestNatModeClientConnectivity(object):
         if staConnect.passes():
             instantiate_testrail.update_testrail(case_id=test_cases["5g_wpa_nat"], run_id=instantiate_project,
                                                  status_id=1,
-                                                 msg='5G WPA Client Connectivity Passed successfully - nat mode')
+                                                 msg='5G WPA Client Connectivity Passed successfully - nat mode' + str(run_results))
         else:
             instantiate_testrail.update_testrail(case_id=test_cases["5g_wpa_nat"], run_id=instantiate_project,
                                                  status_id=5,
-                                                 msg='5G WPA Client Connectivity Failed - nat mode')
+                                                 msg='5G WPA Client Connectivity Failed - nat mode' + str(run_results))
         assert staConnect.passes()
         # C2419
 
@@ -175,11 +175,11 @@ class TestNatModeClientConnectivity(object):
         if staConnect.passes():
             instantiate_testrail.update_testrail(case_id=test_cases["2g_wpa2_nat"], run_id=instantiate_project,
                                                  status_id=1,
-                                                 msg='2G WPA2 Client Connectivity Passed successfully - nat mode')
+                                                 msg='2G WPA2 Client Connectivity Passed successfully - nat mode' + str(run_results))
         else:
             instantiate_testrail.update_testrail(case_id=test_cases["2g_wpa2_nat"], run_id=instantiate_project,
                                                  status_id=5,
-                                                 msg='2G WPA2 Client Connectivity Failed - nat mode')
+                                                 msg='2G WPA2 Client Connectivity Failed - nat mode' + str(run_results))
         assert staConnect.passes()
         # C2237
 
@@ -221,11 +221,11 @@ class TestNatModeClientConnectivity(object):
         if staConnect.passes():
             instantiate_testrail.update_testrail(case_id=test_cases["5g_wpa2_nat"], run_id=instantiate_project,
                                                  status_id=1,
-                                                 msg='5G WPA2 Client Connectivity Passed successfully - nat mode')
+                                                 msg='5G WPA2 Client Connectivity Passed successfully - nat mode' + str(run_results))
         else:
             instantiate_testrail.update_testrail(case_id=test_cases["5g_wpa2_nat"], run_id=instantiate_project,
                                                  status_id=5,
-                                                 msg='5G WPA2 Client Connectivity Failed - nat mode')
+                                                 msg='5G WPA2 Client Connectivity Failed - nat mode' + str(run_results))
         assert staConnect.passes()
         # C2236
 
@@ -270,11 +270,11 @@ class TestNatModeClientConnectivity(object):
             instantiate_testrail.update_testrail(case_id=test_cases["2g_eap_nat"], run_id=instantiate_project,
                                                  status_id=1,
                                                  msg='5G WPA2 ENTERPRISE Client Connectivity Passed successfully - '
-                                                     'nat mode')
+                                                     'nat mode' + str(run_results))
         else:
             instantiate_testrail.update_testrail(case_id=test_cases["2g_eap_nat"], run_id=instantiate_project,
                                                  status_id=5,
-                                                 msg='5G WPA2 ENTERPRISE Client Connectivity Failed - nat mode')
+                                                 msg='5G WPA2 ENTERPRISE Client Connectivity Failed - nat mode' + str(run_results))
         assert eap_connect.passes()
         # C5214
 
@@ -319,11 +319,11 @@ class TestNatModeClientConnectivity(object):
             instantiate_testrail.update_testrail(case_id=test_cases["5g_eap_nat"], run_id=instantiate_project,
                                                  status_id=1,
                                                  msg='5G WPA2 ENTERPRISE Client Connectivity Passed successfully - '
-                                                     'nat mode')
+                                                     'nat mode' + str(run_results))
         else:
             instantiate_testrail.update_testrail(case_id=test_cases["5g_eap_nat"], run_id=instantiate_project,
                                                  status_id=5,
-                                                 msg='5G WPA2 ENTERPRISE Client Connectivity Failed - nat mode')
+                                                 msg='5G WPA2 ENTERPRISE Client Connectivity Failed - nat mode' + str(run_results))
         assert eap_connect.passes()
 
     @pytest.mark.modify_ssid
@@ -333,7 +333,7 @@ class TestNatModeClientConnectivity(object):
         indirect=True
     )
     def test_modify_ssid(self, request, update_ssid, get_lanforge_data, setup_profile_data, instantiate_testrail,
-                         instantiate_project, test_cases):
+                         instantiate_project, test_cases, instantiate_controller):
         profile_data = setup_profile_data["NAT"]["WPA"]["5G"]
         station_names = []
         for i in range(0, int(request.config.getini("num_stations"))):
@@ -369,9 +369,10 @@ class TestNatModeClientConnectivity(object):
             instantiate_testrail.update_testrail(case_id=test_cases["nat_ssid_update"], run_id=instantiate_project,
                                                  status_id=1,
                                                  msg='5G WPA Client Connectivity Passed successfully - nat mode '
-                                                     'updated ssid')
+                                                     'updated ssid' + str(run_results))
         else:
             instantiate_testrail.update_testrail(case_id=test_cases["nat_ssid_update"], run_id=instantiate_project,
                                                  status_id=5,
-                                                 msg='5G WPA Client Connectivity Failed - nat mode updated ssid')
+                                                 msg='5G WPA Client Connectivity Failed - nat mode updated ssid' + str(run_results))
+        instantiate_controller.refresh_instance()
         assert staConnect.passes()

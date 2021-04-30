@@ -163,6 +163,3 @@ class APNOS:
             print(e)
             status = "Error"
         return status
-
-
-

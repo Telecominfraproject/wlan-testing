@@ -109,6 +109,28 @@ class Controller(ConfigureController):
         }
         return self.login_client.get_access_token(request_body)
 
+    def refresh_instance(self):
+        # Connecting to Controller
+        self.api_client = swagger_client.ApiClient(self.configuration)
+        self.login_client = swagger_client.LoginApi(api_client=self.api_client)
+        self.bearer = self.get_bearer_token()
+
+        self.api_client.default_headers['Authorization'] = "Bearer " + self.bearer._access_token
+        self.status_client = swagger_client.StatusApi(api_client=self.api_client)
+        self.equipment_client = swagger_client.EquipmentApi(self.api_client)
+        self.profile_client = swagger_client.ProfileApi(self.api_client)
+        self.api_client.configuration.api_key_prefix = {
+            "Authorization": "Bearer " + self.bearer._access_token
+        }
+        self.api_client.configuration.refresh_api_key_hook = self.get_bearer_token()
+        self.ping_response = self.portal_ping()
+        self.default_profiles = {}
+        # print(self.bearer)
+        if self.ping_response._application_name != 'PortalServer':
+            print("Server not Reachable")
+            exit()
+        print("Connected to Controller Server")
+
     def portal_ping(self):
         return self.login_client.portal_ping()
 
@@ -835,15 +857,3 @@ class FirmwareUtility(JFrogUtility):
             firmware_version = False
             print("firmware not available: ", firmware_version)
         return firmware_version
-
-# data = {
-#     'url': "https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build",  # API base url for the controller
-#     'username': 'support@example.com',
-#     'password': 'support',
-#     'version': '1.0.0-SNAPSHOT',
-#     'commit_date': '2021-03-01'
-# }
-# sdk_client = Controller(controller_data=data)
-# profile = ProfileUtility(sdk_client=sdk_client)
-# profile.cleanup_profiles()
-# sdk_client.disconnect_Controller()
