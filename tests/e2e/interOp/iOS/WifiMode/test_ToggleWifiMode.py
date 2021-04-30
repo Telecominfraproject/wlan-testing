@@ -33,13 +33,10 @@ class TestToggleWifiMode(object):
 
     def test_ToogleWifiMode(self, setup_profile_data, get_ToggleWifiMode_data, setup_perfectoMobile_iOS):
          
-        profile_data = setup_profile_data["NAT"]["WPA"]["5G"]
+        profile_data = setup_profile_data["NAT"]["WPA"]["5G"]  
+        #profile_data = setup_profile_data["NAT"]["WPA"]["2G"]
         ssidName = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-
-        profile_data = setup_profile_data["NAT"]["WPA"]["2G"]
-        ssidPassword = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
+        ssidPassword = profile_data["security_key"]
       
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
