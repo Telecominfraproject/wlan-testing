@@ -1,0 +1,34 @@
+name: Quali example pipeline
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  quali:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
+      CLOUDSHELL_USER: admin
+      CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        run: pip install -r .quali/requirements.txt
+
+      - name: Start reservation
+        id: start
+        run: echo ::set-output name=res_id::$(python .quali/start_reservation.py)
+  
+      - name: Run tests
+        run: |
+          echo "simulating test execution"
+          sleep 30
+
+      - name: Stop reservation
+        run: python .quali/stop_reservation.py ${{ steps.start.outputs.res_id }}
