@@ -1,7 +1,6 @@
 name: Quali example pipeline
 
 on:
-  push:
   workflow_dispatch:
 
 jobs:
