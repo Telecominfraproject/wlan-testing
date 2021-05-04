@@ -3,7 +3,7 @@ import time
 
 from cloudshell.api.cloudshell_api import CloudShellAPISession
 
-TIMEOUT=600
+TIMEOUT=1200
 
 def get_session():
     url = os.environ['CLOUDSHELL_URL']
@@ -12,12 +12,11 @@ def get_session():
 
     return CloudShellAPISession(url, user, password, "Global")
 
-
-def wait_for_reservation_status(session, res_id, target_status):
+def __wait_for_status(session, res_id, field, target_status):
     timer = 0
     sleep_time = 5
     while True:
-        status = session.GetReservationStatus(res_id).ReservationSlimStatus.ProvisioningStatus
+        status = session.GetReservationStatus(res_id).ReservationSlimStatus.__dict__[field]
 
         if status == target_status:
             break
@@ -27,3 +26,9 @@ def wait_for_reservation_status(session, res_id, target_status):
 
         time.sleep(sleep_time)
         timer += sleep_time
+
+def wait_for_provisioning_status(session, res_id, target_status):
+    __wait_for_status(session, res_id, 'ProvisioningStatus', target_status)
+
+def wait_for_reservation_status(session, res_id, target_status):
+    __wait_for_status(session, res_id, 'Status', target_status)
