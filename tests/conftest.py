@@ -76,6 +76,41 @@ def pytest_addoption(parser):
         default=False,
         help="Stop using Testrails"
     )
+    parser.addoption(
+        "--exit-on-fail",
+        action="store_true",
+        default=False,
+        help="use to stop execution if failure"
+    )
+
+    # Perfecto Parameters
+    parser.addini("perfectoURL", "Cloud URL")
+    parser.addini("securityToken", "Security Token")
+    parser.addini("platformName-iOS", "iOS Platform")
+    parser.addini("platformName-android", "Android Platform")
+    parser.addini("model-iOS", "iOS Devices")
+    parser.addini("model-android", "Android Devices")
+    parser.addini("bundleId-iOS", "iOS Devices")
+    parser.addini("bundleId-iOS-Settings", "iOS Settings App")
+    parser.addini("appPackage-android", "Android Devices")
+    parser.addini("wifi-SSID-5gl-Pwd", "Wifi 5g Password")
+    parser.addini("wifi-SSID-2g-Pwd", "Wifi 2g Password")
+    parser.addini("Default-SSID-5gl-perfecto-b", "Wifi 5g AP Name")
+    parser.addini("Default-SSID-2g-perfecto-b", "Wifi 2g AP Name")
+    parser.addini("Default-SSID-perfecto-b", "Wifi AP Name")
+    parser.addini("bundleId-iOS-Ping", "Ping Bundle ID")
+    parser.addini("browserType-iOS", "Mobile Browser Name")
+    parser.addini("projectName", "Project Name")
+    parser.addini("projectVersion", "Project Version")
+    parser.addini("jobName", "CI Job Name")
+    parser.addini("jobNumber", "CI Job Number")
+    parser.addini("reportTags", "Report Tags")
+    parser.addoption(
+        "--access-points-perfecto",
+        # nargs="+",
+        default=["Perfecto"],
+        help="list of access points to test"
+    )
 
 
 """
@@ -159,9 +194,13 @@ def instantiate_project(request, instantiate_testrail, testbed, get_latest_firmw
 
 
 @pytest.fixture(scope="session")
-def check_lanforge_connectivity(testbed):
-    # Check port
+def setup_lanforge():
     yield True
+
+
+@pytest.fixture(scope="session")
+def exit_on_fail(request):
+    yield request.config.getoption("--exit-on-fail")
 
 
 @pytest.fixture(scope="session")
@@ -175,22 +214,41 @@ def test_cases():
 
 
 @pytest.fixture(scope="session")
+def apnos_obj(get_configuration, testbed):
+    yield APNOS(get_configuration[testbed]['access_point'][0])
+
+
+@pytest.fixture(scope="session")
 def instantiate_access_point(testbed):
     APNOS(CONFIGURATION[testbed]['access_point'][0], pwd="../libs/apnos/")
     yield True
 
 
 @pytest.fixture(scope="function")
-def test_access_point(testbed, instantiate_access_point):
-    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
-    ap_ssh.reboot()
-    time.sleep(100)
-    status = ap_ssh.get_manager_state()
+def access_point_connectivity(apnos_obj, get_configuration, testbed):
+    ap_conn = {}
+    config_serial = get_configuration[testbed]['access_point'][0]['serial']
+    ap_serial = apnos_obj.get_serial_number()
+    ap_conn["serial"] = True
+    if ap_serial != config_serial:
+        ap_conn["serial"] = False
+
+    ap_conn["redir"] = False
+    ap_redir = apnos_obj.get_redirector()
+
+    # Compare with something ...
+
+    ap_conn["mgr"] = False
+    status = apnos_obj.get_manager_state()
     if "ACTIVE" not in status:
+        apnos_obj.run_generic_command(cmd="service opensync restart")
         time.sleep(30)
-        ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
-        status = ap_ssh.get_manager_state()
-    yield status
+        status = apnos_obj.get_manager_state()
+        if "ACTIVE" in status:
+            ap_conn["mgr"] = True
+    else:
+        ap_conn["mgr"] = True
+    yield ap_conn
 
 
 @pytest.fixture(scope="session")
@@ -273,3 +331,8 @@ def check_ap_firmware_ssh(testbed):
 @pytest.fixture(scope="session")
 def radius_info():
     yield RADIUS_SERVER_DATA
+
+
+@pytest.fixture(scope="session")
+def get_configuration():
+    yield CONFIGURATION
