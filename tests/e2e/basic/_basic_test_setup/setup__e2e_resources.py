@@ -4,15 +4,35 @@
 
 """
 import pytest
+import time
 
+
+@pytest.mark.lanforge_scenario_setup_dut
+def test_lanforge_scenario_setup_dut(create_lanforge_chamberview_dut):
+    print(create_lanforge_chamberview_dut)
+    ssid = [
+        ['ssid_idx=0 ssid=Default-SSID-2g password=12345678 bssid=90:3c:b3:94:48:58'],
+        ['ssid_idx=1 ssid=Default-SSID-5gl password=12345678 bssid=90:3c:b3:94:48:59']
+            ]
+
+    create_lanforge_chamberview_dut.ssid = ssid
+    create_lanforge_chamberview_dut.setup()
+    create_lanforge_chamberview_dut.add_ssids()
+    create_lanforge_chamberview_dut.cv_test.show_text_blob(None, None, True)  # Show changes on GUI
+    create_lanforge_chamberview_dut.cv_test.sync_cv()
+    time.sleep(2)
+    create_lanforge_chamberview_dut.cv_test.show_text_blob(None, None, True)  # Show changes on GUI
+    create_lanforge_chamberview_dut.cv_test.sync_cv()
+
+    assert True
 
 @pytest.mark.lanforge_scenario_setup
 def test_lanforge_scenario_setup(create_lanforge_chamberview):
-    raw_line = [
-        ["profile_link 1.1 vlan-100 1 NA NA eth2,AUTO -1 100"]
-    ]
-    print(create_lanforge_chamberview.setup(create_scenario="TIP-test",raw_line=raw_line))
-    create_lanforge_chamberview.build("TIP-test")
+    # raw_line = [
+    #     ["profile_link 1.1 vlan-100 1 NA NA eth2,AUTO -1 100"]
+    # ]
+    # print(create_lanforge_chamberview.setup_scenario(create_scenario="TIP-test",raw_line=raw_line))
+    # create_lanforge_chamberview.build_scenario("TIP-test")
     assert True
 
 @pytest.mark.sanity
