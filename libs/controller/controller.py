@@ -15,6 +15,7 @@ import swagger_client
 from bs4 import BeautifulSoup
 from swagger_client import EquipmentGatewayApi
 from swagger_client import FirmwareManagementApi
+import allure
 
 
 class ConfigureController:
@@ -639,6 +640,7 @@ class ProfileUtility:
         return default_profile
 
     """
+
         method to push the profile to the given equipment 
     """
 
@@ -781,7 +783,7 @@ class FirmwareUtility(JFrogUtility):
         return self.latest_fw
 
     def upload_fw_on_cloud(self, fw_version=None, force_upload=False):
-        print("shivam", fw_version)
+        print("Upload fw version :", fw_version)
         # force_upload = True
         # if fw_latest available and force upload is False -- Don't upload
         # if fw_latest available and force upload is True -- Upload
