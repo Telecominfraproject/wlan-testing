@@ -23,8 +23,6 @@ Information:
 
 """
 
-
-
 import sys
 import os
 import time
@@ -49,7 +47,6 @@ from configuration import CONFIGURATION
 from configuration import FIRMWARE
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
-
 
 """
 Basic Setup Collector
@@ -80,7 +77,7 @@ def get_lanforge_data(testbed):
 def instantiate_profile(instantiate_controller):
     try:
         profile_object = ProfileUtility(sdk_client=instantiate_controller)
-    except:
+    except Exception as e:
         profile_object = False
     yield profile_object
 
@@ -91,6 +88,7 @@ def get_equipment_id(instantiate_controller, testbed):
     if len(CONFIGURATION[testbed]['access_point']) == 1:
         equipment_id = instantiate_controller.get_equipment_id(
             serial_number=CONFIGURATION[testbed]['access_point'][0]['serial'])
+    print(equipment_id)
     yield equipment_id
 
 
@@ -145,9 +143,10 @@ def setup_profiles(request, create_profiles, instantiate_profile, get_equipment_
     mode = str(request.param[0]).lower()
     try:
         instantiate_profile.push_profile_old_method(equipment_id=get_equipment_id)
-    except:
-        print("failed to create AP Profile")
-    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
+    except Exception as e:
+        print(e)
+        print("failed to Push Profile")
+    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0], pwd="../libs/apnos/")
     get_current_profile_cloud.sort()
     # This loop will check the VIF Config with cloud profile
     for i in range(0, 18):
@@ -159,7 +158,7 @@ def setup_profiles(request, create_profiles, instantiate_profile, get_equipment_
             test_cases[mode + '_vifc'] = True
             break
         time.sleep(10)
-    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
+    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0], pwd="../libs/apnos/")
     # This loop will check the VIF Config with VIF State
     for i in range(0, 18):
         vif_state = list(ap_ssh.get_vif_state_ssids())
@@ -172,6 +171,7 @@ def setup_profiles(request, create_profiles, instantiate_profile, get_equipment_
             test_cases[mode + '_vifs'] = True
             break
         time.sleep(10)
+        #
     yield test_cases
 
 
@@ -183,26 +183,28 @@ def create_profiles(request, testbed, get_security_flags, get_markers, instantia
     if mode not in ["BRIDGE", "NAT", "VLAN"]:
         print("Invalid Mode: ", mode)
         yield False
-    instantiate_profile.delete_profile_by_name(profile_name="Equipment-AP-" + mode)
+    instantiate_profile.delete_profile_by_name(profile_name=testbed + "-Equipment-AP-" + mode)
     for i in setup_profile_data[mode]:
         for j in setup_profile_data[mode][i]:
             instantiate_profile.delete_profile_by_name(
                 profile_name=setup_profile_data[mode][i][j]['profile_name'])
-    instantiate_profile.delete_profile_by_name(profile_name="Automation-Radius-Profile-" + mode)
+    instantiate_profile.delete_profile_by_name(profile_name=testbed + "-Automation-Radius-Profile-" + mode)
     instantiate_profile.get_default_profiles()
     profile_data = {
-        "name": "RF-Profile-"+CONFIGURATION[testbed]['access_point'][0]['mode']+CONFIGURATION[testbed]['access_point'][0]['model'] + mode
+        "name": "RF-Profile-" + CONFIGURATION[testbed]['access_point'][0]['mode'] +
+                CONFIGURATION[testbed]['access_point'][0]['model'] + "_" + mode + "_" + testbed
     }
     instantiate_profile.delete_profile_by_name(profile_name=profile_data['name'])
-    instantiate_profile.set_rf_profile(profile_data=profile_data, mode=CONFIGURATION[testbed]['access_point'][0]['mode'])
+    instantiate_profile.set_rf_profile(profile_data=profile_data,
+                                       mode=CONFIGURATION[testbed]['access_point'][0]['mode'])
     # Create RF Profile Here
     if get_markers["radius"]:
         radius_info = RADIUS_SERVER_DATA
-        radius_info["name"] = "Automation-Radius-Profile-" + mode
+        radius_info["name"] = testbed + "-Automation-Radius-Profile-" + mode
         try:
             instantiate_profile.create_radius_profile(radius_info=radius_info)
             test_cases['radius_profile'] = True
-        except:
+        except Exception as e:
             test_cases['radius_profile'] = False
     for i in get_security_flags:
         if get_markers[i] and i == "open":
@@ -213,7 +215,7 @@ def create_profiles(request, testbed, get_security_flags, get_markers, instantia
                                                                       profile_data=profile_data)
                     profile_id["ssid"].append(profile_data['ssid_name'])
                     test_cases['ssid_2g_open_' + mode.lower()] = True
-                except:
+                except Exception as e:
                     test_cases['ssid_2g_open_' + mode.lower()] = False
             if get_markers["fiveg"]:
                 profile_data = setup_profile_data[mode]["OPEN"]["5G"]
@@ -222,7 +224,7 @@ def create_profiles(request, testbed, get_security_flags, get_markers, instantia
                                                                       profile_data=profile_data)
                     profile_id["ssid"].append(profile_data['ssid_name'])
                     test_cases['ssid_5g_open_' + mode.lower()] = True
-                except:
+                except Exception as e:
                     test_cases['ssid_5g_open_' + mode.lower()] = False
         if get_markers[i] and i == "wpa":
             if get_markers["twog"]:
@@ -231,7 +233,7 @@ def create_profiles(request, testbed, get_security_flags, get_markers, instantia
                     id = instantiate_profile.create_wpa_ssid_profile(two4g=True, fiveg=False, profile_data=profile_data)
                     profile_id["ssid"].append(profile_data['ssid_name'])
                     test_cases['ssid_2g_wpa_' + mode.lower()] = True
-                except:
+                except Exception as e:
                     test_cases['ssid_5g_wpa_' + mode.lower()] = False
             if get_markers["fiveg"]:
                 profile_data = setup_profile_data[mode]["WPA"]["5G"]
@@ -239,7 +241,7 @@ def create_profiles(request, testbed, get_security_flags, get_markers, instantia
                     id = instantiate_profile.create_wpa_ssid_profile(two4g=False, fiveg=True, profile_data=profile_data)
                     profile_id["ssid"].append(profile_data['ssid_name'])
                     test_cases['ssid_5g_wpa_' + mode.lower()] = True
-                except:
+                except Exception as e:
                     test_cases['ssid_5g_wpa_' + mode.lower()] = False
         if get_markers[i] and i == "wpa2_personal":
             if get_markers["twog"]:
@@ -249,7 +251,7 @@ def create_profiles(request, testbed, get_security_flags, get_markers, instantia
                                                                                profile_data=profile_data)
                     profile_id["ssid"].append(profile_data['ssid_name'])
                     test_cases['ssid_2g_wpa2_' + mode.lower()] = True
-                except:
+                except Exception as e:
                     test_cases['ssid_2g_wpa2_' + mode.lower()] = False
             if get_markers["fiveg"]:
                 profile_data = setup_profile_data[mode]["WPA2_P"]["5G"]
@@ -258,7 +260,7 @@ def create_profiles(request, testbed, get_security_flags, get_markers, instantia
                                                                                profile_data=profile_data)
                     profile_id["ssid"].append(profile_data['ssid_name'])
                     test_cases['ssid_5g_wpa2_' + mode.lower()] = True
-                except:
+                except Exception as e:
                     test_cases['ssid_5g_wpa2_' + mode.lower()] = False
         if get_markers[i] and i == "wpa2_enterprise":
             if get_markers["twog"]:
@@ -268,7 +270,7 @@ def create_profiles(request, testbed, get_security_flags, get_markers, instantia
                                                                                  profile_data=profile_data)
                     profile_id["ssid"].append(profile_data['ssid_name'])
                     test_cases['ssid_2g_eap_' + mode.lower()] = True
-                except:
+                except Exception as e:
                     test_cases['ssid_2g_eap_' + mode.lower()] = False
             if get_markers["fiveg"]:
                 profile_data = setup_profile_data[mode]["WPA2_E"]["5G"]
@@ -277,18 +279,26 @@ def create_profiles(request, testbed, get_security_flags, get_markers, instantia
                                                                                  profile_data=profile_data)
                     profile_id["ssid"].append(profile_data['ssid_name'])
                     test_cases['ssid_5g_eap_' + mode.lower()] = True
-                except:
+                except Exception as e:
                     test_cases['ssid_5g_eap_' + mode.lower()] = False
 
     # Create Equipment AP Profile Here
     profile_data = {
-        "profile_name": "Equipment-AP-" + mode
+        "profile_name": testbed + "-Equipment-AP-" + mode
     }
     try:
         instantiate_profile.set_ap_profile(profile_data=profile_data)
         test_cases['ap_' + mode.lower()] = True
-    except:
+    except Exception as e:
+        print(e)
         test_cases['ap_' + mode.lower()] = False
+
+    def teardown_profiles():
+        print("\nRemoving Profiles")
+        instantiate_profile.delete_profile_by_name(profile_name=profile_data['profile_name'])
+        time.sleep(20)
+
+    request.addfinalizer(teardown_profiles)
     yield test_cases
 
 
@@ -304,3 +314,4 @@ def update_ssid(request, instantiate_profile, setup_profile_data):
         requested_profile[3]
     time.sleep(90)
     yield status
+
