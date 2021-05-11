@@ -10,23 +10,6 @@ def setup_vlan():
     allure.attach(body=str(vlan_id), name="VLAN Created: ")
     yield vlan_id[0]
 
-@pytest.fixture(scope="session")
-def get_equipment_id(instantiate_controller, testbed):
-    equipment_id = 0
-    if len(CONFIGURATION[testbed]['access_point']) == 1:
-        equipment_id = instantiate_controller.get_equipment_id(
-            serial_number=CONFIGURATION[testbed]['access_point'][0]['serial'])
-    print(equipment_id)
-    yield equipment_id
-
-@pytest.fixture(scope="module")
-def instantiate_profile(instantiate_controller):
-    try:
-        profile_object = ProfileUtility(sdk_client=instantiate_controller)
-    except Exception as e:
-        profile_object = False
-    yield profile_object
-
 
 @allure.feature("CLIENT CONNECTIVITY SETUP")
 @pytest.fixture(scope="package")

@@ -3,6 +3,7 @@ import datetime
 import sys
 import os
 import time
+import allure
 
 sys.path.append(
     os.path.dirname(
@@ -11,7 +12,19 @@ sys.path.append(
 )
 if "libs" not in sys.path:
     sys.path.append(f'../libs')
+for folder in 'py-json', 'py-scripts':
+    if folder not in sys.path:
+        sys.path.append(f'../lanforge/lanforge-scripts/{folder}')
 
+sys.path.append(f"../lanforge/lanforge-scripts/py-scripts/tip-cicd-sanity")
+
+sys.path.append(f'../libs')
+sys.path.append(f'../libs/lanforge/')
+
+from LANforge.LFUtils import *
+
+if 'py-json' not in sys.path:
+    sys.path.append('../py-scripts')
 from apnos.apnos import APNOS
 from controller.controller import Controller
 from controller.controller import ProfileUtility
@@ -24,6 +37,8 @@ from configuration import CONFIGURATION
 from configuration import FIRMWARE
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
+import sta_connect2
+from sta_connect2 import StaConnect2
 
 
 def pytest_addoption(parser):
@@ -59,15 +74,9 @@ def pytest_addoption(parser):
     # this has to be the last argument
     # example: --access-points ECW5410 EA8300-EU
     parser.addoption(
-        "--model",
-        # nargs="+",
-        default="ecw5410",
-        help="AP Model which is needed to test"
-    )
-    parser.addoption(
         "--testbed",
         # nargs="+",
-        default="lab-info",
+        default="basic-01",
         help="AP Model which is needed to test"
     )
     parser.addoption(
@@ -86,6 +95,8 @@ Test session base fixture
 @pytest.fixture(scope="session")
 def testbed(request):
     var = request.config.getoption("--testbed")
+    allure.attach(body=str(var),
+                  name="Testbed Selected : ")
     yield var
 
 
@@ -99,63 +110,85 @@ def should_upgrade_firmware(request):
     yield request.config.getoption("--force-upgrade")
 
 
-"""
-Instantiate Objects for Test session
-"""
-
-
 @pytest.fixture(scope="session")
-def instantiate_controller(request, testbed):
-    try:
-        sdk_client = Controller(controller_data=CONFIGURATION[testbed]["controller"])
+def radius_info():
+    allure.attach(body=str(RADIUS_SERVER_DATA), name="Radius server Info: ")
+    yield RADIUS_SERVER_DATA
 
-        def teardown_session():
+
+# Get Configuration data f
+@pytest.fixture(scope="session")
+def get_configuration(testbed):
+    allure.attach(body=str(testbed), name="Testbed Selected: ")
+    yield CONFIGURATION[testbed]
+
+
+# APNOS Library
+@pytest.fixture(scope="session")
+def get_apnos():
+    yield APNOS
+
+
+# Controller Fixture
+@pytest.fixture(scope="session")
+def setup_controller(request, get_configuration):
+    try:
+        sdk_client = Controller(controller_data=get_configuration["controller"])
+        allure.attach(body=str(get_configuration["controller"]), name="Controller Instantiated: ")
+
+        def teardown_controller():
             print("\nTest session Completed")
+            allure.attach(body=str(get_configuration["controller"]), name="Controller Teardown: ")
             sdk_client.disconnect_Controller()
 
-        request.addfinalizer(teardown_session)
+        request.addfinalizer(teardown_controller)
     except Exception as e:
         print(e)
+        allure.attach(body=str(e), name="Controller Instantiation Failed: ")
         sdk_client = False
     yield sdk_client
 
 
 @pytest.fixture(scope="session")
-def instantiate_testrail(request):
+def instantiate_firmware(controller_instance, instantiate_jFrog, get_configuration):
+    firmware_client_obj = []
+    for access_point_info in get_configuration['access_point']:
+        firmware_client = FirmwareUtility(jfrog_credentials=instantiate_jFrog, sdk_client=controller_instance,
+                                          model=access_point_info["model"],
+                                          version=access_point_info["version"])
+        firmware_client_obj.append(firmware_client)
+    yield firmware_client_obj
+
+
+"""
+Instantiate Reporting
+"""
+
+
+@pytest.fixture(scope="session")
+def instantiate_reporting(request, testbed, get_latest_firmware):
     if request.config.getoption("--skip-testrail"):
         tr_client = Reporting()
     else:
         tr_client = APIClient(request.config.getini("tr_url"), request.config.getini("tr_user"),
                               request.config.getini("tr_pass"), request.config.getini("tr_project_id"))
+    if request.config.getoption("--skip-testrail"):
+        tr_client.rid = "skip testrails"
+    else:
+        projId = tr_client.get_project_id(project_name=request.config.getini("tr_project_id"))
+        test_run_name = request.config.getini("tr_prefix") + testbed + "_" + str(
+            datetime.date.today()) + "_" + get_latest_firmware
+        tr_client.create_testrun(name=test_run_name, case_ids=list(TEST_CASES.values()), project_id=projId,
+                                 milestone_id=request.config.getini("milestone"),
+                                 description="Automated Nightly Sanity test run for new firmware build")
+        rid = tr_client.get_run_id(test_run_name=test_run_name)
+        tr_client.rid = rid
     yield tr_client
-
-
-@pytest.fixture(scope="session")
-def instantiate_firmware(instantiate_controller, instantiate_jFrog, testbed):
-    firmware_client = FirmwareUtility(jfrog_credentials=instantiate_jFrog, sdk_client=instantiate_controller,
-                                      model=CONFIGURATION[testbed]["access_point"][0]["model"],
-                                      version=CONFIGURATION[testbed]["access_point"][0]["version"])
-    yield firmware_client
 
 
 @pytest.fixture(scope="session")
 def instantiate_jFrog():
     yield FIRMWARE["JFROG"]
-
-
-@pytest.fixture(scope="session")
-def instantiate_project(request, instantiate_testrail, testbed, get_latest_firmware):
-    if request.config.getoption("--skip-testrail"):
-        rid = "skip testrails"
-    else:
-        projId = instantiate_testrail.get_project_id(project_name=request.config.getini("tr_project_id"))
-        test_run_name = request.config.getini("tr_prefix") + testbed + "_" + str(
-            datetime.date.today()) + "_" + get_latest_firmware
-        instantiate_testrail.create_testrun(name=test_run_name, case_ids=list(TEST_CASES.values()), project_id=projId,
-                                            milestone_id=request.config.getini("milestone"),
-                                            description="Automated Nightly Sanity test run for new firmware build")
-        rid = instantiate_testrail.get_run_id(test_run_name=test_run_name)
-    yield rid
 
 
 @pytest.fixture(scope="session")
@@ -225,7 +258,7 @@ def setup_profile_data(testbed):
 
 @pytest.fixture(scope="session")
 def get_security_flags():
-    security = ["open", "wpa", "wpa2_personal", "wpa2_enterprise", "twog", "fiveg", "radius"]
+    security = ["open", "wpa", "wpa2_personal", "wpa2_enterprise", "wpa3_enterprise", "twog", "fiveg", "radius"]
     yield security
 
 
@@ -245,6 +278,7 @@ def get_markers(request, get_security_flags):
         else:
             security_dict[i] = False
     # print(security_dict)
+    allure.attach(body=str(security_dict), name="Test Cases Requires: ")
     yield security_dict
 
 
@@ -271,5 +305,5 @@ def check_ap_firmware_ssh(testbed):
 
 
 @pytest.fixture(scope="session")
-def radius_info():
-    yield RADIUS_SERVER_DATA
+def client_connectivity():
+    yield StaConnect2

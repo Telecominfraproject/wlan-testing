@@ -56,10 +56,10 @@ def test_lanforge_connectivity(check_lanforge_connectivity):
     assert "instantiate_cloudsdk"
 
 
-@pytest.mark.sanity
+@pytest.mark.shivam
 @pytest.mark.bridge
 @pytest.mark.nat
 @pytest.mark.vlan
 @pytest.mark.test_perfecto_connectivity
-def test_perfecto_connectivity(setup_perfecto_devices):
+def test_perfecto_connectivity(setup_controller):
     assert "instantiate_cloudsdk"
