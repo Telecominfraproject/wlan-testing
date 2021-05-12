@@ -5,7 +5,7 @@ from cloudshell.api.cloudshell_api import CloudShellAPISession
 
 TIMEOUT=1200
 
-def get_session():
+def get_session() -> CloudShellAPISession:
     url = os.environ['CLOUDSHELL_URL']
     user = os.environ['CLOUDSHELL_USER']
     password = os.environ['CLOUDSHELL_PASSWORD']
