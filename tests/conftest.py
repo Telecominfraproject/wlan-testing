@@ -87,7 +87,7 @@ def pytest_addoption(parser):
     parser.addini("bundleId-iOS", "iOS Devices")
     parser.addini("bundleId-iOS-Settings", "iOS Settings App")
     parser.addini("appPackage-android", "Android Devices")
-    parser.addini("wifi-SSID-5gl-Pwd", "Wifi 5g Password")
+    parser.addini("bundleId-iOS-Safari", "Safari BundleID")
     parser.addini("wifi-SSID-2g-Pwd", "Wifi 2g Password")
     parser.addini("Default-SSID-5gl-perfecto-b", "Wifi 5g AP Name")
     parser.addini("Default-SSID-2g-perfecto-b", "Wifi 2g AP Name")

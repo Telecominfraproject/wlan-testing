@@ -49,7 +49,7 @@ from urllib3 import exceptions
 @pytest.fixture(scope="class")
 def setup_perfectoMobileWeb(request):
     from selenium import webdriver
-    driver = None
+    rdriver = None
     reporting_client = None
     
     warnings.simplefilter("ignore", ResourceWarning)
@@ -59,12 +59,12 @@ def setup_perfectoMobileWeb(request):
             'platformName': request.config.getini("platformName-iOS"),
             'model': request.config.getini("model-iOS"),
             'browserName': request.config.getini("browserType-iOS"),
-            'securityToken' : request.config.getini("securityToken")
+            'securityToken' : request.config.getini("securityToken"),
     }
 
-    driver = webdriver.Remote('https://'+request.config.getini("perfectoURL")+'.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
-    driver.implicitly_wait(25)
-   
+    rdriver = webdriver.Remote('https://'+request.config.getini("perfectoURL")+'.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
+    rdriver.implicitly_wait(35)
+
     projectname = request.config.getini("projectName")
     projectversion = request.config.getini("projectVersion")
     jobname = request.config.getini("jobName")
@@ -73,29 +73,33 @@ def setup_perfectoMobileWeb(request):
     testCaseName = request.config.getini("jobName")
 
     print("Setting Perfecto ReportClient....")
-    perfecto_execution_context = PerfectoExecutionContext(driver, tags, Job(jobname, jobnumber),Project(projectname, projectversion))
+    perfecto_execution_context = PerfectoExecutionContext(rdriver, tags, Job(jobname, jobnumber),Project(projectname, projectversion))
     reporting_client = PerfectoReportiumClient(perfecto_execution_context)
-    reporting_client.test_start(testCaseName, TestContext([], "Raj"))
+    reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
 
-    if driver is None:
+    def teardown():
+        try:
+            print(" -- Tear Down --")     
+            reporting_client.test_stop(TestResultFactory.create_success())
+            print('Report-Url: ' + reporting_client.report_url() + '\n')
+            rdriver.close()
+        except Exception as e:
+            print(" -- Exception Not Able To close --")    
+            print (e.message)
+        finally:
+            try:
+                rdriver.quit()
+            except Exception as e:
+                print(" -- Exception Not Able To Quit --")    
+                print (e.message)
+
+    request.addfinalizer(teardown)
+
+    if rdriver is None:
         yield -1
     else:
-        yield driver,reporting_client 
+        yield rdriver,reporting_client 
 
-    try:
-        print(" -- Tear Down --")     
-        reporting_client.test_stop(TestResultFactory.create_success())
-        print('Report-Url: ' + reporting_client.report_url() + '\n')
-        driver.close()
-    except Exception as e:
-        print(" -- Exception Not Able To close --")    
-        print (e.message)
-    finally:
-        try:
-            driver.quit()
-        except Exception as e:
-            print(" -- Exception Not Able To Quit --")    
-            print (e.message)
 
 @pytest.fixture(scope="class")
 def setup_perfectoMobile_iOS(request):
@@ -114,7 +118,7 @@ def setup_perfectoMobile_iOS(request):
     }
 
     driver = webdriver.Remote('https://'+request.config.getini("perfectoURL")+'.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
-    driver.implicitly_wait(25)
+    driver.implicitly_wait(35)
    
     projectname = request.config.getini("projectName")
     projectversion = request.config.getini("projectVersion")
@@ -126,27 +130,32 @@ def setup_perfectoMobile_iOS(request):
     print("Setting Perfecto ReportClient....")
     perfecto_execution_context = PerfectoExecutionContext(driver, tags, Job(jobname, jobnumber),Project(projectname, projectversion))
     reporting_client = PerfectoReportiumClient(perfecto_execution_context)
-    reporting_client.test_start(testCaseName, TestContext([], "Raj"))
+    reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
+
+    def teardown():
+        try:
+            print(" -- Tear Down --")     
+            reporting_client.test_stop(TestResultFactory.create_success())
+            print('Report-Url: ' + reporting_client.report_url() + '\n')
+            driver.close()
+        except Exception as e:
+            print(" -- Exception Not Able To close --")    
+            print (e.message)
+        finally:
+            try:
+                driver.quit()
+            except Exception as e:
+                print(" -- Exception Not Able To Quit --")    
+                print (e.message)
+
+    request.addfinalizer(teardown)
 
     if driver is None:
         yield -1
     else:
         yield driver,reporting_client 
 
-    try:
-        print(" -- Tear Down --")     
-        reporting_client.test_stop(TestResultFactory.create_success())
-        print('Report-Url: ' + reporting_client.report_url() + '\n')
-        driver.close()
-    except Exception as e:
-        print(" -- Exception Not Able To close --")    
-        print (e.message)
-    finally:
-        try:
-            driver.quit()
-        except Exception as e:
-            print(" -- Exception Not Able To Quit --")    
-            print (e.message)
+
 
 @pytest.fixture(scope="function")
 def get_PassPointConniOS_data(request):
@@ -164,6 +173,8 @@ def get_APToMobileDevice_data(request):
         "lblSearch": "//*[@class='gLFyf']",
         "elelSearch": "(//*[@class='sbic sb43'])[1]",
         "BtnRunSpeedTest": "//*[text()='RUN SPEED TEST']",
+        "bundleId-iOS-Settings": request.config.getini("bundleId-iOS-Settings"),
+        "bundleId-iOS-Safari": request.config.getini("bundleId-iOS-Safari"),
         "downloadMbps": "//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']",
         "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
         "lblSearch2": "test "
@@ -175,8 +186,6 @@ def get_AccessPointConn_data(request):
     passPoint_data = {
         "bundleId-iOS-Settings": request.config.getini("bundleId-iOS-Settings"),
         "bundleId-iOS-Ping": request.config.getini("bundleId-iOS-Ping"),
-        "Default-SSID-5gl-perfecto-b": request.config.getini("Default-SSID-5gl-perfecto-b"),
-        "Default-SSID-2g-perfecto-b": request.config.getini("Default-SSID-2g-perfecto-b"),
         "Default-SSID-perfecto-b": request.config.getini("Default-SSID-perfecto-b")
         
     }
@@ -187,7 +196,7 @@ def get_ToggleAirplaneMode_data(request):
     passPoint_data = {
         "bundleId-iOS-Settings": request.config.getini("bundleId-iOS-Settings"),
         "lblSearch": "//*[@class='gLFyf']",
-        "elelSearch": "(//*[@class='sbic sb43'])[1]",
+        "elelSearch": "(//*[@class='fSXkBc'])[1]",
         "BtnRunSpeedTest": "//*[text()='RUN SPEED TEST']",
         "downloadMbps": "//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']",
         "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
