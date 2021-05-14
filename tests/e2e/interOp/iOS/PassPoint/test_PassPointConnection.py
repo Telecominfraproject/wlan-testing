@@ -51,7 +51,7 @@ class TestPassPointConnection(object):
         set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Toggle Airplane Mode and Ensure Wifi Connection. 
-        Toggle_AirplaneMode_iOS(setup_perfectoMobile_iOS, connData)
+        assert Toggle_AirplaneMode_iOS(setup_perfectoMobile_iOS, connData)
 
         #ForgetWifi
         ForgetWifiConnection(setup_perfectoMobile_iOS, ssidName, connData)

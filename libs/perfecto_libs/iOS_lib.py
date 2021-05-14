@@ -129,6 +129,7 @@ def set_APconnMobileDevice_iOS(WifiName, WifiPass, setup_perfectoMobile, connDat
 def Toggle_AirplaneMode_iOS(setup_perfectoMobile, connData):
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
+    currentResult = True
 
     #Open Settings Application
     openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
@@ -148,12 +149,13 @@ def Toggle_AirplaneMode_iOS(setup_perfectoMobile, connData):
             #ssertEqual(CellularMsgEle.text, "Airplane Mode", "Airplane Mode Not Triggerd")
             print("Verify Cellular Mode Text: Airplane Mode Success")
         except NoSuchElementException:
-            
+            currentResult = False
             print("Cellular Mode Not in Airplane Mode: ERROR") 
 
         #Set Airplane Mode Back
         AirplaneMode.click()         
     except NoSuchElementException:
+        currentResult = False
         print("Airplane Wifi Button not loaded...")
         
     #Verify No Sim Card Installed Msg Popup
@@ -172,6 +174,8 @@ def Toggle_AirplaneMode_iOS(setup_perfectoMobile, connData):
         NoSimCardErrorMsgOK.click()
     except NoSuchElementException:
         print("No Sim Card AlertMsg")
+
+    return  currentResult
 
 def verify_APconnMobileDevice_iOS(WifiName, setup_perfectoMobile, connData):
     report = setup_perfectoMobile[1]    
@@ -436,6 +440,7 @@ def verifyUploadDownloadSpeediOS(setup_perfectoMobile, get_APToMobileDevice_data
         report = setup_perfectoMobile[1]    
         driver = setup_perfectoMobile[0]
         connData = get_APToMobileDevice_data
+        currentResult = True
 
         contexts = driver.contexts
         print("Printing Context")
@@ -456,6 +461,7 @@ def verifyUploadDownloadSpeediOS(setup_perfectoMobile, get_APToMobileDevice_data
                 elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']/li[1]/div[1]")  
                 elelSearch.click()
             except NoSuchElementException:
+                currentResult = False
                 print("Search Drop Down not active...")
 
             print("Click Run Speed Test Button...")
@@ -478,12 +484,11 @@ def verifyUploadDownloadSpeediOS(setup_perfectoMobile, get_APToMobileDevice_data
 
             except NoSuchElementException:
                 print("Access Point Verification NOT Completed, checking Connection....")
-
-            currentResult = True    
-
-            assert currentResult
+                currentResult = False
         except Exception as e:
             print (e.message)
 
+          
+        return currentResult
 
       

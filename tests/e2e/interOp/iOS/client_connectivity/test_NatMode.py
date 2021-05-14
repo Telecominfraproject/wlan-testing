@@ -73,7 +73,7 @@ class TestNatMode(object):
         set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobileWeb, connData)
 
         #Verify Upload download Speed from device Selection
-        verifyUploadDownloadSpeediOS(setup_perfectoMobileWeb, connData)
+        assert verifyUploadDownloadSpeediOS(setup_perfectoMobileWeb, connData)
 
         #ForgetWifi
         ForgetWifiConnection(setup_perfectoMobileWeb, ssidName, connData)

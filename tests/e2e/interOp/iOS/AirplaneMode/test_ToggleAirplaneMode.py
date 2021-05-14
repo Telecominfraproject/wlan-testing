@@ -49,7 +49,7 @@ class TestToggleAirplaneMode(object):
         set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Toggle AirplaneMode
-        Toggle_AirplaneMode_iOS(setup_perfectoMobile_iOS, connData)
+        assert Toggle_AirplaneMode_iOS(setup_perfectoMobile_iOS, connData)
     
         #Verify AP After AirplaneMode
         assert verify_APconnMobileDevice_iOS(ssidName, setup_perfectoMobile_iOS, connData)
