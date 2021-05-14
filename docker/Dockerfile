@@ -1,15 +1,13 @@
 FROM python:3.8
-WORKDIR /ci
-
+WORKDIR /wlan-testing
 RUN apt update && apt install vim -y && rm -rf /var/lib/apt/lists/*
-RUN pip3 install requests xlsxwriter pandas
-
-COPY wlan-lanforge-scripts/py-json/LANforge /ci/LANforge
-COPY wlan-lanforge-scripts/py-json/realm.py /ci
-COPY wlan-lanforge-scripts/py-json/generic_cx.py /ci
-COPY wlan-lanforge-scripts/py-scripts/sta_connect2.py /ci
-COPY wlan-lanforge-scripts/py-scripts/__init__.py /ci
-COPY wlan-testing/docker/nightly.py /ci
-COPY wlan-testing/docker/nightly_test_config.json /ci
-
-ENTRYPOINT [ "/ci/nightly.py" ]
+RUN pip3 install pytest==6.2.2 bs4 paramiko xlsxwriter requests pandas influxdb scp allure-pytest
+RUN mkdir ~/.pip
+RUN echo "[global]" > ~/.pip/pip.conf
+RUN echo "index-url = https://pypi.org/simple" >> ~/.pip/pip.conf
+RUN echo "extra-index-url = https://tip-read:tip-read@tip.jfrog.io/artifactory/api/pypi/tip-wlan-python-pypi-local/simple" >> ~/.pip/pip.conf
+RUN echo "tip-wlan-cloud" > ~/.pip/requirements.txt
+RUN pip3 install -r ~/.pip/requirements.txt
+COPY lanforge /wlan-testing/lanforge
+COPY tests /wlan-testing/tests
+COPY libs /wlan-testing/libs
