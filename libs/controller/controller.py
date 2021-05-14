@@ -13,9 +13,12 @@ import urllib
 import requests
 import swagger_client
 from bs4 import BeautifulSoup
+
 from swagger_client import EquipmentGatewayApi
 from swagger_client import FirmwareManagementApi
 import allure
+
+import threading
 
 
 class ConfigureController:
@@ -74,31 +77,34 @@ class Controller(ConfigureController):
         if customer_id is None:
             self.customer_id = 2
             print("Setting to default Customer ID 2")
-
+        #
         # Setting the Controller Client Configuration
         self.select_controller_data(controller_data=controller_data)
         self.set_credentials(controller_data=controller_data)
-        # self.configuration.refresh_api_key_hook = self.get_bearer_token
+        self.configuration.refresh_api_key_hook = self.get_bearer_token
 
         # Connecting to Controller
         self.api_client = swagger_client.ApiClient(self.configuration)
         self.login_client = swagger_client.LoginApi(api_client=self.api_client)
-        self.bearer = self.get_bearer_token()
+        self.bearer = False
+        self.disconnect = False
+        self.semaphore = False
+        try:
+            self.bearer = self.get_bearer_token()
+            # t1 = threading.Thread(target=self.refresh_instance)
+            # t1.start()
+            self.api_client.default_headers['Authorization'] = "Bearer " + self.bearer._access_token
+            self.status_client = swagger_client.StatusApi(api_client=self.api_client)
+            self.equipment_client = swagger_client.EquipmentApi(self.api_client)
+            self.profile_client = swagger_client.ProfileApi(self.api_client)
+            self.api_client.configuration.api_key_prefix = {
+                "Authorization": "Bearer " + self.bearer._access_token
+            }
+            self.api_client.configuration.refresh_api_key_hook = self.refresh_instance
+        except Exception as e:
+            self.bearer = False
+            print(e)
 
-        self.api_client.default_headers['Authorization'] = "Bearer " + self.bearer._access_token
-        self.status_client = swagger_client.StatusApi(api_client=self.api_client)
-        self.equipment_client = swagger_client.EquipmentApi(self.api_client)
-        self.profile_client = swagger_client.ProfileApi(self.api_client)
-        self.api_client.configuration.api_key_prefix = {
-            "Authorization": "Bearer " + self.bearer._access_token
-        }
-        self.api_client.configuration.refresh_api_key_hook = self.get_bearer_token()
-        self.ping_response = self.portal_ping()
-        self.default_profiles = {}
-        # print(self.bearer)
-        if self.ping_response._application_name != 'PortalServer':
-            print("Server not Reachable")
-            exit()
         print("Connected to Controller Server")
 
     def get_bearer_token(self):
@@ -110,6 +116,15 @@ class Controller(ConfigureController):
 
     def refresh_instance(self):
         # Connecting to Controller
+        # while True:
+        #     print("Controller Refresh Thread Started")
+        #     for i in range(0, 800):
+        #         if self.disconnect:
+        #             break
+        #         time.sleep(1)
+        #     if self.disconnect:
+        #         break
+        #     self.semaphore = True
         self.api_client = swagger_client.ApiClient(self.configuration)
         self.login_client = swagger_client.LoginApi(api_client=self.api_client)
         self.bearer = self.get_bearer_token()
@@ -121,7 +136,7 @@ class Controller(ConfigureController):
         self.api_client.configuration.api_key_prefix = {
             "Authorization": "Bearer " + self.bearer._access_token
         }
-        self.api_client.configuration.refresh_api_key_hook = self.get_bearer_token()
+        self.api_client.configuration.refresh_api_key_hook = self.refresh_instance
         self.ping_response = self.portal_ping()
         self.default_profiles = {}
         # print(self.bearer)
@@ -129,11 +144,13 @@ class Controller(ConfigureController):
             print("Server not Reachable")
             exit()
         print("Connected to Controller Server")
+        # self.semaphore = False
 
     def portal_ping(self):
         return self.login_client.portal_ping()
 
     def disconnect_Controller(self):
+        self.disconnect = True
         self.api_client.__del__()
 
     # Returns a List of All the Equipments that are available in the cloud instances
@@ -451,21 +468,16 @@ class ProfileUtility:
         method call: used to create a ssid profile with the given parameters
     """
 
-    def create_open_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
+    def create_open_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
                 return False
             default_profile = self.default_profiles['ssid']
-            default_profile._details['appliedRadios'] = []
-            if two4g is True:
-                default_profile._details['appliedRadios'].append("is2dot4GHz")
-            if fiveg is True:
-                default_profile._details['appliedRadios'].append("is5GHzU")
-                default_profile._details['appliedRadios'].append("is5GHz")
-                default_profile._details['appliedRadios'].append("is5GHzL")
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
             default_profile._name = profile_data['profile_name']
-            default_profile._details['vlanId'] = profile_data['vlan']
             default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
             default_profile._details['forwardMode'] = profile_data['mode']
             default_profile._details['secureMode'] = 'open'
             profile = self.profile_client.create_profile(body=default_profile)
@@ -473,22 +485,17 @@ class ProfileUtility:
             self.profile_creation_ids['ssid'].append(profile_id)
             self.profile_ids.append(profile_id)
         except Exception as e:
+            print(e)
             profile = "error"
 
         return profile
 
-    def create_wpa_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
+    def create_wpa_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
                 return False
             default_profile = self.default_profiles['ssid']
-            default_profile._details['appliedRadios'] = []
-            if two4g is True:
-                default_profile._details['appliedRadios'].append("is2dot4GHz")
-            if fiveg is True:
-                default_profile._details['appliedRadios'].append("is5GHzU")
-                default_profile._details['appliedRadios'].append("is5GHz")
-                default_profile._details['appliedRadios'].append("is5GHzL")
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
             default_profile._name = profile_data['profile_name']
             default_profile._details['vlanId'] = profile_data['vlan']
             default_profile._details['ssid'] = profile_data['ssid_name']
@@ -500,21 +507,17 @@ class ProfileUtility:
             self.profile_creation_ids['ssid'].append(profile_id)
             self.profile_ids.append(profile_id)
         except Exception as e:
+            print(e)
             profile = False
         return profile
 
-    def create_wpa2_personal_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
+    def create_wpa2_personal_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
                 return False
             default_profile = self.default_profiles['ssid']
-            default_profile._details['appliedRadios'] = []
-            if two4g is True:
-                default_profile._details['appliedRadios'].append("is2dot4GHz")
-            if fiveg is True:
-                default_profile._details['appliedRadios'].append("is5GHzU")
-                default_profile._details['appliedRadios'].append("is5GHz")
-                default_profile._details['appliedRadios'].append("is5GHzL")
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
             default_profile._name = profile_data['profile_name']
             default_profile._details['vlanId'] = profile_data['vlan']
             default_profile._details['ssid'] = profile_data['ssid_name']
@@ -526,43 +529,39 @@ class ProfileUtility:
             self.profile_creation_ids['ssid'].append(profile_id)
             self.profile_ids.append(profile_id)
         except Exception as e:
+            print(e)
             profile = False
         return profile
 
-    def create_wpa3_personal_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
-        if profile_data is None:
-            return False
-        default_profile = self.default_profiles['ssid']
-        default_profile._details['appliedRadios'] = []
-        if two4g is True:
-            default_profile._details['appliedRadios'].append("is2dot4GHz")
-        if fiveg is True:
-            default_profile._details['appliedRadios'].append("is5GHzU")
-            default_profile._details['appliedRadios'].append("is5GHz")
-            default_profile._details['appliedRadios'].append("is5GHzL")
-        default_profile._name = profile_data['profile_name']
-        default_profile._details['vlanId'] = profile_data['vlan']
-        default_profile._details['ssid'] = profile_data['ssid_name']
-        default_profile._details['keyStr'] = profile_data['security_key']
-        default_profile._details['forwardMode'] = profile_data['mode']
-        default_profile._details['secureMode'] = 'wpa3OnlyPSK'
-        profile_id = self.profile_client.create_profile(body=default_profile)._id
-        self.profile_creation_ids['ssid'].append(profile_id)
-        self.profile_ids.append(profile_id)
-        return True
-
-    def create_wpa2_enterprise_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
+    def create_wpa3_personal_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
                 return False
             default_profile = self.default_profiles['ssid']
-            default_profile._details['appliedRadios'] = []
-            if two4g is True:
-                default_profile._details['appliedRadios'].append("is2dot4GHz")
-            if fiveg is True:
-                default_profile._details['appliedRadios'].append("is5GHzU")
-                default_profile._details['appliedRadios'].append("is5GHz")
-                default_profile._details['appliedRadios'].append("is5GHzL")
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['keyStr'] = profile_data['security_key']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details['secureMode'] = 'wpa3OnlyPSK'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    def create_wpa2_enterprise_ssid_profile(self, profile_data=None):
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
             default_profile._name = profile_data['profile_name']
             default_profile._details['vlanId'] = profile_data['vlan']
             default_profile._details['ssid'] = profile_data['ssid_name']
@@ -579,29 +578,27 @@ class ProfileUtility:
             profile = False
         return profile
 
-    def create_wpa3_enterprise_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
-        if profile_data is None:
-            return False
-        default_profile = self.default_profiles['ssid']
-        default_profile._details['appliedRadios'] = []
-        if two4g is True:
-            default_profile._details['appliedRadios'].append("is2dot4GHz")
-        if fiveg is True:
-            default_profile._details['appliedRadios'].append("is5GHzU")
-            default_profile._details['appliedRadios'].append("is5GHz")
-            default_profile._details['appliedRadios'].append("is5GHzL")
-        default_profile._name = profile_data['profile_name']
-        default_profile._details['vlanId'] = profile_data['vlan']
-        default_profile._details['ssid'] = profile_data['ssid_name']
-        default_profile._details['keyStr'] = profile_data['security_key']
-        default_profile._details['forwardMode'] = profile_data['mode']
-        default_profile._details['secureMode'] = 'wpa3OnlyRadius'
-        default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
-        default_profile._child_profile_ids = self.profile_creation_ids["radius"]
-        profile_id = self.profile_client.create_profile(body=default_profile)._id
-        self.profile_creation_ids['ssid'].append(profile_id)
-        self.profile_ids.append(profile_id)
-        return True
+    def create_wpa3_enterprise_ssid_profile(self, profile_data=None):
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
+            default_profile._child_profile_ids = self.profile_creation_ids["radius"]
+            default_profile._details['secureMode'] = 'wpa3OnlyEAP'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
 
     """
         method call: used to create a ap profile that contains the given ssid profiles
