@@ -13,10 +13,13 @@ Currently Having Methods:
 import paramiko
 from scp import SCPClient
 import os
+import allure
+
 
 class APNOS:
 
     def __init__(self, credentials=None, pwd=os.getcwd()):
+        allure.attach(name="APNOS LIbrary: ", body=str(credentials))
         self.owrt_args = "--prompt root@OpenAp -s serial --log stdout --user root --passwd openwifi"
         if credentials is None:
             print("No credentials Given")
@@ -39,13 +42,16 @@ class APNOS:
             if str(stdout.read()).__contains__("False"):
                 print("Copying openwrt_ctl serial control Script...")
                 with SCPClient(client.get_transport()) as scp:
-                    scp.put(pwd+'openwrt_ctl.py', '~/cicd-git/openwrt_ctl.py')  # Copy my_file.txt to the server
+                    scp.put(pwd + 'openwrt_ctl.py', '~/cicd-git/openwrt_ctl.py')  # Copy my_file.txt to the server
             cmd = '[ -f ~/cicd-git/openwrt_ctl.py ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
             var = str(stdout.read())
+            print(var)
             if var.__contains__("True"):
+                allure.attach(name="openwrt_ctl Setup", body=str(var))
                 print("APNOS Serial Setup OK")
             else:
+                allure.attach(name="openwrt_ctl Setup", body=str(var))
                 print("APNOS Serial Setup Fail")
 
     # Method to connect AP-CLI/ JUMPHOST-CLI
@@ -59,6 +65,19 @@ class APNOS:
 
         return client
 
+    def reboot(self):
+        client = self.ssh_cli_connect()
+
+        cmd = "reboot"
+        if self.mode:
+            cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                  f"cmd --value \"{cmd}\" "
+        stdin, stdout, stderr = client.exec_command(cmd)
+        output = stdout.read()
+        client.close()
+        allure.attach(name="AP Reboot", body=str(output))
+        return output
+
     # Method to get the iwinfo status of AP using AP-CLI/ JUMPHOST-CLI
     def iwinfo_status(self):
         client = self.ssh_cli_connect()
@@ -69,6 +88,8 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
+        allure.attach(name="iwinfo Output Msg: ", body=str(output))
+        allure.attach(name="iwinfo config Err Msg: ", body=str(stderr))
         return output
 
     # Method to get the vif_config of AP using AP-CLI/ JUMPHOST-CLI
@@ -81,6 +102,9 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
+        allure.attach(name="vif config Output Msg: ", body=str(output))
+        allure.attach(name="vif config Err Msg: ", body=str(stderr))
+
         return output
 
     # Method to get the vif_state of AP using AP-CLI/ JUMPHOST-CLI
@@ -93,6 +117,8 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
+        allure.attach(name="vif state Output Msg: ", body=str(output))
+        allure.attach(name="vif state Err Msg: ", body=str(stderr))
         return output
 
     # Method to get the vif_config ssid's of AP using AP-CLI/ JUMPHOST-CLI
@@ -103,6 +129,7 @@ class APNOS:
             ssid = str(i).replace(" ", "").split(".")
             if ssid[0].split(":")[0] == "b'ssid":
                 ssid_list.append(ssid[0].split(":")[1].replace("'", ""))
+        allure.attach(name="get_vif_config_ssids ", body=str(ssid_list))
         return ssid_list
 
     # Method to get the vif_state ssid's of AP using AP-CLI/ JUMPHOST-CLI
@@ -113,6 +140,7 @@ class APNOS:
             ssid = str(i).replace(" ", "").split(".")
             if ssid[0].split(":")[0] == "b'ssid":
                 ssid_list.append(ssid[0].split(":")[1].replace("'", ""))
+        allure.attach(name="get_vif_state_ssids ", body=str(ssid_list))
         return ssid_list
 
     # Method to get the active firmware of AP using AP-CLI/ JUMPHOST-CLI
@@ -132,7 +160,9 @@ class APNOS:
             client.close()
         except Exception as e:
             print(e)
+            allure.attach(name="get_active_firmware - Exception ", body=str(e))
             cli_active_fw = "Error"
+        allure.attach(name="get_active_firmware ", body=str(cli_active_fw))
         return cli_active_fw
 
     # Method to get the manager state of AP using AP-CLI/ JUMPHOST-CLI
@@ -150,8 +180,86 @@ class APNOS:
             client.close()
         except Exception as e:
             print(e)
+            allure.attach(name="get_active_firmware - Exception ", body=str(e))
             status = "Error"
+        allure.attach(name="get_active_firmware ", body=str(status))
         return status
 
+    def get_serial_number(self):
+        try:
+            client = self.ssh_cli_connect()
+            cmd = "node | grep serial_number"
+            if self.mode:
+                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                      f"cmd --value \"{cmd}\" "
+            stdin, stdout, stderr = client.exec_command(cmd)
+            output = stdout.read()
+            output = output.decode('utf-8').splitlines()
+            allure.attach(name="get_serial_number output ", body=str(stderr))
+            serial = output[1].replace(" ", "").split("|")[1]
+            client.close()
+        except Exception as e:
+            print(e)
+            allure.attach(name="get_serial_number - Exception ", body=str(e))
+            serial = "Error"
+        allure.attach(name="get_serial_number ", body=str(serial))
+        return serial
+
+    def get_redirector(self):
+        try:
+            client = self.ssh_cli_connect()
+            cmd = "node | grep redirector_addr"
+            if self.mode:
+                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                      f"cmd --value \"{cmd}\" "
+            stdin, stdout, stderr = client.exec_command(cmd)
+            output = stdout.read()
+            status = output.decode('utf-8').splitlines()
+            allure.attach(name="get_redirector output ", body=str(stderr))
+            redirector = status[1].replace(" ", "").split("|")[1]
+            client.close()
+        except Exception as e:
+            print(e)
+            allure.attach(name="get_redirector - Exception ", body=str(e))
+            redirector = "Error"
+        allure.attach(name="get_redirector ", body=redirector)
+        return redirector
+
+    def run_generic_command(self, cmd=""):
+        allure.attach(name="run_generic_command ", body=cmd)
+        try:
+            client = self.ssh_cli_connect()
+            cmd = cmd
+            if self.mode:
+                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                      f"cmd --value \"{cmd}\" "
+            stdin, stdout, stderr = client.exec_command(cmd)
+            input = stdin.read().decode('utf-8').splitlines()
+            output = stdout.read().decode('utf-8').splitlines()
+            error = stderr.read().decode('utf-8').splitlines()
+            client.close()
+        except Exception as e:
+            print(e)
+            allure.attach(name="run_generic_command - Exception ", body=str(e))
+            input = "Error"
+            output = "Error"
+            error = "Error"
+        allure.attach(name="run_generic_command ", body=input)
+        allure.attach(name="run_generic_command ", body=str(output))
+        allure.attach(name="run_generic_command ", body=error)
+        return [input, output, error]
 
 
+if __name__ == '__main__':
+    obj = {
+        'jumphost': True,
+        'ip': "192.168.200.230",
+        'username': "lanforge",
+        'password': "lanforge",
+        'port': 22,
+        'jumphost_tty': '/dev/ttyAP1',
+
+    }
+    var = APNOS(credentials=obj)
+    r = var.get_redirector()
+    print(r)

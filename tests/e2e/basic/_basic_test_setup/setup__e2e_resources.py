@@ -6,6 +6,11 @@
 import pytest
 import time
 
+@pytest.mark.configure_lanforge
+def test_configure_lanforge(configure_lanforge):
+
+    assert True
+
 
 @pytest.mark.lanforge_scenario_setup_dut
 def test_lanforge_scenario_setup_dut(create_lanforge_chamberview_dut):

@@ -4,8 +4,6 @@
         1. controller_data/sdk_base_url
         2. login credentials
 """
-import base64
-import datetime
 import json
 import re
 import ssl
@@ -14,9 +12,10 @@ import urllib
 
 import requests
 import swagger_client
-from swagger_client import FirmwareManagementApi
-from swagger_client import EquipmentGatewayApi
 from bs4 import BeautifulSoup
+from swagger_client import EquipmentGatewayApi
+from swagger_client import FirmwareManagementApi
+import allure
 
 
 class ConfigureController:
@@ -109,6 +108,28 @@ class Controller(ConfigureController):
         }
         return self.login_client.get_access_token(request_body)
 
+    def refresh_instance(self):
+        # Connecting to Controller
+        self.api_client = swagger_client.ApiClient(self.configuration)
+        self.login_client = swagger_client.LoginApi(api_client=self.api_client)
+        self.bearer = self.get_bearer_token()
+
+        self.api_client.default_headers['Authorization'] = "Bearer " + self.bearer._access_token
+        self.status_client = swagger_client.StatusApi(api_client=self.api_client)
+        self.equipment_client = swagger_client.EquipmentApi(self.api_client)
+        self.profile_client = swagger_client.ProfileApi(self.api_client)
+        self.api_client.configuration.api_key_prefix = {
+            "Authorization": "Bearer " + self.bearer._access_token
+        }
+        self.api_client.configuration.refresh_api_key_hook = self.get_bearer_token()
+        self.ping_response = self.portal_ping()
+        self.default_profiles = {}
+        # print(self.bearer)
+        if self.ping_response._application_name != 'PortalServer':
+            print("Server not Reachable")
+            exit()
+        print("Connected to Controller Server")
+
     def portal_ping(self):
         return self.login_client.portal_ping()
 
@@ -141,8 +162,9 @@ class Controller(ConfigureController):
     # Get the equipment id, of a equipment with a serial number
     def get_equipment_id(self, serial_number=None):
         equipment_data = self.get_equipment_by_customer_id(max_items=100)
-        print(len(equipment_data))
+        # print(equipment_data)
         for equipment in equipment_data:
+            print(equipment._id)
             if equipment._serial == serial_number:
                 return equipment._id
 
@@ -175,7 +197,7 @@ class Controller(ConfigureController):
                 current_ap_fw = status_data[2]['details']['reportedSwVersion']
                 print(current_ap_fw)
                 return current_ap_fw
-            except:
+            except Exception as e:
                 current_ap_fw = "error"
                 return False
 
@@ -618,6 +640,7 @@ class ProfileUtility:
         return default_profile
 
     """
+
         method to push the profile to the given equipment 
     """
 
@@ -697,8 +720,6 @@ class JFrogUtility:
     def __init__(self, credentials=None):
         if credentials is None:
             exit()
-        self.user = credentials["username"]
-        self.password = credentials["password"]
         self.jfrog_url = credentials["jfrog-base-url"]
         self.build = credentials["build"]
         self.branch = credentials["branch"]
@@ -706,29 +727,25 @@ class JFrogUtility:
 
     def get_build(self, model=None, version=None):
         jfrog_url = self.jfrog_url + "/" + model + "/" + self.branch + "/"
-        auth = str(
-            base64.b64encode(
-                bytes('%s:%s' % (self.user, self.password), 'utf-8')
-            ),
-            'ascii'
-        ).strip()
-        headers = {'Authorization': 'Basic ' + auth}
 
         ''' FIND THE LATEST FILE NAME'''
         print(jfrog_url)
-        req = urllib.request.Request(jfrog_url, headers=headers)
+        req = urllib.request.Request(jfrog_url)
         response = urllib.request.urlopen(req)
         # print(response)
         html = response.read()
         soup = BeautifulSoup(html, features="html.parser")
+        if self.branch == "trunk":
+            self.build = model
         last_link = soup.find_all('a', href=re.compile(self.build))
         latest_fw = None
         for i in last_link:
+
             if str(i['href']).__contains__(version):
                 latest_fw = i['href']
 
-        # latest_file = last_link['href']
         latest_fw = latest_fw.replace('.tar.gz', '')
+        print("Using Firmware Image: ", latest_fw)
         return latest_fw
 
 
@@ -766,6 +783,8 @@ class FirmwareUtility(JFrogUtility):
         return self.latest_fw
 
     def upload_fw_on_cloud(self, fw_version=None, force_upload=False):
+        print("Upload fw version :", fw_version)
+        # force_upload = True
         # if fw_latest available and force upload is False -- Don't upload
         # if fw_latest available and force upload is True -- Upload
         # if fw_latest is not available -- Upload
@@ -787,10 +806,9 @@ class FirmwareUtility(JFrogUtility):
                 "modelId": fw_version.split("-")[0],
                 "versionName": fw_version + ".tar.gz",
                 "description": fw_version + "  FW VERSION",
-                "filename": "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/" + fw_version.split("-")[
-                    0] + "/dev/" + fw_version + ".tar.gz",
-                "commit": fw_version.split("-")[5]
+                "filename": self.jfrog_url + "/" + self.model + "/" + self.branch + "/" + fw_version + ".tar.gz",
             }
+            print(firmware_data["filename"])
             firmware_id = self.firmware_client.create_firmware_version(body=firmware_data)
             print("Force Upload :", force_upload, "  Uploaded the Image")
             return firmware_id._id
@@ -807,9 +825,11 @@ class FirmwareUtility(JFrogUtility):
             try:
                 obj = self.equipment_gateway_client.request_firmware_update(equipment_id=equipment_id,
                                                                             firmware_version_id=firmware_id)
+
                 print("Request firmware upgrade Success! waiting for 300 sec")
                 time.sleep(300)
             except Exception as e:
+                print(e)
                 obj = False
             return obj
             # Write the upgrade fw logic here
@@ -831,7 +851,24 @@ class FirmwareUtility(JFrogUtility):
                 firmware_version_name=fw_version + ".tar.gz")
             firmware_version = firmware_version._id
             print("Firmware ID: ", firmware_version)
-        except:
+        except Exception as e:
+            print(e)
             firmware_version = False
             print("firmware not available: ", firmware_version)
         return firmware_version
+
+
+if __name__ == '__main__':
+    """
+    Examples to Try Out
+    """
+    controller = {
+        'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
+        'username': 'support@example.com',
+        'password': 'support',
+        'version': "1.1.0-SNAPSHOT",
+        'commit_date': "2021-04-27"
+    }
+    sdk_client = Controller(controller_data=controller)
+    # Use Library/ Method Here
+    sdk_client.disconnect_Controller()

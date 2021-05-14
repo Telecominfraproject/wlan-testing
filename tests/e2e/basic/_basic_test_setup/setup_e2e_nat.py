@@ -3,6 +3,7 @@
     Details:    nat mode setup
 
 """
+import time
 
 import pytest
 
@@ -163,9 +164,11 @@ class TestSetupnat:
             instantiate_testrail.update_testrail(case_id=test_cases["nat_vifs"], run_id=instantiate_project,
                                                  status_id=1,
                                                  msg='profile pushed successfully')
+            time.sleep(100)
             assert setup_profiles['nat_vifs']
         else:
             instantiate_testrail.update_testrail(case_id=test_cases["nat_vifs"], run_id=instantiate_project,
                                                  status_id=5,
                                                  msg='Failed to push profile')
+            time.sleep(100)
             assert False

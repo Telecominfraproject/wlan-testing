@@ -10,6 +10,9 @@ pytestmark = [pytest.mark.test_connectivity]
 
 
 @pytest.mark.sanity
+@pytest.mark.bridge
+@pytest.mark.nat
+@pytest.mark.vlan
 @pytest.mark.test_controller_connectivity
 def test_controller_connectivity(instantiate_controller, instantiate_testrail, instantiate_project, test_cases):
     try:
@@ -24,14 +27,17 @@ def test_controller_connectivity(instantiate_controller, instantiate_testrail, i
 
 
 @pytest.mark.sanity
+@pytest.mark.bridge
+@pytest.mark.nat
+@pytest.mark.vlan
 @pytest.mark.test_access_points_connectivity
-def test_access_points_connectivity(test_access_point, instantiate_testrail, instantiate_project, test_cases):
-    if "ACTIVE" not in test_access_point:
+def test_access_points_connectivity(access_point_connectivity, instantiate_testrail, instantiate_project, test_cases, exit_on_fail):
+    if not access_point_connectivity["serial"] and not access_point_connectivity["mgr"]:
         instantiate_testrail.update_testrail(case_id=test_cases["cloud_connection"], run_id=instantiate_project,
                                              status_id=5,
                                              msg='CloudSDK connectivity failed')
         status = False
-        sys.exit()
+        pytest.exit("Access Point is not Properly Connected: Sanity Failed")
     else:
         instantiate_testrail.update_testrail(case_id=test_cases["cloud_connection"], run_id=instantiate_project,
                                              status_id=1,
@@ -41,11 +47,4 @@ def test_access_points_connectivity(test_access_point, instantiate_testrail, ins
     assert status
 
 
-@pytest.mark.test_lanforge_connectivity
-def test_lanforge_connectivity(check_lanforge_connectivity):
-    assert check_lanforge_connectivity
 
-
-@pytest.mark.test_perfecto_connectivity
-def test_perfecto_connectivity(setup_perfecto_devices):
-    assert "instantiate_cloudsdk"

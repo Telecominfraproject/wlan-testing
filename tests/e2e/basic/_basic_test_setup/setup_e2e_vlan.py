@@ -3,6 +3,7 @@
     Details:    vlan mode setup
 
 """
+import time
 
 import pytest
 
@@ -164,9 +165,13 @@ class TestSetupvlan:
             instantiate_testrail.update_testrail(case_id=test_cases["vlan_vifs"], run_id=instantiate_project,
                                                  status_id=1,
                                                  msg='profile pushed successfully')
+            time.sleep(100)
+
             assert setup_profiles['vlan_vifs']
+
         else:
             instantiate_testrail.update_testrail(case_id=test_cases["vlan_vifs"], run_id=instantiate_project,
                                                  status_id=5,
                                                  msg='Failed to push profile')
+            time.sleep(100)
             assert False
