@@ -13,8 +13,12 @@ import sys
 import time
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
-from appium import webdriver
+#from appium import webdriver
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.ui import WebDriverWait
+from appium.webdriver.common.mobileby import MobileBy
+from selenium.webdriver.support import expected_conditions as EC
+
 
 def openApp(appName, setup_perfectoMobile):
     #print("Refreshing App: " + appName)
@@ -43,22 +47,27 @@ def set_APconnMobileDevice_iOS(WifiName, WifiPass, setup_perfectoMobile, connDat
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
 
-    report.step_start("Set Wifi Network to " + WifiName)  
+    report.step_start("Switching Driver Context")  
+    print("Switching Context to Native")
+    contexts = driver.contexts
+    #print(contexts)
 
+    driver.switch_to.context(contexts[0])
+
+    report.step_start("Set Wifi Network to " + WifiName)  
     #Open Settings Application
     openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
 
     try:
-    # print("Verifying Connected Wifi Connection")
+        print("Verifying Connected Wifi Connection")
         report.step_start("Verifying Connected Wifi Connection")  
         element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']/XCUIElementTypeStaticText[2]")
         Wifi_AP_Name = element.text
     except NoSuchElementException:
         print("Exception: Verify Xpath - UpdateXpath") 
-
         #NEED to fail if Wifi AP NAME isn't in the approved list AKA 5g & 2g.  
-    #print("Wifi Name Matches - Already Connected To: " + Wifi_AP_Name)
-    #print("Wifi Name Matches - Already Connected To: " + WifiName)
+        #print("Wifi Name Matches - Already Connected To: " + Wifi_AP_Name)
+        #print("Wifi Name Matches - Already Connected To: " + WifiName)
 
     if Wifi_AP_Name.__eq__(WifiName):
         print("Wifi Name Matches - Already Connected To: " + Wifi_AP_Name) 
@@ -84,22 +93,20 @@ def set_APconnMobileDevice_iOS(WifiName, WifiPass, setup_perfectoMobile, connDat
             print("No Error with Wifi-AP Connection: " + Wifi_AP_Name)
 
     else:
-        print("Selecting Wifi...: " + WifiName)
-        try:
-            report.step_start("Selecting Wifi...: " + WifiName)
-            element.click()
-        except NoSuchElementException:
-            print("Exception: Selection Wifi Network")
+        print("Selecting Wifi: " + WifiName)
+        #try:
+        report.step_start("Selecting Wifi...: " + WifiName)
+        element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']/XCUIElementTypeStaticText[2]")
+        element.click()
+       # except NoSuchElementException:
+         #   print("Exception: Selection Wifi Network")
 
         try:
-            wifiXpath2 = driver.find_element_by_xpath("//*[@label='"+ WifiName + "']")
+            wifiXpath2 = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='"+ WifiName + "']")))
             wifiXpath2.click()
         
         except NoSuchElementException:
-            #PerfectoErrorHandleClass
-                #Pass a list of errors that can be ignored
             print("\n Can't find Wifi/AP NAME.....CheckXpath & Wifi Name")
-        # print (e.message)
 
         #Set password if Needed
         try:
@@ -201,6 +208,12 @@ def verify_APconnMobileDevice_iOS(WifiName, setup_perfectoMobile, connData):
 def ForgetWifiConnection(setup_perfectoMobile, wifiName, connData):
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
+
+    report.step_start("Switching Driver Context")  
+    print("Switching Context to Native")
+    driver.switch_to.context('NATIVE_APP')
+    contexts = driver.contexts
+    print(contexts)
 
     report.step_start("Forget Existing Wifi")   
     openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
@@ -418,23 +431,35 @@ def tearDown(setup_perfectoMobile):
             print (e.message)
 
 def verifyUploadDownloadSpeediOS(setup_perfectoMobile, get_APToMobileDevice_data):
+        print("Verify Upload Download Speed")
+
         report = setup_perfectoMobile[1]    
         driver = setup_perfectoMobile[0]
         connData = get_APToMobileDevice_data
 
+        contexts = driver.contexts
+        print("Printing Context")
+        print(contexts)
+
+        driver.switch_to.context('WEBVIEW_1')
+        
         try:  
-            report.step_start("Google Home Page")     
+            print("Launching Safari")
+            report.step_start("Google Home Page") 
             driver.get(connData["webURL"]) 
+            print("Enter Search Text")
             elementFindTxt = driver.find_element_by_xpath(connData["lblSearch"])
             elementFindTxt.send_keys("Internet Speed Test")
 
             try:
-                elelSearch = driver.find_element_by_xpath(connData["elelSearch"])  
+                print("Click Search Button")
+                elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']/li[1]/div[1]")  
                 elelSearch.click()
             except NoSuchElementException:
-                print("Enter Not Active...")
+                print("Search Drop Down not active...")
 
-            report.step_start("Verify Run Button")           
+            print("Click Run Speed Test Button...")
+            report.step_start("Click Run Speed Test Button")  
             driver.find_element_by_xpath(connData["BtnRunSpeedTest"]).click()
 
             #Get upload/Download Speed
@@ -460,64 +485,5 @@ def verifyUploadDownloadSpeediOS(setup_perfectoMobile, get_APToMobileDevice_data
         except Exception as e:
             print (e.message)
 
-def verifyUploadDownloadSpeediOSRemoteDriver(setup_perfectoMobile, get_APToMobileDevice_data):
-        report = setup_perfectoMobile[1]    
-        driver = setup_perfectoMobile[0]
-        connData = get_APToMobileDevice_data
-
-        report.step_start("Launch Safari")   
-        openApp(connData["bundleId-iOS-Safari"], setup_perfectoMobile)
-
-        print("Search Google Page Internet Speed Test")       
-        #driver.get(connData["webURL"]) 
-        report.step_start("Search Internet Speed Test")   
-        elementFindTxt0 = driver.find_element_by_xpath("//XCUIElementTypeButton[@label='Address']")
-        elementFindTxt0.click()
-
-        print("Send Keys")
-        elementFindTxt1 = driver.find_element_by_xpath("//*[@label='Address']")
-        elementFindTxt1.send_keys("Internet Speed Test")
-
-        print("Click Go Search")
-        report.step_start("Click Go Search")   
-        elementGo = driver.find_element_by_xpath("//*[@label='go']")
-        elementGo.click()
-
-       # print("Switching to Dom Tree")
-       # context = driver.contexts[2]
-        #print("WebView: " + context) 
-        print("AvaiableContext: " + driver.getContexts())
-        #driver.switch_to.window("handle")
-        driver.switch_to.context('WEBVIEW_1')
-
-        print("--Click Run Speed Test Btn ")
-        try:
-            elelSearch2 = driver.find_element_by_xpath("//*[@id='knowledge-verticals-internetspeedtest__test_button']")  
-            elelSearch2.click()
-        except NoSuchElementException:
-            print("Enter Not Active...")
-
-        report.step_start("Verify Run Button")           
-        driver.find_element_by_xpath(connData["BtnRunSpeedTest"]).click()
-
-        #Get upload/Download Speed
-        try:
-            report.step_start("Get upload/Download Speed")   
-            time.sleep(60)
-            downloadMbps = driver.find_element_by_xpath(connData["downloadMbps"])
-            downloadSpeed = downloadMbps.text
-            print("Download: " + downloadSpeed + " Mbps")
-
-            UploadMbps = driver.find_element_by_xpath(connData["UploadMbps"])
-            uploadSpeed = UploadMbps.text
-            print("Upload: " + uploadSpeed + " Mbps")
-            
-            print("Access Point Verification Completed Successfully")
-
-        except NoSuchElementException:
-            driver.switch_to.context('NATIVE_APP')
-            print("Access Point Verification NOT Completed, checking Connection....")
-
-        driver.switch_to.context('NATIVE_APP')
 
       

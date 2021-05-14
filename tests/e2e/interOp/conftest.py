@@ -109,12 +109,17 @@ def setup_perfectoMobile_iOS(request):
     
     warnings.simplefilter("ignore", ResourceWarning)
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
+   
+       
     capabilities = {
             'platformName': request.config.getini("platformName-iOS"),
             'model': request.config.getini("model-iOS"),
-            'securityToken' : request.config.getini("securityToken"),
-            'bundleId' : request.config.getini("bundleId-iOS"),
+            'browserName': 'safari',
+            #'automationName' : 'Appium',
+            'securityToken' : request.config.getini("securityToken"),  
+            'useAppiumForWeb' : 'false',
+            'useAppiumForHybrid' : 'false',
+            #'bundleId' : request.config.getini("bundleId-iOS"),
     }
 
     driver = webdriver.Remote('https://'+request.config.getini("perfectoURL")+'.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)

@@ -27,14 +27,14 @@ from iOS_lib import closeApp, openApp, verifyUploadDownloadSpeediOS, verifyUploa
     indirect=True,
     scope="class"
 )
-
+ 
 @pytest.mark.usefixtures("setup_profiles")
 @pytest.mark.usefixtures("create_profiles")
 class TestNatMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ClientConnectivity_5g_WPA2_Personal(self, setup_profile_data, get_APToMobileDevice_data, setup_perfectoMobileWeb):
+    def test_ClientConnectivity_5g_WPA2_Personal(self, setup_profile_data, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
         
         profile_data = setup_profile_data["NAT"]["WPA2_P"]["5G"]  
         ssidName = profile_data["ssid_name"]
@@ -42,19 +42,18 @@ class TestNatMode(object):
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
 
-        report = setup_perfectoMobileWeb[1]
-        driver = setup_perfectoMobileWeb[0]
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
         connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
-        #set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Verify Upload download Speed from device Selection
-        verifyUploadDownloadSpeediOS(setup_perfectoMobileWeb, connData)
-        #verifyUploadDownloadSpeediOSRemoteDriver(setup_perfectoMobileWeb, connData)
+        verifyUploadDownloadSpeediOS(setup_perfectoMobile_iOS, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobileWeb, ssidName, connData)
+        ForgetWifiConnection(setup_perfectoMobile_iOS, ssidName, connData)
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
