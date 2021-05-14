@@ -190,9 +190,7 @@ def get_APToMobileDevice_data(request):
 def get_AccessPointConn_data(request):
     passPoint_data = {
         "bundleId-iOS-Settings": request.config.getini("bundleId-iOS-Settings"),
-        "bundleId-iOS-Ping": request.config.getini("bundleId-iOS-Ping"),
-        "Default-SSID-perfecto-b": request.config.getini("Default-SSID-perfecto-b")
-        
+        "bundleId-iOS-Ping": request.config.getini("bundleId-iOS-Ping")
     }
     yield passPoint_data
 
@@ -212,9 +210,7 @@ def get_ToggleAirplaneMode_data(request):
 @pytest.fixture(scope="function")
 def get_ToggleWifiMode_data(request):
     passPoint_data = {
-        "bundleId-iOS-Settings": request.config.getini("bundleId-iOS-Settings"),
-        "wifi-SSID-5gl-Pwd": request.config.getini("wifi-SSID-5gl-Pwd"),
-        "wifi-SSID-2g-Pwd": request.config.getini("wifi-SSID-2g-Pwd")
+        "bundleId-iOS-Settings": request.config.getini("bundleId-iOS-Settings")
     }
     yield passPoint_data
 

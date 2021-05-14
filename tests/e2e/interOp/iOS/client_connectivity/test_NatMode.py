@@ -16,7 +16,7 @@ import sys
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-from iOS_lib import closeApp, openApp, verifyUploadDownloadSpeediOS, verifyUploadDownloadSpeediOSRemoteDriver, ForgetWifiConnection, Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
+from iOS_lib import closeApp, openApp, verifyUploadDownloadSpeediOS, ForgetWifiConnection, Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
 
 @pytest.mark.ClientConnectivity
 @pytest.mark.wifi5
