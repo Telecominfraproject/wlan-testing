@@ -364,5 +364,5 @@ def radius_info():
 
 
 @pytest.fixture(scope="session")
-def get_configuration():
-    yield CONFIGURATION
+def get_configuration(testbed):
+    yield CONFIGURATION[testbed]

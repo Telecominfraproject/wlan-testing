@@ -31,7 +31,8 @@ def test_controller_connectivity(instantiate_controller, instantiate_testrail, i
 @pytest.mark.nat
 @pytest.mark.vlan
 @pytest.mark.test_access_points_connectivity
-def test_access_points_connectivity(access_point_connectivity, instantiate_testrail, instantiate_project, test_cases, exit_on_fail):
+def test_access_points_connectivity(access_point_connectivity, instantiate_testrail, instantiate_project, test_cases,
+                                    exit_on_fail):
     if not access_point_connectivity["serial"] and not access_point_connectivity["mgr"]:
         instantiate_testrail.update_testrail(case_id=test_cases["cloud_connection"], run_id=instantiate_project,
                                              status_id=5,
@@ -47,4 +48,6 @@ def test_access_points_connectivity(access_point_connectivity, instantiate_testr
     assert status
 
 
-
+@pytest.mark.test_lanforge_connectivity
+def test_lanforge_connectiity(check_lanforge_connectivity):
+    assert True

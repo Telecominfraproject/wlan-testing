@@ -41,7 +41,6 @@ from LANforge.LFUtils import *
 if 'py-json' not in sys.path:
     sys.path.append('../py-scripts')
 
-
 sys.path.append(
     os.path.dirname(
         os.path.realpath(__file__)
@@ -66,7 +65,6 @@ from testrails.reporting import Reporting
 from cv_test_manager import cv_test
 from create_chamberview import CreateChamberview
 from create_chamberview_dut import DUT
-
 
 """
 Basic Setup Collector
@@ -335,45 +333,55 @@ def update_ssid(request, instantiate_profile, setup_profile_data):
     time.sleep(90)
     yield status
 
-@pytest.fixture(scope="package")
-def create_lanforge_chamberview(get_lanforge_data):
-    ip = get_lanforge_data["lanforge_ip"]
-    port = get_lanforge_data["lanforge-port-number"]
-    upstream_port = get_lanforge_data["lanforge_bridge_port"]#eth2
-    eth_vlan = get_lanforge_data["lanforge_vlan_port"]#eth2.100
-    vlan = get_lanforge_data["vlan"]
-    scenario_name = "TIP-test"
 
+@pytest.fixture(scope="package")
+def create_lanforge_chamberview(create_lanforge_chamberview_dut, get_configuration, testbed):
+    lanforge_data = get_configuration['traffic_generator']['details']
+    ip = lanforge_data["ip"]
+    port = lanforge_data["port"]
+    upstream_port = lanforge_data["upstream"]  # eth1
+    uplink_port = lanforge_data["uplink"]  # eth2
+    upstream_subnet = lanforge_data["upstream_subnet"]
+    scenario_name = "TIP-" + testbed
+    upstream_res = upstream_port.split(".")[0] + "." + upstream_port.split(".")[1]
+    uplink_res = uplink_port.split(".")[0] + "." + uplink_port.split(".")[1]
     print(ip)
-    print(upstream_port)
-    print(eth_vlan)
-    print(vlan)
+    print(upstream_port, upstream_res, upstream_port.split(".")[2])
     # "profile_link 1.1 upstream-dhcp 1 NA NA eth2,AUTO -1 NA"
     # "profile_link 1.1 uplink-nat 1 'DUT: upstream LAN 10.28.2.1/24' NA eth1,eth2 -1 NA"
     raw_line = [
-        ["profile_link 1.1 upstream-dhcp 1 NA NA "+ upstream_port +",AUTO -1 NA"]
-        # ["profile_link 1.1 uplink-nat 1 'DUT: upstream LAN 10.28.2.1/24' NA eth1,eth2 -1 NA"]
-        ]
+        ["profile_link " + upstream_res + " upstream-dhcp 1 NA NA " + upstream_port.split(".")[2] + ",AUTO -1 NA"]
+        , ["profile_link " + uplink_res + " uplink-nat 1 'DUT: upstream LAN "
+           + upstream_subnet + "' NA " + uplink_port.split(".")[2] + " -1 NA"]
+    ]
+    print(raw_line)
     Create_Chamberview = CreateChamberview(ip, port)
+    Create_Chamberview.clean_cv_scenario()
     Create_Chamberview.clean_cv_scenario(type="Network-Connectivity", scenario_name=scenario_name)
 
-    Create_Chamberview.setup_scenario(create_scenario=scenario_name,
+    Create_Chamberview.setup(create_scenario=scenario_name,
                              raw_line=raw_line)
 
-    Create_Chamberview.build_scenario(scenario_name)
-    Create_Chamberview.show_text_blob(None, None, True) # Show changes on GUI
+    Create_Chamberview.build(scenario_name)
+    Create_Chamberview.show_text_blob(None, None, True)  # Show changes on GUI
     yield Create_Chamberview
 
 
 @pytest.fixture(scope="package")
-def create_lanforge_chamberview_dut(get_lanforge_data):
-    ip = get_lanforge_data["lanforge_ip"]
-    port = get_lanforge_data["lanforge-port-number"]
+def create_lanforge_chamberview_dut(get_configuration, testbed):
+    ap_model = get_configuration["access_point"][0]["model"]
+    version = get_configuration["access_point"][0]["version"]
+    serial = get_configuration["access_point"][0]["serial"]
+    # ap_model = get_configuration["access_point"][0]["model"]
+    lanforge_data = get_configuration['traffic_generator']['details']
+    ip = lanforge_data["ip"]
+    port = lanforge_data["port"]
     dut = DUT(lfmgr=ip,
               port=port,
-              dut_name="TIP-Test",
-              sw_version="pending-d89798e",
-              hw_version="ECW5410",
-              model_num="ECW5410"
+              dut_name=testbed,
+              sw_version=version,
+              model_num=ap_model,
+              serial_num=serial
               )
+    dut.setup()
     yield dut
