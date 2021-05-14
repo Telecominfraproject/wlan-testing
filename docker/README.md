@@ -4,7 +4,7 @@
 
 From the root directory of this repository (wlan-testing) run the following command:
 ```bash
-docker build -f ./docker/Dockerfile -t wlantest
+docker build -f ./docker/Dockerfile -t wlantest .
 ```
 This will produce a docker image, which you can verify by running docker images command.
 

@@ -1,6 +1,6 @@
 FROM python:3.8
 WORKDIR /wlan-testing
-RUN apt update && apt install vim -y && rm -rf /var/lib/apt/lists/*
+RUN apt update && rm -rf /var/lib/apt/lists/*
 RUN pip3 install pytest==6.2.2 bs4 paramiko xlsxwriter requests pandas influxdb scp allure-pytest
 RUN mkdir ~/.pip
 RUN echo "[global]" > ~/.pip/pip.conf
