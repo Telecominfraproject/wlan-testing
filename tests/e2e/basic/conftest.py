@@ -1,7 +1,34 @@
-import time
+import os
+import sys
 
+sys.path.append(
+    os.path.dirname(
+        os.path.realpath(__file__)
+    )
+)
+if "libs" not in sys.path:
+    sys.path.append(f'../libs')
+
+from controller.controller import ProfileUtility
+import time
+from lanforge.lf_tests import RunTest
 import pytest
 import allure
+
+
+@pytest.fixture(scope="session")
+def get_equipment_id(setup_controller, testbed, get_configuration):
+    equipment_id = 0
+    if len(get_configuration['access_point']) == 1:
+        equipment_id = setup_controller.get_equipment_id(
+            serial_number=get_configuration['access_point'][0]['serial'])
+    print(equipment_id)
+    yield equipment_id
+
+
+@pytest.fixture(scope="session")
+def instantiate_profile():
+    yield ProfileUtility
 
 
 @pytest.fixture(scope="session")
@@ -10,30 +37,13 @@ def setup_vlan():
     allure.attach(body=str(vlan_id), name="VLAN Created: ")
     yield vlan_id[0]
 
-@pytest.fixture(scope="session")
-def get_equipment_id(instantiate_controller, testbed):
-    equipment_id = 0
-    if len(CONFIGURATION[testbed]['access_point']) == 1:
-        equipment_id = instantiate_controller.get_equipment_id(
-            serial_number=CONFIGURATION[testbed]['access_point'][0]['serial'])
-    print(equipment_id)
-    yield equipment_id
-
-@pytest.fixture(scope="module")
-def instantiate_profile(instantiate_controller):
-    try:
-        profile_object = ProfileUtility(sdk_client=instantiate_controller)
-    except Exception as e:
-        profile_object = False
-    yield profile_object
-
 
 @allure.feature("CLIENT CONNECTIVITY SETUP")
-@pytest.fixture(scope="package")
-def setup_client_connectivity(request, instantiate_controller, testbed, setup_vlan, get_equipment_id,
+@pytest.fixture(scope="class")
+def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment_id,
                               instantiate_profile, get_markers,
                               get_security_flags, get_configuration, radius_info, get_apnos):
-    instantiate_profile = instantiate_profile(sdk_client=instantiate_controller)
+    instantiate_profile = instantiate_profile(sdk_client=setup_controller)
     vlan_id, mode = 0, 0
     instantiate_profile.cleanup_objects()
     parameter = dict(request.param)
@@ -80,7 +90,7 @@ def setup_client_connectivity(request, instantiate_controller, testbed, setup_vl
     """
     rf_profile_data = {
         "name": "RF-Profile-" + testbed + "-" + parameter['mode'] + "-" +
-                get_configuration[testbed]['access_point'][0]['mode']
+                get_configuration['access_point'][0]['mode']
     }
 
     for i in parameter["rf"]:
@@ -90,9 +100,9 @@ def setup_client_connectivity(request, instantiate_controller, testbed, setup_vl
     try:
         instantiate_profile.delete_profile_by_name(profile_name=rf_profile_data['name'])
         instantiate_profile.set_rf_profile(profile_data=rf_profile_data,
-                                           mode=get_configuration[testbed]['access_point'][0]['mode'])
+                                           mode=get_configuration['access_point'][0]['mode'])
         allure.attach(body=str(rf_profile_data),
-                      name="RF Profile Created : " + get_configuration[testbed]['access_point'][0]['mode'])
+                      name="RF Profile Created : " + get_configuration['access_point'][0]['mode'])
     except Exception as e:
         print(e)
         allure.attach(body=str(e), name="Exception ")
@@ -308,7 +318,7 @@ def setup_client_connectivity(request, instantiate_controller, testbed, setup_vl
         print(e)
         print("failed to create AP Profile")
 
-    ap_ssh = get_apnos(get_configuration[testbed]['access_point'][0], pwd="../libs/apnos/")
+    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
     ssid_names = []
     for i in instantiate_profile.profile_creation_ids["ssid"]:
         ssid_names.append(instantiate_profile.get_ssid_name_by_profile_id(profile_id=i))
@@ -328,7 +338,7 @@ def setup_client_connectivity(request, instantiate_controller, testbed, setup_vl
         time.sleep(10)
     allure.attach(body=str("VIF Config: " + str(vif_config) + "\n" + "SSID Pushed from Controller: " + str(ssid_names)),
                   name="SSID Profiles in VIF Config and Controller: ")
-    ap_ssh = get_apnos(get_configuration[testbed]['access_point'][0], pwd="../libs/apnos/")
+    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
 
     # This loop will check the VIF Config with VIF State
     test_cases['vifs'] = False
@@ -359,3 +369,9 @@ def setup_client_connectivity(request, instantiate_controller, testbed, setup_vl
 
     request.addfinalizer(teardown_session)
     yield test_cases
+
+
+@pytest.fixture(scope="session")
+def lf_test(get_configuration):
+    obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'])
+    yield obj

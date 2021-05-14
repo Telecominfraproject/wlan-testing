@@ -92,6 +92,17 @@ Test session base fixture
 """
 
 
+# To be depreciated as testrails will go
+@pytest.fixture(scope="session")
+def test_cases():
+    yield TEST_CASES
+
+
+@pytest.fixture(scope="session")
+def instantiate_jFrog():
+    yield FIRMWARE["JFROG"]
+
+
 @pytest.fixture(scope="session")
 def testbed(request):
     var = request.config.getoption("--testbed")
@@ -129,9 +140,25 @@ def get_apnos():
     yield APNOS
 
 
+# APNOS SETUP
+@pytest.fixture(scope="session")
+def instantiate_access_point(testbed, get_apnos, get_configuration):
+    # Used to add openwrtctl.py in case of serial console mode
+    for access_point_info in get_configuration['access_point']:
+        if access_point_info["jumphost"]:
+            allure.attach(name="added openwrtctl.py to :",
+                          body=access_point_info['ip'] + ":" + str(access_point_info["port"]))
+            get_apnos(access_point_info, pwd="../libs/apnos/")
+        else:
+            allure.attach(name="Direct AP SSH : ",
+                          body=access_point_info['ip'] + ":" + str(access_point_info["port"]))
+        # Write a code to verify Access Point Connectivity
+    yield True
+
+
 # Controller Fixture
 @pytest.fixture(scope="session")
-def setup_controller(request, get_configuration):
+def setup_controller(request, get_configuration, instantiate_access_point):
     try:
         sdk_client = Controller(controller_data=get_configuration["controller"])
         allure.attach(body=str(get_configuration["controller"]), name="Controller Instantiated: ")
@@ -149,11 +176,11 @@ def setup_controller(request, get_configuration):
     yield sdk_client
 
 
-@pytest.fixture(scope="session")
-def instantiate_firmware(controller_instance, instantiate_jFrog, get_configuration):
+@pytest.fixture(scope="class")
+def instantiate_firmware(setup_controller, instantiate_jFrog, get_configuration):
     firmware_client_obj = []
     for access_point_info in get_configuration['access_point']:
-        firmware_client = FirmwareUtility(jfrog_credentials=instantiate_jFrog, sdk_client=controller_instance,
+        firmware_client = FirmwareUtility(jfrog_credentials=instantiate_jFrog, sdk_client=setup_controller,
                                           model=access_point_info["model"],
                                           version=access_point_info["version"])
         firmware_client_obj.append(firmware_client)
@@ -166,7 +193,7 @@ Instantiate Reporting
 
 
 @pytest.fixture(scope="session")
-def instantiate_reporting(request, testbed, get_latest_firmware):
+def update_report(request, testbed, get_configuration):
     if request.config.getoption("--skip-testrail"):
         tr_client = Reporting()
     else:
@@ -177,7 +204,7 @@ def instantiate_reporting(request, testbed, get_latest_firmware):
     else:
         projId = tr_client.get_project_id(project_name=request.config.getini("tr_project_id"))
         test_run_name = request.config.getini("tr_prefix") + testbed + "_" + str(
-            datetime.date.today()) + "_" + get_latest_firmware
+            datetime.date.today()) + "_" + get_configuration['access_point'][0]['version']
         tr_client.create_testrun(name=test_run_name, case_ids=list(TEST_CASES.values()), project_id=projId,
                                  milestone_id=request.config.getini("milestone"),
                                  description="Automated Nightly Sanity test run for new firmware build")
@@ -186,78 +213,15 @@ def instantiate_reporting(request, testbed, get_latest_firmware):
     yield tr_client
 
 
-@pytest.fixture(scope="session")
-def instantiate_jFrog():
-    yield FIRMWARE["JFROG"]
+"""
+FRAMEWORK MARKER LOGIC
 
-
-@pytest.fixture(scope="session")
-def check_lanforge_connectivity(testbed):
-    # Check port
-    yield True
-
-
-@pytest.fixture(scope="session")
-def setup_perfecto_devices(request):
-    yield True
-
-
-@pytest.fixture(scope="session")
-def test_cases():
-    yield TEST_CASES
-
-
-@pytest.fixture(scope="session")
-def instantiate_access_point(testbed):
-    APNOS(CONFIGURATION[testbed]['access_point'][0], pwd="../libs/apnos/")
-    yield True
-
-
-@pytest.fixture(scope="function")
-def test_access_point(testbed, instantiate_access_point):
-    ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
-    ap_ssh.reboot()
-    time.sleep(100)
-    status = ap_ssh.get_manager_state()
-    if "ACTIVE" not in status:
-        time.sleep(30)
-        ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
-        status = ap_ssh.get_manager_state()
-    yield status
-
-
-@pytest.fixture(scope="session")
-def setup_profile_data(testbed):
-    model = CONFIGURATION[testbed]["access_point"][0]["model"]
-    profile_data = {}
-    for mode in "BRIDGE", "NAT", "VLAN":
-        profile_data[mode] = {}
-        for security in "OPEN", "WPA", "WPA2_P", "WPA2_E", "WEP":
-            profile_data[mode][security] = {}
-            for radio in "2G", "5G":
-                profile_data[mode][security][radio] = {}
-                name_string = f"{'Sanity'}-{testbed}-{model}-{radio}_{security}_{mode}"
-                ssid_name = f"{'Sanity'}-{model}-{radio}_{security}_{mode}"
-                passkey_string = f"{radio}-{security}_{mode}"
-                profile_data[mode][security][radio]["profile_name"] = name_string
-                profile_data[mode][security][radio]["ssid_name"] = ssid_name
-                if mode == "VLAN":
-                    profile_data[mode][security][radio]["vlan"] = 100
-                else:
-                    profile_data[mode][security][radio]["vlan"] = 1
-                if mode != "NAT":
-                    profile_data[mode][security][radio]["mode"] = "BRIDGE"
-                else:
-                    profile_data[mode][security][radio]["mode"] = "NAT"
-                if security != "OPEN":
-                    profile_data[mode][security][radio]["security_key"] = passkey_string
-                else:
-                    profile_data[mode][security][radio]["security_key"] = "[BLANK]"
-    yield profile_data
+"""
 
 
 @pytest.fixture(scope="session")
 def get_security_flags():
+    # Add more classifications as we go
     security = ["open", "wpa", "wpa2_personal", "wpa2_enterprise", "wpa3_enterprise", "twog", "fiveg", "radius"]
     yield security
 
@@ -282,28 +246,43 @@ def get_markers(request, get_security_flags):
     yield security_dict
 
 
-@pytest.fixture(scope="session")
-def get_latest_firmware(instantiate_firmware):
-    try:
-        latest_firmware = instantiate_firmware.get_fw_version()
-    except Exception as e:
-        print(e)
-        latest_firmware = False
-    yield latest_firmware
-
-
+# Will be availabe as a test case
 @pytest.fixture(scope="function")
-def check_ap_firmware_ssh(testbed):
-    try:
-        ap_ssh = APNOS(CONFIGURATION[testbed]['access_point'][0])
-        active_fw = ap_ssh.get_active_firmware()
-        print(active_fw)
-    except Exception as e:
-        print(e)
-        active_fw = False
-    yield active_fw
+def test_access_point(testbed, get_apnos, get_configuration):
+    mgr_status = []
+    for access_point_info in get_configuration['access_point']:
+        ap_ssh = get_apnos(access_point_info)
+        ap_ssh.reboot()
+        time.sleep(100)
+        status = ap_ssh.get_manager_state()
+        if "ACTIVE" not in status:
+            time.sleep(30)
+            ap_ssh = APNOS(access_point_info)
+            status = ap_ssh.get_manager_state()
+        mgr_status.append(status)
+    yield mgr_status
 
 
 @pytest.fixture(scope="session")
 def client_connectivity():
     yield StaConnect2
+
+
+@pytest.fixture(scope="session")
+def get_lanforge_data(get_configuration):
+    lanforge_data = {}
+    if get_configuration['traffic_generator']['name'] == 'lanforge':
+        lanforge_data = {
+            "lanforge_ip": get_configuration['traffic_generator']['details']['ip'],
+            "lanforge-port-number": get_configuration['traffic_generator']['details']['port'],
+            "lanforge_2dot4g": get_configuration['traffic_generator']['details']['2.4G-Radio'][0],
+            "lanforge_5g": get_configuration['traffic_generator']['details']['5G-Radio'][0],
+            "lanforge_2dot4g_prefix": get_configuration['traffic_generator']['details']['2.4G-Station-Name'],
+            "lanforge_5g_prefix": get_configuration['traffic_generator']['details']['5G-Station-Name'],
+            "lanforge_2dot4g_station": get_configuration['traffic_generator']['details']['2.4G-Station-Name'],
+            "lanforge_5g_station": get_configuration['traffic_generator']['details']['5G-Station-Name'],
+            "lanforge_bridge_port": get_configuration['traffic_generator']['details']['upstream'],
+            "lanforge_vlan_port": get_configuration['traffic_generator']['details']['upstream'] + ".100",
+            "vlan": 100
+        }
+    yield lanforge_data

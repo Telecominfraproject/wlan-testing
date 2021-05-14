@@ -15,6 +15,7 @@ from scp import SCPClient
 import os
 import allure
 
+
 class APNOS:
 
     def __init__(self, credentials=None, pwd=os.getcwd()):
