@@ -31,19 +31,23 @@ class TestResources(object):
     @pytest.mark.test_access_points_connectivity
     @allure.testcase(name="test_access_points_connectivity", url="")
     def test_access_points_connectivity(self, test_access_point, update_report, test_cases):
-        print(test_access_point)
-        # if "ACTIVE" not in test_access_point:
-        #     allure.attach(name="Access Point Connectivity Success", body=str(test_access_point))
-        #     update_report.update_testrail(case_id=test_cases["cloud_connection"],
-        #                                   status_id=5,
-        #                                   msg='CloudSDK connectivity failed')
-        #
-        #     sys.exit()
-        # else:
-        #     allure.attach(name="Access Point Connectivity Failed", body=str(test_access_point))
-        #     update_report.update_testrail(case_id=test_cases["cloud_connection"],
-        #                                   status_id=1,
-        #                                   msg='Manager status is Active')
-        #
-        # assert "ACTIVE" in test_access_point
-        assert True
+        flag = True
+        for i in test_access_point:
+            if "ACTIVE" not in i:
+                flag = False
+
+        if flag is False:
+            allure.attach(name="Access Point Connectivity Success", body=str(test_access_point))
+            update_report.update_testrail(case_id=test_cases["cloud_connection"],
+                                          status_id=5,
+                                          msg='CloudSDK connectivity failed')
+
+            pytest.exit("Access Point Manafer state is not ACtive")
+        else:
+            allure.attach(name="Access Point Connectivity Failed", body=str(test_access_point))
+            update_report.update_testrail(case_id=test_cases["cloud_connection"],
+                                          status_id=1,
+                                          msg='Manager status is Active')
+
+        assert flag
+
