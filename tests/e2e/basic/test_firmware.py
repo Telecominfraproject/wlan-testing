@@ -5,11 +5,11 @@
 """
 import pytest
 
-@pytest.mark.configure_lanforge
-def test_configure_lanforge(configure_lanforge):
 
-    assert True
-
+# @pytest.mark.configure_lanforge
+# def test_configure_lanforge(configure_lanforge):
+#     assert True
+#
 
 @pytest.mark.sanity
 @pytest.mark.bridge

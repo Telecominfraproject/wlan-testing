@@ -31,10 +31,6 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectivity(object):
 
-    @pytest.mark.configuration
-    def test_basic_configuration(self):
-        assert True
-
     @pytest.mark.open
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
@@ -245,7 +241,7 @@ class TestBridgeModeEnterprise(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
-    def test_wpa2_enterprise_2g(self, ):
+    def test_wpa2_enterprise_2g(self):
         # print(setup_client_connectivity)
         assert "setup_client_connectivity"
 
