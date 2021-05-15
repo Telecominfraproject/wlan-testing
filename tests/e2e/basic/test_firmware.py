@@ -5,17 +5,15 @@
 """
 import pytest
 
+pytestmark = [pytest.mark.firmware, pytest.mark.sanity]
+
 
 # @pytest.mark.configure_lanforge
 # def test_configure_lanforge(configure_lanforge):
 #     assert True
 #
 
-@pytest.mark.sanity
-@pytest.mark.bridge
-@pytest.mark.nat
-@pytest.mark.vlan
-@pytest.mark.firmware
+@pytest.mark.firmware_cloud
 class TestFirmware(object):
 
     @pytest.mark.firmware_create
@@ -62,11 +60,7 @@ class TestFirmware(object):
         assert get_latest_firmware == check_ap_firmware_cloud
 
 
-@pytest.mark.sanity
-@pytest.mark.bridge
-@pytest.mark.nat
-@pytest.mark.vlan
-@pytest.mark.check_active_firmware_ap
+@pytest.mark.firmware_ap
 def test_ap_firmware(check_ap_firmware_ssh, get_latest_firmware, instantiate_testrail, instantiate_project,
                      test_cases):
     if check_ap_firmware_ssh == get_latest_firmware:
