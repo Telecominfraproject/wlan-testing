@@ -1,6 +1,44 @@
 
 CONFIGURATION = {
- "interop":  {
+
+    "ext-05":  {
+        "controller": {
+            'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
+            'username': 'support@example.com',
+            'password': 'support',
+            'version': '1.0.0-SNAPSHOT',
+            'commit_date': '2021-03-01'
+        },
+        'access_point': [
+            {
+                'model': 'ecw5410',
+                'mode': 'wifi5',
+                'serial': '903cb3944817',
+                'jumphost': True,
+                'ip': "192.168.200.82",
+                'username': "lanforge",
+                'password': "lanforge",
+                'port': 22,
+                'jumphost_tty': '/dev/ttyAP1',
+                'version': "ecw5410-2021-04-26-pending-3fc41fa"
+            }
+        ],
+        "traffic_generator":  {
+            "name": "lanforge",
+            "details": {
+                "ip": "192.168.200.82",
+                "port": 8080,
+                "2.4G-Radio": ["wiphy0"],
+                "5G-Radio": ["wiphy1"],
+                "AX-Radio": ["wiphy2"],
+                "upstream": "eth1",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan1",
+
+            }
+        }
+    },
+  "interop":  {
         "controller": {
             'url': "https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build",  # API base url for the controller
             'username': 'support@example.com',
@@ -32,6 +70,7 @@ CONFIGURATION = {
     }
 
 }
+
 
 
 FIRMWARE = {

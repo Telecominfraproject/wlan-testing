@@ -4,8 +4,6 @@
         1. controller_data/sdk_base_url
         2. login credentials
 """
-import base64
-import datetime
 import json
 import re
 import ssl
@@ -14,9 +12,10 @@ import urllib
 
 import requests
 import swagger_client
-from swagger_client import FirmwareManagementApi
-from swagger_client import EquipmentGatewayApi
 from bs4 import BeautifulSoup
+from swagger_client import EquipmentGatewayApi
+from swagger_client import FirmwareManagementApi
+import allure
 
 
 class ConfigureController:
@@ -25,7 +24,8 @@ class ConfigureController:
         self.configuration = swagger_client.Configuration()
 
     def set_credentials(self, controller_data=None):
-        if dict(controller_data).keys().__contains__("username") and dict(controller_data).keys().__contains__("password"):
+        if dict(controller_data).keys().__contains__("username") and dict(controller_data).keys().__contains__(
+                "password"):
             self.configuration.username = "support@example.com"
             self.configuration.password = "support"
             print("Login Credentials set to default: \n user_id: %s\n password: %s\n" % ("support@example.com",
@@ -108,6 +108,28 @@ class Controller(ConfigureController):
         }
         return self.login_client.get_access_token(request_body)
 
+    def refresh_instance(self):
+        # Connecting to Controller
+        self.api_client = swagger_client.ApiClient(self.configuration)
+        self.login_client = swagger_client.LoginApi(api_client=self.api_client)
+        self.bearer = self.get_bearer_token()
+
+        self.api_client.default_headers['Authorization'] = "Bearer " + self.bearer._access_token
+        self.status_client = swagger_client.StatusApi(api_client=self.api_client)
+        self.equipment_client = swagger_client.EquipmentApi(self.api_client)
+        self.profile_client = swagger_client.ProfileApi(self.api_client)
+        self.api_client.configuration.api_key_prefix = {
+            "Authorization": "Bearer " + self.bearer._access_token
+        }
+        self.api_client.configuration.refresh_api_key_hook = self.get_bearer_token()
+        self.ping_response = self.portal_ping()
+        self.default_profiles = {}
+        # print(self.bearer)
+        if self.ping_response._application_name != 'PortalServer':
+            print("Server not Reachable")
+            exit()
+        print("Connected to Controller Server")
+
     def portal_ping(self):
         return self.login_client.portal_ping()
 
@@ -140,8 +162,9 @@ class Controller(ConfigureController):
     # Get the equipment id, of a equipment with a serial number
     def get_equipment_id(self, serial_number=None):
         equipment_data = self.get_equipment_by_customer_id(max_items=100)
-        print(len(equipment_data))
+        # print(equipment_data)
         for equipment in equipment_data:
+            print(equipment._id)
             if equipment._serial == serial_number:
                 return equipment._id
 
@@ -150,6 +173,7 @@ class Controller(ConfigureController):
         if equipment_id is None:
             return None
         data = self.equipment_client.get_equipment_by_id(equipment_id=equipment_id)
+        print(str(data._details._equipment_model))
         return str(data._details._equipment_model)
 
     # Needs Bug fix from swagger code generation side
@@ -173,7 +197,7 @@ class Controller(ConfigureController):
                 current_ap_fw = status_data[2]['details']['reportedSwVersion']
                 print(current_ap_fw)
                 return current_ap_fw
-            except:
+            except Exception as e:
                 current_ap_fw = "error"
                 return False
 
@@ -322,13 +346,13 @@ class ProfileUtility:
         self.push_profile_old_method(equipment_id=equipment_id)
         self.delete_profile(profile_id=delete_ids)
 
-    # This will delete all the profiles on an controller_tests instance, except the default profiles
+    # This will delete all the profiles on an controller instance, except the default profiles
     def cleanup_profiles(self):
         try:
             self.get_default_profiles()
             pagination_context = """{
                             "model_type": "PaginationContext",
-                            "maxItemsPerPage": 5000
+                            "maxItemsPerPage": 10000
                     }"""
             skip_delete_id = []
             for i in self.default_profiles:
@@ -344,14 +368,13 @@ class ProfileUtility:
             for i in self.default_profiles:
                 skip_delete_id.append(self.default_profiles[i]._id)
             delete_ids = list(set(delete_ids) - set(delete_ids).intersection(set(skip_delete_id)))
+            print(delete_ids)
             for i in delete_ids:
                 self.set_equipment_to_profile(profile_id=i)
-            try:
-                self.delete_profile(profile_id=delete_ids)
-            except Exception as e:
-                pass
+            self.delete_profile(profile_id=delete_ids)
             status = True
-        except:
+        except Exception as e:
+            print(e)
             status = False
         return status
 
@@ -393,11 +416,36 @@ class ProfileUtility:
         Library method to create a new rf profile: Now using default profile
     """
 
-    def set_rf_profile(self, profile_data=None):
-        default_profile = self.default_profiles['rf']
-        if profile_data is None:
-            self.profile_creation_ids['rf'].append(default_profile._id)
-        return default_profile
+    def set_rf_profile(self, profile_data=None, mode=None):
+        self.get_default_profiles()
+        if mode == "wifi5":
+            default_profile = self.default_profiles['rf']
+            default_profile._name = profile_data["name"]
+
+            default_profile._details["rfConfigMap"]["is2dot4GHz"]["rf"] = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is5GHz"]["rf"] = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is5GHzL"]["rf"] = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is5GHzU"]["rf"] = profile_data["name"]
+            profile = self.profile_client.create_profile(body=default_profile)
+            self.profile_creation_ids['rf'].append(profile._id)
+            return profile
+
+        if mode == "wifi6":
+            default_profile = self.default_profiles['rf']
+            default_profile._name = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is2dot4GHz"]["activeScanSettings"]["enabled"] = False
+            default_profile._details["rfConfigMap"]["is2dot4GHz"]["radioMode"] = 'modeAX'
+            default_profile._details["rfConfigMap"]["is5GHz"]["radioMode"] = 'modeAX'
+            default_profile._details["rfConfigMap"]["is5GHzL"]["radioMode"] = 'modeAX'
+            default_profile._details["rfConfigMap"]["is5GHzU"]["radioMode"] = 'modeAX'
+            default_profile._details["rfConfigMap"]["is2dot4GHz"]["rf"] = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is5GHz"]["rf"] = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is5GHzL"]["rf"] = profile_data["name"]
+            default_profile._details["rfConfigMap"]["is5GHzU"]["rf"] = profile_data["name"]
+            default_profile._name = profile_data["name"]
+            profile = self.profile_client.create_profile(body=default_profile)
+            self.profile_creation_ids['rf'].append(profile._id)
+            return profile
 
     """
         method call: used to create a ssid profile with the given parameters
@@ -592,6 +640,7 @@ class ProfileUtility:
         return default_profile
 
     """
+
         method to push the profile to the given equipment 
     """
 
@@ -671,31 +720,32 @@ class JFrogUtility:
     def __init__(self, credentials=None):
         if credentials is None:
             exit()
-        self.user = credentials["username"]
-        self.password = credentials["password"]
         self.jfrog_url = credentials["jfrog-base-url"]
         self.build = credentials["build"]
         self.branch = credentials["branch"]
         ssl._create_default_https_context = ssl._create_unverified_context
 
-    def get_latest_build(self, model=None):
+    def get_build(self, model=None, version=None):
         jfrog_url = self.jfrog_url + "/" + model + "/" + self.branch + "/"
-        auth = str(
-            base64.b64encode(
-                bytes('%s:%s' % (self.user, self.password), 'utf-8')
-            ),
-            'ascii'
-        ).strip()
-        headers = {'Authorization': 'Basic ' + auth}
 
         ''' FIND THE LATEST FILE NAME'''
-        req = urllib.request.Request(jfrog_url, headers=headers)
+        print(jfrog_url)
+        req = urllib.request.Request(jfrog_url)
         response = urllib.request.urlopen(req)
+        # print(response)
         html = response.read()
         soup = BeautifulSoup(html, features="html.parser")
-        last_link = soup.find_all('a', href=re.compile(self.build))[-1]
-        latest_file = last_link['href']
-        latest_fw = latest_file.replace('.tar.gz', '')
+        if self.branch == "trunk":
+            self.build = model
+        last_link = soup.find_all('a', href=re.compile(self.build))
+        latest_fw = None
+        for i in last_link:
+
+            if str(i['href']).__contains__(version):
+                latest_fw = i['href']
+
+        latest_fw = latest_fw.replace('.tar.gz', '')
+        print("Using Firmware Image: ", latest_fw)
         return latest_fw
 
 
@@ -710,7 +760,13 @@ class JFrogUtility:
 
 class FirmwareUtility(JFrogUtility):
 
-    def __init__(self, sdk_client=None, jfrog_credentials=None, controller_data=None, customer_id=None):
+    def __init__(self,
+                 sdk_client=None,
+                 jfrog_credentials=None,
+                 controller_data=None,
+                 customer_id=None,
+                 model=None,
+                 version=None):
         super().__init__(credentials=jfrog_credentials)
         if sdk_client is None:
             sdk_client = Controller(controller_data=controller_data, customer_id=customer_id)
@@ -718,13 +774,17 @@ class FirmwareUtility(JFrogUtility):
         self.firmware_client = FirmwareManagementApi(api_client=sdk_client.api_client)
         self.jfrog_client = JFrogUtility(credentials=jfrog_credentials)
         self.equipment_gateway_client = EquipmentGatewayApi(api_client=sdk_client.api_client)
+        self.model = model
+        self.fw_version = version
 
-    def get_latest_fw_version(self, model="ecw5410"):
+    def get_fw_version(self):
         # Get The equipment model
-        self.latest_fw = self.get_latest_build(model=model)
+        self.latest_fw = self.get_build(model=self.model, version=self.fw_version)
         return self.latest_fw
 
     def upload_fw_on_cloud(self, fw_version=None, force_upload=False):
+        print("Upload fw version :", fw_version)
+        # force_upload = True
         # if fw_latest available and force upload is False -- Don't upload
         # if fw_latest available and force upload is True -- Upload
         # if fw_latest is not available -- Upload
@@ -745,11 +805,10 @@ class FirmwareUtility(JFrogUtility):
                 "equipmentType": "AP",
                 "modelId": fw_version.split("-")[0],
                 "versionName": fw_version + ".tar.gz",
-                "description": "ECW5410 FW VERSION TEST",
-                "filename": "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/" + fw_version.split("-")[
-                    0] + "/dev/" + fw_version + ".tar.gz",
-                "commit": fw_version.split("-")[5]
+                "description": fw_version + "  FW VERSION",
+                "filename": self.jfrog_url + "/" + self.model + "/" + self.branch + "/" + fw_version + ".tar.gz",
             }
+            print(firmware_data["filename"])
             firmware_id = self.firmware_client.create_firmware_version(body=firmware_data)
             print("Force Upload :", force_upload, "  Uploaded the Image")
             return firmware_id._id
@@ -760,23 +819,25 @@ class FirmwareUtility(JFrogUtility):
             exit()
         if (force_upgrade is True) or (self.should_upgrade_ap_fw(equipment_id=equipment_id)):
             model = self.sdk_client.get_model_name(equipment_id=equipment_id).lower()
-            latest_fw = self.get_latest_fw_version(model=model)
+            latest_fw = self.get_fw_version()
             firmware_id = self.upload_fw_on_cloud(fw_version=latest_fw, force_upload=force_upload)
             time.sleep(5)
             try:
                 obj = self.equipment_gateway_client.request_firmware_update(equipment_id=equipment_id,
                                                                             firmware_version_id=firmware_id)
+
                 print("Request firmware upgrade Success! waiting for 300 sec")
                 time.sleep(300)
             except Exception as e:
+                print(e)
                 obj = False
             return obj
             # Write the upgrade fw logic here
 
     def should_upgrade_ap_fw(self, equipment_id=None):
-        current_fw = self.get_current_fw_version(equipment_id=equipment_id)
-        model = self.sdk_client.get_model_name(equipment_id=equipment_id).lower()
-        latest_fw = self.get_latest_fw_version(model=model)
+        current_fw = self.sdk_client.get_ap_firmware_old_method(equipment_id=equipment_id)
+        latest_fw = self.get_fw_version()
+        print(self.model, current_fw, latest_fw)
         if current_fw == latest_fw:
             return False
         else:
@@ -790,7 +851,24 @@ class FirmwareUtility(JFrogUtility):
                 firmware_version_name=fw_version + ".tar.gz")
             firmware_version = firmware_version._id
             print("Firmware ID: ", firmware_version)
-        except:
+        except Exception as e:
+            print(e)
             firmware_version = False
             print("firmware not available: ", firmware_version)
         return firmware_version
+
+
+if __name__ == '__main__':
+    """
+    Examples to Try Out
+    """
+    controller = {
+        'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
+        'username': 'support@example.com',
+        'password': 'support',
+        'version': "1.1.0-SNAPSHOT",
+        'commit_date': "2021-04-27"
+    }
+    sdk_client = Controller(controller_data=controller)
+    # Use Library/ Method Here
+    sdk_client.disconnect_Controller()
