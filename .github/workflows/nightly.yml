@@ -36,7 +36,6 @@ jobs:
       uses: actions/checkout@v2
       with:
         path: wlan-testing
-        ref: staging-wifi-2047
 
     - name: Checkout LANforge scripts
       uses: actions/checkout@v2
