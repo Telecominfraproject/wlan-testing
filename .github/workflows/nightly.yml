@@ -181,7 +181,7 @@ jobs:
         kubectl logs $podname | grep "==== 0 failed,"
 
     - name: cleanup
-#      if: ${{ always() }}
+      if: ${{ always() }}
       run: |
         kubectl delete job "${{ steps.job.outputs.name }}" --wait=true --ignore-not-found=true
 #    - name: Publish Unit Test Results

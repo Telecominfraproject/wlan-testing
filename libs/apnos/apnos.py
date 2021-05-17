@@ -59,7 +59,7 @@ class APNOS:
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         print("Connecting to jumphost: %s@%s:%s" % (
-            self.username, self.ip, self.port, self.password))
+            self.username, self.ip, self.port))
         client.connect(self.ip, username=self.username, password=self.password,
                        port=self.port, timeout=10, allow_agent=False, banner_timeout=200)
 
