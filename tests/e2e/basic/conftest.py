@@ -17,16 +17,6 @@ import allure
 
 
 @pytest.fixture(scope="session")
-def get_equipment_id(setup_controller, testbed, get_configuration):
-    equipment_id = 0
-    if len(get_configuration['access_point']) == 1:
-        equipment_id = setup_controller.get_equipment_id(
-            serial_number=get_configuration['access_point'][0]['serial'])
-    print(equipment_id)
-    yield equipment_id
-
-
-@pytest.fixture(scope="session")
 def instantiate_profile():
     yield ProfileUtility
 
@@ -41,8 +31,8 @@ def setup_vlan():
 @allure.feature("CLIENT CONNECTIVITY SETUP")
 @pytest.fixture(scope="class")
 def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment_id,
-                              instantiate_profile, get_markers,
-                              get_security_flags, get_configuration, radius_info, get_apnos):
+                   instantiate_profile, get_markers,
+                   get_security_flags, get_configuration, radius_info, get_apnos):
     instantiate_profile = instantiate_profile(sdk_client=setup_controller)
     vlan_id, mode = 0, 0
     instantiate_profile.cleanup_objects()
@@ -375,3 +365,25 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
 def lf_test(get_configuration):
     obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'])
     yield obj
+
+
+@pytest.fixture(scope="session")
+def station_names_twog(request, get_configuration):
+    station_names = []
+    for i in range(0, int(request.config.getini("num_stations"))):
+        station_names.append(get_configuration["traffic_generator"]["details"]["2.4G-Station-Name"] + "0" + str(i))
+    yield station_names
+
+
+@pytest.fixture(scope="session")
+def station_names_fiveg(request, get_configuration):
+    station_names = []
+    for i in range(0, int(request.config.getini("num_stations"))):
+        station_names.append(get_configuration["traffic_generator"]["details"]["5G-Station-Name"] + "0" + str(i))
+    yield station_names
+
+
+@pytest.fixture(scope="session")
+def num_stations(request):
+    num_sta = int(request.config.getini("num_stations"))
+    yield num_sta

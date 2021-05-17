@@ -32,6 +32,7 @@ class TestResources(object):
     @allure.testcase(name="test_access_points_connectivity", url="")
     def test_access_points_connectivity(self, test_access_point, update_report, test_cases):
         flag = True
+        print(test_access_point)
         for i in test_access_point:
             if "ACTIVE" not in i:
                 flag = False

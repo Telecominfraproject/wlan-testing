@@ -143,7 +143,7 @@ class Controller(ConfigureController):
             print("Server not Reachable")
             exit()
         print("Connected to Controller Server")
-            # self.semaphore = False
+        # self.semaphore = False
 
     def portal_ping(self):
         return self.login_client.portal_ping()
@@ -341,7 +341,7 @@ class ProfileUtility:
                 self.default_profiles['radius'] = i
             if i._name == "TipWlan-rf":
                 self.default_profiles['rf'] = i
-
+                print(i)
     # This will delete the Profiles associated with an equipment of givwn equipment_id, and associate it to default
     # equipment_ap profile
     def delete_current_profile(self, equipment_id=None):
@@ -441,6 +441,9 @@ class ProfileUtility:
             default_profile._details["rfConfigMap"]["is5GHz"]["rf"] = profile_data["name"]
             default_profile._details["rfConfigMap"]["is5GHzL"]["rf"] = profile_data["name"]
             default_profile._details["rfConfigMap"]["is5GHzU"]["rf"] = profile_data["name"]
+            # for i in profile_data['rfConfigMap']:
+            #     for j in profile_data['rfConfigMap'][i]:
+            #         default_profile._details["rfConfigMap"][i][j] = profile_data['rfConfigMap'][i][j]
             profile = self.profile_client.create_profile(body=default_profile)
             self.profile_creation_ids['rf'].append(profile._id)
             return profile
@@ -466,6 +469,7 @@ class ProfileUtility:
         method call: used to create a ssid profile with the given parameters
     """
 
+    # Open
     def create_open_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
@@ -488,6 +492,7 @@ class ProfileUtility:
 
         return profile
 
+    # wpa personal
     def create_wpa_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
@@ -509,6 +514,7 @@ class ProfileUtility:
             profile = False
         return profile
 
+    # wpa2 personal
     def create_wpa2_personal_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
@@ -531,6 +537,7 @@ class ProfileUtility:
             profile = False
         return profile
 
+    # wpa3 personal
     def create_wpa3_personal_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
@@ -543,7 +550,7 @@ class ProfileUtility:
             default_profile._details['ssid'] = profile_data['ssid_name']
             default_profile._details['keyStr'] = profile_data['security_key']
             default_profile._details['forwardMode'] = profile_data['mode']
-            default_profile._details['secureMode'] = 'wpa3OnlyPSK'
+            default_profile._details['secureMode'] = 'wpa3OnlySAE'
             profile = self.profile_client.create_profile(body=default_profile)
             profile_id = profile._id
             self.profile_creation_ids['ssid'].append(profile_id)
@@ -553,6 +560,101 @@ class ProfileUtility:
             profile = False
         return profile
 
+    # wpa3 personal mixed mode
+    def create_wpa3_personal_mixed_ssid_profile(self, profile_data=None):
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['keyStr'] = profile_data['security_key']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details['secureMode'] = 'wpa3MixedSAE'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa wpa3 personal mixed mode
+    def create_wpa_wpa2_personal_mixed_ssid_profile(self, profile_data=None):
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['keyStr'] = profile_data['security_key']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details['secureMode'] = 'wpa2PSK'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa enterprise
+    def create_wpa_enterprise_ssid_profile(self, profile_data=None):
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
+            default_profile._child_profile_ids = self.profile_creation_ids["radius"]
+            default_profile._details['secureMode'] = 'wpaRadius'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa wpa2 enterprise mixed mode
+    def create_wpa_wpa2_enterprise_mixed_ssid_profile(self, profile_data=None):
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
+            default_profile._child_profile_ids = self.profile_creation_ids["radius"]
+            default_profile._details['secureMode'] = 'wpa2OnlyRadius'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa2 enterprise mode ssid profile
     def create_wpa2_enterprise_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
@@ -576,6 +678,7 @@ class ProfileUtility:
             profile = False
         return profile
 
+    # wpa3 enterprise mode
     def create_wpa3_enterprise_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
@@ -589,6 +692,29 @@ class ProfileUtility:
             default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
             default_profile._child_profile_ids = self.profile_creation_ids["radius"]
             default_profile._details['secureMode'] = 'wpa3OnlyEAP'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa3 enterprise mixed mode
+    def create_wpa3_enterprise_mixed_ssid_profile(self, profile_data=None):
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
+            default_profile._child_profile_ids = self.profile_creation_ids["radius"]
+            default_profile._details['secureMode'] = 'wpa3MixedEAP'
             profile = self.profile_client.create_profile(body=default_profile)
             profile_id = profile._id
             self.profile_creation_ids['ssid'].append(profile_id)
@@ -714,8 +840,6 @@ class JFrogUtility:
     def __init__(self, credentials=None):
         if credentials is None:
             exit()
-        self.user = credentials["username"]
-        self.password = credentials["password"]
         self.jfrog_url = credentials["jfrog-base-url"]
         self.build = credentials["build"]
         self.branch = credentials["branch"]
@@ -723,13 +847,6 @@ class JFrogUtility:
 
     def get_build(self, model=None, version=None):
         jfrog_url = self.jfrog_url + "/" + model + "/" + self.branch + "/"
-        # auth = str(
-        #     base64.b64encode(
-        #         bytes('%s:%s' % (self.user, self.password), 'utf-8')
-        #     ),
-        #     'ascii'
-        # ).strip()
-        # headers = {'Authorization': 'Basic ' + auth}
 
         ''' FIND THE LATEST FILE NAME'''
         print(jfrog_url)
@@ -738,14 +855,17 @@ class JFrogUtility:
         # print(response)
         html = response.read()
         soup = BeautifulSoup(html, features="html.parser")
+        if self.branch == "trunk":
+            self.build = model
         last_link = soup.find_all('a', href=re.compile(self.build))
         latest_fw = None
         for i in last_link:
+
             if str(i['href']).__contains__(version):
                 latest_fw = i['href']
 
-        # latest_file = last_link['href']
         latest_fw = latest_fw.replace('.tar.gz', '')
+        print("Using Firmware Image: ", latest_fw)
         return latest_fw
 
 
@@ -780,9 +900,12 @@ class FirmwareUtility(JFrogUtility):
     def get_fw_version(self):
         # Get The equipment model
         self.latest_fw = self.get_build(model=self.model, version=self.fw_version)
+        print("shivam", self.latest_fw)
         return self.latest_fw
 
     def upload_fw_on_cloud(self, fw_version=None, force_upload=False):
+        print("Upload fw version :", fw_version)
+        # force_upload = True
         # if fw_latest available and force upload is False -- Don't upload
         # if fw_latest available and force upload is True -- Upload
         # if fw_latest is not available -- Upload
@@ -804,10 +927,9 @@ class FirmwareUtility(JFrogUtility):
                 "modelId": fw_version.split("-")[0],
                 "versionName": fw_version + ".tar.gz",
                 "description": fw_version + "  FW VERSION",
-                "filename": "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/" + fw_version.split("-")[
-                    0] + "/dev/" + fw_version + ".tar.gz",
-                "commit": fw_version.split("-")[5]
+                "filename": self.jfrog_url + "/" + self.model + "/" + self.branch + "/" + fw_version + ".tar.gz",
             }
+            print(firmware_data["filename"])
             firmware_id = self.firmware_client.create_firmware_version(body=firmware_data)
             print("Force Upload :", force_upload, "  Uploaded the Image")
             return firmware_id._id
@@ -853,20 +975,17 @@ class FirmwareUtility(JFrogUtility):
             print("firmware not available: ", firmware_version)
         return firmware_version
 
-# controller = {
-#     'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
-#     'username': 'support@example.com',
-#     'password': 'support',
-#     'version': "1.1.0-SNAPSHOT",
-#     'commit_date': "2021-04-27"
-# }
-# api = Controller(controller_data=controller)
-# # profile = ProfileUtility(sdk_client=api)
-# # profile.cleanup_profiles()
-# # # print(api.get_equipment_by_customer_id())
-# # #
-# for i in range(0, 300):
-#     print(i)
-#     time.sleep(1)
-# print(api.get_equipment_by_customer_id())
-# api.disconnect_Controller()
+
+if __name__ == '__main__':
+    controller = {
+        'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
+        'username': 'support@example.com',
+        'password': 'support',
+        'version': "1.1.0-SNAPSHOT",
+        'commit_date': "2021-04-27"
+    }
+    api = Controller(controller_data=controller)
+    profile = ProfileUtility(sdk_client=api)
+    # print(profile.get_profile_by_name(profile_name="basic-ext-03-03-SSID-open-0-VLAN"))
+    profile.get_default_profiles()
+    api.disconnect_Controller()
