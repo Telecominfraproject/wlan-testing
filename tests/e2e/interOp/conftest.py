@@ -9,7 +9,7 @@ from perfecto.model.model import Job, Project
 from perfecto import (PerfectoExecutionContext, PerfectoReportiumClient,TestContext, TestResultFactory)
 import pytest
 import logging
-
+import re
 
 sys.path.append(
     os.path.dirname(
@@ -110,7 +110,8 @@ def setup_perfectoMobile_iOS(request):
     warnings.simplefilter("ignore", ResourceWarning)
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
    
-       
+    
+
     capabilities = {
             'platformName': request.config.getini("platformName-iOS"),
             'model': request.config.getini("model-iOS"),
@@ -125,14 +126,19 @@ def setup_perfectoMobile_iOS(request):
     driver = webdriver.Remote('https://'+request.config.getini("perfectoURL")+'.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
     driver.implicitly_wait(35)
    
+    TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
+    nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
+    TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
+    #print ("\nTestCaseName: " + TestCaseName)
+    
     projectname = request.config.getini("projectName")
     projectversion = request.config.getini("projectVersion")
     jobname = request.config.getini("jobName")
     jobnumber = request.config.getini("jobNumber")
     tags = request.config.getini("reportTags")
-    testCaseName = request.config.getini("jobName")
+    testCaseName = TestCaseName
 
-    print("Setting Perfecto ReportClient....")
+    print("\nSetting Perfecto ReportClient....")
     perfecto_execution_context = PerfectoExecutionContext(driver, tags, Job(jobname, jobnumber),Project(projectname, projectversion))
     reporting_client = PerfectoReportiumClient(perfecto_execution_context)
     reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
@@ -159,7 +165,6 @@ def setup_perfectoMobile_iOS(request):
         yield -1
     else:
         yield driver,reporting_client 
-
 
 
 @pytest.fixture(scope="function")
