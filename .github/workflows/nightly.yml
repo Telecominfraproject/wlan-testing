@@ -2,10 +2,8 @@ name: nightly build
 env:
   # thirdparties
   DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
-  DOCKER_USER_NAME: ${{ secrets.DOCKER_USER_NAME }}
+  DOCKER_USER_NAME: wlan-testing-cicd
   DOCKER_USER_PASSWORD: ${{ secrets.DOCKER_USER_PASSWORD }}
-  TESTRAIL_USER_PASSWORD: ${{ secrets.TESTRAIL_USER_PASSWORD }}
-  JFROG_USER_PASSWORD: ${{ secrets.JFROG_USER_PASSWORD }}
   # AWS credentials
   AWS_EKS_NAME: tip-wlan-main
   AWS_DEFAULT_OUTPUT: json
@@ -16,6 +14,7 @@ env:
   # Cloud SDK certs
   CACERT: ${{ secrets.CACERT }}
   CAKEY: ${{ secrets.CAKEY }}
+  ALLURE_CLI_VERSION: 2.14.0
 
 on:
   workflow_dispatch:
@@ -142,6 +141,11 @@ jobs:
     - name: get EKS access credentials
       run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
+    - name: install Allure CLI tool
+      run: |
+        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+
     - name: set job name
       id: job
       run: echo "::set-output name=name::nightly-ci-${{ github.run_number }}"
@@ -162,23 +166,53 @@ jobs:
                 command: [ "bash" ]
                 args: 
                 - "-c"
-                - "cd tests; pytest -m sanity -s -vvv --testbed=basic-02 --skip-testrail || true"
+                - "cd tests; pytest -m sanity -s -vvv --testbed=basic-02 --skip-testrail --alluredir=/tmp/allure-results; sleep 60"
               imagePullSecrets:
               - name: tip-docker-registry-key
               restartPolicy: Never
           backoffLimit: 0
         EOF
 
-        echo "waiting for tests to complete"
-        kubectl wait --for=condition=complete --timeout=90m "job/${{ steps.job.outputs.name }}"
+        sleep 60 # wait for the pod to come up
 
-    - name: print logs and check for failed tests
+        #echo "waiting for tests to complete"
+        #kubectl wait --for=condition=complete --timeout=90m "job/${{ steps.job.outputs.name }}"
+        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
+
+        until [ -s test_everything.xml ]
+        do
+          echo "waiting for tests to complete"
+          kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml
+          sleep 10
+        done
+
+        kubectl cp $podname:/tmp/allure-results allure-results
+
+    - name: print logs
       if: ${{ always() }}
       run: |
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
         kubectl logs $podname
         # try to match pytest result output
-        kubectl logs $podname | grep "==== 0 failed,"
+        # kubectl logs $podname | egrep -v -q '[[:digit:]]* failed'
+
+    - name: upload Allure results as artifact
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: allure-results
+        path: allure-results
+
+    - name: generate Allure report
+      if: ${{ always() }}
+      run: allure-${{ env.ALLURE_CLI_VERSION }}/bin/allure generate
+
+    - name: upload Allure report as artifact
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: allure-report
+        path: allure-report
 
     - name: cleanup
       if: ${{ always() }}
