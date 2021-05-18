@@ -25,20 +25,20 @@ class TestFirmware(object):
             PASS = False
         assert PASS
 
-    @pytest.mark.firmware_upgrade
-    def test_firmware_upgrade_request(self, upgrade_firmware, update_report, test_cases):
-        print()
-        if not upgrade_firmware:
-            update_report.update_testrail(case_id=test_cases["upgrade_api"],
-                                          status_id=0,
-                                          msg='Error requesting upgrade via API')
-            PASS = False
-        else:
-            update_report.update_testrail(case_id=test_cases["upgrade_api"],
-                                          status_id=1,
-                                          msg='Upgrade request using API successful')
-            PASS = True
-        assert PASS
+    # @pytest.mark.firmware_upgrade
+    # def test_firmware_upgrade_request(self, upgrade_firmware, update_report, test_cases):
+    #     print()
+    #     if not upgrade_firmware:
+    #         update_report.update_testrail(case_id=test_cases["upgrade_api"],
+    #                                       status_id=0,
+    #                                       msg='Error requesting upgrade via API')
+    #         PASS = False
+    #     else:
+    #         update_report.update_testrail(case_id=test_cases["upgrade_api"],
+    #                                       status_id=1,
+    #                                       msg='Upgrade request using API successful')
+    #         PASS = True
+    #     assert PASS
 
     @pytest.mark.check_active_firmware_cloud
     def test_active_version_cloud(self, get_latest_firmware, check_ap_firmware_cloud, update_report, test_cases):
@@ -60,7 +60,7 @@ def test_ap_firmware(check_ap_firmware_ssh, get_latest_firmware, update_report,
     if check_ap_firmware_ssh == get_latest_firmware:
         update_report.update_testrail(case_id=test_cases["ap_upgrade"],
                                       status_id=1,
-                                      msg='Upgrade to ' + get_latest_firmware + ' successful')
+                                      msg='Upgrade to ' + str(get_latest_firmware) + ' successful')
     else:
         update_report.update_testrail(case_id=test_cases["ap_upgrade"],
                                       status_id=4,

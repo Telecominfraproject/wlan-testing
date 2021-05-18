@@ -33,7 +33,7 @@ class TestVLANModeConnectivity(object):
     @pytest.mark.open
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    def test_open_ssid_2g(self, request, get_lanforge_data, lf_test, update_report, test_cases):
+    def test_open_ssid_2g(self, setup_profiles, request, get_lanforge_data, lf_test, update_report, test_cases):
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = "[BLANK]"

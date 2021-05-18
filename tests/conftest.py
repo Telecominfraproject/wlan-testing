@@ -142,12 +142,11 @@ def get_apnos():
 
 @pytest.fixture(scope="session")
 def get_equipment_id(setup_controller, testbed, get_configuration):
-    equipment_id = 0
-    if len(get_configuration['access_point']) == 1:
-        equipment_id = setup_controller.get_equipment_id(
-            serial_number=get_configuration['access_point'][0]['serial'])
-    print(equipment_id)
-    yield equipment_id
+    equipment_id_list = []
+    for i in get_configuration['access_point']:
+        equipment_id_list.append(setup_controller.get_equipment_id(
+            serial_number=i['serial']))
+    yield equipment_id_list
 
 
 # APNOS SETUP
@@ -250,7 +249,10 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
 
 @pytest.fixture(scope="class")
 def check_ap_firmware_cloud(setup_controller, get_equipment_id):
-    yield setup_controller.get_ap_firmware_old_method(equipment_id=get_equipment_id)
+    ap_fw_list = []
+    for i in get_equipment_id:
+        ap_fw_list.append(setup_controller.get_ap_firmware_old_method(equipment_id=i))
+    yield ap_fw_list
 
 
 @pytest.fixture(scope="class")

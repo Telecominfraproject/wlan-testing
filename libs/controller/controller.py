@@ -178,7 +178,7 @@ class Controller(ConfigureController):
     # Get the equipment id, of a equipment with a serial number
     def get_equipment_id(self, serial_number=None):
         equipment_data = self.get_equipment_by_customer_id(max_items=100)
-        print(len(equipment_data))
+        # print(len(equipment_data))
         for equipment in equipment_data:
             if equipment._serial == serial_number:
                 return equipment._id
@@ -210,7 +210,7 @@ class Controller(ConfigureController):
             # print(status_data)
             try:
                 current_ap_fw = status_data[2]['details']['reportedSwVersion']
-                print(current_ap_fw)
+                # print(current_ap_fw)
                 return current_ap_fw
             except:
                 current_ap_fw = "error"
@@ -341,7 +341,7 @@ class ProfileUtility:
                 self.default_profiles['radius'] = i
             if i._name == "TipWlan-rf":
                 self.default_profiles['rf'] = i
-                print(i)
+                # print(i)
     # This will delete the Profiles associated with an equipment of givwn equipment_id, and associate it to default
     # equipment_ap profile
     def delete_current_profile(self, equipment_id=None):
@@ -383,7 +383,7 @@ class ProfileUtility:
             for i in self.default_profiles:
                 skip_delete_id.append(self.default_profiles[i]._id)
             delete_ids = list(set(delete_ids) - set(delete_ids).intersection(set(skip_delete_id)))
-            print(delete_ids)
+            # print(delete_ids)
             for i in delete_ids:
                 self.set_equipment_to_profile(profile_id=i)
             self.delete_profile(profile_id=delete_ids)
@@ -900,7 +900,7 @@ class FirmwareUtility(JFrogUtility):
     def get_fw_version(self):
         # Get The equipment model
         self.latest_fw = self.get_build(model=self.model, version=self.fw_version)
-        print("shivam", self.latest_fw)
+        # print("shivam", self.latest_fw)
         return self.latest_fw
 
     def upload_fw_on_cloud(self, fw_version=None, force_upload=False):

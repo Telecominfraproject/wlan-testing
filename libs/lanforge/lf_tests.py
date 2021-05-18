@@ -5,8 +5,8 @@
 
 from sta_connect2 import StaConnect2
 import time
-from eap_connect import EAPConnect
-
+# from eap_connect import EAPConnect
+from test_ipv4_ttls import TTLSTest
 
 class RunTest:
 
@@ -67,35 +67,7 @@ class RunTest:
         time.sleep(3)
         return self.staConnect.passes(), result
 
-    def Single_Client_EAP(self, port, sta_list, ssid_name, radio, security, eap_type,
-                          identity, ttls_password, test_case, rid, client, logger):
-        eap_connect = EAPConnect(self.lanforge_ip, self.lanforge_port, _debug_on=False)
-        eap_connect.upstream_resource = 1
-        eap_connect.upstream_port = port
-        eap_connect.security = security
-        eap_connect.sta_list = sta_list
-        eap_connect.station_names = sta_list
-        eap_connect.sta_prefix = self.lanforge_prefix
-        eap_connect.ssid = ssid_name
-        eap_connect.radio = radio
-        eap_connect.eap = eap_type
-        eap_connect.identity = identity
-        eap_connect.ttls_passwd = ttls_password
-        eap_connect.runtime_secs = 40
-        eap_connect.setup()
-        eap_connect.start()
-        print("napping %f sec" % eap_connect.runtime_secs)
-        time.sleep(eap_connect.runtime_secs)
-        eap_connect.stop()
-        eap_connect.cleanup()
-        run_results = eap_connect.get_result_list()
-        for result in run_results:
-            print("test result: " + result)
-        result = True
-        print("Single Client Connectivity :", eap_connect.passes)
-        if eap_connect.passes():
-            print("Single client connection to", ssid_name, "successful. Test Passed")
-        else:
-            print("Single client connection to", ssid_name, "unsuccessful. Test Failed")
-            result = False
-        return self.staConnect.passes(), result
+    # def Client_Connectivity_EAP(self, ssid="[BLANK]", passwd="[BLANK]", key_mgmt= "WPA-EAP",
+    #                             pairwise="", group="", wpa_psk="", identity="", station_name=[],
+    #                             mode="BRIDGE", security="wpa2", eap_type,
+    #                       identity, ttls_password, test_case, rid, client, logger):

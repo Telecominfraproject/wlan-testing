@@ -25,7 +25,7 @@ class TestResources(object):
             update_report.update_testrail(case_id=test_cases["cloud_ver"],
                                           status_id=0, msg='Could not read CloudSDK version from API')
             pytest.exit("Resource Not Available")
-        print(setup_controller.bearer)
+        # print(setup_controller.bearer)
         assert setup_controller.bearer
 
     @pytest.mark.test_access_points_connectivity
