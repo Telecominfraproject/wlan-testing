@@ -305,7 +305,7 @@ def get_current_profile_cloud(instantiate_profile):
     yield ssid_names
 
 
-pytest.fixture(scope="module")
+@pytest.fixture(scope="module")
 def setup_profiles(request, create_profiles, instantiate_profile, get_equipment_id, get_current_profile_cloud, testbed):
     test_cases = {}
     mode = str(request.param[0]).lower()
