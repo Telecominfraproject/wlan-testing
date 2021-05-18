@@ -112,6 +112,34 @@ def pytest_addoption(parser):
         help="list of access points to test"
     )
 
+    #Perfecto Parameters
+    parser.addini("perfectoURL", "Cloud URL")
+    parser.addini("securityToken", "Security Token")
+    parser.addini("platformName-iOS", "iOS Platform")
+    parser.addini("platformName-android", "Android Platform")
+    parser.addini("model-iOS", "iOS Devices")
+    parser.addini("model-android", "Android Devices")
+    parser.addini("bundleId-iOS", "iOS Devices")
+    parser.addini("bundleId-iOS-Settings", "iOS Settings App")
+    parser.addini("appPackage-android", "Android Devices")
+    parser.addini("bundleId-iOS-Safari", "Safari BundleID")
+    parser.addini("wifi-SSID-2g-Pwd", "Wifi 2g Password")
+    parser.addini("Default-SSID-5gl-perfecto-b", "Wifi 5g AP Name")
+    parser.addini("Default-SSID-2g-perfecto-b", "Wifi 2g AP Name")
+    parser.addini("Default-SSID-perfecto-b", "Wifi AP Name")
+    parser.addini("bundleId-iOS-Ping", "Ping Bundle ID")
+    parser.addini("browserType-iOS", "Mobile Browser Name")    
+    parser.addini("projectName", "Project Name")
+    parser.addini("projectVersion", "Project Version")
+    parser.addini("jobName", "CI Job Name")
+    parser.addini("jobNumber", "CI Job Number")
+    parser.addini("reportTags", "Report Tags")
+    parser.addoption(
+        "--access-points-perfecto",
+        # nargs="+",
+        default=["Perfecto"],
+        help="list of access points to test"
+    )
 
 """
 Test session base fixture
