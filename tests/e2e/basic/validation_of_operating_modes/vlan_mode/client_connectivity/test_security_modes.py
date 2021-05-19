@@ -212,21 +212,21 @@ class TestVLANModeConnectivity(object):
         assert result
 
 
-# setup_params_enterprise = {
-#     "mode": "BRIDGE",
-#     "ssid_modes": {
-#         "wpa2_enterprise": [
-#             {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-#             {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
-#              "security_key": "something"}],
-#         "wpa3_enterprise": [
-#             {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["is2dot4GHz"]},
-#             {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}]},
-#
-#     "rf": {},
-#     "radius": True
-# }
-#
+setup_params_enterprise = {
+    "mode": "VLAN",
+    "ssid_modes": {
+        "wpa2_enterprise": [
+            {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+             "security_key": "something"}],
+        "wpa3_enterprise": [
+            {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["is2dot4GHz"]},
+            {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}]},
+
+    "rf": {},
+    "radius": True
+}
+
 #
 # @pytest.mark.parametrize(
 #     'setup_profiles',
