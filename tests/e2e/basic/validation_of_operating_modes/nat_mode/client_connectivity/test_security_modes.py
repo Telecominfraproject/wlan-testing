@@ -28,7 +28,7 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestNATModeConnectivity(object):
+class TestNATModeConnectivitySuiteOne(object):
 
     @pytest.mark.open
     @pytest.mark.twog
@@ -228,6 +228,7 @@ setup_params_general_two = {
     "radius": False
 }
 
+
 @pytest.mark.shivam
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
@@ -237,16 +238,17 @@ setup_params_general_two = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestNATModeConnectivity(object):
+class TestNATModeConnectivitySuiteTwo(object):
 
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    def test_wpa3_personal_ssid_2g(self, request, setup_profiles, get_lanforge_data, lf_test, update_report, test_cases):
+    def test_wpa3_personal_ssid_2g(self, request, setup_profiles, get_lanforge_data, lf_test, update_report,
+                                   test_cases):
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        security = "wpa3"
+        security = ["wpa3"]
         station_names = []
         for i in range(0, int(request.config.getini("num_stations"))):
             station_names.append(get_lanforge_data["lanforge_2dot4g_prefix"] + "0" + str(i))
@@ -276,7 +278,7 @@ class TestNATModeConnectivity(object):
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        security = "wpa3"
+        security = ["wpa3"]
         station_names = []
         for i in range(0, int(request.config.getini("num_stations"))):
             station_names.append(get_lanforge_data["lanforge_5g_prefix"] + "0" + str(i))
@@ -302,7 +304,8 @@ class TestNATModeConnectivity(object):
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    def test_wpa3_personal_mixed_ssid_2g(self, request, setup_profiles, get_lanforge_data, lf_test, update_report, test_cases):
+    def test_wpa3_personal_mixed_ssid_2g(self, request, setup_profiles, get_lanforge_data, lf_test, update_report,
+                                         test_cases):
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]

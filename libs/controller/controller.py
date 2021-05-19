@@ -342,6 +342,7 @@ class ProfileUtility:
             if i._name == "TipWlan-rf":
                 self.default_profiles['rf'] = i
                 # print(i)
+
     # This will delete the Profiles associated with an equipment of givwn equipment_id, and associate it to default
     # equipment_ap profile
     def delete_current_profile(self, equipment_id=None):
@@ -417,8 +418,9 @@ class ProfileUtility:
                                                 "model_type": "PaginationContext",
                                                 "maxItemsPerPage": 5000
                                         }"""
-        equipment_data = self.sdk_client.equipment_client.get_equipment_by_customer_id(customer_id=2,
-                                                                                       pagination_context=pagination_context)
+        equipment_data = self.sdk_client.equipment_client. \
+            get_equipment_by_customer_id(customer_id=2,
+                                         pagination_context=pagination_context)
         self.get_default_profiles()
         for i in equipment_data._items:
             if i._profile_id == profile_id:
