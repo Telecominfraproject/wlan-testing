@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 """
     Test Case Module:  setup test cases for basic test cases
     Details:    Firmware Upgrade
@@ -110,7 +110,7 @@ def test_ap_firmware(check_ap_firmware_ssh, get_latest_firmware, instantiate_tes
 
     assert check_ap_firmware_ssh == get_latest_firmware
 
-=======
+
 # """
 #     Test Case Module:  setup test cases for basic test cases
 #     Details:    Firmware Upgrade
@@ -192,4 +192,4 @@ def test_ap_firmware(check_ap_firmware_ssh, get_latest_firmware, instantiate_tes
 #                                              msg='Cannot reach AP after upgrade to check CLI - re-test required')
 #
 #     assert check_ap_firmware_ssh == get_latest_firmware
->>>>>>> staging-wifi-1960
+

@@ -5,77 +5,65 @@
 """
 import pytest
 
-@pytest.mark.configure_lanforge
-def test_configure_lanforge(configure_lanforge):
-
-    assert True
+pytestmark = [pytest.mark.firmware, pytest.mark.sanity]
 
 
-@pytest.mark.sanity
-@pytest.mark.bridge
-@pytest.mark.nat
-@pytest.mark.vlan
-@pytest.mark.firmware
+@pytest.mark.firmware_cloud
 class TestFirmware(object):
 
     @pytest.mark.firmware_create
-    def test_firmware_create(self, upload_firmware, instantiate_testrail, instantiate_project, test_cases):
+    def test_firmware_create(self, upload_firmware, update_report, test_cases):
         if upload_firmware != 0:
-            instantiate_testrail.update_testrail(case_id=test_cases["create_fw"], run_id=instantiate_project,
-                                                 status_id=1,
-                                                 msg='Create new FW version by API successful')
+            update_report.update_testrail(case_id=test_cases["create_fw"],
+                                          status_id=1,
+                                          msg='Create new FW version by API successful')
             PASS = True
         else:
-            instantiate_testrail.update_testrail(case_id=test_cases["create_fw"], run_id=instantiate_project,
-                                                 status_id=5,
-                                                 msg='Error creating new FW version by API')
+            update_report.update_testrail(case_id=test_cases["create_fw"],
+                                          status_id=5,
+                                          msg='Error creating new FW version by API')
             PASS = False
         assert PASS
 
-    @pytest.mark.firmware_upgrade
-    def test_firmware_upgrade_request(self, upgrade_firmware, instantiate_testrail, instantiate_project, test_cases):
-        print()
-        if not upgrade_firmware:
-            instantiate_testrail.update_testrail(case_id=test_cases["upgrade_api"], run_id=instantiate_project,
-                                                 status_id=0,
-                                                 msg='Error requesting upgrade via API')
-            PASS = False
-        else:
-            instantiate_testrail.update_testrail(case_id=test_cases["upgrade_api"], run_id=instantiate_project,
-                                                 status_id=1,
-                                                 msg='Upgrade request using API successful')
-            PASS = True
-        assert PASS
+    # @pytest.mark.firmware_upgrade
+    # def test_firmware_upgrade_request(self, upgrade_firmware, update_report, test_cases):
+    #     print()
+    #     if not upgrade_firmware:
+    #         update_report.update_testrail(case_id=test_cases["upgrade_api"],
+    #                                       status_id=0,
+    #                                       msg='Error requesting upgrade via API')
+    #         PASS = False
+    #     else:
+    #         update_report.update_testrail(case_id=test_cases["upgrade_api"],
+    #                                       status_id=1,
+    #                                       msg='Upgrade request using API successful')
+    #         PASS = True
+    #     assert PASS
 
     @pytest.mark.check_active_firmware_cloud
-    def test_active_version_cloud(self, get_latest_firmware, check_ap_firmware_cloud, instantiate_testrail,
-                                  instantiate_project, test_cases):
+    def test_active_version_cloud(self, get_latest_firmware, check_ap_firmware_cloud, update_report, test_cases):
         if get_latest_firmware != check_ap_firmware_cloud:
-            instantiate_testrail.update_testrail(case_id=test_cases["cloud_fw"], run_id=instantiate_project,
-                                                 status_id=5,
-                                                 msg='CLOUDSDK reporting incorrect firmware version.')
+            update_report.update_testrail(case_id=test_cases["cloud_fw"],
+                                          status_id=5,
+                                          msg='CLOUDSDK reporting incorrect firmware version.')
         else:
-            instantiate_testrail.update_testrail(case_id=test_cases["cloud_fw"], run_id=instantiate_project,
-                                                 status_id=1,
-                                                 msg='CLOUDSDK reporting correct firmware version.')
+            update_report.update_testrail(case_id=test_cases["cloud_fw"],
+                                          status_id=1,
+                                          msg='CLOUDSDK reporting correct firmware version.')
 
         assert get_latest_firmware == check_ap_firmware_cloud
 
 
-@pytest.mark.sanity
-@pytest.mark.bridge
-@pytest.mark.nat
-@pytest.mark.vlan
-@pytest.mark.check_active_firmware_ap
-def test_ap_firmware(check_ap_firmware_ssh, get_latest_firmware, instantiate_testrail, instantiate_project,
+@pytest.mark.firmware_ap
+def test_ap_firmware(check_ap_firmware_ssh, get_latest_firmware, update_report,
                      test_cases):
     if check_ap_firmware_ssh == get_latest_firmware:
-        instantiate_testrail.update_testrail(case_id=test_cases["ap_upgrade"], run_id=instantiate_project,
-                                             status_id=1,
-                                             msg='Upgrade to ' + get_latest_firmware + ' successful')
+        update_report.update_testrail(case_id=test_cases["ap_upgrade"],
+                                      status_id=1,
+                                      msg='Upgrade to ' + str(get_latest_firmware) + ' successful')
     else:
-        instantiate_testrail.update_testrail(case_id=test_cases["ap_upgrade"], run_id=instantiate_project,
-                                             status_id=4,
-                                             msg='Cannot reach AP after upgrade to check CLI - re-test required')
+        update_report.update_testrail(case_id=test_cases["ap_upgrade"],
+                                      status_id=4,
+                                      msg='Cannot reach AP after upgrade to check CLI - re-test required')
 
     assert check_ap_firmware_ssh == get_latest_firmware

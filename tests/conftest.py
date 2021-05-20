@@ -194,6 +194,15 @@ def get_apnos():
     yield APNOS
 
 
+@pytest.fixture(scope="session")
+def get_equipment_id(setup_controller, testbed, get_configuration):
+    equipment_id_list = []
+    for i in get_configuration['access_point']:
+        equipment_id_list.append(setup_controller.get_equipment_id(
+            serial_number=i['serial']))
+    yield equipment_id_list
+
+
 # APNOS SETUP
 @pytest.fixture(scope="session")
 def instantiate_access_point(testbed, get_apnos, get_configuration):
@@ -239,6 +248,79 @@ def instantiate_firmware(setup_controller, instantiate_jFrog, get_configuration)
                                           version=access_point_info["version"])
         firmware_client_obj.append(firmware_client)
     yield firmware_client_obj
+
+
+@pytest.fixture(scope="class")
+def get_latest_firmware(instantiate_firmware):
+    fw_version_list = []
+    try:
+
+        for fw_obj in instantiate_firmware:
+            latest_firmware = fw_obj.get_fw_version()
+            fw_version_list.append(latest_firmware)
+    except Exception as e:
+        print(e)
+        fw_version_list = []
+
+    yield fw_version_list
+
+
+@pytest.fixture(scope="class")
+def upload_firmware(should_upload_firmware, instantiate_firmware, get_latest_firmware):
+    firmware_id_list = []
+    for i in range(0, len(instantiate_firmware)):
+        firmware_id = instantiate_firmware[i].upload_fw_on_cloud(fw_version=get_latest_firmware[i],
+                                                                 force_upload=should_upload_firmware)
+        firmware_id_list.append(firmware_id)
+    yield firmware_id_list
+
+
+@pytest.fixture(scope="class")
+def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_firmware_cloud, get_latest_firmware,
+                     should_upgrade_firmware):
+    status_list = []
+    if get_latest_firmware != check_ap_firmware_cloud:
+        if request.config.getoption("--skip-upgrade"):
+            status = "skip-upgrade"
+            status_list.append(status)
+        else:
+
+            for i in range(0, len(instantiate_firmware)):
+                status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id, force_upload=False,
+                                                            force_upgrade=should_upgrade_firmware)
+                status_list.append(status)
+    else:
+        if should_upgrade_firmware:
+            for i in range(0, len(instantiate_firmware)):
+                status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id, force_upload=False,
+                                                            force_upgrade=should_upgrade_firmware)
+                status_list.append(status)
+        else:
+            status = "skip-upgrade Version Already Available"
+            status_list.append(status)
+    yield status_list
+
+
+@pytest.fixture(scope="class")
+def check_ap_firmware_cloud(setup_controller, get_equipment_id):
+    ap_fw_list = []
+    for i in get_equipment_id:
+        ap_fw_list.append(setup_controller.get_ap_firmware_old_method(equipment_id=i))
+    yield ap_fw_list
+
+
+@pytest.fixture(scope="class")
+def check_ap_firmware_ssh(get_configuration):
+    active_fw_list = []
+    try:
+        for access_point in get_configuration['access_point']:
+            ap_ssh = APNOS(access_point)
+            active_fw = ap_ssh.get_active_firmware()
+            active_fw_list.append(active_fw)
+    except Exception as e:
+        print(e)
+        active_fw_list = []
+    yield active_fw_list
 
 
 """
@@ -358,7 +440,8 @@ FRAMEWORK MARKER LOGIC
 @pytest.fixture(scope="session")
 def get_security_flags():
     # Add more classifications as we go
-    security = ["open", "wpa", "wpa2_personal", "wpa2_enterprise", "wpa3_enterprise", "twog", "fiveg", "radius"]
+    security = ["open", "wpa", "wpa2_personal", "wpa3_personal", "wpa3_personal_mixed",
+                "wpa2_enterprise", "wpa3_enterprise", "twog", "fiveg", "radius"]
     yield security
 
 

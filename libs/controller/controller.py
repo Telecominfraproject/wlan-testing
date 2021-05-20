@@ -179,7 +179,7 @@ class Controller(ConfigureController):
     # Get the equipment id, of a equipment with a serial number
     def get_equipment_id(self, serial_number=None):
         equipment_data = self.get_equipment_by_customer_id(max_items=100)
-        # print(equipment_data)
+
         for equipment in equipment_data:
             print(equipment._id)
             if equipment._serial == serial_number:
@@ -212,7 +212,7 @@ class Controller(ConfigureController):
             # print(status_data)
             try:
                 current_ap_fw = status_data[2]['details']['reportedSwVersion']
-                print(current_ap_fw)
+                # print(current_ap_fw)
                 return current_ap_fw
             except Exception as e:
                 current_ap_fw = "error"
@@ -343,6 +343,7 @@ class ProfileUtility:
                 self.default_profiles['radius'] = i
             if i._name == "TipWlan-rf":
                 self.default_profiles['rf'] = i
+                # print(i)
 
     # This will delete the Profiles associated with an equipment of givwn equipment_id, and associate it to default
     # equipment_ap profile
@@ -385,7 +386,7 @@ class ProfileUtility:
             for i in self.default_profiles:
                 skip_delete_id.append(self.default_profiles[i]._id)
             delete_ids = list(set(delete_ids) - set(delete_ids).intersection(set(skip_delete_id)))
-            print(delete_ids)
+            # print(delete_ids)
             for i in delete_ids:
                 self.set_equipment_to_profile(profile_id=i)
             self.delete_profile(profile_id=delete_ids)
@@ -419,8 +420,9 @@ class ProfileUtility:
                                                 "model_type": "PaginationContext",
                                                 "maxItemsPerPage": 5000
                                         }"""
-        equipment_data = self.sdk_client.equipment_client.get_equipment_by_customer_id(customer_id=2,
-                                                                                       pagination_context=pagination_context)
+        equipment_data = self.sdk_client.equipment_client. \
+            get_equipment_by_customer_id(customer_id=2,
+                                         pagination_context=pagination_context)
         self.get_default_profiles()
         for i in equipment_data._items:
             if i._profile_id == profile_id:
@@ -443,6 +445,9 @@ class ProfileUtility:
             default_profile._details["rfConfigMap"]["is5GHz"]["rf"] = profile_data["name"]
             default_profile._details["rfConfigMap"]["is5GHzL"]["rf"] = profile_data["name"]
             default_profile._details["rfConfigMap"]["is5GHzU"]["rf"] = profile_data["name"]
+            # for i in profile_data['rfConfigMap']:
+            #     for j in profile_data['rfConfigMap'][i]:
+            #         default_profile._details["rfConfigMap"][i][j] = profile_data['rfConfigMap'][i][j]
             profile = self.profile_client.create_profile(body=default_profile)
             self.profile_creation_ids['rf'].append(profile._id)
             return profile
@@ -468,6 +473,7 @@ class ProfileUtility:
         method call: used to create a ssid profile with the given parameters
     """
 
+    # Open
     def create_open_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
@@ -490,6 +496,7 @@ class ProfileUtility:
 
         return profile
 
+    # wpa personal
     def create_wpa_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
@@ -511,6 +518,7 @@ class ProfileUtility:
             profile = False
         return profile
 
+    # wpa2 personal
     def create_wpa2_personal_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
@@ -533,6 +541,7 @@ class ProfileUtility:
             profile = False
         return profile
 
+    # wpa3 personal
     def create_wpa3_personal_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
@@ -545,7 +554,7 @@ class ProfileUtility:
             default_profile._details['ssid'] = profile_data['ssid_name']
             default_profile._details['keyStr'] = profile_data['security_key']
             default_profile._details['forwardMode'] = profile_data['mode']
-            default_profile._details['secureMode'] = 'wpa3OnlyPSK'
+            default_profile._details['secureMode'] = 'wpa3OnlySAE'
             profile = self.profile_client.create_profile(body=default_profile)
             profile_id = profile._id
             self.profile_creation_ids['ssid'].append(profile_id)
@@ -555,6 +564,101 @@ class ProfileUtility:
             profile = False
         return profile
 
+    # wpa3 personal mixed mode
+    def create_wpa3_personal_mixed_ssid_profile(self, profile_data=None):
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['keyStr'] = profile_data['security_key']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details['secureMode'] = 'wpa3MixedSAE'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa wpa2 personal mixed mode
+    def create_wpa_wpa2_personal_mixed_ssid_profile(self, profile_data=None):
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['keyStr'] = profile_data['security_key']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details['secureMode'] = 'wpa2PSK'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa enterprise
+    def create_wpa_enterprise_ssid_profile(self, profile_data=None):
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
+            default_profile._child_profile_ids = self.profile_creation_ids["radius"]
+            default_profile._details['secureMode'] = 'wpaRadius'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa wpa2 enterprise mixed mode
+    def create_wpa_wpa2_enterprise_mixed_ssid_profile(self, profile_data=None):
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
+            default_profile._child_profile_ids = self.profile_creation_ids["radius"]
+            default_profile._details['secureMode'] = 'wpa2OnlyRadius'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa2 enterprise mode ssid profile
     def create_wpa2_enterprise_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
@@ -578,6 +682,7 @@ class ProfileUtility:
             profile = False
         return profile
 
+    # wpa3 enterprise mode
     def create_wpa3_enterprise_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
@@ -591,6 +696,29 @@ class ProfileUtility:
             default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
             default_profile._child_profile_ids = self.profile_creation_ids["radius"]
             default_profile._details['secureMode'] = 'wpa3OnlyEAP'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa3 enterprise mixed mode
+    def create_wpa3_enterprise_mixed_ssid_profile(self, profile_data=None):
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
+            default_profile._child_profile_ids = self.profile_creation_ids["radius"]
+            default_profile._details['secureMode'] = 'wpa3MixedEAP'
             profile = self.profile_client.create_profile(body=default_profile)
             profile_id = profile._id
             self.profile_creation_ids['ssid'].append(profile_id)
@@ -777,6 +905,7 @@ class FirmwareUtility(JFrogUtility):
     def get_fw_version(self):
         # Get The equipment model
         self.latest_fw = self.get_build(model=self.model, version=self.fw_version)
+        # print("shivam", self.latest_fw)
         return self.latest_fw
 
     def upload_fw_on_cloud(self, fw_version=None, force_upload=False):
@@ -869,3 +998,9 @@ if __name__ == '__main__':
     sdk_client = Controller(controller_data=controller)
     # Use Library/ Method Here
     sdk_client.disconnect_Controller()
+    api = Controller(controller_data=controller)
+    profile = ProfileUtility(sdk_client=api)
+    # print(profile.get_profile_by_name(profile_name="basic-ext-03-03-SSID-open-0-VLAN"))
+    profile.get_default_profiles()
+    api.disconnect_Controller()
+
