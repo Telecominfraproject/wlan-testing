@@ -585,7 +585,7 @@ class ProfileUtility:
             profile = False
         return profile
 
-    # wpa wpa3 personal mixed mode
+    # wpa wpa2 personal mixed mode
     def create_wpa_wpa2_personal_mixed_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
