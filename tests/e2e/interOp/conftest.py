@@ -252,13 +252,9 @@ def get_lanforge_data(testbed):
     yield lanforge_data
 
 
-@pytest.fixture(scope="module")
-def instantiate_profile(setup_controller):
-    #try:
-    profile_object = ProfileUtility(sdk_client=setup_controller)
-    #except:
-    #profile_object = False
-    yield profile_object
+@pytest.fixture(scope="session")
+def instantiate_profile():
+    yield ProfileUtility
 
 
 @pytest.fixture(scope="session")
