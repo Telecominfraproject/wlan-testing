@@ -1,51 +1,53 @@
 """
     Test Case Module:  Testing Basic Connectivity with Resources
-    Mode:       BRIDGE
-
 """
-import pytest
 import sys
 
-pytestmark = [pytest.mark.test_connection]
+
+import allure
+import pytest
+
+pytestmark = [pytest.mark.test_resources]
 
 
 @pytest.mark.sanity
-@pytest.mark.test_controller_connectivity
-def test_controller_connectivity(instantiate_controller, instantiate_testrail, instantiate_project, test_cases):
-    try:
-        instantiate_testrail.update_testrail(case_id=test_cases["cloud_ver"], run_id=instantiate_project,
-                                             status_id=1, msg='Read CloudSDK version from API successfully')
-        PASS = True
-    except:
-        instantiate_testrail.update_testrail(case_id=test_cases["cloud_ver"], run_id=instantiate_project,
-                                             status_id=0, msg='Could not read CloudSDK version from API')
-        PASS = False
-    assert instantiate_controller
+@allure.testcase(name="Test Resources", url="")
+class TestResources(object):
 
+    @pytest.mark.test_cloud_controller
+    @allure.testcase(name="test_controller_connectivity", url="")
+    def test_controller_connectivity(self, setup_controller, update_report, test_cases):
+        if setup_controller.bearer:
+            allure.attach(name="Controller Connectivity Success", body="")
+            update_report.update_testrail(case_id=test_cases["cloud_ver"],
+                                          status_id=1, msg='Read CloudSDK version from API successfully')
+        else:
+            allure.attach(name="Controller Connectivity Failed", body="")
+            update_report.update_testrail(case_id=test_cases["cloud_ver"],
+                                          status_id=0, msg='Could not read CloudSDK version from API')
+            pytest.exit("Resource Not Available")
+        # print(setup_controller.bearer)
+        assert setup_controller.bearer
 
-@pytest.mark.sanity
-@pytest.mark.test_access_points_connectivity
-def test_access_points_connectivity(test_access_point, instantiate_testrail, instantiate_project, test_cases):
-    if "ACTIVE" not in test_access_point:
-        instantiate_testrail.update_testrail(case_id=test_cases["cloud_connection"], run_id=instantiate_project,
-                                             status_id=5,
-                                             msg='CloudSDK connectivity failed')
-        status = False
-        sys.exit()
-    else:
-        instantiate_testrail.update_testrail(case_id=test_cases["cloud_connection"], run_id=instantiate_project,
-                                             status_id=1,
-                                             msg='Manager status is Active')
-        status = True
+    @pytest.mark.test_access_points_connectivity
+    @allure.testcase(name="test_access_points_connectivity", url="")
+    def test_access_points_connectivity(self, test_access_point, update_report, test_cases):
+        for i in test_access_point:
+            if "ACTIVE" not in i:
+                flag = False
 
-    assert status
+        if flag is False:
+            allure.attach(name="Access Point Connectivity Success", body=str(test_access_point))
+            update_report.update_testrail(case_id=test_cases["cloud_connection"],
+                                          status_id=5,
+                                          msg='CloudSDK connectivity failed')
 
+            pytest.exit("Access Point Manafer state is not ACtive")
+        else:
+            allure.attach(name="Access Point Connectivity Failed", body=str(test_access_point))
+            update_report.update_testrail(case_id=test_cases["cloud_connection"],
+                                          status_id=1,
+                                          msg='Manager status is Active')
 
-@pytest.mark.test_lanforge_connectivity
-def test_lanforge_connectivity(setup_lanforge):
-    assert "instantiate_cloudsdk"
+        assert flag
 
-
-@pytest.mark.test_perfecto_connectivity
-def test_perfecto_connectivity(setup_perfecto_devices):
-    assert "instantiate_cloudsdk"
