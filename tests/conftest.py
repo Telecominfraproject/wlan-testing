@@ -39,6 +39,7 @@ from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
 import sta_connect2
 from sta_connect2 import StaConnect2
+from cv_test_manager import cv_test
 
 
 def pytest_addoption(parser):
@@ -369,3 +370,24 @@ def get_lanforge_data(get_configuration):
             "vlan": 100
         }
     yield lanforge_data
+
+
+@pytest.fixture(scope="session")
+def check_lanforge_connectivity(testbed, get_configuration):
+    lanforge_ip = get_configuration['traffic_generator']['details']['ip']
+    lanforge_port = get_configuration['traffic_generator']['details']['port']
+
+    try:
+        cv = cv_test(lanforge_ip, lanforge_port)
+        url_data = cv.get_ports("/")
+        lanforge_GUI_version = url_data["VersionInfo"]["BuildVersion"]
+        lanforge_gui_git_version = url_data["VersionInfo"]["GitVersion"]
+        lanforge_gui_build_date = url_data["VersionInfo"]["BuildDate"]
+        print(lanforge_GUI_version, lanforge_gui_build_date, lanforge_gui_git_version)
+        if not (lanforge_GUI_version or lanforge_gui_build_date or lanforge_gui_git_version):
+            yield False
+        else:
+            yield True
+    except:
+        yield False
+
