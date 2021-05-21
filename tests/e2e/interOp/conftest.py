@@ -262,10 +262,10 @@ def instantiate_profile(instantiate_controller):
 
 
 @pytest.fixture(scope="session")
-def get_equipment_id(instantiate_controller, testbed):
+def get_equipment_id(setup_controller, testbed):
     equipment_id = 0
     if len(CONFIGURATION[testbed]['access_point']) == 1:
-        equipment_id = instantiate_controller.get_equipment_id(
+        equipment_id = setup_controller.get_equipment_id(
             serial_number=CONFIGURATION[testbed]['access_point'][0]['serial'])
     yield equipment_id
 

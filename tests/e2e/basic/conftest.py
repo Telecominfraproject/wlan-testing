@@ -66,7 +66,7 @@ def get_lanforge_data(testbed):
 
 
 @pytest.fixture(scope="module")
-def instantiate_profile(instantiate_controller):
+def instantiate_profile(se):
     try:
         profile_object = ProfileUtility(sdk_client=instantiate_controller)
     except Exception as e:
