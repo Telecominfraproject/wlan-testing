@@ -2,36 +2,71 @@
 # Used by Nightly_Sanity
 # This has different types of old_pytest like Single client connectivity, Single_Client_EAP, testrail_retest
 #########################################################################################################
+import sys
+import os
 
+sys.path.append(
+    os.path.dirname(
+        os.path.realpath(__file__)
+    )
+)
+if "libs" not in sys.path:
+    sys.path.append(f'../libs')
+for folder in 'py-json', 'py-scripts':
+    if folder not in sys.path:
+        sys.path.append(f'../../lanforge/lanforge-scripts/{folder}')
+
+sys.path.append(f"../lanforge/lanforge-scripts/py-scripts/tip-cicd-sanity")
+
+sys.path.append(f'../libs')
+sys.path.append(f'../libs/lanforge/')
 from sta_connect2 import StaConnect2
+import time
+# from eap_connect import EAPConnect
+from test_ipv4_ttls import TTLSTest
 
 
 class RunTest:
 
-    def __init__(self, lanforge_ip, lanforge_port, lanforge_prefix):
-        self.lanforge_ip = lanforge_ip
-        self.lanforge_port = lanforge_port
-        self.lanforge_prefix = lanforge_prefix
+    def __init__(self, lanforge_data=None, debug=False):
+        self.lanforge_ip = lanforge_data["ip"]
+        self.lanforge_port = lanforge_data["port"]
+        self.twog_radios = lanforge_data["2.4G-Radio"]
+        self.fiveg_radios = lanforge_data["5G-Radio"]
+        self.ax_radios = lanforge_data["AX-Radio"]
+        self.upstream_port = lanforge_data["upstream"]
+        self.twog_prefix = lanforge_data["2.4G-Station-Name"]
+        self.fiveg_prefix = lanforge_data["5G-Station-Name"]
+        self.ax_prefix = lanforge_data["AX-Station-Name"]
+        self.debug = debug
+        self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=debug)
 
-    def Single_Client_Connectivity(self, upstream_port="eth1", radio="wiphy0", ssid="TestAP", passkey="ssid_psk",
-                                   security="open",
-                                   station_name="sta0000", test_case=None, rid=None, client=None, logger=None):
+    def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", station_name=[],
+                            mode="BRIDGE", vlan_id=1, band="twog"):
         '''SINGLE CLIENT CONNECTIVITY using test_connect2.py'''
-        self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=False)
         self.staConnect.sta_mode = 0
         self.staConnect.upstream_resource = 1
-        self.staConnect.upstream_port = upstream_port
-        self.staConnect.radio = radio
+        if mode == "BRIDGE":
+            self.staConnect.upstream_port = self.upstream_port
+        elif mode == "NAT":
+            self.staConnect.upstream_port = self.upstream_port
+        else:
+            self.staConnect.upstream_port = self.upstream_port + "." + str(vlan_id)
+        if band == "twog":
+            self.staConnect.radio = self.twog_radios[0]
+            self.staConnect.sta_prefix = self.twog_prefix
+        if band == "fiveg":
+            self.staConnect.radio = self.fiveg_radios[0]
+            self.staConnect.sta_prefix = self.fiveg_prefix
         self.staConnect.resource = 1
         self.staConnect.dut_ssid = ssid
         self.staConnect.dut_passwd = passkey
         self.staConnect.dut_security = security
         self.staConnect.station_names = station_name
-        self.staConnect.sta_prefix = self.lanforge_prefix
-        self.staConnect.runtime_secs = 10
+        self.staConnect.runtime_secs = 40
         self.staConnect.bringup_time_sec = 60
         self.staConnect.cleanup_on_exit = True
-        # staConnect.cleanup()
+        # self.staConnect.cleanup()
         self.staConnect.setup()
         self.staConnect.start()
         print("napping %f sec" % self.staConnect.runtime_secs)
@@ -41,58 +76,75 @@ class RunTest:
         run_results = self.staConnect.get_result_list()
         for result in run_results:
             print("test result: " + result)
-        # result = 'pass'
-        print("Single Client Connectivity :", self.staConnect.passes)
-        if self.staConnect.passes() == True:
-            print("Single client connection to", self.staConnect.dut_ssid, "successful. Test Passed")
-            client.update_testrail(case_id=test_case, run_id=rid, status_id=1, msg='Client connectivity passed')
-            logger.info("Client connectivity to " + self.staConnect.dut_ssid + " Passed")
-            return ("passed")
+        result = True
+        print("Client Connectivity :", self.staConnect.passes)
+        if self.staConnect.passes():
+            print("client connection to", self.staConnect.dut_ssid, "successful. Test Passed")
         else:
-            client.update_testrail(case_id=test_case, run_id=rid, status_id=5, msg='Client connectivity failed')
-            print("Single client connection to", self.staConnect.dut_ssid, "unsuccessful. Test Failed")
-            logger.warning("Client connectivity to " + self.staConnect.dut_ssid + " FAILED")
-            return ("failed")
+            print("client connection to", self.staConnect.dut_ssid, "unsuccessful. Test Failed")
+            result = False
+        time.sleep(3)
+        return self.staConnect.passes(), result
 
-    def Single_Client_EAP(self, port, sta_list, ssid_name, radio, security, eap_type,
-                          identity, ttls_password, test_case, rid, client, logger):
-        eap_connect = EAPConnect(self.lanforge_ip, self.lanforge_port, _debug_on=False)
-        eap_connect.upstream_resource = 1
-        eap_connect.upstream_port = port
-        eap_connect.security = security
-        eap_connect.sta_list = sta_list
-        eap_connect.station_names = sta_list
-        eap_connect.sta_prefix = self.lanforge_prefix
-        eap_connect.ssid = ssid_name
-        eap_connect.radio = radio
-        eap_connect.eap = eap_type
-        eap_connect.identity = identity
-        eap_connect.ttls_passwd = ttls_password
-        eap_connect.runtime_secs = 10
-        eap_connect.setup()
-        eap_connect.start()
-        print("napping %f sec" % eap_connect.runtime_secs)
-        time.sleep(eap_connect.runtime_secs)
-        eap_connect.stop()
-        eap_connect.cleanup()
-        run_results = eap_connect.get_result_list()
-        for result in run_results:
-            print("test result: " + result)
-        # result = 'pass'
-        print("Single Client Connectivity :", eap_connect.passes)
-        if eap_connect.passes() == True:
-            print("Single client connection to", ssid_name, "successful. Test Passed")
-            client.update_testrail(case_id=test_case, run_id=rid, status_id=1, msg='Client connectivity passed')
-            logger.info("Client connectivity to " + ssid_name + " Passed")
-            return ("passed")
+    def EAP_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog", vlan_id=100,
+                    station_name=[], key_mgmt="WPA-EAP",
+                    pairwise="NA", group="NA", wpa_psk="DEFAULT",
+                    ttls_passwd="nolastart",
+                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius"):
+        self.eap_connect = TTLSTest(host=self.lanforge_ip, port=self.lanforge_port,
+                                    sta_list=station_name, vap=False, _debug_on=self.debug)
+
+        self.eap_connect.station_profile.sta_mode = 0
+        self.eap_connect.upstream_resource = 1
+        if mode == "BRIDGE":
+            self.eap_connect.upstream_port = self.upstream_port
+        elif mode == "NAT":
+            self.eap_connect.upstream_port = self.upstream_port
         else:
-            client.update_testrail(case_id=test_case, run_id=rid, status_id=5, msg='Client connectivity failed')
-            print("Single client connection to", ssid_name, "unsuccessful. Test Failed")
-            logger.warning("Client connectivity to " + ssid_name + " FAILED")
-            return ("failed")
+            self.eap_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
+        if band == "twog":
+            self.eap_connect.radio = self.twog_radios[0]
+            # self.eap_connect.sta_prefix = self.twog_prefix
+        if band == "fiveg":
+            self.eap_connect.radio = self.fiveg_radios[0]
+            # self.eap_connect.sta_prefix = self.fiveg_prefix
+        # self.eap_connect.resource = 1
+        if eap == "TTLS":
+            self.eap_connect.ieee80211w = 0
+            self.eap_connect.station_profile.set_command_flag("add_sta", "80211u_enable", 0)
+            self.eap_connect.identity = identity
+            self.eap_connect.ttls_passwd = ttls_passwd
+        if eap == "TLS":
+            self.eap_connect.key_mgmt = "WPA-EAP-SUITE-B"
+            self.eap_connect.station_profile.set_command_flag("add_sta", "80211u_enable", 0)
+            self.eap_connect.pairwise = "TKIP"
+            self.eap_connect.group = "TKIP"
+            self.eap_connect.eap = "EAP-TLS"
 
-    def testrail_retest(self, test_case, rid, ssid_name, client, logger):
-        client.update_testrail(case_id=test_case, run_id=rid, status_id=4,
-                               msg='Error in Client Connectivity Test. Needs to be Re-run')
-        print("Error in test for single client connection to", ssid_name)
-        logger.warning("ERROR testing Client connectivity to " + ssid_name)
+        # self.eap_connect.hs20_enable = False
+        self.eap_connect.ssid = ssid
+        self.eap_connect.password = passkey
+        self.eap_connect.security = security
+        self.eap_connect.sta_list = station_name
+        self.eap_connect.build()
+        self.eap_connect.start(station_name, True, True)
+        self.eap_connect.stop()
+        self.eap_connect.cleanup(station_name)
+        return self.eap_connect.passes()
+
+
+if __name__ == '__main__':
+    lanforge_data = {
+        "ip": "192.168.200.81",
+        "port": 8080,
+        "2.4G-Radio": ["wiphy0"],
+        "5G-Radio": ["wiphy1"],
+        "AX-Radio": ["wiphy2"],
+        "upstream": "eth1",
+        "2.4G-Station-Name": "wlan0",
+        "5G-Station-Name": "wlan0",
+        "AX-Station-Name": "ax",
+    }
+    obj = RunTest(lanforge_data=lanforge_data, debug=False)
+    # print(obj.eap_connect.json_get("port/1/1/sta0000?fields=ap,ip"))
+    obj.EAP_Connect(station_name=["sta0000", "sta0001"], eap="TTLS", ssid="testing_radius")
