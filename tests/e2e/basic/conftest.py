@@ -1,20 +1,6 @@
 import os
 import sys
 
-for folder in 'py-json', 'py-scripts':
-    if folder not in sys.path:
-        sys.path.append(f'../lanforge/lanforge-scripts/{folder}')
-
-sys.path.append(f"../lanforge/lanforge-scripts/py-scripts/tip-cicd-sanity")
-
-sys.path.append(f'../libs')
-sys.path.append(f'../libs/lanforge/')
-
-from LANforge.LFUtils import *
-
-if 'py-json' not in sys.path:
-    sys.path.append('../py-scripts')
-
 sys.path.append(
     os.path.dirname(
         os.path.realpath(__file__)
@@ -27,51 +13,7 @@ from controller.controller import ProfileUtility
 import time
 from lanforge.lf_tests import RunTest
 import pytest
-
-import logging
-from configuration import RADIUS_SERVER_DATA
-from configuration import TEST_CASES
-from configuration import CONFIGURATION
-from configuration import FIRMWARE
-from testrails.testrail_api import APIClient
-from testrails.reporting import Reporting
 import allure
-from cv_test_manager import cv_test
-from create_chamberview import CreateChamberview
-from create_chamberview_dut import DUT
-
-"""
-Basic Setup Collector
-"""
-
-
-@pytest.fixture(scope="session")
-def get_lanforge_data(testbed):
-    lanforge_data = {}
-    if CONFIGURATION[testbed]['traffic_generator']['name'] == 'lanforge':
-        lanforge_data = {
-            "lanforge_ip": CONFIGURATION[testbed]['traffic_generator']['details']['ip'],
-            "lanforge-port-number": CONFIGURATION[testbed]['traffic_generator']['details']['port'],
-            "lanforge_2dot4g": CONFIGURATION[testbed]['traffic_generator']['details']['2.4G-Radio'][0],
-            "lanforge_5g": CONFIGURATION[testbed]['traffic_generator']['details']['5G-Radio'][0],
-            "lanforge_2dot4g_prefix": CONFIGURATION[testbed]['traffic_generator']['details']['2.4G-Station-Name'],
-            "lanforge_5g_prefix": CONFIGURATION[testbed]['traffic_generator']['details']['5G-Station-Name'],
-            "lanforge_2dot4g_station": CONFIGURATION[testbed]['traffic_generator']['details']['2.4G-Station-Name'],
-            "lanforge_5g_station": CONFIGURATION[testbed]['traffic_generator']['details']['5G-Station-Name'],
-            "lanforge_bridge_port": CONFIGURATION[testbed]['traffic_generator']['details']['upstream'],
-            "lanforge_vlan_port": CONFIGURATION[testbed]['traffic_generator']['details']['upstream'] + ".100",
-            "vlan": 100
-        }
-    yield lanforge_data
-
-
-@pytest.fixture(scope="module")
-def instantiate_profile(instantiate_controller):
-    try:
-        profile_object = ProfileUtility(sdk_client=instantiate_controller)
-    except Exception as e:
-        profile_object = False
-    yield profile_object
 
 
 @pytest.fixture(scope="session")
@@ -261,6 +203,34 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                         allure.attach(body=str(e),
                                       name="SSID Profile Creation Failed")
 
+        if mode == "wpa_wpa2_personal_mixed":
+            for j in profile_data["ssid"][mode]:
+                # print(j)
+                if mode in get_markers.keys() and get_markers[mode]:
+                    try:
+                        if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
+                                j["appliedRadios"]):
+                            creates_profile = instantiate_profile.create_wpa_wpa2_personal_mixed_ssid_profile(profile_data=j)
+                            test_cases["wpa_wpa2_personal_mixed_2g"] = True
+                            allure.attach(body=str(creates_profile),
+                                          name="SSID Profile Created")
+                    except Exception as e:
+                        print(e)
+                        test_cases["wpa_wpa2_personal_mixed_2g"] = False
+                        allure.attach(body=str(e),
+                                      name="SSID Profile Creation Failed")
+                    try:
+                        if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
+                                j["appliedRadios"]):
+                            creates_profile = instantiate_profile.create_wpa_wpa2_personal_mixed_ssid_profile(profile_data=j)
+                            test_cases["wpa_wpa2_personal_mixed_5g"] = True
+                            allure.attach(body=str(creates_profile),
+                                          name="SSID Profile Created")
+                    except Exception as e:
+                        print(e)
+                        test_cases["wpa_wpa2_personal_mixed_5g"] = False
+                        allure.attach(body=str(e),
+                                      name="SSID Profile Creation Failed")
         if mode == "wpa3_personal":
             for j in profile_data["ssid"][mode]:
                 print(j)
@@ -404,72 +374,51 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
         ssid_names.append(instantiate_profile.get_ssid_name_by_profile_id(profile_id=i))
     ssid_names.sort()
 
+    # This loop will check the VIF Config with cloud profile
+    vif_config = []
+    test_cases['vifc'] = False
+    for i in range(0, 18):
+        vif_config = list(ap_ssh.get_vif_config_ssids())
+        vif_config.sort()
+        print(vif_config)
+        print(ssid_names)
+        if ssid_names == vif_config:
+            test_cases['vifc'] = True
+            break
+        time.sleep(10)
+    allure.attach(body=str("VIF Config: " + str(vif_config) + "\n" + "SSID Pushed from Controller: " + str(ssid_names)),
+                  name="SSID Profiles in VIF Config and Controller: ")
+    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
 
-@pytest.fixture(scope="function")
-def update_ssid(request, instantiate_profile, setup_profile_data):
-    requested_profile = str(request.param).replace(" ", "").split(",")
-    profile = setup_profile_data[requested_profile[0]][requested_profile[1]][requested_profile[2]]
-    status = instantiate_profile.update_ssid_name(profile_name=profile["profile_name"],
-                                                  new_profile_name=requested_profile[3])
-    setup_profile_data[requested_profile[0]][requested_profile[1]][requested_profile[2]]["profile_name"] = \
-        requested_profile[3]
-    setup_profile_data[requested_profile[0]][requested_profile[1]][requested_profile[2]]["ssid_name"] = \
-        requested_profile[3]
-    time.sleep(90)
-    yield status
+    # This loop will check the VIF Config with VIF State
+    test_cases['vifs'] = False
+    for i in range(0, 18):
+        vif_state = list(ap_ssh.get_vif_state_ssids())
+        vif_state.sort()
+        vif_config = list(ap_ssh.get_vif_config_ssids())
+        vif_config.sort()
+        print(vif_config)
+        print(vif_state)
+        if vif_state == vif_config:
+            test_cases['vifs'] = True
+            break
+        time.sleep(10)
+    allure.attach(body=str("VIF Config: " + str(vif_config) + "\n" + "VIF State: " + str(vif_state)),
+                  name="SSID Profiles in VIF Config and VIF State: ")
+    print(test_cases)
 
+    def teardown_session():
+        print("\nRemoving Profiles")
+        instantiate_profile.delete_profile_by_name(profile_name=profile_data['equipment_ap']['profile_name'])
+        instantiate_profile.delete_profile(instantiate_profile.profile_creation_ids["ssid"])
+        instantiate_profile.delete_profile(instantiate_profile.profile_creation_ids["radius"])
+        instantiate_profile.delete_profile(instantiate_profile.profile_creation_ids["rf"])
+        allure.attach(body=str(profile_data['equipment_ap']['profile_name'] + "\n"),
+                      name="Tear Down in Profiles ")
+        time.sleep(20)
 
-@pytest.fixture(scope="package")
-def create_lanforge_chamberview(create_lanforge_chamberview_dut, get_configuration, testbed):
-    lanforge_data = get_configuration['traffic_generator']['details']
-    ip = lanforge_data["ip"]
-    port = lanforge_data["port"]
-    upstream_port = lanforge_data["upstream"]  # eth1
-    uplink_port = lanforge_data["uplink"]  # eth2
-    upstream_subnet = lanforge_data["upstream_subnet"]
-    scenario_name = "TIP-" + testbed
-    upstream_res = upstream_port.split(".")[0] + "." + upstream_port.split(".")[1]
-    uplink_res = uplink_port.split(".")[0] + "." + uplink_port.split(".")[1]
-    print(ip)
-    print(upstream_port, upstream_res, upstream_port.split(".")[2])
-    # "profile_link 1.1 upstream-dhcp 1 NA NA eth2,AUTO -1 NA"
-    # "profile_link 1.1 uplink-nat 1 'DUT: upstream LAN 10.28.2.1/24' NA eth1,eth2 -1 NA"
-    raw_line = [
-        ["profile_link " + upstream_res + " upstream-dhcp 1 NA NA " + upstream_port.split(".")[2] + ",AUTO -1 NA"]
-        , ["profile_link " + uplink_res + " uplink-nat 1 'DUT: upstream LAN "
-           + upstream_subnet + "' NA " + uplink_port.split(".")[2] + " -1 NA"]
-    ]
-    print(raw_line)
-    Create_Chamberview = CreateChamberview(ip, port)
-    Create_Chamberview.clean_cv_scenario()
-    Create_Chamberview.clean_cv_scenario(type="Network-Connectivity", scenario_name=scenario_name)
-
-    Create_Chamberview.setup(create_scenario=scenario_name,
-                             raw_line=raw_line)
-
-    Create_Chamberview.build(scenario_name)
-    Create_Chamberview.show_text_blob(None, None, True)  # Show changes on GUI
-    yield Create_Chamberview
-
-
-@pytest.fixture(scope="package")
-def create_lanforge_chamberview_dut(get_configuration, testbed):
-    ap_model = get_configuration["access_point"][0]["model"]
-    version = get_configuration["access_point"][0]["version"]
-    serial = get_configuration["access_point"][0]["serial"]
-    # ap_model = get_configuration["access_point"][0]["model"]
-    lanforge_data = get_configuration['traffic_generator']['details']
-    ip = lanforge_data["ip"]
-    port = lanforge_data["port"]
-    dut = DUT(lfmgr=ip,
-              port=port,
-              dut_name=testbed,
-              sw_version=version,
-              model_num=ap_model,
-              serial_num=serial
-              )
-    dut.setup()
-    yield dut
+    request.addfinalizer(teardown_session)
+    yield test_cases
 
 
 @pytest.fixture(scope="session")

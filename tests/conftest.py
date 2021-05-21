@@ -5,21 +5,6 @@ import os
 import time
 import allure
 
-for folder in 'py-json', 'py-scripts':
-    if folder not in sys.path:
-        sys.path.append(f'../lanforge/lanforge-scripts/{folder}')
-
-sys.path.append(f"../lanforge/lanforge-scripts/py-scripts/tip-cicd-sanity")
-
-sys.path.append(f'../libs')
-sys.path.append(f'../libs/lanforge/')
-
-from LANforge.LFUtils import *
-
-if 'py-json' not in sys.path:
-    sys.path.append('../py-scripts')
-
-
 sys.path.append(
     os.path.dirname(
         os.path.realpath(__file__)
@@ -52,13 +37,9 @@ from configuration import CONFIGURATION
 from configuration import FIRMWARE
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
-<<<<<<< HEAD
-from cv_test_manager import cv_test
-=======
 import sta_connect2
 from sta_connect2 import StaConnect2
 
->>>>>>> staging-wifi-1960
 
 def pytest_addoption(parser):
     parser.addini("tr_url", "Test Rail URL")
@@ -103,41 +84,6 @@ def pytest_addoption(parser):
         action="store_true",
         default=False,
         help="Stop using Testrails"
-    )
-    parser.addoption(
-        "--exit-on-fail",
-        action="store_true",
-        default=False,
-        help="use to stop execution if failure"
-    )
-
-    # Perfecto Parameters
-    parser.addini("perfectoURL", "Cloud URL")
-    parser.addini("securityToken", "Security Token")
-    parser.addini("platformName-iOS", "iOS Platform")
-    parser.addini("platformName-android", "Android Platform")
-    parser.addini("model-iOS", "iOS Devices")
-    parser.addini("model-android", "Android Devices")
-    parser.addini("bundleId-iOS", "iOS Devices")
-    parser.addini("bundleId-iOS-Settings", "iOS Settings App")
-    parser.addini("appPackage-android", "Android Devices")
-    parser.addini("wifi-SSID-5gl-Pwd", "Wifi 5g Password")
-    parser.addini("wifi-SSID-2g-Pwd", "Wifi 2g Password")
-    parser.addini("Default-SSID-5gl-perfecto-b", "Wifi 5g AP Name")
-    parser.addini("Default-SSID-2g-perfecto-b", "Wifi 2g AP Name")
-    parser.addini("Default-SSID-perfecto-b", "Wifi AP Name")
-    parser.addini("bundleId-iOS-Ping", "Ping Bundle ID")
-    parser.addini("browserType-iOS", "Mobile Browser Name")
-    parser.addini("projectName", "Project Name")
-    parser.addini("projectVersion", "Project Version")
-    parser.addini("jobName", "CI Job Name")
-    parser.addini("jobNumber", "CI Job Number")
-    parser.addini("reportTags", "Report Tags")
-    parser.addoption(
-        "--access-points-perfecto",
-        # nargs="+",
-        default=["Perfecto"],
-        help="list of access points to test"
     )
 
 
@@ -340,87 +286,6 @@ def update_report(request, testbed, get_configuration):
     else:
         projId = tr_client.get_project_id(project_name=request.config.getini("tr_project_id"))
         test_run_name = request.config.getini("tr_prefix") + testbed + "_" + str(
-<<<<<<< HEAD
-            datetime.date.today()) + "_" + get_latest_firmware
-        instantiate_testrail.create_testrun(name=test_run_name, case_ids=list(TEST_CASES.values()), project_id=projId,
-                                            milestone_id=request.config.getini("milestone"),
-                                            description="Automated Nightly Sanity test run for new firmware build")
-        rid = instantiate_testrail.get_run_id(test_run_name=test_run_name)
-    yield rid
-
-
-@pytest.fixture(scope="session")
-def check_lanforge_connectivity(testbed):
-    lanforge_ip = CONFIGURATION[testbed]['traffic_generator']['details']['ip']
-    lanforge_port = CONFIGURATION[testbed]['traffic_generator']['details']['port']
-
-    try:
-        cv = cv_test(lanforge_ip,lanforge_port)
-        url_data = cv.get_ports("/")
-        lanforge_GUI_version = url_data["VersionInfo"]["BuildVersion"]
-        lanforge_gui_git_version = url_data["VersionInfo"]["GitVersion"]
-        lanforge_gui_build_date = url_data["VersionInfo"]["BuildDate"]
-        print(lanforge_GUI_version,lanforge_gui_build_date,lanforge_gui_git_version)
-        if not (lanforge_GUI_version or lanforge_gui_build_date or lanforge_gui_git_version):
-            yield False
-        else:
-            yield True
-    except:
-        yield False
-
-
-@pytest.fixture(scope="session")
-def exit_on_fail(request):
-    yield request.config.getoption("--exit-on-fail")
-
-
-@pytest.fixture(scope="session")
-def setup_perfecto_devices(request):
-    yield True
-
-
-@pytest.fixture(scope="session")
-def test_cases():
-    yield TEST_CASES
-
-
-@pytest.fixture(scope="session")
-def apnos_obj(get_configuration, testbed):
-    yield APNOS(get_configuration[testbed]['access_point'][0])
-
-
-@pytest.fixture(scope="session")
-def instantiate_access_point(testbed):
-    APNOS(CONFIGURATION[testbed]['access_point'][0], pwd="../libs/apnos/")
-    yield True
-
-
-@pytest.fixture(scope="function")
-def access_point_connectivity(apnos_obj, get_configuration, testbed):
-    ap_conn = {}
-    config_serial = get_configuration[testbed]['access_point'][0]['serial']
-    ap_serial = apnos_obj.get_serial_number()
-    ap_conn["serial"] = True
-    if ap_serial != config_serial:
-        ap_conn["serial"] = False
-
-    ap_conn["redir"] = False
-    ap_redir = apnos_obj.get_redirector()
-
-    # Compare with something ...
-
-    ap_conn["mgr"] = False
-    status = apnos_obj.get_manager_state()
-    if "ACTIVE" not in status:
-        apnos_obj.run_generic_command(cmd="service opensync restart")
-        time.sleep(30)
-        status = apnos_obj.get_manager_state()
-        if "ACTIVE" in status:
-            ap_conn["mgr"] = True
-    else:
-        ap_conn["mgr"] = True
-    yield ap_conn
-=======
             datetime.date.today()) + "_" + get_configuration['access_point'][0]['version']
         tr_client.create_testrun(name=test_run_name, case_ids=list(TEST_CASES.values()), project_id=projId,
                                  milestone_id=request.config.getini("milestone"),
@@ -429,7 +294,6 @@ def access_point_connectivity(apnos_obj, get_configuration, testbed):
         tr_client.rid = rid
     yield tr_client
 
->>>>>>> staging-wifi-1960
 
 """
 FRAMEWORK MARKER LOGIC
@@ -441,7 +305,7 @@ FRAMEWORK MARKER LOGIC
 def get_security_flags():
     # Add more classifications as we go
     security = ["open", "wpa", "wpa2_personal", "wpa3_personal", "wpa3_personal_mixed",
-                "wpa2_enterprise", "wpa3_enterprise", "twog", "fiveg", "radius"]
+                "wpa_wpa2_personal_mixed", "wpa2_enterprise", "wpa3_enterprise", "twog", "fiveg", "radius"]
     yield security
 
 
@@ -488,15 +352,6 @@ def client_connectivity():
 
 
 @pytest.fixture(scope="session")
-<<<<<<< HEAD
-def radius_info():
-    yield RADIUS_SERVER_DATA
-
-
-@pytest.fixture(scope="session")
-def get_configuration(testbed):
-    yield CONFIGURATION[testbed]
-=======
 def get_lanforge_data(get_configuration):
     lanforge_data = {}
     if get_configuration['traffic_generator']['name'] == 'lanforge':
@@ -514,4 +369,3 @@ def get_lanforge_data(get_configuration):
             "vlan": 100
         }
     yield lanforge_data
->>>>>>> staging-wifi-1960
