@@ -168,7 +168,7 @@ def instantiate_access_point(testbed, get_apnos, get_configuration):
 
 # Controller Fixture
 @pytest.fixture(scope="session")
-def setup_controller(request, get_configuration, instantiate_access_point):
+def setup_controller(request, get_configuration, instantiate_access_point, traffic_generator_connectivity):
     try:
         sdk_client = Controller(controller_data=get_configuration["controller"])
         allure.attach(body=str(get_configuration["controller"]), name="Controller Instantiated: ")
@@ -336,8 +336,8 @@ def test_access_point(testbed, get_apnos, get_configuration):
     mgr_status = []
     for access_point_info in get_configuration['access_point']:
         ap_ssh = get_apnos(access_point_info)
-        ap_ssh.reboot()
-        time.sleep(100)
+        # ap_ssh.reboot()
+        # time.sleep(100)
         status = ap_ssh.get_manager_state()
         if "ACTIVE" not in status:
             time.sleep(30)
@@ -373,20 +373,29 @@ def get_lanforge_data(get_configuration):
 
 
 @pytest.fixture(scope="session")
-def check_lanforge_connectivity(testbed, get_configuration):
-    lanforge_ip = get_configuration['traffic_generator']['details']['ip']
-    lanforge_port = get_configuration['traffic_generator']['details']['port']
-
-    try:
-        cv = cv_test(lanforge_ip, lanforge_port)
-        url_data = cv.get_ports("/")
-        lanforge_GUI_version = url_data["VersionInfo"]["BuildVersion"]
-        lanforge_gui_git_version = url_data["VersionInfo"]["GitVersion"]
-        lanforge_gui_build_date = url_data["VersionInfo"]["BuildDate"]
-        print(lanforge_GUI_version, lanforge_gui_build_date, lanforge_gui_git_version)
-        if not (lanforge_GUI_version or lanforge_gui_build_date or lanforge_gui_git_version):
+def traffic_generator_connectivity(testbed, get_configuration):
+    if get_configuration['traffic_generator']['name'] == "lanforge":
+        lanforge_ip = get_configuration['traffic_generator']['details']['ip']
+        lanforge_port = get_configuration['traffic_generator']['details']['port']
+        # Condition :
+        #   if gui connection is not available
+        #   yield False
+        # Condition :
+        # If Gui Connection is available
+        # yield the gui version
+        try:
+            cv = cv_test(lanforge_ip, lanforge_port)
+            url_data = cv.get_ports("/")
+            lanforge_GUI_version = url_data["VersionInfo"]["BuildVersion"]
+            lanforge_gui_git_version = url_data["VersionInfo"]["GitVersion"]
+            lanforge_gui_build_date = url_data["VersionInfo"]["BuildDate"]
+            print(lanforge_GUI_version, lanforge_gui_build_date, lanforge_gui_git_version)
+            if not (lanforge_GUI_version or lanforge_gui_build_date or lanforge_gui_git_version):
+                yield False
+            else:
+                yield True
+        except:
             yield False
-        else:
-            yield True
-    except:
-        yield False
+    else:
+        # Writing the connectivity check of InterOP
+        yield True
