@@ -187,7 +187,9 @@ def get_APToMobileDevice_data(request):
         "bundleId-iOS-Safari": request.config.getini("bundleId-iOS-Safari"),
         "downloadMbps": "//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']",
         "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
-        "lblSearch2": "test "
+        #Android
+        "platformName-android": request.config.getini("platformName-android"),
+        "appPackage-android": request.config.getini("appPackage-android")      
     }
     yield passPoint_data
 
@@ -202,20 +204,28 @@ def get_AccessPointConn_data(request):
 @pytest.fixture(scope="function")
 def get_ToggleAirplaneMode_data(request):
     passPoint_data = {
-        "bundleId-iOS-Settings": request.config.getini("bundleId-iOS-Settings"),
+        "webURL": "https://www.google.com",
         "lblSearch": "//*[@class='gLFyf']",
-        "elelSearch": "(//*[@class='fSXkBc'])[1]",
+        "elelSearch": "(//*[@class='sbic sb43'])[1]",
         "BtnRunSpeedTest": "//*[text()='RUN SPEED TEST']",
+        "bundleId-iOS-Settings": request.config.getini("bundleId-iOS-Settings"),
+        "bundleId-iOS-Safari": request.config.getini("bundleId-iOS-Safari"),
         "downloadMbps": "//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']",
         "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
-
+        #Android
+        "platformName-android": request.config.getini("platformName-android"),
+        "appPackage-android": request.config.getini("appPackage-android")      
     }
     yield passPoint_data
 
 @pytest.fixture(scope="function")
 def get_ToggleWifiMode_data(request):
     passPoint_data = {
-        "bundleId-iOS-Settings": request.config.getini("bundleId-iOS-Settings")
+        #iOS
+        "bundleId-iOS-Settings": request.config.getini("bundleId-iOS-Settings"),
+         #Android
+        "platformName-android": request.config.getini("platformName-android"),
+        "appPackage-android": request.config.getini("appPackage-android")      
     }
     yield passPoint_data
 
