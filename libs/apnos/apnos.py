@@ -87,6 +87,8 @@ class APNOS:
                   f"cmd --value \"{cmd}\" "
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
+        allure.attach(body=str("VIF Config: " + str(vif_config) + "\n" + "VIF State: " + str(vif_state)),
+                      name="SSID Profiles in VIF Config and VIF State: ")
         client.close()
         allure.attach(name="iwinfo Output Msg: ", body=str(output))
         allure.attach(name="iwinfo config Err Msg: ", body=str(stderr))
