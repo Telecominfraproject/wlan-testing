@@ -256,15 +256,13 @@ def get_lanforge_data(testbed):
 def instantiate_profile():
     yield ProfileUtility
 
-
 @pytest.fixture(scope="session")
-def get_equipment_id(setup_controller, testbed):
-    equipment_id = 0
-    if len(CONFIGURATION[testbed]['access_point']) == 1:
-        equipment_id = setup_controller.get_equipment_id(
-            serial_number=CONFIGURATION[testbed]['access_point'][0]['serial'])
-    yield equipment_id
-
+def get_equipment_id(setup_controller, testbed, get_configuration):
+    equipment_id_list = []
+    for i in get_configuration['access_point']:
+        equipment_id_list.append(setup_controller.get_equipment_id(
+            serial_number=i['serial']))
+    yield equipment_id_list
 
 @pytest.fixture(scope="session")
 def upload_firmware(should_upload_firmware, instantiate_firmware, get_latest_firmware):
@@ -663,6 +661,53 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
     for i in instantiate_profile.profile_creation_ids["ssid"]:
         ssid_names.append(instantiate_profile.get_ssid_name_by_profile_id(profile_id=i))
     ssid_names.sort()
+
+    # This loop will check the VIF Config with cloud profile
+    vif_config = []
+    test_cases['vifc'] = False
+    for i in range(0, 18):
+        vif_config = list(ap_ssh.get_vif_config_ssids())
+        vif_config.sort()
+        print(vif_config)
+        print(ssid_names)
+        if ssid_names == vif_config:
+            test_cases['vifc'] = True
+            break
+        time.sleep(10)
+    allure.attach(body=str("VIF Config: " + str(vif_config) + "\n" + "SSID Pushed from Controller: " + str(ssid_names)),
+                  name="SSID Profiles in VIF Config and Controller: ")
+    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
+
+    # This loop will check the VIF Config with VIF State
+    test_cases['vifs'] = False
+    for i in range(0, 18):
+        vif_state = list(ap_ssh.get_vif_state_ssids())
+        vif_state.sort()
+        vif_config = list(ap_ssh.get_vif_config_ssids())
+        vif_config.sort()
+        print(vif_config)
+        print(vif_state)
+        if vif_state == vif_config:
+            test_cases['vifs'] = True
+            break
+        time.sleep(10)
+    allure.attach(body=str("VIF Config: " + str(vif_config) + "\n" + "VIF State: " + str(vif_state)),
+                  name="SSID Profiles in VIF Config and VIF State: ")
+    print(test_cases)
+
+    def teardown_session():
+        print("\nRemoving Profiles")
+        instantiate_profile.delete_profile_by_name(profile_name=profile_data['equipment_ap']['profile_name'])
+        instantiate_profile.delete_profile(instantiate_profile.profile_creation_ids["ssid"])
+        instantiate_profile.delete_profile(instantiate_profile.profile_creation_ids["radius"])
+        instantiate_profile.delete_profile(instantiate_profile.profile_creation_ids["rf"])
+        allure.attach(body=str(profile_data['equipment_ap']['profile_name'] + "\n"),
+                      name="Tear Down in Profiles ")
+        time.sleep(20)
+
+    request.addfinalizer(teardown_session)
+    yield test_cases
+
 
 
 @pytest.fixture(scope="function")

@@ -432,6 +432,53 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
         ssid_names.append(instantiate_profile.get_ssid_name_by_profile_id(profile_id=i))
     ssid_names.sort()
 
+    # This loop will check the VIF Config with cloud profile
+    vif_config = []
+    test_cases['vifc'] = False
+    for i in range(0, 18):
+        vif_config = list(ap_ssh.get_vif_config_ssids())
+        vif_config.sort()
+        print(vif_config)
+        print(ssid_names)
+        if ssid_names == vif_config:
+            test_cases['vifc'] = True
+            break
+        time.sleep(10)
+    allure.attach(body=str("VIF Config: " + str(vif_config) + "\n" + "SSID Pushed from Controller: " + str(ssid_names)),
+                  name="SSID Profiles in VIF Config and Controller: ")
+    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
+
+    # This loop will check the VIF Config with VIF State
+    test_cases['vifs'] = False
+    for i in range(0, 18):
+        vif_state = list(ap_ssh.get_vif_state_ssids())
+        vif_state.sort()
+        vif_config = list(ap_ssh.get_vif_config_ssids())
+        vif_config.sort()
+        print(vif_config)
+        print(vif_state)
+        if vif_state == vif_config:
+            test_cases['vifs'] = True
+            break
+        time.sleep(10)
+    allure.attach(body=str("VIF Config: " + str(vif_config) + "\n" + "VIF State: " + str(vif_state)),
+                  name="SSID Profiles in VIF Config and VIF State: ")
+    print(test_cases)
+
+    def teardown_session():
+        print("\nRemoving Profiles")
+        instantiate_profile.delete_profile_by_name(profile_name=profile_data['equipment_ap']['profile_name'])
+        instantiate_profile.delete_profile(instantiate_profile.profile_creation_ids["ssid"])
+        instantiate_profile.delete_profile(instantiate_profile.profile_creation_ids["radius"])
+        instantiate_profile.delete_profile(instantiate_profile.profile_creation_ids["rf"])
+        allure.attach(body=str(profile_data['equipment_ap']['profile_name'] + "\n"),
+                      name="Tear Down in Profiles ")
+        time.sleep(20)
+
+    request.addfinalizer(teardown_session)
+    yield test_cases
+
+
 
 @pytest.fixture(scope="function")
 def update_ssid(request, instantiate_profile, setup_profile_data):
