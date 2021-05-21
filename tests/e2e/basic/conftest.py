@@ -203,6 +203,34 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                         allure.attach(body=str(e),
                                       name="SSID Profile Creation Failed")
 
+        if mode == "wpa_wpa2_personal_mixed":
+            for j in profile_data["ssid"][mode]:
+                # print(j)
+                if mode in get_markers.keys() and get_markers[mode]:
+                    try:
+                        if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
+                                j["appliedRadios"]):
+                            creates_profile = instantiate_profile.create_wpa_wpa2_personal_mixed_ssid_profile(profile_data=j)
+                            test_cases["wpa_wpa2_personal_mixed_2g"] = True
+                            allure.attach(body=str(creates_profile),
+                                          name="SSID Profile Created")
+                    except Exception as e:
+                        print(e)
+                        test_cases["wpa_wpa2_personal_mixed_2g"] = False
+                        allure.attach(body=str(e),
+                                      name="SSID Profile Creation Failed")
+                    try:
+                        if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
+                                j["appliedRadios"]):
+                            creates_profile = instantiate_profile.create_wpa_wpa2_personal_mixed_ssid_profile(profile_data=j)
+                            test_cases["wpa_wpa2_personal_mixed_5g"] = True
+                            allure.attach(body=str(creates_profile),
+                                          name="SSID Profile Created")
+                    except Exception as e:
+                        print(e)
+                        test_cases["wpa_wpa2_personal_mixed_5g"] = False
+                        allure.attach(body=str(e),
+                                      name="SSID Profile Creation Failed")
         if mode == "wpa3_personal":
             for j in profile_data["ssid"][mode]:
                 print(j)
@@ -238,7 +266,8 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_wpa3_personal_mixed_ssid_profile(profile_data=j)
+                            creates_profile = instantiate_profile.create_wpa3_personal_mixed_ssid_profile(
+                                profile_data=j)
                             test_cases["wpa3_personal_mixed_2g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
@@ -250,7 +279,8 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_wpa3_personal_mixed_ssid_profile(profile_data=j)
+                            creates_profile = instantiate_profile.create_wpa3_personal_mixed_ssid_profile(
+                                profile_data=j)
                             test_cases["wpa3_personal_mixed_5g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
@@ -259,7 +289,6 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                         test_cases["wpa3_personal_5g"] = False
                         allure.attach(body=str(e),
                                       name="SSID Profile Creation Failed")
-
 
         if mode == "wpa2_enterprise":
             for j in profile_data["ssid"][mode]:
