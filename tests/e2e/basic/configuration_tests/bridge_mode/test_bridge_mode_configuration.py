@@ -178,8 +178,8 @@ setup_params_general_two = {
             {"ssid_name": "ssid_wpa3_p_m_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
              "security_key": "something"}],
         "wpa_wpa2_personal_mixed": [
-            {"ssid_name": "ssid_wpa_wpa3_p_m_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa_wpa3_p_m_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+            {"ssid_name": "ssid_wpa_wpa2_p_m_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa_wpa2_p_m_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
              "security_key": "something"}]
     },
     "rf": {},
@@ -261,12 +261,12 @@ class TestBridgeModeConnectivitySuiteTwo(object):
                                                            test_cases):
 
         if setup_profiles['wpa2_personal_2g']:
-            update_report.update_testrail(case_id=test_cases["wpa2_personal_2g"],
+            update_report.update_testrail(case_id=test_cases["wpa_wpa2_personal_mixed_2g"],
                                           status_id=1,
                                           msg='profile created successfully')
             assert setup_profiles['wpa2_personal_2g']
         else:
-            update_report.update_testrail(case_id=test_cases["wpa2_personal_2g"],
+            update_report.update_testrail(case_id=test_cases["wpa_wpa2_personal_mixed_2g"],
                                           status_id=5,
                                           msg='Failed to create profile')
             assert False
@@ -277,12 +277,12 @@ class TestBridgeModeConnectivitySuiteTwo(object):
                                                            test_cases):
 
         if setup_profiles['wpa2_personal_5g']:
-            update_report.update_testrail(case_id=test_cases["wpa2_personal_5g"],
+            update_report.update_testrail(case_id=test_cases["wpa_wpa2_personal_mixed_5g"],
                                           status_id=1,
                                           msg='profile created successfully')
             assert setup_profiles['wpa2_personal_5g']
         else:
-            update_report.update_testrail(case_id=test_cases["wpa2_personal_5g"],
+            update_report.update_testrail(case_id=test_cases["wpa_wpa2_personal_mixed_5g"],
                                           status_id=5,
                                           msg='Failed to create profile')
             assert False
@@ -335,13 +335,11 @@ setup_params_enterprise = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa_enterprise": [
-            {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
-             "security_key": "something"}],
+            {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["is2dot4GHz"]},
+            {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
         "wpa2_enterprise": [
-            {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
-             "security_key": "something"}],
+            {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["is2dot4GHz"]},
+            {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
         "wpa3_enterprise": [
             {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["is2dot4GHz"]},
             {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}]},

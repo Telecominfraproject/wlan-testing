@@ -441,7 +441,7 @@ FRAMEWORK MARKER LOGIC
 def get_security_flags():
     # Add more classifications as we go
     security = ["open", "wpa", "wpa2_personal", "wpa3_personal", "wpa3_personal_mixed",
-                "wpa2_enterprise", "wpa3_enterprise", "twog", "fiveg", "radius"]
+                "wpa_wpa2_personal_mixed", "wpa2_enterprise", "wpa3_enterprise", "twog", "fiveg", "radius"]
     yield security
 
 
