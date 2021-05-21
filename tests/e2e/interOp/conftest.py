@@ -253,9 +253,9 @@ def get_lanforge_data(testbed):
 
 
 @pytest.fixture(scope="module")
-def instantiate_profile(instantiate_controller):
+def instantiate_profile(setup_controller):
     #try:
-    profile_object = ProfileUtility(sdk_client=instantiate_controller)
+    profile_object = ProfileUtility(sdk_client=setup_controller)
     #except:
     #profile_object = False
     yield profile_object
@@ -296,8 +296,8 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
 
 
 @pytest.fixture(scope="session")
-def check_ap_firmware_cloud(instantiate_controller, get_equipment_id):
-    yield instantiate_controller.get_ap_firmware_old_method(equipment_id=get_equipment_id)
+def check_ap_firmware_cloud(setup_controller, get_equipment_id):
+    yield setup_controller.get_ap_firmware_old_method(equipment_id=get_equipment_id)
 
 
 """
