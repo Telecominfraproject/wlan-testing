@@ -40,7 +40,9 @@ from testrails.reporting import Reporting
 import sta_connect2
 from sta_connect2 import StaConnect2
 from cv_test_manager import cv_test
-
+# from cv_test_manager import cv_test
+from create_chamberview import CreateChamberview
+from create_chamberview_dut import DUT
 
 def pytest_addoption(parser):
     parser.addini("tr_url", "Test Rail URL")
@@ -168,7 +170,9 @@ def instantiate_access_point(testbed, get_apnos, get_configuration):
 
 # Controller Fixture
 @pytest.fixture(scope="session")
-def setup_controller(request, get_configuration, instantiate_access_point, traffic_generator_connectivity):
+def setup_controller(request, get_configuration, instantiate_access_point,
+                     traffic_generator_connectivity,
+                     create_lanforge_chamberview_dut):
     try:
         sdk_client = Controller(controller_data=get_configuration["controller"])
         allure.attach(body=str(get_configuration["controller"]), name="Controller Instantiated: ")
@@ -184,6 +188,59 @@ def setup_controller(request, get_configuration, instantiate_access_point, traff
         allure.attach(body=str(e), name="Controller Instantiation Failed: ")
         sdk_client = False
     yield sdk_client
+
+@pytest.fixture(scope="session")
+def create_lanforge_chamberview_dut(get_configuration, testbed):
+    ap_model = get_configuration["access_point"][0]["model"]
+    version = get_configuration["access_point"][0]["version"]
+    serial = get_configuration["access_point"][0]["serial"]
+    # ap_model = get_configuration["access_point"][0]["model"]
+    lanforge_data = get_configuration['traffic_generator']['details']
+    ip = lanforge_data["ip"]
+    port = lanforge_data["port"]
+    dut = DUT(lfmgr=ip,
+              port=port,
+              dut_name=testbed,
+              sw_version=version,
+              model_num=ap_model,
+              serial_num=serial
+              )
+    dut.setup()
+    yield dut
+
+@pytest.fixture(scope="session")
+def create_lanforge_chamberview(create_lanforge_chamberview_dut, get_configuration, testbed):
+    lanforge_data = get_configuration['traffic_generator']['details']
+    ip = lanforge_data["ip"]
+    port = lanforge_data["port"]
+    upstream_port = lanforge_data["upstream"]  # eth1
+    uplink_port = lanforge_data["uplink"]  # eth2
+    upstream_subnet = lanforge_data["upstream_subnet"]
+    scenario_name = "TIP-" + testbed
+    upstream_res = upstream_port.split(".")[0] + "." + upstream_port.split(".")[1]
+    uplink_res = uplink_port.split(".")[0] + "." + uplink_port.split(".")[1]
+    print(ip)
+    print(upstream_port, upstream_res, upstream_port.split(".")[2])
+    # "profile_link 1.1 upstream-dhcp 1 NA NA eth2,AUTO -1 NA"
+    # "profile_link 1.1 uplink-nat 1 'DUT: upstream LAN 10.28.2.1/24' NA eth1,eth2 -1 NA"
+    raw_line = [
+        ["profile_link " + upstream_res + " upstream-dhcp 1 NA NA " + upstream_port.split(".")[2] + ",AUTO -1 NA"]
+        , ["profile_link " + uplink_res + " uplink-nat 1 'DUT: upstream LAN "
+           + upstream_subnet + "' NA " + uplink_port.split(".")[2] + " -1 NA"]
+    ]
+    print(raw_line)
+    Create_Chamberview = CreateChamberview(ip, port)
+    Create_Chamberview.clean_cv_scenario()
+    Create_Chamberview.clean_cv_scenario(type="Network-Connectivity", scenario_name=scenario_name)
+
+    Create_Chamberview.setup(create_scenario=scenario_name,
+                             raw_line=raw_line)
+
+    Create_Chamberview.build(scenario_name)
+    Create_Chamberview.show_text_blob(None, None, True)  # Show changes on GUI
+    yield Create_Chamberview
+
+
 
 
 @pytest.fixture(scope="class")
