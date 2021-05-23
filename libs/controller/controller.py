@@ -496,6 +496,7 @@ class ProfileUtility:
 
     # wpa personal
     def create_wpa_ssid_profile(self, profile_data=None):
+        self.get_default_profiles()
         try:
             if profile_data is None:
                 return False
@@ -608,18 +609,18 @@ class ProfileUtility:
             profile = False
         return profile
 
-    # wpa enterprise
+    # wpa enterprise    done
     def create_wpa_enterprise_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
                 return False
             default_profile = self.default_profiles['ssid']
             default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
-
             default_profile._name = profile_data['profile_name']
             default_profile._details['vlanId'] = profile_data['vlan']
             default_profile._details['ssid'] = profile_data['ssid_name']
             default_profile._details['forwardMode'] = profile_data['mode']
+            print("shivams", self.profile_creation_ids["radius"][0])
             default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
             default_profile._child_profile_ids = self.profile_creation_ids["radius"]
             default_profile._details['secureMode'] = 'wpaRadius'
@@ -632,7 +633,7 @@ class ProfileUtility:
             profile = False
         return profile
 
-    # wpa wpa2 enterprise mixed mode
+    # wpa wpa2 enterprise mixed mode done
     def create_wpa_wpa2_enterprise_mixed_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
@@ -646,7 +647,7 @@ class ProfileUtility:
             default_profile._details['forwardMode'] = profile_data['mode']
             default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
             default_profile._child_profile_ids = self.profile_creation_ids["radius"]
-            default_profile._details['secureMode'] = 'wpa2OnlyRadius'
+            default_profile._details['secureMode'] = 'wpa2Radius'
             profile = self.profile_client.create_profile(body=default_profile)
             profile_id = profile._id
             self.profile_creation_ids['ssid'].append(profile_id)
@@ -703,7 +704,7 @@ class ProfileUtility:
             profile = False
         return profile
 
-    # wpa3 enterprise mixed mode
+    # wpa3 enterprise mixed mode done
     def create_wpa3_enterprise_mixed_ssid_profile(self, profile_data=None):
         try:
             if profile_data is None:
@@ -717,6 +718,47 @@ class ProfileUtility:
             default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
             default_profile._child_profile_ids = self.profile_creation_ids["radius"]
             default_profile._details['secureMode'] = 'wpa3MixedEAP'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa3 enterprise mixed mode done
+    def create_wep_ssid_profile(self, profile_data=None):
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details['secureMode'] = 'wep'
+            default_profile._details['wepConfig'] = {}
+            default_profile._details['wepConfig']["model_type"] = "WepConfiguration"
+            default_profile._details['wepConfig']["wepAuthType"] = "open"
+            default_profile._details['wepConfig']["primaryTxKeyId"] = profile_data["default_key_id"]
+            default_profile._details['wepConfig']["wepKeys"] = [{'model_type': 'WepKey',
+                                        'txKey': profile_data["wep_key"],
+                                        'txKeyConverted': None,
+                                        'txKeyType': 'wep64'},
+                                       {'model_type': 'WepKey',
+                                        'txKey': profile_data["wep_key"],
+                                        'txKeyConverted': None,
+                                        'txKeyType': 'wep64'},
+                                       {'model_type': 'WepKey',
+                                        'txKey': profile_data["wep_key"],
+                                        'txKeyConverted': None,
+                                        'txKeyType': 'wep64'},
+                                       {'model_type': 'WepKey',
+                                        'txKey': profile_data["wep_key"],
+                                        'txKeyConverted': None,
+                                        'txKeyType': 'wep64'}]
             profile = self.profile_client.create_profile(body=default_profile)
             profile_id = profile._id
             self.profile_creation_ids['ssid'].append(profile_id)
@@ -754,6 +796,7 @@ class ProfileUtility:
     def create_radius_profile(self, radius_info=None):
         default_profile = self.default_profiles['radius']
         default_profile._name = radius_info['name']
+        default_profile._details['primaryRadiusAuthServer'] = {}
         default_profile._details['primaryRadiusAuthServer']['ipAddress'] = radius_info['ip']
         default_profile._details['primaryRadiusAuthServer']['port'] = radius_info['port']
         default_profile._details['primaryRadiusAuthServer']['secret'] = radius_info['secret']
@@ -980,7 +1023,7 @@ class FirmwareUtility(JFrogUtility):
 
 if __name__ == '__main__':
     controller = {
-        'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
+        'url': "https://wlan-portal-svc-digicert.cicd.lab.wlan.tip.build",  # API base url for the controller
         'username': 'support@example.com',
         'password': 'support',
         'version': "1.1.0-SNAPSHOT",
@@ -988,6 +1031,18 @@ if __name__ == '__main__':
     }
     api = Controller(controller_data=controller)
     profile = ProfileUtility(sdk_client=api)
-    # print(profile.get_profile_by_name(profile_name="basic-ext-03-03-SSID-open-0-VLAN"))
+    profile.get_default_profiles()
+    profile_data = {
+        "profile_name": "ssid_wep_2g",
+        "ssid_name": "ssid_wep_2g",
+        "appliedRadios": ["is2dot4GHz"],
+        "default_key_id" : 1,
+        "wep_key" : 1234567890,
+        "vlan": 1,
+        "mode": "BRIDGE"
+    }
+
+    profile.create_wep_ssid_profile(profile_data=profile_data)
+    # print(profile.get_profile_by_name(profile_name="wpa_wpa2_eap"))
     profile.get_default_profiles()
     api.disconnect_Controller()
