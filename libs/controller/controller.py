@@ -88,6 +88,9 @@ class Controller(ConfigureController):
         self.bearer = False
         self.disconnect = False
         self.semaphore = False
+        # Token expiry in seconds
+        self.token_expiry = 1000
+        self.token_timestamp = time.time()
         try:
             self.bearer = self.get_bearer_token()
             # t1 = threading.Thread(target=self.refresh_instance)
@@ -124,26 +127,29 @@ class Controller(ConfigureController):
         #     if self.disconnect:
         #         break
         #     self.semaphore = True
-        self.api_client = swagger_client.ApiClient(self.configuration)
-        self.login_client = swagger_client.LoginApi(api_client=self.api_client)
-        self.bearer = self.get_bearer_token()
+        # Refresh token 10 seconds before it's expiry
+        if time.time() - self.token_timestamp < (self.token_expiry-10):
+            print("Refreshing the controller API token")
+            self.api_client = swagger_client.ApiClient(self.configuration)
+            self.login_client = swagger_client.LoginApi(api_client=self.api_client)
+            self.bearer = self.get_bearer_token()
 
-        self.api_client.default_headers['Authorization'] = "Bearer " + self.bearer._access_token
-        self.status_client = swagger_client.StatusApi(api_client=self.api_client)
-        self.equipment_client = swagger_client.EquipmentApi(self.api_client)
-        self.profile_client = swagger_client.ProfileApi(self.api_client)
-        self.api_client.configuration.api_key_prefix = {
-            "Authorization": "Bearer " + self.bearer._access_token
-        }
-        self.api_client.configuration.refresh_api_key_hook = self.refresh_instance
-        self.ping_response = self.portal_ping()
-        self.default_profiles = {}
-        # print(self.bearer)
-        if self.ping_response._application_name != 'PortalServer':
-            print("Server not Reachable")
-            exit()
-        print("Connected to Controller Server")
-        # self.semaphore = False
+            self.api_client.default_headers['Authorization'] = "Bearer " + self.bearer._access_token
+            self.status_client = swagger_client.StatusApi(api_client=self.api_client)
+            self.equipment_client = swagger_client.EquipmentApi(self.api_client)
+            self.profile_client = swagger_client.ProfileApi(self.api_client)
+            self.api_client.configuration.api_key_prefix = {
+                "Authorization": "Bearer " + self.bearer._access_token
+            }
+            self.api_client.configuration.refresh_api_key_hook = self.refresh_instance
+            self.ping_response = self.portal_ping()
+            self.default_profiles = {}
+            # print(self.bearer)
+            if self.ping_response._application_name != 'PortalServer':
+                print("Server not Reachable")
+                exit()
+            print("Connected to Controller Server")
+            # self.semaphore = False
 
     def portal_ping(self):
         return self.login_client.portal_ping()
@@ -154,6 +160,7 @@ class Controller(ConfigureController):
 
     # Returns a List of All the Equipments that are available in the cloud instances
     def get_equipment_by_customer_id(self, max_items=10):
+        self.refresh_instance()
         pagination_context = """{
                 "model_type": "PaginationContext",
                 "maxItemsPerPage": """ + str(max_items) + """
@@ -187,19 +194,21 @@ class Controller(ConfigureController):
     def get_model_name(self, equipment_id=None):
         if equipment_id is None:
             return None
+        self.refresh_instance()
         data = self.equipment_client.get_equipment_by_id(equipment_id=equipment_id)
         print(str(data._details._equipment_model))
         return str(data._details._equipment_model)
 
     # Needs Bug fix from swagger code generation side
     def get_ap_firmware_new_method(self, equipment_id=None):
-
+        self.refresh_instance()
         response = self.status_client.get_status_by_customer_equipment(customer_id=self.customer_id,
                                                                        equipment_id=equipment_id)
         print(response[2])
 
     # Old Method, will be depreciated in future
     def get_ap_firmware_old_method(self, equipment_id=None):
+        self.refresh_instance()
         url = self.configuration.host + "/portal/status/forEquipment?customerId=" + str(
             self.customer_id) + "&equipmentId=" + str(equipment_id)
         payload = {}
@@ -224,6 +233,7 @@ class Controller(ConfigureController):
     """
 
     def get_current_profile_on_equipment(self, equipment_id=None):
+        self.refresh_instance()
         default_equipment_data = self.equipment_client.get_equipment_by_id(equipment_id=equipment_id, async_req=False)
         return default_equipment_data._profile_id
 
@@ -239,6 +249,7 @@ class Controller(ConfigureController):
 
     # Get the child ssid profiles that are used by equipment ap profile of given profile id
     def get_ssid_profiles_from_equipment_profile(self, profile_id=None):
+        self.refresh_instance()
         equipment_ap_profile = self.profile_client.get_profile_by_id(profile_id=profile_id)
         ssid_name_list = []
         child_profile_ids = equipment_ap_profile.child_profile_ids
