@@ -304,8 +304,9 @@ FRAMEWORK MARKER LOGIC
 @pytest.fixture(scope="session")
 def get_security_flags():
     # Add more classifications as we go
-    security = ["open", "wpa", "wpa2_personal", "wpa3_personal", "wpa3_personal_mixed",
-                "wpa2_enterprise", "wpa3_enterprise", "twog", "fiveg", "radius"]
+    security = ["open", "wpa", "wep", "wpa2_personal", "wpa3_personal", "wpa3_personal_mixed", "wpa_wpa2_enterprise_mixed",
+                "wpa_wpa2_personal_mixed", "wpa_enterprise", "wpa2_enterprise", "wpa3_enterprise_mixed",
+                "wpa3_enterprise", "twog", "fiveg", "radius"]
     yield security
 
 
@@ -318,7 +319,7 @@ def get_markers(request, get_security_flags):
     for item in session.items:
         for j in item.iter_markers():
             markers.append(j.name)
-    # print(set(markers))
+    print(set(markers))
     for i in security:
         if set(markers).__contains__(i):
             security_dict[i] = True
@@ -335,8 +336,6 @@ def test_access_point(testbed, get_apnos, get_configuration):
     mgr_status = []
     for access_point_info in get_configuration['access_point']:
         ap_ssh = get_apnos(access_point_info)
-        ap_ssh.reboot()
-        time.sleep(100)
         status = ap_ssh.get_manager_state()
         if "ACTIVE" not in status:
             time.sleep(30)
