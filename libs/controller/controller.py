@@ -87,7 +87,9 @@ class Controller(ConfigureController):
         self.login_client = swagger_client.LoginApi(api_client=self.api_client)
         self.bearer = False
         self.disconnect = False
-        self.start_time = time.time()
+        # Token expiry in seconds
+        self.token_expiry = 1000
+        self.token_timestamp = time.time()
         try:
 
             self.bearer = self.get_bearer_token()
@@ -115,11 +117,12 @@ class Controller(ConfigureController):
         return self.login_client.get_access_token(request_body)
 
     def refresh_instance(self):
-        if (time.time() - self.start_time) >= 500:
+        # Refresh token 10 seconds before it's expiry
+        if time.time() - self.token_timestamp < (self.token_expiry-10):
+            print("Refreshing the controller API token")
             self.api_client = swagger_client.ApiClient(self.configuration)
             self.login_client = swagger_client.LoginApi(api_client=self.api_client)
             self.bearer = self.get_bearer_token()
-            self.start_time = time.time()
             self.api_client.default_headers['Authorization'] = "Bearer " + self.bearer._access_token
             self.status_client = swagger_client.StatusApi(api_client=self.api_client)
             self.equipment_client = swagger_client.EquipmentApi(self.api_client)
@@ -129,13 +132,12 @@ class Controller(ConfigureController):
             }
             self.api_client.configuration.refresh_api_key_hook = self.refresh_instance
             self.ping_response = self.portal_ping()
-            self.default_profiles = {}
             # print(self.bearer)
             if self.ping_response._application_name != 'PortalServer':
                 print("Server not Reachable")
                 exit()
             print("Connected to Controller Server")
-        # self.semaphore = False
+            self.token_timestamp = time.time()
 
     def portal_ping(self):
         self.refresh_instance()
@@ -148,6 +150,7 @@ class Controller(ConfigureController):
 
     # Returns a List of All the Equipments that are available in the cloud instances
     def get_equipment_by_customer_id(self, max_items=10):
+        self.refresh_instance()
         pagination_context = """{
                 "model_type": "PaginationContext",
                 "maxItemsPerPage": """ + str(max_items) + """
@@ -185,6 +188,7 @@ class Controller(ConfigureController):
         self.refresh_instance()
         if equipment_id is None:
             return None
+        self.refresh_instance()
         data = self.equipment_client.get_equipment_by_id(equipment_id=equipment_id)
         print(str(data._details._equipment_model))
         return str(data._details._equipment_model)
