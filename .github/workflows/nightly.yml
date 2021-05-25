@@ -19,8 +19,8 @@ env:
 on:
   workflow_dispatch:
   push:
-  #schedule:
-  #- cron: '15 0 * * *'
+  schedule:
+  - cron: '15 0 * * *'
 
 defaults:
   run:
@@ -163,10 +163,17 @@ jobs:
               containers:
               - name: tests
                 image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_number }}
-                command: [ "bash" ]
-                args: 
-                - "-c"
-                - "cd tests; pytest -m sanity -s -vvv --testbed=basic-02 --skip-testrail --alluredir=/tmp/allure-results; sleep 60"
+                command:
+                  - /bin/bash
+                  - -x
+                  - -c
+                  - |
+                    cd tests
+                    pytest -m sanity -s -vvv --testbed=basic-02 --skip-testrail --alluredir=/tmp/allure-results
+                    ret=\$?
+                    # sleep some time to be able to download the Allure results
+                    sleep 60
+                    exit \$ret
               imagePullSecrets:
               - name: tip-docker-registry-key
               restartPolicy: Never
@@ -175,26 +182,29 @@ jobs:
 
         sleep 60 # wait for the pod to come up
 
-        #echo "waiting for tests to complete"
-        #kubectl wait --for=condition=complete --timeout=90m "job/${{ steps.job.outputs.name }}"
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
 
         until [ -s test_everything.xml ]
         do
-          echo "waiting for tests to complete"
-          kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml
           sleep 10
+          echo "waiting for tests to complete..."
+          kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
         done
+        echo "tests completed"
 
-        kubectl cp $podname:/tmp/allure-results allure-results
+        echo "downloading allure results..."
+        kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
+
+        echo "waiting for pod to exit"
+        kubectl logs -f $podname >/dev/null 2>&1
+
+        exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
 
     - name: print logs
       if: ${{ always() }}
       run: |
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
         kubectl logs $podname
-        # try to match pytest result output
-        # kubectl logs $podname | egrep -v -q '[[:digit:]]* failed'
 
     - name: upload Allure results as artifact
       if: ${{ always() }}
@@ -218,8 +228,3 @@ jobs:
       if: ${{ always() }}
       run: |
         kubectl delete job "${{ steps.job.outputs.name }}" --wait=true --ignore-not-found=true
-#    - name: Publish Unit Test Results
-#      uses: EnricoMi/publish-unit-test-result-action@v1.7
-#      with:
-#        github_token: ${{ secrets.GITHUB_TOKEN }}
-#        files: "**/*.xml"
