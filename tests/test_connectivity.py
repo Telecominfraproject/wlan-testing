@@ -6,10 +6,9 @@ import sys
 import allure
 import pytest
 
-pytestmark = [pytest.mark.test_resources]
+pytestmark = [pytest.mark.usefixtures("setup_test_run"), pytest.mark.test_resources, pytest.mark.sanity]
 
 
-@pytest.mark.sanity
 @allure.testcase(name="Test Resources", url="")
 class TestResources(object):
 
@@ -51,4 +50,3 @@ class TestResources(object):
                                           msg='Manager status is Active')
 
         assert flag
-

@@ -31,10 +31,9 @@ from controller.controller import ProfileUtility
 from controller.controller import FirmwareUtility
 import pytest
 import logging
+from configuration import CONFIGURATION
 from configuration import RADIUS_SERVER_DATA
 from configuration import TEST_CASES
-from configuration import CONFIGURATION
-from configuration import FIRMWARE
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
 import sta_connect2
@@ -58,6 +57,15 @@ def pytest_addoption(parser):
         default=False,
         help="skip updating firmware on the AP (useful for local testing)"
     )
+
+    # change behaviour
+    parser.addoption(
+        "--exit-on-fail",
+        action="store_true",
+        default=False,
+        help="skip updating firmware on the AP (useful for local testing)"
+    )
+
     # change behaviour
     parser.addoption(
         "--force-upgrade",
@@ -99,11 +107,6 @@ def test_cases():
 
 
 @pytest.fixture(scope="session")
-def instantiate_jFrog():
-    yield FIRMWARE["JFROG"]
-
-
-@pytest.fixture(scope="session")
 def testbed(request):
     var = request.config.getoption("--testbed")
     allure.attach(body=str(var),
@@ -119,6 +122,11 @@ def should_upload_firmware(request):
 @pytest.fixture(scope="session")
 def should_upgrade_firmware(request):
     yield request.config.getoption("--force-upgrade")
+
+
+@pytest.fixture(scope="session")
+def exit_on_fail(request):
+    yield request.config.getoption("--exit-on-fail")
 
 
 @pytest.fixture(scope="session")
@@ -185,24 +193,25 @@ def setup_controller(request, get_configuration, instantiate_access_point):
     yield sdk_client
 
 
-@pytest.fixture(scope="class")
-def instantiate_firmware(setup_controller, instantiate_jFrog, get_configuration):
+@pytest.fixture(scope="session")
+def instantiate_firmware(setup_controller, get_configuration):
     firmware_client_obj = []
     for access_point_info in get_configuration['access_point']:
-        firmware_client = FirmwareUtility(jfrog_credentials=instantiate_jFrog, sdk_client=setup_controller,
+        firmware_client = FirmwareUtility(sdk_client=setup_controller,
                                           model=access_point_info["model"],
-                                          version=access_point_info["version"])
+                                          version_url=access_point_info["version"])
         firmware_client_obj.append(firmware_client)
     yield firmware_client_obj
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="session")
 def get_latest_firmware(instantiate_firmware):
     fw_version_list = []
     try:
 
         for fw_obj in instantiate_firmware:
             latest_firmware = fw_obj.get_fw_version()
+            latest_firmware = latest_firmware.replace(".tar.gz", "")
             fw_version_list.append(latest_firmware)
     except Exception as e:
         print(e)
@@ -211,17 +220,16 @@ def get_latest_firmware(instantiate_firmware):
     yield fw_version_list
 
 
-@pytest.fixture(scope="class")
-def upload_firmware(should_upload_firmware, instantiate_firmware, get_latest_firmware):
+@pytest.fixture(scope="session")
+def upload_firmware(should_upload_firmware, instantiate_firmware):
     firmware_id_list = []
     for i in range(0, len(instantiate_firmware)):
-        firmware_id = instantiate_firmware[i].upload_fw_on_cloud(fw_version=get_latest_firmware[i],
-                                                                 force_upload=should_upload_firmware)
+        firmware_id = instantiate_firmware[i].upload_fw_on_cloud(force_upload=should_upload_firmware)
         firmware_id_list.append(firmware_id)
     yield firmware_id_list
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="session")
 def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_firmware_cloud, get_latest_firmware,
                      should_upgrade_firmware):
     status_list = []
@@ -247,7 +255,7 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
     yield status_list
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="session")
 def check_ap_firmware_cloud(setup_controller, get_equipment_id):
     ap_fw_list = []
     for i in get_equipment_id:
@@ -255,7 +263,7 @@ def check_ap_firmware_cloud(setup_controller, get_equipment_id):
     yield ap_fw_list
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="session")
 def check_ap_firmware_ssh(get_configuration):
     active_fw_list = []
     try:
@@ -268,6 +276,13 @@ def check_ap_firmware_ssh(get_configuration):
         active_fw_list = []
     yield active_fw_list
 
+
+@pytest.fixture(scope="session")
+def setup_test_run(setup_controller, upgrade_firmware, check_ap_firmware_cloud, check_ap_firmware_ssh):
+    if check_ap_firmware_ssh == check_ap_firmware_cloud:
+        yield True
+    else:
+        pytest.exit("AP is not Upgraded tp Target Firmware versions")
 
 """
 Instantiate Reporting

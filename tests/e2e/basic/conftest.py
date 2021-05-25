@@ -535,7 +535,9 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
 
 @pytest.fixture(scope="session")
 def lf_test(get_configuration):
+    # print(get_configuration)
     obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'])
+    # pytest.exit("")
     yield obj
 
 
