@@ -152,3 +152,5 @@ pytest/*
 pytest/nightly*log
 
 test_everything.xml
+.vscode
+.envrc
