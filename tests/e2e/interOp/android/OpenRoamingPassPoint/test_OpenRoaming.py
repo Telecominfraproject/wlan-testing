@@ -16,7 +16,7 @@ import allure
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_WifiMode_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, setup_perfectoMobile_android
+from android_lib import closeApp, set_APconnMobileDevice_android, verifyUploadDownloadSpeed_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, setup_perfectoMobile_android
 
 setup_params_general = {
     "mode": "NAT",
@@ -30,8 +30,8 @@ setup_params_general = {
     "radius": False
 }
 
-@pytest.mark.ToggleWifiModeAndroid
-@pytest.mark.interop_and
+@pytest.mark.OpenRoamingAndroid
+#@pytest.mark.interop_and
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
@@ -39,14 +39,14 @@ setup_params_general = {
     indirect=True,
     scope="class"
 )
-
+ 
 @pytest.mark.usefixtures("setup_profiles")
-class TestToggleWifiMode(object):
+class TestOpenRoaming(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ToogleWifiMode_5g_WPA2_Personal(self, get_ToggleWifiMode_data, setup_perfectoMobile_android):
-         
+    def test_OpenRoaming_5g_WPA2_Personal(self, get_APToMobileDevice_data, setup_perfectoMobile_android):
+        
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
@@ -55,22 +55,24 @@ class TestToggleWifiMode(object):
 
         report = setup_perfectoMobile_android[1]
         driver = setup_perfectoMobile_android[0]
-        connData = get_ToggleWifiMode_data
+        connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
         set_APconnMobileDevice_android(ssidName, ssidPassword, setup_perfectoMobile_android, connData)
 
-        #Toggle Wifi Mode
-        Toggle_WifiMode_android(setup_perfectoMobile_android, ssidName, connData)
-    
+        #Install Profile 
+
+        #Verify Upload download Speed from device Selection
+        assert verifyUploadDownloadSpeed_android(setup_perfectoMobile_android, connData)
+
         #ForgetWifi
         ForgetWifiConnection(setup_perfectoMobile_android, ssidName, connData)
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ToogleWifiMode_2g_WPA2_Personal(self, get_ToggleWifiMode_data, setup_perfectoMobile_android):
-        
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0] 
+    def test_OpenRoaming_2g_WPA2_Personal(self, get_APToMobileDevice_data, setup_perfectoMobile_android):
+            
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]  
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
@@ -78,21 +80,44 @@ class TestToggleWifiMode(object):
 
         report = setup_perfectoMobile_android[1]
         driver = setup_perfectoMobile_android[0]
-        connData = get_ToggleWifiMode_data
+        connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
         set_APconnMobileDevice_android(ssidName, ssidPassword, setup_perfectoMobile_android, connData)
 
-        #Toggle Wifi Mode
-        assert Toggle_WifiMode_android(setup_perfectoMobile_android, ssidName, connData)
-    
+        #Toggle AirplaneMode
+        assert Toggle_AirplaneMode_android(setup_perfectoMobile_android, connData)
+
+        #ForgetWifi
+        ForgetWifiConnection(setup_perfectoMobile_android, ssidName, connData)
+
+    @pytest.mark.twog
+    @pytest.mark.wpa
+    def test_OpenRoaming_2g_WPA(self, get_APToMobileDevice_data, setup_perfectoMobile_android):
+            
+        profile_data = setup_params_general["ssid_modes"]["wpa"][0] 
+        ssidName = profile_data["ssid_name"]
+        ssidPassword = profile_data["security_key"]
+        print ("SSID_NAME: " + ssidName)
+        print ("SSID_PASS: " + ssidPassword)
+
+        report = setup_perfectoMobile_android[1]
+        driver = setup_perfectoMobile_android[0]
+        connData = get_APToMobileDevice_data
+
+        #Set Wifi/AP Mode
+        set_APconnMobileDevice_android(ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+
+        #Toggle AirplaneMode
+        assert Toggle_AirplaneMode_android(setup_perfectoMobile_android, connData)
+
         #ForgetWifi
         ForgetWifiConnection(setup_perfectoMobile_android, ssidName, connData)
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ToogleWifiMode_5g_WPA(self, get_ToggleWifiMode_data, setup_perfectoMobile_android):
-         
+    def test_OpenRoaming_5g_WPA(self, get_APToMobileDevice_data, setup_perfectoMobile_android):
+            
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
@@ -101,36 +126,13 @@ class TestToggleWifiMode(object):
 
         report = setup_perfectoMobile_android[1]
         driver = setup_perfectoMobile_android[0]
-        connData = get_ToggleWifiMode_data
+        connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
         set_APconnMobileDevice_android(ssidName, ssidPassword, setup_perfectoMobile_android, connData)
 
-        #Toggle Wifi Mode
-        assert Toggle_WifiMode_android(setup_perfectoMobile_android, ssidName, connData)
-    
-        #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_android, ssidName, connData)
+        #Toggle AirplaneMode
+        assert Toggle_AirplaneMode_android(setup_perfectoMobile_android, connData)
 
-    @pytest.mark.twog
-    @pytest.mark.wpa
-    def test_ToogleWifiMode_2g_WPA(self, get_ToggleWifiMode_data, setup_perfectoMobile_android):
-         
-        profile_data = setup_params_general["ssid_modes"]["wpa"][0]
-        ssidName = profile_data["ssid_name"]
-        ssidPassword = profile_data["security_key"]
-        print ("SSID_NAME: " + ssidName)
-        print ("SSID_PASS: " + ssidPassword)
-
-        report = setup_perfectoMobile_android[1]
-        driver = setup_perfectoMobile_android[0]
-        connData = get_ToggleWifiMode_data
-
-        #Set Wifi/AP Mode
-        set_APconnMobileDevice_android(ssidName, ssidPassword, setup_perfectoMobile_android, connData)
-
-        #Toggle Wifi Mode
-        assert Toggle_WifiMode_android(setup_perfectoMobile_android, ssidName, connData)
-    
         #ForgetWifi
         ForgetWifiConnection(setup_perfectoMobile_android, ssidName, connData)

@@ -8,6 +8,6 @@ if [ -d ../wlan-lanforge-scripts ]
 then
     rm -fr lanforge/lanforge-scripts
 
-    cp -ar ../wlan-lanforge-scripts lanforge/lanforge-scripts
+    cp -a ../wlan-lanforge-scripts lanforge/lanforge-scripts
 fi
 

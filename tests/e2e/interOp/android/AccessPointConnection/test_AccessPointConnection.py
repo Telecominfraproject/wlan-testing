@@ -11,31 +11,43 @@ from appium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 
 import sys
+import allure
 
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
 from android_lib import closeApp, verifyUploadDownloadSpeed_android, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, setup_perfectoMobile_android
 
+setup_params_general = {
+    "mode": "NAT",
+    "ssid_modes": {
+        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
+                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],"security_key": "something"}],
+        "wpa2_personal": [
+            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],"security_key": "something"}]},
+    "rf": {},
+    "radius": False
+}
+
 @pytest.mark.AccessPointConnectionAndroid
-@pytest.mark.wifi5
-@pytest.mark.wifi6
+@pytest.mark.interop_and
+@allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles, create_profiles',
-    [(["NAT"], ["NAT"])],
+    'setup_profiles',
+    [setup_params_general],
     indirect=True,
     scope="class"
 )
 
 @pytest.mark.usefixtures("setup_profiles")
-@pytest.mark.usefixtures("create_profiles")
 class TestAcessPointConnection(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_AccessPointConnection_5g_WPA2_Personal(self, setup_profile_data, get_APToMobileDevice_data, setup_perfectoMobile_android):
+    def test_AccessPointConnection_5g_WPA2_Personal(self, get_APToMobileDevice_data, setup_perfectoMobile_android):
         
-        profile_data = setup_profile_data["NAT"]["WPA2_P"]["5G"]  
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
@@ -59,9 +71,9 @@ class TestAcessPointConnection(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_AccessPointConnection_2g_WPA2_Personal(self, setup_profile_data, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_AccessPointConnection_2g_WPA2_Personal(self, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         
-        profile_data = setup_profile_data["NAT"]["WPA2_P"]["2G"]  
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0] 
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
@@ -85,9 +97,9 @@ class TestAcessPointConnection(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_AccessPointConnection_5g_WPA(self, setup_profile_data, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_AccessPointConnection_5g_WPA(self, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         
-        profile_data = setup_profile_data["NAT"]["WPA"]["5G"]  
+        profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
@@ -111,9 +123,9 @@ class TestAcessPointConnection(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_AccessPointConnection_2g_WPA(self, setup_profile_data, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_AccessPointConnection_2g_WPA(self, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         
-        profile_data = setup_profile_data["NAT"]["WPA"]["2G"]  
+        profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)

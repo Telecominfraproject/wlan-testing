@@ -44,8 +44,6 @@ from configuration import CONFIGURATION
 
 from urllib3 import exceptions
 
-
-
 @pytest.fixture(scope="class")
 def setup_perfectoMobileWeb(request):
     from selenium import webdriver
@@ -110,8 +108,6 @@ def setup_perfectoMobile_iOS(request):
     warnings.simplefilter("ignore", ResourceWarning)
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
    
-    
-
     capabilities = {
             'platformName': request.config.getini("platformName-iOS"),
             'model': request.config.getini("model-iOS"),
@@ -119,8 +115,8 @@ def setup_perfectoMobile_iOS(request):
             #'automationName' : 'Appium',
             'securityToken' : request.config.getini("securityToken"),  
             'useAppiumForWeb' : 'false',
-            'useAppiumForHybrid' : 'false',
             #'bundleId' : request.config.getini("bundleId-iOS"),
+            'useAppiumForHybrid' : 'false',
     }
 
     driver = webdriver.Remote('https://'+request.config.getini("perfectoURL")+'.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
@@ -128,9 +124,14 @@ def setup_perfectoMobile_iOS(request):
    
     TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
     nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
-    TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
-    #print ("\nTestCaseName: " + TestCaseName)
-    
+    try:
+        TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
+        print ("\nTestCaseName: " + TestCaseName)
+    except Exception as e:
+        TestCaseName = nCurrentTestMethodNameSplit
+        print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
+        print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
+        
     projectname = request.config.getini("projectName")
     projectversion = request.config.getini("projectVersion")
     jobname = request.config.getini("jobName")
@@ -145,12 +146,36 @@ def setup_perfectoMobile_iOS(request):
 
     def teardown():
         try:
-            print(" -- Tear Down --")     
-            reporting_client.test_stop(TestResultFactory.create_success())
-            print('Report-Url: ' + reporting_client.report_url() + '\n')
+            print("\n\n---------- Tear Down ----------")
+    
+            testFailed = request.session.testsfailed
+            if testFailed>0:
+                print ("Test Case Failure, please check report link: " + testCaseName)
+                reporting_client.test_stop(TestResultFactory.create_failure("Exception See Test Case"))
+                #seen = {None}
+                #session = request.node
+                #print(session)
+            elif testFailed<=0:
+                reporting_client.test_stop(TestResultFactory.create_success())
+                
+            #amount = len(request.session.items)
+            #print("Test Session Items: ")
+            #print(amount)
+
+            #tests_count = request.session.testscollected
+            #print("Test Collected: ")
+            #print(tests_count)
+
+            print('Report-Url: ' + reporting_client.report_url())
+            print("----------------------------------------------------------")
             driver.close()
         except Exception as e:
-            print(" -- Exception Not Able To close --")    
+            print(" -- Exception While Tear Down --")    
+            reporting_client.test_stop(TestResultFactory.create_failure("Exception"))
+            print('Report-Url-Failure: ' + reporting_client.report_url() + '\n')
+            
+            driver.close()
+           
             print (e.message)
         finally:
             try:
@@ -722,3 +747,15 @@ def update_ssid(request, instantiate_profile, setup_profile_data):
         requested_profile[3]
     time.sleep(90)
     yield status
+
+
+#@pytest.fixture(scope="module", autouse=True)
+def failure_tracking_fixture(request):
+    tests_failed_before_module = request.session.testsfailed
+    print("\n\ntests_failed_before_module: ")
+    print(tests_failed_before_module)
+    tests_failed_during_module = request.session.testsfailed - tests_failed_before_module
+    print("tests_failed_during_module: ")
+    print(tests_failed_during_module)
+    yield tests_failed_during_module
+    

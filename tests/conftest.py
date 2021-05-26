@@ -49,8 +49,34 @@ def pytest_addoption(parser):
     parser.addini("tr_pass", "Testrail Password")
     parser.addini("tr_project_id", "Testrail Project ID")
     parser.addini("milestone", "milestone Id")
-
     parser.addini("num_stations", "Number of Stations/Clients for testing")
+
+    #Perfecto Parameters
+    parser.addini("perfectoURL", "Cloud URL")
+    parser.addini("securityToken", "Security Token")
+    parser.addini("platformName-iOS", "iOS Platform")
+    parser.addini("platformName-android", "Android Platform")
+    parser.addini("model-iOS", "iOS Devices")
+    parser.addini("model-android", "Android Devices")
+    parser.addini("bundleId-iOS", "iOS Devices")
+    parser.addini("bundleId-iOS-Settings", "iOS Settings App")
+    parser.addini("appPackage-android", "Android Devices")
+    parser.addini("bundleId-iOS-Safari", "Safari BundleID")
+    parser.addini("wifi-SSID-2g-Pwd", "Wifi 2g Password")
+    parser.addini("bundleId-iOS-Ping", "Ping Bundle ID")
+    parser.addini("browserType-iOS", "Mobile Browser Name")    
+    parser.addini("projectName", "Project Name")
+    parser.addini("projectVersion", "Project Version")
+    parser.addini("jobName", "CI Job Name")
+    parser.addini("jobNumber", "CI Job Number")
+    parser.addini("reportTags", "Report Tags")
+    parser.addoption(
+        "--access-points-perfecto",
+        # nargs="+",
+        default=["Perfecto"],
+        help="list of access points to test"
+    )
+
 
     # change behaviour
     parser.addoption(

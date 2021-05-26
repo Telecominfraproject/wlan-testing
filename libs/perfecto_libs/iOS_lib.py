@@ -13,7 +13,6 @@ import sys
 import time
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
-#from appium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from appium.webdriver.common.mobileby import MobileBy
@@ -42,7 +41,12 @@ def rebootPhone(setup_perfectoMobile):
     setup_perfectoMobile[0].execute_script('mobile:handset:reboot', params)
 
 def set_APconnMobileDevice_iOS(WifiName, WifiPass, setup_perfectoMobile, connData):
-    
+    print("\n-------------------------------------")
+    print("Select Wifi/AccessPoint Connection")
+    print("-------------------------------------")
+   
+    reportFlag = True
+
     print("Verifying Wifi/AP Connection Details....") 
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
@@ -79,10 +83,14 @@ def set_APconnMobileDevice_iOS(WifiName, WifiPass, setup_perfectoMobile, connDat
 
         #Verifies if AP is connected to Wifi status
         #print("Verify Wifi Connection Status..")
-        report.step_start("Verify Wifi Connected Status")
-        WifiXpath = "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeStaticText[@label='"+ Wifi_AP_Name + "']"
-        elementWifName = driver.find_element_by_xpath(WifiXpath)
-    
+        try:
+            report.step_start("Verify Wifi Connected Status")
+            WifiXpath = "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeStaticText[@label='"+ Wifi_AP_Name + "']"
+            elementWifName = driver.find_element_by_xpath(WifiXpath)
+        except NoSuchElementException:
+            reportFlag = False
+            assert reportFlag
+
         #Check AP Internet Error Msg 
         print("Checking Internet Connection Error..")
         report.step_start("Checking Internet Connection Error..")
@@ -106,6 +114,8 @@ def set_APconnMobileDevice_iOS(WifiName, WifiPass, setup_perfectoMobile, connDat
             wifiXpath2.click()
         
         except NoSuchElementException:
+            reportFlag = False
+            assert reportFlag
             print("\n Can't find Wifi/AP NAME.....CheckXpath & Wifi Name")
 
         #Set password if Needed
@@ -123,10 +133,17 @@ def set_APconnMobileDevice_iOS(WifiName, WifiPass, setup_perfectoMobile, connDat
 
         try:
             WifiInternetErrMsg2 = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
+            reportFlag = False
         except NoSuchElementException:
+            reportFlag = True
             print("No Wifi-AP Error Internet Error: " + WifiName)
+    return reportFlag
 
 def Toggle_AirplaneMode_iOS(setup_perfectoMobile, connData):
+    print("\n-----------------------")
+    print("Toggle Airplane Mode")
+    print("-----------------------")
+    
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
     currentResult = True
@@ -210,6 +227,10 @@ def verify_APconnMobileDevice_iOS(WifiName, setup_perfectoMobile, connData):
         return None
 
 def ForgetWifiConnection(setup_perfectoMobile, wifiName, connData):
+    print("\n-----------------------------")
+    print("Forget Wifi/AP Connection")
+    print("-----------------------------")
+    
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
 
@@ -217,7 +238,7 @@ def ForgetWifiConnection(setup_perfectoMobile, wifiName, connData):
     print("Switching Context to Native")
     driver.switch_to.context('NATIVE_APP')
     contexts = driver.contexts
-    print(contexts)
+    #print(contexts)
 
     report.step_start("Forget Existing Wifi")   
     openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
@@ -274,6 +295,10 @@ def ForgetWifiConnection(setup_perfectoMobile, wifiName, connData):
         elementforgetWifi.click()
 
 def Toggle_WifiMode_iOS(setup_perfectoMobile, connData):
+    print("\n-----------------------")
+    print("Toggle Wifi Mode")
+    print("-----------------------")
+    
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
 
@@ -435,60 +460,59 @@ def tearDown(setup_perfectoMobile):
             print (e.message)
 
 def verifyUploadDownloadSpeediOS(setup_perfectoMobile, get_APToMobileDevice_data):
-        print("Verify Upload Download Speed")
+    print("\n-------------------------------------")
+    print("Verify Upload & Download Speed")
+    print("-------------------------------------")
+    
+    report = setup_perfectoMobile[1]    
+    driver = setup_perfectoMobile[0]
+    connData = get_APToMobileDevice_data
+    currentResult = True
 
-        report = setup_perfectoMobile[1]    
-        driver = setup_perfectoMobile[0]
-        connData = get_APToMobileDevice_data
-        currentResult = True
+    contexts = driver.contexts
+    #print("Printing Context")
+    #print(contexts)
 
-        contexts = driver.contexts
-        print("Printing Context")
-        print(contexts)
+    driver.switch_to.context('WEBVIEW_1')
+    
+ 
+    print("Launching Safari")
+    report.step_start("Google Home Page") 
+    driver.get(connData["webURL"]) 
+    print("Enter Search Text")
+    elementFindTxt = driver.find_element_by_xpath(connData["lblSearch"])
+    elementFindTxt.send_keys("Internet Speed Test")
 
-        driver.switch_to.context('WEBVIEW_1')
+    try:
+        print("Click Search Button")
+        elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']/li[1]/div[1]")  
+        elelSearch.click()
+    except NoSuchElementException:
+        currentResult = False
+        print("Search Drop Down not active...")
+
+    print("Click Run Speed Test Button...")
+    report.step_start("Click Run Speed Test Button")  
+    driver.find_element_by_xpath(connData["BtnRunSpeedTest"]).click()
+
+    #Get upload/Download Speed
+    try:
+        report.step_start("Get upload/Download Speed")   
+        time.sleep(60)
+        downloadMbps = driver.find_element_by_xpath(connData["downloadMbps"])
+        downloadSpeed = downloadMbps.text
+        print("Download: " + downloadSpeed + " Mbps")
+
+        UploadMbps = driver.find_element_by_xpath(connData["UploadMbps"])
+        uploadSpeed = UploadMbps.text
+        print("Upload: " + uploadSpeed + " Mbps")
         
-        try:  
-            print("Launching Safari")
-            report.step_start("Google Home Page") 
-            driver.get(connData["webURL"]) 
-            print("Enter Search Text")
-            elementFindTxt = driver.find_element_by_xpath(connData["lblSearch"])
-            elementFindTxt.send_keys("Internet Speed Test")
+        print("Access Point Verification Completed Successfully")
 
-            try:
-                print("Click Search Button")
-                elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']/li[1]/div[1]")  
-                elelSearch.click()
-            except NoSuchElementException:
-                currentResult = False
-                print("Search Drop Down not active...")
-
-            print("Click Run Speed Test Button...")
-            report.step_start("Click Run Speed Test Button")  
-            driver.find_element_by_xpath(connData["BtnRunSpeedTest"]).click()
-
-            #Get upload/Download Speed
-            try:
-                report.step_start("Get upload/Download Speed")   
-                time.sleep(60)
-                downloadMbps = driver.find_element_by_xpath(connData["downloadMbps"])
-                downloadSpeed = downloadMbps.text
-                print("Download: " + downloadSpeed + " Mbps")
-
-                UploadMbps = driver.find_element_by_xpath(connData["UploadMbps"])
-                uploadSpeed = UploadMbps.text
-                print("Upload: " + uploadSpeed + " Mbps")
-                
-                print("Access Point Verification Completed Successfully")
-
-            except NoSuchElementException:
-                print("Access Point Verification NOT Completed, checking Connection....")
-                currentResult = False
-        except Exception as e:
-            print (e.message)
-
-          
-        return currentResult
+    except NoSuchElementException:
+        print("Access Point Verification NOT Completed, checking Connection....")
+        currentResult = False
+        
+    return currentResult
 
       

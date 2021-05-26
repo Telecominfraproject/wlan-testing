@@ -23,18 +23,16 @@ setup_params_general = {
     "mode": "NAT",
     "ssid_modes": {
         "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
-                 "security_key": "something"}],
+                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],"security_key": "something"}],
         "wpa2_personal": [
             {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
-             "security_key": "something"}]},
+            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],"security_key": "something"}]},
     "rf": {},
     "radius": False
 }
 
-
 @pytest.mark.ToggleAirplaneMode
+@pytest.mark.interop_iOS
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
@@ -42,13 +40,13 @@ setup_params_general = {
     indirect=True,
     scope="class"
 )
+
 @pytest.mark.usefixtures("setup_profiles")
 class TestToggleAirplaneMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ToogleAirplaneMode_5g_WPA2_Personal(self, get_ToggleAirplaneMode_data,
-                                                 setup_perfectoMobile_iOS):
+    def test_ToogleAirplaneMode_5g_WPA2_Personal(self, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
@@ -61,7 +59,9 @@ class TestToggleAirplaneMode(object):
 
         # Set Wifi/AP Mode
         set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-
+        #print("ReportFlag: " + resultFlag)
+        #setReportResultFlag(resultFlag)
+        
         # Toggle AirplaneMode
         Toggle_AirplaneMode_iOS(setup_perfectoMobile_iOS, connData)
 
@@ -73,9 +73,8 @@ class TestToggleAirplaneMode(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ToogleAirplaneMode_2g_WPA2_Personal(self, setup_profile_data, get_ToggleAirplaneMode_data,
-                                                 setup_perfectoMobile_iOS):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+    def test_ToogleAirplaneMode_2g_WPA2_Personal(self, get_ToggleAirplaneMode_data,setup_perfectoMobile_iOS):
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
@@ -87,7 +86,10 @@ class TestToggleAirplaneMode(object):
 
         # Set Wifi/AP Mode
         set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-
+        #print("ResultFlag: " + resultFlag)
+       # print(resultFlag)
+       # reportResultFlag.reportFlag = resultFlag
+        
         # Toggle AirplaneMode
         Toggle_AirplaneMode_iOS(setup_perfectoMobile_iOS, connData)
 
@@ -99,8 +101,8 @@ class TestToggleAirplaneMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ToogleAirplaneMode_5g_WPA(self, setup_profile_data, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
-        profile_data = setup_profile_data["NAT"]["WPA"]["5G"]
+    def test_ToogleAirplaneMode_5g_WPA(self, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
+        profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
@@ -124,8 +126,8 @@ class TestToggleAirplaneMode(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_ToogleAirplaneMode_2g_WPA(self, setup_profile_data, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
-        profile_data = setup_profile_data["NAT"]["WPA"]["2G"]
+    def test_ToogleAirplaneMode_2g_WPA(self, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
+        profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)

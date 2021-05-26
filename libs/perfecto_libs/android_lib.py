@@ -80,9 +80,14 @@ def setup_perfectoMobile_android(request):
    
     TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
     nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
-    TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
-    #print ("\nTestCaseName: " + TestCaseName)
-    
+    try:
+        TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
+        print ("\nTestCaseName: " + TestCaseName)
+    except Exception as e:
+        TestCaseName = nCurrentTestMethodNameSplit
+        print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
+        print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
+        
     projectname = request.config.getini("projectName")
     projectversion = request.config.getini("projectVersion")
     jobname = request.config.getini("jobName")
@@ -97,12 +102,35 @@ def setup_perfectoMobile_android(request):
 
     def teardown():
         try:
-            print(" -- Tear Down --")     
-            reporting_client.test_stop(TestResultFactory.create_success())
-            print('Report-Url: ' + reporting_client.report_url() + '\n')
+            print("\n\n---------- Tear Down ----------")
+           
+
+            testFailed = request.session.testsfailed
+            if testFailed>0:
+                print ("Test Case Failure, please check report link: " + testCaseName)
+                reporting_client.test_stop(TestResultFactory.create_failure("Exception See Test Case"))
+                #seen = {None}
+                #session = request.node
+                #print(session)
+            elif testFailed<=0:
+                reporting_client.test_stop(TestResultFactory.create_success())
+                
+            #amount = len(request.session.items)
+            #print("Test Session Items: ")
+            #print(amount)
+
+            #tests_count = request.session.testscollected
+            #print("Test Collected: ")
+            #print(tests_count)
+
+            print('Report-Url: ' + reporting_client.report_url())
+            print("----------------------------------------------------------")
             driver.close()
         except Exception as e:
-            print(" -- Exception Not Able To close --")    
+            print(" -- Exception While Tear Down --")    
+            reporting_client.test_stop(TestResultFactory.create_failure("Exception"))
+            print('Report-Url-Failure: ' + reporting_client.report_url() + '\n')
+            driver.close()
             print (e.message)
         finally:
             try:
@@ -152,14 +180,24 @@ def set_APconnMobileDevice_android(WifiName, WifiPass, setup_perfectoMobile, con
             print("Get Connected Wifi Name if any")
             report.step_start("Get Connected Wifi Name if any")           
             try:
-                driver.implicitly_wait(35)
+                driver.implicitly_wait(20)
                 WifiNameElement = driver.find_element_by_xpath("//*[@resource-id='android:id/summary']")
                 Wifi_AP_Name = WifiNameElement.text
                 print("Current Wifi Status Name: " + Wifi_AP_Name)
             except NoSuchElementException:
-                report.step_start("Wifi Radio Button Enabled") 
-                WifiRadioBtnConnections = driver.find_element_by_xpath("//*[@resource-id='android:id/switch_widget' and @content-desc='Wi-Fi']")
-                WifiRadioBtnConnections.click()
+                report.step_start("Checking Wifi Radio Button Status") 
+                try:
+                    driver.implicitly_wait(5)
+                    WifiRadioBtnConnections = driver.find_element_by_xpath("//*[@resource-id='android:id/switch_widget' and @content-desc='Wi-Fi' and @text='Off']")
+                    report.step_start("Wifi Radio Button Disabled, Enabling Radio Button..") 
+                    print("Wifi Radio Button Disabled, Enabling Radio Button..")
+                    WifiRadioBtnConnections.click()
+                except NoSuchElementException:
+                    Wifi_AP_Name="Null"
+                    driver.implicitly_wait(25)
+                    report.step_start("Wifi Radio Button Already Enabled") 
+                    print("Wifi Radio Button Already Enabled")
+    
         except NoSuchElementException:
             Wifi_AP_Name="Null"
             print("Device not connected to any Wifi") 
@@ -309,7 +347,7 @@ def ForgetWifiConnection(setup_perfectoMobile, WifiName, connData):
     print("Switching Context to Native")
     driver.switch_to.context('NATIVE_APP')
     contexts = driver.contexts
-    print(contexts)
+    #print(contexts)
 
     #Open Settings Application
     openApp(connData["appPackage-android"], setup_perfectoMobile)
@@ -343,6 +381,7 @@ def ForgetWifiConnection(setup_perfectoMobile, WifiName, connData):
         wifiElement.click()
     
         if Wifi_AP_Name.__eq__(WifiName):
+            report.step_start("Wifi Name Matches - Already Connected To: " + Wifi_AP_Name) 
             print("Wifi Name Matches - Already Connected To: " + Wifi_AP_Name) 
 
             print("Load Wifi Details Page")
@@ -366,13 +405,13 @@ def ForgetWifiConnection(setup_perfectoMobile, WifiName, connData):
                 report.step_start("Verify if wifi is disconnected from: " + WifiName) 
                 WifiForget= driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")     
                 print("Wifi Not disconnected, check xpath for: " + WifiName)
-                assert False
             except NoSuchElementException:
                 print("Wifi Disconnected Successfully: " + WifiName)
             
         else:
             print("Wifi Does not Match with Wifi: " + WifiName)
-        
+            report.step_start("Wifi Does not Match with Wifi: " + WifiName) 
+            report.step_start("Probably wifi auto connected to another network") 
             try:
                 report.step_start("Wifi Details Page") 
                 WifiInternetDetails = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/wifi_details']")     
@@ -386,14 +425,13 @@ def ForgetWifiConnection(setup_perfectoMobile, WifiName, connData):
                 WifiForget.click()
             except NoSuchElementException:
                 print("Wifi Connection Error: " + WifiName)
-
-            
+      
             print("Verify if wifi is disconnected from: " + WifiName)
             try:
                 report.step_start("Verify if wifi is disconnected from: " + WifiName) 
                 WifiForget= driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")     
                 print("Wifi Not disconnected, check xpath for: " + WifiName)
-                assert False
+              
             except NoSuchElementException:
                 print("Wifi Disconnected Successfully: " + WifiName)
 
@@ -457,7 +495,7 @@ def Toggle_AirplaneMode_android(setup_perfectoMobile, connData):
     print("Switching Context to Native")
     driver.switch_to.context('NATIVE_APP')
     contexts = driver.contexts
-    print(contexts)
+    #print(contexts)
 
     #Open Settings Application
     openApp(connData["appPackage-android"], setup_perfectoMobile)
@@ -513,7 +551,7 @@ def Toggle_WifiMode_android(setup_perfectoMobile, WifiName, connData):
     print("Switching Context to Native")
     driver.switch_to.context('NATIVE_APP')
     contexts = driver.contexts
-    print(contexts)
+    #print(contexts)
 
     #Open Settings Application
     openApp(connData["appPackage-android"], setup_perfectoMobile)
@@ -586,7 +624,6 @@ def Toggle_WifiMode_android(setup_perfectoMobile, WifiName, connData):
         WifiFlag = False
 
     return WifiFlag
-
 
 def verifyUploadDownloadSpeed_android(setup_perfectoMobile, get_APToMobileDevice_data):
     print("\n-------------------------------------")

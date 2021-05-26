@@ -30,22 +30,22 @@ setup_params_general = {
     "radius": False
 }
 
-@pytest.mark.ClientConnectivity
-@pytest.mark.interop_iOS
+@pytest.mark.OpenRoaming
+#@pytest.mark.interop_iOS
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
     indirect=True,
-    scope="class"
+   scope="class"
 )
- 
 @pytest.mark.usefixtures("setup_profiles")
-class TestNatMode(object):
+class TestOpenRoaming(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ClientConnectivity_5g_WPA2_Personal(self, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_OpenRoaming_5g_WPA2_Personal(self, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
         
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1] 
         ssidName = profile_data["ssid_name"]
@@ -60,6 +60,8 @@ class TestNatMode(object):
         #Set Wifi/AP Mode
         set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
+        #Install Profile 
+
         #Verify Upload download Speed from device Selection
         verifyUploadDownloadSpeediOS(setup_perfectoMobile_iOS, connData)
 
@@ -68,7 +70,7 @@ class TestNatMode(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ClientConnectivity_2g_WPA2_Personal(self, get_APToMobileDevice_data, setup_perfectoMobileWeb):
+    def test_OpenRoaming_2g_WPA2_Personal(self, get_APToMobileDevice_data, setup_perfectoMobileWeb):
             
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -91,7 +93,7 @@ class TestNatMode(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_ClientConnectivity_2g_WPA(self, get_APToMobileDevice_data, setup_perfectoMobileWeb):
+    def test_OpenRoaming_2g_WPA(self, get_APToMobileDevice_data, setup_perfectoMobileWeb):
             
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
@@ -114,7 +116,7 @@ class TestNatMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ClientConnectivity_5g_WPA(self, get_APToMobileDevice_data, setup_perfectoMobileWeb):
+    def test_OpenRoaming_5g_WPA(self, get_APToMobileDevice_data, setup_perfectoMobileWeb):
             
         profile_data = setup_params_general["ssid_modes"]["wpa"][1] 
         ssidName = profile_data["ssid_name"]
