@@ -24,6 +24,7 @@ from sta_connect2 import StaConnect2
 import time
 # from eap_connect import EAPConnect
 from test_ipv4_ttls import TTLSTest
+from lf_wifi_capacity_test import WiFiCapacityTest
 
 
 class RunTest:
@@ -86,6 +87,7 @@ class RunTest:
         time.sleep(3)
         return self.staConnect.passes(), result
 
+
     def EAP_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog", vlan_id=100,
                     station_name=[], key_mgmt="WPA-EAP",
                     pairwise="NA", group="NA", wpa_psk="DEFAULT",
@@ -132,6 +134,28 @@ class RunTest:
         self.eap_connect.cleanup(station_name)
         return self.eap_connect.passes()
 
+    def wifi_capacity(self, ssid="[BLANK]", paswd="[BLANK]", security="open", mode="BRIDGE", band="twog",
+                      instance_name="wct_instance"):
+        '''SINGLE WIFI CAPACITY using lf_wifi_capacity.py'''
+        self.wfc_test = WiFiCapacityTest(lfclient_host=self.lanforge_ip, lf_port=self.lanforge_port,
+                                         lf_user="lanforge", lf_password="lanforge", instance_name=instance_name,
+                                         config_name="wifi_config", upstream=self.upstream_port, batch_size="1",
+                                         loop_iter="1", protocol="UDP-IPv4", duration="3000", pull_report=False,
+                                         load_old_cfg=False, upload_rate="10Mbps", download_rate="1Gbps",
+                                         sort="interleave", stations="1.1.sta0000,1.1.sta0001", create_stations=True,
+                                         radio=["wiphy0"], security=security, paswd=paswd, ssid=ssid, enables=[],
+                                         disables=[], raw_lines=[], raw_lines_file="", sets=[])
+
+        if band == "twog":
+            self.wfc_test.radio = self.twog_radios[0]
+        if band == "fiveg":
+            self.wfc_test.radio = self.fiveg_radios[0]
+
+        self.wfc_test.setup()
+        self.wfc_test.run()
+
+        result = True
+        return result
 
 if __name__ == '__main__':
     lanforge_data = {
