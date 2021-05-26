@@ -517,7 +517,6 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
         time.sleep(10)
     allure.attach(body=str("VIF Config: " + str(vif_config) + "\n" + "VIF State: " + str(vif_state)),
                   name="SSID Profiles in VIF Config and VIF State: ")
-    print(test_cases)
 
     def teardown_session():
         print("\nRemoving Profiles")

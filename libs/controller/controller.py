@@ -118,7 +118,8 @@ class Controller(ConfigureController):
 
     def refresh_instance(self):
         # Refresh token 10 seconds before it's expiry
-        if time.time() - self.token_timestamp < (self.token_expiry-10):
+        if time.time() - self.token_timestamp > self.token_expiry:
+            self.token_timestamp = time.time()
             print("Refreshing the controller API token")
             self.api_client = swagger_client.ApiClient(self.configuration)
             self.login_client = swagger_client.LoginApi(api_client=self.api_client)
@@ -137,7 +138,7 @@ class Controller(ConfigureController):
                 print("Server not Reachable")
                 exit()
             print("Connected to Controller Server")
-            self.token_timestamp = time.time()
+
 
     def portal_ping(self):
         self.refresh_instance()
@@ -955,7 +956,7 @@ class FirmwareUtility:
             firmware_data = {
                 "id": 0,
                 "equipmentType": "AP",
-                "modelId": self.model,
+                "modelId": str(self.model).upper(),
                 "versionName": fw_version,
                 "description": fw_version + "  FW VERSION",
                 "filename": self.fw_version,
@@ -971,6 +972,7 @@ class FirmwareUtility:
             exit()
         if (force_upgrade is True) or (self.should_upgrade_ap_fw(equipment_id=equipment_id)):
             firmware_id = self.upload_fw_on_cloud(force_upload=force_upload)
+            print(firmware_id)
             time.sleep(5)
             try:
                 obj = self.equipment_gateway_client.request_firmware_update(equipment_id=equipment_id,
@@ -978,6 +980,7 @@ class FirmwareUtility:
                 print("Request firmware upgrade Success! waiting for 300 sec")
                 time.sleep(300)
             except Exception as e:
+                print(e)
                 obj = False
             return obj
             # Write the upgrade fw logic here
@@ -1028,10 +1031,10 @@ if __name__ == '__main__':
     #     "vlan": 1,
     #     "mode": "BRIDGE"
     # }
-    fw_obj = FirmwareUtility(sdk_client=api, model="eap101",
-                             version_url="https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/dev/ecw5410-2021-05-25-pending-e71df5e.tar.gz")
+    fw_obj = FirmwareUtility(sdk_client=api, model="ecw5410",
+                             version_url="https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.0.4-rc4.tar.gz")
     fw_obj.upload_fw_on_cloud(force_upload=True)
-    # fw_obj.upgrade_fw(equipment_id=28)
+    fw_obj.upgrade_fw(equipment_id=7)
     # profile.create_wep_ssid_profile(profile_data=profile_data)
     # print(profile.get_profile_by_name(profile_name="wpa_wpa2_eap"))
     # profile.get_default_profiles()

@@ -27,7 +27,7 @@ ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 -L 8803:lab-ctlr:22 \
 -L 8860:lf13:4002 -L 8861:lf13:5901 -L 8862:lf13:8080 -L 8863:lab-ctlr4:22 \
 -L 8870:lf14:4002 -L 8871:lf14:5901 -L 8872:lf14:8080 -L 8873:lab-ctlr4:22 \
 -L 8880:lf15:4002 -L 8881:lf15:5901 -L 8882:lf15:8080 -L 8883:lab-ctlr4:22 \
-ubuntu@3.130.51.163
+ubuntu@orch
 
 """
 
@@ -51,7 +51,7 @@ CONFIGURATION = {
                 'password': "lanforge",
                 'port': 22,
                 'jumphost_tty': '/dev/ttyAP1',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.0.4-rc2.tar.gz"
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.0.4-rc4.tar.gz"
             }
         ],
         "traffic_generator": {

@@ -27,7 +27,7 @@ class TestFirmware(object):
 
     @pytest.mark.firmware_upgrade
     def test_firmware_upgrade_request(self, upgrade_firmware, update_report, test_cases):
-        print()
+        print(upgrade_firmware)
         if not upgrade_firmware:
             update_report.update_testrail(case_id=test_cases["upgrade_api"],
                                           status_id=0,

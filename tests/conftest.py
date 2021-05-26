@@ -232,6 +232,7 @@ def upload_firmware(should_upload_firmware, instantiate_firmware):
 @pytest.fixture(scope="session")
 def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_firmware_cloud, get_latest_firmware,
                      should_upgrade_firmware):
+
     status_list = []
     if get_latest_firmware != check_ap_firmware_cloud:
         if request.config.getoption("--skip-upgrade"):
@@ -240,13 +241,13 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
         else:
 
             for i in range(0, len(instantiate_firmware)):
-                status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id, force_upload=False,
+                status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i], force_upload=True,
                                                             force_upgrade=should_upgrade_firmware)
                 status_list.append(status)
     else:
         if should_upgrade_firmware:
             for i in range(0, len(instantiate_firmware)):
-                status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id, force_upload=False,
+                status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i], force_upload=False,
                                                             force_upgrade=should_upgrade_firmware)
                 status_list.append(status)
         else:
