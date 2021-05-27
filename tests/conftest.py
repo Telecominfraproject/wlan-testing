@@ -37,12 +37,10 @@ from configuration import CONFIGURATION
 from configuration import FIRMWARE
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
+from cv_test_manager import cv_test
 import sta_connect2
 from sta_connect2 import StaConnect2
-from cv_test_manager import cv_test
-# from cv_test_manager import cv_test
-from create_chamberview import CreateChamberview
-from create_chamberview_dut import DUT
+
 
 def pytest_addoption(parser):
     parser.addini("tr_url", "Test Rail URL")
@@ -87,6 +85,41 @@ def pytest_addoption(parser):
         action="store_true",
         default=False,
         help="Stop using Testrails"
+    )
+    parser.addoption(
+        "--exit-on-fail",
+        action="store_true",
+        default=False,
+        help="use to stop execution if failure"
+    )
+
+    # Perfecto Parameters
+    parser.addini("perfectoURL", "Cloud URL")
+    parser.addini("securityToken", "Security Token")
+    parser.addini("platformName-iOS", "iOS Platform")
+    parser.addini("platformName-android", "Android Platform")
+    parser.addini("model-iOS", "iOS Devices")
+    parser.addini("model-android", "Android Devices")
+    parser.addini("bundleId-iOS", "iOS Devices")
+    parser.addini("bundleId-iOS-Settings", "iOS Settings App")
+    parser.addini("appPackage-android", "Android Devices")
+    parser.addini("wifi-SSID-5gl-Pwd", "Wifi 5g Password")
+    parser.addini("wifi-SSID-2g-Pwd", "Wifi 2g Password")
+    parser.addini("Default-SSID-5gl-perfecto-b", "Wifi 5g AP Name")
+    parser.addini("Default-SSID-2g-perfecto-b", "Wifi 2g AP Name")
+    parser.addini("Default-SSID-perfecto-b", "Wifi AP Name")
+    parser.addini("bundleId-iOS-Ping", "Ping Bundle ID")
+    parser.addini("browserType-iOS", "Mobile Browser Name")
+    parser.addini("projectName", "Project Name")
+    parser.addini("projectVersion", "Project Version")
+    parser.addini("jobName", "CI Job Name")
+    parser.addini("jobNumber", "CI Job Number")
+    parser.addini("reportTags", "Report Tags")
+    parser.addoption(
+        "--access-points-perfecto",
+        # nargs="+",
+        default=["Perfecto"],
+        help="list of access points to test"
     )
 
 
@@ -189,59 +222,6 @@ def setup_controller(request, get_configuration, instantiate_access_point,
         sdk_client = False
     yield sdk_client
 
-@pytest.fixture(scope="session")
-def create_lanforge_chamberview_dut(get_configuration, testbed):
-    ap_model = get_configuration["access_point"][0]["model"]
-    version = get_configuration["access_point"][0]["version"]
-    serial = get_configuration["access_point"][0]["serial"]
-    # ap_model = get_configuration["access_point"][0]["model"]
-    lanforge_data = get_configuration['traffic_generator']['details']
-    ip = lanforge_data["ip"]
-    port = lanforge_data["port"]
-    dut = DUT(lfmgr=ip,
-              port=port,
-              dut_name=testbed,
-              sw_version=version,
-              model_num=ap_model,
-              serial_num=serial
-              )
-    dut.setup()
-    yield dut
-
-@pytest.fixture(scope="session")
-def create_lanforge_chamberview(create_lanforge_chamberview_dut, get_configuration, testbed):
-    lanforge_data = get_configuration['traffic_generator']['details']
-    ip = lanforge_data["ip"]
-    port = lanforge_data["port"]
-    upstream_port = lanforge_data["upstream"]  # eth1
-    uplink_port = lanforge_data["uplink"]  # eth2
-    upstream_subnet = lanforge_data["upstream_subnet"]
-    scenario_name = "TIP-" + testbed
-    upstream_res = upstream_port.split(".")[0] + "." + upstream_port.split(".")[1]
-    uplink_res = uplink_port.split(".")[0] + "." + uplink_port.split(".")[1]
-    print(ip)
-    print(upstream_port, upstream_res, upstream_port.split(".")[2])
-    # "profile_link 1.1 upstream-dhcp 1 NA NA eth2,AUTO -1 NA"
-    # "profile_link 1.1 uplink-nat 1 'DUT: upstream LAN 10.28.2.1/24' NA eth1,eth2 -1 NA"
-    raw_line = [
-        ["profile_link " + upstream_res + " upstream-dhcp 1 NA NA " + upstream_port.split(".")[2] + ",AUTO -1 NA"]
-        , ["profile_link " + uplink_res + " uplink-nat 1 'DUT: upstream LAN "
-           + upstream_subnet + "' NA " + uplink_port.split(".")[2] + " -1 NA"]
-    ]
-    print(raw_line)
-    Create_Chamberview = CreateChamberview(ip, port)
-    Create_Chamberview.clean_cv_scenario()
-    Create_Chamberview.clean_cv_scenario(type="Network-Connectivity", scenario_name=scenario_name)
-
-    Create_Chamberview.setup(create_scenario=scenario_name,
-                             raw_line=raw_line)
-
-    Create_Chamberview.build(scenario_name)
-    Create_Chamberview.show_text_blob(None, None, True)  # Show changes on GUI
-    yield Create_Chamberview
-
-
-
 
 @pytest.fixture(scope="class")
 def instantiate_firmware(setup_controller, instantiate_jFrog, get_configuration):
@@ -252,79 +232,6 @@ def instantiate_firmware(setup_controller, instantiate_jFrog, get_configuration)
                                           version=access_point_info["version"])
         firmware_client_obj.append(firmware_client)
     yield firmware_client_obj
-
-
-@pytest.fixture(scope="class")
-def get_latest_firmware(instantiate_firmware):
-    fw_version_list = []
-    try:
-
-        for fw_obj in instantiate_firmware:
-            latest_firmware = fw_obj.get_fw_version()
-            fw_version_list.append(latest_firmware)
-    except Exception as e:
-        print(e)
-        fw_version_list = []
-
-    yield fw_version_list
-
-
-@pytest.fixture(scope="class")
-def upload_firmware(should_upload_firmware, instantiate_firmware, get_latest_firmware):
-    firmware_id_list = []
-    for i in range(0, len(instantiate_firmware)):
-        firmware_id = instantiate_firmware[i].upload_fw_on_cloud(fw_version=get_latest_firmware[i],
-                                                                 force_upload=should_upload_firmware)
-        firmware_id_list.append(firmware_id)
-    yield firmware_id_list
-
-
-@pytest.fixture(scope="class")
-def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_firmware_cloud, get_latest_firmware,
-                     should_upgrade_firmware):
-    status_list = []
-    if get_latest_firmware != check_ap_firmware_cloud:
-        if request.config.getoption("--skip-upgrade"):
-            status = "skip-upgrade"
-            status_list.append(status)
-        else:
-
-            for i in range(0, len(instantiate_firmware)):
-                status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id, force_upload=False,
-                                                            force_upgrade=should_upgrade_firmware)
-                status_list.append(status)
-    else:
-        if should_upgrade_firmware:
-            for i in range(0, len(instantiate_firmware)):
-                status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id, force_upload=False,
-                                                            force_upgrade=should_upgrade_firmware)
-                status_list.append(status)
-        else:
-            status = "skip-upgrade Version Already Available"
-            status_list.append(status)
-    yield status_list
-
-
-@pytest.fixture(scope="class")
-def check_ap_firmware_cloud(setup_controller, get_equipment_id):
-    ap_fw_list = []
-    for i in get_equipment_id:
-        ap_fw_list.append(setup_controller.get_ap_firmware_old_method(equipment_id=i))
-    yield ap_fw_list
-
-
-@pytest.fixture(scope="class")
-def check_ap_firmware_ssh(get_configuration):
-    active_fw_list = []
-    try:
-        for access_point in get_configuration['access_point']:
-            ap_ssh = APNOS(access_point)
-            active_fw = ap_ssh.get_active_firmware()
-            active_fw_list.append(active_fw)
-    except Exception as e:
-        print(e)
-        active_fw_list = []
-    yield active_fw_list
 
 
 """

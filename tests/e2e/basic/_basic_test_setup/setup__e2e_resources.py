@@ -7,39 +7,44 @@
 import pytest
 import time
 
+
 @pytest.mark.configure_lanforge
 def test_configure_lanforge(configure_lanforge):
-
     assert True
 
 
-@pytest.mark.lanforge_scenario_setup_dut
-def test_lanforge_scenario_setup_dut(create_lanforge_chamberview_dut):
-    print(create_lanforge_chamberview_dut)
+@pytest.mark.setup_dut
+def test_lanforge_scenario_setup_dut(create_lanforge_chamberview_dut, lf_tools):
+    object_name, dut_name = create_lanforge_chamberview_dut
+    # print(create_lanforge_chamberview_dut)
     ssid = [
-        ['ssid_idx=0 ssid=Default-SSID-2g password=12345678 bssid=90:3c:b3:94:48:58'],
-        ['ssid_idx=1 ssid=Default-SSID-5gl password=12345678 bssid=90:3c:b3:94:48:59']
-            ]
-
-    create_lanforge_chamberview_dut.ssid = ssid
-    create_lanforge_chamberview_dut.setup()
-    create_lanforge_chamberview_dut.add_ssids()
-    create_lanforge_chamberview_dut.cv_test.show_text_blob(None, None, True)  # Show changes on GUI
-    create_lanforge_chamberview_dut.cv_test.sync_cv()
-    time.sleep(2)
-    create_lanforge_chamberview_dut.cv_test.show_text_blob(None, None, True)  # Show changes on GUI
-    create_lanforge_chamberview_dut.cv_test.sync_cv()
+        # how to add ssid example
+        # ['ssid_idx=0 ssid=Default-SSID-2g security=WPA password=12345678 bssid=90:3c:b3:94:48:58'],
+        # ['ssid_idx=1 ssid=Default-SSID-5gl security=WPA password=12345678 bssid=90:3c:b3:94:48:59']
+    ]
+    if ssid:
+        lf_tools.CreateDut.ssid = ssid
+        lf_tools.Create_Dut()
+        print("Here")
 
     assert True
 
-@pytest.mark.lanforge_scenario_setup
-def test_lanforge_scenario_setup(create_lanforge_chamberview):
-    # raw_line = [
-    #     ["profile_link 1.1 vlan-100 1 NA NA eth2,AUTO -1 100"]
-    # ]
-    # print(create_lanforge_chamberview.setup_scenario(create_scenario="TIP-test",raw_line=raw_line))
-    # create_lanforge_chamberview.build_scenario("TIP-test")
+
+@pytest.mark.setup_chamberview
+def test_lanforge_scenario_setup(create_lanforge_chamberview, lf_tools):
+    raw_line = [
+        # How to add in chamberview example, please look for create_chamberview.py for information
+        # ["profile_link 1.1 STA-AC 10 'DUT: " + lf_tools.dut_name + " Radio-1' tcp-dl-6m-vi wiphy0,AUTO -1"]
+        # ["profile_link 1.1 STA-AC 10 'DUT: temp Radio-1' tcp-dl-6m-vi wiphy0,AUTO -1"], to create stations
+        # ["profile_link 1.1 vlan-100 1 NA NA eth2,AUTO -1 100"] # add new list separated by commas to add in cv
+        # scenario
+    ]
+    if raw_line:
+        lf_tools.delete_old_scenario = False
+        lf_tools.raw_line = raw_line
+        lf_tools.Chamber_View()
     assert True
+
 
 @pytest.mark.sanity
 @pytest.mark.bridge
@@ -110,7 +115,8 @@ def test_ap_firmware(check_ap_firmware_ssh, get_latest_firmware, instantiate_tes
 
     assert check_ap_firmware_ssh == get_latest_firmware
 
-
+# adding comment here (previous git-conflict)
+# =======
 # """
 #     Test Case Module:  setup test cases for basic test cases
 #     Details:    Firmware Upgrade
@@ -192,4 +198,3 @@ def test_ap_firmware(check_ap_firmware_ssh, get_latest_firmware, instantiate_tes
 #                                              msg='Cannot reach AP after upgrade to check CLI - re-test required')
 #
 #     assert check_ap_firmware_ssh == get_latest_firmware
-
