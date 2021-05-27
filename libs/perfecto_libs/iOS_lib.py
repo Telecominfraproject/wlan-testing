@@ -11,7 +11,7 @@ from perfecto.test import TestResultFactory
 import pytest
 import sys
 import time
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
@@ -515,4 +515,79 @@ def verifyUploadDownloadSpeediOS(setup_perfectoMobile, get_APToMobileDevice_data
         
     return currentResult
 
-      
+
+def downloadInstallOpenRoamingProfile(setup_perfectoMobile, get_APToMobileDevice_data):
+    print("\n-------------------------------------")
+    print("Download Open Roaming Profile")
+    print("-------------------------------------")
+    
+    report = setup_perfectoMobile[1]    
+    driver = setup_perfectoMobile[0]
+    connData = get_APToMobileDevice_data
+    currentResult = True
+    contexts = driver.contexts
+    #print("Printing Context")
+    #print(contexts)
+
+    driver.switch_to.context('WEBVIEW_1')
+    
+    print("Launching Safari with OpenRoaming Profile")
+    report.step_start("Open Roaming Download Page") 
+    driver.get(connData["openRoaming-iOS-URL"]) 
+  
+    try:
+        print("Accept Popup")
+        report.step_start("Accept Popup") 
+        driver.switch_to.context('NATIVE_APP')
+        WebDriverWait(driver, 40).until(EC.alert_is_present(), 'Time out confirmation popup to appear')
+        alert = driver.switch_to.alert
+        alert.accept()
+        print("Alert Accepted")
+    except TimeoutException:
+        print("no alert")
+  
+    #Open Settings Application
+    openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+
+    try:
+        print("Click on downloaded Profile")
+        report.step_start("Click on downloaded Profile") 
+        downloadprofile = driver.find_element_by_xpath("//XCUIElementTypeStaticText[@label='Profile Downloaded']")  
+        downloadprofile.click()
+    except NoSuchElementException:
+        print("Exception: Click Download Profile Button not showing up in settings")
+
+    try:
+        print("Install 1st Confirmation")
+        report.step_start("Install 1st Confirmation") 
+        install1stConf = driver.find_element_by_xpath("//XCUIElementTypeButton[@label='Install']")  
+        install1stConf.click()
+    except NoSuchElementException:
+        print("Exception: Install 1st Confirmation")
+  
+    # //*[@label="The profile is not signed."]
+    try:
+        print("Install 2nd Confirmation")
+        report.step_start("Install 2nd Confirmation") 
+        install2ndConf = driver.find_element_by_xpath("//XCUIElementTypeButton[@label='Install'] ")  
+        install2ndConf.click()
+    except NoSuchElementException:
+        print("Exception: Install 2nd Confirmation")
+
+    try:
+        print("Install 3rd Confirmation")
+        report.step_start("Install 3rd Confirmation") 
+        install3rdConf = driver.find_element_by_xpath("//XCUIElementTypeButton[@label='Install']")  
+        install3rdConf.click()
+    except NoSuchElementException:
+        print("Exception: Install 3rd Confirmation")
+
+    try:
+        print("Click Done Button")
+        report.step_start("Click Done Button") 
+        elelSearch = driver.find_element_by_xpath("//XCUIElementTypeButton[@label='Done']")  
+        elelSearch.click()
+    except NoSuchElementException:
+        "Exception: Done Button"
+
+    closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)

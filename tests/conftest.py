@@ -67,6 +67,8 @@ def pytest_addoption(parser):
     parser.addini("browserType-iOS", "Mobile Browser Name")    
     parser.addini("projectName", "Project Name")
     parser.addini("projectVersion", "Project Version")
+    parser.addini("openRoaming-iOS-URL", "iOS OpenRoaming Profile")
+    parser.addini("openRoaming-and-URL", "Android OpenRoaming Profile")
     parser.addini("jobName", "CI Job Name")
     parser.addini("jobNumber", "CI Job Number")
     parser.addini("reportTags", "Report Tags")

@@ -16,7 +16,7 @@ import allure
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-from iOS_lib import closeApp, openApp, verifyUploadDownloadSpeediOS, ForgetWifiConnection, Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
+from iOS_lib import closeApp, openApp, verifyUploadDownloadSpeediOS, downloadInstallOpenRoamingProfile, ForgetWifiConnection, Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
 
 setup_params_general = {
     "mode": "NAT",
@@ -61,9 +61,10 @@ class TestOpenRoaming(object):
         set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Install Profile 
+        downloadInstallOpenRoamingProfile(setup_perfectoMobile_iOS, connData)
 
         #Verify Upload download Speed from device Selection
-        verifyUploadDownloadSpeediOS(setup_perfectoMobile_iOS, connData)
+        #verifyUploadDownloadSpeediOS(setup_perfectoMobile_iOS, connData)
 
         #ForgetWifi
         ForgetWifiConnection(setup_perfectoMobile_iOS, ssidName, connData)
