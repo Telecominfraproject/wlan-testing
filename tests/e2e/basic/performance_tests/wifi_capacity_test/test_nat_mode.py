@@ -118,7 +118,7 @@ class TestWifiCapacityNatMode(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    def test_client_wpa2_personal_2g(self, test_cases, lf_test):
+    def test_client_wpa2_personal_5g(self, test_cases, lf_test):
         print("**********  test_client_wpa2_personal_5g  ***********")
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         print(profile_data)
