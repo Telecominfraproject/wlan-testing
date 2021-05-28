@@ -1,61 +1,30 @@
-"""
-ec420	basic-03
-ecw5410	basic-01
-ecw5211		not available in basic
-wf188n	basic-05
-eap102	basic-06
-eap101	basic-02
-wf194c	baisc-08-02
-
-ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 -L 8803:lab-ctlr:22 \     # basic-01
--L 8720:lf2:4002 -L 8721:lf2:5901 -L 8722:lf2:8080 -L 8723:lab-ctlr:22 \			# basic-02
--L 8830:lf3:4002 -L 8831:lf3:5901 -L 8832:lf3:8080 -L 8833:lab-ctlr:22 \			# basic-03
--L 8810:lf4:4002 -L 8811:lf4:5901 -L 8812:lf4:8080 -L 8813:lab-ctlr:22 \			# basic-04
--L 8850:lf12:4002 -L 8851:lf12:5901 -L 8852:lf12:8080 -L 8853:lab-ctlr4:22 \		# basic-05
--L 8860:lf13:4002 -L 8861:lf13:5901 -L 8862:lf13:8080 -L 8863:lab-ctlr4:22 \		# basic-06
--L 8870:lf14:4002 -L 8871:lf14:5901 -L 8872:lf14:8080 -L 8873:lab-ctlr4:22 \		# basic-07
--L 8880:lf15:4002 -L 8881:lf15:5901 -L 8882:lf15:8080 -L 8883:lab-ctlr4:22 \		# basic-08
-ubuntu@3.130.51.163
-
-
-
-ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 -L 8803:lab-ctlr:22 \
--L 8720:lf2:4002 -L 8721:lf2:5901 -L 8722:lf2:8080 -L 8723:lab-ctlr:22 \
--L 8830:lf3:4002 -L 8831:lf3:5901 -L 8832:lf3:8080 -L 8833:lab-ctlr:22 \
--L 8810:lf4:4002 -L 8811:lf4:5901 -L 8812:lf4:8080 -L 8813:lab-ctlr:22 \
--L 8850:lf12:4002 -L 8851:lf12:5901 -L 8852:lf12:8080 -L 8853:lab-ctlr4:22 \
--L 8860:lf13:4002 -L 8861:lf13:5901 -L 8862:lf13:8080 -L 8863:lab-ctlr4:22 \
--L 8870:lf14:4002 -L 8871:lf14:5901 -L 8872:lf14:8080 -L 8873:lab-ctlr4:22 \
--L 8880:lf15:4002 -L 8881:lf15:5901 -L 8882:lf15:8080 -L 8883:lab-ctlr4:22 \
-ubuntu@orch
-
-"""
-
 CONFIGURATION = {
-    "basic-01": {
+    "basic-lab": {
         "controller": {
             'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
-            'username': 'support@example.com',
-            'password': 'support',
-            'version': '1.1.0-SNAPSHOT',
-            'commit_date': "2021-04-27"
+            'username': 'support@example.com',  # cloud controller Login
+            'password': 'support',          # Cloud Controller Login Password
+            'version': '1.1.0-SNAPSHOT',    # Controller version
+            'commit_date': "2021-04-27"     # Controller version sdk, commit date
         },
         'access_point': [
             {
-                'model': 'ecw5410',
-                'mode': 'wifi5',
-                'serial': '3c2c99f44e77',
-                'jumphost': True,
-                'ip': "localhost",  # localhost
-                'username': "lanforge",
-                'password': "pumpkin77",
-                'port': 8803,  # 22,
-                'jumphost_tty': '/dev/ttyAP1',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.0.0-rc2.tar.gz"
+                'model': 'ecw5410',     # AP Model, can be found in ap console using "node" command
+                'mode': 'wifi5',        # wifi5/wifi6   can be found on AP Hardware page on Confluence
+                'serial': '3c2c99f44e77',   # "node" command has serial_number information
+                'jumphost': True,           # True, if you have AP On serial console and not ssh access, False, if you have AP ssh access from the machine
+                'ip': "localhost",          # IP Address of System, which has AP Connected to serial cable (if jumphost is True), else -  AP IP Address
+                'username': "lanforge",     # ssh username of system (lab-ctlr/ap)
+                'password': "pumpkin77",    # ssh password for system (lab-ctlr/ap)
+                'port': 8803,  # 22,        # ssh port for system (lab-ctlr/ap)
+                'jumphost_tty': '/dev/ttyAP1',  # if jumphost is True, enter the serial console device name
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.0.0-rc2.tar.gz"   # Enter the Target AP Version URL for Testing
             }
         ],
+        # Traffic generator
         "traffic_generator": {
-            "name": "lanforge",
+            "name": "lanforge", #( lanforge/ perfecto)
+            # Details for LANforge system
             "details": {
                 "ip": "localhost",  # localhost,
                 "port": 8802,  # 8802,
@@ -70,60 +39,9 @@ CONFIGURATION = {
                 "AX-Station-Name": "ax"
             }
         }
-    },  # checked
-    "basic-ext-04-01": {
-        "controller": {
-            'url': "http://wlan-portal-svc-digicert.cicd.lab.wlan.tip.build",  # API base url for the controller
-            'username': 'support@example.com',
-            'password': 'support',
-            'version': "1.1.0-SNAPSHOT",
-            'commit_date': "2021-04-27"
-        },
-        'access_point': [
-            {
-                'model': 'ecw5410',
-                'mode': "wifi5",
-                'serial': '903cb3944857',
-                'jumphost': True,
-                'ip': "192.168.200.80",
-                'username': "lanforge",
-                'password': "lanforge",
-                'port': 22,
-                'jumphost_tty': '/dev/ttyAP1',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.0.4-rc4.tar.gz"
-            }
-        ],
-        "traffic_generator": {
-            "name": "lanforge",
-            "details": {
-                "ip": "192.168.200.80",
-                "port": 8080,
-                "2.4G-Radio": ["wiphy0"],
-                "5G-Radio": ["wiphy1"],
-                "AX-Radio": ["wiphy2"],
-                "upstream": "1.1.eth1",
-                "upstream_subnet": "192.168.200.0/24",
-                "uplink" : "1.1.eth2",
-                "2.4G-Station-Name": "wlan0",
-                "5G-Station-Name": "wlan0",
-                "AX-Station-Name": "ax",
-            }
-        }
     }
 }
 
-FIRMWARE = {
-    # jFrog parameters
-    "JFROG":
-        {
-            "jfrog-base-url": "https://tip.jFrog.io/artifactory/tip-wlan-ap-firmware",
-            "build": "pending",
-            "branch": "trunk"
-        }
-
-
-
-}
 
 RADIUS_SERVER_DATA = {
     "ip": "10.10.10.72",

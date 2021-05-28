@@ -2,7 +2,7 @@ import allure
 import pytest
 import time
 
-pytestmark = [pytest.mark.setup, pytest.mark.bridge, pytest.mark.sanity]
+pytestmark = [pytest.mark.setup, pytest.mark.bridge, pytest.mark.sanity, pytest.mark.general, pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -36,12 +36,12 @@ class TestSetupBridge(object):
     @pytest.mark.twog
     def test_setup_open_2g_ssid_profile(self, setup_profiles, update_report, test_cases):
         if setup_profiles['open_2g']:
-            update_report.update_testrail(case_id=test_cases["open_2g"],
+            update_report.update_testrail(case_id=test_cases["open_2g_bridge"],
                                           status_id=1,
                                           msg='profile created successfully')
             assert setup_profiles['open_2g']
         else:
-            update_report.update_testrail(case_id=test_cases["open_2g"],
+            update_report.update_testrail(case_id=test_cases["open_2g_bridge"],
                                           status_id=5,
                                           msg='Failed to create profile')
             assert False
@@ -51,12 +51,12 @@ class TestSetupBridge(object):
     def test_setup_open_5g_ssid_profile(self, setup_profiles, update_report, test_cases):
 
         if setup_profiles['open_5g']:
-            update_report.update_testrail(case_id=test_cases["open_5g"],
+            update_report.update_testrail(case_id=test_cases["open_5g_bridge"],
                                           status_id=1,
                                           msg='profile created successfully')
             assert setup_profiles['open_5g']
         else:
-            update_report.update_testrail(case_id=test_cases["open_5g"],
+            update_report.update_testrail(case_id=test_cases["open_5g_bridge"],
                                           status_id=5,
                                           msg='Failed to create profile')
             assert False
@@ -65,12 +65,12 @@ class TestSetupBridge(object):
     @pytest.mark.twog
     def test_setup_wpa_2g_ssid_profile(self, setup_profiles, update_report, test_cases):
         if setup_profiles['wpa_2g']:
-            update_report.update_testrail(case_id=test_cases["wpa_2g"],
+            update_report.update_testrail(case_id=test_cases["wpa_2g_bridge"],
                                           status_id=1,
                                           msg='profile created successfully')
             assert setup_profiles['wpa_2g']
         else:
-            update_report.update_testrail(case_id=test_cases["wpa_2g"],
+            update_report.update_testrail(case_id=test_cases["wpa_2g_bridge"],
                                           status_id=5,
                                           msg='Failed to create profile')
             assert False
@@ -96,12 +96,12 @@ class TestSetupBridge(object):
                                                  test_cases):
 
         if setup_profiles['wpa2_personal_2g']:
-            update_report.update_testrail(case_id=test_cases["wpa2_personal_2g"],
+            update_report.update_testrail(case_id=test_cases["wpa2_personal_2g_bridge"],
                                           status_id=1,
                                           msg='profile created successfully')
             assert setup_profiles['wpa2_personal_2g']
         else:
-            update_report.update_testrail(case_id=test_cases["wpa2_personal_2g"],
+            update_report.update_testrail(case_id=test_cases["wpa2_personal_2g_bridge"],
                                           status_id=5,
                                           msg='Failed to create profile')
             assert False
@@ -112,12 +112,12 @@ class TestSetupBridge(object):
                                                  test_cases):
 
         if setup_profiles['wpa2_personal_5g']:
-            update_report.update_testrail(case_id=test_cases["wpa2_personal_5g"],
+            update_report.update_testrail(case_id=test_cases["wpa2_personal_5g_bridge"],
                                           status_id=1,
                                           msg='profile created successfully')
             assert setup_profiles['wpa2_personal_5g']
         else:
-            update_report.update_testrail(case_id=test_cases["wpa2_personal_5g"],
+            update_report.update_testrail(case_id=test_cases["wpa2_personal_5g_bridge"],
                                           status_id=5,
                                           msg='Failed to create profile')
             assert False

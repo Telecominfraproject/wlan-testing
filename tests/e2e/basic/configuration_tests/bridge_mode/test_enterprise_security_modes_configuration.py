@@ -1,6 +1,8 @@
 import pytest
 import allure
 
+pytestmark = [pytest.mark.setup, pytest.mark.bridge, pytest.mark.sanity, pytest.mark.enterprise, pytest.mark.usefixtures("setup_test_run")]
+
 setup_params_enterprise = {
     "mode": "BRIDGE",
     "ssid_modes": {

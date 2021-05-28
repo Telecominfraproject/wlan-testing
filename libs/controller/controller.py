@@ -1010,6 +1010,7 @@ class FirmwareUtility:
         return firmware_version
 
 
+# This is for Unit tests on Controller Library
 if __name__ == '__main__':
     controller = {
         'url': "https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build",  # API base url for the controller
@@ -1030,10 +1031,6 @@ if __name__ == '__main__':
     #     "vlan": 1,
     #     "mode": "BRIDGE"
     # }
-    fw_obj = FirmwareUtility(sdk_client=api, model="ecw5410",
-                             version_url="https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.0.4-rc4.tar.gz")
-    fw_obj.upload_fw_on_cloud(force_upload=True)
-    fw_obj.upgrade_fw(equipment_id=7)
     # profile.create_wep_ssid_profile(profile_data=profile_data)
     # print(profile.get_profile_by_name(profile_name="wpa_wpa2_eap"))
     # profile.get_default_profiles()
