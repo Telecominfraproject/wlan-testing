@@ -34,14 +34,15 @@ class RunTest:
         self.twog_radios = lanforge_data["2.4G-Radio"]
         self.fiveg_radios = lanforge_data["5G-Radio"]
         self.ax_radios = lanforge_data["AX-Radio"]
-        self.upstream_port = lanforge_data["upstream"]
+        self.upstream_port = lanforge_data["upstream"].split(".")[2]
         self.twog_prefix = lanforge_data["2.4G-Station-Name"]
         self.fiveg_prefix = lanforge_data["5G-Station-Name"]
         self.ax_prefix = lanforge_data["AX-Station-Name"]
         self.debug = debug
         self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=debug)
+        print(lanforge_data)
 
-    def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", station_name=[],
+    def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[], station_name=[],
                             mode="BRIDGE", vlan_id=1, band="twog"):
         '''SINGLE CLIENT CONNECTIVITY using test_connect2.py'''
         self.staConnect.sta_mode = 0
@@ -67,7 +68,7 @@ class RunTest:
         self.staConnect.bringup_time_sec = 60
         self.staConnect.cleanup_on_exit = True
         # self.staConnect.cleanup()
-        self.staConnect.setup()
+        self.staConnect.setup(extra_securities=extra_securities)
         self.staConnect.start()
         print("napping %f sec" % self.staConnect.runtime_secs)
         time.sleep(self.staConnect.runtime_secs)
@@ -86,7 +87,8 @@ class RunTest:
         time.sleep(3)
         return self.staConnect.passes(), result
 
-    def EAP_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog", vlan_id=100,
+    def EAP_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", extra_securities=[],
+                    mode="BRIDGE", band="twog", vlan_id=100,
                     station_name=[], key_mgmt="WPA-EAP",
                     pairwise="NA", group="NA", wpa_psk="DEFAULT",
                     ttls_passwd="nolastart",
@@ -97,11 +99,14 @@ class RunTest:
         self.eap_connect.station_profile.sta_mode = 0
         self.eap_connect.upstream_resource = 1
         if mode == "BRIDGE":
-            self.eap_connect.upstream_port = self.upstream_port
+            self.eap_connect.l3_cx_obj_udp.upstream = self.upstream_port
+            self.eap_connect.l3_cx_obj_tcp.upstream = self.upstream_port
         elif mode == "NAT":
-            self.eap_connect.upstream_port = self.upstream_port
+            self.eap_connect.l3_cx_obj_udp.upstream = self.upstream_port
+            self.eap_connect.l3_cx_obj_tcp.upstream = self.upstream_port
         else:
-            self.eap_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
+            self.eap_connect.l3_cx_obj_udp.upstream = self.upstream_port + "." + str(vlan_id)
+            self.eap_connect.l3_cx_obj_tcp.upstream = self.upstream_port + "." + str(vlan_id)
         if band == "twog":
             self.eap_connect.radio = self.twog_radios[0]
             # self.eap_connect.sta_prefix = self.twog_prefix
@@ -126,7 +131,7 @@ class RunTest:
         self.eap_connect.password = passkey
         self.eap_connect.security = security
         self.eap_connect.sta_list = station_name
-        self.eap_connect.build()
+        self.eap_connect.build(extra_securities=extra_securities)
         self.eap_connect.start(station_name, True, True)
         self.eap_connect.stop()
         self.eap_connect.cleanup(station_name)

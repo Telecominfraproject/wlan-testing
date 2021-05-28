@@ -31,14 +31,13 @@ from controller.controller import ProfileUtility
 from controller.controller import FirmwareUtility
 import pytest
 import logging
+from cv_test_manager import cv_test
+from configuration import CONFIGURATION
 from configuration import RADIUS_SERVER_DATA
 from configuration import TEST_CASES
-from configuration import CONFIGURATION
-from configuration import FIRMWARE
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
-from cv_test_manager import cv_test
-import sta_connect2
+from lf_tools import ChamberView
 from sta_connect2 import StaConnect2
 
 
@@ -59,6 +58,15 @@ def pytest_addoption(parser):
         default=False,
         help="skip updating firmware on the AP (useful for local testing)"
     )
+
+    # change behaviour
+    parser.addoption(
+        "--exit-on-fail",
+        action="store_true",
+        default=False,
+        help="skip updating firmware on the AP (useful for local testing)"
+    )
+
     # change behaviour
     parser.addoption(
         "--force-upgrade",
@@ -86,41 +94,6 @@ def pytest_addoption(parser):
         default=False,
         help="Stop using Testrails"
     )
-    parser.addoption(
-        "--exit-on-fail",
-        action="store_true",
-        default=False,
-        help="use to stop execution if failure"
-    )
-
-    # Perfecto Parameters
-    parser.addini("perfectoURL", "Cloud URL")
-    parser.addini("securityToken", "Security Token")
-    parser.addini("platformName-iOS", "iOS Platform")
-    parser.addini("platformName-android", "Android Platform")
-    parser.addini("model-iOS", "iOS Devices")
-    parser.addini("model-android", "Android Devices")
-    parser.addini("bundleId-iOS", "iOS Devices")
-    parser.addini("bundleId-iOS-Settings", "iOS Settings App")
-    parser.addini("appPackage-android", "Android Devices")
-    parser.addini("wifi-SSID-5gl-Pwd", "Wifi 5g Password")
-    parser.addini("wifi-SSID-2g-Pwd", "Wifi 2g Password")
-    parser.addini("Default-SSID-5gl-perfecto-b", "Wifi 5g AP Name")
-    parser.addini("Default-SSID-2g-perfecto-b", "Wifi 2g AP Name")
-    parser.addini("Default-SSID-perfecto-b", "Wifi AP Name")
-    parser.addini("bundleId-iOS-Ping", "Ping Bundle ID")
-    parser.addini("browserType-iOS", "Mobile Browser Name")
-    parser.addini("projectName", "Project Name")
-    parser.addini("projectVersion", "Project Version")
-    parser.addini("jobName", "CI Job Name")
-    parser.addini("jobNumber", "CI Job Number")
-    parser.addini("reportTags", "Report Tags")
-    parser.addoption(
-        "--access-points-perfecto",
-        # nargs="+",
-        default=["Perfecto"],
-        help="list of access points to test"
-    )
 
 
 """
@@ -132,11 +105,6 @@ Test session base fixture
 @pytest.fixture(scope="session")
 def test_cases():
     yield TEST_CASES
-
-
-@pytest.fixture(scope="session")
-def instantiate_jFrog():
-    yield FIRMWARE["JFROG"]
 
 
 @pytest.fixture(scope="session")
@@ -155,6 +123,11 @@ def should_upload_firmware(request):
 @pytest.fixture(scope="session")
 def should_upgrade_firmware(request):
     yield request.config.getoption("--force-upgrade")
+
+
+@pytest.fixture(scope="session")
+def exit_on_fail(request):
+    yield request.config.getoption("--exit-on-fail")
 
 
 @pytest.fixture(scope="session")
@@ -203,9 +176,7 @@ def instantiate_access_point(testbed, get_apnos, get_configuration):
 
 # Controller Fixture
 @pytest.fixture(scope="session")
-def setup_controller(request, get_configuration, instantiate_access_point,
-                     traffic_generator_connectivity,
-                     create_lanforge_chamberview_dut):
+def setup_controller(request, get_configuration, instantiate_access_point):
     try:
         sdk_client = Controller(controller_data=get_configuration["controller"])
         allure.attach(body=str(get_configuration["controller"]), name="Controller Instantiated: ")
@@ -223,16 +194,97 @@ def setup_controller(request, get_configuration, instantiate_access_point,
     yield sdk_client
 
 
-@pytest.fixture(scope="class")
-def instantiate_firmware(setup_controller, instantiate_jFrog, get_configuration):
+@pytest.fixture(scope="session")
+def instantiate_firmware(setup_controller, get_configuration):
     firmware_client_obj = []
     for access_point_info in get_configuration['access_point']:
-        firmware_client = FirmwareUtility(jfrog_credentials=instantiate_jFrog, sdk_client=setup_controller,
+        firmware_client = FirmwareUtility(sdk_client=setup_controller,
                                           model=access_point_info["model"],
-                                          version=access_point_info["version"])
+                                          version_url=access_point_info["version"])
         firmware_client_obj.append(firmware_client)
     yield firmware_client_obj
 
+
+@pytest.fixture(scope="session")
+def get_latest_firmware(instantiate_firmware):
+    fw_version_list = []
+    try:
+
+        for fw_obj in instantiate_firmware:
+            latest_firmware = fw_obj.get_fw_version()
+            latest_firmware = latest_firmware.replace(".tar.gz", "")
+            fw_version_list.append(latest_firmware)
+    except Exception as e:
+        print(e)
+        fw_version_list = []
+
+    yield fw_version_list
+
+
+@pytest.fixture(scope="session")
+def upload_firmware(should_upload_firmware, instantiate_firmware):
+    firmware_id_list = []
+    for i in range(0, len(instantiate_firmware)):
+        firmware_id = instantiate_firmware[i].upload_fw_on_cloud(force_upload=should_upload_firmware)
+        firmware_id_list.append(firmware_id)
+    yield firmware_id_list
+
+
+@pytest.fixture(scope="session")
+def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_firmware_cloud, get_latest_firmware,
+                     should_upgrade_firmware):
+
+    status_list = []
+    if get_latest_firmware != check_ap_firmware_cloud:
+        if request.config.getoption("--skip-upgrade"):
+            status = "skip-upgrade"
+            status_list.append(status)
+        else:
+
+            for i in range(0, len(instantiate_firmware)):
+                status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i], force_upload=True,
+                                                            force_upgrade=should_upgrade_firmware)
+                status_list.append(status)
+    else:
+        if should_upgrade_firmware:
+            for i in range(0, len(instantiate_firmware)):
+                status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i], force_upload=False,
+                                                            force_upgrade=should_upgrade_firmware)
+                status_list.append(status)
+        else:
+            status = "skip-upgrade Version Already Available"
+            status_list.append(status)
+    yield status_list
+
+
+@pytest.fixture(scope="session")
+def check_ap_firmware_cloud(setup_controller, get_equipment_id):
+    ap_fw_list = []
+    for i in get_equipment_id:
+        ap_fw_list.append(setup_controller.get_ap_firmware_old_method(equipment_id=i))
+    yield ap_fw_list
+
+
+@pytest.fixture(scope="session")
+def check_ap_firmware_ssh(get_configuration):
+    active_fw_list = []
+    try:
+        for access_point in get_configuration['access_point']:
+            ap_ssh = APNOS(access_point)
+            active_fw = ap_ssh.get_active_firmware()
+            active_fw_list.append(active_fw)
+    except Exception as e:
+        print(e)
+        active_fw_list = []
+    yield active_fw_list
+
+
+@pytest.fixture(scope="session")
+def setup_test_run(setup_controller, upgrade_firmware, check_ap_firmware_cloud, check_ap_firmware_ssh):
+    if check_ap_firmware_ssh == check_ap_firmware_cloud:
+        yield True
+    else:
+        pytest.exit("AP is not Upgraded tp Target Firmware versions")
 
 """
 Instantiate Reporting
@@ -262,15 +314,15 @@ def update_report(request, testbed, get_configuration):
 
 """
 FRAMEWORK MARKER LOGIC
-
 """
 
 
 @pytest.fixture(scope="session")
 def get_security_flags():
     # Add more classifications as we go
-    security = ["open", "wpa", "wpa2_personal", "wpa3_personal", "wpa3_personal_mixed",
-                "wpa_wpa2_personal_mixed", "wpa2_enterprise", "wpa3_enterprise", "twog", "fiveg", "radius"]
+    security = ["open", "wpa", "wep", "wpa2_personal", "wpa3_personal", "wpa3_personal_mixed", "wpa_wpa2_enterprise_mixed",
+                "wpa_wpa2_personal_mixed", "wpa_enterprise", "wpa2_enterprise", "wpa3_enterprise_mixed",
+                "wpa3_enterprise", "twog", "fiveg", "radius"]
     yield security
 
 
@@ -283,7 +335,7 @@ def get_markers(request, get_security_flags):
     for item in session.items:
         for j in item.iter_markers():
             markers.append(j.name)
-    # print(set(markers))
+    print(set(markers))
     for i in security:
         if set(markers).__contains__(i):
             security_dict[i] = True
@@ -300,8 +352,6 @@ def test_access_point(testbed, get_apnos, get_configuration):
     mgr_status = []
     for access_point_info in get_configuration['access_point']:
         ap_ssh = get_apnos(access_point_info)
-        # ap_ssh.reboot()
-        # time.sleep(100)
         status = ap_ssh.get_manager_state()
         if "ACTIVE" not in status:
             time.sleep(30)
@@ -334,8 +384,6 @@ def get_lanforge_data(get_configuration):
             "vlan": 100
         }
     yield lanforge_data
-
-
 @pytest.fixture(scope="session")
 def traffic_generator_connectivity(testbed, get_configuration):
     if get_configuration['traffic_generator']['name'] == "lanforge":
@@ -363,3 +411,10 @@ def traffic_generator_connectivity(testbed, get_configuration):
     else:
         # Writing the connectivity check of InterOP
         yield True
+
+# Controller Fixture
+@pytest.fixture(scope="session")
+def create_lanforge_chamberview_dut(get_configuration, testbed):
+    ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
+                testbed=testbed, access_point_data=get_configuration["access_point"])
+    yield True

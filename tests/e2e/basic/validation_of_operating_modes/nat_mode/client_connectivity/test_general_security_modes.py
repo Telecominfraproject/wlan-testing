@@ -1,7 +1,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.client_connectivity, pytest.mark.NAT, pytest.mark.sanity]
+pytestmark = [pytest.mark.client_connectivity, pytest.mark.nat, pytest.mark.general, pytest.mark.sanity]
 
 setup_params_general = {
     "mode": "NAT",
@@ -102,12 +102,12 @@ class TestNATModeConnectivitySuiteOne(object):
                                                      station_name=station_names_twog, vlan_id=vlan)
 
         if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
                                           status_id=1,
                                           msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
                                           status_id=5,
                                           msg='2G WPA Client Connectivity Failed - NAT mode' + str(
                                               passes))
@@ -129,12 +129,12 @@ class TestNATModeConnectivitySuiteOne(object):
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         if result:
-            update_report.update_testrail(case_id=test_cases["5g_wpa_NAT"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa_nat"],
                                           status_id=1,
                                           msg='5G WPA Client Connectivity Passed successfully - NAT mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["5g_wpa_NAT"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa_nat"],
                                           status_id=5,
                                           msg='5G WPA Client Connectivity Failed - NAT mode' + str(
                                               passes))
@@ -157,12 +157,12 @@ class TestNATModeConnectivitySuiteOne(object):
                                                      station_name=station_names_twog, vlan_id=vlan)
 
         if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa2_NAT"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa2_nat"],
                                           status_id=1,
                                           msg='2G WPA2 Client Connectivity Passed successfully - NAT mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa2_NAT"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa2_nat"],
                                           status_id=5,
                                           msg='2G WPA2 Client Connectivity Failed - NAT mode' + str(
                                               passes))
@@ -185,12 +185,12 @@ class TestNATModeConnectivitySuiteOne(object):
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         if result:
-            update_report.update_testrail(case_id=test_cases["5g_wpa2_NAT"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa2_nat"],
                                           status_id=1,
                                           msg='5G WPA2 Client Connectivity Passed successfully - NAT mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["5g_wpa2_NAT"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa2_nat"],
                                           status_id=5,
                                           msg='5G WPA2 Client Connectivity Failed - NAT mode' + str(
                                               passes))
@@ -245,12 +245,12 @@ class TestNATModeConnectivitySuiteTwo(object):
                                                      station_name=station_names_twog, vlan_id=vlan)
 
         if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
                                           status_id=1,
                                           msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
                                           status_id=5,
                                           msg='2G WPA Client Connectivity Failed - NAT mode' + str(
                                               passes))
@@ -272,12 +272,12 @@ class TestNATModeConnectivitySuiteTwo(object):
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
                                           status_id=1,
                                           msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
                                           status_id=5,
                                           msg='2G WPA Client Connectivity Failed - NAT mode' + str(
                                               passes))
@@ -301,12 +301,12 @@ class TestNATModeConnectivitySuiteTwo(object):
                                                      station_name=station_names_twog, vlan_id=vlan)
 
         if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
                                           status_id=1,
                                           msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
                                           status_id=5,
                                           msg='2G WPA Client Connectivity Failed - NAT mode' + str(
                                               passes))
@@ -329,12 +329,12 @@ class TestNATModeConnectivitySuiteTwo(object):
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
                                           status_id=1,
                                           msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
                                           status_id=5,
                                           msg='2G WPA Client Connectivity Failed - NAT mode' + str(
                                               passes))
@@ -349,21 +349,22 @@ class TestNATModeConnectivitySuiteTwo(object):
         profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        security = "wpa2"
+        security = "wpa"
+        extra_secu = ["wpa2"]
         mode = "NAT"
         band = "twog"
         vlan = 1
-        passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
+        passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
 
         if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
                                           status_id=1,
                                           msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
                                           status_id=5,
                                           msg='2G WPA Client Connectivity Failed - NAT mode' + str(
                                               passes))
@@ -377,233 +378,103 @@ class TestNATModeConnectivitySuiteTwo(object):
         profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        security = "wpa2"
+        security = "wpa"
+        extra_secu = ["wpa2"]
         mode = "NAT"
         band = "fiveg"
         vlan = 1
-        passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
+        passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
                                           status_id=1,
                                           msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
                                           status_id=5,
                                           msg='2G WPA Client Connectivity Failed - NAT mode' + str(
                                               passes))
         assert result
 
 
-setup_params_enterprise = {
-    "mode": "NAT",
-    "ssid_modes": {
-        "wpa_enterprise": [
-            {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["is2dot4GHz"]},
-            {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
-        "wpa2_enterprise": [
-            {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["is2dot4GHz"]},
-            {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
-        "wpa3_enterprise": [
-            {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["is2dot4GHz"]},
-            {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}]},
-
-    "rf": {},
-    "radius": True
-}
-
-
-@pytest.mark.enterprise
-@pytest.mark.parametrize(
-    'setup_profiles',
-    [setup_params_enterprise],
-    indirect=True,
-    scope="class"
-)
-@pytest.mark.usefixtures("setup_profiles")
-class TestNATModeEnterprise(object):
-
-    # @pytest.mark.wpa_enterprise
-    # @pytest.mark.twog
-    # def test_wpa_enterprise_2g(self, station_names_twog, setup_profiles, get_lanforge_data, lf_test, update_report,
-    #                            test_cases, radius_info):
-    #     profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][0]
-    #     ssid_name = profile_data["ssid_name"]
-    #     security_key = profile_data["security_key"]
-    #     security = "wpa"
-    #     mode = "NAT"
-    #     band = "twog"
-    #     vlan = 1
-    #     ttls_passwd = radius_info["password"]
-    #     eap = "TTLS"
-    #     identity = radius_info['user']
-    #     passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-    #                                  passkey=security_key, mode=mode, band=band,
-    #                                  eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-    #                                  station_name=station_names_twog, vlan_id=vlan)
-    #
-    #     if passes:
-    #         update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
-    #                                       status_id=1,
-    #                                       msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
-    #                                           passes))
-    #     else:
-    #         update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
-    #                                       status_id=5,
-    #                                       msg='2G WPA Client Connectivity Failed - NAT mode' + str(
-    #                                           passes))
-    #     assert passes
-    #
-    # @pytest.mark.wpa_enterprise
-    # @pytest.mark.fiveg
-    # def test_wpa_enterprise_5g(self, station_names_fiveg, setup_profiles, get_lanforge_data, lf_test, update_report,
-    #                            test_cases, radius_info):
-    #     profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][1]
-    #     ssid_name = profile_data["ssid_name"]
-    #     security_key = profile_data["security_key"]
-    #     security = "wpa"
-    #     mode = "NAT"
-    #     band = "fiveg"
-    #     vlan = 1
-    #     ttls_passwd = radius_info["password"]
-    #     eap = "TTLS"
-    #     identity = radius_info['user']
-    #     passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-    #                                  passkey=security_key, mode=mode, band=band,
-    #                                  eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-    #                                  station_name=station_names_fiveg, vlan_id=vlan)
-    #
-    #     if passes:
-    #         update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
-    #                                       status_id=1,
-    #                                       msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
-    #                                           passes))
-    #     else:
-    #         update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
-    #                                       status_id=5,
-    #                                       msg='2G WPA Client Connectivity Failed - NAT mode' + str(
-    #                                           passes))
-    #     assert passes
-
-    @pytest.mark.wpa2_enterprise
-    @pytest.mark.twog
-    def test_wpa2_enterprise_2g(self, station_names_twog, setup_profiles, get_lanforge_data, lf_test, update_report,
-                                test_cases, radius_info):
-        profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][0]
-        ssid_name = profile_data["ssid_name"]
-        security = "wpa2"
-        mode = "NAT"
-        band = "twog"
-        vlan = 1
-        ttls_passwd = radius_info["password"]
-        eap = "TTLS"
-        identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                     mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_twog, vlan_id=vlan)
-
-        if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
-                                          status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
-                                          status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - NAT mode' + str(
-                                              passes))
-        assert passes
-
-    @pytest.mark.wpa2_enterprise
-    @pytest.mark.fiveg
-    def test_wpa2_enterprise_5g(self, station_names_fiveg, setup_profiles, get_lanforge_data, lf_test, update_report,
-                                test_cases, radius_info):
-        profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][1]
-        ssid_name = profile_data["ssid_name"]
-        security = "wpa2"
-        mode = "NAT"
-        band = "fiveg"
-        vlan = 1
-        ttls_passwd = radius_info["password"]
-        eap = "TTLS"
-        identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                     mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_fiveg, vlan_id=vlan)
-
-        if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
-                                          status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
-                                          status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - NAT mode' + str(
-                                              passes))
-        assert passes
-
-    @pytest.mark.wpa3_enterprise
-    @pytest.mark.twog
-    def test_wpa3_enterprise_2g(self, station_names_twog, setup_profiles, get_lanforge_data, lf_test, update_report,
-                                test_cases, radius_info):
-        profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][0]
-        ssid_name = profile_data["ssid_name"]
-        security = "wpa3"
-        mode = "NAT"
-        band = "twog"
-        vlan = 1
-        ttls_passwd = radius_info["password"]
-        eap = "TTLS"
-        identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                     mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_twog, vlan_id=vlan)
-
-        if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
-                                          status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
-                                          status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - NAT mode' + str(
-                                              passes))
-        assert passes
-
-    @pytest.mark.wpa3_enterprise
-    @pytest.mark.fiveg
-    def test_wpa3_enterprise_5g(self, station_names_fiveg, setup_profiles, get_lanforge_data, lf_test, update_report,
-                                test_cases, radius_info):
-        profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][1]
-        ssid_name = profile_data["ssid_name"]
-        security = "wpa3"
-        mode = "NAT"
-        band = "fiveg"
-        vlan = 1
-        ttls_passwd = radius_info["password"]
-        eap = "TTLS"
-        identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                     mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_fiveg, vlan_id=vlan)
-
-        if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
-                                          status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
-                                          status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - NAT mode' + str(
-                                              passes))
-        assert passes
+# setup_params_wep = {
+#     "mode": "NAT",
+#     "ssid_modes": {
+#         "wep": [ {"ssid_name": "ssid_wep_2g", "appliedRadios": ["is2dot4GHz"], "default_key_id": 1,
+#                   "wep_key": 1234567890},
+#                 {"ssid_name": "ssid_wep_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+#                  "default_key_id": 1, "wep_key": 1234567890}]
+#     },
+#     "rf": {},
+#     "radius": True
+# }
+#
+#
+# @pytest.mark.enterprise
+# @pytest.mark.parametrize(
+#     'setup_profiles',
+#     [setup_params_wep],
+#     indirect=True,
+#     scope="class"
+# )
+# @pytest.mark.usefixtures("setup_profiles")
+# class TestNATModeWEP(object):
+#
+#     @pytest.mark.wep
+#     @pytest.mark.twog
+#     def test_wep_2g(self, station_names_twog, setup_profiles, get_lanforge_data, lf_test, update_report,
+#                                test_cases, radius_info):
+#         profile_data = setup_params_wep["ssid_modes"]["wep"][0]
+#         ssid_name = profile_data["ssid_name"]
+#         wep_key = "[BLANK]"
+#         security = "open"
+#         extra_secu = []
+#         mode = "NAT"
+#         band = "twog"
+#         vlan = 1
+#         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
+#                                                      passkey=wep_key, mode=mode, band=band,
+#                                                      station_name=station_names_twog, vlan_id=vlan)
+#
+#         if passes:
+#             update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
+#                                           status_id=1,
+#                                           msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
+#                                               passes))
+#         else:
+#             update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
+#                                           status_id=5,
+#                                           msg='2G WPA Client Connectivity Failed - NAT mode' + str(
+#                                               passes))
+#         assert passes
+#
+#     @pytest.mark.wep
+#     @pytest.mark.fiveg
+#     def test_wep_5g(self, station_names_fiveg, setup_profiles, get_lanforge_data, lf_test, update_report,
+#                                test_cases, radius_info):
+#         profile_data = setup_params_wep["ssid_modes"]["wep"][1]
+#         ssid_name = profile_data["ssid_name"]
+#         wep_key = "[BLANK]"
+#         security = "open"
+#         extra_secu = []
+#         mode = "NAT"
+#         band = "twog"
+#         vlan = 1
+#         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
+#                                                      passkey=wep_key, mode=mode, band=band,
+#                                                      station_name=station_names_fiveg, vlan_id=vlan)
+#
+#         if passes:
+#             update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
+#                                           status_id=1,
+#                                           msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
+#                                               passes))
+#         else:
+#             update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
+#                                           status_id=5,
+#                                           msg='2G WPA Client Connectivity Failed - NAT mode' + str(
+#                                               passes))
+#         assert passes
