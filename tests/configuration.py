@@ -34,7 +34,7 @@ ubuntu@3.130.51.163
 CONFIGURATION = {
     "basic-ext-04-01": {
         "controller": {
-            'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
+            'url': "https://wlan-portal-svc-digicert.cicd.lab.wlan.tip.build",  # API base url for the controller
             'username': 'support@example.com',
             'password': 'support',
             'version': "1.1.0-SNAPSHOT",
@@ -44,9 +44,9 @@ CONFIGURATION = {
             {
                 'model': 'ecw5410',
                 'mode': "wifi5",
-                'serial': '903cb394486f',
+                'serial': '903cb3944857',
                 'jumphost': True,
-                'ip': "192.168.200.81",
+                'ip': "192.168.200.80",
                 'username': "lanforge",
                 'password': "lanforge",
                 'port': 22,
@@ -57,7 +57,7 @@ CONFIGURATION = {
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "192.168.200.81",
+                "ip": "192.168.200.80",
                 "port": 8080,
                 "2.4G-Radio": ["wiphy0"],
                 "5G-Radio": ["wiphy1"],
