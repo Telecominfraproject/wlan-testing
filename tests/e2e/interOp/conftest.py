@@ -26,11 +26,6 @@ from controller.controller import FirmwareUtility
 import pytest
 import logging
 from configuration import RADIUS_SERVER_DATA
-from configuration import TEST_CASES
-from configuration import CONFIGURATION
-from configuration import FIRMWARE
-from testrails.testrail_api import APIClient
-from testrails.reporting import Reporting
 
 sys.path.append(
     os.path.dirname(
