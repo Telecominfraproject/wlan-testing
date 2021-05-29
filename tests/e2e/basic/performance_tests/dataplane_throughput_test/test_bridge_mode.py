@@ -1,7 +1,7 @@
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.dataplane_throughput_test, pytest.mark.bridge]
+pytestmark = [pytest.mark.performance, pytest.mark.dataplane_throughput_test, pytest.mark.bridge, pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -33,7 +33,7 @@ class TestDataplaneThroughputBridge(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    def test_client_wpa2_personal_5g(self, setup_profiles, lf_test, station_names_fiveg):
+    def test_client_wpa2_personal_5g(self, setup_profiles, lf_test, station_names_fiveg, create_lanforge_chamberview_dut):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -41,16 +41,17 @@ class TestDataplaneThroughputBridge(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
+        dut_name = create_lanforge_chamberview_dut
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
 
         if station:
             lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP_PERF_DPT_WPA2_5G",
-                              vlan_id=vlan)
+                              vlan_id=vlan, dut_name=dut_name)
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(ssid=ssid_name, security=security,
-                                      passkey=security_key, mode=mode, band=band,
-                                      station_name=station_names_fiveg, vlan_id=vlan)
+            lf_test.Client_disconnect(station_name=station_names_fiveg)
 
             assert station
+        else:
+            assert False

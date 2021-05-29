@@ -37,7 +37,7 @@ class ChamberView:
         # for DUT
         self.dut_name = testbed
         self.ap_model = access_point_data[0]["model"]
-        self.version = access_point_data[0]["version"]
+        self.version = access_point_data[0]["version"].split("/")[-1]
         self.serial = access_point_data[0]["serial"]
 
         self.CreateDut = DUT(lfmgr=self.lanforge_ip,
@@ -50,11 +50,7 @@ class ChamberView:
                              )
         self.CreateDut.ssid = []
 
-        # SSID data should be in this format
-        # [
-        # ['ssid_idx=0 ssid=Default-SSID-2g password=12345678 bssid=90:3c:b3:94:48:58'],
-        # ['ssid_idx=1 ssid=Default-SSID-5gl password=12345678 bssid=90:3c:b3:94:48:59']
-        #  ]
+
 
     def Chamber_View(self):
         if self.delete_old_scenario:
@@ -79,3 +75,13 @@ class ChamberView:
         self.CreateDut.cv_test.show_text_blob(None, None, True)  # Show changes on GUI
         self.CreateDut.cv_test.sync_cv()
         return self.CreateDut, self.dut_name
+
+    def update_ssid(self, ssid_data=[]):
+        self.CreateDut.ssid = ssid_data
+        self.CreateDut.add_ssids()
+        # SSID data should be in this format
+        # [
+        # ['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58'],
+        # ['ssid_idx=1 ssid=Default-SSID-5gl password=12345678 bssid=90:3c:b3:94:48:59']
+        #  ]
+        pass

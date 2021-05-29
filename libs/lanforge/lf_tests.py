@@ -43,7 +43,7 @@ class RunTest:
         self.ax_prefix = lanforge_data["AX-Station-Name"]
         self.debug = debug
         self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=debug)
-        print(lanforge_data)
+        self.dataplane_obj = None
 
     def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[], station_name=[],
                             mode="BRIDGE", vlan_id=1, band="twog"):
@@ -165,25 +165,18 @@ class RunTest:
         print(self.client_connect.wait_for_ip(station_name))
         if self.client_connect.wait_for_ip(station_name):
             self.client_connect._pass("ALL Stations got IP's", print_=True)
-
-            return True
+            return self.client_connect
         else:
             return False
 
-    def Client_disconnect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog",
-                          vlan_id=100,
-                          station_name=[]):
-        print("hi")
-
+    def Client_disconnect(self, station_name=[]):
         self.client_dis = CreateStation(_host=self.lanforge_ip, _port=self.lanforge_port,
-                                        _sta_list=station_name, _password=passkey, _ssid=ssid, _security=security)
-        print(station_name)
-        self.client_dis.cleanup(station_name)
+                                        _sta_list=station_name, _password="passkey", _ssid="ssid", _security="security")
+        self.client_dis.station_profile.cleanup(station_name)
         return True
 
     def dataplane(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%",  dut_name="TIP",
                   upload_rate="85%", duration="1m", instance_name="test_demo"):
-        print("hi")
         print(station_name)
         if mode == "BRIDGE":
             self.client_connect.upstream_port = self.upstream_port
@@ -192,7 +185,7 @@ class RunTest:
         else:
             self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
 
-        self.dataplane = DataplaneTest(lf_host=self.lanforge_ip,
+        self.dataplane_obj = DataplaneTest(lf_host=self.lanforge_ip,
                                        lf_port=self.lanforge_port,
                                        lf_user="lanforge",
                                        lf_password="lanforge",
@@ -208,10 +201,11 @@ class RunTest:
                                        station="1.1." + station_name[0],
                                        raw_lines=['pkts: Custom;60;142;256;512;1024;MTU',
                                                   'directions: DUT Transmit;DUT Receive',
-                                                  'traffic_types: UDP;TCP'],
+                                                  'traffic_types: UDP;TCP', "show_3s: 1",
+                                                  "show_ll_graphs: 1","show_log: 1"],
                                        )
-        self.dataplane.setup()
-        self.dataplane.run()
+        self.dataplane_obj.setup()
+        self.dataplane_obj.run()
         return True
 
 

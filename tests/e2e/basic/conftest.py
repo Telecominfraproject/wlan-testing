@@ -22,7 +22,7 @@ def instantiate_profile():
     yield ProfileUtility
 
 
-@pytest.fixture(scope="package")
+@pytest.fixture(scope="session")
 def lf_tools(get_configuration, testbed):
     lf_tools_obj = ChamberView(lanforge_data=get_configuration['traffic_generator']['details'],
                                access_point_data=get_configuration['access_point'],
@@ -33,13 +33,13 @@ def lf_tools(get_configuration, testbed):
 @pytest.fixture(scope="session")
 def create_lanforge_chamberview(lf_tools):
     scenario_object, scenario_name = lf_tools.Chamber_View()
-    return scenario_object, scenario_name
+    return scenario_name
 
 
 @pytest.fixture(scope="session")
 def create_lanforge_chamberview_dut(lf_tools):
     dut_object, dut_name = lf_tools.Create_Dut()
-    return dut_object, dut_name
+    return dut_name
 
 
 @pytest.fixture(scope="session")
@@ -52,7 +52,7 @@ def setup_vlan():
 @allure.feature("CLIENT CONNECTIVITY SETUP")
 @pytest.fixture(scope="class")
 def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment_id,
-                   instantiate_profile, get_markers,
+                   instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                    get_security_flags, get_configuration, radius_info, get_apnos):
     instantiate_profile = instantiate_profile(sdk_client=setup_controller)
     vlan_id, mode = 0, 0
@@ -134,7 +134,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
             test_cases['radius_profile'] = False
 
     # SSID Profile Creation
-    print(get_markers)
+    lf_dut_data = []
     for mode in profile_data['ssid']:
         if mode == "open":
             for j in profile_data["ssid"][mode]:
@@ -143,6 +143,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_open_ssid_profile(profile_data=j)
                             test_cases["open_2g"] = True
                             allure.attach(body=str(creates_profile),
@@ -156,6 +157,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_open_ssid_profile(profile_data=j)
                             test_cases["open_5g"] = True
                             allure.attach(body=str(creates_profile),
@@ -172,6 +174,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa_ssid_profile(profile_data=j)
                             test_cases["wpa_2g"] = True
                             allure.attach(body=str(creates_profile),
@@ -184,6 +187,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa_ssid_profile(profile_data=j)
                             test_cases["wpa_5g"] = True
                             allure.attach(body=str(creates_profile),
@@ -200,6 +204,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa2_personal_ssid_profile(profile_data=j)
                             test_cases["wpa2_personal_2g"] = True
                             allure.attach(body=str(creates_profile),
@@ -212,6 +217,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa2_personal_ssid_profile(profile_data=j)
                             test_cases["wpa2_personal_5g"] = True
                             allure.attach(body=str(creates_profile),
@@ -229,6 +235,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa_wpa2_personal_mixed_ssid_profile(
                                 profile_data=j)
                             test_cases["wpa_wpa2_personal_mixed_2g"] = True
@@ -242,6 +249,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa_wpa2_personal_mixed_ssid_profile(
                                 profile_data=j)
                             test_cases["wpa_wpa2_personal_mixed_5g"] = True
@@ -259,6 +267,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa3_personal_ssid_profile(profile_data=j)
                             test_cases["wpa3_personal_2g"] = True
                             allure.attach(body=str(creates_profile),
@@ -271,6 +280,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa3_personal_ssid_profile(profile_data=j)
                             test_cases["wpa3_personal_5g"] = True
                             allure.attach(body=str(creates_profile),
@@ -287,6 +297,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa3_personal_mixed_ssid_profile(
                                 profile_data=j)
                             test_cases["wpa3_personal_mixed_2g"] = True
@@ -300,6 +311,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa3_personal_mixed_ssid_profile(
                                 profile_data=j)
                             test_cases["wpa3_personal_mixed_5g"] = True
@@ -318,6 +330,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa_enterprise_ssid_profile(profile_data=j)
                             test_cases["wpa_enterprise_2g"] = True
                             allure.attach(body=str(creates_profile),
@@ -331,6 +344,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa_enterprise_ssid_profile(profile_data=j)
                             test_cases["wpa_enterprise_5g"] = True
                             allure.attach(body=str(creates_profile),
@@ -347,6 +361,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa2_enterprise_ssid_profile(profile_data=j)
                             test_cases["wpa2_enterprise_2g"] = True
                             allure.attach(body=str(creates_profile),
@@ -359,6 +374,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa2_enterprise_ssid_profile(profile_data=j)
                             test_cases["wpa2_enterprise_5g"] = True
                             allure.attach(body=str(creates_profile),
@@ -375,6 +391,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa3_enterprise_ssid_profile(profile_data=j)
                             test_cases["wpa3_enterprise_2g"] = True
                             allure.attach(body=str(creates_profile),
@@ -387,6 +404,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa3_enterprise_ssid_profile(profile_data=j)
                             test_cases["wpa3_enterprise_5g"] = True
                             allure.attach(body=str(creates_profile),
@@ -405,6 +423,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa_wpa2_enterprise_mixed_ssid_profile(
                                 profile_data=j)
                             test_cases["wpa3_enterprise_2g"] = True
@@ -418,6 +437,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa_wpa2_enterprise_mixed_ssid_profile(
                                 profile_data=j)
                             test_cases["wpa3_enterprise_5g"] = True
@@ -435,6 +455,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa3_enterprise_mixed_ssid_profile(
                                 profile_data=j)
                             test_cases["wpa3_enterprise_2g"] = True
@@ -448,6 +469,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa3_enterprise_mixed_ssid_profile(
                                 profile_data=j)
                             test_cases["wpa3_enterprise_5g"] = True
@@ -466,6 +488,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wep_ssid_profile(profile_data=j)
                             test_cases["wpa3_enterprise_2g"] = True
                             allure.attach(body=str(creates_profile),
@@ -478,6 +501,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wep_ssid_profile(profile_data=j)
                             test_cases["wpa3_enterprise_5g"] = True
                             allure.attach(body=str(creates_profile),
@@ -544,6 +568,22 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
         time.sleep(10)
     allure.attach(body=str("VIF Config: " + str(vif_config) + "\n" + "VIF State: " + str(vif_state)),
                   name="SSID Profiles in VIF Config and VIF State: ")
+
+    ssid_info = ap_ssh.get_ssid_info()
+    ssid_data = []
+    for i in range(0, len(ssid_info)):
+        ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] +
+                " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
+        ssid_data.append(ssid)
+
+    # Add bssid password and security from iwinfo data
+    # Format SSID Data in the below format
+    # ssid_data = [
+    #     ['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58'],
+    #     ['ssid_idx=1 ssid=Default-SSID-5gl password=12345678 bssid=90:3c:b3:94:48:59']
+    # ]
+
+    lf_tools.update_ssid(ssid_data=ssid_data)
 
     def teardown_session():
         print("\nRemoving Profiles")

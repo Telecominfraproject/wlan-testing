@@ -95,8 +95,7 @@ def pytest_addoption(parser):
         help="Stop using Testrails"
     )
 
-
-    #Perfecto Parameters
+    # Perfecto Parameters
     parser.addini("perfectoURL", "Cloud URL")
     parser.addini("securityToken", "Security Token")
     parser.addini("platformName-iOS", "iOS Platform")
@@ -112,7 +111,7 @@ def pytest_addoption(parser):
     parser.addini("Default-SSID-2g-perfecto-b", "Wifi 2g AP Name")
     parser.addini("Default-SSID-perfecto-b", "Wifi AP Name")
     parser.addini("bundleId-iOS-Ping", "Ping Bundle ID")
-    parser.addini("browserType-iOS", "Mobile Browser Name")    
+    parser.addini("browserType-iOS", "Mobile Browser Name")
     parser.addini("projectName", "Project Name")
     parser.addini("projectVersion", "Project Version")
     parser.addini("jobName", "CI Job Name")
@@ -124,6 +123,7 @@ def pytest_addoption(parser):
         default=["Perfecto"],
         help="list of access points to test"
     )
+
 
 """
 Test session base fixture
@@ -262,7 +262,6 @@ def upload_firmware(should_upload_firmware, instantiate_firmware):
 @pytest.fixture(scope="session")
 def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_firmware_cloud, get_latest_firmware,
                      should_upgrade_firmware):
-
     status_list = []
     if get_latest_firmware != check_ap_firmware_cloud:
         if request.config.getoption("--skip-upgrade"):
@@ -315,6 +314,7 @@ def setup_test_run(setup_controller, upgrade_firmware, check_ap_firmware_cloud, 
     else:
         pytest.exit("AP is not Upgraded tp Target Firmware versions")
 
+
 """
 Instantiate Reporting
 """
@@ -349,7 +349,8 @@ FRAMEWORK MARKER LOGIC
 @pytest.fixture(scope="session")
 def get_security_flags():
     # Add more classifications as we go
-    security = ["open", "wpa", "wep", "wpa2_personal", "wpa3_personal", "wpa3_personal_mixed", "wpa_wpa2_enterprise_mixed",
+    security = ["open", "wpa", "wep", "wpa2_personal", "wpa3_personal", "wpa3_personal_mixed",
+                "wpa_wpa2_enterprise_mixed",
                 "wpa_wpa2_personal_mixed", "wpa_enterprise", "wpa2_enterprise", "wpa3_enterprise_mixed",
                 "wpa3_enterprise", "twog", "fiveg", "radius"]
     yield security
@@ -413,6 +414,8 @@ def get_lanforge_data(get_configuration):
             "vlan": 100
         }
     yield lanforge_data
+
+
 @pytest.fixture(scope="session")
 def traffic_generator_connectivity(testbed, get_configuration):
     if get_configuration['traffic_generator']['name'] == "lanforge":
@@ -440,6 +443,7 @@ def traffic_generator_connectivity(testbed, get_configuration):
     else:
         # Writing the connectivity check of InterOP
         yield True
+
 
 # Controller Fixture
 @pytest.fixture(scope="session")
