@@ -1,5 +1,7 @@
 CONFIGURATION = {
 
+
+   # This is sample Config of a Testbed
     "basic-lab": {
         "controller": {
             'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
