@@ -24,6 +24,9 @@ from sta_connect2 import StaConnect2
 import time
 # from eap_connect import EAPConnect
 from test_ipv4_ttls import TTLSTest
+from create_station import CreateStation
+import lf_dataplane_test
+from lf_dataplane_test import DataplaneTest
 
 
 class RunTest:
@@ -34,7 +37,7 @@ class RunTest:
         self.twog_radios = lanforge_data["2.4G-Radio"]
         self.fiveg_radios = lanforge_data["5G-Radio"]
         self.ax_radios = lanforge_data["AX-Radio"]
-        self.upstream_port = lanforge_data["upstream"]
+        self.upstream_port = lanforge_data["upstream"].split(".")[2]
         self.twog_prefix = lanforge_data["2.4G-Station-Name"]
         self.fiveg_prefix = lanforge_data["5G-Station-Name"]
         self.ax_prefix = lanforge_data["AX-Station-Name"]
@@ -131,6 +134,80 @@ class RunTest:
         self.eap_connect.stop()
         self.eap_connect.cleanup(station_name)
         return self.eap_connect.passes()
+
+    def Client_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog",
+                       vlan_id=100,
+                       station_name=[]):
+
+        self.client_connect = CreateStation(_host=self.lanforge_ip, _port=self.lanforge_port,
+                                            _sta_list=station_name, _password=passkey, _ssid=ssid, _security=security)
+
+        self.client_connect.station_profile.sta_mode = 0
+        self.client_connect.upstream_resource = 1
+        if mode == "BRIDGE":
+            self.client_connect.upstream_port = self.upstream_port
+        elif mode == "NAT":
+            self.client_connect.upstream_port = self.upstream_port
+        else:
+            self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
+        if band == "twog":
+            self.client_connect.radio = self.twog_radios[0]
+            # self.client_connect.sta_prefix = self.twog_prefix
+        if band == "fiveg":
+            self.client_connect.radio = self.fiveg_radios[0]
+        self.client_connect.build()
+        self.client_connect.wait_for_ip(station_name)
+        print(self.client_connect.wait_for_ip(station_name))
+        if self.client_connect.wait_for_ip(station_name):
+            self.client_connect._pass("ALL Stations got IP's", print_=True)
+
+            return True
+        else:
+            return False
+
+    def Client_disconnect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog",
+                          vlan_id=100,
+                          station_name=[]):
+        print("hi")
+
+        self.client_dis = CreateStation(_host=self.lanforge_ip, _port=self.lanforge_port,
+                                        _sta_list=station_name, _password=passkey, _ssid=ssid, _security=security)
+        print(station_name)
+        self.client_dis.cleanup(station_name)
+        return True
+
+    def dataplane(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%",  dut_name="TIP",
+                  upload_rate="85%", duration="1m", instance_name="test_demo"):
+        print("hi")
+        print(station_name)
+        if mode == "BRIDGE":
+            self.client_connect.upstream_port = self.upstream_port
+        elif mode == "NAT":
+            self.client_connect.upstream_port = self.upstream_port
+        else:
+            self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
+
+        self.dataplane = DataplaneTest(lf_host=self.lanforge_ip,
+                                       lf_port=self.lanforge_port,
+                                       lf_user="lanforge",
+                                       lf_password="lanforge",
+                                       instance_name=instance_name,
+                                       config_name="dpt_config",
+                                       upstream="1.1." + self.upstream_port,
+                                       pull_report=True,
+                                       load_old_cfg=False,
+                                       download_speed=download_rate,
+                                       upload_speed=upload_rate,
+                                       duration=duration,
+                                       dut=dut_name,
+                                       station="1.1." + station_name[0],
+                                       raw_lines=['pkts: Custom;60;142;256;512;1024;MTU',
+                                                  'directions: DUT Transmit;DUT Receive',
+                                                  'traffic_types: UDP;TCP'],
+                                       )
+        self.dataplane.setup()
+        self.dataplane.run()
+        return True
 
 
 if __name__ == '__main__':
