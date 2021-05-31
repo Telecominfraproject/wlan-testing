@@ -31,7 +31,7 @@ from lf_dataplane_test import DataplaneTest
 
 class RunTest:
 
-    def __init__(self, lanforge_data=None, debug=False):
+    def __init__(self, lanforge_data=None, local_report_path="../reports/", debug=False):
         self.lanforge_ip = lanforge_data["ip"]
         self.lanforge_port = lanforge_data["port"]
         self.twog_radios = lanforge_data["2.4G-Radio"]
@@ -42,10 +42,15 @@ class RunTest:
         self.fiveg_prefix = lanforge_data["5G-Station-Name"]
         self.ax_prefix = lanforge_data["AX-Station-Name"]
         self.debug = debug
+        self.lf_ssh_port = lanforge_data["ssh_port"]
         self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=debug)
         self.dataplane_obj = None
+        self.local_report_path = local_report_path
+        if not os.path.exists(self.local_report_path):
+            os.mkdir(self.local_report_path)
 
-    def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[], station_name=[],
+    def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[],
+                            station_name=[],
                             mode="BRIDGE", vlan_id=1, band="twog"):
         '''SINGLE CLIENT CONNECTIVITY using test_connect2.py'''
         self.staConnect.sta_mode = 0
@@ -175,9 +180,8 @@ class RunTest:
         self.client_dis.station_profile.cleanup(station_name)
         return True
 
-    def dataplane(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%",  dut_name="TIP",
+    def dataplane(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
                   upload_rate="85%", duration="1m", instance_name="test_demo"):
-        print(station_name)
         if mode == "BRIDGE":
             self.client_connect.upstream_port = self.upstream_port
         elif mode == "NAT":
@@ -186,27 +190,29 @@ class RunTest:
             self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
 
         self.dataplane_obj = DataplaneTest(lf_host=self.lanforge_ip,
-                                       lf_port=self.lanforge_port,
-                                       lf_user="lanforge",
-                                       lf_password="lanforge",
-                                       instance_name=instance_name,
-                                       config_name="dpt_config",
-                                       upstream="1.1." + self.upstream_port,
-                                       pull_report=True,
-                                       load_old_cfg=False,
-                                       download_speed=download_rate,
-                                       upload_speed=upload_rate,
-                                       duration=duration,
-                                       dut=dut_name,
-                                       station="1.1." + station_name[0],
-                                       raw_lines=['pkts: Custom;60;142;256;512;1024;MTU',
-                                                  'directions: DUT Transmit;DUT Receive',
-                                                  'traffic_types: UDP;TCP', "show_3s: 1",
-                                                  "show_ll_graphs: 1","show_log: 1"],
-                                       )
+                                           lf_port=self.lanforge_port,
+                                           ssh_port=self.lf_ssh_port,
+                                           local_path=self.local_report_path,
+                                           lf_user="lanforge",
+                                           lf_password="lanforge",
+                                           instance_name=instance_name,
+                                           config_name="dpt_config",
+                                           upstream="1.1." + self.upstream_port,
+                                           pull_report=True,
+                                           load_old_cfg=False,
+                                           download_speed=download_rate,
+                                           upload_speed=upload_rate,
+                                           duration=duration,
+                                           dut=dut_name,
+                                           station="1.1." + station_name[0],
+                                           raw_lines=['pkts: Custom;60;142;256;512;1024;MTU',
+                                                      'directions: DUT Transmit;DUT Receive',
+                                                      'traffic_types: UDP;TCP', "show_3s: 1",
+                                                      "show_ll_graphs: 1", "show_log: 1"],
+                                           )
         self.dataplane_obj.setup()
         self.dataplane_obj.run()
-        return True
+        return self.dataplane_obj
 
 
 if __name__ == '__main__':
@@ -216,11 +222,11 @@ if __name__ == '__main__':
         "2.4G-Radio": ["wiphy0"],
         "5G-Radio": ["wiphy1"],
         "AX-Radio": ["wiphy2"],
-        "upstream": "eth1",
+        "upstream": "1.1.eth1",
         "2.4G-Station-Name": "wlan0",
         "5G-Station-Name": "wlan0",
         "AX-Station-Name": "ax",
     }
     obj = RunTest(lanforge_data=lanforge_data, debug=False)
     # print(obj.eap_connect.json_get("port/1/1/sta0000?fields=ap,ip"))
-    obj.EAP_Connect(station_name=["sta0000", "sta0001"], eap="TTLS", ssid="testing_radius")
+    # obj.EAP_Connect(station_name=["sta0000", "sta0001"], eap="TTLS", ssid="testing_radius")
