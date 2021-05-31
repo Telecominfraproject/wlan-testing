@@ -3,7 +3,7 @@ import sys
 import time
 from lf_wifi_capacity_test import WiFiCapacityTest
 from create_station import CreateStation
-pytestmark = [pytest.mark.wifi_capacity_test, pytest.mark.nat]
+pytestmark = [pytest.mark.wifi_capacity_test, pytest.mark.bridge]
 
 for folder in 'py-json', 'py-scripts':
     if folder not in sys.path:
@@ -20,7 +20,7 @@ from eap_connect import EAPConnect
 import allure
 
 setup_params_general = {
-    "mode": "NAT",
+    "mode": "BRIDGE",
     "ssid_modes": {
         "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"]},
                  {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
@@ -41,7 +41,7 @@ def lanforge_ip(args):
 
 
 @pytest.mark.basic
-@allure.feature("NAT MODE CLIENT CONNECTIVITY")
+@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -49,7 +49,7 @@ def lanforge_ip(args):
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestWifiCapacityNatMode(object):
+class TestWifiCapacityBridgeMode(object):
 
     @pytest.mark.wpa
     @pytest.mark.mutto
@@ -68,8 +68,8 @@ class TestWifiCapacityNatMode(object):
                                        _radio = lf_test.twog_radios)
         create_station.build()
         time.sleep(20)'''
-        PASS = lf_test.wifi_capacity(ssid = profile_data["ssid_name"], paswd = profile_data["security_key"],
-                              security = "wpa", mode = "NAT", band = "twog", instance_name = "wct_instance", )
+        PASS = lf_test.wifi_capacity( ssid = profile_data["ssid_name"], paswd = profile_data["security_key"],
+                              security = "wpa", mode = "BRIDGE", band = "twog", instance_name = "wct_instance", )
         assert PASS
 
     @pytest.mark.wpa
@@ -89,7 +89,7 @@ class TestWifiCapacityNatMode(object):
         create_station.build()
         time.sleep(20)'''
         PASS = lf_test.wifi_capacity(ssid=profile_data["ssid_name"], paswd=profile_data["security_key"],
-                                     security="wpa", mode="NAT", band="fiveg",
+                                     security="wpa", mode="BRIDGE", band="fiveg",
                                      instance_name="wct_instance", )
         assert PASS
 
@@ -111,7 +111,7 @@ class TestWifiCapacityNatMode(object):
         create_station.build()
         time.sleep(20)'''
         PASS = lf_test.wifi_capacity( ssid = profile_data["ssid_name"], paswd = profile_data["security_key"],
-                              security = "wpa2", mode = "NAT", band = "twog",
+                              security = "wpa2", mode = "BRIDGE", band = "twog",
                               instance_name = "wct_instance", )
         assert PASS
 
@@ -131,8 +131,8 @@ class TestWifiCapacityNatMode(object):
                                        _radio=lf_test.fiveg_radios)
         create_station.build()
         time.sleep(20)'''
-        PASS = lf_test.wifi_capacity(ssid=profile_data["ssid_name"], paswd=profile_data["security_key"],
-                                     security="wpa2", mode="NAT", band="fiveg",
+        PASS = lf_test.wifi_capacity( ssid=profile_data["ssid_name"], paswd=profile_data["security_key"],
+                                     security="wpa2", mode="BRIDGE", band="fiveg",
                                      instance_name="wct_instance", )
         assert PASS
 
