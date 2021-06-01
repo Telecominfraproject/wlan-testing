@@ -28,11 +28,13 @@ from lf_wifi_capacity_test import WiFiCapacityTest
 from create_station import CreateStation
 import lf_dataplane_test
 from lf_dataplane_test import DataplaneTest
+from csv_to_influx import CSVtoInflux
+from influx2 import RecordInflux
 
 
 class RunTest:
 
-    def __init__(self, lanforge_data=None, local_report_path="../reports/", debug=False):
+    def __init__(self, lanforge_data=None, local_report_path="../reports/", influx_params=None, debug=False):
         self.lanforge_ip = lanforge_data["ip"]
         self.lanforge_port = lanforge_data["port"]
         self.twog_radios = lanforge_data["2.4G-Radio"]
@@ -46,6 +48,14 @@ class RunTest:
         self.lf_ssh_port = lanforge_data["ssh_port"]
         self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=debug)
         self.dataplane_obj = None
+        self.influx_params = influx_params
+        self.influxdb = RecordInflux(_lfjson_host=self.lanforge_ip,
+                                     _lfjson_port=self.lanforge_port,
+                                     _influx_host=influx_params["influx_host"],
+                                     _influx_port=influx_params["influx_port"],
+                                     _influx_org=influx_params["influx_org"],
+                                     _influx_token=influx_params["influx_token"],
+                                     _influx_bucket=influx_params["influx_bucket"])
         self.local_report_path = local_report_path
         if not os.path.exists(self.local_report_path):
             os.mkdir(self.local_report_path)
@@ -235,6 +245,11 @@ class RunTest:
                                            )
         self.dataplane_obj.setup()
         self.dataplane_obj.run()
+        report_name = self.dataplane_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        influx = CSVtoInflux(influxdb=self.influxdb,
+                             _influx_tag=self.influx_params["influx_tag"],
+                             target_csv=self.local_report_path + report_name + "/kpi.csv")
+        influx.post_to_influx()
         return self.dataplane_obj
 
 

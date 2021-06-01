@@ -50,6 +50,12 @@ def pytest_addoption(parser):
     parser.addini("tr_project_id", "Testrail Project ID")
     parser.addini("milestone", "milestone Id")
 
+    parser.addini("influx_host", "Influx Host", default="influx.cicd.lab.wlan.tip.build")
+    parser.addini("influx_port", "Influx Port", default=80)
+    parser.addini("influx_token", "Influx Token", default="TCkdATXAbHmNbn4QyNaj43WpGBYxFrzV")
+    parser.addini("influx_bucket", "influx bucket", default="tip-cicd")
+    parser.addini("influx_org", "influx organization", default="tip")
+
     parser.addini("num_stations", "Number of Stations/Clients for testing")
 
     # change behaviour
@@ -434,6 +440,7 @@ def get_lanforge_data(get_configuration):
 
 @pytest.fixture(scope="session")
 def traffic_generator_connectivity(testbed, get_configuration):
+    """Verify if traffic generator is reachable"""
     if get_configuration['traffic_generator']['name'] == "lanforge":
         lanforge_ip = get_configuration['traffic_generator']['details']['ip']
         lanforge_port = get_configuration['traffic_generator']['details']['port']
@@ -461,9 +468,9 @@ def traffic_generator_connectivity(testbed, get_configuration):
 
 
 
-# Controller Fixture
 @pytest.fixture(scope="session")
 def create_lanforge_chamberview_dut(get_configuration, testbed):
+    """ Create a DUT on LANforge"""
     ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
                 testbed=testbed, access_point_data=get_configuration["access_point"])
     yield True
@@ -471,6 +478,7 @@ def create_lanforge_chamberview_dut(get_configuration, testbed):
 
 @pytest.fixture(scope="module")
 def create_vlan(request, testbed, get_configuration):
+    """Create a vlan on lanforge"""
     if request.param["mode"] == "VLAN":
         vlan_list = list()
         refactored_vlan_list = list()
@@ -515,3 +523,16 @@ def create_vlan(request, testbed, get_configuration):
                 print(e)
                 yield False
 
+
+@pytest.fixture(scope="session")
+def setup_influx(request, testbed, get_configuration):
+    """ Setup Influx Parameters: Used in CV Automation"""
+    influx_params = {
+        "influx_host": request.config.getini("influx_host"),
+        "influx_port": request.config.getini("influx_port"),
+        "influx_token": request.config.getini("influx_token"),
+        "influx_bucket": request.config.getini("influx_bucket"),
+        "influx_org": request.config.getini("influx_org"),
+        "influx_tag": [testbed, get_configuration["access_point"][0]["model"]],
+    }
+    yield influx_params
