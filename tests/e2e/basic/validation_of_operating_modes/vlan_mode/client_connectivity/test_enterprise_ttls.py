@@ -28,6 +28,8 @@ setup_params_enterprise = {
     indirect=True,
     scope="class"
 )
+
+
 @pytest.mark.usefixtures("setup_profiles")
 class TestVLANModeEnterpriseTTLSSuiteOne(object):
 

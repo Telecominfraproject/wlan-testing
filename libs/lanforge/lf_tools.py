@@ -1,6 +1,7 @@
 from create_chamberview import CreateChamberview
 from create_chamberview_dut import DUT
 import time
+from LANforge.lfcli_base import LFCliBase
 
 
 class ChamberView:
@@ -34,21 +35,22 @@ class ChamberView:
 
         self.CreateChamberview = CreateChamberview(self.lanforge_ip, self.lanforge_port)
 
-        # for DUT
-        self.dut_name = testbed
-        self.ap_model = access_point_data[0]["model"]
-        self.version = access_point_data[0]["version"].split("/")[-1]
-        self.serial = access_point_data[0]["serial"]
+        if access_point_data:
+            # for DUT
+            self.dut_name = testbed
+            self.ap_model = access_point_data[0]["model"]
+            self.version = access_point_data[0]["version"].split("/")[-1]
+            self.serial = access_point_data[0]["serial"]
 
-        self.CreateDut = DUT(lfmgr=self.lanforge_ip,
-                             port=self.lanforge_port,
-                             dut_name=self.testbed,
-                             sw_version=self.version,
-                             hw_version=self.ap_model,
-                             model_num=self.ap_model,
-                             serial_num=self.serial
-                             )
-        self.CreateDut.ssid = []
+            self.CreateDut = DUT(lfmgr=self.lanforge_ip,
+                                 port=self.lanforge_port,
+                                 dut_name=self.testbed,
+                                 sw_version=self.version,
+                                 hw_version=self.ap_model,
+                                 model_num=self.ap_model,
+                                 serial_num=self.serial
+                                 )
+            self.CreateDut.ssid = []
 
 
 
@@ -85,3 +87,8 @@ class ChamberView:
         # ['ssid_idx=1 ssid=Default-SSID-5gl password=12345678 bssid=90:3c:b3:94:48:59']
         #  ]
         pass
+
+    def json_get(self,_req_url="/"):
+        cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port,)
+        json_response = cli_base.json_get(_req_url=_req_url)
+        return json_response

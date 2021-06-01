@@ -467,3 +467,37 @@ def create_lanforge_chamberview_dut(get_configuration, testbed):
     ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
                 testbed=testbed, access_point_data=get_configuration["access_point"])
     yield True
+
+
+@pytest.fixture(scope="module")
+def create_vlan(request, testbed, get_configuration):
+    if request.param["mode"] == "VLAN":
+        vlan_list = list()
+        ssid_modes = request.param["ssid_modes"].keys()
+        for mode in ssid_modes:
+            for ssid in range(len(request.param["ssid_modes"][mode])):
+                if "vlan" in request.param["ssid_modes"][mode][ssid]:
+                    vlan_list.append(request.param["ssid_modes"][mode][ssid]["vlan"])
+        if vlan_list:
+            chamberview_obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
+                                          testbed=testbed, access_point_data=get_configuration["access_point"])
+
+            lanforge_data = get_configuration["traffic_generator"]["details"]
+            upstream_port = lanforge_data["upstream"]
+            upstream_resources = upstream_port.split(".")[0] + "." + upstream_port.split(".")[1]
+            for vlan in vlan_list:
+                if 1 > vlan or vlan > 4095:
+                    continue
+                chamberview_obj.raw_line.append(["profile_link " + upstream_resources + " vlan-100 1 NA "
+                                                 + "NA " + upstream_port.split(".")[2] + ",AUTO -1 " + str(vlan)])
+
+            chamberview_obj.Chamber_View()
+            port_resource = upstream_resources.split(".")
+
+            try:
+                ip = (chamberview_obj.json_get("/port/" + port_resource[0] + "/" + port_resource[1] +
+                                               "/" + upstream_port.split(".")[2] + "." + str(vlan))["interface"]["ip"])
+                if ip:
+                    yield vlan_list
+            except:
+                yield False

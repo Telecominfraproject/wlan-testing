@@ -1,8 +1,7 @@
 import pytest
 import allure
 
-pytestmark = [pytest.mark.setup, pytest.mark.vlan, pytest.mark.sanity, pytest.mark.enterprise,
-              pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.setup, pytest.mark.vlan, pytest.mark.sanity, pytest.mark.enterprise, pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_enterprise = {
     "mode": "VLAN",
@@ -324,3 +323,14 @@ class TestSetupVLANEnterpriseSuiteB(object):
                                           status_id=5,
                                           msg='Failed to push profile')
             assert False
+
+
+@pytest.mark.parametrize(
+    "create_vlan",
+    [setup_params_enterprise],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.vlan_create
+def test_vlan(create_vlan):
+    assert True
