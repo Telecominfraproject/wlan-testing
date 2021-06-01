@@ -51,14 +51,14 @@ class TestBridgeModeEnterpriseTTLSSuiteOne(object):
                                      station_name=station_names_twog, vlan_id=vlan)
 
         if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa_eap_ttls_bridge"],
                                           status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - bridge mode' + str(
+                                          msg='2G WPA Enterprise Client Connectivity Passed successfully - bridge mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa_eap_ttls_bridge"],
                                           status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - bridge mode' + str(
+                                          msg='2G WPA Enterprise Client Connectivity Failed - bridge mode' + str(
                                               passes))
             if exit_on_fail:
                 pytest.exit("Test Case Failed")
@@ -84,14 +84,14 @@ class TestBridgeModeEnterpriseTTLSSuiteOne(object):
                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa_eap_ttls_bridge"],
                                           status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - bridge mode' + str(
+                                          msg='5G WPA Enterprise Client Connectivity Passed successfully - bridge mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa_eap_ttls_bridge"],
                                           status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - bridge mode' + str(
+                                          msg='5G Enterprise WPA Client Connectivity Failed - bridge mode' + str(
                                               passes))
             if exit_on_fail:
                 pytest.exit("Test Case Failed")
@@ -116,14 +116,14 @@ class TestBridgeModeEnterpriseTTLSSuiteOne(object):
                                      station_name=station_names_twog, vlan_id=vlan)
 
         if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa2_bridge"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa2_eap_ttls_bridge"],
                                           status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - bridge mode' + str(
+                                          msg='2G WPA2 Enterprise Client Connectivity Passed successfully - bridge mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa2_eap_ttls_bridge"],
                                           status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - bridge mode' + str(
+                                          msg='2G WPA2 Enterprise Client Connectivity Failed - bridge mode' + str(
                                               passes))
             if exit_on_fail:
                 pytest.exit("Test Case Failed")
@@ -148,14 +148,14 @@ class TestBridgeModeEnterpriseTTLSSuiteOne(object):
                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa2_eap_ttls_bridge"],
                                           status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - bridge mode' + str(
+                                          msg='5G WPA2 Enterprise Client Connectivity Passed successfully - bridge mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa2_eap_ttls_bridge"],
                                           status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - bridge mode' + str(
+                                          msg='5G WPA2 Enterprise Client Connectivity Failed - bridge mode' + str(
                                               passes))
             if exit_on_fail:
                 pytest.exit("Test Case Failed")
@@ -180,14 +180,14 @@ class TestBridgeModeEnterpriseTTLSSuiteOne(object):
                                      station_name=station_names_twog, vlan_id=vlan)
 
         if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa3_eap_bridge"],
                                           status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - bridge mode' + str(
+                                          msg='2G WPA3 Enterprise Client Connectivity Passed successfully - bridge mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa3_eap_bridge"],
                                           status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - bridge mode' + str(
+                                          msg='2G WPA3 Enterprise Client Connectivity Failed - bridge mode' + str(
                                               passes))
             if exit_on_fail:
                 pytest.exit("Test Case Failed")
@@ -212,14 +212,14 @@ class TestBridgeModeEnterpriseTTLSSuiteOne(object):
                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa3_eap_bridge"],
                                           status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - bridge mode' + str(
+                                          msg='5G WPA3 Enterprise Client Connectivity Passed successfully - bridge mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa3_eap_bridge"],
                                           status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - bridge mode' + str(
+                                          msg='5G WPA3 Enterprise Client Connectivity Failed - bridge mode' + str(
                                               passes))
             if exit_on_fail:
                 pytest.exit("Test Case Failed")
@@ -271,14 +271,14 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
                                      station_name=station_names_twog, vlan_id=vlan)
 
         if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa2_mixed_eap_wpa2_bridge"],
                                           status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - bridge mode' + str(
+                                          msg='2G WPA2 Mixed Enterprise Client Connectivity Passed successfully - bridge mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa2_mixed_eap_wpa2_bridge"],
                                           status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - bridge mode' + str(
+                                          msg='2G WPA2 Mixed Enterprise Client Connectivity Failed - bridge mode' + str(
                                               passes))
             if exit_on_fail:
                 pytest.exit("Test Case Failed")
@@ -304,14 +304,14 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa2_mixed_eap_ttls_wpa2_bridge"],
                                           status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - bridge mode' + str(
+                                          msg='5G WPA Mixed Enterprise Client Connectivity Passed successfully - bridge mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa2_mixed_eap_ttls_wpa2_bridge"],
                                           status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - bridge mode' + str(
+                                          msg='25G WPA2 Mixed Enterprise Client Connectivity Failed - bridge mode' + str(
                                               passes))
             if exit_on_fail:
                 pytest.exit("Test Case Failed")
@@ -336,14 +336,14 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
                                      station_name=station_names_twog, vlan_id=vlan)
 
         if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa3_mixed_eap_ttls_wpa3_vlan"],
                                           status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - bridge mode' + str(
+                                          msg='2G WPA3 Mixed Enterprise Client Connectivity Passed successfully - bridge mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa3_mixed_eap_ttls_wpa3_vlan"],
                                           status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - bridge mode' + str(
+                                          msg='2G WPA3 Mixed Enterprise Client Connectivity Failed - bridge mode' + str(
                                               passes))
             if exit_on_fail:
                 pytest.exit("Test Case Failed")
@@ -369,14 +369,14 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa3_mixed_eap_ttls_wpa3_vlan"],
                                           status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - bridge mode' + str(
+                                          msg='5G WPA3 Mixed Enterprise Client Connectivity Passed successfully - bridge mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_bridge"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa3_mixed_eap_ttls_wpa3_vlan"],
                                           status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - bridge mode' + str(
+                                          msg='5G WPA3 Mixed Enterprise Client Connectivity Failed - bridge mode' + str(
                                               passes))
             if exit_on_fail:
                 pytest.exit("Test Case Failed")

@@ -46,16 +46,16 @@ class TestNATModeConnectivitySuiteOne(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
 
-        # if result:
-        #     update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
-        #                                   status_id=1,
-        #                                   msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
-        #                                       passes))
-        # else:
-        #     update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
-        #                                   status_id=5,
-        #                                   msg='2G WPA Client Connectivity Failed - NAT mode' + str(
-        #                                       passes))
+        if result:
+            update_report.update_testrail(case_id=test_cases["2g_open_nat"],
+                                          status_id=1,
+                                          msg='2G Open Client Connectivity Passed successfully - NAT mode' + str(
+                                              passes))
+        else:
+            update_report.update_testrail(case_id=test_cases["2g_open_nat"],
+                                          status_id=5,
+                                          msg='2G Open Client Connectivity Failed - NAT mode' + str(
+                                              passes))
         assert result
 
     @pytest.mark.open
@@ -73,16 +73,16 @@ class TestNATModeConnectivitySuiteOne(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
-        # if result:
-        #     update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
-        #                                   status_id=1,
-        #                                   msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
-        #                                       passes))
-        # else:
-        #     update_report.update_testrail(case_id=test_cases["2g_wpa_NAT"],
-        #                                   status_id=5,
-        #                                   msg='2G WPA Client Connectivity Failed - NAT mode' + str(
-        #                                       passes))
+        if result:
+            update_report.update_testrail(case_id=test_cases["5g_open_nat"],
+                                          status_id=1,
+                                          msg='5G Open Client Connectivity Passed successfully - NAT mode' + str(
+                                              passes))
+        else:
+            update_report.update_testrail(case_id=test_cases["5g_open_nat"],
+                                          status_id=5,
+                                          msg='5G Open Client Connectivity Failed - NAT mode' + str(
+                                              passes))
         assert result
 
     @pytest.mark.wpa
@@ -245,14 +245,14 @@ class TestNATModeConnectivitySuiteTwo(object):
                                                      station_name=station_names_twog, vlan_id=vlan)
 
         if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa3_nat"],
                                           status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
+                                          msg='2G WPA3 Client Connectivity Passed successfully - NAT mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa3_nat"],
                                           status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - NAT mode' + str(
+                                          msg='2G WPA3 Client Connectivity Failed - NAT mode' + str(
                                               passes))
         assert result
 
@@ -272,14 +272,14 @@ class TestNATModeConnectivitySuiteTwo(object):
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa3_nat"],
                                           status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
+                                          msg='5G WPA3 Client Connectivity Passed successfully - NAT mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa3_nat"],
                                           status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - NAT mode' + str(
+                                          msg='5G WPA3 Client Connectivity Failed - NAT mode' + str(
                                               passes))
         assert result
 
@@ -301,14 +301,14 @@ class TestNATModeConnectivitySuiteTwo(object):
                                                      station_name=station_names_twog, vlan_id=vlan)
 
         if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa3_mixed_wpa3_nat"],
                                           status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
+                                          msg='2G WPA3 Mixed Client Connectivity Passed successfully - NAT mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa3_mixed_wpa3_nat"],
                                           status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - NAT mode' + str(
+                                          msg='2G WPA3 Mixed Client Connectivity Failed - NAT mode' + str(
                                               passes))
         assert result
 
@@ -329,14 +329,14 @@ class TestNATModeConnectivitySuiteTwo(object):
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa3_mixed_wpa3_nat"],
                                           status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
+                                          msg='5G WPA3 Mixed Client Connectivity Passed successfully - NAT mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa3_mixed_wpa3_nat"],
                                           status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - NAT mode' + str(
+                                          msg='5G WPA3 Mixed Client Connectivity Failed - NAT mode' + str(
                                               passes))
         assert result
 
@@ -359,14 +359,14 @@ class TestNATModeConnectivitySuiteTwo(object):
                                                      station_name=station_names_twog, vlan_id=vlan)
 
         if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
+            update_report.update_testrail(case_id=test_cases["2g_wpa2_mixed_eap_wpa2_nat"],
                                           status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
+                                          msg='2G WPA2 Mixed Client Connectivity Passed successfully - NAT mode' + str(
                                               passes))
         else:
             update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
                                           status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - NAT mode' + str(
+                                          msg='2G WPA2 Mixed Client Connectivity Failed - NAT mode' + str(
                                               passes))
         assert result
 
@@ -388,14 +388,14 @@ class TestNATModeConnectivitySuiteTwo(object):
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa2_mixed_wpa2_nat"],
                                           status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
+                                          msg='5G WPA2 Mixed Client Connectivity Passed successfully - NAT mode' + str(
                                               passes))
         else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
+            update_report.update_testrail(case_id=test_cases["5g_wpa2_mixed_wpa2_nat"],
                                           status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - NAT mode' + str(
+                                          msg='5G WPA2 Mixed Client Connectivity Failed - NAT mode' + str(
                                               passes))
         assert result
 
