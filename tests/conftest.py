@@ -473,11 +473,24 @@ def create_lanforge_chamberview_dut(get_configuration, testbed):
 def create_vlan(request, testbed, get_configuration):
     if request.param["mode"] == "VLAN":
         vlan_list = list()
+        refactored_vlan_list = list()
         ssid_modes = request.param["ssid_modes"].keys()
         for mode in ssid_modes:
             for ssid in range(len(request.param["ssid_modes"][mode])):
                 if "vlan" in request.param["ssid_modes"][mode][ssid]:
                     vlan_list.append(request.param["ssid_modes"][mode][ssid]["vlan"])
+                else:
+                    pass
+        if vlan_list:
+            [refactored_vlan_list.append(x) for x in vlan_list if x not in refactored_vlan_list]
+            vlan_list = refactored_vlan_list
+            for i in range(len(vlan_list)):
+                if vlan_list[i] > 4095 or vlan_list[i] < 1:
+                    vlan_list.pop(i)
+
+        if not vlan_list:
+            vlan_list.append(100)
+
         if vlan_list:
             chamberview_obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
                                           testbed=testbed, access_point_data=get_configuration["access_point"])
@@ -485,9 +498,8 @@ def create_vlan(request, testbed, get_configuration):
             lanforge_data = get_configuration["traffic_generator"]["details"]
             upstream_port = lanforge_data["upstream"]
             upstream_resources = upstream_port.split(".")[0] + "." + upstream_port.split(".")[1]
+
             for vlan in vlan_list:
-                if 1 > vlan or vlan > 4095:
-                    continue
                 chamberview_obj.raw_line.append(["profile_link " + upstream_resources + " vlan-100 1 NA "
                                                  + "NA " + upstream_port.split(".")[2] + ",AUTO -1 " + str(vlan)])
 
