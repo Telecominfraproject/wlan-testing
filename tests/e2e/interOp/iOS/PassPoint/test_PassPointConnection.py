@@ -47,7 +47,7 @@ class TestPassPointConnection(object):
  
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_PassPointConnection_5g_WPA2_Personal(self, setup_perfectoMobile_iOS, get_PassPointConniOS_data):
+    def test_PassPointConnection_5g_WPA2_Personal(self, request, setup_perfectoMobile_iOS, get_PassPointConniOS_data):
   
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1] 
         ssidName = profile_data["ssid_name"]
@@ -60,20 +60,20 @@ class TestPassPointConnection(object):
         connData = get_PassPointConniOS_data
 
         #Set Wifi Access Mode to #Default-SSID-5gl-perfecto-b/#Default-SSID-2gl-perfecto-b
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Toggle Airplane Mode and Ensure Wifi Connection. 
-        assert Toggle_AirplaneMode_iOS(setup_perfectoMobile_iOS, connData)
+        assert Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_iOS, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
         #Close Settings App
         closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile_iOS)
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_PassPointConnection_2g_WPA2_Personal(self, setup_perfectoMobile_iOS, get_PassPointConniOS_data):
+    def test_PassPointConnection_2g_WPA2_Personal(self, request, setup_perfectoMobile_iOS, get_PassPointConniOS_data):
         
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0] 
         ssidName = profile_data["ssid_name"]
@@ -86,20 +86,20 @@ class TestPassPointConnection(object):
         connData = get_PassPointConniOS_data
 
         #Set Wifi Access Mode to #Default-SSID-5gl-perfecto-b/#Default-SSID-2gl-perfecto-b
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Toggle Airplane Mode and Ensure Wifi Connection. 
-        Toggle_AirplaneMode_iOS(setup_perfectoMobile_iOS, connData)
+        Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_iOS, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
         #Close Settings App
         closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile_iOS)
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_PassPointConnection_2g_WPA(self, setup_perfectoMobile_iOS, get_PassPointConniOS_data):
+    def test_PassPointConnection_2g_WPA(self, request, setup_perfectoMobile_iOS, get_PassPointConniOS_data):
         
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
@@ -112,20 +112,20 @@ class TestPassPointConnection(object):
         connData = get_PassPointConniOS_data
 
         #Set Wifi Access Mode to #Default-SSID-5gl-perfecto-b/#Default-SSID-2gl-perfecto-b
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Toggle Airplane Mode and Ensure Wifi Connection. 
-        Toggle_AirplaneMode_iOS(setup_perfectoMobile_iOS, connData)
+        Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_iOS, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
         #Close Settings App
         closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile_iOS)
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_PassPointConnection_5g_WPA(self, setup_perfectoMobile_iOS, get_PassPointConniOS_data):
+    def test_PassPointConnection_5g_WPA(self, request, setup_perfectoMobile_iOS, get_PassPointConniOS_data):
         
         profile_data = setup_params_general["ssid_modes"]["wpa"][1] 
         ssidName = profile_data["ssid_name"]
@@ -138,13 +138,13 @@ class TestPassPointConnection(object):
         connData = get_PassPointConniOS_data
 
         #Set Wifi Access Mode to #Default-SSID-5gl-perfecto-b/#Default-SSID-2gl-perfecto-b
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Toggle Airplane Mode and Ensure Wifi Connection. 
-        Toggle_AirplaneMode_iOS(setup_perfectoMobile_iOS, connData)
+        Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_iOS, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
         
         #Close Settings App
         closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile_iOS)

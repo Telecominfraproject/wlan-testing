@@ -46,7 +46,7 @@ class TestToggleAirplaneMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ToogleAirplaneMode_5g_WPA2_Personal(self, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
+    def test_ToogleAirplaneMode_5g_WPA2_Personal(self, request, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
@@ -58,22 +58,22 @@ class TestToggleAirplaneMode(object):
         connData = get_ToggleAirplaneMode_data
 
         # Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         #print("ReportFlag: " + resultFlag)
         #setReportResultFlag(resultFlag)
         
         # Toggle AirplaneMode
-        Toggle_AirplaneMode_iOS(setup_perfectoMobile_iOS, connData)
+        Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
 
         # Verify AP After AirplaneMode
-        assert verify_APconnMobileDevice_iOS(ssidName, setup_perfectoMobile_iOS, connData)
+        assert verify_APconnMobileDevice_iOS(request, ssidName, setup_perfectoMobile_iOS, connData)
 
         # ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_iOS, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ToogleAirplaneMode_2g_WPA2_Personal(self, get_ToggleAirplaneMode_data,setup_perfectoMobile_iOS):
+    def test_ToogleAirplaneMode_2g_WPA2_Personal(self, request, get_ToggleAirplaneMode_data,setup_perfectoMobile_iOS):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
@@ -85,23 +85,23 @@ class TestToggleAirplaneMode(object):
         connData = get_ToggleAirplaneMode_data
 
         # Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         #print("ResultFlag: " + resultFlag)
        # print(resultFlag)
        # reportResultFlag.reportFlag = resultFlag
         
         # Toggle AirplaneMode
-        Toggle_AirplaneMode_iOS(setup_perfectoMobile_iOS, connData)
+        Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
 
         # Verify AP After AirplaneMode
-        assert verify_APconnMobileDevice_iOS(ssidName, setup_perfectoMobile_iOS, connData)
+        assert verify_APconnMobileDevice_iOS(request, ssidName, setup_perfectoMobile_iOS, connData)
 
         # ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_iOS, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ToogleAirplaneMode_5g_WPA(self, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
+    def test_ToogleAirplaneMode_5g_WPA(self, request, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
@@ -113,20 +113,20 @@ class TestToggleAirplaneMode(object):
         connData = get_ToggleAirplaneMode_data
 
         # Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         # Toggle AirplaneMode
-        Toggle_AirplaneMode_iOS(setup_perfectoMobile_iOS, connData)
+        Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
 
         # Verify AP After AirplaneMode
-        assert verify_APconnMobileDevice_iOS(ssidName, setup_perfectoMobile_iOS, connData)
+        assert verify_APconnMobileDevice_iOS(request, ssidName, setup_perfectoMobile_iOS, connData)
 
         # ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_iOS, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_ToogleAirplaneMode_2g_WPA(self, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
+    def test_ToogleAirplaneMode_2g_WPA(self, request, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
@@ -138,13 +138,13 @@ class TestToggleAirplaneMode(object):
         connData = get_ToggleAirplaneMode_data
 
         # Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         # Toggle AirplaneMode
-        Toggle_AirplaneMode_iOS(setup_perfectoMobile_iOS, connData)
+        Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
 
         # Verify AP After AirplaneMode
-        assert verify_APconnMobileDevice_iOS(ssidName, setup_perfectoMobile_iOS, connData)
+        assert verify_APconnMobileDevice_iOS(request, ssidName, setup_perfectoMobile_iOS, connData)
 
         # ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_iOS, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)

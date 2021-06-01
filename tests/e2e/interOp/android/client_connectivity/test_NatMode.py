@@ -45,7 +45,7 @@ class TestNatMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ClientConnectivity_5g_WPA2_Personal(self, get_APToMobileDevice_data, setup_perfectoMobile_android):
+    def test_ClientConnectivity_5g_WPA2_Personal(self, request, get_APToMobileDevice_data, setup_perfectoMobile_android):
         
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
@@ -58,17 +58,17 @@ class TestNatMode(object):
         connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_android(ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+        set_APconnMobileDevice_android(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
 
         #Verify Upload download Speed from device Selection
-        assert verifyUploadDownloadSpeed_android(setup_perfectoMobile_android, connData)
+        assert verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_android, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ClientConnectivity_2g_WPA2_Personal(self, get_APToMobileDevice_data, setup_perfectoMobile_android):
+    def test_ClientConnectivity_2g_WPA2_Personal(self, request, get_APToMobileDevice_data, setup_perfectoMobile_android):
             
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]  
         ssidName = profile_data["ssid_name"]
@@ -81,17 +81,17 @@ class TestNatMode(object):
         connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_android(ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+        set_APconnMobileDevice_android(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
 
         #Toggle AirplaneMode
-        assert Toggle_AirplaneMode_android(setup_perfectoMobile_android, connData)
+        assert Toggle_AirplaneMode_android(request, setup_perfectoMobile_android, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_android, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_ClientConnectivity_2g_WPA(self, get_APToMobileDevice_data, setup_perfectoMobile_android):
+    def test_ClientConnectivity_2g_WPA(self, request, get_APToMobileDevice_data, setup_perfectoMobile_android):
             
         profile_data = setup_params_general["ssid_modes"]["wpa"][0] 
         ssidName = profile_data["ssid_name"]
@@ -104,17 +104,17 @@ class TestNatMode(object):
         connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_android(ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+        set_APconnMobileDevice_android(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
 
         #Toggle AirplaneMode
-        assert Toggle_AirplaneMode_android(setup_perfectoMobile_android, connData)
+        assert Toggle_AirplaneMode_android(request, setup_perfectoMobile_android, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_android, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ClientConnectivity_5g_WPA(self, get_APToMobileDevice_data, setup_perfectoMobile_android):
+    def test_ClientConnectivity_5g_WPA(self, request, get_APToMobileDevice_data, setup_perfectoMobile_android):
             
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
@@ -127,10 +127,10 @@ class TestNatMode(object):
         connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_android(ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+        set_APconnMobileDevice_android(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
 
         #Toggle AirplaneMode
-        assert Toggle_AirplaneMode_android(setup_perfectoMobile_android, connData)
+        assert Toggle_AirplaneMode_android(request, setup_perfectoMobile_android, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_android, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)

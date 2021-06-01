@@ -45,7 +45,7 @@ class TestNatMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ClientConnectivity_5g_WPA2_Personal(self, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_5g_WPA2_Personal(self, request, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
         
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1] 
         ssidName = profile_data["ssid_name"]
@@ -58,17 +58,17 @@ class TestNatMode(object):
         connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Verify Upload download Speed from device Selection
-        verifyUploadDownloadSpeediOS(setup_perfectoMobile_iOS, connData)
+        verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_iOS, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ClientConnectivity_2g_WPA2_Personal(self, get_APToMobileDevice_data, setup_perfectoMobileWeb):
+    def test_ClientConnectivity_2g_WPA2_Personal(self, request, get_APToMobileDevice_data, setup_perfectoMobileWeb):
             
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -81,17 +81,17 @@ class TestNatMode(object):
         connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobileWeb, connData)
+        set_APconnMobileDevice_iOS(ssidName, request, ssidPassword, setup_perfectoMobileWeb, connData)
 
         #Verify Upload download Speed from device Selection
-        assert verifyUploadDownloadSpeediOS(setup_perfectoMobileWeb, connData)
+        assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobileWeb, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobileWeb, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobileWeb, ssidName, connData)
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_ClientConnectivity_2g_WPA(self, get_APToMobileDevice_data, setup_perfectoMobileWeb):
+    def test_ClientConnectivity_2g_WPA(self, request, get_APToMobileDevice_data, setup_perfectoMobileWeb):
             
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
@@ -104,17 +104,17 @@ class TestNatMode(object):
         connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobileWeb, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobileWeb, connData)
 
         #Verify Upload download Speed from device Selection
-        verifyUploadDownloadSpeediOS(setup_perfectoMobileWeb, connData)
+        verifyUploadDownloadSpeediOS(request, setup_perfectoMobileWeb, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobileWeb, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobileWeb, ssidName, connData)
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ClientConnectivity_5g_WPA(self, get_APToMobileDevice_data, setup_perfectoMobileWeb):
+    def test_ClientConnectivity_5g_WPA(self, request, get_APToMobileDevice_data, setup_perfectoMobileWeb):
             
         profile_data = setup_params_general["ssid_modes"]["wpa"][1] 
         ssidName = profile_data["ssid_name"]
@@ -127,10 +127,10 @@ class TestNatMode(object):
         connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobileWeb, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobileWeb, connData)
 
         #Verify Upload download Speed from device Selection
-        verifyUploadDownloadSpeediOS(setup_perfectoMobileWeb, connData)
+        verifyUploadDownloadSpeediOS(request, setup_perfectoMobileWeb, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobileWeb, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobileWeb, ssidName, connData)

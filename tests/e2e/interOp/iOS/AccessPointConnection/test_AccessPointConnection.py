@@ -45,7 +45,7 @@ class TestAccessPointConnectivety(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_AccessPointConnection_5g_WPA2_Personal(self, get_AccessPointConn_data, setup_perfectoMobile_iOS):
+    def test_AccessPointConnection_5g_WPA2_Personal(self, request, get_AccessPointConn_data, setup_perfectoMobile_iOS):
         
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
@@ -58,22 +58,22 @@ class TestAccessPointConnectivety(object):
         connData = get_AccessPointConn_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Need An ip To ping
-        wifi_ip = get_WifiIPAddress_iOS(setup_perfectoMobile_iOS, connData, ssidName)
+        wifi_ip = get_WifiIPAddress_iOS(request, setup_perfectoMobile_iOS, connData, ssidName)
 
         #Open Ping Application
         openApp(connData["bundleId-iOS-Ping"], setup_perfectoMobile_iOS)
 
-        ping_deftapps_iOS(setup_perfectoMobile_iOS, wifi_ip)
+        ping_deftapps_iOS(request, setup_perfectoMobile_iOS, wifi_ip)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_iOS, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_AccessPointConnection_2g_WPA2_Personal(self, get_AccessPointConn_data, setup_perfectoMobile_iOS):
+    def test_AccessPointConnection_2g_WPA2_Personal(self, request, get_AccessPointConn_data, setup_perfectoMobile_iOS):
         
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]  
         ssidName = profile_data["ssid_name"]
@@ -86,22 +86,22 @@ class TestAccessPointConnectivety(object):
         connData = get_AccessPointConn_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Need An ip To ping
-        wifi_ip = get_WifiIPAddress_iOS(setup_perfectoMobile_iOS, connData)
+        wifi_ip = get_WifiIPAddress_iOS(request, setup_perfectoMobile_iOS, connData)
 
         #Open Ping Application
         openApp(connData["bundleId-iOS-Ping"], setup_perfectoMobile_iOS)
 
-        ping_deftapps_iOS(setup_perfectoMobile_iOS, wifi_ip)
+        ping_deftapps_iOS(request, setup_perfectoMobile_iOS, wifi_ip)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_iOS, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_AccessPointConnection_5g_WPA(self, get_AccessPointConn_data, setup_perfectoMobile_iOS):
+    def test_AccessPointConnection_5g_WPA(self, request, get_AccessPointConn_data, setup_perfectoMobile_iOS):
         
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
@@ -114,22 +114,22 @@ class TestAccessPointConnectivety(object):
         connData = get_AccessPointConn_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Need An ip To ping
-        wifi_ip = get_WifiIPAddress_iOS(setup_perfectoMobile_iOS, connData, ssidName)
+        wifi_ip = get_WifiIPAddress_iOS(request, setup_perfectoMobile_iOS, connData, ssidName)
 
         #Open Ping Application
         openApp(connData["bundleId-iOS-Ping"], setup_perfectoMobile_iOS)
 
-        ping_deftapps_iOS(setup_perfectoMobile_iOS, wifi_ip)
+        ping_deftapps_iOS(request, setup_perfectoMobile_iOS, wifi_ip)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_iOS, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_AccessPointConnection_2g_WPA(self, get_AccessPointConn_data, setup_perfectoMobile_iOS):
+    def test_AccessPointConnection_2g_WPA(self, request, get_AccessPointConn_data, setup_perfectoMobile_iOS):
         
         profile_data = setup_params_general["ssid_modes"]["wpa"][0] 
         ssidName = profile_data["ssid_name"]
@@ -142,15 +142,15 @@ class TestAccessPointConnectivety(object):
         connData = get_AccessPointConn_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Need An ip To ping
-        wifi_ip = get_WifiIPAddress_iOS(setup_perfectoMobile_iOS, connData, ssidName)
+        wifi_ip = get_WifiIPAddress_iOS(request, setup_perfectoMobile_iOS, connData, ssidName)
 
         #Open Ping Application
         openApp(connData["bundleId-iOS-Ping"], setup_perfectoMobile_iOS)
 
-        ping_deftapps_iOS(setup_perfectoMobile_iOS, wifi_ip)
+        ping_deftapps_iOS(request, setup_perfectoMobile_iOS, wifi_ip)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_iOS, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)

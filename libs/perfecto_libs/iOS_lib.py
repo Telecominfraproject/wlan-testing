@@ -17,7 +17,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.webdriver.support import expected_conditions as EC
-
+import allure
 
 def openApp(appName, setup_perfectoMobile):
     #print("Refreshing App: " + appName)
@@ -40,7 +40,7 @@ def rebootPhone(setup_perfectoMobile):
     params = {}
     setup_perfectoMobile[0].execute_script('mobile:handset:reboot', params)
 
-def set_APconnMobileDevice_iOS(WifiName, WifiPass, setup_perfectoMobile, connData):
+def set_APconnMobileDevice_iOS(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Select Wifi/AccessPoint Connection")
     print("-------------------------------------")
@@ -113,16 +113,19 @@ def set_APconnMobileDevice_iOS(WifiName, WifiPass, setup_perfectoMobile, connDat
             wifiXpath2 = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='"+ WifiName + "']")))
             wifiXpath2.click()
         
-        except NoSuchElementException:
-            reportFlag = False
-            assert reportFlag
+        except NoSuchElementException or TimeoutException as e:
             print("\n Can't find Wifi/AP NAME.....CheckXpath & Wifi Name")
+            reportFlag = False
+            pytest.xfail("Selecting Wifi Failed", e)
+            request.config.cache.set(key="SelectingWifiFailed", value=e)
+            #allure.attach(name="Raj", body="hello world")
 
         #Set password if Needed
         try:
             wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
             wifiPassword.send_keys(WifiPass)
         except NoSuchElementException:
+            
             print("Enter Password Page Not Loaded  ")
         
         try:
@@ -139,7 +142,7 @@ def set_APconnMobileDevice_iOS(WifiName, WifiPass, setup_perfectoMobile, connDat
             print("No Wifi-AP Error Internet Error: " + WifiName)
     return reportFlag
 
-def Toggle_AirplaneMode_iOS(setup_perfectoMobile, connData):
+def Toggle_AirplaneMode_iOS(request, setup_perfectoMobile, connData):
     print("\n-----------------------")
     print("Toggle Airplane Mode")
     print("-----------------------")
@@ -194,7 +197,7 @@ def Toggle_AirplaneMode_iOS(setup_perfectoMobile, connData):
 
     return  currentResult
 
-def verify_APconnMobileDevice_iOS(WifiName, setup_perfectoMobile, connData):
+def verify_APconnMobileDevice_iOS(request, WifiName, setup_perfectoMobile, connData):
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
 
@@ -226,7 +229,7 @@ def verify_APconnMobileDevice_iOS(WifiName, setup_perfectoMobile, connData):
         print("Exception Checking Wifi/AP connection NAME...")    
         return None
 
-def ForgetWifiConnection(setup_perfectoMobile, wifiName, connData):
+def ForgetWifiConnection(request, setup_perfectoMobile, wifiName, connData):
     print("\n-----------------------------")
     print("Forget Wifi/AP Connection")
     print("-----------------------------")
@@ -294,7 +297,7 @@ def ForgetWifiConnection(setup_perfectoMobile, wifiName, connData):
         elementforgetWifi = driver.find_element_by_xpath(WifiXpathForgetWifi)
         elementforgetWifi.click()
 
-def Toggle_WifiMode_iOS(setup_perfectoMobile, connData):
+def Toggle_WifiMode_iOS(request, setup_perfectoMobile, connData):
     print("\n-----------------------")
     print("Toggle Wifi Mode")
     print("-----------------------")
@@ -325,7 +328,7 @@ def Toggle_WifiMode_iOS(setup_perfectoMobile, connData):
     except NoSuchElementException:
         print("Airplane Wifi Button not loaded...")
 
-def get_WifiIPAddress_iOS(setup_perfectoMobile, connData, wifiName):
+def get_WifiIPAddress_iOS(request, setup_perfectoMobile, connData, wifiName):
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
 
@@ -347,13 +350,9 @@ def get_WifiIPAddress_iOS(setup_perfectoMobile, connData, wifiName):
     report.step_start("Checking Internet Connection Error..")
 
     try:
-        driver.implicitly_wait(5)
         WifiInternetErrMsg = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
     except NoSuchElementException:
-        #Need to fail test case
-        driver.implicitly_wait(25)
         print("Wifi Connected without any errors: " + wifiName)
-        #Fail TEST CASE
 
     try:   
         WifiInternetInfo=driver.find_element_by_xpath("(//XCUIElementTypeButton[@label='More Info'])[1]")
@@ -451,15 +450,15 @@ def tearDown(setup_perfectoMobile):
         driver.close()
     except Exception as e:
         print(" -- Exception Not Able To close --")    
-        print (e.message)
+        print (e)
     finally:
         try:
             driver.quit()
         except Exception as e:
             print(" -- Exception Not Able To Quit --")    
-            print (e.message)
+            print (e)
 
-def verifyUploadDownloadSpeediOS(setup_perfectoMobile, get_APToMobileDevice_data):
+def verifyUploadDownloadSpeediOS(request, setup_perfectoMobile, get_APToMobileDevice_data):
     print("\n-------------------------------------")
     print("Verify Upload & Download Speed")
     print("-------------------------------------")
@@ -514,7 +513,6 @@ def verifyUploadDownloadSpeediOS(setup_perfectoMobile, get_APToMobileDevice_data
         currentResult = False
         
     return currentResult
-
 
 def downloadInstallOpenRoamingProfile(setup_perfectoMobile, get_APToMobileDevice_data):
     print("\n-------------------------------------")

@@ -103,12 +103,10 @@ def setup_perfectoMobile_android(request):
     def teardown():
         try:
             print("\n\n---------- Tear Down ----------")
-           
-
             testFailed = request.session.testsfailed
             if testFailed>0:
                 print ("Test Case Failure, please check report link: " + testCaseName)
-                reporting_client.test_stop(TestResultFactory.create_failure("Exception See Test Case"))
+                reporting_client.test_stop(TestResultFactory.create_failure(request.config.cache.get("SelectingWifiFailed", None)))
                 #seen = {None}
                 #session = request.node
                 #print(session)
@@ -128,16 +126,16 @@ def setup_perfectoMobile_android(request):
             driver.close()
         except Exception as e:
             print(" -- Exception While Tear Down --")    
-            reporting_client.test_stop(TestResultFactory.create_failure("Exception"))
+            reporting_client.test_stop(TestResultFactory.create_failure(e))
             print('Report-Url-Failure: ' + reporting_client.report_url() + '\n')
             driver.close()
-            print (e.message)
+            print (e)
         finally:
             try:
                 driver.quit()
             except Exception as e:
                 print(" -- Exception Not Able To Quit --")    
-                print (e.message)
+                print (e)
 
     request.addfinalizer(teardown)
 
@@ -146,7 +144,7 @@ def setup_perfectoMobile_android(request):
     else:
         yield driver,reporting_client 
 
-def set_APconnMobileDevice_android(WifiName, WifiPass, setup_perfectoMobile, connData):
+def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Select Wifi/AccessPoint Connection")
     print("-------------------------------------")
@@ -233,8 +231,10 @@ def set_APconnMobileDevice_android(WifiName, WifiPass, setup_perfectoMobile, con
                 report.step_start("Selecting Wifi: " + WifiName)
                 wifiSelectionElement = WebDriverWait(driver, 35).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='"+ WifiName + "']")))
                 wifiSelectionElement.click()
-            except NoSuchElementException:
+            except NoSuchElementException or TimeoutException as e:
                 print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
+                request.config.cache.set(key="SelectingWifiFailed", value=e)
+                pytest.xfail("Selecting Wifi Failed", e)
 
             #Set password if Needed
             try:
@@ -336,7 +336,7 @@ def set_APconnMobileDevice_android(WifiName, WifiPass, setup_perfectoMobile, con
 
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
         
-def ForgetWifiConnection(setup_perfectoMobile, WifiName, connData):
+def ForgetWifiConnection(request, setup_perfectoMobile, WifiName, connData):
     print("\n-----------------------------")
     print("Forget Wifi/AP Connection")
     print("-----------------------------")
@@ -484,7 +484,7 @@ def ForgetWifiConnection(setup_perfectoMobile, WifiName, connData):
 
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-def Toggle_AirplaneMode_android(setup_perfectoMobile, connData):
+def Toggle_AirplaneMode_android(request, setup_perfectoMobile, connData):
     print("\n-----------------------")
     print("Toggle Airplane Mode")
     print("-----------------------")
@@ -540,7 +540,7 @@ def Toggle_AirplaneMode_android(setup_perfectoMobile, connData):
             
     return airplaneFlag  
     
-def Toggle_WifiMode_android(setup_perfectoMobile, WifiName, connData):
+def Toggle_WifiMode_android(request, setup_perfectoMobile, WifiName, connData):
     print("\n-----------------------")
     print("Toggle Wifi Mode")
     print("-----------------------")
@@ -625,7 +625,7 @@ def Toggle_WifiMode_android(setup_perfectoMobile, WifiName, connData):
 
     return WifiFlag
 
-def verifyUploadDownloadSpeed_android(setup_perfectoMobile, get_APToMobileDevice_data):
+def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMobileDevice_data):
     print("\n-------------------------------------")
     print("Verify Upload & Download Speed")
     print("-------------------------------------")
@@ -646,7 +646,7 @@ def verifyUploadDownloadSpeed_android(setup_perfectoMobile, get_APToMobileDevice
         elementFindTxt.send_keys("Internet Speed Test")
     except Exception as e:
         print("Launching Safari Failed")
-        print (e.message)
+        print (e)
 
     try:
         print("Click Search Button")

@@ -45,7 +45,7 @@ class TestOpenRoaming(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_OpenRoaming_5g_WPA2_Personal(self, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_OpenRoaming_5g_WPA2_Personal(self, request, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
         
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1] 
         ssidName = profile_data["ssid_name"]
@@ -58,20 +58,20 @@ class TestOpenRoaming(object):
         connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Install Profile 
-        downloadInstallOpenRoamingProfile(setup_perfectoMobile_iOS, connData)
+        downloadInstallOpenRoamingProfile(request, setup_perfectoMobile_iOS, connData)
 
         #Verify Upload download Speed from device Selection
-        #verifyUploadDownloadSpeediOS(setup_perfectoMobile_iOS, connData)
+        #verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobile_iOS, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_OpenRoaming_2g_WPA2_Personal(self, get_APToMobileDevice_data, setup_perfectoMobileWeb):
+    def test_OpenRoaming_2g_WPA2_Personal(self, request, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
             
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -79,22 +79,25 @@ class TestOpenRoaming(object):
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
 
-        report = setup_perfectoMobileWeb[1]
-        driver = setup_perfectoMobileWeb[0]
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
         connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobileWeb, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+
+        #Install Profile 
+        downloadInstallOpenRoamingProfile(request, setup_perfectoMobile_iOS, connData)
 
         #Verify Upload download Speed from device Selection
-        assert verifyUploadDownloadSpeediOS(setup_perfectoMobileWeb, connData)
+        verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobileWeb, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_OpenRoaming_2g_WPA(self, get_APToMobileDevice_data, setup_perfectoMobileWeb):
+    def test_OpenRoaming_2g_WPA(self, request, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
             
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
@@ -102,22 +105,22 @@ class TestOpenRoaming(object):
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
 
-        report = setup_perfectoMobileWeb[1]
-        driver = setup_perfectoMobileWeb[0]
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
         connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobileWeb, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Verify Upload download Speed from device Selection
-        verifyUploadDownloadSpeediOS(setup_perfectoMobileWeb, connData)
+        verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobileWeb, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_OpenRoaming_5g_WPA(self, get_APToMobileDevice_data, setup_perfectoMobileWeb):
+    def test_OpenRoaming_5g_WPA(self, request, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
             
         profile_data = setup_params_general["ssid_modes"]["wpa"][1] 
         ssidName = profile_data["ssid_name"]
@@ -125,15 +128,18 @@ class TestOpenRoaming(object):
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
 
-        report = setup_perfectoMobileWeb[1]
-        driver = setup_perfectoMobileWeb[0]
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
         connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(ssidName, ssidPassword, setup_perfectoMobileWeb, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Verify Upload download Speed from device Selection
-        verifyUploadDownloadSpeediOS(setup_perfectoMobileWeb, connData)
+        verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(setup_perfectoMobileWeb, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
+
+
+ 

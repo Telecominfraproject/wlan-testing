@@ -99,7 +99,7 @@ def setup_perfectoMobileWeb(request):
         yield rdriver,reporting_client 
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def setup_perfectoMobile_iOS(request):
     from appium import webdriver
     driver = None
@@ -148,11 +148,11 @@ def setup_perfectoMobile_iOS(request):
     def teardown():
         try:
             print("\n\n---------- Tear Down ----------")
-    
+
             testFailed = request.session.testsfailed
             if testFailed>0:
                 print ("Test Case Failure, please check report link: " + testCaseName)
-                reporting_client.test_stop(TestResultFactory.create_failure("Exception See Test Case"))
+                reporting_client.test_stop(TestResultFactory.create_failure(request.config.cache.get("SelectingWifiFailed", None)))
                 #seen = {None}
                 #session = request.node
                 #print(session)
@@ -177,13 +177,14 @@ def setup_perfectoMobile_iOS(request):
             
             driver.close()
            
-            print (e.message)
+            print (e)
         finally:
             try:
                 driver.quit()
             except Exception as e:
                 print(" -- Exception Not Able To Quit --")    
-                print (e.message)
+                print (e)
+    
 
     request.addfinalizer(teardown)
 
