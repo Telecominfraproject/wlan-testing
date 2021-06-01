@@ -51,9 +51,8 @@ class RunTest:
             os.mkdir(self.local_report_path)
 
     def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[],
-                            station_name=[],
-                            mode="BRIDGE", vlan_id=1, band="twog"):
-        '''SINGLE CLIENT CONNECTIVITY using test_connect2.py'''
+                            station_name=[], mode="BRIDGE", vlan_id=1, band="twog"):
+        """SINGLE CLIENT CONNECTIVITY using test_connect2.py"""
         self.staConnect.sta_mode = 0
         self.staConnect.upstream_resource = 1
         if mode == "BRIDGE":

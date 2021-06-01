@@ -52,8 +52,6 @@ class ChamberView:
                                  )
             self.CreateDut.ssid = []
 
-
-
     def Chamber_View(self):
         if self.delete_old_scenario:
             self.CreateChamberview.clean_cv_scenario(type="Network-Connectivity", scenario_name=self.scenario_name)
@@ -66,7 +64,6 @@ class ChamberView:
         self.CreateChamberview.show_text_blob(None, None, True)  # Show changes on GUI
         self.CreateChamberview.sync_cv()
         return self.CreateChamberview, self.scenario_name
-
 
     def Create_Dut(self):
         self.CreateDut.setup()
@@ -88,7 +85,7 @@ class ChamberView:
         #  ]
         pass
 
-    def json_get(self,_req_url="/"):
-        cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port,)
+    def json_get(self, _req_url="/"):
+        cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port, )
         json_response = cli_base.json_get(_req_url=_req_url)
         return json_response
