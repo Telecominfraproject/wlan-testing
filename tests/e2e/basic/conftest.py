@@ -12,6 +12,7 @@ if "libs" not in sys.path:
 from controller.controller import ProfileUtility
 import time
 from lanforge.lf_tests import RunTest
+from lanforge.lf_tools import ChamberView
 import pytest
 import allure
 
@@ -19,6 +20,26 @@ import allure
 @pytest.fixture(scope="session")
 def instantiate_profile():
     yield ProfileUtility
+
+
+@pytest.fixture(scope="session")
+def lf_tools(get_configuration, testbed):
+    lf_tools_obj = ChamberView(lanforge_data=get_configuration['traffic_generator']['details'],
+                               access_point_data=get_configuration['access_point'],
+                               testbed=testbed)
+    yield lf_tools_obj
+
+
+@pytest.fixture(scope="session")
+def create_lanforge_chamberview(lf_tools):
+    scenario_object, scenario_name = lf_tools.Chamber_View()
+    return scenario_name
+
+
+@pytest.fixture(scope="session")
+def create_lanforge_chamberview_dut(lf_tools):
+    dut_object, dut_name = lf_tools.Create_Dut()
+    return dut_name
 
 
 @pytest.fixture(scope="session")
@@ -31,7 +52,7 @@ def setup_vlan():
 @allure.feature("CLIENT CONNECTIVITY SETUP")
 @pytest.fixture(scope="class")
 def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment_id,
-                   instantiate_profile, get_markers,
+                   instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                    get_security_flags, get_configuration, radius_info, get_apnos):
     instantiate_profile = instantiate_profile(sdk_client=setup_controller)
     vlan_id, mode = 0, 0
@@ -104,7 +125,6 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
         radius_info["name"] = testbed + "-Automation-Radius-Profile-" + testbed
         instantiate_profile.delete_profile_by_name(profile_name=testbed + "-Automation-Radius-Profile-" + testbed)
         try:
-            # pass
             instantiate_profile.create_radius_profile(radius_info=radius_info)
             allure.attach(body=str(radius_info),
                           name="Radius Profile Created")
@@ -114,7 +134,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
             test_cases['radius_profile'] = False
 
     # SSID Profile Creation
-    print(get_markers)
+    lf_dut_data = []
     for mode in profile_data['ssid']:
         if mode == "open":
             for j in profile_data["ssid"][mode]:
@@ -123,6 +143,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_open_ssid_profile(profile_data=j)
                             test_cases["open_2g"] = True
                             allure.attach(body=str(creates_profile),
@@ -136,6 +157,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_open_ssid_profile(profile_data=j)
                             test_cases["open_5g"] = True
                             allure.attach(body=str(creates_profile),
@@ -145,7 +167,6 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                         test_cases["open_5g"] = False
                         allure.attach(body=str(e),
                                       name="SSID Profile Creation Failed")
-
         if mode == "wpa":
             for j in profile_data["ssid"][mode]:
                 # print(j)
@@ -153,6 +174,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa_ssid_profile(profile_data=j)
                             test_cases["wpa_2g"] = True
                             allure.attach(body=str(creates_profile),
@@ -165,6 +187,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa_ssid_profile(profile_data=j)
                             test_cases["wpa_5g"] = True
                             allure.attach(body=str(creates_profile),
@@ -181,6 +204,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa2_personal_ssid_profile(profile_data=j)
                             test_cases["wpa2_personal_2g"] = True
                             allure.attach(body=str(creates_profile),
@@ -193,6 +217,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa2_personal_ssid_profile(profile_data=j)
                             test_cases["wpa2_personal_5g"] = True
                             allure.attach(body=str(creates_profile),
@@ -210,7 +235,9 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_wpa_wpa2_personal_mixed_ssid_profile(profile_data=j)
+                            lf_dut_data.append(j)
+                            creates_profile = instantiate_profile.create_wpa_wpa2_personal_mixed_ssid_profile(
+                                profile_data=j)
                             test_cases["wpa_wpa2_personal_mixed_2g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
@@ -222,7 +249,9 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_wpa_wpa2_personal_mixed_ssid_profile(profile_data=j)
+                            lf_dut_data.append(j)
+                            creates_profile = instantiate_profile.create_wpa_wpa2_personal_mixed_ssid_profile(
+                                profile_data=j)
                             test_cases["wpa_wpa2_personal_mixed_5g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
@@ -238,6 +267,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa3_personal_ssid_profile(profile_data=j)
                             test_cases["wpa3_personal_2g"] = True
                             allure.attach(body=str(creates_profile),
@@ -250,6 +280,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa3_personal_ssid_profile(profile_data=j)
                             test_cases["wpa3_personal_5g"] = True
                             allure.attach(body=str(creates_profile),
@@ -266,6 +297,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa3_personal_mixed_ssid_profile(
                                 profile_data=j)
                             test_cases["wpa3_personal_mixed_2g"] = True
@@ -279,6 +311,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa3_personal_mixed_ssid_profile(
                                 profile_data=j)
                             test_cases["wpa3_personal_mixed_5g"] = True
@@ -290,6 +323,37 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                         allure.attach(body=str(e),
                                       name="SSID Profile Creation Failed")
 
+        if mode == "wpa_enterprise":
+            for j in profile_data["ssid"][mode]:
+
+                if mode in get_markers.keys() and get_markers[mode]:
+                    try:
+                        if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
+                                j["appliedRadios"]):
+                            lf_dut_data.append(j)
+                            creates_profile = instantiate_profile.create_wpa_enterprise_ssid_profile(profile_data=j)
+                            test_cases["wpa_enterprise_2g"] = True
+                            allure.attach(body=str(creates_profile),
+                                          name="SSID Profile Created")
+
+                    except Exception as e:
+                        print(e)
+                        test_cases["wpa_enterprise_2g"] = False
+                        allure.attach(body=str(e),
+                                      name="SSID Profile Creation Failed")
+                    try:
+                        if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
+                                j["appliedRadios"]):
+                            lf_dut_data.append(j)
+                            creates_profile = instantiate_profile.create_wpa_enterprise_ssid_profile(profile_data=j)
+                            test_cases["wpa_enterprise_5g"] = True
+                            allure.attach(body=str(creates_profile),
+                                          name="SSID Profile Created")
+                    except Exception as e:
+                        print(e)
+                        test_cases["wpa_enterprise_5g"] = False
+                        allure.attach(body=str(e),
+                                      name="SSID Profile Creation Failed")
         if mode == "wpa2_enterprise":
             for j in profile_data["ssid"][mode]:
                 # print(j)
@@ -297,6 +361,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa2_enterprise_ssid_profile(profile_data=j)
                             test_cases["wpa2_enterprise_2g"] = True
                             allure.attach(body=str(creates_profile),
@@ -309,6 +374,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa2_enterprise_ssid_profile(profile_data=j)
                             test_cases["wpa2_enterprise_5g"] = True
                             allure.attach(body=str(creates_profile),
@@ -318,7 +384,6 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                         test_cases["wpa2_enterprise_5g"] = False
                         allure.attach(body=str(e),
                                       name="SSID Profile Creation Failed")
-
         if mode == "wpa3_enterprise":
             for j in profile_data["ssid"][mode]:
                 # print(j)
@@ -326,6 +391,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa3_enterprise_ssid_profile(profile_data=j)
                             test_cases["wpa3_enterprise_2g"] = True
                             allure.attach(body=str(creates_profile),
@@ -338,6 +404,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                     try:
                         if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
                                 j["appliedRadios"]):
+                            lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa3_enterprise_ssid_profile(profile_data=j)
                             test_cases["wpa3_enterprise_5g"] = True
                             allure.attach(body=str(creates_profile),
@@ -348,6 +415,102 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                         allure.attach(body=str(e),
                                       name="SSID Profile Creation Failed")
 
+        if mode == "wpa_wpa2_enterprise_mixed":
+            print("shivam", mode)
+            for j in profile_data["ssid"][mode]:
+                # print(j)
+                if mode in get_markers.keys() and get_markers[mode]:
+                    try:
+                        if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
+                                j["appliedRadios"]):
+                            lf_dut_data.append(j)
+                            creates_profile = instantiate_profile.create_wpa_wpa2_enterprise_mixed_ssid_profile(
+                                profile_data=j)
+                            test_cases["wpa3_enterprise_2g"] = True
+                            allure.attach(body=str(creates_profile),
+                                          name="SSID Profile Created")
+                    except Exception as e:
+                        print(e)
+                        test_cases["wpa3_enterprise_2g"] = False
+                        allure.attach(body=str(e),
+                                      name="SSID Profile Creation Failed")
+                    try:
+                        if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
+                                j["appliedRadios"]):
+                            lf_dut_data.append(j)
+                            creates_profile = instantiate_profile.create_wpa_wpa2_enterprise_mixed_ssid_profile(
+                                profile_data=j)
+                            test_cases["wpa3_enterprise_5g"] = True
+                            allure.attach(body=str(creates_profile),
+                                          name="SSID Profile Created")
+                    except Exception as e:
+                        print(e)
+                        test_cases["wpa3_enterprise_5g"] = False
+                        allure.attach(body=str(e),
+                                      name="SSID Profile Creation Failed")
+        if mode == "wpa3_enterprise_mixed":
+            for j in profile_data["ssid"][mode]:
+                # print(j)
+                if mode in get_markers.keys() and get_markers[mode]:
+                    try:
+                        if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
+                                j["appliedRadios"]):
+                            lf_dut_data.append(j)
+                            creates_profile = instantiate_profile.create_wpa3_enterprise_mixed_ssid_profile(
+                                profile_data=j)
+                            test_cases["wpa3_enterprise_2g"] = True
+                            allure.attach(body=str(creates_profile),
+                                          name="SSID Profile Created")
+                    except Exception as e:
+                        print(e)
+                        test_cases["wpa3_enterprise_2g"] = False
+                        allure.attach(body=str(e),
+                                      name="SSID Profile Creation Failed")
+                    try:
+                        if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
+                                j["appliedRadios"]):
+                            lf_dut_data.append(j)
+                            creates_profile = instantiate_profile.create_wpa3_enterprise_mixed_ssid_profile(
+                                profile_data=j)
+                            test_cases["wpa3_enterprise_5g"] = True
+                            allure.attach(body=str(creates_profile),
+                                          name="SSID Profile Created")
+                    except Exception as e:
+                        print(e)
+                        test_cases["wpa3_enterprise_5g"] = False
+                        allure.attach(body=str(e),
+                                      name="SSID Profile Creation Failed")
+
+        if mode == "wep":
+            for j in profile_data["ssid"][mode]:
+                # print(j)
+                if mode in get_markers.keys() and get_markers[mode]:
+                    try:
+                        if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
+                                j["appliedRadios"]):
+                            lf_dut_data.append(j)
+                            creates_profile = instantiate_profile.create_wep_ssid_profile(profile_data=j)
+                            test_cases["wpa3_enterprise_2g"] = True
+                            allure.attach(body=str(creates_profile),
+                                          name="SSID Profile Created")
+                    except Exception as e:
+                        print(e)
+                        test_cases["wpa3_enterprise_2g"] = False
+                        allure.attach(body=str(e),
+                                      name="SSID Profile Creation Failed")
+                    try:
+                        if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
+                                j["appliedRadios"]):
+                            lf_dut_data.append(j)
+                            creates_profile = instantiate_profile.create_wep_ssid_profile(profile_data=j)
+                            test_cases["wpa3_enterprise_5g"] = True
+                            allure.attach(body=str(creates_profile),
+                                          name="SSID Profile Created")
+                    except Exception as e:
+                        print(e)
+                        test_cases["wpa3_enterprise_5g"] = False
+                        allure.attach(body=str(e),
+                                      name="SSID Profile Creation Failed")
     # Equipment AP Profile Creation
     try:
         instantiate_profile.set_ap_profile(profile_data=profile_data['equipment_ap'])
@@ -405,7 +568,22 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
         time.sleep(10)
     allure.attach(body=str("VIF Config: " + str(vif_config) + "\n" + "VIF State: " + str(vif_state)),
                   name="SSID Profiles in VIF Config and VIF State: ")
-    print(test_cases)
+
+    ssid_info = ap_ssh.get_ssid_info()
+    ssid_data = []
+    for i in range(0, len(ssid_info)):
+        ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] +
+                " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
+        ssid_data.append(ssid)
+
+    # Add bssid password and security from iwinfo data
+    # Format SSID Data in the below format
+    # ssid_data = [
+    #     ['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58'],
+    #     ['ssid_idx=1 ssid=Default-SSID-5gl password=12345678 bssid=90:3c:b3:94:48:59']
+    # ]
+
+    lf_tools.update_ssid(ssid_data=ssid_data)
 
     def teardown_session():
         print("\nRemoving Profiles")
@@ -423,7 +601,9 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
 
 @pytest.fixture(scope="session")
 def lf_test(get_configuration):
+    # print(get_configuration)
     obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'])
+    # pytest.exit("")
     yield obj
 
 
