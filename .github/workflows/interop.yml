@@ -65,17 +65,19 @@ jobs:
       run: |
         wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
         tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+        
     - name: set job name
       id: job
       run: echo "::set-output name=name::interop-ci-${{ github.run_number }}"
 
-    - name: create configuration.py secret
-      run: |
-        cat << EOF > configuration.py
-        ${{ secrets.LAB_CONFIGURATION }}
-        EOF
-        kubectl create secret generic configuration --from-file=configuration=./configuration.py
-    - name: run sanity tests
+#    - name: create configuration.py secret
+#      run: |
+#        cat << EOF > configuration.py
+#        ${{ secrets.LAB_CONFIGURATION }}
+#        EOF
+#        kubectl create secret generic configuration --from-file=configuration=./configuration.py
+        
+    - name: run interop tests
       run: |
         cat <<EOF | kubectl apply -f -
         apiVersion: batch/v1
