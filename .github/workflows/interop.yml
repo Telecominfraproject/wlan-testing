@@ -67,7 +67,7 @@ jobs:
         tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
     - name: set job name
       id: job
-      run: echo "::set-output name=name::nightly-ci-${{ github.run_number }}"
+      run: echo "::set-output name=name::interop-ci-${{ github.run_number }}"
 
     - name: create configuration.py secret
       run: |
