@@ -55,7 +55,7 @@ def getDeviceModelName(setup_perfectoMobile):
     print("ModelName: " + deviceModel)  
     return deviceModel
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def setup_perfectoMobile_android(request):
     from appium import webdriver
     driver = None
