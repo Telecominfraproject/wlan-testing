@@ -34,12 +34,12 @@ setup_params_general = {
 #@pytest.mark.interop_iOS
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 
-@pytest.mark.parametrize(
-    'setup_profiles',
-    [setup_params_general],
-    indirect=True,
-   scope="class"
-)
+#@pytest.mark.parametrize(
+ #   'setup_profiles',
+ #   [setup_params_general],
+ #   indirect=True,
+ #  scope="class"
+#)
 @pytest.mark.usefixtures("setup_profiles")
 class TestOpenRoaming(object):
 
@@ -64,7 +64,7 @@ class TestOpenRoaming(object):
         downloadInstallOpenRoamingProfile(request, setup_perfectoMobile_iOS, connData)
 
         #Verify Upload download Speed from device Selection
-        #verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
+        verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
 
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)

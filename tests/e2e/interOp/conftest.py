@@ -153,6 +153,7 @@ def setup_perfectoMobile_iOS(request):
             if testFailed>0:
                 print ("Test Case Failure, please check report link: " + testCaseName)
                 reporting_client.test_stop(TestResultFactory.create_failure(request.config.cache.get("SelectingWifiFailed", None)))
+                request.config.cache.set(key="SelectingWifiFailed", value="Cache Cleared!!")
                 #seen = {None}
                 #session = request.node
                 #print(session)
@@ -257,8 +258,6 @@ def get_ToggleWifiMode_data(request):
         "appPackage-android": request.config.getini("appPackage-android")      
     }
     yield passPoint_data
-
-
 
 
 @pytest.fixture(scope="function")

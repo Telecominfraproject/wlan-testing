@@ -33,23 +33,27 @@ setup_params_general = {
 @pytest.mark.AccessPassPointConnectivety
 @pytest.mark.interop_iOS
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
-@pytest.mark.parametrize(
-    'setup_profiles',
-    [setup_params_general],
-    indirect=True,
-    scope="class"
-)
+#@pytest.mark.parametrize(
+   # 'setup_profiles',
+  #  [setup_params_general],
+  #  indirect=True,
+  #  scope="class"
+#)
+#@pytest.mark.usefixtures("setup_profiles")
 
-@pytest.mark.usefixtures("setup_profiles")
 class TestAccessPointConnectivety(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_AccessPointConnection_5g_WPA2_Personal(self, request, get_AccessPointConn_data, setup_perfectoMobile_iOS):
         
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
-        ssidName = profile_data["ssid_name"]
-        ssidPassword = profile_data["security_key"]
+        #profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        #ssidName = profile_data["ssid_name"]
+       # ssidPassword = profile_data["security_key"]
+
+        ssidName = "Hello"
+        ssidPassword = "Password"
+
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
      

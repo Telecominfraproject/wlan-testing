@@ -4,6 +4,7 @@
         1. controller_data/sdk_base_url
         2. login credentials
 """
+from ast import Str
 from logging import exception
 import unittest
 import warnings
@@ -46,7 +47,7 @@ def set_APconnMobileDevice_iOS(request, WifiName, WifiPass, setup_perfectoMobile
     print("-------------------------------------")
    
     reportFlag = True
-
+   
     print("Verifying Wifi/AP Connection Details....") 
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
@@ -101,23 +102,17 @@ def set_APconnMobileDevice_iOS(request, WifiName, WifiPass, setup_perfectoMobile
             print("No Error with Wifi-AP Connection: " + Wifi_AP_Name)
 
     else:
-        print("Selecting Wifi: " + WifiName)
-        #try:
+        print("Selecting Wifi: " + WifiName)   
         report.step_start("Selecting Wifi...: " + WifiName)
         element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']/XCUIElementTypeStaticText[2]")
         element.click()
-       # except NoSuchElementException:
-         #   print("Exception: Selection Wifi Network")
-
         try:
             wifiXpath2 = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='"+ WifiName + "']")))
             wifiXpath2.click()
-        
-        except NoSuchElementException or TimeoutException as e:
-            print("\n Can't find Wifi/AP NAME.....CheckXpath & Wifi Name")
-            reportFlag = False
-            pytest.xfail("Selecting Wifi Failed", e)
-            request.config.cache.set(key="SelectingWifiFailed", value=e)
+        except Exception as e:
+            print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
+            request.config.cache.set(key="SelectingWifiFailed", value=str(e))
+            pytest.xfail("Selecting Wifi Failed: " + e)
             #allure.attach(name="Raj", body="hello world")
 
         #Set password if Needed

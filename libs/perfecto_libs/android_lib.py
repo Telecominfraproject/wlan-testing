@@ -106,7 +106,8 @@ def setup_perfectoMobile_android(request):
             testFailed = request.session.testsfailed
             if testFailed>0:
                 print ("Test Case Failure, please check report link: " + testCaseName)
-                reporting_client.test_stop(TestResultFactory.create_failure(request.config.cache.get("SelectingWifiFailed", None)))
+                exceptionFailure = request.config.cache.get("SelectingWifiFailed", None)
+                reporting_client.test_stop(TestResultFactory.create_failure(exceptionFailure))
                 #seen = {None}
                 #session = request.node
                 #print(session)
@@ -233,8 +234,8 @@ def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMo
                 wifiSelectionElement.click()
             except NoSuchElementException or TimeoutException as e:
                 print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
-                request.config.cache.set(key="SelectingWifiFailed", value=e)
-                pytest.xfail("Selecting Wifi Failed", e)
+                request.config.cache.set(key="SelectingWifiFailed", value=str(e))
+                pytest.xfail("Selecting Wifi Failed: " + e)
 
             #Set password if Needed
             try:
