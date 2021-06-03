@@ -16,7 +16,7 @@ import allure
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-from iOS_lib import closeApp, openApp, verifyUploadDownloadSpeediOS, downloadInstallOpenRoamingProfile, ForgetWifiConnection, Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
+from iOS_lib import closeApp, openApp, ForgetAllWifiConnection, deleteOpenRoamingInstalledProfile, verifyUploadDownloadSpeediOS, downloadInstallOpenRoamingProfile, ForgetWifiConnection, Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
 
 setup_params_general = {
     "mode": "NAT",
@@ -35,21 +35,24 @@ setup_params_general = {
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 
 #@pytest.mark.parametrize(
- #   'setup_profiles',
- #   [setup_params_general],
- #   indirect=True,
- #  scope="class"
+  #  'setup_profiles',
+  #  [setup_params_general],
+  #  indirect=True,
+  # scope="class"
 #)
-@pytest.mark.usefixtures("setup_profiles")
+#@pytest.mark.usefixtures("setup_profiles")
 class TestOpenRoaming(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_OpenRoaming_5g_WPA2_Personal(self, request, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
         
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1] 
-        ssidName = profile_data["ssid_name"]
-        ssidPassword = profile_data["security_key"]
+        #profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1] 
+        #ssidName = profile_data["ssid_name"]
+        #ssidPassword = profile_data["security_key"]
+        
+        ssidName = "ssid-passpoint-osu"
+        ssidPassword = "something"
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
 
@@ -57,17 +60,35 @@ class TestOpenRoaming(object):
         driver = setup_perfectoMobile_iOS[0]
         connData = get_APToMobileDevice_data
 
+        ssidName = "ssid-passpoint-osu"
+        ssidPassword = "something"
+
+        ForgetAllWifiConnection(request, setup_perfectoMobile_iOS, connData)
+
+        #Delete Profile Under Settings
+        #deleteOpenRoamingInstalledProfile(request, setup_perfectoMobile_iOS, connData)    
+
+
         #Set Wifi/AP Mode
         set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Install Profile 
-        downloadInstallOpenRoamingProfile(request, setup_perfectoMobile_iOS, connData)
+        OpenRoamingWifiName = downloadInstallOpenRoamingProfile(request, setup_perfectoMobile_iOS, connData)
+        print ("OpenRoaming Profile Connected WifiName: " + OpenRoamingWifiName)
 
+        #ForgetWifi Original
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
+
+        assert verify_APconnMobileDevice_iOS(request, OpenRoamingWifiName, setup_perfectoMobile_iOS, connData)
+       
         #Verify Upload download Speed from device Selection
         verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
 
-        #ForgetWifi
-        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
+        #Delete Profile Under Settings
+        #deleteOpenRoamingInstalledProfile(request, setup_perfectoMobile_iOS, connData)    
+
+      
+      
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal

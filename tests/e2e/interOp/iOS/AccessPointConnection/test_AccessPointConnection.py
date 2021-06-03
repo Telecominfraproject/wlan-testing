@@ -1,4 +1,5 @@
 from logging import exception
+import io
 import unittest
 import warnings
 from perfecto.test import TestResultFactory
@@ -47,16 +48,13 @@ class TestAccessPointConnectivety(object):
     @pytest.mark.wpa2_personal
     def test_AccessPointConnection_5g_WPA2_Personal(self, request, get_AccessPointConn_data, setup_perfectoMobile_iOS):
         
-        #profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
-        #ssidName = profile_data["ssid_name"]
-       # ssidPassword = profile_data["security_key"]
-
-        ssidName = "Hello"
-        ssidPassword = "Password"
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        ssidName = profile_data["ssid_name"]
+        ssidPassword = profile_data["security_key"]
 
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
-     
+
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
         connData = get_AccessPointConn_data

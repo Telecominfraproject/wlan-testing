@@ -232,10 +232,10 @@ def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMo
                 report.step_start("Selecting Wifi: " + WifiName)
                 wifiSelectionElement = WebDriverWait(driver, 35).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='"+ WifiName + "']")))
                 wifiSelectionElement.click()
-            except NoSuchElementException or TimeoutException as e:
+            except Exception as e:
                 print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
                 request.config.cache.set(key="SelectingWifiFailed", value=str(e))
-                pytest.xfail("Selecting Wifi Failed: " + e)
+                assert False
 
             #Set password if Needed
             try:
