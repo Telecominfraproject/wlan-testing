@@ -1,32 +1,34 @@
 CONFIGURATION = {
 
-
-   # This is sample Config of a Testbed
+    # This is sample Config of a Testbed
     "basic-lab": {
         "controller": {
             'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
             'username': 'support@example.com',  # cloud controller Login
-            'password': 'support',          # Cloud Controller Login Password
-            'version': '1.1.0-SNAPSHOT',    # Controller version
-            'commit_date': "2021-04-27"     # Controller version sdk, commit date
+            'password': 'support',  # Cloud Controller Login Password
+            'version': '1.1.0-SNAPSHOT',  # Controller version
+            'commit_date': "2021-04-27"  # Controller version sdk, commit date
         },
         'access_point': [
             {
-                'model': 'ecw5410',     # AP Model, can be found in ap console using "node" command
-                'mode': 'wifi5',        # wifi5/wifi6   can be found on AP Hardware page on Confluence
-                'serial': '3c2c99f44e77',   # "node" command has serial_number information
-                'jumphost': True,           # True, if you have AP On serial console and not ssh access, False, if you have AP ssh access from the machine
-                'ip': "localhost",          # IP Address of System, which has AP Connected to serial cable (if jumphost is True), else -  AP IP Address
-                'username': "lanforge",     # ssh username of system (lab-ctlr/ap)
-                'password': "pumpkin77",    # ssh password for system (lab-ctlr/ap)
+                'model': 'ecw5410',  # AP Model, can be found in ap console using "node" command
+                'mode': 'wifi5',  # wifi5/wifi6   can be found on AP Hardware page on Confluence
+                'serial': '3c2c99f44e77',  # "node" command has serial_number information
+                'jumphost': True,
+                # True, if you have AP On serial console and not ssh access, False, if you have AP ssh access from the machine
+                'ip': "localhost",
+                # IP Address of System, which has AP Connected to serial cable (if jumphost is True), else -  AP IP Address
+                'username': "lanforge",  # ssh username of system (lab-ctlr/ap)
+                'password': "pumpkin77",  # ssh password for system (lab-ctlr/ap)
                 'port': 8803,  # 22,        # ssh port for system (lab-ctlr/ap)
                 'jumphost_tty': '/dev/ttyAP1',  # if jumphost is True, enter the serial console device name
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.0.0-rc2.tar.gz"   # Enter the Target AP Version URL for Testing
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.0.0-rc2.tar.gz"
+                # Enter the Target AP Version URL for Testing
             }
         ],
         # Traffic generator
         "traffic_generator": {
-            "name": "lanforge", #( lanforge/ perfecto)
+            "name": "lanforge",  # ( lanforge/ perfecto)
             # Details for LANforge system
             "details": {
                 "ip": "localhost",  # localhost,
@@ -36,18 +38,46 @@ CONFIGURATION = {
                 "AX-Radio": ["wiphy0", "wiphy1", "wiphy2", "wiphy3"],
                 "upstream": "1.1.eth2",
                 "upstream_subnet": "10.28.2.1/24",
-                "uplink" : "1.1.eth3",
+                "uplink": "1.1.eth3",
                 "2.4G-Station-Name": "wlan0",
                 "5G-Station-Name": "wlan0",
                 "AX-Station-Name": "ax"
             }
         }
-        
-    }
+
+    },
+    "interop":  {
+            "controller": {
+                'url': "https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build",  # API base url for the controller
+                'username': 'support@example.com',
+                'password': 'support',
+                'version': '1.0.0-SNAPSHOT',
+                'commit_date': '2021-03-01'
+            },
+            'access_point': [
+                {
+                    'model': 'ecw5410',
+                    'mode': 'wifi5',
+                    'serial': '68215fd2f78c',
+                    'jumphost': True,
+                    'ip': "localhost",
+                    'username': "lanforge",
+                    'password': "pumpkin77",
+                    'port': 8803,
+                    'jumphost_tty': '/dev/ttyAP1',
+                    'version': "ecw5410-2021-04-26-pending-3fc41fa"
+                }
+            ],
+            "traffic_generator":  {
+                "name": "Perfecto",
+                "details": {
+                    "securityToken": "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJqdGkiOiJjYjRjYjQzYi05Y2FiLTQxNzQtOTYxYi04MDEwNTZkNDM2MzgiLCJleHAiOjAsIm5iZiI6MCwiaWF0IjoxNjExNTk0NzcxLCJpc3MiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwiYXVkIjoiaHR0cHM6Ly9hdXRoMi5wZXJmZWN0b21vYmlsZS5jb20vYXV0aC9yZWFsbXMvdGlwLXBlcmZlY3RvbW9iaWxlLWNvbSIsInN1YiI6IjdiNTMwYWUwLTg4MTgtNDdiOS04M2YzLTdmYTBmYjBkZGI0ZSIsInR5cCI6Ik9mZmxpbmUiLCJhenAiOiJvZmZsaW5lLXRva2VuLWdlbmVyYXRvciIsIm5vbmNlIjoiZTRmOTY4NjYtZTE3NS00YzM2LWEyODMtZTQwMmI3M2U5NzhlIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYWNkNTQ3MTctNzJhZC00MGU3LWI0ZDctZjlkMTAyNDRkNWZlIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJyZXBvcnRpdW0iOnsicm9sZXMiOlsiYWRtaW5pc3RyYXRvciJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.SOL-wlZiQ4BoLLfaeIW8QoxJ6xzrgxBjwSiSzkLBPYw",
+                    "perfectoURL": "tip"
+                }
+            }
+        }
 
 }
-
-
 
 RADIUS_SERVER_DATA = {
     "ip": "10.10.10.72",
