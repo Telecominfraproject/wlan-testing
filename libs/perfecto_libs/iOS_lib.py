@@ -649,7 +649,7 @@ def downloadInstallOpenRoamingProfile(request, setup_perfectoMobile, get_APToMob
       #  assert reportFlag
 
 
-    return OpenRoamingWifiName
+    #return OpenRoamingWifiName
 
 def ForgetAllWifiConnection(request, setup_perfectoMobile, connData):
     print("\n-----------------------------")
