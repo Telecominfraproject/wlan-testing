@@ -146,10 +146,11 @@ class APNOS:
                 mac_info_list.pop(0)
                 info.append(":".join(mac_info_list).replace("'", ""))
             if ssid[0].split(":")[0] == "b'security":
-                security = ssid[0].split(":")[1].split(",")[2].replace("]", "").replace('"', "")
+                security = ssid[0].split(":")[1].split(",")[2].replace("]", "").replace('"', "").replace("'", "")
                 info.append(security)
-                security_key = ssid[0].split(":")[1].split(",")[4].replace('"', "").replace("]", "")
-                info.append(security_key)
+                if security != "OPEN":
+                    security_key = ssid[0].split(":")[1].split(",")[4].replace('"', "").replace("]", "")
+                    info.append(security_key)
             if ssid[0].split(":")[0] == "b'ssid":
                 info.append(ssid[0].split(":")[1].replace("'", ""))
                 ssid_info_list.append(info)
@@ -279,11 +280,11 @@ class APNOS:
 if __name__ == '__main__':
     obj = {
         'jumphost': True,
-        'ip': "192.168.200.80",
+        'ip': "192.168.80.99",
         'username': "lanforge",
         'password': "lanforge",
         'port': 22,
-        'jumphost_tty': '/dev/ttyUSB0',
+        'jumphost_tty': '/dev/ttyAP1',
 
     }
     var = APNOS(credentials=obj)
