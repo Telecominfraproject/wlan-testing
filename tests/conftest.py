@@ -278,8 +278,9 @@ def upload_firmware(should_upload_firmware, instantiate_firmware):
 
 @pytest.fixture(scope="session")
 def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_firmware_cloud, get_latest_firmware,
-                     should_upgrade_firmware):
+                     should_upgrade_firmware, should_upload_firmware):
     """yields the status of upgrade of firmware. waits for 300 sec after each upgrade request"""
+    print(should_upgrade_firmware, should_upload_firmware)
     status_list = []
     if get_latest_firmware != check_ap_firmware_cloud:
         if request.config.getoption("--skip-upgrade"):
@@ -460,7 +461,7 @@ def traffic_generator_connectivity(testbed, get_configuration):
             if not (lanforge_GUI_version or lanforge_gui_build_date or lanforge_gui_git_version):
                 yield False
             else:
-                yield True
+                yield lanforge_GUI_version
         except:
             yield False
     else:

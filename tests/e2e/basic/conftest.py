@@ -582,7 +582,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
     #     ['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58'],
     #     ['ssid_idx=1 ssid=Default-SSID-5gl password=12345678 bssid=90:3c:b3:94:48:59']
     # ]
-
+    allure.attach(name="SSID DATA IN LF DUT", body=str(ssid_data))
     lf_tools.update_ssid(ssid_data=ssid_data)
 
     def teardown_session():
@@ -593,7 +593,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
         instantiate_profile.delete_profile(instantiate_profile.profile_creation_ids["rf"])
         allure.attach(body=str(profile_data['equipment_ap']['profile_name'] + "\n"),
                       name="Tear Down in Profiles ")
-        time.sleep(20)
+        time.sleep(5)
 
     request.addfinalizer(teardown_session)
     yield test_cases

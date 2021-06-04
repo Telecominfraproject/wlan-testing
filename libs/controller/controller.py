@@ -397,7 +397,7 @@ class ProfileUtility:
             for i in self.default_profiles:
                 skip_delete_id.append(self.default_profiles[i]._id)
             delete_ids = list(set(delete_ids) - set(delete_ids).intersection(set(skip_delete_id)))
-            # print(delete_ids)
+            print(delete_ids)
             for i in delete_ids:
                 self.set_equipment_to_profile(profile_id=i)
             self.delete_profile(profile_id=delete_ids)
@@ -1013,14 +1013,15 @@ class FirmwareUtility:
 # This is for Unit tests on Controller Library
 if __name__ == '__main__':
     controller = {
-        'url': "https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build",  # API base url for the controller
+        'url': "http://wlan-portal-svc-digicert.cicd.lab.wlan.tip.build",  # API base url for the controller
         'username': 'support@example.com',
         'password': 'support',
         'version': "1.1.0-SNAPSHOT",
         'commit_date': "2021-04-27"
     }
     api = Controller(controller_data=controller)
-    # profile = ProfileUtility(sdk_client=api)
+    profile = ProfileUtility(sdk_client=api)
+    profile.cleanup_profiles()
     # profile.get_default_profiles()
     # profile_data = {
     #     "profile_name": "ssid_wep_2g",
