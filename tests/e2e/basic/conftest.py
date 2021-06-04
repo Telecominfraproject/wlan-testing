@@ -416,7 +416,6 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                                       name="SSID Profile Creation Failed")
 
         if mode == "wpa_wpa2_enterprise_mixed":
-            print("shivam", mode)
             for j in profile_data["ssid"][mode]:
                 # print(j)
                 if mode in get_markers.keys() and get_markers[mode]:
@@ -426,12 +425,12 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                             lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa_wpa2_enterprise_mixed_ssid_profile(
                                 profile_data=j)
-                            test_cases["wpa3_enterprise_2g"] = True
+                            test_cases["wpa_wpa2_enterprise_mixed_2g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
                     except Exception as e:
                         print(e)
-                        test_cases["wpa3_enterprise_2g"] = False
+                        test_cases["wpa_wpa2_enterprise_mixed_2g"] = False
                         allure.attach(body=str(e),
                                       name="SSID Profile Creation Failed")
                     try:
@@ -440,12 +439,12 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                             lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa_wpa2_enterprise_mixed_ssid_profile(
                                 profile_data=j)
-                            test_cases["wpa3_enterprise_5g"] = True
+                            test_cases["wpa_wpa2_enterprise_mixed_5g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
                     except Exception as e:
                         print(e)
-                        test_cases["wpa3_enterprise_5g"] = False
+                        test_cases["wpa_wpa2_enterprise_mixed_5g"] = False
                         allure.attach(body=str(e),
                                       name="SSID Profile Creation Failed")
         if mode == "wpa3_enterprise_mixed":
@@ -458,12 +457,12 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                             lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa3_enterprise_mixed_ssid_profile(
                                 profile_data=j)
-                            test_cases["wpa3_enterprise_2g"] = True
+                            test_cases["wpa3_enterprise_mixed_2g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
                     except Exception as e:
                         print(e)
-                        test_cases["wpa3_enterprise_2g"] = False
+                        test_cases["wpa3_enterprise_mixed_2g"] = False
                         allure.attach(body=str(e),
                                       name="SSID Profile Creation Failed")
                     try:
@@ -472,12 +471,12 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                             lf_dut_data.append(j)
                             creates_profile = instantiate_profile.create_wpa3_enterprise_mixed_ssid_profile(
                                 profile_data=j)
-                            test_cases["wpa3_enterprise_5g"] = True
+                            test_cases["wpa3_enterprise_mixed_5g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
                     except Exception as e:
                         print(e)
-                        test_cases["wpa3_enterprise_5g"] = False
+                        test_cases["wpa3_enterprise_mixed_5g"] = False
                         allure.attach(body=str(e),
                                       name="SSID Profile Creation Failed")
 
@@ -571,7 +570,10 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
 
     ssid_info = ap_ssh.get_ssid_info()
     ssid_data = []
+    print(ssid_info)
     for i in range(0, len(ssid_info)):
+        if ssid_info[i][1] == "OPEN":
+            ssid_info[i].append("")
         ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] +
                 " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
         ssid_data.append(ssid)
@@ -593,7 +595,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
         instantiate_profile.delete_profile(instantiate_profile.profile_creation_ids["rf"])
         allure.attach(body=str(profile_data['equipment_ap']['profile_name'] + "\n"),
                       name="Tear Down in Profiles ")
-        time.sleep(5)
+        time.sleep(20)
 
     request.addfinalizer(teardown_session)
     yield test_cases

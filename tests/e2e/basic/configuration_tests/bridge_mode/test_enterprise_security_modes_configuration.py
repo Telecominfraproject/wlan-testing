@@ -3,6 +3,7 @@
     Profile Configuration : Enterprise SSID's Bridge Mode
 
 """
+import time
 
 import pytest
 import allure
@@ -160,9 +161,11 @@ class TestSetupBridgeEnterpriseSuiteA(object):
                                           msg='Failed to push profile')
             assert False
 
+    @allure.severity(allure.severity_level.BLOCKER)
     def test_verify_vif_state(self, setup_profiles, update_report,
                               test_cases):
         """ VIF Config Suite B Enterprise """
+        time.sleep(180)
         if setup_profiles['vifs']:
             update_report.update_testrail(case_id=test_cases["bridge_vifs"],
                                           status_id=1,
@@ -268,12 +271,12 @@ class TestSetupBridgeEnterpriseSuiteB(object):
                                         test_cases):
         """ Equipment AP Profile Suite B Enterprise """
         if setup_profiles['equipment_ap']:
-            update_report.update_testrail(case_id=test_cases["equipment_ap_bridge"],
+            update_report.update_testrail(case_id=test_cases["ap_profile_bridge"],
                                           status_id=1,
                                           msg='profile created successfully')
             assert setup_profiles['equipment_ap']
         else:
-            update_report.update_testrail(case_id=test_cases["equipment_ap_bridge"],
+            update_report.update_testrail(case_id=test_cases["ap_profile_bridge"],
                                           status_id=5,
                                           msg='Failed to create profile')
             assert False
@@ -292,9 +295,11 @@ class TestSetupBridgeEnterpriseSuiteB(object):
                                           msg='Failed to push profile')
             assert False
 
+    @allure.severity(allure.severity_level.BLOCKER)
     def test_verify_vif_state(self, setup_profiles, update_report,
                               test_cases):
         """ VIF State Suite B Enterprise """
+        time.sleep(180)
         if setup_profiles['vifs']:
             update_report.update_testrail(case_id=test_cases["bridge_vifs"],
                                           status_id=1,

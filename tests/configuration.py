@@ -1,5 +1,44 @@
 CONFIGURATION = {
-
+    "basic-01": {
+        "controller": {
+            'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
+            'username': 'support@example.com',
+            'password': 'support',
+            'version': '1.1.0-SNAPSHOT',
+            'commit_date': "2021-06-01"
+        },
+        'access_point': [
+            {
+                'model': 'ecw5410',
+                'mode': 'wifi5',
+                'serial': '3c2c99f44e77',
+                'jumphost': True,
+                'ip': "localhost",  # localhost
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 8803,  # 22,
+                'jumphost_tty': '/dev/ttyAP1',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.1.0.tar.gz"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "localhost",  # localhost,
+                "port": 8802,  # 8802,
+                "ssh_port": 8804,
+                "2.4G-Radio": ["wiphy4"],
+                "5G-Radio": ["wiphy5"],
+                "AX-Radio": ["wiphy0", "wiphy1", "wiphy2", "wiphy3"],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan1",
+                "AX-Station-Name": "ax"
+            }
+        }
+    },
     # This is sample Config of a Testbed
     "basic-ext-01": {
         "controller": {
@@ -237,14 +276,14 @@ TEST_CASES = {
     # "2g_wpa3_mixed_eap_wpa3_bridge": 9785,
     # "5g_wpa3_mixed_eap_wpa2_bridge": 9786,
     # "5g_wpa3_mixed_eap_wpa3_bridge": 9787,
-    # "ssid_2g_wpa3_mixed_eap_nat": 9788,
-    # "ssid_5g_wpa3_mixed_eap_nat": 9789,
+    "ssid_2g_wpa3_enterprise_mixed_nat": 9788,
+    "ssid_5g_wpa3_enterprise_mixed_nat": 9789,
     # "2g_wpa3_mixed_eap_wpa2_nat": 9790,
-    "2g_wpa3_mixed_eap_ttls_wpa3_nat": 9791,
+    # "2g_wpa3_mixed_eap_ttls_wpa3_nat": 9791,
     # "5g_wpa3_mixed_eap_wpa2_nat": 9792,
     "5g_wpa3_mixed_eap_ttls_wpa3_nat": 9793,
-    # "ssid_2g_wpa3_mixed_eap_vlan": 9794,
-    # "ssid_5g_wpa3_mixed_eap_vlan": 9795,
+    "ssid_2g_wpa3_enterprise_mixed_vlan": 9794,
+    "ssid_5g_wpa3_enterprise_mixed_vlan": 9795,
     # "2g_wpa3_mixed_eap_wpa2_vlan": 9796,
     "2g_wpa3_mixed_eap_ttls_wpa3_vlan": 9797,
     # "5g_wpa3_mixed_eap_wpa2_vlan": 9798,
