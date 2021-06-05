@@ -209,6 +209,7 @@ class Controller(ConfigureController):
         payload = {}
         headers = self.configuration.api_key_prefix
         response = requests.request("GET", url, headers=headers, data=payload)
+
         if response.status_code == 200:
             status_data = response.json()
             # print(status_data)
@@ -216,9 +217,10 @@ class Controller(ConfigureController):
                 current_ap_fw = status_data[2]['details']['reportedSwVersion']
                 # print(current_ap_fw)
                 return current_ap_fw
-            except:
+            except Exception as e:
+                print(e)
                 current_ap_fw = "error"
-                return False
+                return e
 
         else:
             return False
@@ -972,7 +974,6 @@ class FirmwareUtility:
             exit()
         if (force_upgrade is True) or (self.should_upgrade_ap_fw(equipment_id=equipment_id)):
             firmware_id = self.upload_fw_on_cloud(force_upload=force_upload)
-            print(firmware_id)
             time.sleep(5)
             try:
                 obj = self.equipment_gateway_client.request_firmware_update(equipment_id=equipment_id,

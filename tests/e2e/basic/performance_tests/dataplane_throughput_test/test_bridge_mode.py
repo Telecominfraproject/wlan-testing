@@ -1,5 +1,10 @@
-import os
+"""
 
+    Performance Test: Dataplane Throughput Test: Bridge Mode
+    pytest -m "dataplane_throughput_test and bridge"
+
+"""
+import os
 import pytest
 import allure
 
@@ -17,7 +22,6 @@ setup_params_general = {
 }
 
 
-@pytest.mark.basic
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
@@ -27,11 +31,17 @@ setup_params_general = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestDataplaneThroughputBridge(object):
-
+    """Dataplane THroughput Bridge Mode
+       pytest -m "dataplane_throughput_test and bridge"
+    """
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    def test_client_wpa2_personal_2g(self, lf_test, station_names_twog, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_2g(self, get_vif_state,
+                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
+        """Dataplane THroughput Bridge Mode
+           pytest -m "dataplane_throughput_test and bridge and wpa2_personal and twog"
+        """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -40,6 +50,9 @@ class TestDataplaneThroughputBridge(object):
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
+        if ssid_name not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -65,7 +78,11 @@ class TestDataplaneThroughputBridge(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    def test_client_wpa2_personal_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
+    def test_client_wpa2_personal_5g(self, get_vif_state,
+                                     lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
+        """Dataplane THroughput Bridge Mode
+           pytest -m "dataplane_throughput_test and bridge and wpa2_personal and fiveg"
+        """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -74,6 +91,9 @@ class TestDataplaneThroughputBridge(object):
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
+        if ssid_name not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)

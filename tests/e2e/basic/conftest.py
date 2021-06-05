@@ -123,7 +123,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
     if parameter["radius"]:
         radius_info = radius_info
         radius_info["name"] = testbed + "-Automation-Radius-Profile-" + testbed
-        instantiate_profile.delete_profile_by_name(profile_name=testbed + "-Automation-Radius-Profile-" + testbed)
+        instantiate_profile.delete_profile_by_name(profile_name=testbed + "-Automation-Radius-Profile-" + mode)
         try:
             instantiate_profile.create_radius_profile(radius_info=radius_info)
             allure.attach(body=str(radius_info),

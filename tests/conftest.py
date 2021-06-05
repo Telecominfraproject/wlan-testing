@@ -6,7 +6,10 @@ import sys
 import os
 import time
 import allure
-
+import logging
+if "logs" not in os.listdir():
+    os.mkdir("logs/")
+logging.basicConfig(level=logging.INFO, filename="logs/"+'{:%Y-%m-%d-%H-%M-%S}.log'.format(datetime.datetime.now()))
 sys.path.append(
     os.path.dirname(
         os.path.realpath(__file__)
@@ -336,9 +339,19 @@ def check_ap_firmware_ssh(get_configuration):
 
 
 @pytest.fixture(scope="session")
-def setup_test_run(setup_controller, upgrade_firmware, check_ap_firmware_cloud, check_ap_firmware_ssh):
+def setup_test_run(setup_controller, upgrade_firmware, get_configuration, get_equipment_id, get_latest_firmware,
+                   get_apnos):
     """used to upgrade the firmware on AP and should be called on each test case on a module level"""
-    if check_ap_firmware_ssh == check_ap_firmware_cloud:
+    active_fw_list = []
+    try:
+        for access_point in get_configuration['access_point']:
+            ap_ssh = get_apnos(access_point)
+            active_fw = ap_ssh.get_active_firmware()
+            active_fw_list.append(active_fw)
+    except Exception as e:
+        print(e)
+        active_fw_list = []
+    if active_fw_list == get_latest_firmware:
         yield True
     else:
         pytest.exit("AP is not Upgraded tp Target Firmware versions")
@@ -397,7 +410,7 @@ def get_markers(request, get_security_flags):
     for item in session.items:
         for j in item.iter_markers():
             markers.append(j.name)
-    print(set(markers))
+    # print(set(markers))
     for i in security:
         if set(markers).__contains__(i):
             security_dict[i] = True
