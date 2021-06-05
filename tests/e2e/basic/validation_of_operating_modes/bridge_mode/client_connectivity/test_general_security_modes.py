@@ -1,7 +1,15 @@
+"""
+
+    Client Connectivity and tcp-udp Traffic Test: Bridge Mode
+    pytest -m "client_connectivity and bridge and general"
+
+"""
+
 import allure
 import pytest
 
-pytestmark = [pytest.mark.client_connectivity, pytest.mark.bridge, pytest.mark.general, pytest.mark.sanity, pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.client_connectivity, pytest.mark.bridge, pytest.mark.general, pytest.mark.sanity,
+              pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -20,6 +28,7 @@ setup_params_general = {
 }
 
 
+@pytest.mark.suiteA
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
@@ -28,13 +37,19 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestBridgeModeConnectivitySuiteOne(object):
+class TestBridgeModeConnectivitySuiteA(object):
+    """ Client Connectivity SuiteA
+        pytest -m "client_connectivity and bridge and general and suiteA"
+    """
 
     @pytest.mark.open
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
     def test_open_ssid_2g(self, setup_profiles, get_lanforge_data, lf_test, update_report, station_names_twog,
                           test_cases):
+        """Client Connectivity open ssid 2.4G
+           pytest -m "client_connectivity and bridge and general and open and twog"
+        """
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = "[BLANK]"
@@ -62,6 +77,9 @@ class TestBridgeModeConnectivitySuiteOne(object):
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
     def test_open_ssid_5g(self, get_lanforge_data, lf_test, test_cases, station_names_fiveg, update_report):
+        """Client Connectivity open ssid 5G
+           pytest -m "client_connectivity and bridge and general and open and fiveg"
+        """
         profile_data = setup_params_general["ssid_modes"]["open"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = "[BLANK]"
@@ -88,8 +106,11 @@ class TestBridgeModeConnectivitySuiteOne(object):
     @pytest.mark.wpa
     @pytest.mark.twog
     @allure.story('wpa 2.4 GHZ Band')
-    def test_wpa_ssid_2g(self, request, get_lanforge_data, update_report,
+    def test_wpa_ssid_2g(self, get_lanforge_data, update_report,
                          lf_test, test_cases, station_names_twog):
+        """Client Connectivity wpa ssid 2.4G
+           pytest -m "client_connectivity and bridge and general and wpa and twog"
+        """
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -117,6 +138,9 @@ class TestBridgeModeConnectivitySuiteOne(object):
     @pytest.mark.fiveg
     @allure.story('wpa 5 GHZ Band')
     def test_wpa_ssid_5g(self, lf_test, update_report, test_cases, station_names_fiveg, get_lanforge_data):
+        """Client Connectivity wpa ssid 5G
+           pytest -m "client_connectivity and bridge and general and wpa and fiveg"
+        """
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -145,6 +169,9 @@ class TestBridgeModeConnectivitySuiteOne(object):
     @allure.story('wpa2_personal 2.4 GHZ Band')
     def test_wpa2_personal_ssid_2g(self, get_lanforge_data, lf_test, update_report, test_cases,
                                    station_names_twog):
+        """Client Connectivity wpa2_personal ssid 2.4G
+           pytest -m "client_connectivity and bridge and general and wpa2_personal and twog"
+        """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -173,6 +200,9 @@ class TestBridgeModeConnectivitySuiteOne(object):
     @allure.story('wpa2_personal 5 GHZ Band')
     def test_wpa2_personal_ssid_5g(self, get_lanforge_data, update_report, test_cases, station_names_fiveg,
                                    lf_test):
+        """Client Connectivity wpa2_personal ssid 5G
+           pytest -m "client_connectivity and bridge and general and wpa2_personal and fiveg"
+        """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -218,6 +248,7 @@ setup_params_general_two = {
 }
 
 
+@pytest.mark.suiteB
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
@@ -227,12 +258,18 @@ setup_params_general_two = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectivitySuiteTwo(object):
+    """ Client Connectivity SuiteA
+        pytest -m "client_connectivity and bridge and suiteB"
+    """
 
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
     def test_wpa3_personal_ssid_2g(self, station_names_twog, setup_profiles, get_lanforge_data, lf_test, update_report,
                                    test_cases):
+        """Client Connectivity open ssid 2.4G
+           pytest -m "client_connectivity and bridge and general and wpa3_personal and twog"
+        """
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -260,6 +297,9 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
     def test_wpa3_personal_ssid_5g(self, station_names_fiveg, get_lanforge_data, lf_test, test_cases, update_report):
+        """Client Connectivity open ssid 2.4G
+           pytest -m "client_connectivity and bridge and general and wpa3_personal and fiveg"
+        """
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -289,6 +329,9 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     def test_wpa3_personal_mixed_ssid_2g(self, station_names_twog, setup_profiles, get_lanforge_data, lf_test,
                                          update_report,
                                          test_cases):
+        """Client Connectivity open ssid 2.4G
+           pytest -m "client_connectivity and bridge and general and wpa3_personal_mixed and twog"
+        """
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -317,6 +360,9 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @allure.story('open 5 GHZ Band')
     def test_wpa3_personal_mixed_ssid_5g(self, station_names_fiveg, get_lanforge_data, lf_test, test_cases,
                                          update_report):
+        """Client Connectivity open ssid 2.4G
+           pytest -m "client_connectivity and bridge and general and wpa3_personal_mixed and fiveg"
+        """
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -346,6 +392,9 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     def test_wpa_wpa2_personal_ssid_2g(self, station_names_twog, setup_profiles, get_lanforge_data, lf_test,
                                        update_report,
                                        test_cases):
+        """Client Connectivity open ssid 2.4G
+           pytest -m "client_connectivity and bridge and general and wpa_wpa2_personal_mixed and twog"
+        """
         profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -375,6 +424,9 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
     def test_wpa_wpa2_personal_ssid_5g(self, station_names_fiveg, get_lanforge_data, lf_test, test_cases,
                                        update_report):
+        """Client Connectivity open ssid 2.4G
+           pytest -m "client_connectivity and bridge and general and wpa_wpa2_personal_mixed and fiveg"
+        """
         profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -399,7 +451,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
                                               passes))
         assert result
 
-
+# WEP Security Feature not available
 # setup_params_wep = {
 #     "mode": "BRIDGE",
 #     "ssid_modes": {
