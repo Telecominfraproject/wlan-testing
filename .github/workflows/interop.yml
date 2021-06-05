@@ -1,0 +1,159 @@
+name: interop testing
+
+env:
+  # thirdparties
+  DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
+  DOCKER_USER_NAME: wlan-testing-cicd
+  DOCKER_USER_PASSWORD: ${{ secrets.DOCKER_USER_PASSWORD }}
+  # AWS credentials
+  AWS_EKS_NAME: tip-wlan-main
+  AWS_DEFAULT_OUTPUT: json
+  AWS_DEFAULT_REGION: us-east-2
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+  # Cloud SDK certs
+  CACERT: ${{ secrets.CACERT }}
+  CAKEY: ${{ secrets.CAKEY }}
+  ALLURE_CLI_VERSION: 2.14.0
+
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    # checkout needed repositories
+    - name: Checkout Testing repo
+      uses: actions/checkout@v2
+      with:
+        path: wlan-testing
+
+    - name: Checkout LANforge scripts
+      uses: actions/checkout@v2
+      with:
+        path: wlan-lanforge-scripts
+        repository: Telecominfraproject/wlan-lanforge-scripts
+
+    - name: import LANforge scripts
+      working-directory: wlan-testing
+      run: ./sync_repos.bash
+
+    # build and push docker image
+    - name: docker login
+      run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
+    - name: build docker image
+      working-directory: wlan-testing
+      run: docker build -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_number }} -f docker/Dockerfile .
+    - name: push docker image
+      run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_number }}
+
+
+  test:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+    - name: get EKS access credentials
+      run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+    - name: install Allure CLI tool
+      run: |
+        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+        
+    - name: set job name
+      id: job
+      run: echo "::set-output name=name::interop-ci-${{ github.run_number }}"
+
+#    - name: create configuration.py secret
+#      run: |
+#        cat << EOF > configuration.py
+#        ${{ secrets.LAB_CONFIGURATION }}
+#        EOF
+#        kubectl create secret generic configuration --from-file=configuration=./configuration.py
+        
+    - name: run interop tests
+      run: |
+        cat <<EOF | kubectl apply -f -
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: "${{ steps.job.outputs.name }}"
+        spec:
+          template:
+            spec:
+              containers:
+              - name: tests
+                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_number }}
+                command:
+                  - /bin/bash
+                  - -x
+                  - -c
+                  - |
+                    cd tests
+                    pytest -m "interop_and and interop_iOS" -s -vvv --testbed=interop -o 'jobName=Github-Interop' -o 'jobNumber=${{ github.run_number }}' --skip-testrail --alluredir=/tmp/allure-results
+                    ret=\$?
+                    # sleep some time to be able to download the Allure results
+                    sleep 60
+                    exit \$ret
+                volumeMounts:
+                - name: configuration
+                  mountPath: "/wlan-testing/tests/configuration.py"
+                  subPath: configuration
+                  readOnly: true
+              imagePullSecrets:
+              - name: tip-docker-registry-key
+              restartPolicy: Never
+              volumes:
+              - name: configuration
+                secret:
+                  secretName: configuration
+          backoffLimit: 0
+        EOF
+        sleep 60 # wait for the pod to come up
+        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
+        until [ -s test_everything.xml ]
+        do
+          sleep 10
+          echo "waiting for tests to complete..."
+          kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
+        done
+        echo "tests completed"
+        echo "downloading allure results..."
+        kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
+        echo "waiting for pod to exit"
+        kubectl logs -f $podname >/dev/null 2>&1
+        exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
+    - name: print logs
+      if: ${{ always() }}
+      run: |
+        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
+        kubectl logs $podname
+    - name: upload Allure results as artifact
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: allure-results
+        path: allure-results
+
+    - name: generate Allure report
+      if: ${{ always() }}
+      run: allure-${{ env.ALLURE_CLI_VERSION }}/bin/allure generate
+
+    - name: upload Allure report as artifact
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: allure-report
+        path: allure-report
+
+    - name: cleanup
+      if: ${{ always() }}
+      run: |
+        kubectl delete job "${{ steps.job.outputs.name }}" --wait=true --ignore-not-found=true
+        kubectl delete secret configuration --wait=true --ignore-not-found=true
