@@ -134,7 +134,14 @@ pip3 install pytest==6.2.2
 pip3 install bs4
 pip3 install paramiko
 pip3 install xlsxwriter
+pip3 install influxdb_client
+pip3 install allure-pytest
+
+
+
+
 ```
+
 #### Step 3
 
 Please ensure you follow the steps outlined in [here](./libs/controller/README.md)

@@ -1,3 +1,17 @@
+## Test Case Execution Suite
+
+```commandline
+pytest -m sanity -s -vvv --testbed=basic-01 -o build=<firmware URL>
+pytest -m sanity_55 -s -vvv --testbed=basic-01 -o build=<firmware URL>
+pytest -m performance -s -vvv --testbed=basic-01 -o build=<firmware URL>
+pytest -m firmware -s -vvv --testbed=basic-01 -o build=<firmware URL>
+```
+## You can customize the markets with and/or/not logical options
+
+
+
+
+
 ## wlan-testing framework Information
 
 **_pytest  uses setup > test > tear_down_** <br>

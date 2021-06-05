@@ -4,21 +4,22 @@
         1. controller_data/sdk_base_url
         2. login credentials
 """
+from ast import Str
 from logging import exception
 import unittest
 import warnings
+from _pytest.outcomes import fail
 from perfecto.test import TestResultFactory
 import pytest
 import sys
 import time
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
-#from appium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.webdriver.support import expected_conditions as EC
-
+import allure
 
 def openApp(appName, setup_perfectoMobile):
     #print("Refreshing App: " + appName)
@@ -28,7 +29,17 @@ def openApp(appName, setup_perfectoMobile):
     setup_perfectoMobile[0].execute_script('mobile:application:open', params)
     setup_perfectoMobile[0].execute_script('mobile:application:close', params)
     setup_perfectoMobile[0].execute_script('mobile:application:open', params)
-    
+
+def scrollDown(setup_perfectoMobile):
+    #print("Refreshing App: " + appName)
+    setup_perfectoMobile[1].step_start("Scroll Down")  
+    params = {'start': "40%,90%"}
+    params = {'end': "40%,20%"}
+    params = {'duration': "2"}
+    #Open/Close/Open Action is performed to ensure the app is back to its Original Settings
+    setup_perfectoMobile[0].execute_script('mobile:application:swipe', params)
+  
+
 def closeApp(appName, setup_perfectoMobile):
     #print("Closing App.." + appName)
     setup_perfectoMobile[1].step_start("Closing App: " + appName)  
@@ -41,8 +52,15 @@ def rebootPhone(setup_perfectoMobile):
     params = {}
     setup_perfectoMobile[0].execute_script('mobile:handset:reboot', params)
 
-def set_APconnMobileDevice_iOS(WifiName, WifiPass, setup_perfectoMobile, connData):
-    
+def set_APconnMobileDevice_iOS(request, WifiName, WifiPass, setup_perfectoMobile, connData):
+    consoleOutput = ""
+
+    print("\n-------------------------------------")
+    print("Select Wifi/AccessPoint Connection")
+    print("-------------------------------------")
+   
+    reportFlag = True
+   
     print("Verifying Wifi/AP Connection Details....") 
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
@@ -79,10 +97,14 @@ def set_APconnMobileDevice_iOS(WifiName, WifiPass, setup_perfectoMobile, connDat
 
         #Verifies if AP is connected to Wifi status
         #print("Verify Wifi Connection Status..")
-        report.step_start("Verify Wifi Connected Status")
-        WifiXpath = "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeStaticText[@label='"+ Wifi_AP_Name + "']"
-        elementWifName = driver.find_element_by_xpath(WifiXpath)
-    
+        try:
+            report.step_start("Verify Wifi Connected Status")
+            WifiXpath = "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeStaticText[@label='"+ Wifi_AP_Name + "']"
+            elementWifName = driver.find_element_by_xpath(WifiXpath)
+        except NoSuchElementException:
+            reportFlag = False
+            assert reportFlag
+
         #Check AP Internet Error Msg 
         print("Checking Internet Connection Error..")
         report.step_start("Checking Internet Connection Error..")
@@ -93,26 +115,25 @@ def set_APconnMobileDevice_iOS(WifiName, WifiPass, setup_perfectoMobile, connDat
             print("No Error with Wifi-AP Connection: " + Wifi_AP_Name)
 
     else:
-        print("Selecting Wifi: " + WifiName)
-        #try:
+        print("Selecting Wifi: " + WifiName)   
+        #consoleOutput+=str(WifiName)+ "\n"
         report.step_start("Selecting Wifi...: " + WifiName)
         element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']/XCUIElementTypeStaticText[2]")
         element.click()
-       # except NoSuchElementException:
-         #   print("Exception: Selection Wifi Network")
-
         try:
             wifiXpath2 = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='"+ WifiName + "']")))
             wifiXpath2.click()
-        
-        except NoSuchElementException:
-            print("\n Can't find Wifi/AP NAME.....CheckXpath & Wifi Name")
-
+        except Exception as e:
+            print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
+            request.config.cache.set(key="SelectingWifiFailed", value=str(e))
+            #allure.attach(name="Raj", body="hello world")
+            assert False
         #Set password if Needed
         try:
             wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
             wifiPassword.send_keys(WifiPass)
         except NoSuchElementException:
+            
             print("Enter Password Page Not Loaded  ")
         
         try:
@@ -123,10 +144,17 @@ def set_APconnMobileDevice_iOS(WifiName, WifiPass, setup_perfectoMobile, connDat
 
         try:
             WifiInternetErrMsg2 = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
+            reportFlag = False
         except NoSuchElementException:
+            reportFlag = True
             print("No Wifi-AP Error Internet Error: " + WifiName)
+    return reportFlag
 
-def Toggle_AirplaneMode_iOS(setup_perfectoMobile, connData):
+def Toggle_AirplaneMode_iOS(request, setup_perfectoMobile, connData):
+    print("\n-----------------------")
+    print("Toggle Airplane Mode")
+    print("-----------------------")
+    
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
     currentResult = True
@@ -177,7 +205,11 @@ def Toggle_AirplaneMode_iOS(setup_perfectoMobile, connData):
 
     return  currentResult
 
-def verify_APconnMobileDevice_iOS(WifiName, setup_perfectoMobile, connData):
+def verify_APconnMobileDevice_iOS(request, WifiName, setup_perfectoMobile, connData):
+    print("\n-----------------------")
+    print("Verify Connected Wifi Mode")
+    print("-----------------------")
+    
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
 
@@ -189,12 +221,18 @@ def verify_APconnMobileDevice_iOS(WifiName, setup_perfectoMobile, connData):
     #Verifies if AP is connected to Wifi status
     try:
        # print("Verifying Connected Wifi Connection")
+        wifiXpath2 = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='"+ WifiName + "']")))
+        wifiXpath2.click()
+        
         report.step_start("Verifying Connected Wifi Connection")  
         element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']/XCUIElementTypeStaticText[2]")
         Wifi_AP_Name = element.text
        
-    except NoSuchElementException:
-        print("Exception: Verify Xpath - UpdateXpath") 
+    except Exception as e:
+        print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
+        request.config.cache.set(key="SelectingWifiFailed", value=str(e))
+        #allure.attach(name="Raj", body="hello world")
+        assert False
 
     try: 
         if Wifi_AP_Name.__eq__(WifiName):
@@ -209,7 +247,11 @@ def verify_APconnMobileDevice_iOS(WifiName, setup_perfectoMobile, connData):
         print("Exception Checking Wifi/AP connection NAME...")    
         return None
 
-def ForgetWifiConnection(setup_perfectoMobile, wifiName, connData):
+def ForgetWifiConnection(request, setup_perfectoMobile, wifiName, connData):
+    print("\n-----------------------------")
+    print("Forget Wifi/AP Connection")
+    print("-----------------------------")
+    
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
 
@@ -217,7 +259,7 @@ def ForgetWifiConnection(setup_perfectoMobile, wifiName, connData):
     print("Switching Context to Native")
     driver.switch_to.context('NATIVE_APP')
     contexts = driver.contexts
-    print(contexts)
+    #print(contexts)
 
     report.step_start("Forget Existing Wifi")   
     openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
@@ -273,7 +315,11 @@ def ForgetWifiConnection(setup_perfectoMobile, wifiName, connData):
         elementforgetWifi = driver.find_element_by_xpath(WifiXpathForgetWifi)
         elementforgetWifi.click()
 
-def Toggle_WifiMode_iOS(setup_perfectoMobile, connData):
+def Toggle_WifiMode_iOS(request, setup_perfectoMobile, connData):
+    print("\n-----------------------")
+    print("Toggle Wifi Mode")
+    print("-----------------------")
+    
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
 
@@ -300,7 +346,7 @@ def Toggle_WifiMode_iOS(setup_perfectoMobile, connData):
     except NoSuchElementException:
         print("Airplane Wifi Button not loaded...")
 
-def get_WifiIPAddress_iOS(setup_perfectoMobile, connData, wifiName):
+def get_WifiIPAddress_iOS(request, setup_perfectoMobile, connData, wifiName):
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
 
@@ -322,13 +368,9 @@ def get_WifiIPAddress_iOS(setup_perfectoMobile, connData, wifiName):
     report.step_start("Checking Internet Connection Error..")
 
     try:
-        driver.implicitly_wait(5)
         WifiInternetErrMsg = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
     except NoSuchElementException:
-        #Need to fail test case
-        driver.implicitly_wait(25)
         print("Wifi Connected without any errors: " + wifiName)
-        #Fail TEST CASE
 
     try:   
         WifiInternetInfo=driver.find_element_by_xpath("(//XCUIElementTypeButton[@label='More Info'])[1]")
@@ -426,69 +468,305 @@ def tearDown(setup_perfectoMobile):
         driver.close()
     except Exception as e:
         print(" -- Exception Not Able To close --")    
-        print (e.message)
+        print (e)
     finally:
         try:
             driver.quit()
         except Exception as e:
             print(" -- Exception Not Able To Quit --")    
-            print (e.message)
+            print (e)
 
-def verifyUploadDownloadSpeediOS(setup_perfectoMobile, get_APToMobileDevice_data):
-        print("Verify Upload Download Speed")
+def verifyUploadDownloadSpeediOS(request, setup_perfectoMobile, get_APToMobileDevice_data):
+    print("\n-------------------------------------")
+    print("Verify Upload & Download Speed")
+    print("-------------------------------------")
+    
+    report = setup_perfectoMobile[1]    
+    driver = setup_perfectoMobile[0]
+    connData = get_APToMobileDevice_data
+    currentResult = True
 
-        report = setup_perfectoMobile[1]    
-        driver = setup_perfectoMobile[0]
-        connData = get_APToMobileDevice_data
-        currentResult = True
+    contexts = driver.contexts
+    #print("Printing Context")
+    #print(contexts)
 
-        contexts = driver.contexts
-        print("Printing Context")
-        print(contexts)
+    driver.switch_to.context('WEBVIEW_1')
+    
+ 
+    print("Launching Safari")
+    report.step_start("Google Home Page") 
+    driver.get(connData["webURL"]) 
+    print("Enter Search Text")
+    elementFindTxt = driver.find_element_by_xpath(connData["lblSearch"])
+    elementFindTxt.send_keys("Internet Speed Test")
 
-        driver.switch_to.context('WEBVIEW_1')
+    try:
+        print("Click Search Button")
+        elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']/li[1]/div[1]")  
+        elelSearch.click()
+    except NoSuchElementException:
+        currentResult = False
+        print("Search Drop Down not active...")
+
+    print("Click Run Speed Test Button...")
+    report.step_start("Click Run Speed Test Button")  
+    driver.find_element_by_xpath(connData["BtnRunSpeedTest"]).click()
+
+    #Get upload/Download Speed
+    try:
+        report.step_start("Get upload/Download Speed")   
+        time.sleep(60)
+        downloadMbps = driver.find_element_by_xpath(connData["downloadMbps"])
+        downloadSpeed = downloadMbps.text
+        print("Download: " + downloadSpeed + " Mbps")
+
+        UploadMbps = driver.find_element_by_xpath(connData["UploadMbps"])
+        uploadSpeed = UploadMbps.text
+        print("Upload: " + uploadSpeed + " Mbps")
         
-        try:  
-            print("Launching Safari")
-            report.step_start("Google Home Page") 
-            driver.get(connData["webURL"]) 
-            print("Enter Search Text")
-            elementFindTxt = driver.find_element_by_xpath(connData["lblSearch"])
-            elementFindTxt.send_keys("Internet Speed Test")
+        print("Access Point Verification Completed Successfully")
 
-            try:
-                print("Click Search Button")
-                elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']/li[1]/div[1]")  
-                elelSearch.click()
-            except NoSuchElementException:
-                currentResult = False
-                print("Search Drop Down not active...")
+    except NoSuchElementException:
+        print("Access Point Verification NOT Completed, checking Connection....")
+        currentResult = False
+        
+    return currentResult
 
-            print("Click Run Speed Test Button...")
-            report.step_start("Click Run Speed Test Button")  
-            driver.find_element_by_xpath(connData["BtnRunSpeedTest"]).click()
+def downloadInstallOpenRoamingProfile(request, setup_perfectoMobile, get_APToMobileDevice_data):
+    print("\n-------------------------------------")
+    print("Download Open Roaming Profile")
+    print("-------------------------------------")
+    
+    OpenRoamingWifiName = ""
 
-            #Get upload/Download Speed
-            try:
-                report.step_start("Get upload/Download Speed")   
-                time.sleep(60)
-                downloadMbps = driver.find_element_by_xpath(connData["downloadMbps"])
-                downloadSpeed = downloadMbps.text
-                print("Download: " + downloadSpeed + " Mbps")
+    report = setup_perfectoMobile[1]    
+    driver = setup_perfectoMobile[0]
+    connData = get_APToMobileDevice_data
+    currentResult = True
+    contexts = driver.contexts
+    #print("Printing Context")
+    #print(contexts)
 
-                UploadMbps = driver.find_element_by_xpath(connData["UploadMbps"])
-                uploadSpeed = UploadMbps.text
-                print("Upload: " + uploadSpeed + " Mbps")
-                
-                print("Access Point Verification Completed Successfully")
+    driver.switch_to.context('WEBVIEW_1')
+    
+    print("Launching Safari with OpenRoaming Profile")
+    report.step_start("Open Roaming Download Page") 
+    driver.get(connData["openRoaming-iOS-URL"]) 
+  
+    try:
+        print("Accept Popup")
+        report.step_start("Accept Popup") 
+        driver.switch_to.context('NATIVE_APP')
+        WebDriverWait(driver, 40).until(EC.alert_is_present(), 'Time out confirmation popup to appear')
+        alert = driver.switch_to.alert
+        alert.accept()
+        print("Alert Accepted")
+    except TimeoutException:
+        print("no alert")
+  
+    #Open Settings Application
+    openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
 
-            except NoSuchElementException:
-                print("Access Point Verification NOT Completed, checking Connection....")
-                currentResult = False
-        except Exception as e:
-            print (e.message)
+    try:
+        print("Click on downloaded Profile")
+        report.step_start("Click on downloaded Profile") 
+        downloadprofile = driver.find_element_by_xpath("//XCUIElementTypeStaticText[@label='Profile Downloaded']")  
+        downloadprofile.click()
+    except NoSuchElementException:
+        print("Exception: Click Download Profile Button not showing up in settings")
 
-          
-        return currentResult
+    try:
+        print("Install 1st Confirmation")
+        report.step_start("Install 1st Confirmation") 
+        install1stConf = driver.find_element_by_xpath("//XCUIElementTypeButton[@label='Install']")  
+        install1stConf.click()
+    except NoSuchElementException:
+        print("Exception: Install 1st Confirmation")
+  
+    # //*[@label="The profile is not signed."]
+    try:
+        print("Install 2nd Confirmation")
+        report.step_start("Install 2nd Confirmation") 
+        install2ndConf = driver.find_element_by_xpath("//XCUIElementTypeButton[@label='Install'] ")  
+        install2ndConf.click()
+    except NoSuchElementException:
+        print("Exception: Install 2nd Confirmation")
 
+    try:
+        print("Install 3rd Confirmation")
+        report.step_start("Install 3rd Confirmation") 
+        install3rdConf = driver.find_element_by_xpath("//XCUIElementTypeButton[@label='Install']")  
+        install3rdConf.click()
+    except NoSuchElementException:
+        print("Exception: Install 3rd Confirmation")
+
+    try:
+        print("Verify Profile Installed")
+        report.step_start("Verify Profile Installed") 
+        elelSearch2 = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Profile Installed']")))
+        elelSearch2.click()
+    except Exception as e:
+        print("Profile Installed Message Error")
+        request.config.cache.set(key="SelectingWifiFailed", value=str(e))
+        assert False
+
+    try:
+        print("Click Done Button")
+        report.step_start("Click Done Button") 
+        elelSearch = driver.find_element_by_xpath("//XCUIElementTypeButton[@label='Done']")  
+        elelSearch.click()
+    except NoSuchElementException:
+        print("Exception: Clicking on Done Button")
+
+    closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+
+    #Open Settings Application
+    openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+
+    try:
+        print("Verifying OpenRoaming Connected Wifi")
+        time.sleep(20)
+        report.step_start("Verifying Connected Wifi Name")  
+        element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']/XCUIElementTypeStaticText[2]")
+        OpenRoamingWifiName = element.text
+        element.click()
+     
+    except Exception as e:
+        OpenRoamingWifiName = "None"
+        print("Wifi Not Connected to OpenRoaming Profile: ") 
+        request.config.cache.set(key="SelectingWifiFailed", value=str(e))
+        assert False
+
+    #try:
+      #  report.step_start("Verify Wifi Connected Status")
+     #   WifiXpath = "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeStaticText[@label='"+ OpenRoamingWifiName + "']"
+     #   elementWifName = driver.find_element_by_xpath(WifiXpath)
+    #    OpenRoamingWifiName = elementWifName.text
+    #    print ("Connected to: " + OpenRoamingWifiName)
+   #except NoSuchElementException:
+      #  OpenRoamingWifiName = "None"
+      #  reportFlag = False
+      #  assert reportFlag
+
+
+    #return OpenRoamingWifiName
+
+def ForgetAllWifiConnection(request, setup_perfectoMobile, connData):
+    print("\n-----------------------------")
+    print("Forget All Wifi/AP Connection")
+    print("-----------------------------")
+    
+    report = setup_perfectoMobile[1]    
+    driver = setup_perfectoMobile[0]
+
+    report.step_start("Switching Driver Context")  
+    print("Switching Context to Native")
+    driver.switch_to.context('NATIVE_APP')
+    contexts = driver.contexts
+    #print(contexts)
+
+    report.step_start("Forget Existing Wifi")   
+    openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+
+    try:
+        print("Verifying Connected Wifi Connection")
+        report.step_start("Verifying Existing Connected Wifi Connection")  
+        element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']/XCUIElementTypeStaticText[2]")
+        Wifi_AP_Name = element.text
+        element.click()
+        print ("Connected to: " + Wifi_AP_Name)
+    except NoSuchElementException:
+        Wifi_AP_Name = "None"
+        print("Wifi Not Connected to anything") 
+
+    if Wifi_AP_Name.__eq__("Not Connected"):
+        print("Not Connected to any wifi") 
+
+    else:
+        report.step_start("Click on More Info on Wifi")
+        WifiXpathMoreInfo = "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeStaticText[@label='"+ Wifi_AP_Name + "']/parent::*/XCUIElementTypeButton[@label='More Info']"
+        elementMoreInfo = driver.find_element_by_xpath(WifiXpathMoreInfo)
+        elementMoreInfo.click()
+
+        print("Forget Wifi Network " + Wifi_AP_Name)
+        report.step_start("Forget Wifi Network")
+        WifiXpathForgetWifi = "//*[@label='Forget This Network']"
+        elementforgetWifi = driver.find_element_by_xpath(WifiXpathForgetWifi)
+        elementforgetWifi.click()
+
+        report.step_start("Confirm Forget Wifi Network")
+        WifiXpathForgetWifi = "//*[@label='Forget']"
+        elementforgetWifi = driver.find_element_by_xpath(WifiXpathForgetWifi)
+        elementforgetWifi.click()
+
+def deleteOpenRoamingInstalledProfile(request, setup_perfectoMobile, connData):
+    print("\n-----------------------------")
+    print("Delete Open Roaming Profile")
+    print("-----------------------------")
+    
+    report = setup_perfectoMobile[1]    
+    driver = setup_perfectoMobile[0]
+
+    report.step_start("Switching Driver Context")  
+    print("Switching Context to Native")
+    driver.switch_to.context('NATIVE_APP')
+    contexts = driver.contexts
+    #print(contexts)
+
+    report.step_start("Forget Existing Wifi")   
+    openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+
+    try:
+        print("Click General")
+        report.step_start("Click General")  
+        element = driver.find_element_by_xpath("//*[@value='General']")
+        element.click()
+    except NoSuchElementException:
+        print("Exception General Menu Not found")
+        assert False
+
+    scrollDown(setup_perfectoMobile)
+
+    try:
+        print("Select Profile ")
+        report.step_start("Select Profile")  
+        element = driver.find_element_by_xpath("//*[@name='ManagedConfigurationList' and @label='Profile']")
+        element.click()
+    except NoSuchElementException:
+        print("Exception Select Profile Button")
+        assert False
+
+    try:
+        print("Click Configuration Profile ")
+        report.step_start("Click Configuration Profile ")  
+        element = driver.find_element_by_xpath("//XCUIElementTypeStaticText[@label='AmeriBand']")
+        element.click()
+    except NoSuchElementException:
+        print("Exception Click Configuration Button")
+        assert False
+
+    try:
+        print("Remove Profile")
+        report.step_start("Remove Profile ")  
+        element = driver.find_element_by_xpath("//*[@label='Remove Profile']")
+        element.click()
+    except NoSuchElementException:
+        print("Exception Remove")
+        assert False
       
+    try:
+        print("Click Remove Button")
+        report.step_start("Click Remove Button")  
+        element = driver.find_element_by_xpath("//*[@label='Remove']")
+        element.click()
+    except NoSuchElementException:
+        print("Exception Remove Button")
+        assert False
+
+    try:
+        print("Verify No Profile Installed Msg")
+        report.step_start("Verify No Profile Installed Msg")  
+        element = driver.find_element_by_xpath("//*[@label='No profiles are currently installed.']")
+    except NoSuchElementException:
+        print("Exception Verify No Profile Installed Msg")
+        assert False

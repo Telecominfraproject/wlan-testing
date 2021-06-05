@@ -27,6 +27,7 @@ class APIClient:
         self.user = tr_user
         self.password = tr_pw
         self.project = project
+        self.rid = None
         if not base_url.endswith('/'):
             base_url += '/'
         self.__url = base_url + 'index.php?/api/v2/'
@@ -148,9 +149,10 @@ class APIClient:
                     break
             return run_id
 
-    def update_testrail(self, case_id, run_id, status_id, msg):
+    def update_testrail(self, case_id, status_id, msg):
         "Update TestRail for a given run_id and case_id"
         update_flag = False
+        run_id = self.rid
         # Get the TestRail client account details
         # Update the result in TestRail using send_post function.
         # Parameters for add_result_for_case is the combination of runid and case id.

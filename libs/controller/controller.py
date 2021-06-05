@@ -4,6 +4,8 @@
         1. controller_data/sdk_base_url
         2. login credentials
 """
+import base64
+import datetime
 import json
 import re
 import ssl
@@ -12,10 +14,10 @@ import urllib
 
 import requests
 import swagger_client
-from bs4 import BeautifulSoup
-from swagger_client import EquipmentGatewayApi
 from swagger_client import FirmwareManagementApi
-import allure
+from swagger_client import EquipmentGatewayApi
+from bs4 import BeautifulSoup
+import threading
 
 
 class ConfigureController:
@@ -74,31 +76,37 @@ class Controller(ConfigureController):
         if customer_id is None:
             self.customer_id = 2
             print("Setting to default Customer ID 2")
-
+        #
         # Setting the Controller Client Configuration
         self.select_controller_data(controller_data=controller_data)
         self.set_credentials(controller_data=controller_data)
-        # self.configuration.refresh_api_key_hook = self.get_bearer_token
+        self.configuration.refresh_api_key_hook = self.get_bearer_token
 
         # Connecting to Controller
         self.api_client = swagger_client.ApiClient(self.configuration)
         self.login_client = swagger_client.LoginApi(api_client=self.api_client)
-        self.bearer = self.get_bearer_token()
+        self.bearer = False
+        self.disconnect = False
+        # Token expiry in seconds
+        self.token_expiry = 1000
+        self.token_timestamp = time.time()
+        try:
 
-        self.api_client.default_headers['Authorization'] = "Bearer " + self.bearer._access_token
-        self.status_client = swagger_client.StatusApi(api_client=self.api_client)
-        self.equipment_client = swagger_client.EquipmentApi(self.api_client)
-        self.profile_client = swagger_client.ProfileApi(self.api_client)
-        self.api_client.configuration.api_key_prefix = {
-            "Authorization": "Bearer " + self.bearer._access_token
-        }
-        self.api_client.configuration.refresh_api_key_hook = self.get_bearer_token()
-        self.ping_response = self.portal_ping()
-        self.default_profiles = {}
-        # print(self.bearer)
-        if self.ping_response._application_name != 'PortalServer':
-            print("Server not Reachable")
-            exit()
+            self.bearer = self.get_bearer_token()
+            # t1 = threading.Thread(target=self.refresh_instance)
+            # t1.start()
+            self.api_client.default_headers['Authorization'] = "Bearer " + self.bearer._access_token
+            self.status_client = swagger_client.StatusApi(api_client=self.api_client)
+            self.equipment_client = swagger_client.EquipmentApi(self.api_client)
+            self.profile_client = swagger_client.ProfileApi(self.api_client)
+            self.api_client.configuration.api_key_prefix = {
+                "Authorization": "Bearer " + self.bearer._access_token
+            }
+            self.api_client.configuration.refresh_api_key_hook = self.refresh_instance
+        except Exception as e:
+            self.bearer = False
+            print(e)
+
         print("Connected to Controller Server")
 
     def get_bearer_token(self):
@@ -109,46 +117,53 @@ class Controller(ConfigureController):
         return self.login_client.get_access_token(request_body)
 
     def refresh_instance(self):
-        # Connecting to Controller
-        self.api_client = swagger_client.ApiClient(self.configuration)
-        self.login_client = swagger_client.LoginApi(api_client=self.api_client)
-        self.bearer = self.get_bearer_token()
-
-        self.api_client.default_headers['Authorization'] = "Bearer " + self.bearer._access_token
-        self.status_client = swagger_client.StatusApi(api_client=self.api_client)
-        self.equipment_client = swagger_client.EquipmentApi(self.api_client)
-        self.profile_client = swagger_client.ProfileApi(self.api_client)
-        self.api_client.configuration.api_key_prefix = {
-            "Authorization": "Bearer " + self.bearer._access_token
-        }
-        self.api_client.configuration.refresh_api_key_hook = self.get_bearer_token()
-        self.ping_response = self.portal_ping()
-        self.default_profiles = {}
-        # print(self.bearer)
-        if self.ping_response._application_name != 'PortalServer':
-            print("Server not Reachable")
-            exit()
-        print("Connected to Controller Server")
+        # Refresh token 10 seconds before it's expiry
+        if time.time() - self.token_timestamp > self.token_expiry:
+            self.token_timestamp = time.time()
+            print("Refreshing the controller API token")
+            self.disconnect_Controller()
+            self.api_client = swagger_client.ApiClient(self.configuration)
+            self.login_client = swagger_client.LoginApi(api_client=self.api_client)
+            self.bearer = self.get_bearer_token()
+            self.api_client.default_headers['Authorization'] = "Bearer " + self.bearer._access_token
+            self.status_client = swagger_client.StatusApi(api_client=self.api_client)
+            self.equipment_client = swagger_client.EquipmentApi(self.api_client)
+            self.profile_client = swagger_client.ProfileApi(self.api_client)
+            self.api_client.configuration.api_key_prefix = {
+                "Authorization": "Bearer " + self.bearer._access_token
+            }
+            self.api_client.configuration.refresh_api_key_hook = self.refresh_instance
+            self.ping_response = self.portal_ping()
+            # print(self.bearer)
+            if self.ping_response._application_name != 'PortalServer':
+                print("Server not Reachable")
+                exit()
+            print("Connected to Controller Server")
 
     def portal_ping(self):
+        self.refresh_instance()
         return self.login_client.portal_ping()
 
     def disconnect_Controller(self):
+        self.refresh_instance()
+        self.disconnect = True
         self.api_client.__del__()
 
     # Returns a List of All the Equipments that are available in the cloud instances
     def get_equipment_by_customer_id(self, max_items=10):
+        self.refresh_instance()
         pagination_context = """{
                 "model_type": "PaginationContext",
                 "maxItemsPerPage": """ + str(max_items) + """
         }"""
-
+        self.refresh_instance()
         equipment_data = self.equipment_client.get_equipment_by_customer_id(customer_id=self.customer_id,
                                                                             pagination_context=pagination_context)
         return equipment_data._items
 
     # check if equipment with the given equipment_id is available in cloud instance or not
     def validate_equipment_availability(self, equipment_id=None):
+        self.refresh_instance()
         data = self.get_equipment_by_customer_id()
         for i in data:
             if i._id == equipment_id:
@@ -157,49 +172,55 @@ class Controller(ConfigureController):
 
     # Need to be added in future
     def request_ap_reboot(self):
+        self.refresh_instance()
         pass
 
     # Get the equipment id, of a equipment with a serial number
     def get_equipment_id(self, serial_number=None):
+        self.refresh_instance()
         equipment_data = self.get_equipment_by_customer_id(max_items=100)
-        # print(equipment_data)
+        # print(len(equipment_data))
         for equipment in equipment_data:
-            print(equipment._id)
             if equipment._serial == serial_number:
                 return equipment._id
 
     # Get the equipment model name of a given equipment_id
     def get_model_name(self, equipment_id=None):
+        self.refresh_instance()
         if equipment_id is None:
             return None
+        self.refresh_instance()
         data = self.equipment_client.get_equipment_by_id(equipment_id=equipment_id)
         print(str(data._details._equipment_model))
         return str(data._details._equipment_model)
 
     # Needs Bug fix from swagger code generation side
     def get_ap_firmware_new_method(self, equipment_id=None):
-
+        self.refresh_instance()
         response = self.status_client.get_status_by_customer_equipment(customer_id=self.customer_id,
                                                                        equipment_id=equipment_id)
         print(response[2])
 
     # Old Method, will be depreciated in future
     def get_ap_firmware_old_method(self, equipment_id=None):
+        self.refresh_instance()
         url = self.configuration.host + "/portal/status/forEquipment?customerId=" + str(
             self.customer_id) + "&equipmentId=" + str(equipment_id)
         payload = {}
         headers = self.configuration.api_key_prefix
         response = requests.request("GET", url, headers=headers, data=payload)
+
         if response.status_code == 200:
             status_data = response.json()
             # print(status_data)
             try:
                 current_ap_fw = status_data[2]['details']['reportedSwVersion']
-                print(current_ap_fw)
+                # print(current_ap_fw)
                 return current_ap_fw
             except Exception as e:
+                print(e)
                 current_ap_fw = "error"
-                return False
+                return e
 
         else:
             return False
@@ -209,11 +230,13 @@ class Controller(ConfigureController):
     """
 
     def get_current_profile_on_equipment(self, equipment_id=None):
+        self.refresh_instance()
         default_equipment_data = self.equipment_client.get_equipment_by_id(equipment_id=equipment_id, async_req=False)
         return default_equipment_data._profile_id
 
     # Get the ssid's that are used by the equipment
     def get_ssids_on_equipment(self, equipment_id=None):
+        self.refresh_instance()
         profile_id = self.get_current_profile_on_equipment(equipment_id=equipment_id)
         all_profiles = self.profile_client.get_profile_with_children(profile_id=profile_id)
         ssid_name_list = []
@@ -224,6 +247,7 @@ class Controller(ConfigureController):
 
     # Get the child ssid profiles that are used by equipment ap profile of given profile id
     def get_ssid_profiles_from_equipment_profile(self, profile_id=None):
+        self.refresh_instance()
         equipment_ap_profile = self.profile_client.get_profile_by_id(profile_id=profile_id)
         ssid_name_list = []
         child_profile_ids = equipment_ap_profile.child_profile_ids
@@ -240,10 +264,10 @@ class Controller(ConfigureController):
         create a RF Profile
         create a Radius Profile
         create ssid profiles, and add the radius profile in them, if needed (only used by eap ssid's)
-        
+
         create equipment_ap profile, and add the rf profile and ssid profiles
     Now using push profile method, equipment_ap profile will be pushed to an AP of given equipment_id
-    
+
 """
 
 
@@ -257,6 +281,7 @@ class ProfileUtility:
         if sdk_client is None:
             sdk_client = Controller(controller_data=controller_data, customer_id=customer_id)
         self.sdk_client = sdk_client
+        self.sdk_client.refresh_instance()
         self.profile_client = swagger_client.ProfileApi(api_client=self.sdk_client.api_client)
         self.profile_creation_ids = {
             "ssid": [],
@@ -268,6 +293,7 @@ class ProfileUtility:
         self.profile_ids = []
 
     def cleanup_objects(self):
+        self.sdk_client.refresh_instance()
         self.profile_creation_ids = {
             "ssid": [],
             "ap": [],
@@ -278,6 +304,7 @@ class ProfileUtility:
         self.profile_ids = []
 
     def get_profile_by_name(self, profile_name=None):
+        self.sdk_client.refresh_instance()
         pagination_context = """{
                         "model_type": "PaginationContext",
                         "maxItemsPerPage": 1000
@@ -291,6 +318,7 @@ class ProfileUtility:
         return None
 
     def get_ssid_name_by_profile_id(self, profile_id=None):
+        self.sdk_client.refresh_instance()
         profiles = self.profile_client.get_profile_by_id(profile_id=profile_id)
         return profiles._details["ssid"]
 
@@ -309,6 +337,7 @@ class ProfileUtility:
                 "model_type": "PaginationContext",
                 "maxItemsPerPage": 100
         }"""
+        self.sdk_client.refresh_instance()
         items = self.profile_client.get_profiles_by_customer_id(customer_id=self.sdk_client.customer_id,
                                                                 pagination_context=pagination_context)
 
@@ -326,10 +355,12 @@ class ProfileUtility:
                 self.default_profiles['radius'] = i
             if i._name == "TipWlan-rf":
                 self.default_profiles['rf'] = i
+                # print(i)
 
     # This will delete the Profiles associated with an equipment of givwn equipment_id, and associate it to default
     # equipment_ap profile
     def delete_current_profile(self, equipment_id=None):
+        self.sdk_client.refresh_instance()
         equipment_data = self.sdk_client.equipment_client.get_equipment_by_id(equipment_id=equipment_id)
 
         data = self.profile_client.get_profile_with_children(profile_id=equipment_data._profile_id)
@@ -348,6 +379,7 @@ class ProfileUtility:
 
     # This will delete all the profiles on an controller instance, except the default profiles
     def cleanup_profiles(self):
+        self.sdk_client.refresh_instance()
         try:
             self.get_default_profiles()
             pagination_context = """{
@@ -380,6 +412,7 @@ class ProfileUtility:
 
     # Delete any profile with the given name
     def delete_profile_by_name(self, profile_name=None):
+        self.sdk_client.refresh_instance()
         pagination_context = """{
                                                 "model_type": "PaginationContext",
                                                 "maxItemsPerPage": 5000
@@ -398,12 +431,14 @@ class ProfileUtility:
     # This method will set all the equipments to default equipment_ap profile, those having the profile_id passed in
     # argument
     def set_equipment_to_profile(self, profile_id=None):
+        self.sdk_client.refresh_instance()
         pagination_context = """{
                                                 "model_type": "PaginationContext",
                                                 "maxItemsPerPage": 5000
                                         }"""
-        equipment_data = self.sdk_client.equipment_client.get_equipment_by_customer_id(customer_id=2,
-                                                                                       pagination_context=pagination_context)
+        equipment_data = self.sdk_client.equipment_client. \
+            get_equipment_by_customer_id(customer_id=2,
+                                         pagination_context=pagination_context)
         self.get_default_profiles()
         for i in equipment_data._items:
             if i._profile_id == profile_id:
@@ -417,6 +452,7 @@ class ProfileUtility:
     """
 
     def set_rf_profile(self, profile_data=None, mode=None):
+        self.sdk_client.refresh_instance()
         self.get_default_profiles()
         if mode == "wifi5":
             default_profile = self.default_profiles['rf']
@@ -426,6 +462,9 @@ class ProfileUtility:
             default_profile._details["rfConfigMap"]["is5GHz"]["rf"] = profile_data["name"]
             default_profile._details["rfConfigMap"]["is5GHzL"]["rf"] = profile_data["name"]
             default_profile._details["rfConfigMap"]["is5GHzU"]["rf"] = profile_data["name"]
+            # for i in profile_data['rfConfigMap']:
+            #     for j in profile_data['rfConfigMap'][i]:
+            #         default_profile._details["rfConfigMap"][i][j] = profile_data['rfConfigMap'][i][j]
             profile = self.profile_client.create_profile(body=default_profile)
             self.profile_creation_ids['rf'].append(profile._id)
             return profile
@@ -451,21 +490,18 @@ class ProfileUtility:
         method call: used to create a ssid profile with the given parameters
     """
 
-    def create_open_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
+    # Open
+    def create_open_ssid_profile(self, profile_data=None):
+        self.sdk_client.refresh_instance()
         try:
             if profile_data is None:
                 return False
             default_profile = self.default_profiles['ssid']
-            default_profile._details['appliedRadios'] = []
-            if two4g is True:
-                default_profile._details['appliedRadios'].append("is2dot4GHz")
-            if fiveg is True:
-                default_profile._details['appliedRadios'].append("is5GHzU")
-                default_profile._details['appliedRadios'].append("is5GHz")
-                default_profile._details['appliedRadios'].append("is5GHzL")
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
             default_profile._name = profile_data['profile_name']
-            default_profile._details['vlanId'] = profile_data['vlan']
             default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
             default_profile._details['forwardMode'] = profile_data['mode']
             default_profile._details['secureMode'] = 'open'
             profile = self.profile_client.create_profile(body=default_profile)
@@ -473,22 +509,20 @@ class ProfileUtility:
             self.profile_creation_ids['ssid'].append(profile_id)
             self.profile_ids.append(profile_id)
         except Exception as e:
+            print(e)
             profile = "error"
 
         return profile
 
-    def create_wpa_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
+    # wpa personal
+    def create_wpa_ssid_profile(self, profile_data=None):
+        self.sdk_client.refresh_instance()
+        self.get_default_profiles()
         try:
             if profile_data is None:
                 return False
             default_profile = self.default_profiles['ssid']
-            default_profile._details['appliedRadios'] = []
-            if two4g is True:
-                default_profile._details['appliedRadios'].append("is2dot4GHz")
-            if fiveg is True:
-                default_profile._details['appliedRadios'].append("is5GHzU")
-                default_profile._details['appliedRadios'].append("is5GHz")
-                default_profile._details['appliedRadios'].append("is5GHzL")
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
             default_profile._name = profile_data['profile_name']
             default_profile._details['vlanId'] = profile_data['vlan']
             default_profile._details['ssid'] = profile_data['ssid_name']
@@ -500,21 +534,19 @@ class ProfileUtility:
             self.profile_creation_ids['ssid'].append(profile_id)
             self.profile_ids.append(profile_id)
         except Exception as e:
+            print(e)
             profile = False
         return profile
 
-    def create_wpa2_personal_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
+    # wpa2 personal
+    def create_wpa2_personal_ssid_profile(self, profile_data=None):
+        self.sdk_client.refresh_instance()
         try:
             if profile_data is None:
                 return False
             default_profile = self.default_profiles['ssid']
-            default_profile._details['appliedRadios'] = []
-            if two4g is True:
-                default_profile._details['appliedRadios'].append("is2dot4GHz")
-            if fiveg is True:
-                default_profile._details['appliedRadios'].append("is5GHzU")
-                default_profile._details['appliedRadios'].append("is5GHz")
-                default_profile._details['appliedRadios'].append("is5GHzL")
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
             default_profile._name = profile_data['profile_name']
             default_profile._details['vlanId'] = profile_data['vlan']
             default_profile._details['ssid'] = profile_data['ssid_name']
@@ -526,43 +558,140 @@ class ProfileUtility:
             self.profile_creation_ids['ssid'].append(profile_id)
             self.profile_ids.append(profile_id)
         except Exception as e:
+            print(e)
             profile = False
         return profile
 
-    def create_wpa3_personal_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
-        if profile_data is None:
-            return False
-        default_profile = self.default_profiles['ssid']
-        default_profile._details['appliedRadios'] = []
-        if two4g is True:
-            default_profile._details['appliedRadios'].append("is2dot4GHz")
-        if fiveg is True:
-            default_profile._details['appliedRadios'].append("is5GHzU")
-            default_profile._details['appliedRadios'].append("is5GHz")
-            default_profile._details['appliedRadios'].append("is5GHzL")
-        default_profile._name = profile_data['profile_name']
-        default_profile._details['vlanId'] = profile_data['vlan']
-        default_profile._details['ssid'] = profile_data['ssid_name']
-        default_profile._details['keyStr'] = profile_data['security_key']
-        default_profile._details['forwardMode'] = profile_data['mode']
-        default_profile._details['secureMode'] = 'wpa3OnlyPSK'
-        profile_id = self.profile_client.create_profile(body=default_profile)._id
-        self.profile_creation_ids['ssid'].append(profile_id)
-        self.profile_ids.append(profile_id)
-        return True
-
-    def create_wpa2_enterprise_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
+    # wpa3 personal
+    def create_wpa3_personal_ssid_profile(self, profile_data=None):
+        self.sdk_client.refresh_instance()
         try:
             if profile_data is None:
                 return False
             default_profile = self.default_profiles['ssid']
-            default_profile._details['appliedRadios'] = []
-            if two4g is True:
-                default_profile._details['appliedRadios'].append("is2dot4GHz")
-            if fiveg is True:
-                default_profile._details['appliedRadios'].append("is5GHzU")
-                default_profile._details['appliedRadios'].append("is5GHz")
-                default_profile._details['appliedRadios'].append("is5GHzL")
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['keyStr'] = profile_data['security_key']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details['secureMode'] = 'wpa3OnlySAE'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa3 personal mixed mode
+    def create_wpa3_personal_mixed_ssid_profile(self, profile_data=None):
+        self.sdk_client.refresh_instance()
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['keyStr'] = profile_data['security_key']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details['secureMode'] = 'wpa3MixedSAE'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa wpa2 personal mixed mode
+    def create_wpa_wpa2_personal_mixed_ssid_profile(self, profile_data=None):
+        self.sdk_client.refresh_instance()
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['keyStr'] = profile_data['security_key']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details['secureMode'] = 'wpa2PSK'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa enterprise    done
+    def create_wpa_enterprise_ssid_profile(self, profile_data=None):
+        self.sdk_client.refresh_instance()
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
+            default_profile._child_profile_ids = self.profile_creation_ids["radius"]
+            default_profile._details['secureMode'] = 'wpaRadius'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa wpa2 enterprise mixed mode done
+    def create_wpa_wpa2_enterprise_mixed_ssid_profile(self, profile_data=None):
+        self.sdk_client.refresh_instance()
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
+            default_profile._child_profile_ids = self.profile_creation_ids["radius"]
+            default_profile._details['secureMode'] = 'wpa2Radius'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa2 enterprise mode ssid profile
+    def create_wpa2_enterprise_ssid_profile(self, profile_data=None):
+        self.sdk_client.refresh_instance()
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+
             default_profile._name = profile_data['profile_name']
             default_profile._details['vlanId'] = profile_data['vlan']
             default_profile._details['ssid'] = profile_data['ssid_name']
@@ -579,35 +708,102 @@ class ProfileUtility:
             profile = False
         return profile
 
-    def create_wpa3_enterprise_ssid_profile(self, two4g=True, fiveg=True, profile_data=None):
-        if profile_data is None:
-            return False
-        default_profile = self.default_profiles['ssid']
-        default_profile._details['appliedRadios'] = []
-        if two4g is True:
-            default_profile._details['appliedRadios'].append("is2dot4GHz")
-        if fiveg is True:
-            default_profile._details['appliedRadios'].append("is5GHzU")
-            default_profile._details['appliedRadios'].append("is5GHz")
-            default_profile._details['appliedRadios'].append("is5GHzL")
-        default_profile._name = profile_data['profile_name']
-        default_profile._details['vlanId'] = profile_data['vlan']
-        default_profile._details['ssid'] = profile_data['ssid_name']
-        default_profile._details['keyStr'] = profile_data['security_key']
-        default_profile._details['forwardMode'] = profile_data['mode']
-        default_profile._details['secureMode'] = 'wpa3OnlyRadius'
-        default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
-        default_profile._child_profile_ids = self.profile_creation_ids["radius"]
-        profile_id = self.profile_client.create_profile(body=default_profile)._id
-        self.profile_creation_ids['ssid'].append(profile_id)
-        self.profile_ids.append(profile_id)
-        return True
+    # wpa3 enterprise mode
+    def create_wpa3_enterprise_ssid_profile(self, profile_data=None):
+        self.sdk_client.refresh_instance()
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
+            default_profile._child_profile_ids = self.profile_creation_ids["radius"]
+            default_profile._details['secureMode'] = 'wpa3OnlyEAP'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa3 enterprise mixed mode done
+    def create_wpa3_enterprise_mixed_ssid_profile(self, profile_data=None):
+        self.sdk_client.refresh_instance()
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
+            default_profile._child_profile_ids = self.profile_creation_ids["radius"]
+            default_profile._details['secureMode'] = 'wpa3MixedEAP'
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa3 enterprise mixed mode done
+    def create_wep_ssid_profile(self, profile_data=None):
+        self.sdk_client.refresh_instance()
+        try:
+            if profile_data is None:
+                return False
+            default_profile = self.default_profiles['ssid']
+            default_profile._details['appliedRadios'] = profile_data["appliedRadios"]
+            default_profile._name = profile_data['profile_name']
+            default_profile._details['vlanId'] = profile_data['vlan']
+            default_profile._details['ssid'] = profile_data['ssid_name']
+            default_profile._details['forwardMode'] = profile_data['mode']
+            default_profile._details['secureMode'] = 'wep'
+            default_profile._details['wepConfig'] = {}
+            default_profile._details['wepConfig']["model_type"] = "WepConfiguration"
+            default_profile._details['wepConfig']["wepAuthType"] = "open"
+            default_profile._details['wepConfig']["primaryTxKeyId"] = profile_data["default_key_id"]
+            default_profile._details['wepConfig']["wepKeys"] = [{'model_type': 'WepKey',
+                                                                 'txKey': profile_data["wep_key"],
+                                                                 'txKeyConverted': None,
+                                                                 'txKeyType': 'wep64'},
+                                                                {'model_type': 'WepKey',
+                                                                 'txKey': profile_data["wep_key"],
+                                                                 'txKeyConverted': None,
+                                                                 'txKeyType': 'wep64'},
+                                                                {'model_type': 'WepKey',
+                                                                 'txKey': profile_data["wep_key"],
+                                                                 'txKeyConverted': None,
+                                                                 'txKeyType': 'wep64'},
+                                                                {'model_type': 'WepKey',
+                                                                 'txKey': profile_data["wep_key"],
+                                                                 'txKeyConverted': None,
+                                                                 'txKeyType': 'wep64'}]
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids['ssid'].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
 
     """
         method call: used to create a ap profile that contains the given ssid profiles
     """
 
     def set_ap_profile(self, profile_data=None):
+        self.sdk_client.refresh_instance()
         if profile_data is None:
             return False
         default_profile = self.default_profiles['equipment_ap_2_radios']
@@ -629,8 +825,10 @@ class ProfileUtility:
     """
 
     def create_radius_profile(self, radius_info=None):
+        self.sdk_client.refresh_instance()
         default_profile = self.default_profiles['radius']
         default_profile._name = radius_info['name']
+        default_profile._details['primaryRadiusAuthServer'] = {}
         default_profile._details['primaryRadiusAuthServer']['ipAddress'] = radius_info['ip']
         default_profile._details['primaryRadiusAuthServer']['port'] = radius_info['port']
         default_profile._details['primaryRadiusAuthServer']['secret'] = radius_info['secret']
@@ -640,12 +838,12 @@ class ProfileUtility:
         return default_profile
 
     """
-
         method to push the profile to the given equipment 
     """
 
     # Under a Bug, depreciated until resolved, should be used primarily
     def push_profile(self, equipment_id=None):
+        self.sdk_client.refresh_instance()
         pagination_context = """{
                                 "model_type": "PaginationContext",
                                 "maxItemsPerPage": 100
@@ -660,6 +858,7 @@ class ProfileUtility:
     """
 
     def update_ssid_name(self, profile_name=None, new_profile_name=None):
+        self.sdk_client.refresh_instance()
         if profile_name is None:
             print("profile name is None, Please specify the ssid profile name that you want to modify")
             return False
@@ -680,11 +879,13 @@ class ProfileUtility:
     """
 
     def delete_profile(self, profile_id=None):
+        self.sdk_client.refresh_instance()
         for i in profile_id:
             self.profile_client.delete_profile(profile_id=i)
 
     # Need to be depreciated by using push_profile method
     def push_profile_old_method(self, equipment_id=None):
+        self.sdk_client.refresh_instance()
         if equipment_id is None:
             return 0
         url = self.sdk_client.configuration.host + "/portal/equipment?equipmentId=" + str(equipment_id)
@@ -704,52 +905,7 @@ class ProfileUtility:
 
 
 """
-    JfrogUtility base class used for FirmwareUtility for Artifactory Management
-    Used for getting the latest firmware image
-    credentials required are as follows:
-        username
-        password
-        jfrog-base-url
-        build   [pending]
-        branch  [dev, trunk]
-"""
 
-
-class JFrogUtility:
-
-    def __init__(self, credentials=None):
-        if credentials is None:
-            exit()
-        self.jfrog_url = credentials["jfrog-base-url"]
-        self.build = credentials["build"]
-        self.branch = credentials["branch"]
-        ssl._create_default_https_context = ssl._create_unverified_context
-
-    def get_build(self, model=None, version=None):
-        jfrog_url = self.jfrog_url + "/" + model + "/" + self.branch + "/"
-
-        ''' FIND THE LATEST FILE NAME'''
-        print(jfrog_url)
-        req = urllib.request.Request(jfrog_url)
-        response = urllib.request.urlopen(req)
-        # print(response)
-        html = response.read()
-        soup = BeautifulSoup(html, features="html.parser")
-        if self.branch == "trunk":
-            self.build = model
-        last_link = soup.find_all('a', href=re.compile(self.build))
-        latest_fw = None
-        for i in last_link:
-
-            if str(i['href']).__contains__(version):
-                latest_fw = i['href']
-
-        latest_fw = latest_fw.replace('.tar.gz', '')
-        print("Using Firmware Image: ", latest_fw)
-        return latest_fw
-
-
-"""
     FirmwareUtility class
         uses JfrogUtility base class
         sdk_client  [ controller_tests instance ]
@@ -758,74 +914,70 @@ class JFrogUtility:
 """
 
 
-class FirmwareUtility(JFrogUtility):
+class FirmwareUtility:
 
     def __init__(self,
                  sdk_client=None,
                  jfrog_credentials=None,
                  controller_data=None,
-                 customer_id=None,
+                 customer_id=2,
                  model=None,
-                 version=None):
-        super().__init__(credentials=jfrog_credentials)
+                 version_url=None):
+        # super().__init__(credentials=jfrog_credentials)
         if sdk_client is None:
             sdk_client = Controller(controller_data=controller_data, customer_id=customer_id)
         self.sdk_client = sdk_client
+        self.sdk_client.refresh_instance()
         self.firmware_client = FirmwareManagementApi(api_client=sdk_client.api_client)
-        self.jfrog_client = JFrogUtility(credentials=jfrog_credentials)
+        # self.jfrog_client = JFrogUtility(credentials=jfrog_credentials)
         self.equipment_gateway_client = EquipmentGatewayApi(api_client=sdk_client.api_client)
         self.model = model
-        self.fw_version = version
+        self.fw_version = version_url
 
     def get_fw_version(self):
-        # Get The equipment model
-        self.latest_fw = self.get_build(model=self.model, version=self.fw_version)
-        return self.latest_fw
+        fw_version = self.fw_version.split("/")[-1]
+        return fw_version
 
-    def upload_fw_on_cloud(self, fw_version=None, force_upload=False):
-        print("Upload fw version :", fw_version)
-        # force_upload = True
-        # if fw_latest available and force upload is False -- Don't upload
-        # if fw_latest available and force upload is True -- Upload
-        # if fw_latest is not available -- Upload
+    def upload_fw_on_cloud(self, force_upload=False):
+        self.sdk_client.refresh_instance()
+        fw_version = self.fw_version.split("/")[-1]
+        print("Upload fw version :", self.fw_version)
         fw_id = self.is_fw_available(fw_version=fw_version)
         if fw_id and not force_upload:
-            print("Firmware Version Already Available, Skipping upload", "Force Upload :", force_upload)
+            print("Skipping upload, Firmware Already Available", "Force Upload :", force_upload)
             # Don't Upload the fw
             return fw_id
         else:
             if fw_id and force_upload:
-                print("Firmware Version Already Available, Deleting and Uploading Again")
+                print("Firmware Version Already Available, Deleting and Uploading Again",
+                      " Force Upload :", force_upload)
                 self.firmware_client.delete_firmware_version(firmware_version_id=fw_id)
-                print("Force Upload :", force_upload, "  Deleted current Image")
+                print("Deleted Firmware Image from cloud, uploading again")
                 time.sleep(2)
                 # if force_upload is true and latest image available, then delete the image
             firmware_data = {
                 "id": 0,
                 "equipmentType": "AP",
-                "modelId": fw_version.split("-")[0],
-                "versionName": fw_version + ".tar.gz",
+                "modelId": str(self.model).upper(),
+                "versionName": fw_version,
                 "description": fw_version + "  FW VERSION",
-                "filename": self.jfrog_url + "/" + self.model + "/" + self.branch + "/" + fw_version + ".tar.gz",
+                "filename": self.fw_version,
             }
-            print(firmware_data["filename"])
             firmware_id = self.firmware_client.create_firmware_version(body=firmware_data)
-            print("Force Upload :", force_upload, "  Uploaded the Image")
+            print("Uploaded the Image: ", fw_version)
             return firmware_id._id
 
     def upgrade_fw(self, equipment_id=None, force_upgrade=False, force_upload=False):
+        self.sdk_client.refresh_instance()
         if equipment_id is None:
             print("No Equipment Id Given")
             exit()
         if (force_upgrade is True) or (self.should_upgrade_ap_fw(equipment_id=equipment_id)):
-            model = self.sdk_client.get_model_name(equipment_id=equipment_id).lower()
-            latest_fw = self.get_fw_version()
-            firmware_id = self.upload_fw_on_cloud(fw_version=latest_fw, force_upload=force_upload)
+            firmware_id = self.upload_fw_on_cloud(force_upload=force_upload)
             time.sleep(5)
             try:
                 obj = self.equipment_gateway_client.request_firmware_update(equipment_id=equipment_id,
                                                                             firmware_version_id=firmware_id)
-
                 print("Request firmware upgrade Success! waiting for 300 sec")
                 time.sleep(300)
             except Exception as e:
@@ -835,6 +987,7 @@ class FirmwareUtility(JFrogUtility):
             # Write the upgrade fw logic here
 
     def should_upgrade_ap_fw(self, equipment_id=None):
+        self.sdk_client.refresh_instance()
         current_fw = self.sdk_client.get_ap_firmware_old_method(equipment_id=equipment_id)
         latest_fw = self.get_fw_version()
         print(self.model, current_fw, latest_fw)
@@ -844,11 +997,12 @@ class FirmwareUtility(JFrogUtility):
             return True
 
     def is_fw_available(self, fw_version=None):
+        self.sdk_client.refresh_instance()
         if fw_version is None:
             exit()
         try:
             firmware_version = self.firmware_client.get_firmware_version_by_name(
-                firmware_version_name=fw_version + ".tar.gz")
+                firmware_version_name=fw_version)
             firmware_version = firmware_version._id
             print("Firmware ID: ", firmware_version)
         except Exception as e:
@@ -858,17 +1012,29 @@ class FirmwareUtility(JFrogUtility):
         return firmware_version
 
 
+# This is for Unit tests on Controller Library
 if __name__ == '__main__':
-    """
-    Examples to Try Out
-    """
     controller = {
-        'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
+        'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
         'username': 'support@example.com',
         'password': 'support',
         'version': "1.1.0-SNAPSHOT",
         'commit_date': "2021-04-27"
     }
-    sdk_client = Controller(controller_data=controller)
-    # Use Library/ Method Here
-    sdk_client.disconnect_Controller()
+    api = Controller(controller_data=controller)
+    profile = ProfileUtility(sdk_client=api)
+    profile.cleanup_profiles()
+    # profile.get_default_profiles()
+    # profile_data = {
+    #     "profile_name": "ssid_wep_2g",
+    #     "ssid_name": "ssid_wep_2g",
+    #     "appliedRadios": ["is2dot4GHz"],
+    #     "default_key_id" : 1,
+    #     "wep_key" : 1234567890,
+    #     "vlan": 1,
+    #     "mode": "BRIDGE"
+    # }
+    # profile.create_wep_ssid_profile(profile_data=profile_data)
+    # print(profile.get_profile_by_name(profile_name="wpa_wpa2_eap"))
+    # profile.get_default_profiles()
+    api.disconnect_Controller()

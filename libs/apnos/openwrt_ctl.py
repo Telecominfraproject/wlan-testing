@@ -5,6 +5,7 @@ make sure pexpect is installed:
 $ sudo yum install python3-pexpect
 
 You might need to install pexpect-serial using pip:
+$ pip3 install serial
 $ pip3 install pexpect-serial
 
 ./openwrt_ctl.py -l stdout -u root -p TIP -s serial --tty ttyUSB0

@@ -7,23 +7,23 @@ from configuration import CONFIGURATION
 
 
 @pytest.mark.sanity
+@pytest.mark.sanity_55
 @pytest.mark.sdk_version_check
-def test_cloud_sdk_version(instantiate_controller, testbed, test_cases, instantiate_testrail, instantiate_project):
+def test_cloud_sdk_version(setup_controller, testbed, test_cases, update_report):
     try:
-        response = instantiate_controller.portal_ping()
+        response = setup_controller.portal_ping()
         if CONFIGURATION[testbed]['controller']['version'] == response._project_version:
-            PASS = True
-            instantiate_testrail.update_testrail(case_id=test_cases["cloud_ver"], run_id=instantiate_project,
+            update_report.update_testrail(case_id=test_cases["cloud_ver"],
                                                  status_id=1, msg='Read CloudSDK version from API successfully')
             PASS = True
         else:
-            instantiate_testrail.update_testrail(case_id=test_cases["cloud_ver"], run_id=instantiate_project,
+            update_report.update_testrail(case_id=test_cases["cloud_ver"],
                                                  status_id=0, msg='Could not read CloudSDK version from API -  '
                                                                   'version missmatch')
             PASS = False
     except Exception as e:
         print(e)
-        instantiate_testrail.update_testrail(case_id=test_cases["cloud_ver"], run_id=instantiate_project,
+        update_report.update_testrail(case_id=test_cases["cloud_ver"],
                                              status_id=0, msg='Could not read CloudSDK version from API - Exception '
                                                               'occured')
         PASS = False

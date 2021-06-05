@@ -46,7 +46,6 @@ class APNOS:
             cmd = '[ -f ~/cicd-git/openwrt_ctl.py ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
             var = str(stdout.read())
-            print(var)
             if var.__contains__("True"):
                 allure.attach(name="openwrt_ctl Setup", body=str(var))
                 print("APNOS Serial Setup OK")
@@ -87,6 +86,8 @@ class APNOS:
                   f"cmd --value \"{cmd}\" "
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
+        allure.attach(body=str("VIF Config: " + str(vif_config) + "\n" + "VIF State: " + str(vif_state)),
+                      name="SSID Profiles in VIF Config and VIF State: ")
         client.close()
         allure.attach(name="iwinfo Output Msg: ", body=str(output))
         allure.attach(name="iwinfo config Err Msg: ", body=str(stderr))
@@ -133,6 +134,32 @@ class APNOS:
         return ssid_list
 
     # Method to get the vif_state ssid's of AP using AP-CLI/ JUMPHOST-CLI
+    def get_ssid_info(self):
+        stdout = self.get_vif_state()
+        ssid_info_list = []
+        info = []
+        for i in stdout.splitlines():
+            ssid = str(i).replace(" ", "").split(".")
+            # print(ssid)
+            if ssid[0].split(":")[0] == "b'mac":
+                mac_info_list = ssid[0].split(":")
+                mac_info_list.pop(0)
+                info.append(":".join(mac_info_list).replace("'", ""))
+            if ssid[0].split(":")[0] == "b'security":
+                security = ssid[0].split(":")[1].split(",")[2].replace("]", "").replace('"', "").replace("'", "")
+                info.append(security)
+                if security != "OPEN":
+                    security_key = ssid[0].split(":")[1].split(",")[4].replace('"', "").replace("]", "")
+                    info.append(security_key)
+            if ssid[0].split(":")[0] == "b'ssid":
+                info.append(ssid[0].split(":")[1].replace("'", ""))
+                ssid_info_list.append(info)
+                info = []
+        print(ssid_info_list)
+        # allure.attach(name="get_vif_state_ssids ", body=str(ssid_list))
+        return ssid_info_list
+
+    # Get VIF State parameters
     def get_vif_state_ssids(self):
         stdout = self.get_vif_state()
         ssid_list = []
@@ -253,7 +280,7 @@ class APNOS:
 if __name__ == '__main__':
     obj = {
         'jumphost': True,
-        'ip': "192.168.200.230",
+        'ip': "192.168.80.99",
         'username': "lanforge",
         'password': "lanforge",
         'port': 22,
@@ -261,5 +288,5 @@ if __name__ == '__main__':
 
     }
     var = APNOS(credentials=obj)
-    r = var.get_redirector()
+    r = var.get_ssid_info()
     print(r)
