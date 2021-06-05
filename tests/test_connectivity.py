@@ -5,7 +5,8 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.usefixtures("setup_test_run"), pytest.mark.test_resources, pytest.mark.sanity]
+pytestmark = [pytest.mark.usefixtures("setup_test_run"), pytest.mark.test_resources, pytest.mark.sanity,
+              pytest.mark.sanity_55]
 
 
 @allure.testcase(name="Test Resources", url="")
@@ -55,16 +56,10 @@ class TestResources(object):
     def test_traffic_generator_connectivity(self, traffic_generator_connectivity, update_report, test_cases):
         """Test case to verify Traffic Generator Connectivity"""
         if traffic_generator_connectivity == "5.4.3":
-            allure.attach(name="Access Point Connectivity Success", body=str(traffic_generator_connectivity))
-            update_report.update_testrail(case_id=test_cases["cloud_connection"],
-                                          status_id=5,
-                                          msg='CloudSDK connectivity failed')
+            allure.attach(name="LANforge-", body=str(traffic_generator_connectivity))
 
-            pytest.exit("LANforgeGUI-5.4.3 is not available")
         else:
-            allure.attach(name="Access Point Connectivity Failed", body=str(traffic_generator_connectivity))
-            update_report.update_testrail(case_id=test_cases["cloud_connection"],
-                                          status_id=1,
-                                          msg='Manager status is Active')
+            allure.attach(name="LANforgeGUI-5.4.3 is not available", body=str(traffic_generator_connectivity))
+            pytest.exit("LANforgeGUI-5.4.3 is not available")
 
         assert traffic_generator_connectivity

@@ -55,6 +55,7 @@ def pytest_addoption(parser):
     parser.addini("influx_token", "Influx Token", default="TCkdATXAbHmNbn4QyNaj43WpGBYxFrzV")
     parser.addini("influx_bucket", "influx bucket", default="tip-cicd")
     parser.addini("influx_org", "influx organization", default="tip")
+    parser.addini("build", "AP Firmware build URL", default="0")
 
     parser.addini("num_stations", "Number of Stations/Clients for testing")
 
@@ -238,13 +239,17 @@ def setup_controller(request, get_configuration, instantiate_access_point):
 
 
 @pytest.fixture(scope="session")
-def instantiate_firmware(setup_controller, get_configuration):
+def instantiate_firmware(request, setup_controller, get_configuration):
     """sets up firmware utility and yields the object for firmware upgrade"""
     firmware_client_obj = []
+
     for access_point_info in get_configuration['access_point']:
+        version = access_point_info["version"]
+        if request.config.getini("build") != "0":
+            version = request.config.getini("build")
         firmware_client = FirmwareUtility(sdk_client=setup_controller,
                                           model=access_point_info["model"],
-                                          version_url=access_point_info["version"])
+                                          version_url=version)
         firmware_client_obj.append(firmware_client)
     yield firmware_client_obj
 
@@ -291,12 +296,14 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
             for i in range(0, len(instantiate_firmware)):
                 status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i], force_upload=True,
                                                             force_upgrade=should_upgrade_firmware)
+                allure.attach(name="Firmware Upgrade Request", body=str(status))
                 status_list.append(status)
     else:
         if should_upgrade_firmware:
             for i in range(0, len(instantiate_firmware)):
                 status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i], force_upload=False,
                                                             force_upgrade=should_upgrade_firmware)
+                allure.attach(name="Firmware Upgrade Request", body=str(status))
                 status_list.append(status)
         else:
             status = "skip-upgrade Version Already Available"

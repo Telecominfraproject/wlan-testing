@@ -121,6 +121,7 @@ class Controller(ConfigureController):
         if time.time() - self.token_timestamp > self.token_expiry:
             self.token_timestamp = time.time()
             print("Refreshing the controller API token")
+            self.disconnect_Controller()
             self.api_client = swagger_client.ApiClient(self.configuration)
             self.login_client = swagger_client.LoginApi(api_client=self.api_client)
             self.bearer = self.get_bearer_token()
@@ -1013,7 +1014,7 @@ class FirmwareUtility:
 # This is for Unit tests on Controller Library
 if __name__ == '__main__':
     controller = {
-        'url': "http://wlan-portal-svc-digicert.cicd.lab.wlan.tip.build",  # API base url for the controller
+        'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
         'username': 'support@example.com',
         'password': 'support',
         'version': "1.1.0-SNAPSHOT",

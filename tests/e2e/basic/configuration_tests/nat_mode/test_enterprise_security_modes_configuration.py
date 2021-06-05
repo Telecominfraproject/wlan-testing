@@ -71,6 +71,7 @@ class TestSetupNATEnterpriseSuiteA(object):
                                           msg='Failed to create profile')
             assert False
 
+    @pytest.mark.sanity_55
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     def test_setup_wpa2_enterprise_2g_ssid_profile(self, setup_profiles, update_report, test_cases):
@@ -86,6 +87,7 @@ class TestSetupNATEnterpriseSuiteA(object):
                                           msg='Failed to create profile')
             assert False
 
+    @pytest.mark.sanity_55
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     def test_setup_wpa2_enterprise_5g_ssid_profile(self, setup_profiles, update_report, test_cases):
@@ -133,6 +135,7 @@ class TestSetupNATEnterpriseSuiteA(object):
                                           msg='Failed to create profile')
             assert False
 
+    @pytest.mark.sanity_55
     def test_setup_equipment_ap_profile(self, setup_profiles, update_report,
                                         test_cases):
         """ Equipment AP Profile Suite A Enterprise """
@@ -147,6 +150,7 @@ class TestSetupNATEnterpriseSuiteA(object):
                                           msg='Failed to create profile')
             assert False
 
+    @pytest.mark.sanity_55
     def test_verify_vif_config(self, setup_profiles, update_report,
                                test_cases):
         """ VIF Config Suite A Enterprise """
@@ -161,11 +165,12 @@ class TestSetupNATEnterpriseSuiteA(object):
                                           msg='Failed to push profile')
             assert False
 
+    @pytest.mark.sanity_55
     @allure.severity(allure.severity_level.BLOCKER)
     def test_verify_vif_state(self, setup_profiles, update_report,
                               test_cases):
         """ VIF Config Suite B Enterprise """
-        time.sleep(180)
+        time.sleep(200)
         if setup_profiles['vifs']:
             update_report.update_testrail(case_id=test_cases["nat_vifs"],
                                           status_id=1,
@@ -299,7 +304,7 @@ class TestSetupNATEnterpriseSuiteB(object):
     def test_verify_vif_state(self, setup_profiles, update_report,
                               test_cases):
         """ VIF State Suite B Enterprise """
-        time.sleep(180)
+        time.sleep(200)
         if setup_profiles['vifs']:
             update_report.update_testrail(case_id=test_cases["nat_vifs"],
                                           status_id=1,

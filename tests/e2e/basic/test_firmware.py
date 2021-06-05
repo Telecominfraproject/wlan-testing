@@ -3,11 +3,13 @@
     Details:    Firmware Upgrade
 
 """
+import allure
 import pytest
 
-pytestmark = [pytest.mark.firmware, pytest.mark.sanity]
+pytestmark = [pytest.mark.firmware, pytest.mark.sanity, pytest.mark.sanity_55]
 
 
+@allure.testcase("firmware upgrade from Cloud")
 @pytest.mark.firmware_cloud
 class TestFirmware(object):
 

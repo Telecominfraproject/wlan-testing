@@ -7,6 +7,7 @@ from configuration import CONFIGURATION
 
 
 @pytest.mark.sanity
+@pytest.mark.sanity_55
 @pytest.mark.sdk_version_check
 def test_cloud_sdk_version(setup_controller, testbed, test_cases, update_report):
     try:
