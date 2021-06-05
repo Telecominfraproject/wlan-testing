@@ -141,7 +141,6 @@ pip3 install allure-pytest
 
 
 ```
-Note: Add the pip3 module if any module not found error hits
 
 #### Step 3
 
