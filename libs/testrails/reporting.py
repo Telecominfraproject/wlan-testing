@@ -1,3 +1,6 @@
+import allure
+
+
 class Reporting:
 
     def __init__(self):
@@ -5,4 +8,5 @@ class Reporting:
         pass
 
     def update_testrail(self, case_id=None, run_id=None, status_id=1, msg=None):
+        allure.attach(name=str(msg), body="")
         pass

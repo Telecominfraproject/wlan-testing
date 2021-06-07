@@ -3,11 +3,14 @@
     Details:    Firmware Upgrade
 
 """
+import allure
 import pytest
 
-pytestmark = [pytest.mark.firmware, pytest.mark.sanity]
+pytestmark = [pytest.mark.firmware, pytest.mark.sanity, pytest.mark.sanity_55,
+              pytest.mark.usefixtures("setup_test_run")]
 
 
+@allure.testcase("firmware upgrade from Cloud")
 @pytest.mark.firmware_cloud
 class TestFirmware(object):
 
@@ -55,9 +58,19 @@ class TestFirmware(object):
 
 
 @pytest.mark.firmware_ap
-def test_ap_firmware(check_ap_firmware_ssh, get_latest_firmware, update_report,
+def test_ap_firmware(get_configuration, get_apnos, get_latest_firmware, update_report,
                      test_cases):
-    if check_ap_firmware_ssh == get_latest_firmware:
+    """yields the active version of firmware on ap"""
+    active_fw_list = []
+    try:
+        for access_point in get_configuration['access_point']:
+            ap_ssh = get_apnos(access_point)
+            active_fw = ap_ssh.get_active_firmware()
+            active_fw_list.append(active_fw)
+    except Exception as e:
+        print(e)
+        active_fw_list = []
+    if active_fw_list == get_latest_firmware:
         update_report.update_testrail(case_id=test_cases["ap_upgrade"],
                                       status_id=1,
                                       msg='Upgrade to ' + str(get_latest_firmware) + ' successful')
@@ -66,4 +79,4 @@ def test_ap_firmware(check_ap_firmware_ssh, get_latest_firmware, update_report,
                                       status_id=4,
                                       msg='Cannot reach AP after upgrade to check CLI - re-test required')
 
-    assert check_ap_firmware_ssh == get_latest_firmware
+    assert active_fw_list == get_latest_firmware

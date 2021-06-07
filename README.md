@@ -63,7 +63,7 @@ http://pythontesting.net/framework/pytest/pytest-introduction/
 
 ### Build status
   
-[![Build Status](https://github.com/Telecominfraproject/wlan-testing/workflows/nightly%20build/badge.svg)]
+[![nightly build](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/nightly.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/nightly.yml)
 
 ### Best Practice
 
@@ -141,7 +141,6 @@ pip3 install allure-pytest
 
 
 ```
-Note: Add the pip3 module if any module not found error hits
 
 #### Step 3
 

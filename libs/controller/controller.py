@@ -121,6 +121,7 @@ class Controller(ConfigureController):
         if time.time() - self.token_timestamp > self.token_expiry:
             self.token_timestamp = time.time()
             print("Refreshing the controller API token")
+            self.disconnect_Controller()
             self.api_client = swagger_client.ApiClient(self.configuration)
             self.login_client = swagger_client.LoginApi(api_client=self.api_client)
             self.bearer = self.get_bearer_token()
@@ -208,6 +209,7 @@ class Controller(ConfigureController):
         payload = {}
         headers = self.configuration.api_key_prefix
         response = requests.request("GET", url, headers=headers, data=payload)
+
         if response.status_code == 200:
             status_data = response.json()
             # print(status_data)
@@ -215,9 +217,10 @@ class Controller(ConfigureController):
                 current_ap_fw = status_data[2]['details']['reportedSwVersion']
                 # print(current_ap_fw)
                 return current_ap_fw
-            except:
+            except Exception as e:
+                print(e)
                 current_ap_fw = "error"
-                return False
+                return e
 
         else:
             return False
@@ -397,7 +400,7 @@ class ProfileUtility:
             for i in self.default_profiles:
                 skip_delete_id.append(self.default_profiles[i]._id)
             delete_ids = list(set(delete_ids) - set(delete_ids).intersection(set(skip_delete_id)))
-            # print(delete_ids)
+            print(delete_ids)
             for i in delete_ids:
                 self.set_equipment_to_profile(profile_id=i)
             self.delete_profile(profile_id=delete_ids)
@@ -971,7 +974,6 @@ class FirmwareUtility:
             exit()
         if (force_upgrade is True) or (self.should_upgrade_ap_fw(equipment_id=equipment_id)):
             firmware_id = self.upload_fw_on_cloud(force_upload=force_upload)
-            print(firmware_id)
             time.sleep(5)
             try:
                 obj = self.equipment_gateway_client.request_firmware_update(equipment_id=equipment_id,
@@ -1013,14 +1015,15 @@ class FirmwareUtility:
 # This is for Unit tests on Controller Library
 if __name__ == '__main__':
     controller = {
-        'url': "https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build",  # API base url for the controller
+        'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
         'username': 'support@example.com',
         'password': 'support',
         'version': "1.1.0-SNAPSHOT",
         'commit_date': "2021-04-27"
     }
     api = Controller(controller_data=controller)
-    # profile = ProfileUtility(sdk_client=api)
+    profile = ProfileUtility(sdk_client=api)
+    profile.cleanup_profiles()
     # profile.get_default_profiles()
     # profile_data = {
     #     "profile_name": "ssid_wep_2g",
