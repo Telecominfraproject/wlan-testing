@@ -135,6 +135,7 @@ class TestSetupBridgeEnterpriseSuiteA(object):
                                           msg='Failed to create profile')
             assert False
 
+    @pytest.mark.sanity_55
     def test_setup_equipment_ap_profile(self, setup_profiles, update_report,
                                         test_cases):
         """ Equipment AP Profile Suite A Enterprise """
@@ -149,6 +150,7 @@ class TestSetupBridgeEnterpriseSuiteA(object):
                                           msg='Failed to create profile')
             assert False
 
+    @pytest.mark.sanity_55
     def test_verify_vif_config(self, setup_profiles, update_report,
                                test_cases):
         """ VIF Config Suite A Enterprise """
@@ -163,6 +165,7 @@ class TestSetupBridgeEnterpriseSuiteA(object):
                                           msg='Failed to push profile')
             assert False
 
+    @pytest.mark.sanity_55
     @allure.severity(allure.severity_level.BLOCKER)
     def test_verify_vif_state(self, setup_profiles, update_report,
                               test_cases):

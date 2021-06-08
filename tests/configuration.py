@@ -17,7 +17,7 @@ CONFIGURATION = {
                 'username': "lanforge",
                 'password': "pumpkin77",
                 'port': 8803,  # 22,
-                'jumphost_tty': '/dev/ttyAP1',
+                'jumphost_tty': '/dev/ttyAP2',
                 'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.1.0.tar.gz"
             }
         ],

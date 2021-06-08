@@ -89,3 +89,9 @@ class ChamberView:
         cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port, )
         json_response = cli_base.json_get(_req_url=_req_url)
         return json_response
+
+    def add_stations(self, num_stations=5):
+        self.CreateChamberview.setup(create_scenario=self.scenario_name,
+                                     raw_line=self.raw_line)
+
+        return True
