@@ -18,6 +18,15 @@ env:
 
 on:
   workflow_dispatch:
+    inputs:
+      testbed:
+        default: 'basic-02'
+        description: 'Testbed to test'
+        required: false
+      marker_expression:
+        default: 'sanity'
+        description: 'Pytest marker expression that will be used to select the tests to execute'
+        required: false
   push:
     branches:
       - master
@@ -113,7 +122,7 @@ jobs:
     needs: [ build ]
     steps:
     - name: get EKS access credentials
-      run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+      run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
     - name: install Allure CLI tool
       run: |
@@ -151,7 +160,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m sanity -s -vvv --testbed=basic-02 --skip-testrail --alluredir=/tmp/allure-results
+                    pytest -m "${{ github.event.inputs.marker_expression }}" -s -vvv --testbed="${{ github.event.inputs.testbed }}" --skip-testrail --alluredir=/tmp/allure-results
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
