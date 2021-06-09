@@ -1,0 +1,2 @@
+Channel,Frequency,Security,NSS,Cfg-Mode,Bandwidth,Pkt,Traffic-Type,Direction,Atten,Rotation,Duration,Offered-1m,Rx-Bps,Rx-Bps-1m,Rx-Bps-LL,Rx-Bps-3s,RSSI,Tx-Failed,Tx-Failed%,Tx-Rate,Rx-Rate,Rpt-Mode,Rpt-Mode-Brief
+6,2437,WPA2,4,AUTO,20,1024,TCP,DUT-TX,NA,NA,60,208.16 Mbps,208.073 Mbps,208.179 Mbps,219.764 Mbps,217.953 Mbps,-39,0 / 878038,0,288.9 Mbps,288.9 Mbps,802.11bgn,802.11n
