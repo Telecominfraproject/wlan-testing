@@ -28,17 +28,17 @@ class ConfigureController:
     def set_credentials(self, controller_data=None):
         if dict(controller_data).keys().__contains__("username") and dict(controller_data).keys().__contains__(
                 "password"):
+            self.configuration.username = controller_data["username"]
+            self.configuration.password = controller_data["password"]
+            print("Login Credentials set to custom: \n user_id: %s\n password: %s\n" % (controller_data["username"],
+                                                                                        controller_data["password"]))
+            return True
+        else:
             self.configuration.username = "support@example.com"
             self.configuration.password = "support"
             print("Login Credentials set to default: \n user_id: %s\n password: %s\n" % ("support@example.com",
                                                                                          "support"))
             return False
-        else:
-            self.configuration.username = controller_data["username"]
-            self.configuration.password = controller_data["password"]
-            print("Login Credentials set to custom: \n user_id: %s\n password: %s\n" % (controller_data['userId'],
-                                                                                        controller_data['password']))
-            return True
 
     def select_controller_data(self, controller_data=None):
         if dict(controller_data).keys().__contains__("url") is None:
@@ -103,6 +103,8 @@ class Controller(ConfigureController):
                 "Authorization": "Bearer " + self.bearer._access_token
             }
             self.api_client.configuration.refresh_api_key_hook = self.refresh_instance
+            self.ping_response = self.portal_ping()
+            print("Portal details :: \n", self.ping_response)
         except Exception as e:
             self.bearer = False
             print(e)
@@ -118,7 +120,7 @@ class Controller(ConfigureController):
 
     def refresh_instance(self):
         # Refresh token 10 seconds before it's expiry
-        if time.time() - self.token_timestamp > self.token_expiry:
+        if time.time() - self.token_timestamp > self.token_expiry - 10:
             self.token_timestamp = time.time()
             print("Refreshing the controller API token")
             self.disconnect_Controller()
@@ -134,7 +136,7 @@ class Controller(ConfigureController):
             }
             self.api_client.configuration.refresh_api_key_hook = self.refresh_instance
             self.ping_response = self.portal_ping()
-            # print(self.bearer)
+            print("Portal details :: \n", self.ping_response)
             if self.ping_response._application_name != 'PortalServer':
                 print("Server not Reachable")
                 exit()
@@ -287,8 +289,13 @@ class ProfileUtility:
             "ssid": [],
             "ap": [],
             "radius": [],
-            "rf": []
+            "rf": [],
+            "passpoint_osu_id_provider": [],
+            "passpoint_operator": [],
+            "passpoint_venue": [],
+            "passpoint": []
         }
+        self.profile_name_with_id = {}
         self.default_profiles = {}
         self.profile_ids = []
 
@@ -298,8 +305,13 @@ class ProfileUtility:
             "ssid": [],
             "ap": [],
             "radius": [],
-            "rf": []
+            "rf": [],
+            "passpoint_osu_id_provider": [],
+            "passpoint_operator": [],
+            "passpoint_venue": [],
+            "passpoint": []
         }
+        self.profile_name_with_id = {}
         self.default_profiles = {}
         self.profile_ids = []
 
@@ -508,6 +520,7 @@ class ProfileUtility:
             profile_id = profile._id
             self.profile_creation_ids['ssid'].append(profile_id)
             self.profile_ids.append(profile_id)
+            self.profile_name_with_id[profile_data["ssid_name"]] = profile_id
         except Exception as e:
             print(e)
             profile = "error"
@@ -798,6 +811,258 @@ class ProfileUtility:
             profile = False
         return profile
 
+    def __get_boolean(self, flag):
+        return 'true' if flag in ["Enabled", "True"] else 'false'
+
+    # wpa eap general method
+    def __create_wpa_eap_passpoint_ssid_profiles(self, profile_data=None, secure_mode=None):
+        try:
+            if profile_data is None or secure_mode is None:
+                return False
+            default_profile = self.default_profiles["ssid"]
+            default_profile._details["appliedRadios"] = profile_data["appliedRadios"]
+            default_profile._name = profile_data["profile_name"]
+            default_profile._details["vlanId"] = profile_data["vlan"]
+            default_profile._details["ssid"] = profile_data["ssid_name"]
+            default_profile._details["forwardMode"] = profile_data["mode"]
+            default_profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
+            default_profile._child_profile_ids = self.profile_creation_ids["radius"]
+            default_profile._details["secureMode"] = secure_mode
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids["ssid"].append(profile_id)
+            self.profile_ids.append(profile_id)
+            self.profile_name_with_id[profile_data["ssid_name"]] = profile_id
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # wpa eap passpoint
+    def create_wpa_eap_passpoint_ssid_profile(self, profile_data=None):
+        if profile_data is None:
+            return False
+        return self.__create_wpa_eap_passpoint_ssid_profiles(profile_data, "wpaEAP")
+
+    # wpa2 eap passpoint
+    def create_wpa2_eap_passpoint_ssid_profile(self, profile_data=None):
+        if profile_data is None:
+            return False
+        return self.__create_wpa_eap_passpoint_ssid_profiles(profile_data, "wpa2EAP")
+
+    # wpa2only eap passpoint
+    def create_wpa2_only_eap_passpoint_ssid_profile(self, profile_data=None):
+        if profile_data is None:
+            return False
+        return self.__create_wpa_eap_passpoint_ssid_profiles(profile_data, "wpa2OnlyEAP")
+
+    # passpoint osu id provider profile
+    def create_passpoint_osu_id_provider_profile(self, profile_data=None):
+        try:
+            if profile_data is None:
+                return False
+            default_profile = dict()
+            default_profile["model_type"] = "Profile"
+            default_profile["customerId"] = self.sdk_client.customer_id
+            default_profile["profileType"] = "passpoint_osu_id_provider"
+            default_profile["name"] = profile_data["profile_name"]
+            details = dict()
+            details["model_type"] = "PasspointOsuProviderProfile"
+            mcc_mnc = dict()
+            if (profile_data["mcc"] and profile_data["mnc"]) is not None:
+                mcc_mnc = {"mcc": profile_data["mcc"], "mnc": profile_data["mnc"]}
+            if profile_data["network"] is not None:
+                mcc_mnc["network"] = profile_data["network"]
+            if mcc_mnc:
+                details["mccMncList"] = [mcc_mnc]
+            if (profile_data["mcc"] and profile_data["mnc"]) is not None:
+                details["mccMncList"] = [{"mcc": profile_data["mcc"], "mnc": profile_data["mnc"]}]
+            if profile_data["osu_nai_standalone"] is not None:
+                details["osuNaiStandalone"] = profile_data["osu_nai_standalone"]
+            if profile_data["osu_nai_shared"] is not None:
+                details["osuNaiShared"] = profile_data["osu_nai_shared"]
+            if profile_data["nai_realms"] is not None:
+                details["naiRealmList"] = [{"naiRealms": [profile_data["nai_realms"]["domain"]],
+                                            "encoding": profile_data["nai_realms"]["encoding"],
+                                            "eapMap": profile_data["nai_realms"]["eap_map"]
+                                            }]
+            details["roamingOi"] = profile_data["roaming_oi"]
+            default_profile['details'] = details
+            default_profile['childProfileIds'] = []
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids["passpoint_osu_id_provider"].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # passpoint operator profile
+    def create_passpoint_operator_profile(self, profile_data=None):
+        try:
+            if profile_data is None:
+                return False
+            default_profile = dict()
+            default_profile["model_type"] = "Profile"
+            default_profile["customerId"] = self.sdk_client.customer_id
+            default_profile["profileType"] = "passpoint_operator"
+            default_profile["name"] = profile_data["profile_name"]
+
+            default_profile["details"] = dict()
+            default_profile["details"]["model_type"] = "PasspointOperatorProfile"
+            default_profile["details"]["serverOnlyAuthenticatedL2EncryptionNetwork"] = \
+                self.__get_boolean(profile_data["osen"])
+            operator_names = []
+            operators = profile_data["operator_names"]
+            for operator in profile_data["operator_names"]:
+                operator_temp = dict()
+                for key in operator.keys():
+                    if key == "name":
+                        operator_temp["dupleName"] = operator["name"]
+                    else:
+                        operator_temp[key] = operator[key]
+                operator_names.append(operator_temp)
+            default_profile["details"]["operatorFriendlyName"] = operator_names
+            default_profile["details"]["domainNameList"] = profile_data["domain_name_list"]
+            default_profile["childProfileIds"] = []
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids["passpoint_operator"].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            profile = False
+        return profile
+
+    # passpoint venue profile
+    def create_passpoint_venue_profile(self, profile_data=None):
+        try:
+            if profile_data is None:
+                return False
+            default_profile = dict()
+            default_profile["model_type"] = "Profile"
+            default_profile["customerId"] = self.sdk_client.customer_id
+            default_profile["profileType"] = "passpoint_venue"
+            default_profile["name"] = profile_data["profile_name"]
+            default_profile["details"] = dict()
+            default_profile["details"]["model_type"] = "PasspointVenueProfile"
+            venue_names = []
+            for venue in profile_data["venue_names"]:
+                venue_temp = dict()
+                for key in venue.keys():
+                    if key == "name":
+                        venue_temp["dupleName"] = venue["name"]
+                    if key == "url":
+                        venue_temp["venueUrl"] = venue["url"]
+                venue_names.append(venue_temp)
+            default_profile["details"]["venueNameSet"] = venue_names
+            allowed_venue_groups = {"Unspecified": 0, "Assembly": 1, "Business": 2, "Educational": 3,
+                                    "Factory and Industrial": 4, "Institutional": 5, "Mercantile": 6, "Residential": 7}
+            allowed_venue_types = {"Unspecified Assembly": 0, "Areana": 1, "Stadium": 2, "Passenger Terminal": 3,
+                                   "Amphitheatre": 4, "Amusement Park": 5, "Place of Worship": 6,
+                                   "Convention Center": 7,
+                                   "Library": 8, "Museum": 9, "Restaurant": 10, "Theatre": 11, "Bar": 12,
+                                   "Coffee Shop": 13,
+                                   "Zoo or Aquarium": 14, "Emergency Coordination Center": 15,
+                                   "Unspecified Business": 0, "Doctor or Dentist office": 1, "Bank": 2,
+                                   "Fire Station": 3,
+                                   "Police Station": 4, "Post Office": 5, "Professional Office": 6,
+                                   "Research and Development Facility": 7, "Attorney Office": 8,
+                                   "Unspecified Educational": 0, "School, Primary": 1, "School, Secondary": 2,
+                                   "University or College": 3, "Unspecified Factory and Industrial": 0, "Factory": 1,
+                                   "Unspecified Institutional": 0, "Hospital": 1, "Long-Term Care Facility": 2,
+                                   "Alcohol and Drug Re-habilitation Center": 3, "Group Home": 4, "Prison or Jail": 5,
+                                   "Unspecified Mercantile": 0, "Retail Store": 1, "Grocery Market": 2,
+                                   "Automotive Service Station": 3, "Shopping Mall": 4, "Gas Station": 5,
+                                   "Unspecified Residential": 0, "Pivate Residence": 1, "Hotel or Model": 2,
+                                   "Dormitory": 3, "Boarding House": 4}
+            default_profile["details"]["venueTypeAssignment"] = {"venueGroupId":
+                                                                     allowed_venue_groups[
+                                                                         profile_data["venue_type"]["group"]],
+                                                                 "venueTypeId":
+                                                                     allowed_venue_types[
+                                                                         profile_data["venue_type"]["type"]]}
+            default_profile["childProfileIds"] = []
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids["passpoint_venue"].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
+    # passpoint profile
+    def create_passpoint_profile(self, profile_data=None):
+        try:
+            if profile_data is None:
+                return False
+            default_profile = dict()
+            default_profile["model_type"] = "Profile"
+            default_profile["customerId"] = self.sdk_client.customer_id
+            default_profile["profileType"] = "passpoint"
+            default_profile["name"] = profile_data["profile_name"]
+
+            default_profile["details"] = dict()
+            default_profile["details"]["model_type"] = "PasspointProfile"
+            default_profile["details"]["enableInterworkingAndHs20"] = self.__get_boolean(
+                profile_data["interworking_hs2dot0"])
+            if profile_data["hessid"] is not None:
+                default_profile["details"]["hessid"] = dict()
+                default_profile["details"]["hessid"]["addressAsString"] = profile_data["hessid"]
+            default_profile["details"]["passpointAccessNetworkType"] = \
+                profile_data["access_network"]["Access Network Type"].replace(' ', '_').lower()
+            default_profile["details"]["passpointNetworkAuthenticationType"] = \
+                profile_data["access_network"]["Authentication Type"].replace('&', 'and').replace(' ', '_').lower()
+            default_profile["details"]["emergencyServicesReachable"] = self.__get_boolean(
+                profile_data["access_network"][
+                    "Emergency Services Reachable"])
+            default_profile["details"]["unauthenticatedEmergencyServiceAccessible"] = self.__get_boolean(
+                profile_data["access_network"][
+                    "Unauthenticated Emergency Service"])
+            default_profile["details"]["internetConnectivity"] = self.__get_boolean(profile_data["ip_connectivity"][
+                                                                                        "Internet Connectivity"])
+            capability_set = []
+            for cap in profile_data["ip_connectivity"]["Connection Capability"]:
+                capability_info = dict()
+                capability_info["connectionCapabilitiesPortNumber"] = cap["port"]
+                capability_info["connectionCapabilitiesIpProtocol"] = cap["protocol"]
+                capability_info["connectionCapabilitiesStatus"] = cap["status"]
+                capability_set.append(capability_info)
+            default_profile["details"]["connectionCapabilitySet"] = capability_set
+            default_profile["details"]["ipAddressTypeAvailability"] = profile_data["ip_connectivity"]["IP Address Type"]
+            allowed_gas_address_behavior = {"P2P Spec Workaround From Request": "p2pSpecWorkaroundFromRequest",
+                                            "forceNonCompliantBehaviourFromRequest": "forceNonCompliantBehaviourFromRequest",
+                                            "IEEE 80211 Standard Compliant Only": "ieee80211StandardCompliantOnly"}
+            default_profile["details"]["gasAddr3Behaviour"] = allowed_gas_address_behavior[
+                profile_data["ip_connectivity"]
+                ["GAS Address 3 Behaviour"]]
+            default_profile["details"]["anqpDomainId"] = profile_data["ip_connectivity"]["ANQP Domain ID"]
+            default_profile["details"]["disableDownstreamGroupAddressedForwarding"] = self.__get_boolean(
+                profile_data["ip_connectivity"][
+                    "Disable DGAF"])
+            default_profile["details"]["associatedAccessSsidProfileIds"] = profile_data["allowed_ssids"]
+            default_profile["details"]["passpointOperatorProfileId"] = self.profile_creation_ids["passpoint_operator"][0]
+            default_profile["details"]["passpointVenueProfileId"] = self.profile_creation_ids["passpoint_venue"][0]
+            default_profile["details"]["passpointOsuProviderProfileIds"] = self.profile_creation_ids[
+                "passpoint_osu_id_provider"]
+            default_profile["details"]["accessNetworkType"] = \
+                profile_data["access_network"]["Access Network Type"].replace(' ', '_').lower()
+            # osuSsidProfileId is needed for R2
+            default_profile["details"]["networkAuthenticationType"] = \
+                profile_data["access_network"]["Authentication Type"].replace('&', 'and').replace(' ', '_').lower()
+            default_profile["childProfileIds"] = self.profile_creation_ids["passpoint_venue"] + \
+                                                 self.profile_creation_ids["passpoint_operator"] + \
+                                                 self.profile_creation_ids["passpoint_osu_id_provider"]
+            profile = self.profile_client.create_profile(body=default_profile)
+            profile_id = profile._id
+            self.profile_creation_ids["passpoint"].append(profile_id)
+            self.profile_ids.append(profile_id)
+        except Exception as e:
+            print(e)
+            profile = False
+        return profile
+
     """
         method call: used to create a ap profile that contains the given ssid profiles
     """
@@ -809,7 +1074,8 @@ class ProfileUtility:
         default_profile = self.default_profiles['equipment_ap_2_radios']
         default_profile._child_profile_ids = []
         for i in self.profile_creation_ids:
-            if i != 'ap':
+            if i not in ["ap", "passpoint_osu_id_provider", "passpoint_operator", "passpoint_venue", "passpoint",
+                         "radius"]:
                 for j in self.profile_creation_ids[i]:
                     default_profile._child_profile_ids.append(j)
 
@@ -821,10 +1087,60 @@ class ProfileUtility:
         return default_profile
 
     """
+        method call: used to create a ap profile that contains the given ssid profiles
+    """
+
+    def set_ap_profile_custom(self, profile_data=None):
+        self.sdk_client.refresh_instance()
+        if profile_data is None:
+            return False
+        default_profile = self.default_profiles['equipment_ap_2_radios']
+        default_profile._child_profile_ids = []
+        for i in self.profile_creation_ids:
+            if i not in ["ap", "passpoint_osu_id_provider", "passpoint_operator", "passpoint_venue", "passpoint",
+                         "radius", "ssid"]:
+                for j in self.profile_creation_ids[i]:
+                    default_profile._child_profile_ids.append(j)
+        for ssid in profile_data["ssid_names"]:
+            default_profile._child_profile_ids.append(self.profile_name_with_id[ssid])
+        default_profile._name = profile_data['profile_name']
+        default_profile = self.profile_client.create_profile(body=default_profile)
+        self.profile_creation_ids['ap'] = default_profile._id
+        self.profile_ids.append(default_profile._id)
+        return default_profile
+
+    """
+        method call: used to create a ap profile that contains the specific ssid profiles
+    """
+
+    def update_ap_profile(self, profile_data=None):
+        self.sdk_client.refresh_instance()
+        if profile_data is None:
+            print("profile info is None, Please specify the profile info that you want to update")
+            return False
+
+        child_profiles_to_apply = []
+        try:
+            for ssid in profile_data["ssid_names"]:
+                child_profiles_to_apply.append(self.profile_name_with_id[ssid])
+            default_profile = self.get_profile_by_name(profile_name=profile_data["profile_name"])
+            for i in self.profile_creation_ids:
+                if i not in ["ap", "passpoint_osu_id_provider", "passpoint_operator", "passpoint_venue", "passpoint",
+                             "radius", "ssid"]:
+                    for j in self.profile_creation_ids[i]:
+                        child_profiles_to_apply.append(j)
+            default_profile._child_profile_ids = child_profiles_to_apply
+            default_profile = self.profile_client.update_profile(default_profile)
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
+    """
         method call: used to create a radius profile with the settings given
     """
 
-    def create_radius_profile(self, radius_info=None):
+    def create_radius_profile(self, radius_info=None, radius_accounting_info=None):
         self.sdk_client.refresh_instance()
         default_profile = self.default_profiles['radius']
         default_profile._name = radius_info['name']
@@ -832,6 +1148,11 @@ class ProfileUtility:
         default_profile._details['primaryRadiusAuthServer']['ipAddress'] = radius_info['ip']
         default_profile._details['primaryRadiusAuthServer']['port'] = radius_info['port']
         default_profile._details['primaryRadiusAuthServer']['secret'] = radius_info['secret']
+        if radius_accounting_info is not None:
+            default_profile._details["primaryRadiusAccountingServer"] = {}
+            default_profile._details["primaryRadiusAccountingServer"]["ipAddress"] = radius_accounting_info["ip"]
+            default_profile._details["primaryRadiusAccountingServer"]["port"] = radius_accounting_info["port"]
+            default_profile._details["primaryRadiusAccountingServer"]["secret"] = radius_accounting_info["secret"]
         default_profile = self.profile_client.create_profile(body=default_profile)
         self.profile_creation_ids['radius'] = [default_profile._id]
         self.profile_ids.append(default_profile._id)
@@ -872,6 +1193,44 @@ class ProfileUtility:
             self.profile_client.update_profile(profile)
             return True
         except Exception as e:
+            return False
+
+    def update_ssid_profile(self, profile_info=None):
+        self.sdk_client.refresh_instance()
+        if profile_info is None:
+            print("profile info is None, Please specify the profile info that you want to update")
+            return False
+
+        try:
+            profile = self.get_profile_by_name(profile_name=profile_info["ssid_profile_name"])
+            profile._details["radiusServiceId"] = self.profile_creation_ids["radius"][0]
+            profile._child_profile_ids = self.profile_creation_ids["radius"] + self.profile_creation_ids["passpoint"]
+            if "radius_configuration" in profile_info.keys():
+                if "radius_acounting_service_interval" in profile_info["radius_configuration"].keys():
+                    profile._details["radiusAcountingServiceInterval"] = profile_info["radius_configuration"]["radius_acounting_service_interval"]
+                if "user_defined_nas_id" in profile_info["radius_configuration"].keys():
+                    profile._details["radiusClientConfiguration"]["userDefinedNasId"] = profile_info["radius_configuration"]["user_defined_nas_id"]
+                if "operator_id" in profile_info["radius_configuration"].keys():
+                    profile._details["radiusClientConfiguration"]["operatorId"] = profile_info["radius_configuration"]["operator_id"]
+            self.profile_client.update_profile(profile)
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
+    def clear_ssid_profile(self, profile_name=None):
+        if profile_name is None:
+            print("profile name is None, Please specify the ssid profile name that you want to update")
+            return False
+
+        try:
+            profile = self.get_profile_by_name(profile_name=profile_name)
+            profile._details["radiusServiceId"] = None
+            profile._child_profile_ids = []
+            self.profile_client.update_profile(profile)
+            return True
+        except Exception as e:
+            print(e)
             return False
 
     """
