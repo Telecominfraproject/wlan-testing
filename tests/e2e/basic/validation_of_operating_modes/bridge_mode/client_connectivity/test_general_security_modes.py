@@ -109,7 +109,7 @@ class TestBridgeModeConnectivitySuiteA(object):
                                               passes))
         assert result
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @pytest.mark.wpa
     @pytest.mark.twog
     @allure.story('wpa 2.4 GHZ Band')
@@ -144,7 +144,7 @@ class TestBridgeModeConnectivitySuiteA(object):
                                               passes))
         assert result
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @pytest.mark.wpa
     @pytest.mark.fiveg
     @allure.story('wpa 5 GHZ Band')
@@ -178,7 +178,7 @@ class TestBridgeModeConnectivitySuiteA(object):
                                               passes))
         assert result
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.story('wpa2_personal 2.4 GHZ Band')
@@ -213,7 +213,7 @@ class TestBridgeModeConnectivitySuiteA(object):
                                               passes))
         assert result
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @allure.story('wpa2_personal 5 GHZ Band')

@@ -6,8 +6,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.firmware, pytest.mark.sanity, pytest.mark.sanity_55,
-              pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.firmware, pytest.mark.sanity, pytest.mark.sanity_light]
 
 
 @allure.testcase("firmware upgrade from Cloud")
