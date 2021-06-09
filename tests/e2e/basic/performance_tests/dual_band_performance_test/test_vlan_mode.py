@@ -1,14 +1,16 @@
+"""
+       Dual Band Performance Test : VLAN Mode
+       pytest -m "dual_band_performance_test and vlan"
+
+
+"""
+
+import os
+import allure
 import pytest
 
-pytestmark = [pytest.mark.dual_band_performance_test, pytest.mark.vlan]
-import sys
-
-for folder in 'py-json', 'py-scripts':
-    if folder not in sys.path:
-        sys.path.append(f'../lanforge/lanforge-scripts/{folder}')
-import lf_ap_auto_test
-import time
-from lf_ap_auto_test import ApAutoTest
+pytestmark = [pytest.mark.dual_band_performance_test, pytest.mark.vlan,
+              pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -36,123 +38,97 @@ setup_params_general = {
     indirect=True,
     scope="class"
 )
+
 @pytest.mark.usefixtures("setup_profiles")
 class TestDualbandPerformanceVlan(object):
+    """
+        pytest -m "dual_band_performance_test and vlan and open and twog  and fiveg"
+    """
 
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.fiveg
-    def test_client_open(self, get_lanforge_data, testbed, lf_tools):
+    def test_client_open(self,get_vif_state,create_lanforge_chamberview_dut, lf_test,get_configuration):
         profile_data = setup_params_general["ssid_modes"]["open"]
         ssid_2G = profile_data[0]["ssid_name"]
         ssid_5G = profile_data[1]["ssid_name"]
-        lanforge_ip = get_lanforge_data["lanforge_ip"]
-        lanforge_port = int(get_lanforge_data["lanforge-port-number"])
-        upstream = get_lanforge_data["lanforge_bridge_port"]
-        radio_2G = []
-        radio_2G.append(get_lanforge_data["lanforge_2dot4g"])
-        radio_5G = []
-        radio_5G.append(get_lanforge_data["lanforge_5g"])
-        dut_name = testbed
+        dut_name = create_lanforge_chamberview_dut
+        mode = "VLAN"
+        vlan = 100
+        if ssid_2G and ssid_5G not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID's NOT AVAILABLE IN VIF STATE")
 
-        CV_Test = ApAutoTest(lf_host=lanforge_ip,
-                             lf_port=lanforge_port,
-                             lf_user="lanforge",
-                             lf_password="lanforge",
-                             instance_name="dbp_instance_open_vlan",
-                             config_name="dbp_config",
-                             upstream=upstream,
-                             pull_report=True,
-                             dut5_0=dut_name + ' ' + ssid_5G,
-                             dut2_0=dut_name + ' ' + ssid_2G,
-                             load_old_cfg=False,
-                             max_stations_2=1,
-                             max_stations_5=1,
-                             max_stations_dual=2,
-                             radio2=[["1.1.wiphy0"]],
-                             radio5=[["1.1.wiphy1"]],
-                             sets=[['Basic Client Connectivity', '0'], ['Multi Band Performance', '1'],
-                                   ['Throughput vs Pkt Size', '0'], ['Capacity', '0'], ['Stability', '0'],
-                                   ['Band-Steering', '0'], ['Multi-Station Throughput vs Pkt Size', '0'],
-                                   ['Long-Term', '0']]
-                             )
-        CV_Test.setup()
-        CV_Test.run()
+        dbpt_obj = lf_test.dualbandperformancetest(mode=mode,ssid_2G=ssid_2G,ssid_5G=ssid_5G,
+                                   instance_name="dbp_instance_open_vlan",
+                                   vlan_id=vlan, dut_name=dut_name)
+        report_name = dbpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        entries = os.listdir("../reports/" + report_name + '/')
+        pdf = False
+        for i in entries:
+            if ".pdf" in i:
+                pdf = i
+        if pdf:
+            allure.attach.file(source="../reports/" + report_name + "/" + pdf,
+                               name=get_configuration["access_point"][0]["model"] + "_dualbandperfomance")
 
-        @pytest.mark.wpa
-        @pytest.mark.twog
-        @pytest.mark.fiveg
-        def test_client_wpa(self, get_lanforge_data, testbed, lf_tools):
-            profile_data = setup_params_general["ssid_modes"]["wpa"]
-            ssid_2G = profile_data[0]["ssid_name"]
-            ssid_5G = profile_data[1]["ssid_name"]
-            lanforge_ip = get_lanforge_data["lanforge_ip"]
-            lanforge_port = int(get_lanforge_data["lanforge-port-number"])
-            upstream = get_lanforge_data["lanforge_bridge_port"]
-            radio_2G = []
-            radio_2G.append(get_lanforge_data["lanforge_2dot4g"])
-            radio_5G = []
-            radio_5G.append(get_lanforge_data["lanforge_5g"])
-            dut_name = testbed
+    """
+       pytest -m "dual_band_performance_test and vlan and wpa and twog  and fiveg"
+    """
+    @pytest.mark.wpa
+    @pytest.mark.twog
+    @pytest.mark.fiveg
+    def test_client_wpa(self, get_vif_state,create_lanforge_chamberview_dut, lf_test,get_configuration):
+        profile_data = setup_params_general["ssid_modes"]["wpa"]
+        ssid_2G = profile_data[0]["ssid_name"]
+        ssid_5G = profile_data[1]["ssid_name"]
+        dut_name = create_lanforge_chamberview_dut
+        mode = "VLAN"
+        vlan = 100
+        if ssid_2G and ssid_5G not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID's NOT AVAILABLE IN VIF STATE")
 
-            CV_Test = ApAutoTest(lf_host=lanforge_ip,
-                                 lf_port=lanforge_port,
-                                 lf_user="lanforge",
-                                 lf_password="lanforge",
-                                 instance_name="dbp_instance_wpa_vlan",
-                                 config_name="dbp_config",
-                                 upstream=upstream,
-                                 pull_report=True,
-                                 dut5_0=dut_name + ' ' + ssid_5G,
-                                 dut2_0=dut_name + ' ' + ssid_2G,
-                                 load_old_cfg=False,
-                                 max_stations_2=1,
-                                 max_stations_5=1,
-                                 max_stations_dual=2,
-                                 radio2=[["1.1.wiphy0"]],
-                                 radio5=[["1.1.wiphy1"]],
-                                 sets=[['Basic Client Connectivity', '0'], ['Multi Band Performance', '1'],
-                                       ['Throughput vs Pkt Size', '0'], ['Capacity', '0'], ['Stability', '0'],
-                                       ['Band-Steering', '0'], ['Multi-Station Throughput vs Pkt Size', '0'],
-                                       ['Long-Term', '0']]
-                                 )
-            CV_Test.setup()
-            CV_Test.run()
+        dbpt_obj = lf_test.dualbandperformancetest(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
+                                                   instance_name="dbp_instance_wpa_vlan",
+                                                   vlan_id=vlan, dut_name=dut_name)
+        report_name = dbpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        entries = os.listdir("../reports/" + report_name + '/')
+        pdf = False
+        for i in entries:
+            if ".pdf" in i:
+                pdf = i
+        if pdf:
+            allure.attach.file(source="../reports/" + report_name + "/" + pdf,
+                               name=get_configuration["access_point"][0]["model"] + "_dualbandperfomance")
 
+    """
+         pytest -m "dual_band_performance_test and vlan and wpa2_personal and twog  and fiveg"
+    """
     @pytest.mark.wpa2_personal
-    def test_client_wpa2_personal(self, get_lanforge_data, testbed, lf_tools):
+    @pytest.mark.twog
+    @pytest.mark.fiveg
+    def test_client_wpa2_personal(self,get_vif_state,create_lanforge_chamberview_dut,lf_test,get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
         ssid_5G = profile_data[1]["ssid_name"]
-        lanforge_ip = get_lanforge_data["lanforge_ip"]
-        lanforge_port = int(get_lanforge_data["lanforge-port-number"])
-        upstream = get_lanforge_data["lanforge_bridge_port"]
-        radio_2G = []
-        radio_2G.append(get_lanforge_data["lanforge_2dot4g"])
-        radio_5G = []
-        radio_5G.append(get_lanforge_data["lanforge_5g"])
-        dut_name = testbed
+        dut_name = create_lanforge_chamberview_dut
+        mode = "VLAN"
+        vlan = 100
+        if ssid_2G and ssid_5G not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID's NOT AVAILABLE IN VIF STATE")
 
-        CV_Test = ApAutoTest(lf_host=lanforge_ip,
-                             lf_port=lanforge_port,
-                             lf_user="lanforge",
-                             lf_password="lanforge",
-                             instance_name="dbp_instance_wpa2p_vlan",
-                             config_name="dbp_config",
-                             upstream="1.1." + upstream,
-                             pull_report=True,
-                             dut5_0=dut_name + ' ' + ssid_5G,
-                             dut2_0=dut_name + ' ' + ssid_2G,
-                             load_old_cfg=False,
-                             max_stations_2=1,
-                             max_stations_5=1,
-                             max_stations_dual=2,
-                             radio2=[["1.1.wiphy0"]],
-                             radio5=[["1.1.wiphy1"]],
-                             sets=[['Basic Client Connectivity', '0'], ['Multi Band Performance', '1'],
-                                   ['Throughput vs Pkt Size', '0'], ['Capacity', '0'], ['Stability', '0'],
-                                   ['Band-Steering', '0'], ['Multi-Station Throughput vs Pkt Size', '0'],
-                                   ['Long-Term', '0']]
-                             )
-        CV_Test.setup()
-        CV_Test.run()
+        dbpt_obj = lf_test.dualbandperformancetest(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
+                                                   instance_name="dbp_instance_wpa2p_vlan",
+                                                   vlan_id=vlan, dut_name=dut_name)
+        report_name = dbpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        entries = os.listdir("../reports/" + report_name + '/')
+        pdf = False
+        for i in entries:
+            if ".pdf" in i:
+                pdf = i
+        if pdf:
+            allure.attach.file(source="../reports/" + report_name + "/" + pdf,
+                               name=get_configuration["access_point"][0]["model"] + "_dualbandperfomance")
+
