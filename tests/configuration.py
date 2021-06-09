@@ -211,7 +211,8 @@ PASSPOINT_VENUE_INFO = {
 }
 
 PASSPOINT_PROFILE_INFO = {
-    "profile_download_url": "https://onboard.almondlabs.net/ios.html",
+    "profile_download_url_ios": "https://onboard.almondlabs.net/ios.html",
+    "profile_download_url_android": "https://onboard.almondlabs.net/android.html",
     "profile_name_on_device": "AmeriBand",
     "radius_configuration": {
         "user_defined_nas_id": "FB001AP001",
