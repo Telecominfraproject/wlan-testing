@@ -64,7 +64,7 @@ class TestNATModeEapAuth(object):
 
         print("SSID to download profile :: ", setup_params_eap["ssid_modes"]["open"][0]["ssid_name"])
         print("SSID to validate connectivity :: ", setup_params_eap["ssid_modes"]["wpa2_eap"][0]["ssid_name"])
-        print("Profile download URL :: ", passpoint_profile_info["profile_download_url"])
+        print("Profile download URL :: ", passpoint_profile_info["profile_download_url_ios"])
         print("Profile name to remove :: ", passpoint_profile_info["profile_name_on_device"])
 
     @pytest.mark.wpa2_eap
@@ -84,7 +84,7 @@ class TestNATModeEapAuth(object):
 
         print("SSID to download profile :: ", setup_params_eap["ssid_modes"]["open"][0]["ssid_name"])
         print("SSID to validate connectivity :: ", setup_params_eap["ssid_modes"]["wpa2_eap"][1]["ssid_name"])
-        print("Profile download URL :: ", passpoint_profile_info["profile_download_url"])
+        print("Profile download URL :: ", passpoint_profile_info["profile_download_url_ios"])
         print("Profile name to remove :: ", passpoint_profile_info["profile_name_on_device"])
 
     @pytest.mark.wpa2_only_eap
@@ -104,7 +104,7 @@ class TestNATModeEapAuth(object):
 
         print("SSID to download profile :: ", setup_params_eap["ssid_modes"]["open"][0]["ssid_name"])
         print("SSID to validate connectivity :: ", setup_params_eap["ssid_modes"]["wpa2_only_eap"][0]["ssid_name"])
-        print("Profile download URL :: ", passpoint_profile_info["profile_download_url"])
+        print("Profile download URL :: ", passpoint_profile_info["profile_download_url_ios"])
         print("Profile name to remove :: ", passpoint_profile_info["profile_name_on_device"])
 
     @pytest.mark.wpa2_only_eap
@@ -124,5 +124,5 @@ class TestNATModeEapAuth(object):
 
         print("SSID to download profile :: ", setup_params_eap["ssid_modes"]["open"][0]["ssid_name"])
         print("SSID to validate connectivity :: ", setup_params_eap["ssid_modes"]["wpa2_only_eap"][1]["ssid_name"])
-        print("Profile download URL :: ", passpoint_profile_info["profile_download_url"])
+        print("Profile download URL :: ", passpoint_profile_info["profile_download_url_ios"])
         print("Profile name to remove :: ", passpoint_profile_info["profile_name_on_device"])
