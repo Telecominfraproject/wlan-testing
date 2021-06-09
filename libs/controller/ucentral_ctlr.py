@@ -136,8 +136,11 @@ UCENTRAL_BASE_CFG = {
 
     "interfaces": [
         {
-            "name": "WAN",
+            "name": "WAN100",
             "role": "upstream",
+            "vlan": {
+                "id": 100
+             },
             "services": ["lldp"],
             "ethernet": [
                 {
@@ -375,3 +378,40 @@ for i in equipments:
 #
 #
 #
+
+"""
+2 AP Working in UCENTRAL
+Ask Jaspreet, UI - CLOUD INSTANCE
+Command for pointing the AP to ucentral Cloud
+Generic Commands (mgr, node) --- ?
+
+Configuring AP with SSID Profiles
+
+
+
+"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
