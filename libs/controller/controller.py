@@ -462,9 +462,13 @@ class ProfileUtility:
             default_profile._details["rfConfigMap"]["is5GHz"]["rf"] = profile_data["name"]
             default_profile._details["rfConfigMap"]["is5GHzL"]["rf"] = profile_data["name"]
             default_profile._details["rfConfigMap"]["is5GHzU"]["rf"] = profile_data["name"]
-            # for i in profile_data['rfConfigMap']:
-            #     for j in profile_data['rfConfigMap'][i]:
-            #         default_profile._details["rfConfigMap"][i][j] = profile_data['rfConfigMap'][i][j]
+            for i in default_profile._details["rfConfigMap"]:
+                for j in profile_data:
+                    if i == j:
+                        for k in default_profile._details["rfConfigMap"][i]:
+                            for l in profile_data[j]:
+                                if l == k:
+                                    default_profile._details["rfConfigMap"][i][l] = profile_data[j][l]
             profile = self.profile_client.create_profile(body=default_profile)
             self.profile_creation_ids['rf'].append(profile._id)
             return profile
@@ -482,6 +486,13 @@ class ProfileUtility:
             default_profile._details["rfConfigMap"]["is5GHzL"]["rf"] = profile_data["name"]
             default_profile._details["rfConfigMap"]["is5GHzU"]["rf"] = profile_data["name"]
             default_profile._name = profile_data["name"]
+            for i in default_profile._details["rfConfigMap"]:
+                for j in profile_data:
+                    if i == j:
+                        for k in default_profile._details["rfConfigMap"][i]:
+                            for l in profile_data[j]:
+                                if l == k:
+                                    default_profile._details["rfConfigMap"][i][l] = profile_data[j][l]
             profile = self.profile_client.create_profile(body=default_profile)
             self.profile_creation_ids['rf'].append(profile._id)
             return profile
@@ -1023,7 +1034,15 @@ if __name__ == '__main__':
     }
     api = Controller(controller_data=controller)
     profile = ProfileUtility(sdk_client=api)
-    profile.cleanup_profiles()
+    profile_data = {
+        "name": "test-rf-wifi-6",
+        "is2dot4GHz": {},
+        "is5GHz": {"channelBandwidth": "is20MHz"},
+        "is5GHzL": {"channelBandwidth": "is20MHz"},
+        "is5GHzU": {"channelBandwidth": "is20MHz"}
+    }
+    profile.set_rf_profile(profile_data=profile_data, mode="wifi6")
+    print(profile.default_profiles["rf"])
     # profile.get_default_profiles()
     # profile_data = {
     #     "profile_name": "ssid_wep_2g",
