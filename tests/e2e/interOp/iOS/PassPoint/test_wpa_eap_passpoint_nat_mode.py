@@ -1,7 +1,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.eap_nat_passpoint, pytest.mark.sanity, pytest.mark.nat]
+pytestmark = [pytest.mark.eap_passpoint, pytest.mark.sanity, pytest.mark.nat]
 
 setup_params_eap = {
     "mode": "NAT",
