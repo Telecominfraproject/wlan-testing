@@ -319,6 +319,8 @@ def push_ap_profile(request, setup_profiles, get_equipment_id, get_apnos, get_co
         test_cases["equipment_ap"] = {"sdk": False}
         allure.attach(body=str(e), name="Equipment AP Profile Update Failed")
 
+    print("Pushing profiles on AP  :: ", ap_profile_info)
+    allure.attach(body=str(ap_profile_info), name="Pushing profiles on AP  :: ")
     # Push the Equipment AP Profile to AP
     try:
         for i in get_equipment_id:
@@ -347,6 +349,8 @@ def push_ap_profile(request, setup_profiles, get_equipment_id, get_apnos, get_co
             time.sleep(200)
             break
         time.sleep(10)
+    allure.attach(body=str(vif_config), name="vifC status on AP :: ")
+    allure.attach(body=str(vif_state), name="vifS status on AP :: ")
 
     yield test_cases
 
