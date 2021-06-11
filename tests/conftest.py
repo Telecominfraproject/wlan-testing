@@ -7,9 +7,10 @@ import os
 import time
 import allure
 import logging
+
 if "logs" not in os.listdir():
     os.mkdir("logs/")
-logging.basicConfig(level=logging.INFO, filename="logs/"+'{:%Y-%m-%d-%H-%M-%S}.log'.format(datetime.datetime.now()))
+logging.basicConfig(level=logging.INFO, filename="logs/" + '{:%Y-%m-%d-%H-%M-%S}.log'.format(datetime.datetime.now()))
 sys.path.append(
     os.path.dirname(
         os.path.realpath(__file__)
@@ -32,6 +33,7 @@ if 'py-json' not in sys.path:
     sys.path.append('../py-scripts')
 from apnos.apnos import APNOS
 from controller.controller import Controller
+from controller.ucentral_ctlr import UController
 from controller.controller import FirmwareUtility
 import pytest
 from cv_test_manager import cv_test
@@ -74,6 +76,14 @@ def pytest_addoption(parser):
     # change behaviour
     parser.addoption(
         "--exit-on-fail",
+        action="store_true",
+        default=False,
+        help="skip updating firmware on the AP (useful for local testing)"
+    )
+
+    # change to Ucentral Ctlr
+    parser.addoption(
+        "--ucentral",
         action="store_true",
         default=False,
         help="skip updating firmware on the AP (useful for local testing)"
@@ -199,13 +209,19 @@ def get_apnos():
 
 
 @pytest.fixture(scope="session")
-def get_equipment_id(setup_controller, testbed, get_configuration):
-    """yields the equipment-id of the AP by checking the serial number"""
-    equipment_id_list = []
-    for i in get_configuration['access_point']:
-        equipment_id_list.append(setup_controller.get_equipment_id(
-            serial_number=i['serial']))
+def get_equipment_id(request, setup_controller, testbed, get_configuration):
+    """"""
+    if request.config.getoption("--ucentral"):
+        equipment_id_list = []
+        for i in get_configuration['access_point']:
+            equipment_id_list.append(i['serial'])
+    else:
+        equipment_id_list = []
+        for i in get_configuration['access_point']:
+            equipment_id_list.append(setup_controller.get_equipment_id(
+                serial_number=i['serial']))
     yield equipment_id_list
+
 
 
 @pytest.fixture(scope="session")
@@ -225,19 +241,30 @@ def instantiate_access_point(testbed, get_apnos, get_configuration):
 
 # Controller Fixture
 @pytest.fixture(scope="session")
-def setup_controller(request, get_configuration, instantiate_access_point):
+def setup_controller(request, get_configuration, test_access_point):
     """sets up the controller connection and yields the sdk_client object"""
-
     try:
-        sdk_client = Controller(controller_data=get_configuration["controller"])
-        allure.attach(body=str(get_configuration["controller"]), name="Controller Instantiated: ")
+        if request.config.getoption("--ucentral"):
+            sdk_client = UController(controller_data=get_configuration["controller"])
+            allure.attach(body=str(get_configuration["controller"]), name="Ucentral Controller Instantiated: ")
 
-        def teardown_controller():
-            print("\nTest session Completed")
-            allure.attach(body=str(get_configuration["controller"]), name="Controller Teardown: ")
-            sdk_client.disconnect_Controller()
+            def teardown_ucontroller():
+                print("\nTest session Completed")
+                allure.attach(body=str(get_configuration["controller"]), name="Controller Teardown: ")
+                sdk_client.logout()
 
-        request.addfinalizer(teardown_controller)
+            request.addfinalizer(teardown_ucontroller)
+
+        else:
+            sdk_client = Controller(controller_data=get_configuration["controller"])
+            allure.attach(body=str(get_configuration["controller"]), name="Controller Instantiated: ")
+
+            def teardown_controller():
+                print("\nTest session Completed")
+                allure.attach(body=str(get_configuration["controller"]), name="Controller Teardown: ")
+                sdk_client.disconnect_Controller()
+
+            request.addfinalizer(teardown_controller)
     except Exception as e:
         print(e)
         allure.attach(body=str(e), name="Controller Instantiation Failed: ")
@@ -426,18 +453,31 @@ def get_markers(request, get_security_flags):
 
 
 # Will be availabe as a test case
-@pytest.fixture(scope="function")
-def test_access_point(testbed, get_apnos, get_configuration):
+@pytest.fixture(scope="session")
+def test_access_point(request, testbed, get_apnos, get_configuration):
     """used to check the manager status of AP, should be used as a setup to verify if ap can reach cloud"""
     mgr_status = []
-    for access_point_info in get_configuration['access_point']:
-        ap_ssh = get_apnos(access_point_info)
-        status = ap_ssh.get_manager_state()
-        if "ACTIVE" not in status:
-            time.sleep(30)
-            ap_ssh = APNOS(access_point_info)
+    if request.config.getoption("--ucentral"):
+        # for access_point_info in get_configuration['access_point']:
+        #     ap_ssh = get_apnos(access_point_info)
+        #     status = ap_ssh.get_manager_state()
+        #     if "ACTIVE" not in status:
+        #         time.sleep(30)
+        #         ap_ssh = APNOS(access_point_info)
+        #         status = ap_ssh.get_manager_state()
+        #     mgr_status.append(status)
+        # pass
+        pass
+
+    else:
+        for access_point_info in get_configuration['access_point']:
+            ap_ssh = get_apnos(access_point_info)
             status = ap_ssh.get_manager_state()
-        mgr_status.append(status)
+            if "ACTIVE" not in status:
+                time.sleep(30)
+                ap_ssh = APNOS(access_point_info)
+                status = ap_ssh.get_manager_state()
+            mgr_status.append(status)
     yield mgr_status
 
 
@@ -490,7 +530,6 @@ def traffic_generator_connectivity(testbed, get_configuration):
             yield False
     else:
         yield True
-
 
 
 @pytest.fixture(scope="session")

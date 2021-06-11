@@ -37,7 +37,7 @@ class ConfigureController:
 
     def logout(self):
         global access_token
-        uri = self.build_uri('oauth2/%s' % access_token)
+        uri = self.build_uri('oauth2/%s' % self.access_token)
         resp = requests.delete(uri, headers=self.make_headers(), verify=False)
         self.check_response("DELETE", resp, self.make_headers(), "", uri)
         print('Logged out:', resp.status_code)
@@ -65,7 +65,7 @@ class ConfigureController:
         return True
 
 
-class Controller(ConfigureController):
+class UController(ConfigureController):
 
     def __init__(self, controller_data=None):
         super().__init__(controller_data)
@@ -78,70 +78,87 @@ class Controller(ConfigureController):
         return devices
 
     def get_device_by_serial_number(self, serial_number=None):
-        uri = self.build_uri("devices/"+serial_number)
+        uri = self.build_uri("device/" + serial_number)
         resp = requests.get(uri, headers=self.make_headers(), verify=False)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         device = resp.json()
         return device
 
-class ProfileUtility:
+    def get_device_uuid(self, serial_number):
+        device_info = self.get_device_by_serial_number(serial_number=serial_number)
+        return device_info["UUID"]
+
+
+class UProfileUtility:
 
     def __init__(self, sdk_client=None, controller_data=None):
         if sdk_client is None:
-            self.sdk_client = Controller(controller_data=controller_data)
-        self.sdk_client=sdk_client
+            self.sdk_client = UController(controller_data=controller_data)
+        self.sdk_client = sdk_client
         self.base_profile_config = {
             "uuid": 1,
-            "radios": [{},{}],
-            "interfaces": [{}, {}],
-            "metrics": {},
-            "services": {},
-        }
-
-    def set_radio_config(self, radio_config):
-        for i in radio_config:
-            self.base_profile_config["radios"][0] = {
-                "band": "2G",
-                "country": "US",
-                "channel-mode": "HE",
-                "channel-width": 20,
-                "channel": 11
+            "radios": [],
+            "interfaces": [{
+                "name": "WAN",
+                "role": "upstream",
+                "services": ["lldp"],
+                "ethernet": [
+                    {
+                        "select-ports": [
+                            "WAN*"
+                        ]
+                    }
+                ],
+                "ipv4": {
+                    "addressing": "dynamic"
+                }
+            },
+                {
+                    "name": "LAN",
+                    "role": "downstream",
+                    "services": ["ssh", "lldp"],
+                    "ethernet": [
+                        {
+                            "select-ports": [
+                                "LAN*"
+                            ]
+                        }
+                    ],
+                    "ipv4": {
+                        "addressing": "static",
+                        "subnet": "192.168.1.1/16",
+                        "dhcp": {
+                            "lease-first": 10,
+                            "lease-count": 10000,
+                            "lease-time": "6h"
+                        }
+                    },
+                }],
+            "metrics": {
+                "statistics": {
+                    "interval": 120,
+                    "types": ["ssids", "lldp", "clients"]
+                },
+                "health": {
+                    "interval": 120
+                }
+            },
+            "services": {
+                "lldp": {
+                    "describe": "uCentral",
+                    "location": "universe"
+                },
+                "ssh": {
+                    "port": 22
+                }
             }
-        pass
-
-
-
-
-
-
-
-UCENTRAL_BASE_CFG = {
-    "uuid": 1,
-    "radios": [
-        {
-            "band": "2G",
-            "country": "US",
-            "channel-mode": "HE",
-            "channel-width": 20,
-            "channel": 11
-        },
-        {
-            "band": "5G",
-            "country": "US",
-            "channel-mode": "HE",
-            "channel-width": 80,
-            "channel": 36
         }
-    ],  # Similar to RF Profile
-
-    "interfaces": [
-        {
+        self.vlan_section = {
             "name": "WAN100",
             "role": "upstream",
             "vlan": {
                 "id": 100
-             },
-            "services": ["lldp"],
+            },
             "ethernet": [
                 {
                     "select-ports": [
@@ -151,119 +168,230 @@ UCENTRAL_BASE_CFG = {
             ],
             "ipv4": {
                 "addressing": "dynamic"
-            },
-            "ssids": [
-                {
-                    "name": "OpenWifi",
-                    "wifi-bands": [
-                        "2G"
-                    ],
-                    "bss-mode": "ap",
-                    "encryption": {
-                        "proto": "psk2",
-                        "key": "OpenWifi",
-                        "ieee80211w": "optional"
-                    }
-                },
-                {
-                    "name": "OpenWifi",
-                    "wifi-bands": [
-                        "5G"
-                    ],
-                    "bss-mode": "ap",
-                    "encryption": {
-                        "proto": "psk2",
-                        "key": "OpenWifi",
-                        "ieee80211w": "optional"
-                    }
-                }
-            ]
-        },  # SSID Information is here
-        {
-            "name": "LAN",
-            "role": "downstream",
-            "services": ["ssh", "lldp"],
-            "ethernet": [
-                {
-                    "select-ports": [
-                        "LAN*"
-                    ]
-                }
-            ],
-            "ipv4": {
-                "addressing": "static",
-                "subnet": "192.168.1.1/16",
-                "dhcp": {
-                    "lease-first": 10,
-                    "lease-count": 10000,
-                    "lease-time": "6h"
-                }
-            },
-            "ssids": [
-                {
-                    "name": "OpenWifi",
-                    "wifi-bands": [
-                        "2G"
-                    ],
-                    "bss-mode": "ap",
-                    "encryption": {
-                        "proto": "psk2",
-                        "key": "OpenWifi",
-                        "ieee80211w": "optional"
-                    }
-                },
-                {
-                    "name": "OpenWifi",
-                    "wifi-bands": [
-                        "5G"
-                    ],
-                    "bss-mode": "ap",
-                    "encryption": {
-                        "proto": "psk2",
-                        "key": "OpenWifi",
-                        "ieee80211w": "optional"
-                    }
-                }
-            ]
-
-        }  # LAN/WAN Information is here
-    ],
-    "metrics": {
-        "statistics": {
-            "interval": 120,
-            "types": ["ssids", "lldp", "clients"]
-        },
-        "health": {
-            "interval": 120
+            }
         }
-    },
-    "services": {
-        "lldp": {
-            "describe": "uCentral",
-            "location": "universe"
-        },
-        "ssh": {
-            "port": 22
-        }
-    }
-}
+        self.mode = None
+
+    def set_radio_config(self, radio_config=None):
+        self.base_profile_config["radios"].append({
+            "band": "2G",
+            "country": "US",
+            # "channel-mode": "HE",
+            "channel-width": 20,
+            # "channel": 11
+        })
+        self.base_profile_config["radios"].append({
+            "band": "5G",
+            "country": "US",
+            # "channel-mode": "HE",
+            "channel-width": 80,
+            # "channel": 36
+        })
+
+    def set_mode(self, mode):
+        self.mode = mode
+        if mode == "NAT":
+            self.base_profile_config['interfaces'][1]['ssids'] = []
+
+        elif mode == "BRIDGE":
+            del self.base_profile_config['interfaces'][1]
+            self.base_profile_config['interfaces'][0]['ssids'] = []
+        elif mode == "VLAN":
+            del self.base_profile_config['interfaces'][1]
+            self.base_profile_config['interfaces'][0]['ssids'] = []
+        else:
+            print("Invalid Mode")
+            return 0
+
+    def add_ssid(self, ssid_data):
+        ssid_info = {'name': ssid_data["ssid_name"], "bss-mode": "ap", "wifi-bands": []}
+        for i in ssid_data["appliedRadios"]:
+            ssid_info["wifi-bands"].append(i)
+        ssid_info['encryption'] = {}
+        ssid_info['encryption']['proto'] = ssid_data["security"]
+        ssid_info['encryption']['key'] = ssid_data["security_key"]
+        ssid_info['encryption']['ieee80211w'] = "optional"
+        if self.mode == "NAT":
+            self.base_profile_config['interfaces'][1]['ssids'].append(ssid_info)
+        elif self.mode == "BRIDGE":
+            self.base_profile_config['interfaces'][0]['ssids'].append(ssid_info)
+
+    def push_config(self, serial_number):
+        payload = {}
+        payload["configuration"] = self.base_profile_config
+        payload['serialNumber'] = serial_number
+        payload['UUID'] = 0
+        print(payload)
+        uri = self.sdk_client.build_uri("device/" + serial_number + "/configure")
+        basic_cfg_str = json.dumps(payload)
+        resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(), verify=False)
+        self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
+        print(resp)
 
 
-
-controller = {
-    'url': "https://tip-f34.candelatech.com:16001/api/v1/oauth2",  # API base url for the controller
-    'username': "tip@ucentral.com",
-    'password': 'openwifi',
-    # 'version': "1.1.0-SNAPSHOT",
-    # 'commit_date': "2021-04-27"
-}
-
-obj = Controller(controller_data=controller)
-equipments = obj.get_equipment()
-print(equipments)
-for i in equipments:
-    for j in equipments[i]:
-        print(j)
+# UCENTRAL_BASE_CFG = {
+#     "uuid": 1,
+#     "radios": [
+#         {
+#             "band": "2G",
+#             "country": "US",
+#             "channel-mode": "HE",
+#             "channel-width": 20,
+#             "channel": 11
+#         },
+#         {
+#             "band": "5G",
+#             "country": "US",
+#             "channel-mode": "HE",
+#             "channel-width": 80,
+#             "channel": 36
+#         }
+#     ],  # Similar to RF Profile
+#
+#     "interfaces": [
+#         {
+#             "name": "WAN",
+#             "role": "upstream",
+#             "services": ["lldp"],
+#             "ethernet": [
+#                 {
+#                     "select-ports": [
+#                         "WAN*"
+#                     ]
+#                 }
+#             ],
+#             "ipv4": {
+#                 "addressing": "dynamic"
+#             },
+#             "ssids": [
+#                 {
+#                     "name": "OpenWifi",
+#                     "wifi-bands": [
+#                         "2G"
+#                     ],
+#                     "bss-mode": "ap",
+#                     "encryption": {
+#                         "proto": "psk2",
+#                         "key": "OpenWifi",
+#                         "ieee80211w": "optional"
+#                     }
+#                 },
+#                 {
+#                     "name": "OpenWifi",
+#                     "wifi-bands": [
+#                         "5G"
+#                     ],
+#                     "bss-mode": "ap",
+#                     "encryption": {
+#                         "proto": "psk2",
+#                         "key": "OpenWifi",
+#                         "ieee80211w": "optional"
+#                     }
+#                 }
+#             ]
+#         },
+#         {
+#             "name": "LAN",
+#             "role": "downstream",
+#             "services": ["ssh", "lldp"],
+#             "ethernet": [
+#                 {
+#                     "select-ports": [
+#                         "LAN*"
+#                     ]
+#                 }
+#             ],
+#             "ipv4": {
+#                 "addressing": "static",
+#                 "subnet": "192.168.1.1/16",
+#                 "dhcp": {
+#                     "lease-first": 10,
+#                     "lease-count": 10000,
+#                     "lease-time": "6h"
+#                 }
+#             },
+#             "ssids": [
+#                 {
+#                     "name": "OpenWifi",
+#                     "wifi-bands": [
+#                         "2G"
+#                     ],
+#                     "bss-mode": "ap",
+#                     "encryption": {
+#                         "proto": "psk2",
+#                         "key": "OpenWifi",
+#                         "ieee80211w": "optional"
+#                     }
+#                 },
+#                 {
+#                     "name": "OpenWifi",
+#                     "wifi-bands": [
+#                         "5G"
+#                     ],
+#                     "bss-mode": "ap",
+#                     "encryption": {
+#                         "proto": "psk2",
+#                         "key": "OpenWifi",
+#                         "ieee80211w": "optional"
+#                     }
+#                 }
+#             ]
+#
+#         }
+#     ],
+#     "metrics": {
+#         "statistics": {
+#             "interval": 120,
+#             "types": ["ssids", "lldp", "clients"]
+#         },
+#         "health": {
+#             "interval": 120
+#         }
+#     },
+#     "services": {
+#         "lldp": {
+#             "describe": "uCentral",
+#             "location": "universe"
+#         },
+#         "ssh": {
+#             "port": 22
+#         }
+#     }
+# }
+#
+# controller = {
+#     'url': "https://tip-f34.candelatech.com:16001/api/v1/oauth2",  # API base url for the controller
+#     'username': "tip@ucentral.com",
+#     'password': 'openwifi',
+#     # 'version': "1.1.0-SNAPSHOT",
+#     # 'commit_date': "2021-04-27"
+# }
+# profile_data = {
+#     "mode": "BRIDGE",
+#     "ssid_modes": {
+#         "wpa2_personal": [
+#             {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
+#             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+#              "security_key": "something"}]},
+#     "rf": {},
+#     "radius": False
+# }
+# obj = UController(controller_data=controller)
+# obj.get_device_uuid(serial_number="c4411ef53f23")
+# obj.get_device_uuid(serial_number="c4411ef53f23")
+# profile_client = ProfileUtility(sdk_client=obj)
+# profile_client.set_radio_config()
+# profile_client.set_mode(mode="BRIDGE")
+# ssid_data = {"ssid_name": "ssid_wpa_test_3", "appliedRadios": ["2G", "5G"], "security_key": "something", "security": "psk2"}
+# profile_client.add_ssid(ssid_data=ssid_data)
+# profile_client.push_config(serial_number="c4411ef53f23")
+# print(profile_client.base_profile_config)
+# equipments = obj.get_devices()
+# print(equipments)
+# for i in equipments:
+#     for j in equipments[i]:
+#         for k in j:
+#             print(k, j[k])
 # print(equipments)
 #
 #
@@ -378,40 +506,3 @@ for i in equipments:
 #
 #
 #
-
-"""
-2 AP Working in UCENTRAL
-Ask Jaspreet, UI - CLOUD INSTANCE
-Command for pointing the AP to ucentral Cloud
-Generic Commands (mgr, node) --- ?
-
-Configuring AP with SSID Profiles
-
-
-
-"""
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

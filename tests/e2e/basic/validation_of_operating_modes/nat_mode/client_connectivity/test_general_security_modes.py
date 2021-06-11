@@ -8,8 +8,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.client_connectivity, pytest.mark.nat, pytest.mark.general, pytest.mark.sanity,
-              pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.client_connectivity, pytest.mark.nat, pytest.mark.general, pytest.mark.sanity]
 
 setup_params_general = {
     "mode": "NAT",
@@ -571,3 +570,58 @@ class TestBridgeModeConnectivitySuiteB(object):
 #                                           msg='2G WPA Client Connectivity Failed - bridge mode' + str(
 #                                               passes))
 #         assert passes
+
+
+
+
+
+
+
+
+setup_params_general = {
+    "mode": "NAT",
+    "ssid_modes": {
+        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"]},
+                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
+        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
+                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+                 "security_key": "something"}],
+        "wpa2_personal": [
+            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+             "security_key": "something"}]},
+    "rf": {},
+    "radius": False
+}
+
+
+@pytest.mark.suiteX
+@allure.feature("NAT MODE CLIENT CONNECTIVITY")
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestSomthing(object):
+
+    @pytest.mark.wpa
+    @pytest.mark.twog
+    def test_abc(self):
+        assert True
+
+    @pytest.mark.wpa
+    @pytest.mark.fiveg
+    def test_abcd(self):
+        assert True
+
+    @pytest.mark.wpa2_personal
+    @pytest.mark.twog
+    def test_abcde(self):
+        assert True
+
+    @pytest.mark.wpa2_personal
+    @pytest.mark.fiveg
+    def test_abcdef(self):
+        assert True
