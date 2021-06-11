@@ -1043,6 +1043,7 @@ if __name__ == '__main__':
     profile.set_rf_profile(profile_data=profile_data, mode="wifi6")
     print(profile.default_profiles["rf"])
     # profile.cleanup_profiles()
+
     # profile.get_default_profiles()
     # profile_data = {
     #     "profile_name": "ssid_wep_2g",

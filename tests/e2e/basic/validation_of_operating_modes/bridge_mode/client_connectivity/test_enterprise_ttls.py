@@ -116,7 +116,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
                 pytest.exit("Test Case Failed")
         assert passes
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     def test_wpa2_enterprise_2g(self, get_vif_state,
@@ -156,7 +156,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
                 pytest.exit("Test Case Failed")
         assert passes
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     def test_wpa2_enterprise_5g(self, get_vif_state,

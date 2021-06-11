@@ -71,7 +71,7 @@ class TestSetupVLANEnterpriseSuiteA(object):
                                           msg='Failed to create profile')
             assert False
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     def test_setup_wpa2_enterprise_2g_ssid_profile(self, setup_profiles, update_report, test_cases):
@@ -87,7 +87,7 @@ class TestSetupVLANEnterpriseSuiteA(object):
                                           msg='Failed to create profile')
             assert False
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     def test_setup_wpa2_enterprise_5g_ssid_profile(self, setup_profiles, update_report, test_cases):
@@ -135,7 +135,7 @@ class TestSetupVLANEnterpriseSuiteA(object):
                                           msg='Failed to create profile')
             assert False
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     def test_setup_equipment_ap_profile(self, setup_profiles, update_report,
                                         test_cases):
         """ Equipment AP Profile Suite A Enterprise """
@@ -150,7 +150,7 @@ class TestSetupVLANEnterpriseSuiteA(object):
                                           msg='Failed to create profile')
             assert False
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     def test_verify_vif_config(self, setup_profiles, update_report,
                                test_cases):
         """ VIF Config Suite A Enterprise """
@@ -165,7 +165,7 @@ class TestSetupVLANEnterpriseSuiteA(object):
                                           msg='Failed to push profile')
             assert False
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @allure.severity(allure.severity_level.BLOCKER)
     def test_verify_vif_state(self, setup_profiles, update_report,
                               test_cases):

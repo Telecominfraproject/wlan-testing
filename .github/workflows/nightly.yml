@@ -18,6 +18,15 @@ env:
 
 on:
   workflow_dispatch:
+    inputs:
+      testbed:
+        default: 'basic-02'
+        description: 'Testbed to test'
+        required: false
+      marker_expression:
+        default: 'sanity'
+        description: 'Pytest marker expression that will be used to select the tests to execute'
+        required: false
   push:
     branches:
       - master
@@ -113,7 +122,7 @@ jobs:
     needs: [ build ]
     steps:
     - name: get EKS access credentials
-      run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+      run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
     - name: install Allure CLI tool
       run: |
@@ -151,7 +160,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m sanity -s -vvv --testbed=basic-02 --skip-testrail --alluredir=/tmp/allure-results
+                    pytest -m "${{ github.event.inputs.marker_expression || 'sanity' }}" -s -vvv --testbed="${{ github.event.inputs.testbed || 'basic-02' }}" --skip-testrail --alluredir=/tmp/allure-results
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -192,31 +201,102 @@ jobs:
         exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
 
     - name: print logs
-      if: ${{ always() }}
+      if: always()
       run: |
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
         kubectl logs $podname
 
     - name: upload Allure results as artifact
-      if: ${{ always() }}
+      if: always()
       uses: actions/upload-artifact@v2
       with:
         name: allure-results
         path: allure-results
 
+    - name: cleanup
+      if: always()
+      run: |
+        kubectl delete job "${{ steps.job.outputs.name }}" --wait=true --ignore-not-found=true
+        kubectl delete secret configuration --wait=true --ignore-not-found=true
+
+  report:
+    needs: [ test ]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+    - name: install Allure CLI tool
+      run: |
+        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: allure-results
+        path: allure-results
+
+    - name: checkout testing repo
+      uses: actions/checkout@v2
+      with:
+        path: wlan-testing
+
+    - name: get reports branch
+      uses: actions/checkout@v2
+      continue-on-error: true
+      with:
+        ref: gh-pages
+        path: reports
+
+    - name: copy history into results
+      run: |
+        if [ -e "reports/sanity/latest" ] ; then
+          cp -r reports/sanity/latest/history/ allure-results/history
+        fi
+
+    - name: add report metadata
+      run: |
+        cat << EOF >> allure-results/environment.properties
+        Testbed=${{ github.event.inputs.testbed || 'basic-02' }}
+        Tests.CommitId=$(cd wlan-testing && git rev-parse --short HEAD)
+        CiRun.Id=${{ github.run_id }}
+        CiRun.Number=${{ github.run_number }}
+        CiRun.Url=https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
+        EOF
+
     - name: generate Allure report
-      if: ${{ always() }}
       run: allure-${{ env.ALLURE_CLI_VERSION }}/bin/allure generate
 
     - name: upload Allure report as artifact
-      if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
         name: allure-report
         path: allure-report
-
-    - name: cleanup
-      if: ${{ always() }}
+    
+    - name: copy new report
+      if: ${{ (github.event.inputs.marker_expression || 'sanity') == 'sanity' }}
       run: |
-        kubectl delete job "${{ steps.job.outputs.name }}" --wait=true --ignore-not-found=true
-        kubectl delete secret configuration --wait=true --ignore-not-found=true
+        mkdir -p reports/sanity
+        cp -Tr allure-report reports/sanity/${{ github.run_number }}
+
+    - name: update latest symlink
+      if: ${{ (github.event.inputs.marker_expression || 'sanity') == 'sanity' }}
+      working-directory: reports/sanity
+      run: ln -fns ${{ github.run_number }} latest
+
+    - name: generate new index.html
+      run: python wlan-testing/.github/tools/generate_directory_index.py -r reports
+
+    - name: commit reports update
+      working-directory: reports
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+        git add .
+        git commit -m "Automated deployment: $(date -u)"
+
+    - name: push
+      uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: gh-pages
+        directory: reports

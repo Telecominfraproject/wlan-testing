@@ -34,11 +34,13 @@ class APNOS:
             client = self.ssh_cli_connect()
             cmd = '[ -f ~/cicd-git/ ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
+            print(stdout.read())
             if str(stdout.read()).__contains__("False"):
                 cmd = 'mkdir ~/cicd-git/'
                 client.exec_command(cmd)
             cmd = '[ -f ~/cicd-git/openwrt_ctl.py ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
+            print(stdout.read())
             if str(stdout.read()).__contains__("False"):
                 print("Copying openwrt_ctl serial control Script...")
                 with SCPClient(client.get_transport()) as scp:
@@ -46,6 +48,7 @@ class APNOS:
             cmd = '[ -f ~/cicd-git/openwrt_ctl.py ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
             var = str(stdout.read())
+            print(var)
             if var.__contains__("True"):
                 allure.attach(name="openwrt_ctl Setup", body=str(var))
                 print("APNOS Serial Setup OK")
@@ -86,8 +89,6 @@ class APNOS:
                   f"cmd --value \"{cmd}\" "
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
-        allure.attach(body=str("VIF Config: " + str(vif_config) + "\n" + "VIF State: " + str(vif_state)),
-                      name="SSID Profiles in VIF Config and VIF State: ")
         client.close()
         allure.attach(name="iwinfo Output Msg: ", body=str(output))
         allure.attach(name="iwinfo config Err Msg: ", body=str(stderr))
@@ -241,6 +242,7 @@ class APNOS:
                       f"cmd --value \"{cmd}\" "
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
+            print(output, stderr.read())
             status = output.decode('utf-8').splitlines()
             allure.attach(name="get_redirector output ", body=str(stderr))
             redirector = status[1].replace(" ", "").split("|")[1]
@@ -280,10 +282,10 @@ class APNOS:
 if __name__ == '__main__':
     obj = {
         'jumphost': True,
-        'ip': "192.168.80.99",
+        'ip': "localhost",
         'username': "lanforge",
-        'password': "lanforge",
-        'port': 22,
+        'password': "pumpkin77",
+        'port': 8803,
         'jumphost_tty': '/dev/ttyAP1',
 
     }

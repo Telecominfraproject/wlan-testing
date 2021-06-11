@@ -46,7 +46,7 @@ class RunTest:
         self.ax_prefix = lanforge_data["AX-Station-Name"]
         self.debug = debug
         self.lf_ssh_port = lanforge_data["ssh_port"]
-        self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=debug)
+        self.staConnect = None
         self.dataplane_obj = None
         self.influx_params = influx_params
         self.influxdb = RecordInflux(_lfjson_host=self.lanforge_ip,
@@ -63,6 +63,7 @@ class RunTest:
     def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[],
                             station_name=[], mode="BRIDGE", vlan_id=1, band="twog"):
         """SINGLE CLIENT CONNECTIVITY using test_connect2.py"""
+        self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
         self.staConnect.sta_mode = 0
         self.staConnect.upstream_resource = 1
         if mode == "BRIDGE":

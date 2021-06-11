@@ -33,8 +33,8 @@ CONFIGURATION = {
                 "upstream": "1.1.eth2",
                 "upstream_subnet": "10.28.2.1/24",
                 "uplink": "1.1.eth3",
-                "2.4G-Station-Name": "wlan0",
-                "5G-Station-Name": "wlan0",
+                "2.4G-Station-Name": "twog0",
+                "5G-Station-Name": "fiveg0",
                 "AX-Station-Name": "ax"
             }
         }

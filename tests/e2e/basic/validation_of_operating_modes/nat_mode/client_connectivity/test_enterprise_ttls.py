@@ -103,7 +103,7 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
                 pytest.exit("Test Case Failed")
         assert passes
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     def test_wpa2_enterprise_2g(self, get_vif_state,station_names_twog, setup_profiles, get_lanforge_data, lf_test, update_report,
@@ -139,7 +139,7 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
                 pytest.exit("Test Case Failed")
         assert passes
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     def test_wpa2_enterprise_5g(self, get_vif_state, station_names_fiveg, setup_profiles, get_lanforge_data, lf_test, update_report,
