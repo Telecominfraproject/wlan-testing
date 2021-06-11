@@ -37,7 +37,6 @@ import pytest
 from cv_test_manager import cv_test
 from configuration import CONFIGURATION
 from configuration import RADIUS_SERVER_DATA
-from configuration import RADIUS_ACCOUNTING_SERVER_DATA
 from configuration import TEST_CASES
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
@@ -181,12 +180,6 @@ def radius_info():
     """yields the radius server information from lab info file"""
     allure.attach(body=str(RADIUS_SERVER_DATA), name="Radius server Info: ")
     yield RADIUS_SERVER_DATA
-
-
-@pytest.fixture(scope="session")
-def radius_accounting_info():
-    allure.attach(body=str(RADIUS_ACCOUNTING_SERVER_DATA), name="Radius Accounting server Info: ")
-    yield RADIUS_ACCOUNTING_SERVER_DATA
 
 
 @pytest.fixture(scope="session")

@@ -33,8 +33,8 @@ CONFIGURATION = {
                 "upstream": "1.1.eth2",
                 "upstream_subnet": "10.28.2.1/24",
                 "uplink": "1.1.eth3",
-                "2.4G-Station-Name": "wlan0",
-                "5G-Station-Name": "wlan0",
+                "2.4G-Station-Name": "twog0",
+                "5G-Station-Name": "fiveg0",
                 "AX-Station-Name": "ax"
             }
         }
@@ -172,7 +172,16 @@ RADIUS_SERVER_DATA = {
     "pk_password": "whatever"
 }
 
-RADIUS_ACCOUNTING_SERVER_DATA = {
+PASSPOINT_RADIUS_SERVER_DATA = {
+    "ip": "52.234.179.191",
+    "port": 11812,
+    "secret": "yeababy20!",
+    "user": "nolaradius",
+    "password": "nolastart",
+    "pk_password": "whatever"
+}
+
+PASSPOINT_RADIUS_ACCOUNTING_SERVER_DATA = {
     "ip": "52.234.179.191",
     "port": 11813,
     "secret": "yeababy20!"
@@ -425,4 +434,3 @@ TEST_CASES = {
     "2g_open_vlan": 9897,
     "5g_open_vlan": 9898
 }
-

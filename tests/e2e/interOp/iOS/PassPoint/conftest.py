@@ -14,6 +14,8 @@ import pytest
 import allure
 from collections import defaultdict
 from lanforge.lf_tests import RunTest
+from configuration import PASSPOINT_RADIUS_SERVER_DATA
+from configuration import PASSPOINT_RADIUS_ACCOUNTING_SERVER_DATA
 from configuration import PASSPOINT_PROVIDER_INFO
 from configuration import PASSPOINT_OPERATOR_INFO
 from configuration import PASSPOINT_VENUE_INFO
@@ -26,7 +28,7 @@ from controller.controller import ProfileUtility
 def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment_id,
                    instantiate_profile, get_markers, passpoint_provider_info, passpoint_operator_info,
                    passpoint_venue_info, passpoint_profile_info,
-                   get_configuration, radius_info, radius_accounting_info, get_apnos):
+                   get_configuration, passpoint_radius_server_info, passpoint_radius_accounting_server_info, get_apnos):
     instantiate_profile = instantiate_profile(sdk_client=setup_controller)
     vlan_id, mode = 0, 0
     instantiate_profile.cleanup_objects()
@@ -87,14 +89,14 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
         allure.attach(body=str(e), name="Exception ")
 
     # Radius Profile Creation
-    radius_info = radius_info
-    radius_info["name"] = testbed + "-Automation-Radius-Profile"
+    passpoint_radius_server_info = passpoint_radius_server_info
+    passpoint_radius_server_info["name"] = testbed + "-Automation-Radius-Profile"
     instantiate_profile.delete_profile_by_name(profile_name=testbed + "-Automation-Radius-Profile")
     try:
-        instantiate_profile.create_radius_profile(radius_info=radius_info,
-                                                  radius_accounting_info=radius_accounting_info)
+        instantiate_profile.create_radius_profile(radius_info=passpoint_radius_server_info,
+                                                  radius_accounting_info=passpoint_radius_accounting_server_info)
         test_cases["radius_profile"] = True
-        allure.attach(body=str(radius_info), name="Radius Profile Created")
+        allure.attach(body=str(passpoint_radius_server_info), name="Radius Profile Created")
     except Exception as e:
         print(e)
         test_cases["radius_profile"] = False
@@ -262,9 +264,10 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
             if ssid["ssid_name"] == "passpoint_profile_download":
                 ssid_to_apply = ssid["ssid_name"]
                 continue
-            allure.attach(body=str(ssid), name="Updating SSID profile")
-            passpoint_profile_info["ssid_profile_name"] = ssid["profile_name"]
-            instantiate_profile.update_ssid_profile(profile_info=passpoint_profile_info)
+            if ssid["ssid_name"] in test_cases.keys():
+                allure.attach(body=str(ssid), name="Updating SSID profile")
+                passpoint_profile_info["ssid_profile_name"] = ssid["profile_name"]
+                instantiate_profile.update_ssid_profile(profile_info=passpoint_profile_info)
 
     # Equipment AP Profile Creation
     ap_profile_info = dict()
@@ -279,28 +282,6 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
         test_cases["equipment_ap"] = {"sdk": False}
         allure.attach(body=str(e), name="Equipment AP Profile Creation Failed")
 
-    # Push the Equipment AP Profile to AP
-    try:
-        for i in get_equipment_id:
-            instantiate_profile.push_profile_old_method(equipment_id=i)
-    except Exception as e:
-        print(e)
-        print("failed to create AP Profile")
-
-    # Check the VIF Config and VIF State of SSIDs
-    time_start = time.time()
-    ap_ssh = get_apnos(get_configuration["access_point"][0], pwd="../libs/apnos/")
-    while time.time() - time_start < 300:
-        if ((time.time() - time_start) / 10) == 15:
-            ap_ssh = get_apnos(get_configuration["access_point"][0], pwd="../libs/apnos/")
-        vif_config_ssids = list(ap_ssh.get_vif_config_ssids())
-        vif_state_ssids = list(ap_ssh.get_vif_state_ssids())
-        test_cases[ssid_to_apply]["vif_config"] = True if ssid_to_apply in vif_config_ssids else False
-        test_cases[ssid_to_apply]["vif_state"] = True if ssid_to_apply in vif_state_ssids else False
-        if test_cases[ssid_to_apply]["vif_config"] and test_cases[ssid_to_apply]["vif_state"]:
-            time.sleep(120)
-            break
-        time.sleep(10)
 
     def teardown_session():
         print("\nRemoving Profiles")
@@ -349,7 +330,7 @@ def push_ap_profile(request, setup_profiles, get_equipment_id, get_apnos, get_co
     # Check the VIF Config and VIF State of SSIDs
     time_start = time.time()
     ap_ssh = get_apnos(get_configuration["access_point"][0], pwd="../libs/apnos/")
-    while time.time() - time_start < 300:
+    while time.time() - time_start < 240:
         if ((time.time() - time_start) / 10) == 15:
             ap_ssh = get_apnos(get_configuration["access_point"][0], pwd="../libs/apnos/")
         vif_config = list(ap_ssh.get_vif_config_ssids())
@@ -368,6 +349,18 @@ def push_ap_profile(request, setup_profiles, get_equipment_id, get_apnos, get_co
         time.sleep(10)
 
     yield test_cases
+
+
+@pytest.fixture(scope="session")
+def passpoint_radius_server_info():
+    allure.attach(body=str(PASSPOINT_RADIUS_SERVER_DATA), name="Passpoint RADIUS server Info: ")
+    yield PASSPOINT_RADIUS_SERVER_DATA
+
+
+@pytest.fixture(scope="session")
+def passpoint_radius_accounting_server_info():
+    allure.attach(body=str(PASSPOINT_RADIUS_ACCOUNTING_SERVER_DATA), name="Passpoint RADIUS account server Info: ")
+    yield PASSPOINT_RADIUS_ACCOUNTING_SERVER_DATA
 
 
 @pytest.fixture(scope="session")

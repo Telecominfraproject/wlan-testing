@@ -1,15 +1,15 @@
 """
-    EAP Passpoint Test: BRIDGE Mode
-    pytest -m "interop_iOS and eap_passpoint and bridge"
+    EAP Passpoint Test: VLAN Mode
+    pytest -m "interop_iOS and eap_passpoint and vlan"
 """
 
 import allure
 import pytest
 
-pytestmark = [pytest.mark.interop_iOS, pytest.mark.eap_passpoint, pytest.mark.bridge]
+pytestmark = [pytest.mark.interop_iOS, pytest.mark.eap_passpoint, pytest.mark.vlan]
 
 setup_params_eap = {
-    "mode": "BRIDGE",
+    "mode": "VLAN",
     "ssid_modes": {
         "open": [
             {"ssid_name": "passpoint_profile_download", "appliedRadios": ["is2dot4GHz"]}
@@ -26,7 +26,7 @@ setup_params_eap = {
 }
 
 
-@allure.feature("BRIDGE MODE EAP PASSPOINT SETUP")
+@allure.feature("VLAN MODE EAP PASSPOINT SETUP")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_eap],
@@ -34,15 +34,15 @@ setup_params_eap = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestBRIDGEModeEapAuth(object):
+class TestVLANModeEapAuth(object):
     """
-        EAP Passpoint BRIDGE Mode
-        pytest -m "interop_iOS and eap_passpoint and bridge"
+        EAP Passpoint VLAN Mode
+        pytest -m "interop_iOS and eap_passpoint and vlan"
     """
     def test_eap_passpoint_osu_id_provider_creation(self, setup_profiles):
         """
-            EAP Passpoint BRIDGE Mode : OSU ID provider profile creation
-            pytest -m "interop_iOS and eap_passpoint and bridge"
+            EAP Passpoint VLAN Mode : OSU ID provider profile creation
+            pytest -m "interop_iOS and eap_passpoint and vlan"
         """
         test_cases, instantiate_profile, profile_data = setup_profiles
         result = test_cases['passpoint_osu_id_provider']['sdk']
@@ -54,8 +54,8 @@ class TestBRIDGEModeEapAuth(object):
 
     def test_eap_passpoint_operator_creation(self, setup_profiles):
         """
-            EAP Passpoint BRIDGE Mode : Passpoint operator profile creation
-            pytest -m "interop_iOS and eap_passpoint and bridge"
+            EAP Passpoint VLAN Mode : Passpoint operator profile creation
+            pytest -m "interop_iOS and eap_passpoint and vlan"
         """
         test_cases, instantiate_profile, profile_data = setup_profiles
         result = test_cases['passpoint_operator_profile']['sdk']
@@ -67,8 +67,8 @@ class TestBRIDGEModeEapAuth(object):
 
     def test_eap_passpoint_venue_creation(self, setup_profiles):
         """
-            EAP Passpoint BRIDGE Mode : Passpoint venue provider profile creation
-            pytest -m "interop_iOS and eap_passpoint and bridge"
+            EAP Passpoint VLAN Mode : Passpoint venue provider profile creation
+            pytest -m "interop_iOS and eap_passpoint and vlan"
         """
         test_cases, instantiate_profile, profile_data = setup_profiles
         result = test_cases['passpoint_venue_profile']['sdk']
@@ -80,8 +80,8 @@ class TestBRIDGEModeEapAuth(object):
 
     def test_eap_passpoint_creation(self, setup_profiles):
         """
-            EAP Passpoint BRIDGE Mode : Passpoint profile creation
-            pytest -m "interop_iOS and eap_passpoint and bridge"
+            EAP Passpoint VLAN Mode : Passpoint profile creation
+            pytest -m "interop_iOS and eap_passpoint and vlan"
         """
         test_cases, instantiate_profile, profile_data = setup_profiles
         result = test_cases['passpoint']['sdk']
@@ -102,8 +102,8 @@ class TestBRIDGEModeEapAuth(object):
     @pytest.mark.usefixtures("push_ap_profile")
     def test_wpa2_eap_2g(self, passpoint_profile_info, push_ap_profile):
         """
-            EAP Passpoint BRIDGE Mode
-            pytest -m "interop_iOS and eap_passpoint and bridge and wpa2_eap and twog"
+            EAP Passpoint VLAN Mode
+            pytest -m "interop_iOS and eap_passpoint and vlan and wpa2_eap and twog"
         """
         result = push_ap_profile['ssid_wpa2_eap_passpoint_2g']['vif_config']
         if result:
@@ -134,8 +134,8 @@ class TestBRIDGEModeEapAuth(object):
     @pytest.mark.usefixtures("push_ap_profile")
     def test_wpa2_eap_5g(self, passpoint_profile_info, push_ap_profile):
         """
-            EAP Passpoint BRIDGE Mode
-            pytest -m "interop_iOS and eap_passpoint and bridge and wpa2_eap and fiveg"
+            EAP Passpoint VLAN Mode
+            pytest -m "interop_iOS and eap_passpoint and vlan and wpa2_eap and fiveg"
         """
         result = push_ap_profile['ssid_wpa2_eap_passpoint_5g']['vif_config']
         if result:
@@ -166,8 +166,8 @@ class TestBRIDGEModeEapAuth(object):
     @pytest.mark.usefixtures("push_ap_profile")
     def test_wpa2_only_eap_2g(self, passpoint_profile_info, push_ap_profile):
         """
-             EAP Passpoint BRIDGE Mode
-             pytest -m "interop_iOS and eap_passpoint and bridge and wpa2_only_eap and twog"
+             EAP Passpoint VLAN Mode
+             pytest -m "interop_iOS and eap_passpoint and vlan and wpa2_only_eap and twog"
         """
         result = push_ap_profile['ssid_wpa2_only_eap_passpoint_2g']['vif_config']
         if result:
@@ -198,8 +198,8 @@ class TestBRIDGEModeEapAuth(object):
     @pytest.mark.usefixtures("push_ap_profile")
     def test_wpa2_only_eap_5g(self, passpoint_profile_info, push_ap_profile):
         """
-             EAP Passpoint BRIDGE Mode
-             pytest -m "interop_iOS and eap_passpoint and bridge and wpa2_only_eap and fiveg"
+             EAP Passpoint VLAN Mode
+             pytest -m "interop_iOS and eap_passpoint and vlan and wpa2_only_eap and fiveg"
         """
         result = push_ap_profile['ssid_wpa2_only_eap_passpoint_5g']['vif_config']
         if result:
