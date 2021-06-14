@@ -536,10 +536,10 @@ def create_vlan(request, testbed, get_configuration):
             port_resource = upstream_resources.split(".")
 
             try:
-                ip = (chamberview_obj.json_get("/port/" + port_resource[0] + "/" + port_resource[1] +
-                                               "/" + upstream_port.split(".")[2] + "." + str(vlan))["interface"]["ip"])
+                ip = chamberview_obj.json_get("/port/" + port_resource[0] + "/" + port_resource[1] +
+                                               "/" + upstream_port.split(".")[2] + "." + str(vlan))["interface"]["ip"]
                 if ip:
-                    yield vlan_list
+                    yield vlan_list, ip
             except Exception as e:
                 print(e)
                 yield False

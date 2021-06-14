@@ -2,11 +2,11 @@ from create_chamberview import CreateChamberview
 from create_chamberview_dut import DUT
 import time
 from LANforge.lfcli_base import LFCliBase
-
+import json
 
 class ChamberView:
 
-    def __init__(self, lanforge_data=None, access_point_data=None, debug=False, testbed=None):
+    def __init__(self, lanforge_data=None, access_point_data=None, debug=True, testbed=None):
         self.lanforge_ip = lanforge_data["ip"]
         self.lanforge_port = lanforge_data["port"]
         self.twog_radios = lanforge_data["2.4G-Radio"]
@@ -24,13 +24,16 @@ class ChamberView:
         self.delete_old_scenario = True
         # For chamber view
         self.scenario_name = "TIP-" + self.testbed
+        self.debug = debug
+        self.exit_on_error = False
 
         self.raw_line = [
             ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " + self.upstream_port.split(".")
             [2] + ",AUTO -1 NA"],
             ["profile_link " + self.uplink_resources + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
-             + "' NA " + self.uplink_port.split(".")[2] + " -1 NA"]
+             + "' NA " + self.uplink_port.split(".")[2] + "," + self.upstream_port.split(".")[2] + " -1 NA"]
         ]
+
         # This is for rawline input | see create_chamberview_dut.py for more details
 
         self.CreateChamberview = CreateChamberview(self.lanforge_ip, self.lanforge_port)
@@ -89,3 +92,16 @@ class ChamberView:
         cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port, )
         json_response = cli_base.json_get(_req_url=_req_url)
         return json_response
+
+    def json_post(self, req_url, shelf, resources, port, current, intrest):
+        data = {
+            "shelf": shelf,
+            "resource": resources,
+            "port": port,
+            "current_flags": current,
+            "interest": intrest
+        }
+        cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port, )
+        return cli_base.json_post(req_url, data)
+
+
