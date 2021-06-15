@@ -359,41 +359,41 @@ class UProfileUtility:
 #     }
 # }
 #
-# controller = {
-#     'url': "https://tip-f34.candelatech.com:16001/api/v1/oauth2",  # API base url for the controller
-#     'username': "tip@ucentral.com",
-#     'password': 'openwifi',
-#     # 'version': "1.1.0-SNAPSHOT",
-#     # 'commit_date': "2021-04-27"
-# }
-# profile_data = {
-#     "mode": "BRIDGE",
-#     "ssid_modes": {
-#         "wpa2_personal": [
-#             {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-#             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
-#              "security_key": "something"}]},
-#     "rf": {},
-#     "radius": False
-# }
+controller = {
+    'url': "https://tip-f34.candelatech.com:16001/api/v1/oauth2",  # API base url for the controller
+    'username': "tip@ucentral.com",
+    'password': 'openwifi',
+    # 'version': "1.1.0-SNAPSHOT",
+    # 'commit_date': "2021-04-27"
+}
+profile_data = {
+    "mode": "BRIDGE",
+    "ssid_modes": {
+        "wpa2_personal": [
+            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+             "security_key": "something"}]},
+    "rf": {},
+    "radius": False
+}
 # obj = UController(controller_data=controller)
-# obj.get_device_uuid(serial_number="c4411ef53f23")
-# obj.get_device_uuid(serial_number="c4411ef53f23")
-# profile_client = ProfileUtility(sdk_client=obj)
+# # obj.get_device_uuid(serial_number="c4411ef53f23")
+# # obj.get_device_uuid(serial_number="c4411ef53f23")
+# profile_client = UProfileUtility(sdk_client=obj)
 # profile_client.set_radio_config()
 # profile_client.set_mode(mode="BRIDGE")
-# ssid_data = {"ssid_name": "ssid_wpa_test_3", "appliedRadios": ["2G", "5G"], "security_key": "something", "security": "psk2"}
+# ssid_data = {"ssid_name": "ssid_wpa_test_3", "appliedRadios": ["2G", "5G"], "security_key": "something", "security": "none"}
 # profile_client.add_ssid(ssid_data=ssid_data)
 # profile_client.push_config(serial_number="c4411ef53f23")
 # print(profile_client.base_profile_config)
 # equipments = obj.get_devices()
-# print(equipments)
+# # print(equipments)
 # for i in equipments:
 #     for j in equipments[i]:
 #         for k in j:
 #             print(k, j[k])
 # print(equipments)
-#
+# #
 #
 #
 #

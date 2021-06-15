@@ -34,13 +34,15 @@ class APNOS:
             client = self.ssh_cli_connect()
             cmd = '[ -f ~/cicd-git/ ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
-            print(stdout.read())
+            print(stdout.read(), stderr.read())
+            print(type(str(stdout.read()).__contains__("False\n")), str(stdout.read()).__contains__("False\n"))
             if str(stdout.read()).__contains__("False"):
                 cmd = 'mkdir ~/cicd-git/'
-                client.exec_command(cmd)
+                stdin, stdout, stderr = client.exec_command(cmd)
+                print("lol", stdout.read(), stderr.read())
             cmd = '[ -f ~/cicd-git/openwrt_ctl.py ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
-            print(stdout.read())
+            print(stdout.read(), stderr.read())
             if str(stdout.read()).__contains__("False"):
                 print("Copying openwrt_ctl serial control Script...")
                 with SCPClient(client.get_transport()) as scp:
@@ -48,7 +50,7 @@ class APNOS:
             cmd = '[ -f ~/cicd-git/openwrt_ctl.py ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
             var = str(stdout.read())
-            print(var)
+            print(var, stderr.read())
             if var.__contains__("True"):
                 allure.attach(name="openwrt_ctl Setup", body=str(var))
                 print("APNOS Serial Setup OK")
@@ -289,6 +291,18 @@ if __name__ == '__main__':
         'jumphost_tty': '/dev/ttyAP1',
 
     }
-    var = APNOS(credentials=obj)
-    r = var.get_ssid_info()
-    print(r)
+    abc = {
+                'model': 'r160',
+                'mode': 'wifi5',
+                'serial': 'c4411ef53f23',
+                'jumphost': True,
+                'ip': "192.168.100.164",  # localhost
+                'username': "lanforge",
+                'password': "lanforge",
+                'port': 22,  # 22,
+                'jumphost_tty': '/dev/ttyUSB0',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.1.0.tar.gz"
+            }
+    var = APNOS(credentials=abc)
+    # r = var.run_generic_command(cmd="ubus call wifi iface")
+    # print(r)
