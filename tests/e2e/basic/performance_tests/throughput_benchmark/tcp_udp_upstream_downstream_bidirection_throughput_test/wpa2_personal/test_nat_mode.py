@@ -1,7 +1,7 @@
 """
 
-    Performance Test: throughput test under various combinations: VLAN Mode
-    pytest -m "throughput_benchmark_test and VLAN" -s -vvv --skip-testrail --testbed=basic-01
+    Performance Test: throughput test under various combinations: NAT Mode
+    pytest -m "throughput_benchmark_test and NAT" -s -vvv --skip-testrail --testbed=basic-01
 
 
 """
@@ -11,11 +11,11 @@ import time
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.throughput_benchmark_test, pytest.mark.VLAN] # pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.performance, pytest.mark.throughput_benchmark_test, pytest.mark.NAT] # pytest.mark.usefixtures("setup_test_run")]
 
 
 setup_params_general = {
-    "mode": "VLAN",
+    "mode": "NAT",
     "ssid_modes": {
         "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"]},
                  {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
@@ -34,7 +34,7 @@ setup_params_general = {
     "radius": False
 }
 
-@allure.feature("VLAN MODE CLIENT CONNECTIVITY")
+@allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -43,7 +43,7 @@ setup_params_general = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 @pytest.mark.Mhz20
-class TestThroughputUnderCombinationsVLAN20MHz(object):
+class TestThroughputUnderCombinationsNAT20MHz(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -53,14 +53,14 @@ class TestThroughputUnderCombinationsVLAN20MHz(object):
     def test_client_wpa2_personal_2g(self, get_vif_state,
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
-        """Dataplane THroughput VLAN Mode
-           pytest -m "throughput_benchmark_test and VLAN and wpa2_personal and twog and upstream "
+        """Dataplane THroughput NAT Mode
+           pytest -m "throughput_benchmark_test and NAT and wpa2_personal and twog and upstream "
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -104,7 +104,7 @@ class TestThroughputUnderCombinationsVLAN20MHz(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -145,14 +145,14 @@ class TestThroughputUnderCombinationsVLAN20MHz(object):
     def test_client_wpa2_personal_2g(self, get_vif_state,
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
-        """Dataplane THroughput VLAN Mode
-           pytest -m "throughput_benchmark_test and VLAN and wpa2_personal and twog and downstream "
+        """Dataplane THroughput NAT Mode
+           pytest -m "throughput_benchmark_test and NAT and wpa2_personal and twog and downstream "
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -195,7 +195,7 @@ class TestThroughputUnderCombinationsVLAN20MHz(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -238,14 +238,14 @@ class TestThroughputUnderCombinationsVLAN20MHz(object):
     def test_client_wpa2_personal_2g(self, get_vif_state,
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
-        """Dataplane THroughput VLAN Mode
-           pytest -m "throughput_benchmark_test and VLAN and wpa2_personal and twog and bidirectional "
+        """Dataplane THroughput NAT Mode
+           pytest -m "throughput_benchmark_test and NAT and wpa2_personal and twog and bidirectional "
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -289,7 +289,7 @@ class TestThroughputUnderCombinationsVLAN20MHz(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -332,14 +332,14 @@ class TestThroughputUnderCombinationsVLAN20MHz(object):
     def test_client_wpa2_personal_2g(self, get_vif_state,
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
-        """Dataplane THroughput VLAN Mode
-           pytest -m "throughput_benchmark_test and VLAN and wpa2_personal and twog and upstream and tcp "
+        """Dataplane THroughput NAT Mode
+           pytest -m "throughput_benchmark_test and NAT and wpa2_personal and twog and upstream and tcp "
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -383,7 +383,7 @@ class TestThroughputUnderCombinationsVLAN20MHz(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -426,15 +426,15 @@ class TestThroughputUnderCombinationsVLAN20MHz(object):
     def test_client_wpa2_personal_2g(self, get_vif_state,
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
-        """Dataplane THroughput VLAN Mode
-           pytest -m "throughput_benchmark_test and VLAN and wpa2_personal and twog and downstream and tcp"
+        """Dataplane THroughput NAT Mode
+           pytest -m "throughput_benchmark_test and NAT and wpa2_personal and twog and downstream and tcp"
            jira-WIFI-2564
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -478,7 +478,7 @@ class TestThroughputUnderCombinationsVLAN20MHz(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -521,14 +521,14 @@ class TestThroughputUnderCombinationsVLAN20MHz(object):
     def test_client_wpa2_personal_2g(self, get_vif_state,
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
-        """Dataplane THroughput VLAN Mode
-           pytest -m "throughput_benchmark_test and VLAN and wpa2_personal and twog and bidirectional "
+        """Dataplane THroughput NAT Mode
+           pytest -m "throughput_benchmark_test and NAT and wpa2_personal and twog and bidirectional "
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -572,7 +572,7 @@ class TestThroughputUnderCombinationsVLAN20MHz(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -607,7 +607,7 @@ class TestThroughputUnderCombinationsVLAN20MHz(object):
             assert False
 
 setup_params_general = {
-    "mode": "VLAN",
+    "mode": "NAT",
     "ssid_modes": {
         "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"]},
                  {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
@@ -626,7 +626,7 @@ setup_params_general = {
     "radius": False
 }
 
-@allure.feature("VLAN MODE CLIENT CONNECTIVITY")
+@allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -635,7 +635,7 @@ setup_params_general = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 @pytest.mark.Mhz80
-class TestThroughputUnderCombinationsVLAN80MHz(object):
+class TestThroughputUnderCombinationsNAT80MHz(object):
 
 
     @pytest.mark.wpa2_personal
@@ -645,15 +645,15 @@ class TestThroughputUnderCombinationsVLAN80MHz(object):
     @pytest.mark.udp
     def test_client_wpa2_personal_5g(self, get_vif_state,
                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
-        """Dataplane THroughput VLAN Mode
-                   pytest -m "throughput_benchmark_test and VLAN and Mhz80 and wpa2_personal and fiveg and upstream and nss2 and udp "
+        """Dataplane THroughput NAT Mode
+                   pytest -m "throughput_benchmark_test and NAT and Mhz80 and wpa2_personal and fiveg and upstream and nss2 and udp "
                    jira-wifi-2566
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -694,15 +694,15 @@ class TestThroughputUnderCombinationsVLAN80MHz(object):
     @pytest.mark.udp
     def test_client_wpa2_personal_5g(self, get_vif_state,
                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
-        """Dataplane THroughput VLAN Mode
-                           pytest -m "throughput_benchmark_test and VLAN and Mhz80 and wpa2_personal and fiveg and downstream and nss2 and udp "
+        """Dataplane THroughput NAT Mode
+                           pytest -m "throughput_benchmark_test and NAT and Mhz80 and wpa2_personal and fiveg and downstream and nss2 and udp "
                            jira-wifi-2567
                 """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -748,7 +748,7 @@ class TestThroughputUnderCombinationsVLAN80MHz(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -794,7 +794,7 @@ class TestThroughputUnderCombinationsVLAN80MHz(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -840,7 +840,7 @@ class TestThroughputUnderCombinationsVLAN80MHz(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -882,14 +882,14 @@ class TestThroughputUnderCombinationsVLAN80MHz(object):
     def test_client_wpa2_personal_2g(self, get_vif_state,
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
-        """Dataplane THroughput VLAN Mode
-           pytest -m "throughput_benchmark_test and VLAN and wpa2_personal and twog and bidirectional "
+        """Dataplane THroughput NAT Mode
+           pytest -m "throughput_benchmark_test and NAT and wpa2_personal and twog and bidirectional "
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -927,15 +927,15 @@ class TestThroughputUnderCombinationsVLAN80MHz(object):
     @pytest.mark.udp
     def test_client_wpa2_personal_5g(self, get_vif_state,
                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
-        """Dataplane THroughput VLAN Mode
-                   pytest -m "throughput_benchmark_test and VLAN and Mhz80 and wpa2_personal and fiveg and upstream and nss2 and udp and nss3"
+        """Dataplane THroughput NAT Mode
+                   pytest -m "throughput_benchmark_test and NAT and Mhz80 and wpa2_personal and fiveg and upstream and nss2 and udp and nss3"
                    jira-wifi-2572
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -976,15 +976,15 @@ class TestThroughputUnderCombinationsVLAN80MHz(object):
     @pytest.mark.udp
     def test_client_wpa2_personal_5g(self, get_vif_state,
                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
-        """Dataplane THroughput VLAN Mode
-                           pytest -m "throughput_benchmark_test and VLAN and Mhz80 and wpa2_personal and fiveg and downstream and nss2 and udp and nss3 "
+        """Dataplane THroughput NAT Mode
+                           pytest -m "throughput_benchmark_test and NAT and Mhz80 and wpa2_personal and fiveg and downstream and nss2 and udp and nss3 "
                            jira-wifi-2573
                 """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1030,7 +1030,7 @@ class TestThroughputUnderCombinationsVLAN80MHz(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1076,7 +1076,7 @@ class TestThroughputUnderCombinationsVLAN80MHz(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1122,7 +1122,7 @@ class TestThroughputUnderCombinationsVLAN80MHz(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1164,14 +1164,14 @@ class TestThroughputUnderCombinationsVLAN80MHz(object):
     def test_client_wpa2_personal_2g(self, get_vif_state,
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
-        """Dataplane THroughput VLAN Mode
-           pytest -m "throughput_benchmark_test and VLAN and wpa2_personal and twog and bidirectional "
+        """Dataplane THroughput NAT Mode
+           pytest -m "throughput_benchmark_test and NAT and wpa2_personal and twog and bidirectional "
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1203,7 +1203,7 @@ class TestThroughputUnderCombinationsVLAN80MHz(object):
             assert False
 
 setup_params_general = {
-    "mode": "VLAN",
+    "mode": "NAT",
     "ssid_modes": {
         "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"]},
                  {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
@@ -1222,7 +1222,7 @@ setup_params_general = {
     "radius": False
 }
 
-@allure.feature("VLAN MODE CLIENT CONNECTIVITY")
+@allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -1231,7 +1231,7 @@ setup_params_general = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 @pytest.mark.Mhz160
-class TestThroughputUnderCombinationsVLAN160MHz(object):
+class TestThroughputUnderCombinationsNAT160MHz(object):
 
 
     @pytest.mark.wpa2_personal
@@ -1241,15 +1241,15 @@ class TestThroughputUnderCombinationsVLAN160MHz(object):
     @pytest.mark.udp
     def test_client_wpa2_personal_5g(self, get_vif_state,
                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
-        """Dataplane THroughput VLAN Mode
-                   pytest -m "throughput_benchmark_test and VLAN and Mhz80 and wpa2_personal and fiveg and upstream and nss2 and udp "
+        """Dataplane THroughput NAT Mode
+                   pytest -m "throughput_benchmark_test and NAT and Mhz80 and wpa2_personal and fiveg and upstream and nss2 and udp "
                    jira-wifi-2578
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1290,15 +1290,15 @@ class TestThroughputUnderCombinationsVLAN160MHz(object):
     @pytest.mark.udp
     def test_client_wpa2_personal_5g(self, get_vif_state,
                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
-        """Dataplane THroughput VLAN Mode
-                           pytest -m "throughput_benchmark_test and VLAN and Mhz80 and wpa2_personal and fiveg and downstream and nss2 and udp "
+        """Dataplane THroughput NAT Mode
+                           pytest -m "throughput_benchmark_test and NAT and Mhz80 and wpa2_personal and fiveg and downstream and nss2 and udp "
                            jira-wifi-2567
                 """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1344,7 +1344,7 @@ class TestThroughputUnderCombinationsVLAN160MHz(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1390,7 +1390,7 @@ class TestThroughputUnderCombinationsVLAN160MHz(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1436,7 +1436,7 @@ class TestThroughputUnderCombinationsVLAN160MHz(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1477,15 +1477,15 @@ class TestThroughputUnderCombinationsVLAN160MHz(object):
     @pytest.mark.udp
     def test_client_wpa2_personal_5g(self, get_vif_state,
                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
-        """Dataplane THroughput VLAN Mode
-                           pytest -m "throughput_benchmark_test and VLAN and Mhz80 and wpa2_personal and fiveg and downstream and nss2 and udp "
+        """Dataplane THroughput NAT Mode
+                           pytest -m "throughput_benchmark_test and NAT and Mhz80 and wpa2_personal and fiveg and downstream and nss2 and udp "
                            jira-wifi-2567
                 """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1531,7 +1531,7 @@ class TestThroughputUnderCombinationsVLAN160MHz(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1577,7 +1577,7 @@ class TestThroughputUnderCombinationsVLAN160MHz(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1623,7 +1623,7 @@ class TestThroughputUnderCombinationsVLAN160MHz(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1665,14 +1665,14 @@ class TestThroughputUnderCombinationsVLAN160MHz(object):
     def test_client_wpa2_personal_2g(self, get_vif_state,
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
-        """Dataplane THroughput VLAN Mode
-           pytest -m "throughput_benchmark_test and VLAN and wpa2_personal and twog and bidirectional "
+        """Dataplane THroughput NAT Mode
+           pytest -m "throughput_benchmark_test and NAT and wpa2_personal and twog and bidirectional "
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "VLAN"
+        mode = "NAT"
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
