@@ -22,7 +22,7 @@ setup_params_general = {
              "security_key": "something"}],
 
         "wpa_wpa2_personal_mixed": [
-            {"ssid_name": "ssid_wpa_wpa2_p_m_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something","vlan":300},
+            {"ssid_name": "ssid_wpa_wpa2_p_m_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something","vlan":150},
             {"ssid_name": "ssid_wpa_wpa2_p_m_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
              "security_key": "something"}],
     },
@@ -83,18 +83,18 @@ class TestVlanConfigTwogRadio(object):
                 if i != j:
                     assert False
 
-            print(vlan, vlan_list)
-            print("station got IP as per VLAN. Test passed")
-            assert True
-
+            vlan_list = [int(i) for i in vlan_list]
+            if int(vlan) in vlan_list:
+                print("station got IP as per VLAN. Test passed")
+                assert True
+            else:
+                assert False
         else:
             assert False
         try:
             lf_test.Client_disconnect(station_names_twog)
         except:
             pass
-
-
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -178,6 +178,109 @@ class TestVlanConfigTwogRadio(object):
             print("station did not get an IP. Test passed")
             print("station ip: ", station_ip)
             assert True
+        else:
+            assert False
+        try:
+            lf_test.Client_disconnect(station_names_twog)
+        except:
+            pass
+
+    @pytest.mark.open
+    @pytest.mark.twog
+    @pytest.mark.valid_client_ip_open
+    @allure.testcase(name="test_station_ip_open_ssid_2g",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-2160")
+    def test_station_ip_open_ssid_2g(self, get_lanforge_data, setup_profiles, create_vlan, lf_test, lf_tools, get_vlan_list, update_report, station_names_twog,
+                                    test_cases, get_configuration):
+        profile_data = setup_params_general["ssid_modes"]["open"][0]
+        ssid_name = profile_data["ssid_name"]
+        security_key = "[BLANK]"
+        security = "open"
+        mode = "VLAN"
+        band = "twog"
+        vlan = 100
+        lanforge_data = get_configuration["traffic_generator"]["details"]
+        upstream_port = lanforge_data["upstream"]
+        port_resources = upstream_port.split(".")
+        vlan_list = get_vlan_list
+        print(vlan_list)
+        lf_test.Client_disconnect(station_names_twog)
+        passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
+                                                     passkey=security_key, mode=mode, band=band,
+                                                     station_name=station_names_twog, vlan_id=vlan, cleanup=False)
+        if result:
+            station_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
+                                           station_names_twog[0])["interface"]["ip"]
+            vlan_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
+                                        port_resources[2] + "." + str(vlan))["interface"]["ip"]
+
+            station_ip = station_ip.split(".")
+            vlan_ip = vlan_ip.split(".")
+
+            print(station_ip[:2], vlan_ip[:2])
+            for i, j in zip(station_ip[:2], vlan_ip[:2]):
+                if i != j:
+                    assert False
+
+            vlan_list = [int(i) for i in vlan_list]
+            if int(vlan) in vlan_list:
+                print("station got IP as per VLAN. Test passed")
+                assert True
+            else:
+                assert False
+        else:
+            assert False
+        try:
+            lf_test.Client_disconnect(station_names_twog)
+        except:
+            pass
+
+
+    @pytest.mark.wpa_wpa2_personal_mixed
+    @pytest.mark.twog
+    @pytest.mark.test_station_ip_wpa_wpa2_ssid_2g
+    @allure.testcase(name="test_station_ip_wpa_wpa2_personal_ssid_2g",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-2166")
+    def test_station_ip_wpa_wpa2_personal_ssid_2g(self, get_lanforge_data, setup_profiles, create_vlan, lf_test,
+                                                  lf_tools, get_vlan_list, update_report, station_names_twog,
+                                    test_cases, get_configuration):
+        profile_data = setup_params_general["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
+        ssid_name = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+        security = "wpa"
+        extra_secu = ["wpa2"]
+        mode = "VLAN"
+        band = "twog"
+        vlan = 150
+        lanforge_data = get_configuration["traffic_generator"]["details"]
+        upstream_port = lanforge_data["upstream"]
+        port_resources = upstream_port.split(".")
+        vlan_list = get_vlan_list
+        print(vlan_list)
+        lf_test.Client_disconnect(station_names_twog)
+        passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
+                                                     passkey=security_key, mode=mode, band=band,
+                                                     station_name=station_names_twog, vlan_id=vlan, cleanup=False)
+        if result:
+            station_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
+                                           station_names_twog[0])["interface"]["ip"]
+            vlan_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
+                                        port_resources[2] + "." + str(vlan))["interface"]["ip"]
+
+            station_ip = station_ip.split(".")
+            vlan_ip = vlan_ip.split(".")
+
+            print(station_ip[:2], vlan_ip[:2])
+            for i, j in zip(station_ip[:2], vlan_ip[:2]):
+                if i != j:
+                    assert False
+
+            vlan_list = [int(i) for i in vlan_list]
+            if int(vlan) in vlan_list:
+                print("station got IP as per VLAN. Test passed")
+                assert True
+            else:
+                assert False
         else:
             assert False
         try:
