@@ -39,6 +39,46 @@ CONFIGURATION = {
             }
         }
     },
+    "basic-02": {
+        "controller": {
+            'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
+            'username': 'support@example.com',
+            'password': 'support',
+            'version': "1.1.0-SNAPSHOT",
+            'commit_date': "2021-06-01"
+        },
+        'access_point': [
+            {
+                'model': 'eap101',
+                'mode': 'wifi6',
+                'serial': '34efb6af48db',
+                'jumphost': True,
+                'ip': "localhost",
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 8803,
+                'jumphost_tty': '/dev/ttyAP2',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/eap101/dev/eap101-2021-06-15-pending-39bd8f3.tar.gz"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "localhost",
+                "port": 8801,
+                "ssh_port": 8802,
+                "2.4G-Radio": ["wiphy4"],
+                "5G-Radio": ["wiphy5"],
+                "AX-Radio": ["wiphy0", "wiphy1", "wiphy2", "wiphy3"],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "sta0",
+                "5G-Station-Name": "sta1",
+                "AX-Station-Name": "ax"
+            }
+        }
+    },  # checked
     # This is sample Config of a Testbed
     "basic-ext-01": {
         "controller": {

@@ -84,7 +84,7 @@ class RunTest:
         self.staConnect.dut_security = security
         self.staConnect.station_names = station_name
         self.staConnect.runtime_secs = 40
-        self.staConnect.bringup_time_sec = 60
+        self.staConnect.bringup_time_sec = 80
         self.staConnect.cleanup_on_exit = True
         # self.staConnect.cleanup()
         self.staConnect.setup(extra_securities=extra_securities)
@@ -110,7 +110,7 @@ class RunTest:
                     mode="BRIDGE", band="twog", vlan_id=100,
                     station_name=[], key_mgmt="WPA-EAP",
                     pairwise="NA", group="NA", wpa_psk="DEFAULT",
-                    ttls_passwd="nolastart",
+                    ttls_passwd="nolastart", ieee80211w=1,
                     wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius"):
         self.eap_connect = TTLSTest(host=self.lanforge_ip, port=self.lanforge_port,
                                     sta_list=station_name, vap=False, _debug_on=self.debug)
@@ -134,10 +134,13 @@ class RunTest:
             # self.eap_connect.sta_prefix = self.fiveg_prefix
         # self.eap_connect.resource = 1
         if eap == "TTLS":
-            self.eap_connect.ieee80211w = 0
+            self.eap_connect.ieee80211w = ieee80211w
+            self.eap_connect.key_mgmt = key_mgmt
             self.eap_connect.station_profile.set_command_flag("add_sta", "80211u_enable", 0)
             self.eap_connect.identity = identity
             self.eap_connect.ttls_passwd = ttls_passwd
+            self.eap_connect.pairwise = pairwise
+            self.eap_connect.group = group
         if eap == "TLS":
             self.eap_connect.key_mgmt = "WPA-EAP-SUITE-B"
             self.eap_connect.station_profile.set_command_flag("add_sta", "80211u_enable", 0)
