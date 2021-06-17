@@ -558,7 +558,47 @@ CONFIGURATION = {
                 "AX-Station-Name": "ax"
             }
         }
-    }
+    },
+    "basic-ext-03-09": {
+        "controller": {
+            'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
+            'username': 'support@example.com',
+            'password': 'support',
+            'version': "1.1.0-SNAPSHOT",
+            'commit_date': "2021-04-27"
+        },
+        'access_point': [
+            {
+                'model': 'ecw5410',
+                'mode': 'wifi5',
+                'serial': '903cb394486f',
+                'jumphost': True,
+                'ip': "192.168.200.81",
+                'username': "lanforge",
+                'password': "lanforge",
+                'port': 22,
+                'jumphost_tty': '/dev/ttyAP1',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.1.0.tar.gz"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "192.168.200.81",
+                "port": 8080,
+                "ssh_port": 22,
+                "2.4G-Radio": ["wiphy0"],
+                "5G-Radio": ["wiphy1"],
+                "AX-Radio": ["wiphy2"],
+                "upstream": "1.1.eth1",
+                "upstream_subnet": "192.168.200.1/24",
+                "uplink": "1.1.eth2",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            }
+        }
+    },
 }
 
 RADIUS_SERVER_DATA = {
