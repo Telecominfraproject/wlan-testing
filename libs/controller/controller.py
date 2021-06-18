@@ -990,7 +990,7 @@ class FirmwareUtility:
                 obj = self.equipment_gateway_client.request_firmware_update(equipment_id=equipment_id,
                                                                             firmware_version_id=firmware_id)
                 print("Request firmware upgrade Success! waiting for 300 sec")
-                time.sleep(300)
+                time.sleep(400)
             except Exception as e:
                 print(e)
                 obj = False
