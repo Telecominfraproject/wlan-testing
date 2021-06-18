@@ -59,6 +59,7 @@ def pytest_addoption(parser):
     parser.addini("influx_bucket", "influx bucket", default="tip-cicd")
     parser.addini("influx_org", "influx organization", default="tip")
     parser.addini("build", "AP Firmware build URL", default="0")
+    parser.addini("cloud_ctlr", "AP Firmware build URL", default="0")
 
     parser.addini("num_stations", "Number of Stations/Clients for testing")
 
@@ -183,9 +184,11 @@ def radius_info():
 
 
 @pytest.fixture(scope="session")
-def get_configuration(testbed):
+def get_configuration(testbed, request):
     """yields the selected testbed information from lab info file (configuration.py)"""
     allure.attach(body=str(testbed), name="Testbed Selected: ")
+    if request.config.getini("cloud_ctlr") != "0":
+        CONFIGURATION[testbed]["controller"]["url"] = request.config.getini("cloud_ctlr")
     yield CONFIGURATION[testbed]
 
 
@@ -224,6 +227,7 @@ def instantiate_access_point(testbed, get_apnos, get_configuration):
 @pytest.fixture(scope="session")
 def setup_controller(request, get_configuration, instantiate_access_point):
     """sets up the controller connection and yields the sdk_client object"""
+
     try:
         sdk_client = Controller(controller_data=get_configuration["controller"])
         allure.attach(body=str(get_configuration["controller"]), name="Controller Instantiated: ")
