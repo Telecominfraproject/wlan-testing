@@ -7,9 +7,10 @@ import os
 import time
 import allure
 import logging
+
 if "logs" not in os.listdir():
     os.mkdir("logs/")
-logging.basicConfig(level=logging.INFO, filename="logs/"+'{:%Y-%m-%d-%H-%M-%S}.log'.format(datetime.datetime.now()))
+logging.basicConfig(level=logging.INFO, filename="logs/" + '{:%Y-%m-%d-%H-%M-%S}.log'.format(datetime.datetime.now()))
 sys.path.append(
     os.path.dirname(
         os.path.realpath(__file__)
@@ -290,11 +291,21 @@ def upload_firmware(should_upload_firmware, instantiate_firmware):
 
 @pytest.fixture(scope="session")
 def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_firmware_cloud, get_latest_firmware,
-                     should_upgrade_firmware, should_upload_firmware):
+                     should_upgrade_firmware, should_upload_firmware, get_apnos, get_configuration):
     """yields the status of upgrade of firmware. waits for 300 sec after each upgrade request"""
     print(should_upgrade_firmware, should_upload_firmware)
     status_list = []
-    if get_latest_firmware != check_ap_firmware_cloud:
+    active_fw_list = []
+    try:
+        for access_point in get_configuration['access_point']:
+            ap_ssh = get_apnos(access_point)
+            active_fw = ap_ssh.get_active_firmware()
+            active_fw_list.append(active_fw)
+    except Exception as e:
+        print(e)
+        active_fw_list = []
+    print(active_fw_list, get_latest_firmware)
+    if get_latest_firmware != active_fw_list:
         if request.config.getoption("--skip-upgrade"):
             status = "skip-upgrade"
             status_list.append(status)
@@ -308,7 +319,8 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
     else:
         if should_upgrade_firmware:
             for i in range(0, len(instantiate_firmware)):
-                status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i], force_upload=False,
+                status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i],
+                                                            force_upload=should_upload_firmware,
                                                             force_upgrade=should_upgrade_firmware)
                 allure.attach(name="Firmware Upgrade Request", body=str(status))
                 status_list.append(status)
@@ -346,6 +358,7 @@ def check_ap_firmware_ssh(get_configuration):
 def setup_test_run(setup_controller, upgrade_firmware, get_configuration, get_equipment_id, get_latest_firmware,
                    get_apnos):
     """used to upgrade the firmware on AP and should be called on each test case on a module level"""
+
     active_fw_list = []
     try:
         for access_point in get_configuration['access_point']:
@@ -355,6 +368,7 @@ def setup_test_run(setup_controller, upgrade_firmware, get_configuration, get_eq
     except Exception as e:
         print(e)
         active_fw_list = []
+    print(active_fw_list, get_latest_firmware)
     if active_fw_list == get_latest_firmware:
         yield True
     else:
@@ -492,7 +506,6 @@ def traffic_generator_connectivity(testbed, get_configuration):
         yield True
 
 
-
 @pytest.fixture(scope="session")
 def create_lanforge_chamberview_dut(get_configuration, testbed):
     """ Create a DUT on LANforge"""
@@ -561,3 +574,6 @@ def setup_influx(request, testbed, get_configuration):
         "influx_tag": [testbed, get_configuration["access_point"][0]["model"]],
     }
     yield influx_params
+
+
+

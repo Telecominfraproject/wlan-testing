@@ -653,7 +653,9 @@ def num_stations(request):
 @pytest.fixture(scope="class")
 def get_vif_state(get_apnos, get_configuration):
     ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
+    vif_config = list(ap_ssh.get_vif_config_ssids())
     vif_state = list(ap_ssh.get_vif_state_ssids())
     vif_state.sort()
+    vif_config.sort()
     allure.attach(name="vif_state", body=str(vif_state))
     yield vif_state

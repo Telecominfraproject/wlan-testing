@@ -282,10 +282,10 @@ class RunTest:
                                            duration=duration,
                                            dut=dut_name,
                                            station="1.1." + station_name[0],
-                                           raw_lines=['pkts: Custom;60;142;256;512;1024;MTU',
-                                                      'directions: DUT Transmit;DUT Receive',
-                                                      'traffic_types: UDP;TCP', "show_3s: 1",
-                                                      "show_ll_graphs: 1", "show_log: 1"],
+                                           raw_lines=[['pkts: Custom;60;142;256;512;1024;MTU'],
+                                                      ['directions: DUT Transmit;DUT Receive'],
+                                                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
+                                                      ["show_ll_graphs: 1"], ["show_log: 1"]],
                                            )
         self.dataplane_obj.setup()
         self.dataplane_obj.run()

@@ -3,7 +3,8 @@ import pytest
 
 mode = "NAT"
 
-pytestmark = [pytest.mark.client_connectivity, pytest.mark.usefixtures("setup_test_run"), pytest.mark.nat, pytest.mark.enterprise, pytest.mark.ttls,
+pytestmark = [pytest.mark.client_connectivity, pytest.mark.usefixtures("setup_test_run"), pytest.mark.nat,
+              pytest.mark.enterprise, pytest.mark.ttls,
               pytest.mark.sanity]
 
 setup_params_enterprise = {
@@ -397,9 +398,8 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.fiveg
-    def test_wpa3_enterprise_mixed_5g(self, get_vif_state,station_names_fiveg, setup_profiles, get_lanforge_data, lf_test,
-                                      update_report, exit_on_fail,
-                                      test_cases, radius_info):
+    def test_wpa3_enterprise_mixed_5g(self, get_vif_state, station_names_fiveg, setup_profiles, get_lanforge_data, lf_test,
+                                      update_report, exit_on_fail, test_cases, radius_info):
         profile_data = setup_params_enterprise_two["ssid_modes"]["wpa3_enterprise_mixed"][1]
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"

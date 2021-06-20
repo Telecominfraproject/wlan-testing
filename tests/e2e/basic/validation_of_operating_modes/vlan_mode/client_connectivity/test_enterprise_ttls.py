@@ -3,7 +3,8 @@ import pytest
 
 mode = "VLAN"
 
-pytestmark = [pytest.mark.client_connectivity, pytest.mark.usefixtures("setup_test_run"), pytest.mark.vlan, pytest.mark.enterprise, pytest.mark.ttls,
+pytestmark = [pytest.mark.client_connectivity, pytest.mark.usefixtures("setup_test_run"), pytest.mark.vlan,
+              pytest.mark.enterprise, pytest.mark.ttls,
               pytest.mark.sanity]
 
 setup_params_enterprise = {

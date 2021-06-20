@@ -6,7 +6,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.firmware, pytest.mark.sanity, pytest.mark.sanity_light]
+pytestmark = [pytest.mark.firmware, pytest.mark.sanity, pytest.mark.sanity_light, pytest.mark.usefixtures("setup_test_run")]
 
 
 @allure.testcase("firmware upgrade from Cloud")
@@ -43,8 +43,12 @@ class TestFirmware(object):
         assert PASS
 
     @pytest.mark.check_active_firmware_cloud
-    def test_active_version_cloud(self, get_latest_firmware, check_ap_firmware_cloud, update_report, test_cases):
-        if get_latest_firmware != check_ap_firmware_cloud:
+    def test_active_version_cloud(self, get_latest_firmware, get_equipment_id, setup_controller,
+                                  update_report, test_cases):
+        ap_fw_list = []
+        for i in get_equipment_id:
+            ap_fw_list.append(setup_controller.get_ap_firmware_old_method(equipment_id=i))
+        if get_latest_firmware != ap_fw_list:
             update_report.update_testrail(case_id=test_cases["cloud_fw"],
                                           status_id=5,
                                           msg='CLOUDSDK reporting incorrect firmware version.')
@@ -53,10 +57,11 @@ class TestFirmware(object):
                                           status_id=1,
                                           msg='CLOUDSDK reporting correct firmware version.')
 
-        assert get_latest_firmware == check_ap_firmware_cloud
+        assert get_latest_firmware == ap_fw_list
 
 
 @pytest.mark.firmware_ap
+
 def test_ap_firmware(get_configuration, get_apnos, get_latest_firmware, update_report,
                      test_cases):
     """yields the active version of firmware on ap"""
@@ -79,3 +84,7 @@ def test_ap_firmware(get_configuration, get_apnos, get_latest_firmware, update_r
                                       msg='Cannot reach AP after upgrade to check CLI - re-test required')
 
     assert active_fw_list == get_latest_firmware
+
+@pytest.mark.shivam
+def test_abc(setup_controller):
+    assert True
