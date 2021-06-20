@@ -412,7 +412,7 @@ def get_security_flags():
     """used to get the essential markers on security and band"""
     # Add more classifications as we go
     security = ["open", "wpa", "wep", "wpa2_personal", "wpa3_personal", "wpa3_personal_mixed",
-                "wpa_wpa2_enterprise_mixed",
+                "wpa_wpa2_enterprise_mixed", "wpa2_eap", "wpa2_only_eap",
                 "wpa_wpa2_personal_mixed", "wpa_enterprise", "wpa2_enterprise", "wpa3_enterprise_mixed",
                 "wpa3_enterprise", "twog", "fiveg", "radius"]
     yield security
