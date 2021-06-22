@@ -529,20 +529,23 @@ def create_vlan(request, testbed, get_configuration):
             upstream_resources = upstream_port.split(".")[0] + "." + upstream_port.split(".")[1]
 
             for vlan in vlan_list:
-                chamberview_obj.raw_line.append(["profile_link " + upstream_resources + " vlan-100 1 NA "
+                chamberview_obj.raw_line.append(["profile_link " + upstream_resources + " Vlan 1 NA "
                                                  + "NA " + upstream_port.split(".")[2] + ",AUTO -1 " + str(vlan)])
 
             chamberview_obj.Chamber_View()
             port_resource = upstream_resources.split(".")
 
-            try:
-                ip = chamberview_obj.json_get("/port/" + port_resource[0] + "/" + port_resource[1] +
-                                               "/" + upstream_port.split(".")[2] + "." + str(vlan))["interface"]["ip"]
-                if ip:
-                    yield vlan_list, ip
-            except Exception as e:
-                print(e)
-                yield False
+            yield vlan_list
+        else:
+            yield False
+            # try:
+            #     ip = chamberview_obj.json_get("/port/" + port_resource[0] + "/" + port_resource[1] +
+            #                                    "/" + upstream_port.split(".")[2] + "." + str(vlan))["interface"]["ip"]
+            #     if ip:
+            #         yield vlan_list, ip
+            # except Exception as e:
+            #     print(e)
+            #     yield False
 
 
 @pytest.fixture(scope="session")
