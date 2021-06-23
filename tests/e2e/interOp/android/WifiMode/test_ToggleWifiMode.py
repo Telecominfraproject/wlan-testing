@@ -16,6 +16,8 @@ import allure
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.ToggleWifiMode]
+
 from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_WifiMode_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, setup_perfectoMobile_android
 
 setup_params_general = {
@@ -30,7 +32,7 @@ setup_params_general = {
     "radius": False
 }
 
-@pytest.mark.ToggleWifiModeAndroid
+@pytest.mark.ToggleWifiMode
 @pytest.mark.interop_and
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(

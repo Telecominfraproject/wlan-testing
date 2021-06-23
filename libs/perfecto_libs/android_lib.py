@@ -35,6 +35,18 @@ def closeApp(appName, setup_perfectoMobile):
     params = {'identifier': appName}
     setup_perfectoMobile[0].execute_script('mobile:application:close', params)
 
+def scrollDown(setup_perfectoMobile):
+    print("Scroll Down")
+    setup_perfectoMobile[1].step_start("Scroll Down")  
+    params2 = {}
+    params2["start"] = "50%,90%"
+    params2["end"] = "50%,20%"
+    params2["duration"] = "4"
+    time.sleep(5)
+    setup_perfectoMobile[0].execute_script('mobile:touch:swipe', params2)
+    time.sleep(5)
+  
+
 def getDeviceID(setup_perfectoMobile):
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
@@ -683,3 +695,181 @@ def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMob
 
     return currentResult
  
+def downloadInstallOpenRoamingProfile(request, profileDownloadURL, setup_perfectoMobile, connData):
+    print("\n-------------------------------------")
+    print("Installing Android Profile ")
+    print("-------------------------------------")
+
+    OpenRoamingWifiName = ""
+
+    report = setup_perfectoMobile[1]    
+    driver = setup_perfectoMobile[0]
+  
+    driver.switch_to.context('WEBVIEW_1')
+
+    print("Launching Safari with OpenRoaming Profile")
+    report.step_start("Open Roaming Download Page") 
+    driver.get(profileDownloadURL) 
+
+    try:
+        print("Accept Popup")
+        report.step_start("Accept Popup") 
+        driver.switch_to.context('NATIVE_APP')
+        WebDriverWait(driver, 40).until(EC.alert_is_present(), 'Time out confirmation popup to appear')
+        alert = driver.switch_to.alert
+        alert.accept()
+        print("Alert Accepted")
+    except TimeoutException:
+        print("no alert")
+        #//*[@resource-id="android:id/button1"]
+    #Open Settings Application
+    #openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+
+def deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile, connData):
+    print("\n-----------------------------")
+    print("Delete Open Roaming Profile")
+    print("-----------------------------")
+
+    report = setup_perfectoMobile[1]    
+    driver = setup_perfectoMobile[0]
+
+    report.step_start("Switching Driver Context")  
+    print("Switching Context to Native")
+    driver.switch_to.context('NATIVE_APP')
+    contexts = driver.contexts
+
+    #Open Settings Application
+    openApp(connData["appPackage-android"], setup_perfectoMobile)
+
+    deviceModelName = getDeviceModelName(setup_perfectoMobile)
+    print ("Selected Device Model: " + deviceModelName)
+
+    if deviceModelName!=("Pixel 4"): 
+        #Not a pixel Device
+        print ("Selected Device Model: " + deviceModelName)
+        report.step_start("Forget Profile: " + profileName)  
+
+        # three dotss
+        #//*[@resource-id='com.android.settings:id/round_corner']
+        try:
+            print ("Click Advanced Menu 3 Dot")
+            report.step_start("Click Advanced Menu 3 Dot") 
+            ThreeDotMenuBtn = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/round_corner']")     
+            ThreeDotMenuBtn.click()
+        except NoSuchElementException:
+            print("Exception: Click Advanced Menu Not Loaded")
+
+        # Click Advanced
+        # //*[@text='Advanced']
+        try:
+            print ("Click Advanced")
+            report.step_start("Click Advanced") 
+            AdvBtn = driver.find_element_by_xpath("//*[@text='Advanced']")     
+            AdvBtn.click()
+        except NoSuchElementException:
+            print("Exception: Click Advanced")
+
+        #Scroll Down
+        scrollDown(setup_perfectoMobile)
+
+        #Click HotSpot
+        #//*[@text="Hotspot 2.0"]
+        try:
+            print ("Click HotSpot")
+            report.step_start("Click HotSpot") 
+            HotSpotBtn = driver.find_element_by_xpath("//*[@text='Hotspot 2.0']")     
+            HotSpotBtn.click()
+        except NoSuchElementException:
+            print("Exception: Click HotSpot")
+
+        #Click Ameriband
+        #//*[@text="Ameriband"]
+        try:
+            print ("Click Ameriband")
+            report.step_start("Click Ameriband") 
+            AmeribandBtn = driver.find_element_by_xpath("//*[@text='Ameriband']")     
+            AmeribandBtn.click()
+        except NoSuchElementException:
+            print("Exception: Click Ameriband")
+
+        #Click Forget
+        #//*[@resource-id="com.android.settings:id/icon"]
+        try:
+            print ("Click Forget")
+            report.step_start("Click Forget") 
+            ForgetBTN = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/icon']")     
+            ForgetBTN.click()
+        except NoSuchElementException:
+            print("Exception: Click Forget")
+
+        #Click Forget Confirm
+        #//*[@resource-id="android:id/button1"]
+        try:
+            print ("Click Forget Confirm")
+            report.step_start("Click Forget Confirm") 
+            ForgetConfirm = driver.find_element_by_xpath("//*[@resource-id='android:id/button1']")     
+            ForgetConfirm.click()
+        except NoSuchElementException:
+            print("Exception: Click Forget Confirm")
+
+    else:
+        #Pixel Device
+        print ("Pixel Device Not supported: " + deviceModelName)
+        report.step_start("Pixel Device Not supported: ")
+        assert False
+
+    closeApp(connData["appPackage-android"], setup_perfectoMobile)
+
+def verify_APconnMobileDevice_Android(request, profileNameSSID, setup_perfectoMobile, connData):
+    print("\n-----------------------------")
+    print("Verify Connected Network Open Roaming Profile")
+    print("-----------------------------")
+
+    report = setup_perfectoMobile[1]    
+    driver = setup_perfectoMobile[0]
+
+    report.step_start("Switching Driver Context")  
+    print("Switching Context to Native")
+    driver.switch_to.context('NATIVE_APP')
+    contexts = driver.contexts
+
+    #Open Settings Application
+    openApp(connData["appPackage-android"], setup_perfectoMobile)
+
+    deviceModelName = getDeviceModelName(setup_perfectoMobile)
+    print ("Selected Device Model: " + deviceModelName)
+
+    if deviceModelName!=("Pixel 4"): 
+        #Not a pixel Device
+        print ("Selected Device Model: " + deviceModelName)
+        report.step_start("Forget Profile: " + profileNameSSID)  
+
+        report.step_start("Click Connections")  
+        try:
+            print("VClick Connections")
+            report.step_start("Click Connections")  
+            connElement = driver.find_element_by_xpath("//*[@text='Connections']")
+            connElement.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Connections") 
+
+        report.step_start("Clicking Wi-Fi")  
+        wifiElement = driver.find_element_by_xpath("//*[@text='Wi-Fi']")
+        wifiElement.click()
+
+        try:
+            report.step_start("Verify if Wifi is Connected") 
+            WifiInternetErrMsg = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + profileNameSSID + "']")     
+            print("Wifi Successfully Connected")
+                
+        except NoSuchElementException:
+            assert False
+            print("Wifi Connection Error: " + profileNameSSID)
+
+    else:
+        #Pixel Device
+        print ("Pixel Device Not supported: " + deviceModelName)
+        report.step_start("Pixel Device Not supported: ")
+        assert False
+
+    closeApp(connData["appPackage-android"], setup_perfectoMobile)

@@ -132,24 +132,24 @@ CONFIGURATION = {
     },
     "interop":  {
             "controller": {
-                'url': "https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build",  # API base url for the controller
+                'url': "https://wlan-portal-svc-nola-02.cicd.lab.wlan.tip.build",  # API base url for the controller
                 'username': 'support@example.com',
                 'password': 'support',
-                'version': '1.0.0-SNAPSHOT',
-                'commit_date': '2021-03-01'
+                'version': '1.1.0-SNAPSHOT',
+                'commit_date': '2021-06-01'
             },
             'access_point': [
                 {
                     'model': 'ecw5410',
                     'mode': 'wifi5',
-                    'serial': '68215fd2f78c',
+                    'serial': '3c2c99f44e53',
                     'jumphost': True,
                     'ip': "localhost",
                     'username': "lanforge",
                     'password': "pumpkin77",
                     'port': 8803,
-                    'jumphost_tty': '/dev/ttyAP1',
-                    'version': "ecw5410-2021-04-26-pending-3fc41fa"
+                    'jumphost_tty': '/dev/ttyAP4',
+                    'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.1.0-rc3.tar.gz"
                 }
             ],
             "traffic_generator":  {

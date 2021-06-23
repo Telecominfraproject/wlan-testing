@@ -210,10 +210,8 @@ def get_APToMobileDevice_data(request):
         "bundleId-iOS-Safari": request.config.getini("bundleId-iOS-Safari"),
         "downloadMbps": "//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']",
         "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
-        "openRoaming-iOS-URL": request.config.getini("openRoaming-iOS-URL"),
         #Android
         "platformName-android": request.config.getini("platformName-android"),
-        "openRoaming-and-URL": request.config.getini("openRoaming-and-URL"),
         "appPackage-android": request.config.getini("appPackage-android")      
     }
     yield passPoint_data
