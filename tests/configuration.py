@@ -519,43 +519,83 @@ CONFIGURATION = {
                 }
             },
 
-    "basic-ext-03-03": {
+    "ext-03-03": {
         "controller": {
             'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
             'username': 'support@example.com',
             'password': 'support',
             'version': "1.1.0-SNAPSHOT",
-            'commit_date': "2021-04-27"
+            'commit_date': "2021-06-01"
         },
         'access_point': [
             {
                 'model': 'ecw5410',
                 'mode': 'wifi5',
-                'serial': '903cb3944857',
+                'serial': '903cb3944817',
                 'jumphost': True,
-                'ip': "192.168.200.80",
+                'ip': "192.168.200.82",
                 'username': "lanforge",
                 'password': "lanforge",
                 'port': 22,
                 'jumphost_tty': '/dev/ttyAP1',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.1.0.tar.gz"
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/dev/ecw5410-2021-06-16-pending-e8418c0.tar.gz"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "192.168.200.80",
+                "ip": "192.168.200.82",
                 "port": 8080,
                 "ssh_port": 22,
                 "2.4G-Radio": ["wiphy0"],
                 "5G-Radio": ["wiphy1"],
-                "AX-Radio": ["wiphy2"],
+                "AX-Radio": [],
                 "upstream": "1.1.eth1",
                 "upstream_subnet": "192.168.200.1/24",
                 "uplink": "1.1.eth2",
+                "2.4G-Station-Name": "twog0",
+                "5G-Station-Name": "fiveg0",
+                "AX-Station-Name": "ax0"
+            }
+        }
+    },
+"ext-05": {
+        "controller": {
+            'url': "https://wlan-portal-svc-nola-ext-04.cicd.lab.wlan.tip.build",  # API base url for the controller
+            'username': 'support@example.com',
+            'password': 'support',
+            'version': '1.0.0-SNAPSHOT',
+            'commit_date': '2021-03-01'
+        },
+        'access_point': [
+            {
+                'model': 'ecw5410',
+                'mode': 'wifi5',
+                'serial': '903cb3944817',
+                'jumphost': True,
+                'ip': "192.168.200.82",
+                'username': "lanforge",
+                'password': "lanforge",
+                'port': 22,
+                'jumphost_tty': '/dev/ttyUSB0',
+                'version': "ecw5410-2021-04-26-pending-3fc41fa"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "192.168.200.82",
+                "port": 8080,
+                "2.4G-Radio": ["1.1.wiphy0"],
+                "5G-Radio": ["1.1.wiphy1"],
+                "AX-Radio": ["wiphy2"],
+                "upstream": "1.1.eth1",
+                "uplink":"1.1.eth2",
                 "2.4G-Station-Name": "wlan0",
-                "5G-Station-Name": "wlan0",
-                "AX-Station-Name": "ax"
+                "5G-Station-Name": "wlan1",
+                "AX-Station-Name":"ax",
+                "upstream_subnet":"192.168.200.0/24"
+
             }
         }
     },
