@@ -62,8 +62,8 @@ https://docs.pytest.org/en/latest/usage.html
 http://pythontesting.net/framework/pytest/pytest-introduction/
 
 ### Build status
-  
-[![nightly build](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/nightly.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/nightly.yml)
+[![sanity testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/sanity.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/sanity.yml)
+[![interop testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/interop.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/interop.yml)
 
 ### Best Practice
 
