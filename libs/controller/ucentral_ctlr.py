@@ -215,6 +215,36 @@ class UProfileUtility:
             self.base_profile_config['interfaces'][1]['ssids'].append(ssid_info)
         elif self.mode == "BRIDGE":
             self.base_profile_config['interfaces'][0]['ssids'].append(ssid_info)
+        elif self.mode == "VLAN":
+            vid = ssid_data["vlan"]
+            vlan_section = {
+                                "role": "upstream",
+                                "vlan": {
+                                    "id": 100
+                                },
+                                "ethernet": [
+                                    {
+                                        "select-ports": [
+                                            "WAN*"
+                                        ]
+                                    }
+                                ],
+                                "ipv4": {
+                                    "addressing": "dynamic"
+                                }
+                            }
+            vlan_section['name'] = "WANv%s" % (vid)
+            vlan_section['vlan']['id'] = int(vid)
+            self.base_profile_config['interfaces'].append(vlan_section)
+            vsection = 0
+            # Add to the ssid section
+            print(self.base_profile_config)
+            self.base_profile_config['interfaces'][vsection]['vlan'] = {'id': int(vid)}
+            self.base_profile_config['interfaces'][0]['ssids'].append(ssid_info)
+            pass
+        else:
+            print("invalid mode")
+            pytest.exit("invalid Operating Mode")
 
     def push_config(self, serial_number):
         payload = {}
@@ -361,6 +391,7 @@ class UProfileUtility:
 #
 controller = {
     'url': "https://tip-f34.candelatech.com:16001/api/v1/oauth2",  # API base url for the controller
+    # 'url': 'https://restapi-ucentral-2.cicd.lab.wlan.tip.build/api/v1/oauth2',
     'username': "tip@ucentral.com",
     'password': 'openwifi',
     # 'version': "1.1.0-SNAPSHOT",
@@ -376,15 +407,17 @@ profile_data = {
     "rf": {},
     "radius": False
 }
-# obj = UController(controller_data=controller)
-# # obj.get_device_uuid(serial_number="c4411ef53f23")
-# # obj.get_device_uuid(serial_number="c4411ef53f23")
-# profile_client = UProfileUtility(sdk_client=obj)
-# profile_client.set_radio_config()
-# profile_client.set_mode(mode="BRIDGE")
-# ssid_data = {"ssid_name": "ssid_wpa_test_3", "appliedRadios": ["2G", "5G"], "security_key": "something", "security": "none"}
-# profile_client.add_ssid(ssid_data=ssid_data)
-# profile_client.push_config(serial_number="c4411ef53f23")
+obj = UController(controller_data=controller)
+print(obj.get_devices())
+# obj.get_device_uuid(serial_number="c4411ef53f23")
+# obj.get_device_uuid(serial_number="c4411ef53f23")
+profile_client = UProfileUtility(sdk_client=obj)
+profile_client.set_radio_config()
+profile_client.set_mode(mode="VLAN")
+ssid_data = {"ssid_name": "ssid_wpa_test_3", "vlan": 200, "appliedRadios": ["2G", "5G"], "security_key": "something", "security": "none"}
+profile_client.add_ssid(ssid_data=ssid_data)
+print(profile_client.base_profile_config)
+profile_client.push_config(serial_number="c4411ef53f23")
 # print(profile_client.base_profile_config)
 # equipments = obj.get_devices()
 # # print(equipments)
