@@ -418,7 +418,7 @@ def ForgetWifiConnection(request, setup_perfectoMobile, WifiName, connData):
                 report.step_start("Verify if wifi is disconnected from: " + WifiName) 
                 WifiForget= driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")     
                 print("Wifi Not disconnected, check xpath for: " + WifiName)
-            except NoSuchElementException:
+            except NoSuchElementException and Exception:
                 print("Wifi Disconnected Successfully: " + WifiName)
             
         else:
@@ -442,10 +442,11 @@ def ForgetWifiConnection(request, setup_perfectoMobile, WifiName, connData):
             print("Verify if wifi is disconnected from: " + WifiName)
             try:
                 report.step_start("Verify if wifi is disconnected from: " + WifiName) 
-                WifiForget= driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")     
+                #WifiForget= driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")     
                 print("Wifi Not disconnected, check xpath for: " + WifiName)
-              
-            except NoSuchElementException:
+                WifiForget = WebDriverWait(driver, 20).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))          
+            except NoSuchElementException and TimeoutException and Exception:
+                assert True
                 print("Wifi Disconnected Successfully: " + WifiName)
 
 
@@ -627,7 +628,7 @@ def Toggle_WifiMode_android(request, setup_perfectoMobile, WifiName, connData):
         WifiNameElement3 = WebDriverWait(driver, 35).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='android:id/summary']")))
         Wifi_AP_Name3 = WifiNameElement3.text
         print("Current Wifi Status Name: " + Wifi_AP_Name3)
-    except NoSuchElementException:
+    except NoSuchElementException and TimeoutException:
         Wifi_AP_Name3="Null"
         print("Device did not connect back to Wifi: " + WifiName) 
 
@@ -835,7 +836,7 @@ def verify_APconnMobileDevice_Android(request, profileNameSSID, setup_perfectoMo
 
     #Open Settings Application
     openApp(connData["appPackage-android"], setup_perfectoMobile)
-    
+
     deviceModelName = getDeviceModelName(setup_perfectoMobile)
 
     if deviceModelName!=("Pixel 4"): 
