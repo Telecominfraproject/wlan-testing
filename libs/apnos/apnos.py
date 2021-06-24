@@ -148,10 +148,36 @@ class APNOS:
                 info.append(":".join(mac_info_list).replace("'", ""))
             if ssid[0].split(":")[0] == "b'security":
                 security = ssid[0].split(":")[1].split(",")[2].replace("]", "").replace('"', "").replace("'", "")
-                info.append(security)
+                print(ssid[0].split(":")[1])
                 if security != "OPEN":
-                    security_key = ssid[0].split(":")[1].split(",")[4].replace('"', "").replace("]", "")
+                    if security == "WPA-PSK":
+                        if ssid[0].split(":")[1].split(",")[6].__contains__("1"):
+                            info.append("WPA")
+                            security_key = ssid[0].split(":")[1].split(",")[4].replace('"', "").replace("]", "")
+                        if ssid[0].split(":")[1].split(",")[6].__contains__("2"):
+                            info.append("WPA2")
+                            security_key = ssid[0].split(":")[1].split(",")[4].replace('"', "").replace("]", "")
+                        if ssid[0].split(":")[1].split(",")[6].__contains__("mixed"):
+                            info.append("WPA | WPA2")
+                            security_key = ssid[0].split(":")[1].split(",")[4].replace('"', "").replace("]", "")
+                    if security == "WPA-SAE":
+                        if ssid[0].split(":")[1].split(",")[6].__contains__("3"):
+                            info.append("WPA3_PERSONAL")
+                            security_key = ssid[0].split(":")[1].split(",")[4].replace('"', "").replace("]", "")
+                        if ssid[0].split(":")[1].split(",")[6].__contains__("mixed"):
+                            info.append("WPA3_PERSONAL")
+                            security_key = ssid[0].split(":")[1].split(",")[4].replace('"', "").replace("]", "")
+                    if security == "WPA-EAP":
+                        info.append("EAP-TTLS")
+                        security_key = ssid[0].split(":")[1].split(",")[4].replace('"', "").replace("]", "")
+                    if security == "WPA3-EAP":
+                        info.append("EAP-TTLS")
+                        security_key = ssid[0].split(":")[1].split(",")[4].replace('"', "").replace("]", "")
+                    else:
+                        security_key = ssid[0].split(":")[1].split(",")[4].replace('"', "").replace("]", "")
                     info.append(security_key)
+                else:
+                    info.append("OPEN")
             if ssid[0].split(":")[0] == "b'ssid":
                 info.append(ssid[0].split(":")[1].replace("'", ""))
                 ssid_info_list.append(info)
@@ -255,7 +281,6 @@ class APNOS:
         return redirector
 
     def run_generic_command(self, cmd=""):
-        allure.attach(name="run_generic_command ", body=cmd)
         try:
             client = self.ssh_cli_connect()
             cmd = cmd
@@ -263,20 +288,38 @@ class APNOS:
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                       f"cmd --value \"{cmd}\" "
             stdin, stdout, stderr = client.exec_command(cmd)
-            input = stdin.read().decode('utf-8').splitlines()
-            output = stdout.read().decode('utf-8').splitlines()
-            error = stderr.read().decode('utf-8').splitlines()
+            output = stdout.read()
+            print(output, stderr.read())
+            status = output.decode('utf-8').splitlines()
+            allure.attach(name="get_redirector output ", body=str(stderr))
+            redirector = status[1].replace(" ", "").split("|")[1]
             client.close()
         except Exception as e:
             print(e)
-            allure.attach(name="run_generic_command - Exception ", body=str(e))
-            input = "Error"
-            output = "Error"
-            error = "Error"
-        allure.attach(name="run_generic_command ", body=input)
-        allure.attach(name="run_generic_command ", body=str(output))
-        allure.attach(name="run_generic_command ", body=error)
-        return [input, output, error]
+            allure.attach(name="get_redirector - Exception ", body=str(e))
+            redirector = "Error"
+        allure.attach(name="get_redirector ", body=redirector)
+        return redirector
+
+    def logread(self):
+        try:
+            client = self.ssh_cli_connect()
+            cmd = "logread"
+            if self.mode:
+                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                      f"cmd --value \"{cmd}\" "
+            stdin, stdout, stderr = client.exec_command(cmd)
+            output = stdout.read()
+            status = output.decode('utf-8').splitlines()
+            logread = status
+            logs = ""
+            for i in logread:
+                logs = logs + i + "\n"
+            client.close()
+        except Exception as e:
+            print(e)
+            logs = ""
+        return logs
 
 
 if __name__ == '__main__':
@@ -286,7 +329,7 @@ if __name__ == '__main__':
         'username': "lanforge",
         'password': "pumpkin77",
         'port': 8803,
-        'jumphost_tty': '/dev/ttyAP1',
+        'jumphost_tty': '/dev/ttyAP2',
 
     }
     var = APNOS(credentials=obj)

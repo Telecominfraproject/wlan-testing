@@ -5,6 +5,8 @@
 import sys
 import os
 
+import allure
+
 sys.path.append(
     os.path.dirname(
         os.path.realpath(__file__)
@@ -59,6 +61,7 @@ class RunTest:
         self.local_report_path = local_report_path
         if not os.path.exists(self.local_report_path):
             os.mkdir(self.local_report_path)
+        # self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
 
     def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[],
                             station_name=[], mode="BRIDGE", vlan_id=1, band="twog"):
@@ -84,13 +87,26 @@ class RunTest:
         self.staConnect.dut_security = security
         self.staConnect.station_names = station_name
         self.staConnect.runtime_secs = 40
-        self.staConnect.bringup_time_sec = 60
+        self.staConnect.bringup_time_sec = 80
         self.staConnect.cleanup_on_exit = True
         # self.staConnect.cleanup()
         self.staConnect.setup(extra_securities=extra_securities)
         self.staConnect.start()
         print("napping %f sec" % self.staConnect.runtime_secs)
         time.sleep(self.staConnect.runtime_secs)
+        for sta_name in self.staConnect.station_names:
+            try:
+                station_data_str = ""
+                sta_url = self.staConnect.get_station_url(sta_name)
+                station_info = self.staConnect.json_get(sta_url)
+                for i in station_info["interface"]:
+                    try:
+                        station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
+                    except Exception as e:
+                        print(e)
+                allure.attach(name=str(sta_name), body=str(station_data_str))
+            except Exception as e:
+                print(e)
         self.staConnect.stop()
         self.staConnect.cleanup()
         run_results = self.staConnect.get_result_list()
@@ -110,7 +126,7 @@ class RunTest:
                     mode="BRIDGE", band="twog", vlan_id=100,
                     station_name=[], key_mgmt="WPA-EAP",
                     pairwise="NA", group="NA", wpa_psk="DEFAULT",
-                    ttls_passwd="nolastart",
+                    ttls_passwd="nolastart", ieee80211w=1,
                     wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius"):
         self.eap_connect = TTLSTest(host=self.lanforge_ip, port=self.lanforge_port,
                                     sta_list=station_name, vap=False, _debug_on=self.debug)
@@ -134,10 +150,13 @@ class RunTest:
             # self.eap_connect.sta_prefix = self.fiveg_prefix
         # self.eap_connect.resource = 1
         if eap == "TTLS":
-            self.eap_connect.ieee80211w = 0
+            self.eap_connect.ieee80211w = ieee80211w
+            self.eap_connect.key_mgmt = key_mgmt
             self.eap_connect.station_profile.set_command_flag("add_sta", "80211u_enable", 0)
             self.eap_connect.identity = identity
             self.eap_connect.ttls_passwd = ttls_passwd
+            self.eap_connect.pairwise = pairwise
+            self.eap_connect.group = group
         if eap == "TLS":
             self.eap_connect.key_mgmt = "WPA-EAP-SUITE-B"
             self.eap_connect.station_profile.set_command_flag("add_sta", "80211u_enable", 0)
@@ -152,7 +171,31 @@ class RunTest:
         self.eap_connect.sta_list = station_name
         self.eap_connect.build(extra_securities=extra_securities)
         self.eap_connect.start(station_name, True, True)
+        for sta_name in station_name:
+            # try:
+            station_data_str = ""
+            # sta_url = self.eap_connect.get_station_url(sta_name)
+            # station_info = self.eap_connect.json_get(sta_url)
+            station_info = self.eap_connect.json_get("port/1/1/" + sta_name)
+            for i in station_info["interface"]:
+                try:
+                    station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
+                except Exception as e:
+                    print(e)
+            allure.attach(name=str(sta_name), body=str(station_data_str))
+            # except Exception as e:
+            #     print(e)
+
         self.eap_connect.stop()
+        endp_data = []
+        for i in self.eap_connect.resulting_endpoints:
+            endp_data.append(self.eap_connect.resulting_endpoints[i]["endpoint"])
+        cx_data = ""
+        for i in endp_data:
+            for j in i:
+                cx_data = cx_data + str(j) + " : " + str(i[j]) + "\n"
+            cx_data = cx_data + "\n"
+        allure.attach(name="cx_data", body=str(cx_data))
         self.eap_connect.cleanup(station_name)
         return self.eap_connect.passes()
 
@@ -239,10 +282,10 @@ class RunTest:
                                            duration=duration,
                                            dut=dut_name,
                                            station="1.1." + station_name[0],
-                                           raw_lines=['pkts: Custom;60;142;256;512;1024;MTU',
-                                                      'directions: DUT Transmit;DUT Receive',
-                                                      'traffic_types: UDP;TCP', "show_3s: 1",
-                                                      "show_ll_graphs: 1", "show_log: 1"],
+                                           raw_lines=[['pkts: Custom;60;142;256;512;1024;MTU'],
+                                                      ['directions: DUT Transmit;DUT Receive'],
+                                                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
+                                                      ["show_ll_graphs: 1"], ["show_log: 1"]],
                                            )
         self.dataplane_obj.setup()
         self.dataplane_obj.run()
@@ -256,8 +299,9 @@ class RunTest:
 
 if __name__ == '__main__':
     lanforge_data = {
-        "ip": "192.168.200.81",
-        "port": 8080,
+        "ip": "localhost",
+        "port": 8801,
+        "ssh_port": 22,
         "2.4G-Radio": ["wiphy0"],
         "5G-Radio": ["wiphy1"],
         "AX-Radio": ["wiphy2"],
@@ -267,5 +311,7 @@ if __name__ == '__main__':
         "AX-Station-Name": "ax",
     }
     obj = RunTest(lanforge_data=lanforge_data, debug=False)
+    # a = obj.staConnect.json_get("/events/since/")
+    # print(a)
     # print(obj.eap_connect.json_get("port/1/1/sta0000?fields=ap,ip"))
     # obj.EAP_Connect(station_name=["sta0000", "sta0001"], eap="TTLS", ssid="testing_radius")
