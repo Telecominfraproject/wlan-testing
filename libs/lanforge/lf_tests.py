@@ -301,14 +301,7 @@ class RunTest:
 
     def dualbandperformancetest(self,ssid_5G="[BLANK]",ssid_2G="[BLANK]",mode="BRIDGE", vlan_id=100,dut_name="TIP",
                                 instance_name="test_demo"):
-        '''
-        if mode == "BRIDGE":
-            self.client_connect.upstream_port = self.upstream_port
-        elif mode == "NAT":
-            self.client_connect.upstream_port = self.upstream_port
-        else:
-            self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
-        '''
+
         self.dualbandptest_obj = ApAutoTest(lf_host=self.lanforge_ip,
                                          lf_port=self.lanforge_port,
                                          lf_user="lanforge",
