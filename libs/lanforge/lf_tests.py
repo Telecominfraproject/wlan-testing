@@ -315,6 +315,7 @@ class RunTest:
                                          lf_password="lanforge",
                                          instance_name=instance_name,
                                          config_name="dbp_config",
+                                         local_path=self.local_report_path,
                                          upstream="1.1." + self.upstream_port,
                                          pull_report=True,
                                          dut5_0=dut_name + ' ' + ssid_5G,
