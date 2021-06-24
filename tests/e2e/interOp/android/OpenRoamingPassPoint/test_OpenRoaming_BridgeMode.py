@@ -13,10 +13,10 @@ from selenium.common.exceptions import NoSuchElementException
 import sys
 import allure
 
-pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.OpenRoaming]
-
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
+
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.openRoaming, pytest.mark.bridge]
 
 from android_lib import closeApp, set_APconnMobileDevice_android, verify_APconnMobileDevice_Android, deleteOpenRoamingInstalledProfile, downloadInstallOpenRoamingProfile, verifyUploadDownloadSpeed_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, setup_perfectoMobile_android
 
@@ -24,8 +24,6 @@ from android_lib import closeApp, set_APconnMobileDevice_android, verify_APconnM
     EAP Passpoint Test: BRIDGE Mode
     pytest -m "interop_iOS and eap_passpoint and bridge"
 """
-
-pytestmark = [pytest.mark.interop_iOS, pytest.mark.eap_passpoint, pytest.mark.bridge]
 
 setup_params_eap = {
     "mode": "BRIDGE",
@@ -43,8 +41,7 @@ setup_params_eap = {
         ]
     }
 }
-
-@pytest.mark.OpenRoaming
+ 
 @allure.feature("BRIDGE MODE EAP PASSPOINT SETUP")
 @pytest.mark.parametrize(
     'setup_profiles',
@@ -53,63 +50,8 @@ setup_params_eap = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestOpenRoaming(object):
-    """
-        EAP Passpoint BRIDGE Mode
-        pytest -m "interop_iOS and eap_passpoint and bridge"
-    """
-    def test_eap_passpoint_osu_id_provider_creation(self, setup_profiles):
-        """
-            EAP Passpoint BRIDGE Mode : OSU ID provider profile creation
-            pytest -m "interop_iOS and eap_passpoint and bridge"
-        """
-        test_cases, instantiate_profile, profile_data = setup_profiles
-        result = test_cases['passpoint_osu_id_provider']['sdk']
-        if result:
-            allure.attach(name="OSU ID provider profile creation successful ", body="")
-        else:
-            allure.attach(name="OSU ID provider profile creation failed ", body="")
-        assert result
-
-    def test_eap_passpoint_operator_creation(self, setup_profiles):
-        """
-            EAP Passpoint BRIDGE Mode : Passpoint operator profile creation
-            pytest -m "interop_iOS and eap_passpoint and bridge"
-        """
-        test_cases, instantiate_profile, profile_data = setup_profiles
-        result = test_cases['passpoint_operator_profile']['sdk']
-        if result:
-            allure.attach(name="Passpoint operator profile creation successful ", body="")
-        else:
-            allure.attach(name="Passpoint operator profile creation failed ", body="")
-        assert result
-
-    def test_eap_passpoint_venue_creation(self, setup_profiles):
-        """
-            EAP Passpoint BRIDGE Mode : Passpoint venue provider profile creation
-            pytest -m "interop_iOS and eap_passpoint and bridge"
-        """
-        test_cases, instantiate_profile, profile_data = setup_profiles
-        result = test_cases['passpoint_venue_profile']['sdk']
-        if result:
-            allure.attach(name="Passpoint venue provider profile creation successful ", body="")
-        else:
-            allure.attach(name="Passpoint venue provider profile creation failed ", body="")
-        assert result
-
-    def test_eap_passpoint_creation(self, setup_profiles):
-        """
-            EAP Passpoint BRIDGE Mode : Passpoint profile creation
-            pytest -m "interop_iOS and eap_passpoint and bridge"
-        """
-        test_cases, instantiate_profile, profile_data = setup_profiles
-        result = test_cases['passpoint']['sdk']
-        if result:
-            allure.attach(name="Passpoint profile creation successful ", body="")
-        else:
-            allure.attach(name="Passpoint profile creation failed ", body="")
-        assert result
-
+class TestOpenRoamingBridgeMode(object):
+  
     @pytest.mark.wpa2_eap
     @pytest.mark.twog
     @pytest.mark.parametrize(
@@ -158,8 +100,12 @@ class TestOpenRoaming(object):
         profileName = passpoint_profile_info["profile_name_on_device"]
         profileNameSSID = setup_params_eap["ssid_modes"]["wpa2_eap"][1]["ssid_name"]
 
+
+        #Delete Profile Under Settings
+        deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile_android, connData)    
+
         #ForgetWifi
-        ForgetWifiConnection(request, setup_perfectoMobile_android, profileNameSSID, connData)
+        #ForgetWifiConnection(request, setup_perfectoMobile_android, profileNameSSID, connData)
 
         #Set Wifi/AP Mode
         set_APconnMobileDevice_android(request, downloadProfileSSID, downloadProfileSSIDPass, setup_perfectoMobile_android, connData)
@@ -170,11 +116,16 @@ class TestOpenRoaming(object):
         #ForgetWifi Original
         ForgetWifiConnection(request, setup_perfectoMobile_android, downloadProfileSSID, connData)
 
-        verify_APconnMobileDevice_Android(request, profileName, setup_perfectoMobile_android, connData)
-       
-        #Verify Upload download Speed from device Selection
-        verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
+        try:
+            verify_APconnMobileDevice_Android(request, profileNameSSID, setup_perfectoMobile_android, connData)
 
+             #Verify Upload download Speed from device Selection
+            verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
+
+        except Exception as e:
+            deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile_android, connData)    
+            assert False
+     
         #Delete Profile Under Settings
         deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile_android, connData)    
 
@@ -226,8 +177,11 @@ class TestOpenRoaming(object):
         profileName = passpoint_profile_info["profile_name_on_device"]
         profileNameSSID = setup_params_eap["ssid_modes"]["wpa2_eap"][1]["ssid_name"]
 
+         #Delete Profile Under Settings
+        deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile_android, connData)    
+
         #ForgetWifi
-        ForgetWifiConnection(request, setup_perfectoMobile_android, profileNameSSID, connData)
+        #ForgetWifiConnection(request, setup_perfectoMobile_android, profileNameSSID, connData)
 
         #Set Wifi/AP Mode
         set_APconnMobileDevice_android(request, downloadProfileSSID, downloadProfileSSIDPass, setup_perfectoMobile_android, connData)
@@ -238,11 +192,16 @@ class TestOpenRoaming(object):
         #ForgetWifi Original
         ForgetWifiConnection(request, setup_perfectoMobile_android, downloadProfileSSID, connData)
 
-        verify_APconnMobileDevice_Android(request, profileName, setup_perfectoMobile_android, connData)
-       
-        #Verify Upload download Speed from device Selection
-        verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
+        try:
+            verify_APconnMobileDevice_Android(request, profileNameSSID, setup_perfectoMobile_android, connData)
 
+             #Verify Upload download Speed from device Selection
+            verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
+
+        except Exception as e:
+            deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile_android, connData)    
+            assert False
+     
         #Delete Profile Under Settings
         deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile_android, connData)    
   
@@ -289,8 +248,11 @@ class TestOpenRoaming(object):
         profileName = passpoint_profile_info["profile_name_on_device"]
         profileNameSSID = setup_params_eap["ssid_modes"]["wpa2_eap"][1]["ssid_name"]
 
+        #Delete Profile Under Settings
+        deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile_android, connData)    
+
         #ForgetWifi
-        ForgetWifiConnection(request, setup_perfectoMobile_android, profileNameSSID, connData)
+        #ForgetWifiConnection(request, setup_perfectoMobile_android, profileNameSSID, connData)
 
         #Set Wifi/AP Mode
         set_APconnMobileDevice_android(request, downloadProfileSSID, downloadProfileSSIDPass, setup_perfectoMobile_android, connData)
@@ -301,13 +263,18 @@ class TestOpenRoaming(object):
         #ForgetWifi Original
         ForgetWifiConnection(request, setup_perfectoMobile_android, downloadProfileSSID, connData)
 
-        verify_APconnMobileDevice_Android(request, profileName, setup_perfectoMobile_android, connData)
-       
-        #Verify Upload download Speed from device Selection
-        verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
+        try:
+            verify_APconnMobileDevice_Android(request, profileNameSSID, setup_perfectoMobile_android, connData)
 
+             #Verify Upload download Speed from device Selection
+            verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
+
+        except Exception as e:
+            deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile_android, connData)    
+            assert False
+     
         #Delete Profile Under Settings
-        deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile_android, connData)    
+        deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile_android, connData)     
 
     @pytest.mark.wpa2_only_eap
     @pytest.mark.fiveg
@@ -352,8 +319,11 @@ class TestOpenRoaming(object):
         profileName = passpoint_profile_info["profile_name_on_device"]
         profileNameSSID = setup_params_eap["ssid_modes"]["wpa2_eap"][1]["ssid_name"]
 
+        #Delete Profile Under Settings
+        deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile_android, connData)    
+
         #ForgetWifi
-        ForgetWifiConnection(request, setup_perfectoMobile_android, profileNameSSID, connData)
+        #ForgetWifiConnection(request, setup_perfectoMobile_android, profileNameSSID, connData)
 
         #Set Wifi/AP Mode
         set_APconnMobileDevice_android(request, downloadProfileSSID, downloadProfileSSIDPass, setup_perfectoMobile_android, connData)
@@ -364,10 +334,15 @@ class TestOpenRoaming(object):
         #ForgetWifi Original
         ForgetWifiConnection(request, setup_perfectoMobile_android, downloadProfileSSID, connData)
 
-        verify_APconnMobileDevice_Android(request, profileName, setup_perfectoMobile_android, connData)
-       
-        #Verify Upload download Speed from device Selection
-        verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
+        try:
+            verify_APconnMobileDevice_Android(request, profileNameSSID, setup_perfectoMobile_android, connData)
 
+             #Verify Upload download Speed from device Selection
+            verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
+
+        except Exception as e:
+            deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile_android, connData)    
+            assert False
+     
         #Delete Profile Under Settings
         deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile_android, connData)    

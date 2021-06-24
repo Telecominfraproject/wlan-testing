@@ -835,9 +835,8 @@ def verify_APconnMobileDevice_Android(request, profileNameSSID, setup_perfectoMo
 
     #Open Settings Application
     openApp(connData["appPackage-android"], setup_perfectoMobile)
-
+    
     deviceModelName = getDeviceModelName(setup_perfectoMobile)
-    print ("Selected Device Model: " + deviceModelName)
 
     if deviceModelName!=("Pixel 4"): 
         #Not a pixel Device
@@ -846,7 +845,7 @@ def verify_APconnMobileDevice_Android(request, profileNameSSID, setup_perfectoMo
 
         report.step_start("Click Connections")  
         try:
-            print("VClick Connections")
+            print("Click Connections")
             report.step_start("Click Connections")  
             connElement = driver.find_element_by_xpath("//*[@text='Connections']")
             connElement.click()
