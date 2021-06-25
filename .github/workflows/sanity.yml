@@ -20,7 +20,7 @@ on:
   workflow_dispatch:
     inputs:
       testbeds:
-        default: '["basic-01","basic-02","interop"]'
+        default: '["basic-01","basic-02"]'
         description: 'Testbed(s) to test'
         required: false
       marker_expression:
@@ -127,7 +127,7 @@ jobs:
       id: set-matrix
       run: |
         set -x
-        TESTBEDS="${{ github.event.inputs.testbeds || '[\"basic-01\",\"basic-02\", \"interop\"]' }}"
+        TESTBEDS="${{ github.event.inputs.testbeds || '[\"basic-01\",\"basic-02\"]' }}"
         echo "$TESTBEDS"
         TESTBED_ARRAY=$(echo "$TESTBEDS" | jq -c 'map({"testbed":.})')
         echo "$TESTBED_ARRAY"
