@@ -210,10 +210,8 @@ def get_APToMobileDevice_data(request):
         "bundleId-iOS-Safari": request.config.getini("bundleId-iOS-Safari"),
         "downloadMbps": "//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']",
         "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
-        "openRoaming-iOS-URL": request.config.getini("openRoaming-iOS-URL"),
         #Android
         "platformName-android": request.config.getini("platformName-android"),
-        "openRoaming-and-URL": request.config.getini("openRoaming-and-URL"),
         "appPackage-android": request.config.getini("appPackage-android")      
     }
     yield passPoint_data
@@ -757,3 +755,11 @@ def failure_tracking_fixture(request):
     print(tests_failed_during_module)
     yield tests_failed_during_module
     
+
+@pytest.fixture(scope="class")
+def get_vif_state(get_apnos, get_configuration):
+    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
+    vif_state = list(ap_ssh.get_vif_state_ssids())
+    vif_state.sort()
+    allure.attach(name="vif_state", body=str(vif_state))
+    yield vif_state

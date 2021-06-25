@@ -19,6 +19,8 @@ if 'perfecto_libs' not in sys.path:
 from iOS_lib import closeApp, openApp, Toggle_AirplaneMode_iOS, ForgetWifiConnection, set_APconnMobileDevice_iOS, \
     verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
 
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.ToggleAirplaneMode]
+
 setup_params_general = {
     "mode": "NAT",
     "ssid_modes": {
@@ -31,8 +33,6 @@ setup_params_general = {
     "radius": False
 }
 
-@pytest.mark.ToggleAirplaneMode
-@pytest.mark.interop_iOS
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
