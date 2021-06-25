@@ -180,9 +180,6 @@ class TestOpenRoamingBridgeMode(object):
          #Delete Profile Under Settings
         deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile_android, connData)    
 
-        #ForgetWifi
-        #ForgetWifiConnection(request, setup_perfectoMobile_android, profileNameSSID, connData)
-
         #Set Wifi/AP Mode
         set_APconnMobileDevice_android(request, downloadProfileSSID, downloadProfileSSIDPass, setup_perfectoMobile_android, connData)
 
@@ -193,7 +190,7 @@ class TestOpenRoamingBridgeMode(object):
         ForgetWifiConnection(request, setup_perfectoMobile_android, downloadProfileSSID, connData)
 
         try:
-            verify_APconnMobileDevice_Android(request, profileNameSSID, setup_perfectoMobile_android, connData)
+            verify_APconnMobileDevice_Android(request, profileName, setup_perfectoMobile_android, connData)
 
              #Verify Upload download Speed from device Selection
             verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
