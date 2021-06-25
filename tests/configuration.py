@@ -317,6 +317,8 @@ CONFIGURATION = {
     },  # Sushant   192.168.51.___
 
 }
+}
+
 
 RADIUS_SERVER_DATA = {
     "ip": "192.168.200.75",
