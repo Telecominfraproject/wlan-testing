@@ -27,7 +27,7 @@ setup_params_general = {
     "radius": False
 }
 
-
+@pytest.mark.uc_sanity
 @pytest.mark.suiteA
 @allure.feature("vlan MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(

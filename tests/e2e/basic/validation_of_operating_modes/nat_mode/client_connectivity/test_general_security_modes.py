@@ -27,7 +27,7 @@ setup_params_general = {
     "radius": False
 }
 
-
+@pytest.mark.uc_sanity
 @pytest.mark.suiteA
 @pytest.mark.sanity_ucentral
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
