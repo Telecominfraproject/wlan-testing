@@ -20,7 +20,7 @@ class ConfigureController:
         self.password = controller_data["password"]
         self.host = urlparse(controller_data["url"])
         self.access_token = ""
-        self.login()
+        self.login_resp = self.login()
 
     def build_uri(self, path):
         new_uri = 'https://%s:%d/api/v1/%s' % (self.host.hostname, self.host.port, path)
@@ -34,6 +34,7 @@ class ConfigureController:
         self.check_response("POST", resp, "", payload, uri)
         token = resp.json()
         self.access_token = token["access_token"]
+        return resp
 
     def logout(self):
         global access_token
@@ -41,6 +42,7 @@ class ConfigureController:
         resp = requests.delete(uri, headers=self.make_headers(), verify=False)
         self.check_response("DELETE", resp, self.make_headers(), "", uri)
         print('Logged out:', resp.status_code)
+        return resp
 
     def make_headers(self):
         headers = {'Authorization': 'Bearer %s' % self.access_token}
@@ -390,8 +392,8 @@ class UProfileUtility:
 # }
 #
 controller = {
-    'url': "https://tip-f34.candelatech.com:16001/api/v1/oauth2",  # API base url for the controller
-    # 'url': 'https://restapi-ucentral-2.cicd.lab.wlan.tip.build/api/v1/oauth2',
+    # 'url': "https://tip-f34.candelatech.com:16001/api/v1/oauth2",  # API base url for the controller
+    'url': 'https://sdk-ucentral-2.cicd.lab.wlan.tip.build:16001/api/v1/oauth2',
     'username': "tip@ucentral.com",
     'password': 'openwifi',
     # 'version': "1.1.0-SNAPSHOT",
@@ -408,19 +410,19 @@ profile_data = {
     "radius": False
 }
 obj = UController(controller_data=controller)
-print(obj.get_devices())
+# print(obj.get_devices())
+# print(obj.get_device_uuid(serial_number="903cb3944873"))
 # obj.get_device_uuid(serial_number="c4411ef53f23")
-# obj.get_device_uuid(serial_number="c4411ef53f23")
-profile_client = UProfileUtility(sdk_client=obj)
-profile_client.set_radio_config()
-profile_client.set_mode(mode="VLAN")
-ssid_data = {"ssid_name": "ssid_wpa_test_3", "vlan": 200, "appliedRadios": ["2G", "5G"], "security_key": "something", "security": "none"}
-profile_client.add_ssid(ssid_data=ssid_data)
-print(profile_client.base_profile_config)
-profile_client.push_config(serial_number="c4411ef53f23")
+# profile_client = UProfileUtility(sdk_client=obj)
+# profile_client.set_radio_config()
+# profile_client.set_mode(mode="VLAN")
+# ssid_data = {"ssid_name": "ssid_wpa_test_3_vlan", "vlan": 100, "appliedRadios": ["2G", "5G"], "security_key": "something", "security": "none"}
+# profile_client.add_ssid(ssid_data=ssid_data)
+# print(profile_client.base_profile_config)
+# profile_client.push_config(serial_number="903cb3944873")
 # print(profile_client.base_profile_config)
 # equipments = obj.get_devices()
-# # print(equipments)
+# print(equipments)
 # for i in equipments:
 #     for j in equipments[i]:
 #         for k in j:

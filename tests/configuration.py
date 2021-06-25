@@ -174,18 +174,18 @@ CONFIGURATION = {
                 'mode': 'wifi5',
                 'serial': 'c4411ef53f23',
                 'jumphost': True,
-                'ip': "192.168.100.164",  # localhost
+                'ip': "192.168.52.100",  # localhost
                 'username': "lanforge",
                 'password': "lanforge",
                 'port': 22,  # 22,
-                'jumphost_tty': '/dev/ttyUSB0',
+                'jumphost_tty': '/dev/ttyAP1',
                 'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.1.0.tar.gz"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "192.168.100.209",  # localhost,
+                "ip": "192.168.52.100",  # localhost,
                 "port": 8080,  # 8802,
                 "ssh_port": 22,
                 "2.4G-Radio": ["wiphy4"],
