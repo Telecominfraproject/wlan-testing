@@ -7,9 +7,10 @@ import os
 import time
 import allure
 import logging
+
 if "logs" not in os.listdir():
     os.mkdir("logs/")
-logging.basicConfig(level=logging.INFO, filename="logs/"+'{:%Y-%m-%d-%H-%M-%S}.log'.format(datetime.datetime.now()))
+logging.basicConfig(level=logging.INFO, filename="logs/" + '{:%Y-%m-%d-%H-%M-%S}.log'.format(datetime.datetime.now()))
 sys.path.append(
     os.path.dirname(
         os.path.realpath(__file__)
@@ -59,6 +60,7 @@ def pytest_addoption(parser):
     parser.addini("influx_bucket", "influx bucket", default="tip-cicd")
     parser.addini("influx_org", "influx organization", default="tip")
     parser.addini("build", "AP Firmware build URL", default="0")
+    parser.addini("cloud_ctlr", "AP Firmware build URL", default="0")
 
     parser.addini("num_stations", "Number of Stations/Clients for testing")
 
@@ -183,9 +185,11 @@ def radius_info():
 
 
 @pytest.fixture(scope="session")
-def get_configuration(testbed):
+def get_configuration(testbed, request):
     """yields the selected testbed information from lab info file (configuration.py)"""
     allure.attach(body=str(testbed), name="Testbed Selected: ")
+    if request.config.getini("cloud_ctlr") != "0":
+        CONFIGURATION[testbed]["controller"]["url"] = request.config.getini("cloud_ctlr")
     yield CONFIGURATION[testbed]
 
 
@@ -224,6 +228,7 @@ def instantiate_access_point(testbed, get_apnos, get_configuration):
 @pytest.fixture(scope="session")
 def setup_controller(request, get_configuration, instantiate_access_point):
     """sets up the controller connection and yields the sdk_client object"""
+
     try:
         sdk_client = Controller(controller_data=get_configuration["controller"])
         allure.attach(body=str(get_configuration["controller"]), name="Controller Instantiated: ")
@@ -286,11 +291,21 @@ def upload_firmware(should_upload_firmware, instantiate_firmware):
 
 @pytest.fixture(scope="session")
 def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_firmware_cloud, get_latest_firmware,
-                     should_upgrade_firmware, should_upload_firmware):
+                     should_upgrade_firmware, should_upload_firmware, get_apnos, get_configuration):
     """yields the status of upgrade of firmware. waits for 300 sec after each upgrade request"""
     print(should_upgrade_firmware, should_upload_firmware)
     status_list = []
-    if get_latest_firmware != check_ap_firmware_cloud:
+    active_fw_list = []
+    try:
+        for access_point in get_configuration['access_point']:
+            ap_ssh = get_apnos(access_point)
+            active_fw = ap_ssh.get_active_firmware()
+            active_fw_list.append(active_fw)
+    except Exception as e:
+        print(e)
+        active_fw_list = []
+    print(active_fw_list, get_latest_firmware)
+    if get_latest_firmware != active_fw_list:
         if request.config.getoption("--skip-upgrade"):
             status = "skip-upgrade"
             status_list.append(status)
@@ -304,7 +319,8 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
     else:
         if should_upgrade_firmware:
             for i in range(0, len(instantiate_firmware)):
-                status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i], force_upload=False,
+                status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i],
+                                                            force_upload=should_upload_firmware,
                                                             force_upgrade=should_upgrade_firmware)
                 allure.attach(name="Firmware Upgrade Request", body=str(status))
                 status_list.append(status)
@@ -342,6 +358,7 @@ def check_ap_firmware_ssh(get_configuration):
 def setup_test_run(setup_controller, upgrade_firmware, get_configuration, get_equipment_id, get_latest_firmware,
                    get_apnos):
     """used to upgrade the firmware on AP and should be called on each test case on a module level"""
+
     active_fw_list = []
     try:
         for access_point in get_configuration['access_point']:
@@ -351,6 +368,7 @@ def setup_test_run(setup_controller, upgrade_firmware, get_configuration, get_eq
     except Exception as e:
         print(e)
         active_fw_list = []
+    print(active_fw_list, get_latest_firmware)
     if active_fw_list == get_latest_firmware:
         yield True
     else:
@@ -394,7 +412,7 @@ def get_security_flags():
     """used to get the essential markers on security and band"""
     # Add more classifications as we go
     security = ["open", "wpa", "wep", "wpa2_personal", "wpa3_personal", "wpa3_personal_mixed",
-                "wpa_wpa2_enterprise_mixed",
+                "wpa_wpa2_enterprise_mixed", "wpa2_eap", "wpa2_only_eap",
                 "wpa_wpa2_personal_mixed", "wpa_enterprise", "wpa2_enterprise", "wpa3_enterprise_mixed",
                 "wpa3_enterprise", "twog", "fiveg", "radius"]
     yield security
@@ -488,7 +506,6 @@ def traffic_generator_connectivity(testbed, get_configuration):
         yield True
 
 
-
 @pytest.fixture(scope="session")
 def create_lanforge_chamberview_dut(get_configuration, testbed):
     """ Create a DUT on LANforge"""
@@ -557,3 +574,6 @@ def setup_influx(request, testbed, get_configuration):
         "influx_tag": [testbed, get_configuration["access_point"][0]["model"]],
     }
     yield influx_params
+
+
+

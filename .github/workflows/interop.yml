@@ -19,6 +19,11 @@ env:
 
 on:
   workflow_dispatch:
+    inputs:
+      marker_expression:
+        default: 'interop'
+        description: 'Pytest marker expression that will be used to select the tests to execute'
+        required: false
 
 defaults:
   run:
@@ -96,7 +101,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "interop_and and interop_iOS" -s -vvv --testbed=interop -o 'jobName=Github-Interop' -o 'jobNumber=${{ github.run_number }}' --skip-testrail --alluredir=/tmp/allure-results
+                    pytest -m "${{ github.event.inputs.marker_expression || 'interop' }}" -s -vvv --testbed=interop -o 'jobName=Github-Interop' -o 'jobNumber=${{ github.run_number }}' --skip-testrail --alluredir=/tmp/allure-results
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
