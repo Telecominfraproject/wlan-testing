@@ -162,7 +162,7 @@ CONFIGURATION = {
     },
     "ubasic-01": {
         "controller": {
-            'url': "https://tip-f34.candelatech.com:16001/api/v1/oauth2",  # API base url for the controller
+            'url': 'https://sdk-ucentral-2.cicd.lab.wlan.tip.build:16001/api/v1/oauth2',  # API base url for the controller
             'username': "tip@ucentral.com",
             'password': 'openwifi',
             # 'version': "1.1.0-SNAPSHOT",
@@ -170,9 +170,9 @@ CONFIGURATION = {
         },
         'access_point': [
             {
-                'model': 'r160',
+                'model': 'ecw5410',
                 'mode': 'wifi5',
-                'serial': 'c4411ef53f23',
+                'serial': '903cb3944873',
                 'jumphost': True,
                 'ip': "192.168.52.100",  # localhost
                 'username': "lanforge",
@@ -188,14 +188,14 @@ CONFIGURATION = {
                 "ip": "192.168.52.100",  # localhost,
                 "port": 8080,  # 8802,
                 "ssh_port": 22,
-                "2.4G-Radio": ["wiphy4"],
-                "5G-Radio": ["wiphy5"],
+                "2.4G-Radio": ["wiphy0"],
+                "5G-Radio": ["wiphy0"],
                 "AX-Radio": ["wiphy0", "wiphy1", "wiphy2", "wiphy3"],
-                "upstream": "1.1.eth2",
-                "upstream_subnet": "10.28.2.1/24",
-                "uplink": "1.1.eth3",
-                "2.4G-Station-Name": "twog0",
-                "5G-Station-Name": "fiveg0",
+                "upstream": "1.1.eth1",
+                "upstream_subnet": "192.168.52.1/24",
+                "uplink": "1.1.eth2",
+                "2.4G-Station-Name": "sta00",
+                "5G-Station-Name": "sta10",
                 "AX-Station-Name": "ax"
             }
         }

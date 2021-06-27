@@ -92,6 +92,7 @@ class TestNATModeConnectivitySuiteA(object):
         mode = "NAT"
         band = "fiveg"
         vlan = 1
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -127,6 +128,7 @@ class TestNATModeConnectivitySuiteA(object):
         mode = "NAT"
         band = "twog"
         vlan = 1
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -161,6 +163,7 @@ class TestNATModeConnectivitySuiteA(object):
         mode = "NAT"
         band = "fiveg"
         vlan = 1
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -196,6 +199,7 @@ class TestNATModeConnectivitySuiteA(object):
         mode = "NAT"
         band = "twog"
         vlan = 1
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -231,6 +235,7 @@ class TestNATModeConnectivitySuiteA(object):
         mode = "NAT"
         band = "fiveg"
         vlan = 1
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")

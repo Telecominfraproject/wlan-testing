@@ -391,25 +391,25 @@ class UProfileUtility:
 #     }
 # }
 #
-controller = {
-    # 'url': "https://tip-f34.candelatech.com:16001/api/v1/oauth2",  # API base url for the controller
-    'url': 'https://sdk-ucentral-2.cicd.lab.wlan.tip.build:16001/api/v1/oauth2',
-    'username': "tip@ucentral.com",
-    'password': 'openwifi',
-    # 'version': "1.1.0-SNAPSHOT",
-    # 'commit_date': "2021-04-27"
-}
-profile_data = {
-    "mode": "BRIDGE",
-    "ssid_modes": {
-        "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
-             "security_key": "something"}]},
-    "rf": {},
-    "radius": False
-}
-obj = UController(controller_data=controller)
+# controller = {
+#     # 'url': "https://tip-f34.candelatech.com:16001/api/v1/oauth2",  # API base url for the controller
+#     'url': 'https://sdk-ucentral-2.cicd.lab.wlan.tip.build:16001/api/v1/oauth2',
+#     'username': "tip@ucentral.com",
+#     'password': 'openwifi',
+#     # 'version': "1.1.0-SNAPSHOT",
+#     # 'commit_date': "2021-04-27"
+# }
+# profile_data = {
+#     "mode": "BRIDGE",
+#     "ssid_modes": {
+#         "wpa2_personal": [
+#             {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
+#             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+#              "security_key": "something"}]},
+#     "rf": {},
+#     "radius": False
+# }
+# obj = UController(controller_data=controller)
 # print(obj.get_devices())
 # print(obj.get_device_uuid(serial_number="903cb3944873"))
 # obj.get_device_uuid(serial_number="c4411ef53f23")

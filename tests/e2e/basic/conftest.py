@@ -763,12 +763,15 @@ def num_stations(request):
 
 
 @pytest.fixture(scope="class")
-def get_vif_state(get_apnos, get_configuration):
-    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
-    vif_state = list(ap_ssh.get_vif_state_ssids())
-    vif_state.sort()
-    allure.attach(name="vif_state", body=str(vif_state))
-    yield vif_state
+def get_vif_state(get_apnos, get_configuration, request):
+    if request.config.getoption("--ucentral"):
+        yield []
+    else:
+        ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
+        vif_state = list(ap_ssh.get_vif_state_ssids())
+        vif_state.sort()
+        allure.attach(name="vif_state", body=str(vif_state))
+        yield vif_state
 
 
 """UCentral Fixtures"""
