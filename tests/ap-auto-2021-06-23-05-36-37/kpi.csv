@@ -1,2 +1,0 @@
-Date	test-rig	dut-hw-version	dut-sw-version	dut-model-num	dut-serial-num	test-priority	test-id	short-description	pass/fail	numeric-score	test details	Units	Graph-Group	Subtest-Pass	Subtest-Fail
-1624451794879		ecw5410	ecw5410-2021-06-16-pending-e8418c0.tar.	ecw5410	903cb3944817	100	AP Auto	Multi Band Performance Score	FAIL	NaN	Dual-Concurrent vs 90% of Sum: 0 Mbps / 0 Mbps Dual-Concurrent vs 90% of Sum: 200.80 Mbps / 253.94 Mbps	Score	Score	1	1

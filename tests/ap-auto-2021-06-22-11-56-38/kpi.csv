@@ -1,2 +1,0 @@
-Date	test-rig	dut-hw-version	dut-sw-version	dut-model-num	dut-serial-num	test-priority	test-id	short-description	pass/fail	numeric-score	test details	Units	Graph-Group	Subtest-Pass	Subtest-Fail
-1624388196600		ecw5410	ecw5410-2021-06-16-pending-e8418c0.tar.	ecw5410	903cb3944817	100	AP Auto	Multi Band Performance Score	FAIL	0.0		Score	Score	0	0
