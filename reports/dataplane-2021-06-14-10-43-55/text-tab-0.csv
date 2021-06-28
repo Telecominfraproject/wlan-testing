@@ -1,3 +1,0 @@
-Channel	Frequency	Security	NSS	Cfg-Mode	Bandwidth	Pkt	Traffic-Type	Direction	Atten	Rotation	Duration	Offered-1m	Rx-Bps	Rx-Bps-1m	Rx-Bps-LL	Rx-Bps-3s	RSSI	Tx-Failed	Tx-Failed%	Tx-Rate	Rx-Rate	Rpt-Mode	Rpt-Mode-Brief
-36	5180	WPA2	2	AUTO	20	60	UDP	DUT-TX	NA	NA	60	84.328 Mbps	7.758 Mbps	7.757 Mbps	25.857 Mbps	7.899 Mbps	-63	0 / 35639320	0	43.3 Mbps	130 Mbps	802.11an	802.11n
-36	5180	WPA2	2	AUTO	20	60	UDP	DUT-RX	NA	NA	60	11.447 Mbps	11.241 Mbps	11.24 Mbps	37.466 Mbps	11.718 Mbps	-60	192 / 4772275	0.004	72.2 Mbps	6 Mbps	802.11an	802.11n

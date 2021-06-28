@@ -1,3 +1,0 @@
-Date	test-rig	dut-hw-version	dut-sw-version	dut-model-num	dut-serial-num	test-priority	test-id	short-description	pass/fail	numeric-score	test details	Units	Graph-Group	Subtest-Pass	Subtest-Fail
-1623735774102		ecw5410	ecw5410-1.1.0.tar.gz	ecw5410	3c2c99f44e77	90	Dataplane	UDP-DUT-TX-60pkt-sz		7.758101	Throughput at specified settings.	Mbps	Throughput	0	0
-1623735835492		ecw5410	ecw5410-1.1.0.tar.gz	ecw5410	3c2c99f44e77	90	Dataplane	UDP-DUT-RX-60pkt-sz		11.241368	Throughput at specified settings.	Mbps	Throughput	0	0
