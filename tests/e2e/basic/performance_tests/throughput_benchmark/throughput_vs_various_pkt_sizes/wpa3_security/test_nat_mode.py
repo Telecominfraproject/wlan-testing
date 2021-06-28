@@ -48,6 +48,7 @@ class TestThroughputVsPktNatAWpa32G(object):
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
         security = "wpa3_personal"
         mode = "NAT"
         band = "twog"
@@ -56,7 +57,7 @@ class TestThroughputVsPktNatAWpa32G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
 
@@ -90,7 +91,7 @@ class TestThroughputVsPktNatAWpa32G(object):
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
-
+        security_key = profile_data["security_key"]
         security = "wpa3_personal"
         mode = "NAT"
         band = "twog"
@@ -99,7 +100,7 @@ class TestThroughputVsPktNatAWpa32G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
 
@@ -133,7 +134,7 @@ class TestThroughputVsPktNatAWpa32G(object):
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
-
+        security_key = profile_data["security_key"]
         security = "wpa3_personal"
         mode = "NAT"
         band = "twog"
@@ -142,7 +143,7 @@ class TestThroughputVsPktNatAWpa32G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
 
@@ -176,7 +177,7 @@ class TestThroughputVsPktNatAWpa32G(object):
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
-
+        security_key = profile_data["security_key"]
         security = "wpa3_personal"
         mode = "NAT"
         band = "twog"
@@ -185,7 +186,7 @@ class TestThroughputVsPktNatAWpa32G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
 
@@ -219,7 +220,7 @@ class TestThroughputVsPktNatAWpa32G(object):
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
-
+        security_key = profile_data["security_key"]
         security = "wpa3_personal"
         mode = "NAT"
         band = "twog"
@@ -228,7 +229,7 @@ class TestThroughputVsPktNatAWpa32G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
 
@@ -262,7 +263,7 @@ class TestThroughputVsPktNatAWpa32G(object):
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
-
+        security_key = profile_data["security_key"]
         security = "wpa3_personal"
         mode = "NAT"
         band = "twog"
@@ -271,7 +272,7 @@ class TestThroughputVsPktNatAWpa32G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
 
@@ -331,6 +332,7 @@ class TestThroughputVsPktNatOpen5G(object):
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
         security = "wpa3_personal"
         mode = "NAT"
         band = "fiveg"
@@ -339,7 +341,7 @@ class TestThroughputVsPktNatOpen5G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
 
@@ -373,7 +375,7 @@ class TestThroughputVsPktNatOpen5G(object):
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
-
+        security_key = profile_data["security_key"]
         security = "wpa3_personal"
         mode = "NAT"
         band = "fiveg"
@@ -382,7 +384,7 @@ class TestThroughputVsPktNatOpen5G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
 
@@ -416,7 +418,7 @@ class TestThroughputVsPktNatOpen5G(object):
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
-
+        security_key = profile_data["security_key"]
         security = "wpa3_personal"
         mode = "NAT"
         band = "fiveg"
@@ -425,7 +427,7 @@ class TestThroughputVsPktNatOpen5G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
 
@@ -459,7 +461,7 @@ class TestThroughputVsPktNatOpen5G(object):
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
-
+        security_key = profile_data["security_key"]
         security = "wpa3_personal"
         mode = "NAT"
         band = "fiveg"
@@ -468,7 +470,7 @@ class TestThroughputVsPktNatOpen5G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
 
@@ -502,7 +504,7 @@ class TestThroughputVsPktNatOpen5G(object):
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
-
+        security_key = profile_data["security_key"]
         security = "wpa3_personal"
         mode = "NAT"
         band = "fiveg"
@@ -511,7 +513,7 @@ class TestThroughputVsPktNatOpen5G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
 
@@ -545,7 +547,7 @@ class TestThroughputVsPktNatOpen5G(object):
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
-
+        security_key = profile_data["security_key"]
         security = "wpa3_personal"
         mode = "NAT"
         band = "fiveg"
@@ -554,7 +556,7 @@ class TestThroughputVsPktNatOpen5G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
 

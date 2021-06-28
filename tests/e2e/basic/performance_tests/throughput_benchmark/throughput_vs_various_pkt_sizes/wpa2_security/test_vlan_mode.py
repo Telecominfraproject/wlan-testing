@@ -32,7 +32,6 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-@pytest.mark.wpa2
 class TestThroughputVsPktVlanWpa22G(object):
     """Throughput vs Various Pkt Size Test vlan mode
        pytest -m "throughput_vs_pkt and vlan"
@@ -40,7 +39,7 @@ class TestThroughputVsPktVlanWpa22G(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.pkt60
-    def test_client_wpa2_personal_pkt_60_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_pkt_60_2g(self, get_vif_state,
                                             lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                             get_configuration):
         """Throughput Vs Pkt Sizes VLAN MODE
@@ -48,7 +47,8 @@ class TestThroughputVsPktVlanWpa22G(object):
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-        security = "wpa2_personal"
+        security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "VLAN"
         band = "twog"
         vlan = 1
@@ -82,7 +82,7 @@ class TestThroughputVsPktVlanWpa22G(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.pkt142
-    def test_client_wpa2_personal_pkt_142_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_pkt_142_2g(self, get_vif_state,
                                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                              get_configuration):
         """Throughput Vs Pkt Sizes VLAN MODE
@@ -90,8 +90,8 @@ class TestThroughputVsPktVlanWpa22G(object):
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-
-        security = "wpa2_personal"
+        security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "VLAN"
         band = "twog"
         vlan = 1
@@ -99,7 +99,7 @@ class TestThroughputVsPktVlanWpa22G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
 
@@ -125,7 +125,7 @@ class TestThroughputVsPktVlanWpa22G(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.pkt256
-    def test_client_wpa2_personal_pkt_256_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_pkt_256_2g(self, get_vif_state,
                                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                              get_configuration):
         """Throughput Vs Pkt Sizes VLAN MODE
@@ -133,8 +133,8 @@ class TestThroughputVsPktVlanWpa22G(object):
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-
-        security = "wpa2_personal"
+        security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "VLAN"
         band = "twog"
         vlan = 1
@@ -142,7 +142,7 @@ class TestThroughputVsPktVlanWpa22G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
 
@@ -168,7 +168,7 @@ class TestThroughputVsPktVlanWpa22G(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.pkt512
-    def test_client_wpa2_personal_pkt_512_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_pkt_512_2g(self, get_vif_state,
                                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                              get_configuration):
         """Throughput Vs Pkt Sizes VLAN MODE
@@ -176,8 +176,8 @@ class TestThroughputVsPktVlanWpa22G(object):
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-
-        security = "wpa2_personal"
+        security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "VLAN"
         band = "twog"
         vlan = 1
@@ -185,7 +185,7 @@ class TestThroughputVsPktVlanWpa22G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
 
@@ -211,7 +211,7 @@ class TestThroughputVsPktVlanWpa22G(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.pkt1024
-    def test_client_wpa2_personal_pkt_1024_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_pkt_1024_2g(self, get_vif_state,
                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                               get_configuration):
         """Throughput Vs Pkt Sizes VLAN MODE
@@ -219,8 +219,8 @@ class TestThroughputVsPktVlanWpa22G(object):
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-
-        security = "wpa2_personal"
+        security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "VLAN"
         band = "twog"
         vlan = 1
@@ -228,7 +228,7 @@ class TestThroughputVsPktVlanWpa22G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
 
@@ -254,7 +254,7 @@ class TestThroughputVsPktVlanWpa22G(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.pktMTU
-    def test_client_wpa2_personal_pkt_MTU_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_pkt_MTU_2g(self, get_vif_state,
                                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                              get_configuration):
         """Throughput Vs Pkt Sizes VLAN MODE
@@ -262,8 +262,8 @@ class TestThroughputVsPktVlanWpa22G(object):
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-
-        security = "wpa2_personal"
+        security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "VLAN"
         band = "twog"
         vlan = 1
@@ -271,7 +271,7 @@ class TestThroughputVsPktVlanWpa22G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
 
@@ -315,7 +315,6 @@ setup_params_5g = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-@pytest.mark.wpa2
 class TestThroughputVsPktVlan5G(object):
     """Throughput vs Various Pkt Size Test vlan mode
        pytest -m "throughput_vs_pkt and vlan"
@@ -323,7 +322,7 @@ class TestThroughputVsPktVlan5G(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fivg
     @pytest.mark.pkt60
-    def test_client_wpa2_personal_pkt_60_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_pkt_60_5g(self, get_vif_state,
                                             lf_test, station_names_fivg, create_lanforge_chamberview_dut,
                                             get_configuration):
         """Throughput Vs Pkt Sizes VLAN MODE
@@ -331,7 +330,8 @@ class TestThroughputVsPktVlan5G(object):
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-        security = "wpa2_personal"
+        security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "VLAN"
         band = "fivg"
         vlan = 1
@@ -339,7 +339,7 @@ class TestThroughputVsPktVlan5G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fivg, vlan_id=vlan)
 
@@ -365,7 +365,7 @@ class TestThroughputVsPktVlan5G(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fivg
     @pytest.mark.pkt142
-    def test_client_wpa2_personal_pkt_142_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_pkt_142_5g(self, get_vif_state,
                                              lf_test, station_names_fivg, create_lanforge_chamberview_dut,
                                              get_configuration):
         """Throughput Vs Pkt Sizes VLAN MODE
@@ -373,8 +373,8 @@ class TestThroughputVsPktVlan5G(object):
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-
-        security = "wpa2_personal"
+        security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "VLAN"
         band = "fivg"
         vlan = 1
@@ -382,7 +382,7 @@ class TestThroughputVsPktVlan5G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fivg, vlan_id=vlan)
 
@@ -408,7 +408,7 @@ class TestThroughputVsPktVlan5G(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fivg
     @pytest.mark.pkt256
-    def test_client_wpa2_personal_pkt_256_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_pkt_256_5g(self, get_vif_state,
                                              lf_test, station_names_fivg, create_lanforge_chamberview_dut,
                                              get_configuration):
         """Throughput Vs Pkt Sizes VLAN MODE
@@ -416,8 +416,8 @@ class TestThroughputVsPktVlan5G(object):
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-
-        security = "wpa2_personal"
+        security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "VLAN"
         band = "fivg"
         vlan = 1
@@ -425,7 +425,7 @@ class TestThroughputVsPktVlan5G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fivg, vlan_id=vlan)
 
@@ -451,7 +451,7 @@ class TestThroughputVsPktVlan5G(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fivg
     @pytest.mark.pkt512
-    def test_client_wpa2_personal_pkt_512_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_pkt_512_5g(self, get_vif_state,
                                              lf_test, station_names_fivg, create_lanforge_chamberview_dut,
                                              get_configuration):
         """Throughput Vs Pkt Sizes VLAN MODE
@@ -459,8 +459,8 @@ class TestThroughputVsPktVlan5G(object):
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-
-        security = "wpa2_personal"
+        security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "VLAN"
         band = "fivg"
         vlan = 1
@@ -468,7 +468,7 @@ class TestThroughputVsPktVlan5G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fivg, vlan_id=vlan)
 
@@ -494,7 +494,7 @@ class TestThroughputVsPktVlan5G(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fivg
     @pytest.mark.pkt1024
-    def test_client_wpa2_personal_pkt_1024_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_pkt_1024_5g(self, get_vif_state,
                                               lf_test, station_names_fivg, create_lanforge_chamberview_dut,
                                               get_configuration):
         """Throughput Vs Pkt Sizes VLAN MODE
@@ -502,8 +502,8 @@ class TestThroughputVsPktVlan5G(object):
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-
-        security = "wpa2_personal"
+        security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "VLAN"
         band = "fivg"
         vlan = 1
@@ -511,7 +511,7 @@ class TestThroughputVsPktVlan5G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fivg, vlan_id=vlan)
 
@@ -537,7 +537,7 @@ class TestThroughputVsPktVlan5G(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fivg
     @pytest.mark.pktMTU
-    def test_client_wpa2_personal_pkt_MTU_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_pkt_MTU_5g(self, get_vif_state,
                                              lf_test, station_names_fivg, create_lanforge_chamberview_dut,
                                              get_configuration):
         """Throughput Vs Pkt Sizes VLAN MODE
@@ -545,8 +545,8 @@ class TestThroughputVsPktVlan5G(object):
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-
-        security = "wpa2_personal"
+        security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "VLAN"
         band = "fivg"
         vlan = 1
@@ -554,7 +554,7 @@ class TestThroughputVsPktVlan5G(object):
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fivg, vlan_id=vlan)
 

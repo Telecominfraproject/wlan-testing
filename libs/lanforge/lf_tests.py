@@ -271,7 +271,7 @@ class RunTest:
         if bw is not None:
             raw_lines = [['pkts: %s' % pkt_size],
                          ['directions: DUT Transmit;DUT Receive'],
-                         ['bandw_options: %s' % bw ]
+                         ['bandw_options: %s' % bw],
                          ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                          ["show_ll_graphs: 1"], ["show_log: 1"]]
 
@@ -279,8 +279,6 @@ class RunTest:
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-
-
 
         self.dataplane_obj = DataplaneTest(lf_host=self.lanforge_ip,
                                            lf_port=self.lanforge_port,
