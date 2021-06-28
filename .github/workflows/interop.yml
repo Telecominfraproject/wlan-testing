@@ -22,7 +22,7 @@ on:
     inputs:
       additional_markers:
         default: ''
-        description: 'Pass additional markers that will be and-combined with the interop marker, e.g. "twog or fiveg" -> "(interop_and or interop_iOS) and twog or fiveg"'
+        description: 'Pass additional markers that will be and-combined with the interop marker, e.g. "twog or fiveg" -> "interop and twog or fiveg"'
         required: false
   push:
     branches:
@@ -92,7 +92,7 @@ jobs:
     - name: calculate marker expression
       id: marker
       run: |
-        MARKER_EXPRESSION="(interop_and or interop_iOS)"
+        MARKER_EXPRESSION="interop"
         ADDITIONAL_MARKERS="${{ github.event.inputs.additional_markers || '' }}"
         if [ ! -z "$ADDITIONAL_MARKERS" ]; then
           MARKER_EXPRESSION="$MARKER_EXPRESSION and ${ADDITIONAL_MARKERS}"
