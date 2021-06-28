@@ -199,6 +199,44 @@ CONFIGURATION = {
                 "AX-Station-Name": "ax"
             }
         }
+    },
+    "basic-06": {
+        "controller": {
+            'url': 'https://sdk-ucentral-2.cicd.lab.wlan.tip.build:16001/api/v1/oauth2',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'openwifi',
+        },
+        'access_point': [
+            {
+                'model': 'eap102',
+                'mode': 'wifi6',
+                'serial': '903cb39d6918',
+                'jumphost': True,
+                'ip': "localhost",  # 10.28.3.103
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 8863,  # 22
+                'jumphost_tty': '/dev/ttyAP2',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "localhost",  # 10.28.3.30
+                "port": 8862,  # 8080
+                "ssh_port": 8864,
+                "2.4G-Radio": ["wiphy4"],
+                "5G-Radio": ["wiphy5"],
+                "AX-Radio": ["wiphy0", "wiphy1", "wiphy2", "wiphy3"],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            }
+        }
     }
 
 }

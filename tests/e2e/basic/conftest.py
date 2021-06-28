@@ -79,7 +79,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
             instantiate_profile.set_mode(mode=mode)
             vlan_id = 1
         if parameter['mode'] == "VLAN":
-            mode = "BRIDGE"
+            mode = "VLAN"
             instantiate_profile.set_mode(mode=mode)
             vlan_id = setup_vlan
         profile_data["ssid"] = {}
@@ -94,19 +94,12 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                 for j in profile_data["ssid"][mode]:
                     if mode in get_markers.keys() and get_markers[mode]:
                         try:
-                            print("inside wpa")
-                            if "is2dot4GHz" in j["appliedRadios"]:
-                                j["appliedRadios"].remove("is2dot4GHz")
-                                j["appliedRadios"].append("2G")
-                            if "is5GHzL" in j["appliedRadios"]:
-                                j["appliedRadios"].remove("is5GHzL")
-                                # list(j["appliedRadios"]).append("2G")
-                            if "is5GHzU" in j["appliedRadios"]:
-                                j["appliedRadios"].remove("is5GHzU")
-                                # list(j["appliedRadios"]).append("2G")
-                            if "is5GHz" in j["appliedRadios"]:
-                                j["appliedRadios"].remove("is5GHz")
-                                j["appliedRadios"].append("5G")
+                            for i in range(len(j["appliedRadios"])):
+                                j["appliedRadios"][i] = j["appliedRadios"][i].replace("is5GHzU", "5G")
+                                j["appliedRadios"][i] = j["appliedRadios"][i].replace("is5GHzL", "5G")
+                                j["appliedRadios"][i] = j["appliedRadios"][i].replace("is5GHz", "5G")
+                                j["appliedRadios"][i] = j["appliedRadios"][i].replace("is2dot4GHz", "2G")
+                            j["appliedRadios"] = list(set(j["appliedRadios"]))
                             j['security'] = 'none'
                             lf_dut_data.append(j)
                             creates_profile = instantiate_profile.add_ssid(ssid_data=j)
@@ -122,19 +115,12 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                 for j in profile_data["ssid"][mode]:
                     if mode in get_markers.keys() and get_markers[mode]:
                         try:
-                            print("inside wpa")
-                            if "is2dot4GHz" in j["appliedRadios"]:
-                                j["appliedRadios"].remove("is2dot4GHz")
-                                j["appliedRadios"].append("2G")
-                            if "is5GHzL" in j["appliedRadios"]:
-                                j["appliedRadios"].remove("is5GHzL")
-                                # list(j["appliedRadios"]).append("2G")
-                            if "is5GHzU" in j["appliedRadios"]:
-                                j["appliedRadios"].remove("is5GHzU")
-                                # list(j["appliedRadios"]).append("2G")
-                            if "is5GHz" in j["appliedRadios"]:
-                                j["appliedRadios"].remove("is5GHz")
-                                j["appliedRadios"].append("5G")
+                            for i in range(len(j["appliedRadios"])):
+                                j["appliedRadios"][i] = j["appliedRadios"][i].replace("is5GHzU", "5G")
+                                j["appliedRadios"][i] = j["appliedRadios"][i].replace("is5GHzL", "5G")
+                                j["appliedRadios"][i] = j["appliedRadios"][i].replace("is5GHz", "5G")
+                                j["appliedRadios"][i] = j["appliedRadios"][i].replace("is2dot4GHz", "2G")
+                            j["appliedRadios"] = list(set(j["appliedRadios"]))
                             j['security'] = 'psk'
                             lf_dut_data.append(j)
                             creates_profile = instantiate_profile.add_ssid(ssid_data=j)
@@ -150,19 +136,12 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                 for j in profile_data["ssid"][mode]:
                     if mode in get_markers.keys() and get_markers[mode]:
                         try:
-
-                            if "is2dot4GHz" in j["appliedRadios"]:
-                                j["appliedRadios"].remove("is2dot4GHz")
-                                j["appliedRadios"].append("2G")
-                            if "is5GHzL" in j["appliedRadios"]:
-                                j["appliedRadios"].remove("is5GHzL")
-                                # list(j["appliedRadios"]).append("2G")
-                            if "is5GHzU" in j["appliedRadios"]:
-                                j["appliedRadios"].remove("is5GHzU")
-                                # list(j["appliedRadios"]).append("2G")
-                            if "is5GHz" in j["appliedRadios"]:
-                                j["appliedRadios"].remove("is5GHz")
-                                j["appliedRadios"].append("5G")
+                            for i in range(len(j["appliedRadios"])):
+                                j["appliedRadios"][i] = j["appliedRadios"][i].replace("is5GHzU", "5G")
+                                j["appliedRadios"][i] = j["appliedRadios"][i].replace("is5GHzL", "5G")
+                                j["appliedRadios"][i] = j["appliedRadios"][i].replace("is5GHz", "5G")
+                                j["appliedRadios"][i] = j["appliedRadios"][i].replace("is2dot4GHz", "2G")
+                            j["appliedRadios"] = list(set(j["appliedRadios"]))
                             j['security'] = 'psk2'
                             lf_dut_data.append(j)
                             print("shivam: ", j)
@@ -175,7 +154,6 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                             test_cases["wpa2_personal"] = False
                             allure.attach(body=str(e),
                                           name="SSID Profile Creation Failed")
-        print("sss", get_equipment_id)
         instantiate_profile.push_config(serial_number=get_equipment_id[0])
         yield True
 

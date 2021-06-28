@@ -8,24 +8,25 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.client_connectivity, pytest.mark.vlan, pytest.mark.general, pytest.mark.sanity,
-              pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.client_connectivity, pytest.mark.vlan, pytest.mark.general,
+              pytest.mark.sanity]  # pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
-        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"]},
-                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
-        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
+        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something", "vlan": 100},
+                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"], "security_key": "something", "vlan": 100}],
+        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something", "vlan": 100},
                 {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
-                 "security_key": "something"}],
+                 "security_key": "something", "vlan": 100}],
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something", "vlan": 100},
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
-             "security_key": "something"}]},
+             "security_key": "something", "vlan": 100}]},
     "rf": {},
     "radius": False
 }
+
 
 @pytest.mark.uc_sanity
 @pytest.mark.suiteA
@@ -45,7 +46,8 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.open
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    def test_open_ssid_2g(self, get_vif_state,setup_profiles, get_lanforge_data, lf_test, update_report, station_names_twog,
+    def test_open_ssid_2g(self, get_vif_state, setup_profiles, get_lanforge_data, lf_test, update_report,
+                          station_names_twog,
                           test_cases):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and vlan and general and open and twog"
@@ -57,6 +59,7 @@ class TestvlanModeConnectivitySuiteA(object):
         mode = "VLAN"
         band = "twog"
         vlan = 100
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -79,7 +82,8 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.open
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
-    def test_open_ssid_5g(self, get_vif_state,get_lanforge_data, lf_test, test_cases, station_names_fiveg, update_report):
+    def test_open_ssid_5g(self, get_vif_state, get_lanforge_data, lf_test, test_cases, station_names_fiveg,
+                          update_report):
         """Client Connectivity open ssid 5G
            pytest -m "client_connectivity and vlan and general and open and fiveg"
         """
@@ -90,6 +94,7 @@ class TestvlanModeConnectivitySuiteA(object):
         mode = "VLAN"
         band = "fiveg"
         vlan = 100
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -113,7 +118,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.wpa
     @pytest.mark.twog
     @allure.story('wpa 2.4 GHZ Band')
-    def test_wpa_ssid_2g(self, get_vif_state,get_lanforge_data, update_report,
+    def test_wpa_ssid_2g(self, get_vif_state, get_lanforge_data, update_report,
                          lf_test, test_cases, station_names_twog):
         """Client Connectivity wpa ssid 2.4G
            pytest -m "client_connectivity and vlan and general and wpa and twog"
@@ -125,6 +130,7 @@ class TestvlanModeConnectivitySuiteA(object):
         mode = "VLAN"
         band = "twog"
         vlan = 100
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -148,7 +154,8 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.wpa
     @pytest.mark.fiveg
     @allure.story('wpa 5 GHZ Band')
-    def test_wpa_ssid_5g(self, get_vif_state,lf_test, update_report, test_cases, station_names_fiveg, get_lanforge_data):
+    def test_wpa_ssid_5g(self, get_vif_state, lf_test, update_report, test_cases, station_names_fiveg,
+                         get_lanforge_data):
         """Client Connectivity wpa ssid 5G
            pytest -m "client_connectivity and vlan and general and wpa and fiveg"
         """
@@ -159,6 +166,7 @@ class TestvlanModeConnectivitySuiteA(object):
         mode = "VLAN"
         band = "fiveg"
         vlan = 100
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -182,7 +190,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    def test_wpa2_personal_ssid_2g(self, get_vif_state,get_lanforge_data, lf_test, update_report, test_cases,
+    def test_wpa2_personal_ssid_2g(self, get_vif_state, get_lanforge_data, lf_test, update_report, test_cases,
                                    station_names_twog):
         """Client Connectivity wpa2_personal ssid 2.4G
            pytest -m "client_connectivity and vlan and general and wpa2_personal and twog"
@@ -194,6 +202,7 @@ class TestvlanModeConnectivitySuiteA(object):
         mode = "VLAN"
         band = "twog"
         vlan = 100
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -217,7 +226,8 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @allure.story('wpa2_personal 5 GHZ Band')
-    def test_wpa2_personal_ssid_5g(self, get_vif_state,get_lanforge_data, update_report, test_cases, station_names_fiveg,
+    def test_wpa2_personal_ssid_5g(self, get_vif_state, get_lanforge_data, update_report, test_cases,
+                                   station_names_fiveg,
                                    lf_test):
         """Client Connectivity wpa2_personal ssid 5G
            pytest -m "client_connectivity and vlan and general and wpa2_personal and fiveg"
@@ -229,6 +239,7 @@ class TestvlanModeConnectivitySuiteA(object):
         mode = "VLAN"
         band = "fiveg"
         vlan = 100
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -287,7 +298,8 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    def test_wpa3_personal_ssid_2g(self, get_vif_state,station_names_twog, setup_profiles, get_lanforge_data, lf_test, update_report,
+    def test_wpa3_personal_ssid_2g(self, get_vif_state, station_names_twog, setup_profiles, get_lanforge_data, lf_test,
+                                   update_report,
                                    test_cases):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and vlan and general and wpa3_personal and twog"
@@ -321,7 +333,8 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
-    def test_wpa3_personal_ssid_5g(self, get_vif_state,station_names_fiveg, get_lanforge_data, lf_test, test_cases, update_report):
+    def test_wpa3_personal_ssid_5g(self, get_vif_state, station_names_fiveg, get_lanforge_data, lf_test, test_cases,
+                                   update_report):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and vlan and general and wpa3_personal and fiveg"
         """
@@ -354,7 +367,8 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    def test_wpa3_personal_mixed_ssid_2g(self, get_vif_state,station_names_twog, setup_profiles, get_lanforge_data, lf_test,
+    def test_wpa3_personal_mixed_ssid_2g(self, get_vif_state, station_names_twog, setup_profiles, get_lanforge_data,
+                                         lf_test,
                                          update_report,
                                          test_cases):
         """Client Connectivity open ssid 2.4G
@@ -389,7 +403,8 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
-    def test_wpa3_personal_mixed_ssid_5g(self, get_vif_state,station_names_fiveg, get_lanforge_data, lf_test, test_cases,
+    def test_wpa3_personal_mixed_ssid_5g(self, get_vif_state, station_names_fiveg, get_lanforge_data, lf_test,
+                                         test_cases,
                                          update_report):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and vlan and general and wpa3_personal_mixed and fiveg"
@@ -423,7 +438,8 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
-    def test_wpa_wpa2_personal_ssid_2g(self, get_vif_state,station_names_twog, setup_profiles, get_lanforge_data, lf_test,
+    def test_wpa_wpa2_personal_ssid_2g(self, get_vif_state, station_names_twog, setup_profiles, get_lanforge_data,
+                                       lf_test,
                                        update_report,
                                        test_cases):
         """Client Connectivity open ssid 2.4G
@@ -459,7 +475,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
-    def test_wpa_wpa2_personal_ssid_5g(self, get_vif_state,station_names_fiveg, get_lanforge_data, lf_test, test_cases,
+    def test_wpa_wpa2_personal_ssid_5g(self, get_vif_state, station_names_fiveg, get_lanforge_data, lf_test, test_cases,
                                        update_report):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and vlan and general and wpa_wpa2_personal_mixed and fiveg"

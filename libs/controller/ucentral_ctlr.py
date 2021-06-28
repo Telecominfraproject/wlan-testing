@@ -189,6 +189,7 @@ class UProfileUtility:
             "channel-width": 80,
             # "channel": 36
         })
+        self.vlan_ids = []
 
     def set_mode(self, mode):
         self.mode = mode
@@ -206,6 +207,7 @@ class UProfileUtility:
             return 0
 
     def add_ssid(self, ssid_data):
+        print("ssid data : ", ssid_data)
         ssid_info = {'name': ssid_data["ssid_name"], "bss-mode": "ap", "wifi-bands": []}
         for i in ssid_data["appliedRadios"]:
             ssid_info["wifi-bands"].append(i)
@@ -219,22 +221,8 @@ class UProfileUtility:
             self.base_profile_config['interfaces'][0]['ssids'].append(ssid_info)
         elif self.mode == "VLAN":
             vid = ssid_data["vlan"]
-            vlan_section = {
-                                "role": "upstream",
-                                "vlan": {
-                                    "id": 100
-                                },
-                                "ethernet": [
-                                    {
-                                        "select-ports": [
-                                            "WAN*"
-                                        ]
-                                    }
-                                ],
-                                "ipv4": {
-                                    "addressing": "dynamic"
-                                }
-                            }
+            self.vlan_ids.append(vid)
+            vlan_section = self.vlan_section
             vlan_section['name'] = "WANv%s" % (vid)
             vlan_section['vlan']['id'] = int(vid)
             self.base_profile_config['interfaces'].append(vlan_section)
@@ -243,7 +231,6 @@ class UProfileUtility:
             print(self.base_profile_config)
             self.base_profile_config['interfaces'][vsection]['vlan'] = {'id': int(vid)}
             self.base_profile_config['interfaces'][0]['ssids'].append(ssid_info)
-            pass
         else:
             print("invalid mode")
             pytest.exit("invalid Operating Mode")
@@ -391,14 +378,14 @@ class UProfileUtility:
 #     }
 # }
 #
-# controller = {
-#     # 'url': "https://tip-f34.candelatech.com:16001/api/v1/oauth2",  # API base url for the controller
-#     'url': 'https://sdk-ucentral-2.cicd.lab.wlan.tip.build:16001/api/v1/oauth2',
-#     'username': "tip@ucentral.com",
-#     'password': 'openwifi',
-#     # 'version': "1.1.0-SNAPSHOT",
-#     # 'commit_date': "2021-04-27"
-# }
+controller = {
+    # 'url': "https://tip-f34.candelatech.com:16001/api/v1/oauth2",  # API base url for the controller
+    'url': 'https://sdk-ucentral-2.cicd.lab.wlan.tip.build:16001/api/v1/oauth2',
+    'username': "tip@ucentral.com",
+    'password': 'openwifi',
+    # 'version': "1.1.0-SNAPSHOT",
+    # 'commit_date': "2021-04-27"
+}
 # profile_data = {
 #     "mode": "BRIDGE",
 #     "ssid_modes": {
@@ -410,16 +397,18 @@ class UProfileUtility:
 #     "radius": False
 # }
 # obj = UController(controller_data=controller)
-# print(obj.get_devices())
-# print(obj.get_device_uuid(serial_number="903cb3944873"))
-# obj.get_device_uuid(serial_number="c4411ef53f23")
+# # # print(obj.get_devices())
+# # # print(obj.get_device_uuid(serial_number="903cb3944873"))
+# # # obj.get_device_uuid(serial_number="c4411ef53f23")
 # profile_client = UProfileUtility(sdk_client=obj)
 # profile_client.set_radio_config()
 # profile_client.set_mode(mode="VLAN")
 # ssid_data = {"ssid_name": "ssid_wpa_test_3_vlan", "vlan": 100, "appliedRadios": ["2G", "5G"], "security_key": "something", "security": "none"}
 # profile_client.add_ssid(ssid_data=ssid_data)
+# ssid_data = {"ssid_name": "ssid_wpa_test_4_vlan", "vlan": 100, "appliedRadios": ["2G", "5G"], "security_key": "something", "security": "none"}
+# profile_client.add_ssid(ssid_data=ssid_data)
 # print(profile_client.base_profile_config)
-# profile_client.push_config(serial_number="903cb3944873")
+# profile_client.push_config(serial_number="903cb39d6918")
 # print(profile_client.base_profile_config)
 # equipments = obj.get_devices()
 # print(equipments)
