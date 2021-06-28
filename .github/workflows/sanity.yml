@@ -27,9 +27,6 @@ on:
         default: 'sanity'
         description: 'Pytest marker expression that will be used to select the tests to execute'
         required: false
-  push:
-    branches:
-      - master
   schedule:
   - cron: '15 0 * * *'
 
