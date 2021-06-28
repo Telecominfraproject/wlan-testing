@@ -11,7 +11,7 @@ import time
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.throughput_benchmark_test, pytest.mark.vlan] # pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.performance, pytest.mark.throughput_benchmark_test, pytest.mark.vlan, pytest.mark.usefixtures("setup_test_run")]
 
 
 setup_params_general = {
@@ -23,9 +23,9 @@ setup_params_general = {
                 {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
                  "security_key": "something"}],
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something","vlan": 100},
+            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something","vlan": 150},
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
-             "security_key": "something","vlan": 100}]},
+             "security_key": "something"}]},
     "rf": {
         "is5GHz": {"channelBandwidth": "is20MHz"},
         "is5GHzL": {"channelBandwidth": "is20MHz"},
@@ -35,13 +35,13 @@ setup_params_general = {
 }
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
+@pytest.mark.vlan1
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
 
 @pytest.mark.parametrize(
     "create_vlan",
@@ -49,7 +49,9 @@ setup_params_general = {
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("create_vlan")
+@pytest.mark.usefixtures("setup_profiles", "create_vlan")
+
+
 @pytest.mark.Mhz20
 class TestThroughputUnderCombinationsVlan20MHz(object):
 
@@ -59,7 +61,7 @@ class TestThroughputUnderCombinationsVlan20MHz(object):
     @pytest.mark.nss2
     @pytest.mark.udp
     def test_client_wpa2_personal_2g_up_nss2_udp(self, get_vif_state,
-                                     lf_test, create_vlan, station_names_twog, create_lanforge_chamberview_dut,
+                                     lf_test,  station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
         """Dataplane THroughput VLAN Mode
            pytest -m "throughput_benchmark_test and VLAN and wpa2_personal and twog and upstream "
@@ -70,7 +72,7 @@ class TestThroughputUnderCombinationsVlan20MHz(object):
         security = "wpa2"
         mode = "VLAN"
         band = "twog"
-        vlan = 100
+        vlan = profile_data["vlan"]
         dut_name = create_lanforge_chamberview_dut
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))

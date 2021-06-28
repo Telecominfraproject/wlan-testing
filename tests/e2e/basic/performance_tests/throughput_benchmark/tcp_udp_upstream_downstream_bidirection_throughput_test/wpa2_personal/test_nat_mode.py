@@ -1,6 +1,6 @@
 """
 
-    Performance Test: throughput test under various combinations: NAT Mode
+    Performance Test: throughput test under various combinations: nat Mode
     pytest -m "throughput_benchmark_test and nat" -s -vvv --skip-testrail --testbed=basic-01
 
 
@@ -43,7 +43,7 @@ setup_params_general = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 @pytest.mark.Mhz20
-class TestThroughputUnderCombinationsNAT20MHz(object):
+class TestThroughputUnderCombinationsnat20MHz(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -53,8 +53,8 @@ class TestThroughputUnderCombinationsNAT20MHz(object):
     def test_client_wpa2_personal_2g_up_nss2_udp(self, get_vif_state,
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
-        """Dataplane THroughput NAT Mode
-           pytest -m "throughput_benchmark_test and NAT and wpa2_personal and twog and upstream "
+        """Dataplane THroughput nat Mode
+           pytest -m "throughput_benchmark_test and nat and wpa2_personal and twog and upstream "
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -73,7 +73,7 @@ class TestThroughputUnderCombinationsNAT20MHz(object):
         val = [['pkts: 60'], ['cust_pkt_sz: 88 '], ['directions: DUT Receive'], ['traffic_types: UDP'],['bandw_options: 20'], ['spatial_streams: 2']]
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_2G",
+                                       instance_name="TIP1_PERF_DPT_WPA2_2G_nat",
                                        vlan_id=vlan, dut_name=dut_name,raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -119,7 +119,7 @@ class TestThroughputUnderCombinationsNAT20MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_nat",
                               vlan_id=vlan, dut_name=dut_name,raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/"+report_name + '/')
@@ -143,8 +143,8 @@ class TestThroughputUnderCombinationsNAT20MHz(object):
     def test_client_wpa2_personal_2g_down_nss2_udp(self, get_vif_state,
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
-        """Dataplane THroughput NAT Mode
-           pytest -m "throughput_benchmark_test and NAT and wpa2_personal and twog and downstream "
+        """Dataplane THroughput nat Mode
+           pytest -m "throughput_benchmark_test and nat and wpa2_personal and twog and downstream "
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -164,7 +164,7 @@ class TestThroughputUnderCombinationsNAT20MHz(object):
                ['bandw_options: 20'], ['spatial_streams: 2']]
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_2G",
+                                       instance_name="TIP_PERF_DPT_WPA2_2G_down_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -210,7 +210,7 @@ class TestThroughputUnderCombinationsNAT20MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G__down_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -235,8 +235,8 @@ class TestThroughputUnderCombinationsNAT20MHz(object):
     def test_client_wpa2_personal_2g_bi_nss2_udp(self, get_vif_state,
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
-        """Dataplane THroughput NAT Mode
-           pytest -m "throughput_benchmark_test and NAT and wpa2_personal and twog and bidirectional "
+        """Dataplane THroughput nat Mode
+           pytest -m "throughput_benchmark_test and nat and wpa2_personal and twog and bidirectional "
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -256,7 +256,7 @@ class TestThroughputUnderCombinationsNAT20MHz(object):
                ['bandw_options: 20'], ['spatial_streams: 2']]
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_2G",
+                                       instance_name="TIP_PERF_DPT_WPA2_2G_bidirectional_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -302,7 +302,7 @@ class TestThroughputUnderCombinationsNAT20MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_bi_nss2_udp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -327,8 +327,8 @@ class TestThroughputUnderCombinationsNAT20MHz(object):
     def test_client_wpa2_personal_2g_up_nss2_tcp(self, get_vif_state,
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
-        """Dataplane THroughput NAT Mode
-           pytest -m "throughput_benchmark_test and NAT and wpa2_personal and twog and upstream and tcp "
+        """Dataplane THroughput nat Mode
+           pytest -m "throughput_benchmark_test and nat and wpa2_personal and twog and upstream and tcp "
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -348,7 +348,7 @@ class TestThroughputUnderCombinationsNAT20MHz(object):
                ['bandw_options: 20'], ['spatial_streams: 2']]
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_2G",
+                                       instance_name="TIP_PERF_DPT_WPA2_2G__up_nss2_tcp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -394,7 +394,7 @@ class TestThroughputUnderCombinationsNAT20MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G__up_nss2_tcp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -419,8 +419,8 @@ class TestThroughputUnderCombinationsNAT20MHz(object):
     def test_client_wpa2_personal_2g_down_nss2_tcp(self, get_vif_state,
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
-        """Dataplane THroughput NAT Mode
-           pytest -m "throughput_benchmark_test and NAT and wpa2_personal and twog and downstream and tcp"
+        """Dataplane THroughput nat Mode
+           pytest -m "throughput_benchmark_test and nat and wpa2_personal and twog and downstream and tcp"
            jira-WIFI-2564
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -441,7 +441,7 @@ class TestThroughputUnderCombinationsNAT20MHz(object):
                ['bandw_options: 20'], ['spatial_streams: 2']]
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_2G",
+                                       instance_name="TIP_PERF_DPT_WPA2_2G__down_nss2_tcp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -487,7 +487,7 @@ class TestThroughputUnderCombinationsNAT20MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G__down_nss2_tcp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -512,8 +512,8 @@ class TestThroughputUnderCombinationsNAT20MHz(object):
     def test_client_wpa2_personal_2g_bi_nss2_tcp(self, get_vif_state,
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
-        """Dataplane THroughput NAT Mode
-           pytest -m "throughput_benchmark_test and NAT and wpa2_personal and twog and bidirectional "
+        """Dataplane THroughput nat Mode
+           pytest -m "throughput_benchmark_test and nat and wpa2_personal and twog and bidirectional "
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -533,7 +533,7 @@ class TestThroughputUnderCombinationsNAT20MHz(object):
                ['bandw_options: 20'], ['spatial_streams: 2']]
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_2G",
+                                       instance_name="TIP_PERF_DPT_WPA2_2G__bi_nss2_tcp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -579,7 +579,7 @@ class TestThroughputUnderCombinationsNAT20MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G__bi_nss2_tcp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -625,7 +625,7 @@ setup_params_general = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 @pytest.mark.Mhz80
-class TestThroughputUnderCombinationsNAT80MHz(object):
+class TestThroughputUnderCombinationsnat80MHz(object):
 
 
     @pytest.mark.wpa2_personal
@@ -635,8 +635,8 @@ class TestThroughputUnderCombinationsNAT80MHz(object):
     @pytest.mark.udp
     def test_client_wpa2_personal_5g_up_nss2_udp(self, get_vif_state,
                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
-        """Dataplane THroughput NAT Mode
-                   pytest -m "throughput_benchmark_test and NAT and Mhz80 and wpa2_personal and fiveg and upstream and nss2 and udp "
+        """Dataplane THroughput nat Mode
+                   pytest -m "throughput_benchmark_test and nat and Mhz80 and wpa2_personal and fiveg and upstream and nss2 and udp "
                    jira-wifi-2566
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -660,7 +660,7 @@ class TestThroughputUnderCombinationsNAT80MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80__up_nss2_udp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -685,14 +685,14 @@ class TestThroughputUnderCombinationsNAT80MHz(object):
     def test_client_wpa2_personal_5g_down_nss2_udp(self, get_vif_state,
                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
         """Dataplane THroughput NAT Mode
-                           pytest -m "throughput_benchmark_test and NAT and Mhz80 and wpa2_personal and fiveg and downstream and nss2 and udp "
+                           pytest -m "throughput_benchmark_test and nat and Mhz80 and wpa2_personal and fiveg and downstream and nss2 and udp "
                            jira-wifi-2567
                 """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "NAT"
+        mode = "nat"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -709,7 +709,7 @@ class TestThroughputUnderCombinationsNAT80MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80__down_nss2_udp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -755,7 +755,7 @@ class TestThroughputUnderCombinationsNAT80MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80__bi_nss2_udp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -801,7 +801,7 @@ class TestThroughputUnderCombinationsNAT80MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80_up_nss2_tcp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -847,7 +847,7 @@ class TestThroughputUnderCombinationsNAT80MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80_down_nss2_tcp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -865,22 +865,22 @@ class TestThroughputUnderCombinationsNAT80MHz(object):
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.twog
+    @pytest.mark.fiveg
     @pytest.mark.bidirectional
     @pytest.mark.nss2
     @pytest.mark.tcp
     def test_client_wpa2_personal_2g_bi_nss2_tcp(self, get_vif_state,
-                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                     lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                      get_configuration):
-        """Dataplane THroughput NAT Mode
-           pytest -m "throughput_benchmark_test and NAT and wpa2_personal and twog and bidirectional "
+        """Dataplane THroughput nat Mode
+           pytest -m "throughput_benchmark_test and nat and wpa2_personal and twog and bidirectional "
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "NAT"
-        band = "twog"
+        band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         if ssid_name not in get_vif_state:
@@ -888,12 +888,12 @@ class TestThroughputUnderCombinationsNAT80MHz(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_twog, vlan_id=vlan)
+                                         station_name=station_names_fiveg, vlan_id=vlan)
         val = [['pkts: 60'], ['cust_pkt_sz: 88 '], ['directions: DUT Transmit;DUT Receive'], ['traffic_types: TCP'],
                ['bandw_options: 80'], ['spatial_streams: 2']]
         if station:
-            dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_2G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
+                                       instance_name="TIP_PERF_DPT_WPA2_2G_80_bi_nss2_tcp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -905,7 +905,7 @@ class TestThroughputUnderCombinationsNAT80MHz(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_twog)
+            lf_test.Client_disconnect(station_name=station_names_fiveg)
             assert station
         else:
             assert False
@@ -917,8 +917,8 @@ class TestThroughputUnderCombinationsNAT80MHz(object):
     @pytest.mark.udp
     def test_client_wpa2_personal_5g_up_nss3_udp(self, get_vif_state,
                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
-        """Dataplane THroughput NAT Mode
-                   pytest -m "throughput_benchmark_test and NAT and Mhz80 and wpa2_personal and fiveg and upstream and nss2 and udp and nss3"
+        """Dataplane THroughput nat Mode
+                   pytest -m "throughput_benchmark_test and nat and Mhz80 and wpa2_personal and fiveg and upstream and nss2 and udp and nss3"
                    jira-wifi-2572
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -942,7 +942,7 @@ class TestThroughputUnderCombinationsNAT80MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80__up_nss3_udp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -966,8 +966,8 @@ class TestThroughputUnderCombinationsNAT80MHz(object):
     @pytest.mark.udp
     def test_client_wpa2_personal_5g_down_nss3_udp(self, get_vif_state,
                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
-        """Dataplane THroughput NAT Mode
-                           pytest -m "throughput_benchmark_test and NAT and Mhz80 and wpa2_personal and fiveg and downstream and nss2 and udp and nss3 "
+        """Dataplane THroughput nat Mode
+                           pytest -m "throughput_benchmark_test and nat and Mhz80 and wpa2_personal and fiveg and downstream and nss2 and udp and nss3 "
                            jira-wifi-2573
                 """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -991,7 +991,7 @@ class TestThroughputUnderCombinationsNAT80MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80__down_nss3_udp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1037,7 +1037,7 @@ class TestThroughputUnderCombinationsNAT80MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80__bi_nss3_udp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1083,7 +1083,7 @@ class TestThroughputUnderCombinationsNAT80MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80__up_nss3_tcp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1129,7 +1129,7 @@ class TestThroughputUnderCombinationsNAT80MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80_down_nss3_tcp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1176,7 +1176,7 @@ class TestThroughputUnderCombinationsNAT80MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80_bi_nss3_tcp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1223,7 +1223,7 @@ setup_params_general = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 @pytest.mark.Mhz160
-class TestThroughputUnderCombinationsNAT160MHz(object):
+class TestThroughputUnderCombinationsnat160MHz(object):
 
 
     @pytest.mark.wpa2_personal
@@ -1233,8 +1233,8 @@ class TestThroughputUnderCombinationsNAT160MHz(object):
     @pytest.mark.udp
     def test_client_wpa2_personal_5g_up_nss3_udp(self, get_vif_state,
                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
-        """Dataplane THroughput NAT Mode
-                   pytest -m "throughput_benchmark_test and NAT and Mhz80 and wpa2_personal and fiveg and upstream and nss2 and udp "
+        """Dataplane THroughput nat Mode
+                   pytest -m "throughput_benchmark_test and nat and Mhz80 and wpa2_personal and fiveg and upstream and nss2 and udp "
                    jira-wifi-2578
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -1258,7 +1258,7 @@ class TestThroughputUnderCombinationsNAT160MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_up_nss3_udp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1282,8 +1282,8 @@ class TestThroughputUnderCombinationsNAT160MHz(object):
     @pytest.mark.udp
     def test_client_wpa2_personal_5g_down_nss3_udp(self, get_vif_state,
                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
-        """Dataplane THroughput NAT Mode
-                           pytest -m "throughput_benchmark_test and NAT and Mhz80 and wpa2_personal and fiveg and downstream and nss2 and udp "
+        """Dataplane THroughput nat Mode
+                           pytest -m "throughput_benchmark_test and nat and Mhz80 and wpa2_personal and fiveg and downstream and nss2 and udp "
                            jira-wifi-2567
                 """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -1307,7 +1307,7 @@ class TestThroughputUnderCombinationsNAT160MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_down_nss3_udp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1353,7 +1353,7 @@ class TestThroughputUnderCombinationsNAT160MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_bi_nss3_udp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1399,7 +1399,7 @@ class TestThroughputUnderCombinationsNAT160MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_up_nss3_tcp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1445,7 +1445,7 @@ class TestThroughputUnderCombinationsNAT160MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_up_nss4_udp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1469,8 +1469,8 @@ class TestThroughputUnderCombinationsNAT160MHz(object):
     @pytest.mark.udp
     def test_client_wpa2_personal_5g_down_nss4_udp(self, get_vif_state,
                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
-        """Dataplane THroughput NAT Mode
-                           pytest -m "throughput_benchmark_test and NAT and Mhz80 and wpa2_personal and fiveg and downstream and nss2 and udp "
+        """Dataplane THroughput nat Mode
+                           pytest -m "throughput_benchmark_test and nat and Mhz80 and wpa2_personal and fiveg and downstream and nss2 and udp "
                            jira-wifi-2567
                 """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -1494,7 +1494,7 @@ class TestThroughputUnderCombinationsNAT160MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_down_nss4_udp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1540,7 +1540,7 @@ class TestThroughputUnderCombinationsNAT160MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_bi_nss4_udp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1586,7 +1586,7 @@ class TestThroughputUnderCombinationsNAT160MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_up_nss4_tcp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1632,7 +1632,7 @@ class TestThroughputUnderCombinationsNAT160MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_down_nss4_tcp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1679,7 +1679,7 @@ class TestThroughputUnderCombinationsNAT160MHz(object):
 
         if station:
             time.sleep(3)
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_bi_nss4_tcp_nat",
                                        vlan_id=vlan, dut_name=dut_name, raw_data=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')

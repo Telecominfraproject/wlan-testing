@@ -8,11 +8,13 @@
 import allure
 import pytest
 
+mode = "NAT"
+
 pytestmark = [pytest.mark.client_connectivity, pytest.mark.nat, pytest.mark.general, pytest.mark.sanity,
               pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
-    "mode": "NAT",
+    "mode": mode,
     "ssid_modes": {
         "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"]},
                  {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
@@ -45,7 +47,8 @@ class TestNATModeConnectivitySuiteA(object):
     @pytest.mark.open
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    def test_open_ssid_2g(self, get_vif_state,setup_profiles, get_lanforge_data, lf_test, update_report, station_names_twog,
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_open_ssid_2g(self, get_vif_state, setup_profiles, get_lanforge_data, lf_test, update_report, station_names_twog,
                           test_cases):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and nat and general and open and twog"
@@ -54,7 +57,6 @@ class TestNATModeConnectivitySuiteA(object):
         ssid_name = profile_data["ssid_name"]
         security_key = "[BLANK]"
         security = "open"
-        mode = "NAT"
         band = "twog"
         vlan = 1
         if ssid_name not in get_vif_state:
@@ -79,6 +81,7 @@ class TestNATModeConnectivitySuiteA(object):
     @pytest.mark.open
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_open_ssid_5g(self, get_vif_state,get_lanforge_data, lf_test, test_cases, station_names_fiveg, update_report):
         """Client Connectivity open ssid 5G
            pytest -m "client_connectivity and bridge and general and open and fiveg"
@@ -87,7 +90,7 @@ class TestNATModeConnectivitySuiteA(object):
         ssid_name = profile_data["ssid_name"]
         security_key = "[BLANK]"
         security = "open"
-        mode = "NAT"
+
         band = "fiveg"
         vlan = 1
         if ssid_name not in get_vif_state:
@@ -109,10 +112,11 @@ class TestNATModeConnectivitySuiteA(object):
                                               passes))
         assert result
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @pytest.mark.wpa
     @pytest.mark.twog
     @allure.story('wpa 2.4 GHZ Band')
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_wpa_ssid_2g(self, get_vif_state,get_lanforge_data, update_report,
                          lf_test, test_cases, station_names_twog):
         """Client Connectivity wpa ssid 2.4G
@@ -122,7 +126,7 @@ class TestNATModeConnectivitySuiteA(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
-        mode = "NAT"
+
         band = "twog"
         vlan = 1
         if ssid_name not in get_vif_state:
@@ -144,10 +148,11 @@ class TestNATModeConnectivitySuiteA(object):
                                               passes))
         assert result
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @pytest.mark.wpa
     @pytest.mark.fiveg
     @allure.story('wpa 5 GHZ Band')
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_wpa_ssid_5g(self, get_vif_state,lf_test, update_report, test_cases, station_names_fiveg, get_lanforge_data):
         """Client Connectivity wpa ssid 5G
            pytest -m "client_connectivity and bridge and general and wpa and fiveg"
@@ -156,7 +161,7 @@ class TestNATModeConnectivitySuiteA(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
-        mode = "NAT"
+
         band = "fiveg"
         vlan = 1
         if ssid_name not in get_vif_state:
@@ -178,10 +183,11 @@ class TestNATModeConnectivitySuiteA(object):
                                               passes))
         assert result
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.story('wpa2_personal 2.4 GHZ Band')
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_wpa2_personal_ssid_2g(self, get_vif_state,get_lanforge_data, lf_test, update_report, test_cases,
                                    station_names_twog):
         """Client Connectivity wpa2_personal ssid 2.4G
@@ -191,7 +197,7 @@ class TestNATModeConnectivitySuiteA(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "NAT"
+
         band = "twog"
         vlan = 1
         if ssid_name not in get_vif_state:
@@ -213,10 +219,11 @@ class TestNATModeConnectivitySuiteA(object):
                                               passes))
         assert result
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @allure.story('wpa2_personal 5 GHZ Band')
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_wpa2_personal_ssid_5g(self, get_vif_state,get_lanforge_data, update_report, test_cases, station_names_fiveg,
                                    lf_test):
         """Client Connectivity wpa2_personal ssid 5G
@@ -226,7 +233,7 @@ class TestNATModeConnectivitySuiteA(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "NAT"
+
         band = "fiveg"
         vlan = 1
         if ssid_name not in get_vif_state:
@@ -250,7 +257,7 @@ class TestNATModeConnectivitySuiteA(object):
 
 
 setup_params_general_two = {
-    "mode": "BRIDGE",
+    "mode": mode,
     "ssid_modes": {
         "wpa3_personal": [
             {"ssid_name": "ssid_wpa3_p_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
@@ -279,7 +286,7 @@ setup_params_general_two = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestBridgeModeConnectivitySuiteB(object):
+class TestNATModeConnectivitySuiteB(object):
     """ Client Connectivity SuiteA
         pytest -m "client_connectivity and bridge and suiteB"
     """
@@ -287,6 +294,7 @@ class TestBridgeModeConnectivitySuiteB(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_wpa3_personal_ssid_2g(self, get_vif_state,station_names_twog, setup_profiles, get_lanforge_data, lf_test, update_report,
                                    test_cases):
         """Client Connectivity open ssid 2.4G
@@ -296,7 +304,7 @@ class TestBridgeModeConnectivitySuiteB(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
-        mode = "NAT"
+
         band = "twog"
         vlan = 1
         if ssid_name not in get_vif_state:
@@ -321,6 +329,7 @@ class TestBridgeModeConnectivitySuiteB(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_wpa3_personal_ssid_5g(self, get_vif_state,station_names_fiveg, get_lanforge_data, lf_test, test_cases, update_report):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and bridge and general and wpa3_personal and fiveg"
@@ -329,7 +338,7 @@ class TestBridgeModeConnectivitySuiteB(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
-        mode = "NAT"
+
         band = "fiveg"
         vlan = 1
         if ssid_name not in get_vif_state:
@@ -354,6 +363,7 @@ class TestBridgeModeConnectivitySuiteB(object):
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_wpa3_personal_mixed_ssid_2g(self, get_vif_state,station_names_twog, setup_profiles, get_lanforge_data, lf_test,
                                          update_report,
                                          test_cases):
@@ -364,7 +374,7 @@ class TestBridgeModeConnectivitySuiteB(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
-        mode = "NAT"
+
         band = "twog"
         vlan = 1
         if ssid_name not in get_vif_state:
@@ -389,6 +399,7 @@ class TestBridgeModeConnectivitySuiteB(object):
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_wpa3_personal_mixed_ssid_5g(self, get_vif_state,station_names_fiveg, get_lanforge_data, lf_test, test_cases,
                                          update_report):
         """Client Connectivity open ssid 2.4G
@@ -398,7 +409,7 @@ class TestBridgeModeConnectivitySuiteB(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
-        mode = "NAT"
+
         band = "fiveg"
         vlan = 1
         if ssid_name not in get_vif_state:
@@ -423,6 +434,7 @@ class TestBridgeModeConnectivitySuiteB(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_wpa_wpa2_personal_ssid_2g(self, get_vif_state,station_names_twog, setup_profiles, get_lanforge_data, lf_test,
                                        update_report,
                                        test_cases):
@@ -434,7 +446,7 @@ class TestBridgeModeConnectivitySuiteB(object):
         security_key = profile_data["security_key"]
         security = "wpa"
         extra_secu = ["wpa2"]
-        mode = "NAT"
+
         band = "twog"
         vlan = 1
         if ssid_name not in get_vif_state:
@@ -459,6 +471,7 @@ class TestBridgeModeConnectivitySuiteB(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_wpa_wpa2_personal_ssid_5g(self, get_vif_state,station_names_fiveg, get_lanforge_data, lf_test, test_cases,
                                        update_report):
         """Client Connectivity open ssid 2.4G
@@ -469,7 +482,7 @@ class TestBridgeModeConnectivitySuiteB(object):
         security_key = profile_data["security_key"]
         security = "wpa"
         extra_secu = ["wpa2"]
-        mode = "NAT"
+
         band = "fiveg"
         vlan = 1
         if ssid_name not in get_vif_state:
@@ -525,7 +538,7 @@ class TestBridgeModeConnectivitySuiteB(object):
 #         wep_key = "[BLANK]"
 #         security = "open"
 #         extra_secu = []
-#         mode = "NAT"
+#
 #         band = "twog"
 #         vlan = 1
 #         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
@@ -553,7 +566,7 @@ class TestBridgeModeConnectivitySuiteB(object):
 #         wep_key = "[BLANK]"
 #         security = "open"
 #         extra_secu = []
-#         mode = "NAT"
+#
 #         band = "twog"
 #         vlan = 1
 #         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
