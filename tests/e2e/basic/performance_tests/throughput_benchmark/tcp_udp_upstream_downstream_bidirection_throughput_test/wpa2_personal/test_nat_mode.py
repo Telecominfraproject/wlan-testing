@@ -74,7 +74,7 @@ class TestThroughputUnderCombinationsnat20MHz(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
                                        instance_name="TIP1_PERF_DPT_WPA2_2G_nat",
-                                       vlan_id=vlan, dut_name=dut_name,raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name,raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -120,7 +120,7 @@ class TestThroughputUnderCombinationsnat20MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_nat",
-                              vlan_id=vlan, dut_name=dut_name,raw_data=val)
+                              vlan_id=vlan, dut_name=dut_name,raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/"+report_name + '/')
             pdf = False
@@ -165,7 +165,7 @@ class TestThroughputUnderCombinationsnat20MHz(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
                                        instance_name="TIP_PERF_DPT_WPA2_2G_down_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -211,7 +211,7 @@ class TestThroughputUnderCombinationsnat20MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G__down_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -257,7 +257,7 @@ class TestThroughputUnderCombinationsnat20MHz(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
                                        instance_name="TIP_PERF_DPT_WPA2_2G_bidirectional_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -303,7 +303,7 @@ class TestThroughputUnderCombinationsnat20MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_bi_nss2_udp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -349,7 +349,7 @@ class TestThroughputUnderCombinationsnat20MHz(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
                                        instance_name="TIP_PERF_DPT_WPA2_2G__up_nss2_tcp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -395,7 +395,7 @@ class TestThroughputUnderCombinationsnat20MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G__up_nss2_tcp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -442,7 +442,7 @@ class TestThroughputUnderCombinationsnat20MHz(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
                                        instance_name="TIP_PERF_DPT_WPA2_2G__down_nss2_tcp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -488,7 +488,7 @@ class TestThroughputUnderCombinationsnat20MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G__down_nss2_tcp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -534,7 +534,7 @@ class TestThroughputUnderCombinationsnat20MHz(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
                                        instance_name="TIP_PERF_DPT_WPA2_2G__bi_nss2_tcp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -580,7 +580,7 @@ class TestThroughputUnderCombinationsnat20MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G__bi_nss2_tcp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -661,7 +661,7 @@ class TestThroughputUnderCombinationsnat80MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80__up_nss2_udp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -710,7 +710,7 @@ class TestThroughputUnderCombinationsnat80MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80__down_nss2_udp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -756,7 +756,7 @@ class TestThroughputUnderCombinationsnat80MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80__bi_nss2_udp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -802,7 +802,7 @@ class TestThroughputUnderCombinationsnat80MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80_up_nss2_tcp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -848,7 +848,7 @@ class TestThroughputUnderCombinationsnat80MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80_down_nss2_tcp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -894,7 +894,7 @@ class TestThroughputUnderCombinationsnat80MHz(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
                                        instance_name="TIP_PERF_DPT_WPA2_2G_80_bi_nss2_tcp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -943,7 +943,7 @@ class TestThroughputUnderCombinationsnat80MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80__up_nss3_udp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -992,7 +992,7 @@ class TestThroughputUnderCombinationsnat80MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80__down_nss3_udp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -1038,7 +1038,7 @@ class TestThroughputUnderCombinationsnat80MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80__bi_nss3_udp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -1084,7 +1084,7 @@ class TestThroughputUnderCombinationsnat80MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80__up_nss3_tcp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -1130,7 +1130,7 @@ class TestThroughputUnderCombinationsnat80MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80_down_nss3_tcp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -1177,7 +1177,7 @@ class TestThroughputUnderCombinationsnat80MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_80_bi_nss3_tcp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -1259,7 +1259,7 @@ class TestThroughputUnderCombinationsnat160MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_up_nss3_udp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -1308,7 +1308,7 @@ class TestThroughputUnderCombinationsnat160MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_down_nss3_udp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -1354,7 +1354,7 @@ class TestThroughputUnderCombinationsnat160MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_bi_nss3_udp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -1400,7 +1400,7 @@ class TestThroughputUnderCombinationsnat160MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_up_nss3_tcp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -1446,7 +1446,7 @@ class TestThroughputUnderCombinationsnat160MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_up_nss4_udp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -1495,7 +1495,7 @@ class TestThroughputUnderCombinationsnat160MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_down_nss4_udp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -1541,7 +1541,7 @@ class TestThroughputUnderCombinationsnat160MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_bi_nss4_udp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -1587,7 +1587,7 @@ class TestThroughputUnderCombinationsnat160MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_up_nss4_tcp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -1633,7 +1633,7 @@ class TestThroughputUnderCombinationsnat160MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_down_nss4_tcp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -1680,7 +1680,7 @@ class TestThroughputUnderCombinationsnat160MHz(object):
         if station:
             time.sleep(3)
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP3_DPT_WPA2_5G_160_bi_nss4_tcp_nat",
-                                       vlan_id=vlan, dut_name=dut_name, raw_data=val)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
