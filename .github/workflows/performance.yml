@@ -1,0 +1,328 @@
+name: performance testing
+env:
+  # thirdparties
+  DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
+  DOCKER_USER_NAME: wlan-testing-cicd
+  DOCKER_USER_PASSWORD: ${{ secrets.DOCKER_USER_PASSWORD }}
+  # AWS credentials
+  AWS_EKS_NAME: tip-wlan-main
+  AWS_DEFAULT_OUTPUT: json
+  AWS_DEFAULT_REGION: us-east-2
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+  # Cloud SDK certs
+  CACERT: ${{ secrets.CACERT }}
+  CAKEY: ${{ secrets.CAKEY }}
+  ALLURE_CLI_VERSION: 2.14.0
+
+on:
+  workflow_dispatch:
+    inputs:
+      testbeds:
+        default: '["basic-01","basic-02"]'
+        description: 'Testbed(s) to test'
+        required: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    # checkout needed repositories
+    - name: Checkout Testing repo
+      uses: actions/checkout@v2
+      with:
+        path: wlan-testing
+
+    - name: Checkout LANforge scripts
+      uses: actions/checkout@v2
+      with:
+        path: wlan-lanforge-scripts
+        repository: Telecominfraproject/wlan-lanforge-scripts
+
+    - name: import LANforge scripts
+      working-directory: wlan-testing
+      run: ./sync_repos.bash
+
+    # build and push docker image
+    - name: docker login
+      run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
+    - name: build docker image
+      working-directory: wlan-testing
+      run: docker build -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_number }} -f docker/Dockerfile .
+    - name: push docker image
+      run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_number }}
+
+#  cloudsdk:
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: Checkout pki scripts repo
+#      uses: actions/checkout@v2
+#      with:
+#        path: wlan-pki
+#        repository: Telecominfraproject/wlan-pki-cert-scripts
+#    - name: Checkout Cloud SDK repo
+#      uses: actions/checkout@v2
+#      with:
+#        path: wlan-helm
+#        repository: Telecominfraproject/wlan-cloud-helm
+#    - name: Checkout helm values repo
+#      uses: actions/checkout@v2
+#      with:
+#        path: toolsmith
+#        repository: Telecominfraproject/Toolsmith
+#        token: ${{ secrets.PAT_TOKEN }}
+#
+#    - name: Prepare environment
+#      run: |
+#        mkdir -p ./wlan-pki/testCA/private
+#        mkdir -p ./wlan-pki/testCA/newcerts
+#        mkdir -p ./wlan-pki/generated
+#        touch ./wlan-pki/testCA/index.txt
+#        echo "01" > ./wlan-pki/testCA/serial.txt
+#        echo "${{ env.CACERT }}" | base64 -d > ./wlan-pki/testCA/cacert.pem
+#        echo "${{ env.CAKEY }}" | base64 -d > ./wlan-pki/testCA/private/cakey.pem
+#        cp ./toolsmith/helm-values/aws-cicd.yaml ./wlan-helm/tip-wlan/resources/environments/aws-cicd.yaml
+#
+#    - name: Generate certs
+#      run: |
+#        cd ./wlan-pki
+#        ./generate_all.sh true
+#        ./copy-certs-to-helm.sh "../wlan-helm"
+#
+#    - name: Deploy Cloud SDK
+#      run: |
+#        cd ./wlan-helm/tip-wlan
+#        aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+#        # start deployment
+#        helm dependency update
+#        helm upgrade --install tip . -f resources/environments/aws-cicd.yaml --create-namespace --namespace tip
+#
+#    - name: Show pod state on deployment failure
+#      if: failure()
+#      run: |
+#        kubectl get pods -n tip
+#        kubectl describe pods -n tip
+
+  generate-matrix:
+    name: generate testbed matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    - name: generate-matrix
+      id: set-matrix
+      run: |
+        set -x
+        TESTBEDS="${{ github.event.inputs.testbeds || '[\"basic-01\",\"basic-02\"]' }}"
+        echo "$TESTBEDS"
+        TESTBED_ARRAY=$(echo "$TESTBEDS" | jq -c 'map({"testbed":.})')
+        echo "$TESTBED_ARRAY"
+        echo "::set-output name=matrix::{\"include\":${TESTBED_ARRAY}}"
+
+  test:
+    runs-on: ubuntu-latest
+    needs: [ build, generate-matrix ]
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
+    steps:
+    - name: get EKS access credentials
+      run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    - name: install Allure CLI tool
+      run: |
+        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+
+    - name: set job name
+      id: job
+      run: echo "::set-output name=name::perf-${{ github.run_number }}"
+
+    - name: prepare namespace
+      id: namespace
+      run: |
+        NAMESPACE="testing-${{ github.run_number }}-${{ matrix.testbed }}"
+        kubectl create ns $NAMESPACE
+        kubectl config set-context --current --namespace=$NAMESPACE
+        echo "::set-output name=name::${NAMESPACE}"
+
+    - name: create configuration.py secret
+      run: |
+        cat << EOF > configuration.py
+        ${{ secrets.LAB_CONFIGURATION }}
+        EOF
+
+        kubectl create secret generic configuration --from-file=configuration=./configuration.py
+
+    - name: run perf tests
+      run: |
+        cat <<EOF | kubectl apply -f -
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: "${{ steps.job.outputs.name }}"
+        spec:
+          template:
+            spec:
+              containers:
+              - name: tests
+                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_number }}
+                command:
+                  - /bin/bash
+                  - -x
+                  - -c
+                  - |
+                    cd tests
+                    pytest -m "performance" -s -vvv --testbed="${{ matrix.testbed }}" --skip-testrail --alluredir=/tmp/allure-results
+                    ret=\$?
+                    # sleep some time to be able to download the Allure results
+                    sleep 60
+                    exit \$ret
+                volumeMounts:
+                - name: configuration
+                  mountPath: "/wlan-testing/tests/configuration.py"
+                  subPath: configuration
+                  readOnly: true
+              imagePullSecrets:
+              - name: tip-docker-registry-key
+              restartPolicy: Never
+              volumes:
+              - name: configuration
+                secret:
+                  secretName: configuration
+          backoffLimit: 0
+        EOF
+
+        # wait for pod to spawn
+        sleep 1
+
+        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
+
+        kubectl wait "pod/$podname" --for condition=ready
+
+        #sleep 30 # wait for the pod to come up
+
+        until [ -s test_everything.xml ]
+        do
+          sleep 10
+          echo "waiting for tests to complete..."
+          kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
+        done
+        echo "tests completed"
+
+        echo "downloading allure results..."
+        kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
+
+        echo "waiting for pod to exit"
+        kubectl logs -f $podname >/dev/null 2>&1
+
+        exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
+
+    - name: print logs
+      if: always()
+      run: |
+        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
+        kubectl logs $podname
+
+    - name: upload Allure results as artifact
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: allure-results-${{ matrix.testbed }}
+        path: allure-results
+
+    - name: cleanup
+      if: always()
+      run: |
+        kubectl delete ns "${{ steps.namespace.outputs.name }}" --wait=true
+
+  report:
+    runs-on: ubuntu-latest
+    needs: [ test, generate-matrix ]
+    if: always()
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
+    steps:
+    - name: install Allure CLI tool
+      run: |
+        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: allure-results-${{ matrix.testbed }}
+        path: allure-results
+
+    - name: checkout testing repo
+      uses: actions/checkout@v2
+      with:
+        path: wlan-testing
+
+    - name: get reports branch
+      uses: actions/checkout@v2
+      continue-on-error: true
+      with:
+        ref: gh-pages
+        path: reports
+
+    - name: copy history into results
+      run: |
+        if [ -e "reports/performance/${{ matrix.testbed }}/latest" ] ; then
+          cp -r reports/performance/${{ matrix.testbed }}/latest/history/ allure-results/history
+        fi
+
+    - name: add report metadata
+      run: |
+        cat << EOF >> allure-results/environment.properties
+        Testbed=${{ matrix.testbed }}
+        Tests.CommitId=$(cd wlan-testing && git rev-parse --short HEAD)
+        CiRun.Id=${{ github.run_id }}
+        CiRun.Number=${{ github.run_number }}
+        CiRun.Url=https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
+        EOF
+
+    - name: generate Allure report
+      run: allure-${{ env.ALLURE_CLI_VERSION }}/bin/allure generate
+
+    - name: upload Allure report as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: allure-report-${{ matrix.testbed }}
+        path: allure-report
+    
+    - name: copy new report
+      run: |
+        mkdir -p reports/performance/${{ matrix.testbed }}
+        cp -Tr allure-report reports/performance/${{ matrix.testbed }}/${{ github.run_number }}
+
+    - name: update latest symlink
+      working-directory: reports/performance/${{ matrix.testbed }}
+      run: ln -fns ${{ github.run_number }} latest
+
+    - name: generate new index.html
+      run: python wlan-testing/.github/tools/generate_directory_index.py -r reports
+
+    - name: commit reports update
+      working-directory: reports
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+        git add .
+        git commit -m "Automated deployment: $(date -u)"
+
+    - name: push
+      if: github.ref == 'refs/heads/master'
+      uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: gh-pages
+        directory: reports
