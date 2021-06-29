@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.throughput_vs_pkt, pytest.mark.nat, pytest.mark.wpa3,
+pytestmark = [pytest.mark.performance, pytest.mark.nat, pytest.mark.wpa3,
               pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
@@ -37,19 +37,20 @@ class TestThroughputVsPktNatAWpa32G(object):
     """Throughput vs Various Pkt Size Test nat mode
        pytest -m "throughput_vs_pkt and nat"
     """
+
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.pkt60
-    def test_client_wpa3_personal_pkt_60_2g(self, get_vif_state,
-                                            lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                            get_configuration):
+    def test_client_wpa3_personal_nat_pkt_60_2g(self, get_vif_state,
+                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and wpa3_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        security = "wpa3_personal"
+        security = "wpa3"
         mode = "NAT"
         band = "twog"
         vlan = 1
@@ -83,9 +84,9 @@ class TestThroughputVsPktNatAWpa32G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.pkt142
-    def test_client_wpa3_personal_pkt_142_2g(self, get_vif_state,
-                                             lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                             get_configuration):
+    def test_client_wpa3_personal_nat_pkt_142_2g(self, get_vif_state,
+                                                 lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                 get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and wpa3_personal and twog"
         """
@@ -126,9 +127,9 @@ class TestThroughputVsPktNatAWpa32G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.pkt256
-    def test_client_wpa3_personal_pkt_256_2g(self, get_vif_state,
-                                             lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                             get_configuration):
+    def test_client_wpa3_personal_nat_pkt_256_2g(self, get_vif_state,
+                                                 lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                 get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and wpa3_personal and twog"
         """
@@ -169,9 +170,9 @@ class TestThroughputVsPktNatAWpa32G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.pkt512
-    def test_client_wpa3_personal_pkt_512_2g(self, get_vif_state,
-                                             lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                             get_configuration):
+    def test_client_wpa3_personal_nat_pkt_512_2g(self, get_vif_state,
+                                                 lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                 get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and wpa3_personal and twog"
         """
@@ -212,9 +213,9 @@ class TestThroughputVsPktNatAWpa32G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.pkt1024
-    def test_client_wpa3_personal_pkt_1024_2g(self, get_vif_state,
-                                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                              get_configuration):
+    def test_client_wpa3_personal_nat_pkt_1024_2g(self, get_vif_state,
+                                                  lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                  get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and wpa3_personal and twog"
         """
@@ -255,9 +256,9 @@ class TestThroughputVsPktNatAWpa32G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.pktMTU
-    def test_client_wpa3_personal_pkt_MTU_2g(self, get_vif_state,
-                                             lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                             get_configuration):
+    def test_client_wpa3_personal_nat_pkt_MTU_2g(self, get_vif_state,
+                                                 lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                 get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and wpa3_personal and twog"
         """
@@ -321,12 +322,13 @@ class TestThroughputVsPktNatOpen5G(object):
     """Throughput vs Various Pkt Size Test nat mode
        pytest -m "throughput_vs_pkt and nat"
     """
+
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt60
-    def test_client_wpa3_personal_pkt_60_5g(self, get_vif_state,
-                                            lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-                                            get_configuration):
+    def test_client_wpa3_personal_nat_pkt_60_5g(self, get_vif_state,
+                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+                                                get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and wpa3_personal and fiveg"
         """
@@ -367,9 +369,9 @@ class TestThroughputVsPktNatOpen5G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt142
-    def test_client_wpa3_personal_pkt_142_5g(self, get_vif_state,
-                                             lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-                                             get_configuration):
+    def test_client_wpa3_personal_nat_pkt_142_5g(self, get_vif_state,
+                                                 lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+                                                 get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and wpa3_personal and fiveg"
         """
@@ -410,9 +412,9 @@ class TestThroughputVsPktNatOpen5G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt256
-    def test_client_wpa3_personal_pkt_256_5g(self, get_vif_state,
-                                             lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-                                             get_configuration):
+    def test_client_wpa3_personal_nat_pkt_256_5g(self, get_vif_state,
+                                                 lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+                                                 get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and wpa3_personal and fiveg"
         """
@@ -453,9 +455,9 @@ class TestThroughputVsPktNatOpen5G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt512
-    def test_client_wpa3_personal_pkt_512_5g(self, get_vif_state,
-                                             lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-                                             get_configuration):
+    def test_client_wpa3_personal_nat_pkt_512_5g(self, get_vif_state,
+                                                 lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+                                                 get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and wpa3_personal and fiveg"
         """
@@ -496,9 +498,9 @@ class TestThroughputVsPktNatOpen5G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt1024
-    def test_client_wpa3_personal_pkt_1024_5g(self, get_vif_state,
-                                              lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-                                              get_configuration):
+    def test_client_wpa3_personal_nat_pkt_1024_5g(self, get_vif_state,
+                                                  lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+                                                  get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and wpa3_personal and fiveg"
         """
@@ -539,9 +541,9 @@ class TestThroughputVsPktNatOpen5G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @pytest.mark.pktMTU
-    def test_client_wpa3_personal_pkt_MTU_5g(self, get_vif_state,
-                                             lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-                                             get_configuration):
+    def test_client_wpa3_personal_nat_pkt_MTU_5g(self, get_vif_state,
+                                                 lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+                                                 get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and wpa3_personal and fiveg"
         """
