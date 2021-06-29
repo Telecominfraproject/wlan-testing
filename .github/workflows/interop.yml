@@ -24,9 +24,6 @@ on:
         default: ''
         description: 'Pass additional markers that will be and-combined with the interop marker, e.g. "twog or fiveg" -> "interop and twog or fiveg"'
         required: false
-  push:
-    branches:
-      - master
   schedule:
   - cron: '15 0 * * *'
 
