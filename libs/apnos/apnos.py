@@ -321,6 +321,43 @@ class APNOS:
             logs = ""
         return logs
 
+    def get_vifc(self):
+        client = self.ssh_cli_connect()
+        cmd = "vifC"
+        if self.mode:
+            cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                  f"cmd --value \"{cmd}\" "
+        stdin, stdout, stderr = client.exec_command(cmd)
+        output = stdout.read()
+        client.close()
+        allure.attach(name="vif state Output Msg: ", body=str(output))
+        allure.attach(name="vif state Err Msg: ", body=str(stderr))
+        return output
+
+    def get_vifs(self):
+        client = self.ssh_cli_connect()
+        cmd = "vifS"
+        if self.mode:
+            cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                  f"cmd --value \"{cmd}\" "
+        stdin, stdout, stderr = client.exec_command(cmd)
+        output = stdout.read()
+        client.close()
+        allure.attach(name="vif state Output Msg: ", body=str(output))
+        allure.attach(name="vif state Err Msg: ", body=str(stderr))
+        return output
+
+    def get_vlan(self):
+        stdout = self.get_vifs()
+        vlan_list = []
+        for i in stdout.splitlines():
+            vlan = str(i.strip()).replace("|",".").split(".")
+            try:
+                if not vlan[0].find("b'vlan_id"):
+                    vlan_list.append(vlan[1].strip())
+            except:
+                pass
+        return vlan_list
 
 if __name__ == '__main__':
     obj = {
@@ -329,9 +366,11 @@ if __name__ == '__main__':
         'username': "lanforge",
         'password': "pumpkin77",
         'port': 8803,
-        'jumphost_tty': '/dev/ttyAP2',
-
+        'jumphost_tty': '/dev/ttyAP2'
     }
     var = APNOS(credentials=obj)
     r = var.get_ssid_info()
     print(r)
+    print(var.get_ssid_info())
+    print(var.get_manager_state())
+    print(var.get_vlan())

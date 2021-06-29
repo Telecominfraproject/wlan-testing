@@ -84,7 +84,3 @@ def test_ap_firmware(get_configuration, get_apnos, get_latest_firmware, update_r
                                       msg='Cannot reach AP after upgrade to check CLI - re-test required')
 
     assert active_fw_list == get_latest_firmware
-
-@pytest.mark.shivam
-def test_abc(setup_controller):
-    assert True
