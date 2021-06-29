@@ -64,7 +64,7 @@ class RunTest:
         # self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
 
     def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[],
-                            station_name=[], mode="BRIDGE", vlan_id=1, band="twog"):
+                            station_name=[], mode="BRIDGE", vlan_id=1, band="twog", cleanup=True):
         """SINGLE CLIENT CONNECTIVITY using test_connect2.py"""
         self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
         self.staConnect.sta_mode = 0
@@ -108,7 +108,8 @@ class RunTest:
             except Exception as e:
                 print(e)
         self.staConnect.stop()
-        self.staConnect.cleanup()
+        if cleanup:
+            self.staConnect.cleanup()
         run_results = self.staConnect.get_result_list()
         for result in run_results:
             print("test result: " + result)
@@ -243,9 +244,8 @@ class RunTest:
         if band == "fiveg":
             self.client_connect.radio = self.fiveg_radios[0]
         self.client_connect.build()
-        self.client_connect.wait_for_ip(station_name)
-        print("station name", station_name)
-        print(self.client_connect.wait_for_ip(station_name))
+
+        self.client_connect.wait_for_ip(station_name, timeout_sec=60)
         if self.client_connect.wait_for_ip(station_name,timeout_sec=60):
             self.client_connect._pass("ALL Stations got IP's", print_=True)
             return True
@@ -296,7 +296,6 @@ class RunTest:
                              target_csv=self.local_report_path + report_name + "/kpi.csv")
         influx.post_to_influx()
         return self.dataplane_obj
-
 
 if __name__ == '__main__':
     lanforge_data = {

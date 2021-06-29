@@ -659,3 +659,12 @@ def get_vif_state(get_apnos, get_configuration):
     vif_config.sort()
     allure.attach(name="vif_state", body=str(vif_state))
     yield vif_state
+
+@pytest.fixture(scope="class")
+def get_vlan_list(get_apnos, get_configuration):
+    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
+    vlan_list = list(ap_ssh.get_vlan())
+    vlan_list.sort()
+    allure.attach(name="vlan_list", body=str(vlan_list))
+    yield vlan_list
+
