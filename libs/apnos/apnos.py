@@ -256,29 +256,26 @@ class APNOS:
         allure.attach(name="get_redirector ", body=redirector)
         return redirector
 
-    def run_generic_command(self, cmd=""):
-        allure.attach(name="run_generic_command ", body=cmd)
+    def run_generic_cmd(self):
         try:
             client = self.ssh_cli_connect()
-            cmd = cmd
+            cmd = "ubus call ucentral status"
             if self.mode:
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                       f"cmd --value \"{cmd}\" "
             stdin, stdout, stderr = client.exec_command(cmd)
-            input = stdin.read().decode('utf-8').splitlines()
-            output = stdout.read().decode('utf-8').splitlines()
-            error = stderr.read().decode('utf-8').splitlines()
+            output = stdout.read()
+            output = output.decode('utf-8').splitlines()
+            allure.attach(name="get_serial_number output ", body=str(stderr))
+            print(output)
+            # serial = output[1].replace(" ", "").split("|")[1]
             client.close()
         except Exception as e:
             print(e)
-            allure.attach(name="run_generic_command - Exception ", body=str(e))
-            input = "Error"
-            output = "Error"
-            error = "Error"
-        allure.attach(name="run_generic_command ", body=input)
-        allure.attach(name="run_generic_command ", body=str(output))
-        allure.attach(name="run_generic_command ", body=error)
-        return [input, output, error]
+            allure.attach(name="get_serial_number - Exception ", body=str(e))
+        serial = "Error"
+        allure.attach(name="get_serial_number ", body=str(serial))
+        return serial
 
 
 if __name__ == '__main__':
@@ -292,17 +289,17 @@ if __name__ == '__main__':
 
     }
     abc = {
-                'model': 'r160',
-                'mode': 'wifi5',
-                'serial': 'c4411ef53f23',
+                'model': 'eap102',
+                'mode': 'wifi6',
+                'serial': '903cb39d6918',
                 'jumphost': True,
-                'ip': "192.168.100.164",  # localhost
+                'ip': "localhost",  # 10.28.3.103
                 'username': "lanforge",
-                'password': "lanforge",
-                'port': 22,  # 22,
-                'jumphost_tty': '/dev/ttyUSB0',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.1.0.tar.gz"
+                'password': "pumpkin77",
+                'port': 8863,  # 22
+                'jumphost_tty': '/dev/ttyAP2',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
             }
     var = APNOS(credentials=abc)
-    # r = var.run_generic_command(cmd="ubus call wifi iface")
-    # print(r)
+    r = var.run_generic_cmd()
+    print(r)

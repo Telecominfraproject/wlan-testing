@@ -14,14 +14,14 @@ pytestmark = [pytest.mark.client_connectivity, pytest.mark.vlan, pytest.mark.gen
 setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
-        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something", "vlan": 100},
-                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"], "security_key": "something", "vlan": 100}],
-        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something", "vlan": 100},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+        "open": [{"ssid_name": "ssid_open_2g_vlan", "appliedRadios": ["is2dot4GHz"], "security_key": "something", "vlan": 100},
+                 {"ssid_name": "ssid_open_5g_vlan", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"], "security_key": "something", "vlan": 100}],
+        "wpa": [{"ssid_name": "ssid_wpa_2g_vlan", "appliedRadios": ["is2dot4GHz"], "security_key": "something", "vlan": 100},
+                {"ssid_name": "ssid_wpa_5g_vlan", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
                  "security_key": "something", "vlan": 100}],
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something", "vlan": 100},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+            {"ssid_name": "ssid_wpa2_2g_vlan", "appliedRadios": ["is2dot4GHz"], "security_key": "something", "vlan": 100},
+            {"ssid_name": "ssid_wpa2_5g_vlan", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
              "security_key": "something", "vlan": 100}]},
     "rf": {},
     "radius": False

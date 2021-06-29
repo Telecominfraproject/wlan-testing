@@ -204,6 +204,7 @@ class UProfileUtility:
         elif mode == "VLAN":
             del self.base_profile_config['interfaces'][1]
             self.base_profile_config['interfaces'][0]['ssids'] = []
+            self.base_profile_config['interfaces'] = []
         else:
             print("Invalid Mode")
             return 0
@@ -222,7 +223,6 @@ class UProfileUtility:
         elif self.mode == "BRIDGE":
             self.base_profile_config['interfaces'][0]['ssids'].append(ssid_info)
         elif self.mode == "VLAN":
-            self.base_profile_config['interfaces'] = []
             vid = ssid_data["vlan"]
             self.vlan_section = {
                 "name": "WAN100",
@@ -243,21 +243,23 @@ class UProfileUtility:
             }
             vlan_section = self.vlan_section
             if vid in self.vlan_ids:
+                print("sss", self.vlan_ids)
                 for i in self.base_profile_config['interfaces']:
                     if i["name"] == "WANv%s" % (vid):
                         i["ssids"].append(ssid_info)
             else:
+                print(self.vlan_ids)
                 self.vlan_ids.append(vid)
                 vlan_section['name'] = "WANv%s" % (vid)
                 vlan_section['vlan']['id'] = int(vid)
                 vlan_section["ssids"] = []
-                self.base_profile_config['interfaces'].append(vlan_section)
                 vlan_section["ssids"].append(ssid_info)
-            # print(vlan_section)
+                self.base_profile_config['interfaces'].append(vlan_section)
+                print(vlan_section)
                 vsection = 0
             # Add to the ssid section
             # print(self.base_profile_config)
-                self.base_profile_config['interfaces'][vsection]['vlan'] = {'id': int(vid)}
+            # self.base_profile_config['interfaces'][vsection]['vlan'] = {'id': int(vid)}
             # self.base_profile_config['interfaces'][vsection]['ssids'].append(ssid_info)
         else:
             print("invalid mode")
@@ -269,11 +271,11 @@ class UProfileUtility:
         payload['serialNumber'] = serial_number
         payload['UUID'] = 0
         print(payload)
-        # uri = self.sdk_client.build_uri("device/" + serial_number + "/configure")
-        # basic_cfg_str = json.dumps(payload)
-        # resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(), verify=False)
-        # self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
-        # print(resp)
+        uri = self.sdk_client.build_uri("device/" + serial_number + "/configure")
+        basic_cfg_str = json.dumps(payload)
+        resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(), verify=False)
+        self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
+        print(resp)
 
 
 # UCENTRAL_BASE_CFG = {
@@ -424,19 +426,19 @@ controller = {
 #     "rf": {},
 #     "radius": False
 # }
-obj = UController(controller_data=controller)
-# # # print(obj.get_devices())
-# # # print(obj.get_device_uuid(serial_number="903cb3944873"))
-# # # obj.get_device_uuid(serial_number="c4411ef53f23")
-profile_client = UProfileUtility(sdk_client=obj)
-profile_client.set_radio_config()
-profile_client.set_mode(mode="VLAN")
-ssid_data = {"ssid_name": "ssid_wpa_test_3_vlan", "vlan": 100, "appliedRadios": ["2G", "5G"], "security_key": "something", "security": "none"}
-profile_client.add_ssid(ssid_data=ssid_data)
-ssid_data = {"ssid_name": "ssid_wpa_test_4_vlan", "vlan": 200, "appliedRadios": ["2G", "5G"], "security_key": "something", "security": "none"}
-profile_client.add_ssid(ssid_data=ssid_data)
-# print(profile_client.base_profile_config)
-profile_client.push_config(serial_number="903cb39d6918")
+# obj = UController(controller_data=controller)
+# # # # # print(obj.get_devices())
+# # # # # print(obj.get_device_uuid(serial_number="903cb3944873"))
+# # # # # obj.get_device_uuid(serial_number="c4411ef53f23")
+# profile_client = UProfileUtility(sdk_client=obj)
+# profile_client.set_radio_config()
+# profile_client.set_mode(mode="VLAN")
+# ssid_data = {"ssid_name": "ssid_wpa_test_3_vlan", "vlan": 100, "appliedRadios": ["2G", "5G"], "security_key": "something", "security": "none"}
+# profile_client.add_ssid(ssid_data=ssid_data)
+# ssid_data = {"ssid_name": "ssid_wpa_test_4_vlan", "vlan": 100, "appliedRadios": ["2G", "5G"], "security_key": "something", "security": "none"}
+# profile_client.add_ssid(ssid_data=ssid_data)
+# # # print(profile_client.base_profile_config)
+# profile_client.push_config(serial_number="903cb39d6918")
 # print(profile_client.base_profile_config)
 # equipments = obj.get_devices()
 # print(equipments)
