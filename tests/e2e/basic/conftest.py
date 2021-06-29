@@ -122,7 +122,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
     # Radius Profile Creation
     if parameter["radius"]:
         radius_info = radius_info
-        radius_info["name"] = testbed + "-Automation-Radius-Profile-" + testbed
+        radius_info["name"] = testbed + "-Automation-Radius-Profile-" + mode
         instantiate_profile.delete_profile_by_name(profile_name=testbed + "-Automation-Radius-Profile-" + mode)
         try:
             instantiate_profile.create_radius_profile(radius_info=radius_info)
@@ -568,14 +568,33 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
     allure.attach(body=str("VIF Config: " + str(vif_config) + "\n" + "VIF State: " + str(vif_state)),
                   name="SSID Profiles in VIF Config and VIF State: ")
 
+    ap_logs = ap_ssh.logread()
+    allure.attach(body=ap_logs, name="AP LOgs: ")
     ssid_info = ap_ssh.get_ssid_info()
     ssid_data = []
     print(ssid_info)
     for i in range(0, len(ssid_info)):
         if ssid_info[i][1] == "OPEN":
             ssid_info[i].append("")
-        ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] +
-                " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
+        if ssid_info[i][1] == "OPEN":
+            ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] + " security=OPEN" +
+                    " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
+        if ssid_info[i][1] == "WPA":
+            ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] + " security=WPA" +
+                    " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
+        if ssid_info[i][1] == "WPA2":
+            ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] + " security=WPA2" +
+                    " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
+        if ssid_info[i][1] == "WPA3_PERSONAL":
+            ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] + " security=WPA3" +
+                    " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
+        if ssid_info[i][1] == "WPA | WPA2":
+            ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] + " security=WPA|WPA2" +
+                    " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
+        if ssid_info[i][1] == "EAP-TTLS":
+            ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] + " security=EAP-TTLS" +
+                    " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
+
         ssid_data.append(ssid)
 
     # Add bssid password and security from iwinfo data
@@ -634,8 +653,10 @@ def num_stations(request):
 @pytest.fixture(scope="class")
 def get_vif_state(get_apnos, get_configuration):
     ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
+    vif_config = list(ap_ssh.get_vif_config_ssids())
     vif_state = list(ap_ssh.get_vif_state_ssids())
     vif_state.sort()
+    vif_config.sort()
     allure.attach(name="vif_state", body=str(vif_state))
     yield vif_state
 

@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.dataplane_throughput_test, pytest.mark.bridge, pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.performance, pytest.mark.dataplane_throughput_test, pytest.mark.bridge] #, pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -59,7 +59,7 @@ class TestDataplaneThroughputBridge(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_2G",
+                                       instance_name="TIP_DPT_DPT_WPA2_2G_BRIDGE",
                                        vlan_id=vlan, dut_name=dut_name)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -99,7 +99,7 @@ class TestDataplaneThroughputBridge(object):
                                          station_name=station_names_fiveg, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP_PERF_DPT_WPA2_5G",
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode, instance_name="TIP_DPT_DPT_WPA2_5G_BRIDGE",
                               vlan_id=vlan, dut_name=dut_name)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/"+report_name + '/')

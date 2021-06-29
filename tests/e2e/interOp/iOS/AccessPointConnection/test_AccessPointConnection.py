@@ -19,6 +19,8 @@ if 'perfecto_libs' not in sys.path:
 
 from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnection, ping_deftapps_iOS, Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
 
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.AccessPassPointConnectivety]
+
 setup_params_general = {
     "mode": "NAT",
     "ssid_modes": {
@@ -31,17 +33,15 @@ setup_params_general = {
     "radius": False
 }
 
-@pytest.mark.AccessPassPointConnectivety
-@pytest.mark.interop_iOS
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
-#@pytest.mark.parametrize(
-   # 'setup_profiles',
-  #  [setup_params_general],
-  #  indirect=True,
-  #  scope="class"
-#)
-#@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general],
+    indirect=True,
+    scope="class"
+)
 
+@pytest.mark.usefixtures("setup_profiles")
 class TestAccessPointConnectivety(object):
 
     @pytest.mark.fiveg
@@ -68,7 +68,7 @@ class TestAccessPointConnectivety(object):
         #Open Ping Application
         openApp(connData["bundleId-iOS-Ping"], setup_perfectoMobile_iOS)
 
-        ping_deftapps_iOS(request, setup_perfectoMobile_iOS, wifi_ip)
+        ping_deftapps_iOS(setup_perfectoMobile_iOS, wifi_ip)
 
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
@@ -96,7 +96,7 @@ class TestAccessPointConnectivety(object):
         #Open Ping Application
         openApp(connData["bundleId-iOS-Ping"], setup_perfectoMobile_iOS)
 
-        ping_deftapps_iOS(request, setup_perfectoMobile_iOS, wifi_ip)
+        ping_deftapps_iOS(setup_perfectoMobile_iOS, wifi_ip)
 
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
@@ -124,7 +124,7 @@ class TestAccessPointConnectivety(object):
         #Open Ping Application
         openApp(connData["bundleId-iOS-Ping"], setup_perfectoMobile_iOS)
 
-        ping_deftapps_iOS(request, setup_perfectoMobile_iOS, wifi_ip)
+        ping_deftapps_iOS(setup_perfectoMobile_iOS, wifi_ip)
 
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
@@ -152,7 +152,7 @@ class TestAccessPointConnectivety(object):
         #Open Ping Application
         openApp(connData["bundleId-iOS-Ping"], setup_perfectoMobile_iOS)
 
-        ping_deftapps_iOS(request, setup_perfectoMobile_iOS, wifi_ip)
+        ping_deftapps_iOS(setup_perfectoMobile_iOS, wifi_ip)
 
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)

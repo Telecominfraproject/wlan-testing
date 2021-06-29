@@ -78,7 +78,7 @@ class TestSetupVLANSuiteA(object):
                                           msg='Failed to create profile')
             assert False
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @pytest.mark.wpa
     @pytest.mark.twog
     def test_setup_wpa_2g_ssid_profile(self, setup_profiles, update_report, test_cases):
@@ -96,7 +96,7 @@ class TestSetupVLANSuiteA(object):
                                           msg='Failed to create profile')
             assert False
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @pytest.mark.wpa
     @pytest.mark.fiveg
     def test_setup_wpa_5g_ssid_profile(self, setup_profiles, update_report, test_cases):
@@ -114,7 +114,7 @@ class TestSetupVLANSuiteA(object):
                                           msg='Failed to create profile')
             assert False
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     def test_setup_wpa2_personal_2g_ssid_profile(self, setup_profiles, update_report,
@@ -133,7 +133,7 @@ class TestSetupVLANSuiteA(object):
                                           msg='Failed to create profile')
             assert False
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     def test_setup_wpa2_personal_5g_ssid_profile(self, setup_profiles, update_report,
@@ -152,7 +152,7 @@ class TestSetupVLANSuiteA(object):
                                           msg='Failed to create profile')
             assert False
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     def test_setup_equipment_ap_profile(self, setup_profiles, update_report,
                                         test_cases):
         """ Equipment AP Profile SuiteA General """
@@ -167,7 +167,7 @@ class TestSetupVLANSuiteA(object):
                                           msg='Failed to create profile')
             assert False
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     def test_verify_vif_config(self, setup_profiles, update_report,
                                test_cases):
         """ vifc SuiteA General """
@@ -182,7 +182,7 @@ class TestSetupVLANSuiteA(object):
                                           msg='Failed to push profile')
             assert False
 
-    @pytest.mark.sanity_55
+    @pytest.mark.sanity_light
     @allure.severity(allure.severity_level.BLOCKER)
     def test_verify_vif_state(self, setup_profiles, update_report,
                               test_cases):

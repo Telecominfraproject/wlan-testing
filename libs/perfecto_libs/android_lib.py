@@ -35,6 +35,18 @@ def closeApp(appName, setup_perfectoMobile):
     params = {'identifier': appName}
     setup_perfectoMobile[0].execute_script('mobile:application:close', params)
 
+def scrollDown(setup_perfectoMobile):
+    print("Scroll Down")
+    setup_perfectoMobile[1].step_start("Scroll Down")  
+    params2 = {}
+    params2["start"] = "50%,90%"
+    params2["end"] = "50%,20%"
+    params2["duration"] = "4"
+    time.sleep(5)
+    setup_perfectoMobile[0].execute_script('mobile:touch:swipe', params2)
+    time.sleep(5)
+  
+
 def getDeviceID(setup_perfectoMobile):
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
@@ -406,7 +418,7 @@ def ForgetWifiConnection(request, setup_perfectoMobile, WifiName, connData):
                 report.step_start("Verify if wifi is disconnected from: " + WifiName) 
                 WifiForget= driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")     
                 print("Wifi Not disconnected, check xpath for: " + WifiName)
-            except NoSuchElementException:
+            except NoSuchElementException and Exception:
                 print("Wifi Disconnected Successfully: " + WifiName)
             
         else:
@@ -430,10 +442,11 @@ def ForgetWifiConnection(request, setup_perfectoMobile, WifiName, connData):
             print("Verify if wifi is disconnected from: " + WifiName)
             try:
                 report.step_start("Verify if wifi is disconnected from: " + WifiName) 
-                WifiForget= driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")     
+                #WifiForget= driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")     
                 print("Wifi Not disconnected, check xpath for: " + WifiName)
-              
-            except NoSuchElementException:
+                WifiForget = WebDriverWait(driver, 20).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))          
+            except NoSuchElementException and TimeoutException and Exception:
+                assert True
                 print("Wifi Disconnected Successfully: " + WifiName)
 
 
@@ -615,7 +628,7 @@ def Toggle_WifiMode_android(request, setup_perfectoMobile, WifiName, connData):
         WifiNameElement3 = WebDriverWait(driver, 35).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='android:id/summary']")))
         Wifi_AP_Name3 = WifiNameElement3.text
         print("Current Wifi Status Name: " + Wifi_AP_Name3)
-    except NoSuchElementException:
+    except NoSuchElementException and TimeoutException:
         Wifi_AP_Name3="Null"
         print("Device did not connect back to Wifi: " + WifiName) 
 
@@ -683,3 +696,200 @@ def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMob
 
     return currentResult
  
+def downloadInstallOpenRoamingProfile(request, profileDownloadURL, setup_perfectoMobile, connData):
+    print("\n-------------------------------------")
+    print("Installing Android Profile ")
+    print("-------------------------------------")
+
+    OpenRoamingWifiName = ""
+
+    report = setup_perfectoMobile[1]    
+    driver = setup_perfectoMobile[0]
+  
+    driver.switch_to.context('WEBVIEW_1')
+
+    print("Launching Safari with OpenRoaming Profile")
+    report.step_start("Open Roaming Download Page") 
+    driver.get(profileDownloadURL) 
+
+    try:
+        print("Accept Popup")
+        report.step_start("Accept Popup") 
+        driver.switch_to.context('NATIVE_APP')
+        WebDriverWait(driver, 40).until(EC.alert_is_present(), 'Time out confirmation popup to appear')
+        alert = driver.switch_to.alert
+        alert.accept()
+        print("Alert Accepted")
+    except TimeoutException:
+        print("no alert")
+        #//*[@resource-id="android:id/button1"]
+    #Open Settings Application
+    #openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+
+def deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile, connData):
+    print("\n-----------------------------")
+    print("Delete Open Roaming Profile")
+    print("-----------------------------")
+
+    report = setup_perfectoMobile[1]    
+    driver = setup_perfectoMobile[0]
+
+    report.step_start("Switching Driver Context")  
+    print("Switching Context to Native")
+    driver.switch_to.context('NATIVE_APP')
+    contexts = driver.contexts
+
+    #Open Settings Application
+    openApp(connData["appPackage-android"], setup_perfectoMobile)
+
+    deviceModelName = getDeviceModelName(setup_perfectoMobile)
+
+    if deviceModelName!=("Pixel 4"): 
+        #Not a pixel Device
+        print ("Selected Device Model: " + deviceModelName)
+        report.step_start("Forget Profile: " + profileName)  
+
+        # three dotss
+        #//*[@resource-id='com.android.settings:id/round_corner']
+        try:
+            print("Click Connections")
+            report.step_start("Click Connections")  
+            connElement = driver.find_element_by_xpath("//*[@text='Connections']")
+            connElement.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Connections") 
+
+        try:
+            report.step_start("Clicking Wi-Fi")  
+            wifiElement = driver.find_element_by_xpath("//*[@text='Wi-Fi']")
+            wifiElement.click()
+        except NoSuchElementException:
+            print("Exception: Clicking Wi-Fi - Update/check Xpath for Click Wifi Connection ") 
+
+        try:
+            print ("Click Advanced Menu 3 Dot")
+            report.step_start("Click Advanced Menu 3 Dot") 
+            ThreeDotMenuBtn = driver.find_element_by_xpath("//*[@content-desc='More options']")     
+            ThreeDotMenuBtn.click()
+        except NoSuchElementException:
+            print("Exception: Click Advanced Menu Not Loaded")
+
+        # Click Advanced
+        # //*[@text='Advanced']
+        try:
+            print ("Click Advanced")
+            report.step_start("Click Advanced") 
+            AdvBtn = driver.find_element_by_xpath("//*[@text='Advanced']")     
+            AdvBtn.click()
+        except NoSuchElementException:
+            print("Exception: Click Advanced")
+
+        #Scroll Down
+        scrollDown(setup_perfectoMobile)
+
+        #Click HotSpot
+        #//*[@text="Hotspot 2.0"]
+        try:
+            print ("Click HotSpot")
+            report.step_start("Click HotSpot") 
+            HotSpotBtn = driver.find_element_by_xpath("//*[@text='Hotspot 2.0']")     
+            HotSpotBtn.click()
+        except NoSuchElementException:
+            print("Exception: Click HotSpot")
+
+        #Click Ameriband
+        #//*[@text="Ameriband"]
+        try:
+            print ("Click Ameriband")
+            report.step_start("Click Ameriband") 
+            AmeribandXpath = "//*[@text='Ameriband']"
+            AmeribandBtn = WebDriverWait(driver, 25).until(EC.presence_of_element_located((MobileBy.XPATH, AmeribandXpath)))          
+            AmeribandBtn.click()
+
+        except NoSuchElementException and TimeoutException and Exception:
+            report.step_start("Exception: Profile Don't Exist") 
+            print("Exception: Profile Don't Exist")
+
+        #Click Forget
+        #//*[@resource-id="com.android.settings:id/icon"]
+        try:
+            print ("Click Forget")
+            report.step_start("Click Forget") 
+            ForgetBTN = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/icon']")     
+            ForgetBTN.click()
+        except NoSuchElementException:
+            print("Exception: Click Forget")
+
+        #Click Forget Confirm
+        #//*[@resource-id="android:id/button1"]
+        try:
+            print ("Click Forget Confirm")
+            report.step_start("Click Forget Confirm") 
+            ForgetConfirm = driver.find_element_by_xpath("//*[@resource-id='android:id/button1']")     
+            ForgetConfirm.click()
+        except NoSuchElementException:
+            print("Exception: Click Forget Confirm")
+
+    else:
+        #Pixel Device
+        print ("Pixel Device Not supported: " + deviceModelName)
+        report.step_start("Pixel Device Not supported: ")
+        assert False
+
+    closeApp(connData["appPackage-android"], setup_perfectoMobile)
+
+def verify_APconnMobileDevice_Android(request, profileNameSSID, setup_perfectoMobile, connData):
+    print("\n-----------------------------")
+    print("Verify Connected Network ")
+    print("-----------------------------")
+
+    report = setup_perfectoMobile[1]    
+    driver = setup_perfectoMobile[0]
+
+    report.step_start("Switching Driver Context")  
+    print("Switching Context to Native")
+    driver.switch_to.context('NATIVE_APP')
+    contexts = driver.contexts
+
+    #Open Settings Application
+    openApp(connData["appPackage-android"], setup_perfectoMobile)
+
+    deviceModelName = getDeviceModelName(setup_perfectoMobile)
+
+    if deviceModelName!=("Pixel 4"): 
+        #Not a pixel Device
+        print ("Selected Device Model: " + deviceModelName)
+  
+        report.step_start("Click Connections")  
+        try:
+            print("Click Connections")
+            report.step_start("Click Connections")  
+            connElement = driver.find_element_by_xpath("//*[@text='Connections']")
+            connElement.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Connections") 
+
+        print("Clicking Wi-Fi")
+        report.step_start("Clicking Wi-Fi")  
+        wifiElement = driver.find_element_by_xpath("//*[@text='Wi-Fi']")
+        wifiElement.click()
+
+        try:
+            print("Verify if Wifi is Connected to: " + profileNameSSID)
+            report.step_start("Verify if Wifi is Connected: " + profileNameSSID)  
+            #WifiInternetErrMsg = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + profileNameSSID + "']")     
+            WifiInternetErrMsg = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='Ameriband']")           
+            print("Wifi Successfully Connected")
+                
+        except NoSuchElementException:
+            print("Wifi Connection Error: " + profileNameSSID)
+            report.step_start("Wifi Connection Error: " + profileNameSSID) 
+            assert False
+
+    else:
+        #Pixel Device
+        print ("Pixel Device Not supported: " + deviceModelName)
+        report.step_start("Pixel Device Not supported: ")
+        assert False
+
+    closeApp(connData["appPackage-android"], setup_perfectoMobile)
