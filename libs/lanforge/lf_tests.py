@@ -244,10 +244,11 @@ class RunTest:
             self.client_connect.radio = self.fiveg_radios[0]
         self.client_connect.build()
         self.client_connect.wait_for_ip(station_name)
+        print("station name", station_name)
         print(self.client_connect.wait_for_ip(station_name))
-        if self.client_connect.wait_for_ip(station_name):
+        if self.client_connect.wait_for_ip(station_name,timeout_sec=60):
             self.client_connect._pass("ALL Stations got IP's", print_=True)
-            return self.client_connect
+            return True
         else:
             return False
 
@@ -258,14 +259,15 @@ class RunTest:
         return True
 
     def dataplane(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
-                  upload_rate="85%", duration="1m", instance_name="test_demo"):
+                  upload_rate="0kbps", duration="1m", instance_name="test_demo", raw_data=None):
         if mode == "BRIDGE":
             self.client_connect.upstream_port = self.upstream_port
         elif mode == "NAT":
             self.client_connect.upstream_port = self.upstream_port
-        else:
+        elif mode == "VLAN":
             self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
-
+        if raw_data == None:
+            raw_data = [['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types: UDP;TCP'], ["show_3s: 1"], ["show_ll_graphs: 1"], ["show_log: 1"]]
         self.dataplane_obj = DataplaneTest(lf_host=self.lanforge_ip,
                                            lf_port=self.lanforge_port,
                                            ssh_port=self.lf_ssh_port,
@@ -282,11 +284,10 @@ class RunTest:
                                            duration=duration,
                                            dut=dut_name,
                                            station="1.1." + station_name[0],
-                                           raw_lines=[['pkts: MTU'],
-                                                      ['directions: DUT Transmit;DUT Receive'],
-                                                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
-                                                      ["show_ll_graphs: 1"], ["show_log: 1"]],
-                                           )
+                                           raw_lines=raw_data)
+        #print("raw lines",self.raw_lines)
+        #[['pkts: 60'], ['cust_pkt_sz: 88 '], ['directions: DUT Receive'], ['traffic_types: TCP'], ['bandw_options: 20'], ['spatial_streams: 2']]
+
         self.dataplane_obj.setup()
         self.dataplane_obj.run()
         report_name = self.dataplane_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
