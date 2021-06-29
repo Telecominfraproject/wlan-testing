@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.vlan, pytest.mark.wpa,
+pytestmark = [pytest.mark.performance, pytest.mark.throughput_vs_pkt, pytest.mark.vlan, pytest.mark.wpa,
               pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {

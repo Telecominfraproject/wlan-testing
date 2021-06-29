@@ -258,7 +258,7 @@ class RunTest:
         return True
 
     def dataplane(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
-                  upload_rate="85%", duration="1m", instance_name="test_demo", pkt_size=None, bw=None):
+                  upload_rate="85%", duration="1m", instance_name="test_demo", raw_lines=None):
         if mode == "BRIDGE":
             self.client_connect.upstream_port = self.upstream_port
         elif mode == "NAT":
@@ -266,19 +266,11 @@ class RunTest:
         else:
             self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
 
-        if pkt_size is None:
-            pkt_size = "Custom;60;142;256;512;1024;MTU"
-        if bw is not None:
-            raw_lines = [['pkts: %s' % pkt_size],
+        if raw_lines is None:
+            raw_lines = [['pkts: Custom;60;142;256;512;1024;MTU'],
                          ['directions: DUT Transmit;DUT Receive'],
-                         ['bandw_options: %s' % bw],
                          ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                          ["show_ll_graphs: 1"], ["show_log: 1"]]
-
-        raw_lines = [['pkts: %s' % pkt_size],
-                     ['directions: DUT Transmit;DUT Receive'],
-                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
-                     ["show_ll_graphs: 1"], ["show_log: 1"]]
 
         self.dataplane_obj = DataplaneTest(lf_host=self.lanforge_ip,
                                            lf_port=self.lanforge_port,

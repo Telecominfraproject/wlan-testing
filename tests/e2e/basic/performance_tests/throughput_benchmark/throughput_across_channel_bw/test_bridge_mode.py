@@ -10,6 +10,11 @@ import allure
 
 pytestmark = [pytest.mark.performance, pytest.mark.throughput_across_bw_test, pytest.mark.Bridge,
               pytest.mark.usefixtures("setup_test_run")]
+raw_lines = [['pkts: %s' % 1],
+                         ['directions: DUT Transmit;DUT Receive'],
+                         ['bandw_options: %s' % 1],
+                         ['traffic_types: UDP;TCP'], ["show_3s: 1"],
+                         ["show_ll_graphs: 1"], ["show_log: 1"]]
 
 setup_params_general_20Mhz = {
     "mode": "BRIDGE",

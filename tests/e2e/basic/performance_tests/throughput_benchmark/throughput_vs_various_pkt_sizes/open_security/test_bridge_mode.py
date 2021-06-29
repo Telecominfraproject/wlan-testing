@@ -49,6 +49,10 @@ class TestThroughputVsPktBridge2G(object):
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
+        raw_lines = [['pkts: 60'],
+                     ['directions: DUT Transmit;DUT Receive'],
+                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
+                     ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -59,7 +63,7 @@ class TestThroughputVsPktBridge2G(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
                                        instance_name="TIP_PERF_PKT_60_OPEN_2G",
-                                       vlan_id=vlan, dut_name=dut_name, pkt_size="60")
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -92,6 +96,10 @@ class TestThroughputVsPktBridge2G(object):
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
+        raw_lines = [['pkts: 142'],
+                     ['directions: DUT Transmit;DUT Receive'],
+                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
+                     ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -102,7 +110,7 @@ class TestThroughputVsPktBridge2G(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
                                        instance_name="TIP_PERF_PKT_142_OPEN_2G",
-                                       vlan_id=vlan, dut_name=dut_name, pkt_size="142")
+                                       vlan_id=vlan, dut_name=dut_name,raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -135,6 +143,10 @@ class TestThroughputVsPktBridge2G(object):
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
+        raw_lines = [['pkts: 256'],
+                     ['directions: DUT Transmit;DUT Receive'],
+                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
+                     ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -145,7 +157,7 @@ class TestThroughputVsPktBridge2G(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
                                        instance_name="TIP_PER_PKT_256_OPEN_2G",
-                                       vlan_id=vlan, dut_name=dut_name, pkt_size="256")
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -178,6 +190,10 @@ class TestThroughputVsPktBridge2G(object):
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
+        raw_lines = [['pkts: 512'],
+                     ['directions: DUT Transmit;DUT Receive'],
+                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
+                     ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -188,7 +204,7 @@ class TestThroughputVsPktBridge2G(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
                                        instance_name="TIP_PERF_PKT_512_OPEN_2G",
-                                       vlan_id=vlan, dut_name=dut_name, pkt_size="512")
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -221,6 +237,10 @@ class TestThroughputVsPktBridge2G(object):
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
+        raw_lines = [['pkts: 1024'],
+                     ['directions: DUT Transmit;DUT Receive'],
+                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
+                     ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -231,7 +251,7 @@ class TestThroughputVsPktBridge2G(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
                                        instance_name="TIP_PERF_PKT_1024_OPEN_2G",
-                                       vlan_id=vlan, dut_name=dut_name, pkt_size="1024")
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -264,6 +284,10 @@ class TestThroughputVsPktBridge2G(object):
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
+        raw_lines = [['pkts: MTU'],
+                     ['directions: DUT Transmit;DUT Receive'],
+                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
+                     ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -274,7 +298,7 @@ class TestThroughputVsPktBridge2G(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
                                        instance_name="TIP_PERF_PKT_MTU_OPEN_2G",
-                                       vlan_id=vlan, dut_name=dut_name, pkt_size="MTU")
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -313,6 +337,54 @@ class TestThroughputVsPktBridge5G(object):
     """Throughput vs Various Pkt Size Test Bridge mode
        pytest -m "throughput_vs_pkt and Bridge"
     """
+
+    @pytest.mark.open
+    @pytest.mark.fiveg
+    @pytest.mark.pkt60
+    def test_client_open_pkt_142_5g(self, get_vif_state,
+                                    lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+                                    get_configuration):
+        """Throughput Vs Pkt Sizes Bridge Mode
+           pytest -m "throughput_vs_pkt and Bridge and open and fiveg"
+        """
+        profile_data = setup_params_5g["ssid_modes"]["open"][1]
+        ssid_name = profile_data["ssid_name"]
+
+        security = "open"
+        mode = "BRIDGE"
+        band = "fiveg"
+        vlan = 1
+        dut_name = create_lanforge_chamberview_dut
+        raw_lines = [['pkts: 60'],
+                     ['directions: DUT Transmit;DUT Receive'],
+                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
+                     ["show_ll_graphs: 1"], ["show_log: 1"]]
+        if ssid_name not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+                                         mode=mode, band=band,
+                                         station_name=station_names_fiveg, vlan_id=vlan)
+
+        if station:
+            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
+                                       instance_name="TIP_PERF_PKT_60_OPEN_5G",
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            entries = os.listdir("../reports/" + report_name + '/')
+            pdf = False
+            for i in entries:
+                if ".pdf" in i:
+                    pdf = i
+            if pdf:
+                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
+                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
+            print("Test Completed... Cleaning up Stations")
+            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            assert station
+        else:
+            assert False
+
     @pytest.mark.open
     @pytest.mark.fiveg
     @pytest.mark.pkt142
@@ -330,6 +402,10 @@ class TestThroughputVsPktBridge5G(object):
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
+        raw_lines = [['pkts: 142'],
+                     ['directions: DUT Transmit;DUT Receive'],
+                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
+                     ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -340,7 +416,7 @@ class TestThroughputVsPktBridge5G(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
                                        instance_name="TIP_PERF_PKT_142_OPEN_5G",
-                                       vlan_id=vlan, dut_name=dut_name, pkt_size="142")
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -373,6 +449,10 @@ class TestThroughputVsPktBridge5G(object):
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
+        raw_lines = [['pkts: 256'],
+                     ['directions: DUT Transmit;DUT Receive'],
+                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
+                     ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -383,7 +463,7 @@ class TestThroughputVsPktBridge5G(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
                                        instance_name="TIP_PERF_PKT_256_OPEN_5G",
-                                       vlan_id=vlan, dut_name=dut_name, pkt_size="256")
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -416,6 +496,10 @@ class TestThroughputVsPktBridge5G(object):
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
+        raw_lines = [['pkts: 512'],
+                     ['directions: DUT Transmit;DUT Receive'],
+                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
+                     ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -426,7 +510,7 @@ class TestThroughputVsPktBridge5G(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
                                        instance_name="TIP_PERF_PKT_512_OPEN_5G",
-                                       vlan_id=vlan, dut_name=dut_name, pkt_size="512")
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -459,6 +543,10 @@ class TestThroughputVsPktBridge5G(object):
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
+        raw_lines = [['pkts: 1024'],
+                     ['directions: DUT Transmit;DUT Receive'],
+                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
+                     ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -469,7 +557,7 @@ class TestThroughputVsPktBridge5G(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
                                        instance_name="TIP_PERF_PKT_1024_OPEN_5G",
-                                       vlan_id=vlan, dut_name=dut_name, pkt_size="1024")
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
@@ -502,6 +590,10 @@ class TestThroughputVsPktBridge5G(object):
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
+        raw_lines = [['pkts: MTU'],
+                     ['directions: DUT Transmit;DUT Receive'],
+                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
+                     ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -512,7 +604,7 @@ class TestThroughputVsPktBridge5G(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
                                        instance_name="TIP_PERF_PKT_MTU_OPEN_5G",
-                                       vlan_id=vlan, dut_name=dut_name, pkt_size="MTU")
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
