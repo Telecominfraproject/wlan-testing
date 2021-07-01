@@ -250,8 +250,12 @@ def setup_controller(request, get_configuration, test_access_point):
 
             def teardown_ucontroller():
                 print("\nTest session Completed")
-                allure.attach(body=str(get_configuration["controller"]), name="Controller Teardown: ")
                 sdk_client.logout()
+                allure.attach(body=str(get_configuration["controller"]), name="Controller Teardown: ")
+                try:
+                    sdk_client.logout()
+                except Exception as e:
+                    print(e)
 
             request.addfinalizer(teardown_ucontroller)
 
@@ -269,6 +273,7 @@ def setup_controller(request, get_configuration, test_access_point):
         print(e)
         allure.attach(body=str(e), name="Controller Instantiation Failed: ")
         sdk_client = False
+        pytest.exit("unable to communicate to Controller" + str(e))
     yield sdk_client
 
 

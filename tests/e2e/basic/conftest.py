@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 
@@ -55,11 +56,12 @@ def setup_vlan():
 
 @allure.feature("CLIENT CONNECTIVITY SETUP")
 @pytest.fixture(scope="class")
-def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment_id, get_uuid,
+def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment_id,
                    instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                    get_security_flags, get_configuration, radius_info, get_apnos):
     if request.config.getoption("--ucentral"):
-        instantiate_profile = instantiate_profile(sdk_client=setup_controller)
+        instantiate_profile_obj = instantiate_profile(sdk_client=setup_controller)
+        print(1, instantiate_profile_obj.sdk_client)
         vlan_id, mode = 0, 0
         parameter = dict(request.param)
         print(parameter)
@@ -69,18 +71,18 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
             print("Invalid Mode: ", parameter['mode'])
             allure.attach(body=parameter['mode'], name="Invalid Mode: ")
             yield test_cases
-        instantiate_profile.set_radio_config()
+        instantiate_profile_obj.set_radio_config()
         if parameter['mode'] == "NAT":
             mode = "NAT"
-            instantiate_profile.set_mode(mode=mode)
+            instantiate_profile_obj.set_mode(mode=mode)
             vlan_id = 1
         if parameter['mode'] == "BRIDGE":
             mode = "BRIDGE"
-            instantiate_profile.set_mode(mode=mode)
+            instantiate_profile_obj.set_mode(mode=mode)
             vlan_id = 1
         if parameter['mode'] == "VLAN":
             mode = "VLAN"
-            instantiate_profile.set_mode(mode=mode)
+            instantiate_profile_obj.set_mode(mode=mode)
             vlan_id = setup_vlan
         profile_data["ssid"] = {}
         for i in parameter["ssid_modes"]:
@@ -102,7 +104,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                             j["appliedRadios"] = list(set(j["appliedRadios"]))
                             j['security'] = 'none'
                             lf_dut_data.append(j)
-                            creates_profile = instantiate_profile.add_ssid(ssid_data=j)
+                            creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j)
                             test_cases["wpa_2g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
@@ -123,7 +125,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                             j["appliedRadios"] = list(set(j["appliedRadios"]))
                             j['security'] = 'psk'
                             lf_dut_data.append(j)
-                            creates_profile = instantiate_profile.add_ssid(ssid_data=j)
+                            creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j)
                             test_cases["wpa_2g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
@@ -145,7 +147,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                             j['security'] = 'psk2'
                             lf_dut_data.append(j)
                             print("shivam: ", j)
-                            creates_profile = instantiate_profile.add_ssid(ssid_data=j)
+                            creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j)
                             test_cases["wpa_2g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
@@ -154,9 +156,54 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                             test_cases["wpa2_personal"] = False
                             allure.attach(body=str(e),
                                           name="SSID Profile Creation Failed")
-        instantiate_profile.push_config(serial_number=get_equipment_id[0])
-        yield True
+        ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="2.x")
+        connected, latest, active = ap_ssh.get_ucentral_status()
+        print(2, instantiate_profile_obj.sdk_client)
+        if connected == False:
+            pytest.exit("AP is disconnected")
+        instantiate_profile_obj.push_config(serial_number=get_equipment_id[0])
+        config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"'))
+        config["uuid"] = 0
+        ap_config_latest = ap_ssh.get_uc_latest_config()
+        ap_config_latest["uuid"] = 0
+        x = 1
+        while ap_config_latest != config:
+            time.sleep(5)
+            x += 1
+            ap_config_latest = ap_ssh.get_uc_latest_config()
+            ap_config_latest["uuid"] = 0
+            if x == 19:
+                break
+        if x < 19:
+            print("Config properly applied into AP", config)
+        ap_config_latest = ap_ssh.get_uc_latest_config()
+        ap_config_latest["uuid"] = 0
 
+        ap_config_active = ap_ssh.get_uc_active_config()
+        ap_config_active["uuid"] = 0
+        x = 1
+        while ap_config_active != ap_config_latest:
+            time.sleep(5)
+            x += 1
+            ap_config_latest = ap_ssh.get_uc_latest_config()
+            ap_config_latest["uuid"] = 0
+
+            ap_config_active = ap_ssh.get_uc_active_config()
+            ap_config_active["uuid"] = 0
+            if x == 19:
+                break
+        allure_body = "AP config status: \n" + \
+                      "Active Config: " + str(ap_ssh.get_uc_active_config()) + "\n" \
+                                                                               "Latest Config: ", str(
+            ap_ssh.get_uc_latest_config()) + "\n" \
+                                             "Applied Config: ", str(config)
+        if x < 19:
+            print("AP is Broadcasting Applied Config")
+            allure.attach(name="Config Info", body="AP is Broadcasting Applied Config: " + str(allure_body))
+        else:
+            print("AP is Not Broadcasting Applied Config")
+            allure.attach(name="Config Info", body="AP is Not Broadcasting Applied Config: " + str(allure_body))
+        yield True
     else:
         instantiate_profile = instantiate_profile(sdk_client=setup_controller)
         vlan_id, mode = 0, 0
@@ -755,10 +802,10 @@ def get_vif_state(get_apnos, get_configuration, request):
 """UCentral Fixtures"""
 
 
-@pytest.fixture(scope="session")
-def get_uuid(request, setup_controller, get_equipment_id):
-    if request.config.getoption("--ucentral"):
-        UUID = setup_controller.get_device_uuid(serial_number=get_equipment_id[0])
-        yield UUID
-    else:
-        yield False
+# @pytest.fixture(scope="session")
+# def get_uuid(request, setup_controller, get_equipment_id):
+#     # if request.config.getoption("--ucentral"):
+#     #     UUID = 1 #setup_controller.get_device_uuid(serial_number=get_equipment_id[0])
+#     #     yield UUID
+#     # else:
+#     yield False

@@ -6,11 +6,14 @@
 import json
 import ssl
 import sys
+import time
 from urllib.parse import urlparse
 import pytest
 import allure
 import requests
 from pathlib import Path
+
+from requests.adapters import HTTPAdapter
 
 
 class ConfigureController:
@@ -20,32 +23,39 @@ class ConfigureController:
         self.password = controller_data["password"]
         self.host = urlparse(controller_data["url"])
         self.access_token = ""
+        self.session = requests.Session()
+
         self.login_resp = self.login()
 
     def build_uri(self, path):
         new_uri = 'https://%s:%d/api/v1/%s' % (self.host.hostname, self.host.port, path)
+        print(new_uri)
         return new_uri
 
     def login(self):
-
         uri = self.build_uri("oauth2")
+        self.session.mount(uri, HTTPAdapter(max_retries=15))
         payload = json.dumps({"userId": self.username, "password": self.password})
-        resp = requests.post(uri, data=payload, verify="")
+        resp = self.session.post(uri, data=payload, verify=False, timeout=100)
         self.check_response("POST", resp, "", payload, uri)
         token = resp.json()
         self.access_token = token["access_token"]
+        print(resp)
+        self.session.headers.update({'Authorization': self.access_token})
         return resp
 
     def logout(self):
-        global access_token
         uri = self.build_uri('oauth2/%s' % self.access_token)
-        resp = requests.delete(uri, headers=self.make_headers(), verify=False)
+        resp = self.session.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("DELETE", resp, self.make_headers(), "", uri)
         print('Logged out:', resp.status_code)
         return resp
 
     def make_headers(self):
-        headers = {'Authorization': 'Bearer %s' % self.access_token}
+        headers = {'Authorization': 'Bearer %s' % self.access_token,
+                   "Connection": "keep-alive",
+                   "Keep-Alive": "timeout=10, max=1000"
+                   }
         return headers
 
     def check_response(self, cmd, response, headers, data_str, url):
@@ -74,16 +84,18 @@ class UController(ConfigureController):
 
     def get_devices(self):
         uri = self.build_uri("devices/")
-        resp = requests.get(uri, headers=self.make_headers(), verify=False)
+        resp = self.session.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         devices = resp.json()
+        #resp.close()()
         return devices
 
     def get_device_by_serial_number(self, serial_number=None):
         uri = self.build_uri("device/" + serial_number)
-        resp = requests.get(uri, headers=self.make_headers(), verify=False)
+        resp = self.session.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         device = resp.json()
+        #resp.close()()
         return device
 
     def get_device_uuid(self, serial_number):
@@ -266,17 +278,16 @@ class UProfileUtility:
             pytest.exit("invalid Operating Mode")
 
     def push_config(self, serial_number):
-        payload = {}
-        payload["configuration"] = self.base_profile_config
-        payload['serialNumber'] = serial_number
-        payload['UUID'] = 0
-        print(payload)
+        payload = {"configuration": self.base_profile_config, 'serialNumber': serial_number, 'UUID': 0}
+
         uri = self.sdk_client.build_uri("device/" + serial_number + "/configure")
         basic_cfg_str = json.dumps(payload)
-        resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(), verify=False)
+        resp = self.sdk_client.session.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
+                                            verify=False, timeout=100)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
+        print(resp.url)
+        #resp.close()()
         print(resp)
-
 
 # UCENTRAL_BASE_CFG = {
 #     "uuid": 1,
@@ -427,9 +438,11 @@ controller = {
 #     "radius": False
 # }
 # obj = UController(controller_data=controller)
-# # # # # print(obj.get_devices())
-# # # # # print(obj.get_device_uuid(serial_number="903cb3944873"))
-# # # # # obj.get_device_uuid(serial_number="c4411ef53f23")
+# time.sleep(10)
+# obj.logout()
+# # # # # # # print(obj.get_devices())
+# # # # # # # print(obj.get_device_uuid(serial_number="903cb3944873"))
+# # # # # # # obj.get_device_uuid(serial_number="c4411ef53f23")
 # profile_client = UProfileUtility(sdk_client=obj)
 # profile_client.set_radio_config()
 # profile_client.set_mode(mode="VLAN")
@@ -437,10 +450,12 @@ controller = {
 # profile_client.add_ssid(ssid_data=ssid_data)
 # ssid_data = {"ssid_name": "ssid_wpa_test_4_vlan", "vlan": 100, "appliedRadios": ["2G", "5G"], "security_key": "something", "security": "none"}
 # profile_client.add_ssid(ssid_data=ssid_data)
-# # # print(profile_client.base_profile_config)
+# # # # print(profile_client.base_profile_config)
 # profile_client.push_config(serial_number="903cb39d6918")
-# print(profile_client.base_profile_config)
-# equipments = obj.get_devices()
+# b = json.loads(str(profile_client.base_profile_config).replace(" ", "").replace("'", '"'))#, json.dumps(b, sort_keys=True)
+# print(b["interfaces"])#, b["interfaces"])
+# # print(profile_client.base_profile_config)
+# # equipments = obj.get_devices()
 # print(equipments)
 # for i in equipments:
 #     for j in equipments[i]:

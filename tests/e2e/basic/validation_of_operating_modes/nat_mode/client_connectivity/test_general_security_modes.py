@@ -13,7 +13,7 @@ pytestmark = [pytest.mark.client_connectivity, pytest.mark.nat, pytest.mark.gene
 setup_params_general = {
     "mode": "NAT",
     "ssid_modes": {
-        "open": [{"ssid_name": "ssid_open_2g_nat", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
+        "open": [{"ssid_name": "ssid_shivam", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
                  {"ssid_name": "ssid_open_5g_nat", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
                   "security_key": "something"}],
         "wpa": [{"ssid_name": "ssid_wpa_2g_nat", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
@@ -53,8 +53,10 @@ class TestNATModeConnectivitySuiteA(object):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and nat and general and open and twog"
         """
+        global setup_params_general
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssid_name = profile_data["ssid_name"]
+        print(ssid_name)
         security_key = "[BLANK]"
         security = "open"
         mode = "NAT"
@@ -589,62 +591,3 @@ class TestBridgeModeConnectivitySuiteB(object):
 #                                               passes))
 #         assert passes
 
-
-setup_params_general = {
-    "mode": "NAT",
-    "ssid_modes": {
-        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
-                  "security_key": "something"}],
-        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
-                 "security_key": "something"}],
-        "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
-             "security_key": "something"}]},
-    "rf": {},
-    "radius": False
-}
-
-
-@pytest.mark.suiteX
-@allure.feature("NAT MODE CLIENT CONNECTIVITY")
-@pytest.mark.parametrize(
-    'setup_profiles',
-    [setup_params_general],
-    indirect=True,
-    scope="class"
-)
-@pytest.mark.usefixtures("setup_profiles")
-class TestSomthing(object):
-
-    @pytest.mark.open
-    @pytest.mark.twog
-    def test_open_2g(self):
-        assert True
-
-    @pytest.mark.open
-    @pytest.mark.fiveg
-    def test_open_5g(self):
-        assert True
-
-    @pytest.mark.wpa
-    @pytest.mark.twog
-    def test_wpa_2g(self):
-        assert True
-
-    @pytest.mark.wpa
-    @pytest.mark.fiveg
-    def test_wpa_5g(self):
-        assert True
-
-    @pytest.mark.wpa2_personal
-    @pytest.mark.twog
-    def test_wpa2_personal_2g(self):
-        assert True
-
-    @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
-    def test_wpa2_personal_5g(self):
-        assert True
