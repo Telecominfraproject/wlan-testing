@@ -20,7 +20,7 @@ on:
   workflow_dispatch:
     inputs:
       testbeds:
-        default: '["basic-01","basic-02"]'
+        default: 'basic-01,basic-02'
         description: 'Testbed(s) to test'
         required: false
 
@@ -117,12 +117,11 @@ jobs:
     - name: generate-matrix
       id: set-matrix
       run: |
-        set -x
-        TESTBEDS="${{ github.event.inputs.testbeds || '[\"basic-01\",\"basic-02\"]' }}"
-        echo "$TESTBEDS"
-        TESTBED_ARRAY=$(echo "$TESTBEDS" | jq -c 'map({"testbed":.})')
-        echo "$TESTBED_ARRAY"
-        echo "::set-output name=matrix::{\"include\":${TESTBED_ARRAY}}"
+        TESTBEDS="${{ github.event.inputs.testbeds || 'basic-01,basic-02' }}"
+        # convert to JSON array
+        TESTBEDS=$(echo $TESTBEDS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
+        TESTBEDS=$(echo "$TESTBEDS" | jq -c 'map({"testbed":.})')
+        echo "::set-output name=matrix::{\"include\":${TESTBEDS}}"
 
   test:
     runs-on: ubuntu-latest
