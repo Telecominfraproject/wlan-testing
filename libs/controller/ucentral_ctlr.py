@@ -23,7 +23,7 @@ class ConfigureController:
         self.password = controller_data["password"]
         self.host = urlparse(controller_data["url"])
         self.access_token = ""
-        self.session = requests.Session()
+        # self.session = requests.Session()
 
         self.login_resp = self.login()
 
@@ -34,19 +34,19 @@ class ConfigureController:
 
     def login(self):
         uri = self.build_uri("oauth2")
-        self.session.mount(uri, HTTPAdapter(max_retries=15))
+        # self.session.mount(uri, HTTPAdapter(max_retries=15))
         payload = json.dumps({"userId": self.username, "password": self.password})
-        resp = self.session.post(uri, data=payload, verify=False, timeout=100)
+        resp = requests.post(uri, data=payload, verify=False, timeout=100)
         self.check_response("POST", resp, "", payload, uri)
         token = resp.json()
         self.access_token = token["access_token"]
         print(resp)
-        self.session.headers.update({'Authorization': self.access_token})
+        # self.session.headers.update({'Authorization': self.access_token})
         return resp
 
     def logout(self):
         uri = self.build_uri('oauth2/%s' % self.access_token)
-        resp = self.session.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("DELETE", resp, self.make_headers(), "", uri)
         print('Logged out:', resp.status_code)
         return resp
@@ -84,18 +84,18 @@ class UController(ConfigureController):
 
     def get_devices(self):
         uri = self.build_uri("devices/")
-        resp = self.session.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         devices = resp.json()
-        #resp.close()()
+        # resp.close()()
         return devices
 
     def get_device_by_serial_number(self, serial_number=None):
         uri = self.build_uri("device/" + serial_number)
-        resp = self.session.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         device = resp.json()
-        #resp.close()()
+        # resp.close()()
         return device
 
     def get_device_uuid(self, serial_number):
@@ -282,12 +282,13 @@ class UProfileUtility:
 
         uri = self.sdk_client.build_uri("device/" + serial_number + "/configure")
         basic_cfg_str = json.dumps(payload)
-        resp = self.sdk_client.session.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
-                                            verify=False, timeout=100)
+        resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
+                             verify=False, timeout=100)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
         print(resp.url)
-        #resp.close()()
+        # resp.close()()
         print(resp)
+
 
 # UCENTRAL_BASE_CFG = {
 #     "uuid": 1,

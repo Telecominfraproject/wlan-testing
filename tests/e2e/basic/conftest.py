@@ -186,9 +186,11 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
             time.sleep(5)
             x += 1
             ap_config_latest = ap_ssh.get_uc_latest_config()
+            print(ap_config_latest)
             ap_config_latest["uuid"] = 0
 
             ap_config_active = ap_ssh.get_uc_active_config()
+            print(ap_config_active)
             ap_config_active["uuid"] = 0
             if x == 19:
                 break
