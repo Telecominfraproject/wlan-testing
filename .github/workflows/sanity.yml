@@ -27,6 +27,10 @@ on:
         default: 'sanity'
         description: 'Pytest marker expression that will be used to select the tests to execute'
         required: false
+      build_url:
+        default: '0'
+        description: 'Option for AP Firmware build url'
+        required: false
   schedule:
   - cron: '15 0 * * *'
 
@@ -183,7 +187,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression || 'sanity' }}" -s -vvv --testbed="${{ matrix.testbed }}" --skip-testrail --alluredir=/tmp/allure-results
+                    pytest -m "${{ github.event.inputs.marker_expression || 'sanity and not interop' }}" -s -vvv --testbed="${{ matrix.testbed }}" --skip-testrail --alluredir=/tmp/allure-results -o --build=${{ github.event.inputs.build_url }}
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
