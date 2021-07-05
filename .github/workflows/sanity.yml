@@ -307,13 +307,13 @@ jobs:
         path: allure-report
     
     - name: copy new report
-      if: ${{ (github.event.inputs.marker_expression || 'sanity') == 'sanity' }}
+      if: ${{ (github.event.inputs.marker_expression || 'sanity') == 'sanity and not interop' }}
       run: |
         mkdir -p reports/sanity/${{ matrix.testbed }}
         cp -Tr allure-report reports/sanity/${{ matrix.testbed }}/${{ github.run_number }}
 
     - name: update latest symlink
-      if: ${{ (github.event.inputs.marker_expression || 'sanity') == 'sanity' }}
+      if: ${{ (github.event.inputs.marker_expression || 'sanity') == 'sanity and not interop' }}
       working-directory: reports/sanity/${{ matrix.testbed }}
       run: ln -fns ${{ github.run_number }} latest
 
