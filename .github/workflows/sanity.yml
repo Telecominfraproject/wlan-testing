@@ -27,6 +27,10 @@ on:
         default: 'sanity'
         description: 'Pytest marker expression that will be used to select the tests to execute'
         required: false
+      ap_firmware_url:
+        default: 'null'
+        description: 'Option for adding AP Firmware Image: <URL to File> from JFrog, takes from configuration.py when it is null'
+        required: false
   schedule:
   - cron: '15 0 * * *'
 
@@ -183,7 +187,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression || 'sanity' }}" -s -vvv --testbed="${{ matrix.testbed }}" --skip-testrail --alluredir=/tmp/allure-results
+                    pytest -m "${{ github.event.inputs.marker_expression || 'sanity and not interop' }}" -s -vvv --testbed="${{ matrix.testbed }}" --skip-testrail --alluredir=/tmp/allure-results -o --build=${{ github.event.inputs.ap_firmware_url || "null"}}
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -303,13 +307,13 @@ jobs:
         path: allure-report
     
     - name: copy new report
-      if: ${{ (github.event.inputs.marker_expression || 'sanity') == 'sanity' }}
+      if: ${{ (github.event.inputs.marker_expression || 'sanity') == 'sanity and not interop' }}
       run: |
         mkdir -p reports/sanity/${{ matrix.testbed }}
         cp -Tr allure-report reports/sanity/${{ matrix.testbed }}/${{ github.run_number }}
 
     - name: update latest symlink
-      if: ${{ (github.event.inputs.marker_expression || 'sanity') == 'sanity' }}
+      if: ${{ (github.event.inputs.marker_expression || 'sanity') == 'sanity and not interop' }}
       working-directory: reports/sanity/${{ matrix.testbed }}
       run: ln -fns ${{ github.run_number }} latest
 
