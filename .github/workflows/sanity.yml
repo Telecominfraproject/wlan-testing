@@ -305,6 +305,10 @@ jobs:
       with:
         name: allure-report-${{ matrix.testbed }}
         path: allure-report
+
+    # doing this to be able to aggregate multiple reports together later on
+    - name: copy results into report
+      run: cp -r allure-results allure-report/results
     
     - name: copy new report
       if: ${{ (github.event.inputs.marker_expression || 'sanity') == 'sanity and not interop' }}
