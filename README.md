@@ -64,6 +64,7 @@ http://pythontesting.net/framework/pytest/pytest-introduction/
 ### Test status
 [![sanity testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/sanity.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/sanity.yml)
 [![interop testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/interop.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/interop.yml)
+[![performance testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/performance.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/performance.yml)
 
 ### Best Practice
 
