@@ -1,0 +1,14 @@
+allure-pytest
+Appium-Python-Client
+bs4
+influxdb
+influxdb-client
+pandas
+paramiko
+perfecto-py37
+pytest==6.2.2
+requests
+scp
+selenium
+tip-wlan-cloud
+xlsxwriter
