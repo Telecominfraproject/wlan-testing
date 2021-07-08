@@ -513,6 +513,13 @@ def create_lanforge_chamberview_dut(get_configuration, testbed):
                 testbed=testbed, access_point_data=get_configuration["access_point"])
     yield True
 
+@pytest.fixture(scope="session")
+def lf_tools(get_configuration, testbed):
+    """ Create a DUT on LANforge"""
+    obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
+                testbed=testbed, access_point_data=get_configuration["access_point"])
+    yield obj
+
 
 @pytest.fixture(scope="module")
 def create_vlan(request, testbed, get_configuration):

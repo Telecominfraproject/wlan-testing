@@ -1,0 +1,3 @@
+Date	test-rig	dut-hw-version	dut-sw-version	dut-model-num	dut-serial-num	test-priority	test-id	short-description	pass/fail	numeric-score	test details	Units	Graph-Group	Subtest-Pass	Subtest-Fail
+1625742927125		eap102	eap102-2021-06-25-pending-b6743c3.tar.g	eap102	903cb39d6959	90	Rate vs Range	TCP-DUT-TX-MTU		4.36386	Throughput at specified settings.	Mbps	Throughput	0	0
+1625743004533		eap102	eap102-2021-06-25-pending-b6743c3.tar.g	eap102	903cb39d6959	90	Rate vs Range	TCP-DUT-RX-MTU		2.791638	Throughput at specified settings.	Mbps	Throughput	0	0

@@ -1,0 +1,1 @@
+{"uuid": "005fbc5c-bac5-48a8-93bd-0639a05e1d34", "children": ["1dc2e0fe-8b57-4c9e-95a3-9a08ae3cba5c"], "befores": [{"name": "get_latest_firmware", "status": "passed", "start": 1625719581272, "stop": 1625719581272}], "afters": [{"name": "get_latest_firmware::0", "status": "passed", "start": 1625720006378, "stop": 1625720006378}], "start": 1625719581272, "stop": 1625720006378}

@@ -1,0 +1,470 @@
+-9d6959:~# logread
+Thu Jul  8 07:57:47 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 client report (Interface  not configured)
+Thu Jul  8 07:57:47 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:57:47 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:57:47 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:57:47 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 07:57:47 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 07:57:47 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 07:57:47 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 off-chan 153 (36) survey sample 4
+Thu Jul  8 07:57:47 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 off-chan survey report (interface  not configured)
+Thu Jul  8 07:57:47 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:57:47 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:57:47 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:57:47 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:57:47 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 07:57:47 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 07:57:47 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 07:57:47 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan0
+Thu Jul  8 07:57:49 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: MOD table: Wifi_Radio_Config row: 7d338ad3-fc4e-4d90-9abe-93615ad7c29f cached: y key: radio1
+Thu Jul  8 07:57:49 2021 user.info WM[2473]: <INFO>     OVSDB: <<< DONE: MON upd: MOD table: Wifi_Radio_Config row: 7d338ad3-fc4e-4d90-9abe-93615ad7c29f ver:
+Thu Jul  8 07:57:49 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: MOD table: Wifi_Radio_Config row: e068cede-bfd6-49a4-bbe5-b221385c4220 cached: y key: radio0
+Thu Jul  8 07:57:49 2021 user.info WM[2473]: <INFO>     OVSDB: <<< DONE: MON upd: MOD table: Wifi_Radio_Config row: e068cede-bfd6-49a4-bbe5-b221385c4220 ver:
+Thu Jul  8 07:57:49 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: DEL table: Wifi_VIF_Config row: a57a33a6-5f90-47d8-9e4f-c2afd0134d66 cached: y key: wlan1
+Thu Jul  8 07:57:49 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: DEL table: Wifi_VIF_Config row: aa0f4726-f129-4c22-b5aa-11424ec4b4f8 cached: y key: wlan0_1
+Thu Jul  8 07:57:49 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: DEL table: Wifi_VIF_Config row: ca5d49ed-fbe5-456b-9887-f448881c7277 cached: y key: wlan0
+Thu Jul  8 07:57:49 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: DEL table: Wifi_VIF_Config row: 50a76832-2d18-4ed2-8ca0-6d653a6cf634 cached: y key: wlan1_1
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>       MISC: zone: failed to delete dhcp
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: <<< DONE: MON upd: MOD table: Wifi_Inet_Config row: 126a3ca0-6faf-4c4c-a31d-0dba0a10f226 ver: 44a83b56-d04a-4daa-8f0b-9c1554a2e466
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: JSON RECV: {"id":null,"method":"update","params":[1,{"Wifi_Inet_Config":{"ecc7672f-6e19-4d5b-9f7c-c110d24ca42e":{"old":{"dhcpd":["map",[]],"if_name":"wlan1","dhcp_sniff":true,"upnp_mode":["set",[]],"if_type":"vif","netmask":["set",[]],"softwds_wrap":["set",[]],"mesh_options":["map",[]],"NAT":false,"mtu":["set",[]],"network":true,"ppp_options":["map",[]],"igmp_proxy":["set",[]],"gre_ifname":["set",[]],"broadcast":["set",[]],"igmp_tsize":["set",[]],"gateway":["set",[]],"gre_local_inet_addr":["set",[]],"igmp_age":["set",[]],"softwds_mac_addr":["set",[]],"enabled":true,"gre_remote_mac_addr":["set",[]],"vlan_id":["set",[]],"gre_remote_inet_addr":["set",[]],"igmp":["set",[]],"if_uuid":"","inet_addr":["set",[]],"_version":["uuid","2df176a2-b297-4fed-99ce-c5eeb9463274"],"parent_ifname":["set",[]],"dns":["map",[]],"mld_proxy":["set",[]],"ip_assign_scheme":["set",[]]}},"9abfa2e6-b68d-434b-a634-56c84963fcd6":{"old":{"dhcpd":["map",[]],"if_name":"wlan0_1"
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>  TRACEBACK: <TRACE>    OVSDB: MON upd: DEL table: Wifi_Inet_Config row: ecc7672f-6e19-4d5b-9f7c-c110d24ca42e
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>       MISC: zone: failed to delete firewall
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>       MISC: network: failed to delete network
+Thu Jul  8 07:57:49 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_Inet_Config uuid:ecc7672f-6e19-4d5b-9f7c-c110d24ca42e Action:2======
+Thu Jul  8 07:57:49 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_Inet_Config uuid:9abfa2e6-b68d-434b-a634-56c84963fcd6 Action:2======
+Thu Jul  8 07:57:49 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_Inet_Config uuid:3cef0075-f441-4cb1-aa44-32f9b858fd48 Action:2======
+Thu Jul  8 07:57:49 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_Inet_Config uuid:126a3ca0-6faf-4c4c-a31d-0dba0a10f226 Action:2======
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>       MISC: zone: failed to delete dhcp
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: <<< DONE: MON upd: DEL table: Wifi_Inet_Config row: ecc7672f-6e19-4d5b-9f7c-c110d24ca42e ver: 2df176a2-b297-4fed-99ce-c5eeb9463274
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>  TRACEBACK: <TRACE>    OVSDB: MON upd: DEL table: Wifi_Inet_Config row: 9abfa2e6-b68d-434b-a634-56c84963fcd6
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>       MISC: zone: failed to delete firewall
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>       MISC: network: failed to delete network
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>       MISC: zone: failed to delete dhcp
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: <<< DONE: MON upd: DEL table: Wifi_Inet_Config row: 9abfa2e6-b68d-434b-a634-56c84963fcd6 ver: e562766d-e96d-4799-bc0d-b62ef5f71173
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>  TRACEBACK: <TRACE>    OVSDB: MON upd: DEL table: Wifi_Inet_Config row: 3cef0075-f441-4cb1-aa44-32f9b858fd48
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>       MISC: zone: failed to delete firewall
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>       MISC: network: failed to delete network
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>       MISC: zone: failed to delete dhcp
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: <<< DONE: MON upd: DEL table: Wifi_Inet_Config row: 3cef0075-f441-4cb1-aa44-32f9b858fd48 ver: 9436f3e2-2802-46da-a11a-0cc2a20e590c
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>  TRACEBACK: <TRACE>    OVSDB: MON upd: DEL table: Wifi_Inet_Config row: 126a3ca0-6faf-4c4c-a31d-0dba0a10f226
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>       MISC: zone: failed to delete firewall
+Thu Jul  8 07:57:49 2021 user.err NM[2467]: <ERR>       MISC: network: failed to delete network
+Thu Jul  8 07:57:50 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_RRM_Config uuid:758876a1-a5e9-46f9-9999-5233c9baac02 Action:2======
+Thu Jul  8 07:57:50 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_RRM_Config uuid:18714c94-6d2e-466c-9afb-3d4f6a390242 Action:2======
+Thu Jul  8 07:57:50 2021 user.err SM[2470]: <ERR>       MISC: radio1: hwmon is missing
+Thu Jul  8 07:57:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 2 reschedule requested (same 9000 ms)
+Thu Jul  8 07:57:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:57:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 off-chan 3 (6) survey sample 4
+Thu Jul  8 07:57:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 off-chan survey report (interface  not configured)
+Thu Jul  8 07:57:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:57:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:57:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 07:57:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 07:57:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 07:57:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: radio0: tx_chainmask 240
+Thu Jul  8 07:57:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: radio1: tx_chainmask 3
+Thu Jul  8 07:57:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>   TARGET: Parsed device load 0.10 0.04 0.01
+Thu Jul  8 07:57:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>   TARGET: Parsed device uptime 266986
+Thu Jul  8 07:57:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending device stats load 0.10 0.04 0.01
+Thu Jul  8 07:57:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MISC: radio0: temperature : 40
+Thu Jul  8 07:57:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending device stats 5G temp 40
+Thu Jul  8 07:57:51 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_RRM_Config uuid:8e272ed3-98b7-4a6c-9284-c9d1352b3e9d Action:0======
+Thu Jul  8 07:57:51 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_RRM_Config uuid:74c3bbc3-c672-40c5-b318-c28566d137be Action:0======
+Thu Jul  8 07:57:51 2021 user.info WM[2473]: <INFO>      MISC: APC_state Updating: mode: DR, dr-addr: 172.16.224.106 bdr-addr: 0.0.0.0
+Thu Jul  8 07:57:52 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: NEW table: Wifi_VIF_Config row: ed2fba9c-1280-416f-a17c-db8ff31b21c2 cached: n
+Thu Jul  8 07:57:52 2021 user.info WM[2473]: <INFO>      MAIN: wlan1: no radio config found, will retry later
+Thu Jul  8 07:57:52 2021 user.info WM[2473]: <INFO>     OVSDB: <<< DONE: MON upd: NEW table: Wifi_VIF_Config row: ed2fba9c-1280-416f-a17c-db8ff31b21c2 ver: 00000000-0000-0000-0000-000000000000
+Thu Jul  8 07:57:52 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: NEW table: Wifi_VIF_Config row: 92f9340b-1234-4cdd-b0fd-8575b26c1481 cached: n
+Thu Jul  8 07:57:52 2021 user.info WM[2473]: <INFO>      MAIN: wlan0: no radio config found, will retry later
+Thu Jul  8 07:57:52 2021 user.info WM[2473]: <INFO>     OVSDB: <<< DONE: MON upd: NEW table: Wifi_VIF_Config row: 92f9340b-1234-4cdd-b0fd-8575b26c1481 ver: 00000000-0000-0000-0000-000000000000
+Thu Jul  8 07:57:52 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_Inet_Config uuid:0c4cae01-c5c9-4453-a3f8-ea357d3b1165 Action:0======
+Thu Jul  8 07:57:52 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_Inet_Config uuid:6f9971b5-d8fd-42b0-b7ad-eadb95fcd0a8 Action:0======
+Thu Jul  8 07:57:52 2021 user.err NM[2467]: <ERR>       MISC: Unable to modify interface wlan1, could't find it.
+Thu Jul  8 07:57:52 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: <<< DONE: MON upd: DEL table: Wifi_Inet_Config row: 126a3ca0-6faf-4c4c-a31d-0dba0a10f226 ver: 44a83b56-d04a-4daa-8f0b-9c1554a2e466
+Thu Jul  8 07:57:52 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: JSON RECV: {"id":null,"method":"update","params":[1,{"Wifi_Inet_Config":{"0c4cae01-c5c9-4453-a3f8-ea357d3b1165":{"new":{"dhcpd":["map",[]],"if_name":"wlan1","dhcp_sniff":["set",[]],"upnp_mode":["set",[]],"if_type":"vif","netmask":["set",[]],"softwds_wrap":["set",[]],"mesh_options":["map",[]],"NAT":true,"mtu":["set",[]],"network":true,"ppp_options":["map",[]],"igmp_proxy":["set",[]],"gre_ifname":["set",[]],"broadcast":["set",[]],"igmp_tsize":["set",[]],"gateway":["set",[]],"gre_local_inet_addr":["set",[]],"igmp_age":["set",[]],"softwds_mac_addr":["set",[]],"enabled":true,"gre_remote_mac_addr":["set",[]],"vlan_id":["set",[]],"gre_remote_inet_addr":["set",[]],"igmp":["set",[]],"if_uuid":"","inet_addr":["set",[]],"_version":["uuid","0e51a77b-2536-49d2-af55-f596c2510634"],"parent_ifname":["set",[]],"dns":["map",[]],"mld_proxy":["set",[]],"ip_assign_scheme":["set",[]]}},"6f9971b5-d8fd-42b0-b7ad-eadb95fcd0a8":{"new":{"dhcpd":["map",[]],"if_name":"wla
+Thu Jul  8 07:57:52 2021 user.err NM[2467]: <ERR>  TRACEBACK: <TRACE>    OVSDB: MON upd: NEW table: Wifi_Inet_Config row: 0c4cae01-c5c9-4453-a3f8-ea357d3b1165
+Thu Jul  8 07:57:52 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: <<< DONE: MON upd: NEW table: Wifi_Inet_Config row: 0c4cae01-c5c9-4453-a3f8-ea357d3b1165 ver: 0e51a77b-2536-49d2-af55-f596c2510634
+Thu Jul  8 07:57:52 2021 user.err NM[2467]: <ERR>  TRACEBACK: <TRACE>    OVSDB: MON upd: NEW table: Wifi_Inet_Config row: 6f9971b5-d8fd-42b0-b7ad-eadb95fcd0a8
+Thu Jul  8 07:57:52 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: <<< DONE: MON upd: NEW table: Wifi_Inet_Config row: 6f9971b5-d8fd-42b0-b7ad-eadb95fcd0a8 ver: a5839ee1-7ee6-47b8-a9b5-03260a056312
+Thu Jul  8 07:57:52 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: JSON RECV: {"id":null,"method":"update","params":[1,{"Wifi_Inet_Config":{"0c4cae01-c5c9-4453-a3f8-ea357d3b1165":{"new":{"dhcpd":["map",[]],"if_name":"wlan1","dhcp_sniff":true,"upnp_mode":["set",[]],"if_type":"vif","netmask":["set",[]],"softwds_wrap":["set",[]],"mesh_options":["map",[]],"NAT":true,"mtu":["set",[]],"network":true,"ppp_options":["map",[]],"igmp_proxy":["set",[]],"gre_ifname":["set",[]],"broadcast":["set",[]],"igmp_tsize":["set",[]],"gateway":["set",[]],"gre_local_inet_addr":["set",[]],"igmp_age":["set",[]],"softwds_mac_addr":["set",[]],"enabled":true,"gre_remote_mac_addr":["set",[]],"vlan_id":["set",[]],"gre_remote_inet_addr":["set",[]],"igmp":["set",[]],"if_uuid":"","inet_addr":["set",[]],"_version":["uuid","0b613fd0-8f8c-4288-bcc5-bdfa3af1d84f"],"parent_ifname":["set",[]],"dns":["map",[]],"mld_proxy":["set",[]],"ip_assign_scheme":["set",[]]},"old":{"_version":["uuid","0e51a77b-2536-49d2-af55-f596c2510634"],"dhcp_sniff":["set",[
+Thu Jul  8 07:57:52 2021 user.err NM[2467]: <ERR>  TRACEBACK: <TRACE>    OVSDB: MON upd: MOD table: Wifi_Inet_Config row: 0c4cae01-c5c9-4453-a3f8-ea357d3b1165
+Thu Jul  8 07:57:52 2021 user.err NM[2467]: <ERR>       MISC: Unable to modify interface wlan0, could't find it.
+Thu Jul  8 07:57:52 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: <<< DONE: MON upd: MOD table: Wifi_Inet_Config row: 0c4cae01-c5c9-4453-a3f8-ea357d3b1165 ver: 0b613fd0-8f8c-4288-bcc5-bdfa3af1d84f
+Thu Jul  8 07:57:52 2021 user.err NM[2467]: <ERR>  TRACEBACK: <TRACE>    OVSDB: MON upd: MOD table: Wifi_Inet_Config row: 6f9971b5-d8fd-42b0-b7ad-eadb95fcd0a8
+Thu Jul  8 07:57:52 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_Inet_Config uuid:0c4cae01-c5c9-4453-a3f8-ea357d3b1165 Action:1======
+Thu Jul  8 07:57:52 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_Inet_Config uuid:6f9971b5-d8fd-42b0-b7ad-eadb95fcd0a8 Action:1======
+Thu Jul  8 07:57:52 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: MOD table: Wifi_Radio_Config row: 7d338ad3-fc4e-4d90-9abe-93615ad7c29f cached: y key: radio1
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>        VIF: Failed to get base BSSID (mac)
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'ft_psk' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'vlan_id' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'rrm' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'btm' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'bridge' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'mac_list_type' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'mode' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'ssid' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'ssid_broadcast' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'min_hw_mode' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'mac_list' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'security' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'wps_pbc_key_id' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'custom_options' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'captive_portal' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'captive_allowlist' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: changed (forced=1)
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: SYNC: Writing sync operation: {"method": "transact", "params": ["Open_vSwitch", {"table": "Wifi_VIF_State", "op": "select", "where": [["if_name", "==", "wlan1"]]}], "id": 710901}
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: query result: [{"rows": []}]
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: ovsdb_sync_select_where: result no rows
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: SYNC: Writing sync operation: {"method": "transact", "params": ["Open_vSwitch", {"table": "Wifi_VIF_Config", "op": "select", "where": [["if_name", "==", "wlan1"]]}], "id": 710902}
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: query result: [{"rows": [{"vif_radio_idx": ["set", []], "if_name": "wlan1", "ap_bridge": true, "wps_pbc": ["set", []], "mac_list": ["set", []], "ssid": "ssid_wpa2_2g", "uapsd_enable": true, "btm": 1, "mesh_options": ["map", []], "_uuid": ["uuid", "ed2fba9c-1280-416f-a17c-db8ff31b21c2"], "ssid_broadcast": "enabled", "wps": ["set", []], "mcast2ucast": ["set", []], "mode": "ap", "mac_list_type": "none", "wps_pbc_key_id": "", "credential_configs": ["set", []], "ft_psk": 0, "parent": ["set", []], "multi_ap": ["set", []], "security": ["map", [["encryption", "WPA-PSK"], ["key", "something"], ["mode", "2"]]], "wds": ["set", []], "enabled": true, "vlan_id": 1, "min_hw_mode": "11ax", "vif_dbg_lvl": ["set", []], "custom_options": ["map", [["client_dl_limit", "0"], ["client_ul_limit", "0"], ["dtim_period", "2"], ["dynamic_vlan", "0"], ["ieee80211k", "1"], ["radproxy", "0"], ["rate_limit_en", "0"], ["rts_threshold", "65535"], ["ssid_dl_limit", "0"], ["ssid
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: ovsdb_sync_select_where return: [{"vif_radio_idx": ["set", []], "if_name": "wlan1", "ap_bridge": true, "wps_pbc": ["set", []], "mac_list": ["set", []], "ssid": "ssid_wpa2_2g", "uapsd_enable": true, "btm": 1, "mesh_options": ["map", []], "_uuid": ["uuid", "ed2fba9c-1280-416f-a17c-db8ff31b21c2"], "ssid_broadcast": "enabled", "wps": ["set", []], "mcast2ucast": ["set", []], "mode": "ap", "mac_list_type": "none", "wps_pbc_key_id": "", "credential_configs": ["set", []], "ft_psk": 0, "parent": ["set", []], "multi_ap": ["set", []], "security": ["map", [["encryption", "WPA-PSK"], ["key", "something"], ["mode", "2"]]], "wds": ["set", []], "enabled": true, "vlan_id": 1, "min_hw_mode": "11ax", "vif_dbg_lvl": ["set", []], "custom_options": ["map", [["client_dl_limit", "0"], ["client_ul_limit", "0"], ["dtim_period", "2"], ["dynamic_vlan", "0"], ["ieee80211k", "1"], ["radproxy", "0"], ["rate_limit_en", "0"], ["rts_threshold", "65535"], ["ssid_dl_limit", "0"]
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MISC: Found is_inarray()::argc=1|i=0|argv[i]=port_state
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>    OVSDB: filter keep key: port_state
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: Table Wifi_Master_State where: '[["if_name", "==", "wlan1"]]' update: {"port_state": "inactive"}
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: SYNC: Writing sync operation: {"method": "transact", "params": ["Open_vSwitch", {"op": "comment", "comment": "WM - update, if_name==wlan1"}, {"table": "Wifi_Master_State", "op": "update", "where": [["if_name", "==", "wlan1"]], "row": {"port_state": "inactive"}}], "id": 710903}
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: Table Wifi_Master_State update result: [{}, {"count": 0}] off: 0
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: Table Wifi_Master_State update count: 0
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: OVSDB: Update table 'Wifi_Master_State' where '[["if_name", "==", "wlan1"]]': no match
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>     MAIN: wlan1: updated (0) master state to 'inactive'
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>     MAIN: wlan1@radio1: changed, configuring
+Thu Jul  8 07:57:52 2021 user.info WM[2473]: <INFO>     OVSDB: <<< DONE: MON upd: MOD table: Wifi_Radio_Config row: 7d338ad3-fc4e-4d90-9abe-93615ad7c29f ver:
+Thu Jul  8 07:57:52 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: MOD table: Wifi_Radio_Config row: e068cede-bfd6-49a4-bbe5-b221385c4220 cached: y key: radio0
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>        VIF: Failed to get base BSSID (mac)
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'ft_psk' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'vlan_id' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'rrm' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'btm' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'bridge' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'mac_list_type' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'mode' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'ssid' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'ssid_broadcast' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'min_hw_mode' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'mac_list' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'security' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'wps_pbc_key_id' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'custom_options' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'captive_portal' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'captive_allowlist' changed
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: changed (forced=1)
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: SYNC: Writing sync operation: {"method": "transact", "params": ["Open_vSwitch", {"table": "Wifi_VIF_State", "op": "select", "where": [["if_name", "==", "wlan0"]]}], "id": 710915}
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: query result: [{"rows": []}]
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: ovsdb_sync_select_where: result no rows
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: SYNC: Writing sync operation: {"method": "transact", "params": ["Open_vSwitch", {"table": "Wifi_VIF_Config", "op": "select", "where": [["if_name", "==", "wlan0"]]}], "id": 710916}
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: query result: [{"rows": [{"vif_radio_idx": ["set", []], "if_name": "wlan0", "ap_bridge": true, "wps_pbc": ["set", []], "mac_list": ["set", []], "ssid": "ssid_wpa2_5g", "uapsd_enable": true, "btm": 1, "mesh_options": ["map", []], "_uuid": ["uuid", "92f9340b-1234-4cdd-b0fd-8575b26c1481"], "ssid_broadcast": "enabled", "wps": ["set", []], "mcast2ucast": ["set", []], "mode": "ap", "mac_list_type": "none", "wps_pbc_key_id": "", "credential_configs": ["set", []], "ft_psk": 0, "parent": ["set", []], "multi_ap": ["set", []], "security": ["map", [["encryption", "WPA-PSK"], ["key", "something"], ["mode", "2"]]], "wds": ["set", []], "enabled": true, "vlan_id": 1, "min_hw_mode": "11ax", "vif_dbg_lvl": ["set", []], "custom_options": ["map", [["client_dl_limit", "0"], ["client_ul_limit", "0"], ["dtim_period", "2"], ["dynamic_vlan", "0"], ["ieee80211k", "1"], ["radproxy", "0"], ["rate_limit_en", "0"], ["rts_threshold", "65535"], ["ssid_dl_limit", "0"], ["ssid
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: ovsdb_sync_select_where return: [{"vif_radio_idx": ["set", []], "if_name": "wlan0", "ap_bridge": true, "wps_pbc": ["set", []], "mac_list": ["set", []], "ssid": "ssid_wpa2_5g", "uapsd_enable": true, "btm": 1, "mesh_options": ["map", []], "_uuid": ["uuid", "92f9340b-1234-4cdd-b0fd-8575b26c1481"], "ssid_broadcast": "enabled", "wps": ["set", []], "mcast2ucast": ["set", []], "mode": "ap", "mac_list_type": "none", "wps_pbc_key_id": "", "credential_configs": ["set", []], "ft_psk": 0, "parent": ["set", []], "multi_ap": ["set", []], "security": ["map", [["encryption", "WPA-PSK"], ["key", "something"], ["mode", "2"]]], "wds": ["set", []], "enabled": true, "vlan_id": 1, "min_hw_mode": "11ax", "vif_dbg_lvl": ["set", []], "custom_options": ["map", [["client_dl_limit", "0"], ["client_ul_limit", "0"], ["dtim_period", "2"], ["dynamic_vlan", "0"], ["ieee80211k", "1"], ["radproxy", "0"], ["rate_limit_en", "0"], ["rts_threshold", "65535"], ["ssid_dl_limit", "0"]
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MISC: Found is_inarray()::argc=1|i=0|argv[i]=port_state
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>    OVSDB: filter keep key: port_state
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: Table Wifi_Master_State where: '[["if_name", "==", "wlan0"]]' update: {"port_state": "inactive"}
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: SYNC: Writing sync operation: {"method": "transact", "params": ["Open_vSwitch", {"op": "comment", "comment": "WM - update, if_name==wlan0"}, {"table": "Wifi_Master_State", "op": "update", "where": [["if_name", "==", "wlan0"]], "row": {"port_state": "inactive"}}], "id": 710917}
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: Table Wifi_Master_State update result: [{}, {"count": 0}] off: 0
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: Table Wifi_Master_State update count: 0
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: OVSDB: Update table 'Wifi_Master_State' where '[["if_name", "==", "wlan0"]]': no match
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>     MAIN: wlan0: updated (0) master state to 'inactive'
+Thu Jul  8 07:57:52 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>     MAIN: wlan0@radio0: changed, configuring
+Thu Jul  8 07:57:52 2021 user.info WM[2473]: <INFO>     OVSDB: <<< DONE: MON upd: MOD table: Wifi_Radio_Config row: e068cede-bfd6-49a4-bbe5-b221385c4220 ver:
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan1
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending device report at '2021-07-08 07:57:50+0000'
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>      DPP: Q len: 1 size: 160
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending events report...
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>      DPP: Q len: 2 size: 208
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 client report (Interface  not configured)
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 on-chan 6 (6) survey sample 5
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 on-chan survey report (interface  not configured)
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 client report (Interface  not configured)
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 on-chan 36 (36) survey sample 4
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 on-chan survey report (interface  not configured)
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Total 2 elements queued for transmission.
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MISC: qm_conn_client /tmp/plume/qm.sock
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MISC: qm_conn_write_req(1 t:null ds:0): b:56
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MISC: qm_conn_read_res: b:48
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MISC: qm_conn_send_fd: req c:1 dt:0 ds:0 to:null result:1 response:1 err:0
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>      DPP: Q len: 0 size: 0
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MISC: qm_conn_client /tmp/plume/qm.sock
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MISC: qm_conn_write_req(2 t:null ds:479): b:535
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MISC: qm_conn_read_res: b:48
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MISC: qm_conn_send_fd: req c:2 dt:2 ds:479 to:null result:1 response:2 err:0
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: Sent message to QM (size: 479 type: stats)
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 off-chan 153 (36) survey sample 5
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 off-chan survey report (interface  not configured)
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 07:57:56 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan0
+Thu Jul  8 07:57:56 2021 user.notice WM[2473]: <NOTICE>     VIF: wlan1: Failed to get base BSSID (mac)
+Thu Jul  8 07:57:56 2021 user.notice WM[2473]: <NOTICE>     VIF: wlan0: Failed to get base BSSID (mac)
+Thu Jul  8 07:58:01 2021 user.info WM[2473]: <INFO>      MISC: APC_state Updating: mode: DR, dr-addr: 172.16.224.106 bdr-addr: 0.0.0.0
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan1
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Radio Config: No interfaces associated with 2.4G radio1 radio.
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 off-chan 3 (6) survey sample 5
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 off-chan survey report (interface  not configured)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 on-chan 6 (6) survey sample 6
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 on-chan survey report (interface  not configured)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 client report (Interface  not configured)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 on-chan 36 (36) survey sample 5
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 on-chan survey report (interface  not configured)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 client report (Interface  not configured)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 off-chan 153 (36) survey sample 6
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 off-chan survey report (interface  not configured)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 07:58:05 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan0
+Thu Jul  8 07:58:11 2021 user.info WM[2473]: <INFO>      MISC: APC_state Updating: mode: DR, dr-addr: 172.16.224.106 bdr-addr: 0.0.0.0
+Thu Jul  8 07:58:11 2021 user.notice WM[2473]: <NOTICE>     VIF: wlan1: Failed to get base BSSID (mac)
+Thu Jul  8 07:58:11 2021 user.notice WM[2473]: <NOTICE>     VIF: wlan0: Failed to get base BSSID (mac)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan1
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 2 reschedule requested (same 9000 ms)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 off-chan 3 (6) survey sample 6
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 off-chan survey report (interface  not configured)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending 2.4G radio1 on-chan survey report at '2021-07-08 07:58:11+0000'
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 client report (Interface  not configured)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending 2.4G radio1 on-chan neighbor report at '2021-07-08 07:58:11+0000'
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 on-chan 6 (6) survey sample 1
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 on-chan survey report (interface  not configured)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 client report (Interface  not configured)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 client report (Interface  not configured)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 client report (Interface  not configured)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending 5G radio0 on-chan neighbor report at '2021-07-08 07:58:11+0000'
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending 5G radio0 on-chan survey report at '2021-07-08 07:58:11+0000'
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 on-chan 36 (36) survey sample 1
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 on-chan survey report (interface  not configured)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 off-chan 153 (36) survey sample 7
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 off-chan survey report (interface  not configured)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 07:58:14 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan0
+Thu Jul  8 07:58:21 2021 user.info WM[2473]: <INFO>      MISC: APC_state Updating: mode: DR, dr-addr: 172.16.224.106 bdr-addr: 0.0.0.0
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan1
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 2 reschedule requested (same 9000 ms)
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 off-chan 3 (6) survey sample 7
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 off-chan survey report (interface  not configured)
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 on-chan 6 (6) survey sample 2
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 on-chan survey report (interface  not configured)
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 client report (Interface  not configured)
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 client report (Interface  not configured)
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 on-chan 36 (36) survey sample 2
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 on-chan survey report (interface  not configured)
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 07:58:23 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan0
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>        VIF: Failed to get base BSSID (mac)
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'ft_psk' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'vlan_id' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'rrm' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'btm' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'bridge' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'mac_list_type' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'mode' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'ssid' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'ssid_broadcast' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'min_hw_mode' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'mac_list' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'security' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'wps_pbc_key_id' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'custom_options' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'captive_portal' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: 'captive_allowlist' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan0: changed (forced=1)
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: SYNC: Writing sync operation: {"method": "transact", "params": ["Open_vSwitch", {"table": "Wifi_VIF_State", "op": "select", "where": [["if_name", "==", "wlan0"]]}], "id": 710989}
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: query result: [{"rows": []}]
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: ovsdb_sync_select_where: result no rows
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: SYNC: Writing sync operation: {"method": "transact", "params": ["Open_vSwitch", {"table": "Wifi_VIF_Config", "op": "select", "where": [["if_name", "==", "wlan0"]]}], "id": 710990}
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: query result: [{"rows": [{"vif_radio_idx": ["set", []], "if_name": "wlan0", "ap_bridge": true, "wps_pbc": ["set", []], "mac_list": ["set", []], "ssid": "ssid_wpa2_5g", "uapsd_enable": true, "btm": 1, "mesh_options": ["map", []], "_uuid": ["uuid", "92f9340b-1234-4cdd-b0fd-8575b26c1481"], "ssid_broadcast": "enabled", "wps": ["set", []], "mcast2ucast": ["set", []], "mode": "ap", "mac_list_type": "none", "wps_pbc_key_id": "", "credential_configs": ["set", []], "ft_psk": 0, "parent": ["set", []], "multi_ap": ["set", []], "security": ["map", [["encryption", "WPA-PSK"], ["key", "something"], ["mode", "2"]]], "wds": ["set", []], "enabled": true, "vlan_id": 1, "min_hw_mode": "11ax", "vif_dbg_lvl": ["set", []], "custom_options": ["map", [["client_dl_limit", "0"], ["client_ul_limit", "0"], ["dtim_period", "2"], ["dynamic_vlan", "0"], ["ieee80211k", "1"], ["radproxy", "0"], ["rate_limit_en", "0"], ["rts_threshold", "65535"], ["ssid_dl_limit", "0"], ["ssid
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: ovsdb_sync_select_where return: [{"vif_radio_idx": ["set", []], "if_name": "wlan0", "ap_bridge": true, "wps_pbc": ["set", []], "mac_list": ["set", []], "ssid": "ssid_wpa2_5g", "uapsd_enable": true, "btm": 1, "mesh_options": ["map", []], "_uuid": ["uuid", "92f9340b-1234-4cdd-b0fd-8575b26c1481"], "ssid_broadcast": "enabled", "wps": ["set", []], "mcast2ucast": ["set", []], "mode": "ap", "mac_list_type": "none", "wps_pbc_key_id": "", "credential_configs": ["set", []], "ft_psk": 0, "parent": ["set", []], "multi_ap": ["set", []], "security": ["map", [["encryption", "WPA-PSK"], ["key", "something"], ["mode", "2"]]], "wds": ["set", []], "enabled": true, "vlan_id": 1, "min_hw_mode": "11ax", "vif_dbg_lvl": ["set", []], "custom_options": ["map", [["client_dl_limit", "0"], ["client_ul_limit", "0"], ["dtim_period", "2"], ["dynamic_vlan", "0"], ["ieee80211k", "1"], ["radproxy", "0"], ["rate_limit_en", "0"], ["rts_threshold", "65535"], ["ssid_dl_limit", "0"]
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MISC: Found is_inarray()::argc=1|i=0|argv[i]=port_state
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>    OVSDB: filter keep key: port_state
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: Table Wifi_Master_State where: '[["if_name", "==", "wlan0"]]' update: {"port_state": "inactive"}
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: SYNC: Writing sync operation: {"method": "transact", "params": ["Open_vSwitch", {"op": "comment", "comment": "WM - update, if_name==wlan0"}, {"table": "Wifi_Master_State", "op": "update", "where": [["if_name", "==", "wlan0"]], "row": {"port_state": "inactive"}}], "id": 710991}
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: Table Wifi_Master_State update result: [{}, {"count": 0}] off: 0
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: Table Wifi_Master_State update count: 0
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: OVSDB: Update table 'Wifi_Master_State' where '[["if_name", "==", "wlan0"]]': no match
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>     MAIN: wlan0: updated (0) master state to 'inactive'
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>     MAIN: wlan0@radio0: changed, configuring
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>        VIF: Failed to get base BSSID (mac)
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'ft_psk' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'vlan_id' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'rrm' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'btm' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'bridge' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'mac_list_type' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'mode' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'ssid' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'ssid_broadcast' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'min_hw_mode' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'mac_list' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'security' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'wps_pbc_key_id' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'custom_options' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'captive_portal' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'captive_allowlist' changed
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: changed (forced=1)
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: SYNC: Writing sync operation: {"method": "transact", "params": ["Open_vSwitch", {"table": "Wifi_VIF_State", "op": "select", "where": [["if_name", "==", "wlan1"]]}], "id": 711003}
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: query result: [{"rows": []}]
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: ovsdb_sync_select_where: result no rows
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: SYNC: Writing sync operation: {"method": "transact", "params": ["Open_vSwitch", {"table": "Wifi_VIF_Config", "op": "select", "where": [["if_name", "==", "wlan1"]]}], "id": 711004}
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: query result: [{"rows": [{"vif_radio_idx": ["set", []], "if_name": "wlan1", "ap_bridge": true, "wps_pbc": ["set", []], "mac_list": ["set", []], "ssid": "ssid_wpa2_2g", "uapsd_enable": true, "btm": 1, "mesh_options": ["map", []], "_uuid": ["uuid", "ed2fba9c-1280-416f-a17c-db8ff31b21c2"], "ssid_broadcast": "enabled", "wps": ["set", []], "mcast2ucast": ["set", []], "mode": "ap", "mac_list_type": "none", "wps_pbc_key_id": "", "credential_configs": ["set", []], "ft_psk": 0, "parent": ["set", []], "multi_ap": ["set", []], "security": ["map", [["encryption", "WPA-PSK"], ["key", "something"], ["mode", "2"]]], "wds": ["set", []], "enabled": true, "vlan_id": 1, "min_hw_mode": "11ax", "vif_dbg_lvl": ["set", []], "custom_options": ["map", [["client_dl_limit", "0"], ["client_ul_limit", "0"], ["dtim_period", "2"], ["dynamic_vlan", "0"], ["ieee80211k", "1"], ["radproxy", "0"], ["rate_limit_en", "0"], ["rts_threshold", "65535"], ["ssid_dl_limit", "0"], ["ssid
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: ovsdb_sync_select_where return: [{"vif_radio_idx": ["set", []], "if_name": "wlan1", "ap_bridge": true, "wps_pbc": ["set", []], "mac_list": ["set", []], "ssid": "ssid_wpa2_2g", "uapsd_enable": true, "btm": 1, "mesh_options": ["map", []], "_uuid": ["uuid", "ed2fba9c-1280-416f-a17c-db8ff31b21c2"], "ssid_broadcast": "enabled", "wps": ["set", []], "mcast2ucast": ["set", []], "mode": "ap", "mac_list_type": "none", "wps_pbc_key_id": "", "credential_configs": ["set", []], "ft_psk": 0, "parent": ["set", []], "multi_ap": ["set", []], "security": ["map", [["encryption", "WPA-PSK"], ["key", "something"], ["mode", "2"]]], "wds": ["set", []], "enabled": true, "vlan_id": 1, "min_hw_mode": "11ax", "vif_dbg_lvl": ["set", []], "custom_options": ["map", [["client_dl_limit", "0"], ["client_ul_limit", "0"], ["dtim_period", "2"], ["dynamic_vlan", "0"], ["ieee80211k", "1"], ["radproxy", "0"], ["rate_limit_en", "0"], ["rts_threshold", "65535"], ["ssid_dl_limit", "0"]
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MISC: Found is_inarray()::argc=1|i=0|argv[i]=port_state
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>    OVSDB: filter keep key: port_state
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: Table Wifi_Master_State where: '[["if_name", "==", "wlan1"]]' update: {"port_state": "inactive"}
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: SYNC: Writing sync operation: {"method": "transact", "params": ["Open_vSwitch", {"op": "comment", "comment": "WM - update, if_name==wlan1"}, {"table": "Wifi_Master_State", "op": "update", "where": [["if_name", "==", "wlan1"]], "row": {"port_state": "inactive"}}], "id": 711005}
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: Table Wifi_Master_State update result: [{}, {"count": 0}] off: 0
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: Table Wifi_Master_State update count: 0
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: OVSDB: Update table 'Wifi_Master_State' where '[["if_name", "==", "wlan1"]]': no match
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>     MAIN: wlan1: updated (0) master state to 'inactive'
+Thu Jul  8 07:58:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>     MAIN: wlan1@radio1: changed, configuring
+Thu Jul  8 07:58:27 2021 user.notice WM[2473]: <NOTICE>     VIF: wlan1: Failed to get base BSSID (mac)
+Thu Jul  8 07:58:27 2021 user.notice WM[2473]: <NOTICE>     VIF: wlan0: Failed to get base BSSID (mac)
+Thu Jul  8 07:58:28 2021 user.info WM[2473]: <INFO>      MISC: timer_expiry_check Timer Expired..Executing callback
+Thu Jul  8 07:58:28 2021 user.info WM[2473]: <INFO>      MISC: ====Calling reload_config====
+Thu Jul  8 07:58:29 2021 daemon.notice netifd: radio0 (24950): Command failed: Invalid argument
+Thu Jul  8 07:58:29 2021 daemon.notice netifd: radio1 (24954): Command failed: Invalid argument
+Thu Jul  8 07:58:29 2021 daemon.notice netifd: radio1 (24954): sh: out of range
+Thu Jul  8 07:58:29 2021 daemon.notice netifd: radio1 (24954): sh: out of range
+Thu Jul  8 07:58:29 2021 daemon.notice netifd: radio0 (24950): sh: out of range
+Thu Jul  8 07:58:29 2021 daemon.notice netifd: radio0 (24950): sh: out of range
+Thu Jul  8 07:58:29 2021 daemon.notice hostapd: Configuration file: /var/run/hostapd-phy1.conf (phy wlan1) --> new PHY
+Thu Jul  8 07:58:29 2021 kern.info kernel: [267019.059454] IPv6: ADDRCONF(NETDEV_UP): wlan1: link is not ready
+Thu Jul  8 07:58:29 2021 kern.info kernel: [267019.061026] device wlan1 entered promiscuous mode
+Thu Jul  8 07:58:29 2021 kern.info kernel: [267019.064926] br-lan: port 2(wlan1) entered forwarding state
+Thu Jul  8 07:58:29 2021 kern.info kernel: [267019.069216] br-lan: port 2(wlan1) entered forwarding state
+Thu Jul  8 07:58:29 2021 daemon.notice hostapd: wlan1: interface state UNINITIALIZED->COUNTRY_UPDATE
+Thu Jul  8 07:58:29 2021 kern.info kernel: [267019.074886] br-lan: port 2(wlan1) entered disabled state
+Thu Jul  8 07:58:29 2021 user.emerg WM[2473]: platform/openwrt/src/lib/target/src/radio_nl80211.c:nl80211_recv[537]60
+Thu Jul  8 07:58:29 2021 daemon.notice hostapd: Configuration file: /var/run/hostapd-phy0.conf (phy wlan0) --> new PHY
+Thu Jul  8 07:58:29 2021 kern.info kernel: [267019.176871] ath11k c000000.wifi1: bss color param 0x27000000 set on vdev 0
+Thu Jul  8 07:58:29 2021 kern.info kernel: [267019.179213] IPv6: ADDRCONF(NETDEV_CHANGE): wlan1: link becomes ready
+Thu Jul  8 07:58:29 2021 kern.info kernel: [267019.183804] br-lan: port 2(wlan1) entered forwarding state
+Thu Jul  8 07:58:29 2021 kern.info kernel: [267019.189312] br-lan: port 2(wlan1) entered forwarding state
+Thu Jul  8 07:58:29 2021 daemon.notice netifd: bridge 'br-lan' link is up
+Thu Jul  8 07:58:29 2021 daemon.notice netifd: Interface 'lan' has link connectivity
+Thu Jul  8 07:58:29 2021 kern.info kernel: [267019.212494] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
+Thu Jul  8 07:58:29 2021 kern.info kernel: [267019.214227] device wlan0 entered promiscuous mode
+Thu Jul  8 07:58:29 2021 kern.info kernel: [267019.217700] br-lan: port 3(wlan0) entered forwarding state
+Thu Jul  8 07:58:29 2021 kern.info kernel: [267019.222225] br-lan: port 3(wlan0) entered forwarding state
+Thu Jul  8 07:58:29 2021 daemon.notice hostapd: wlan0: interface state UNINITIALIZED->COUNTRY_UPDATE
+Thu Jul  8 07:58:29 2021 user.notice nft-qos: flush
+Thu Jul  8 07:58:29 2021 kern.info kernel: [267019.293864] ath11k c000000.wifi1: bss color param 0x26000000 set on vdev 1
+Thu Jul  8 07:58:29 2021 kern.info kernel: [267019.293942] IPv6: ADDRCONF(NETDEV_CHANGE): wlan0: link becomes ready
+Thu Jul  8 07:58:29 2021 user.emerg WM[2473]: platform/openwrt/src/lib/target/src/radio_nl80211.c:nl80211_recv[537]60
+Thu Jul  8 07:58:29 2021 daemon.notice hostapd: wlan0: interface state COUNTRY_UPDATE->ENABLED
+Thu Jul  8 07:58:29 2021 daemon.notice hostapd: wlan0: AP-ENABLED
+Thu Jul  8 07:58:29 2021 daemon.notice hostapd: wlan1: interface state COUNTRY_UPDATE->ENABLED
+Thu Jul  8 07:58:29 2021 daemon.notice hostapd: wlan1: AP-ENABLED
+Thu Jul  8 07:58:29 2021 user.notice nft-qos: flush
+Thu Jul  8 07:58:29 2021 user.notice nft-qos: 2021-07-08T07:58:29+0000 INIT /etc/rc.common
+Thu Jul  8 07:58:30 2021 user.notice hotplug: Set Tx rates for device wlan1
+Thu Jul  8 07:58:30 2021 daemon.notice netifd: Network device 'wlan1' link is up
+Thu Jul  8 07:58:30 2021 daemon.notice netifd: Network device 'wlan0' link is up
+Thu Jul  8 07:58:31 2021 kern.info kernel: [267021.183407] br-lan: port 2(wlan1) entered forwarding state
+Thu Jul  8 07:58:31 2021 kern.info kernel: [267021.213399] br-lan: port 3(wlan0) entered forwarding state
+Thu Jul  8 07:58:31 2021 user.info WM[2473]: <INFO>      MISC: APC_state Updating: mode: DR, dr-addr: 172.16.224.106 bdr-addr: 0.0.0.0
+Thu Jul  8 07:58:33 2021 daemon.notice netifd: wan (11066): udhcpc: sending renew to 172.16.0.1
+Thu Jul  8 07:58:33 2021 daemon.notice netifd: wan (11066): udhcpc: lease of 172.16.224.106 obtained, lease time 600
+Thu Jul  8 07:58:41 2021 user.info WM[2473]: <INFO>      MISC: APC_state Updating: mode: DR, dr-addr: 172.16.224.106 bdr-addr: 0.0.0.0
+Thu Jul  8 07:58:42 2021 user.info SM[2470]: <INFO>      MAIN: Started 2.4G radio1 on-chan neighbor reporting
+Thu Jul  8 07:58:42 2021 user.info SM[2470]: <INFO>      MAIN: Started 2.4G radio1 off-chan neighbor reporting
+Thu Jul  8 07:58:42 2021 user.info SM[2470]: <INFO>      MAIN: Initialized 2.4G radio1 on-chan survey stats
+Thu Jul  8 07:58:42 2021 user.info SM[2470]: <INFO>      MAIN: Started 2.4G radio1 on-chan survey reporting
+Thu Jul  8 07:58:42 2021 user.info SM[2470]: <INFO>      MAIN: Initialized 2.4G radio1 off-chan survey stats
+Thu Jul  8 07:58:42 2021 user.info SM[2470]: <INFO>      MAIN: Started 2.4G radio1 off-chan survey reporting
+Thu Jul  8 07:58:42 2021 user.info SM[2470]: <INFO>      MAIN: Started 2.4G radio1 client reporting
+Thu Jul  8 07:58:42 2021 user.info SM[2470]: <INFO>      MAIN: Started 5G radio0 on-chan neighbor reporting
+Thu Jul  8 07:58:42 2021 user.info SM[2470]: <INFO>      MAIN: Started 5G radio0 off-chan neighbor reporting
+Thu Jul  8 07:58:42 2021 user.info SM[2470]: <INFO>      MAIN: Initialized 5G radio0 on-chan survey stats
+Thu Jul  8 07:58:42 2021 user.info SM[2470]: <INFO>      MAIN: Started 5G radio0 on-chan survey reporting
+Thu Jul  8 07:58:42 2021 user.info SM[2470]: <INFO>      MAIN: Initialized 5G radio0 off-chan survey stats
+Thu Jul  8 07:58:42 2021 user.info SM[2470]: <INFO>      MAIN: Started 5G radio0 off-chan survey reporting
+Thu Jul  8 07:58:42 2021 user.info SM[2470]: <INFO>      MAIN: Started 5G radio0 client reporting
+Thu Jul  8 07:58:50 2021 user.notice nft-qos: flush
+Thu Jul  8 07:58:50 2021 user.notice nft-qos: flush
+Thu Jul  8 07:58:50 2021 user.notice nft-qos: 2021-07-08T07:58:50+0000 INIT /etc/rc.common
+Thu Jul  8 07:58:50 2021 user.notice hotplug: Set Tx rates for device wlan0
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>       MISC: radio1: hwmon is missing
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <INFO>      MAIN: Started 5G radio0 off-chan survey reporting
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Fetched 5G radio0 (null) survey reporting context
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip starting 5G radio0 (null) survey reporting (Stats not configured)
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Fetched 5G radio0 client reporting context
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: wlan0: assoc returned 1, list 1
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <INFO>      MAIN: Started 5G radio0 client reporting
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Fetched 5G radio0 rssi reporting context
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip starting 5G radio0 rssi reporting (Stats not configured)
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Initializing 2.4G radio1 radio tx_stats on radio1
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_session_cb
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_session_cb
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 2 reschedule requested (same 9000 ms)
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>   TARGET: Parsed device load 0.04 0.03 0.00
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>   TARGET: Parsed device uptime 267046
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending device stats load 0.04 0.03 0.00
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MISC: radio0: temperature : 40
+Thu Jul  8 07:58:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending device stats 5G temp 40
+Thu Jul  8 07:58:51 2021 user.info WM[2473]: <INFO>      MISC: APC_state Updating: mode: DR, dr-addr: 172.16.224.106 bdr-addr: 0.0.0.0
+Thu Jul  8 07:58:52 2021 daemon.info lldpd[1883]: interface 65 does not have a name or an address, skip
+Thu Jul  8 07:58:52 2021 daemon.info lldpd[1883]: interface 66 does not have a name or an address, skip
+

@@ -1,0 +1,6 @@
+2021-07-08 13:47:13 [32mINFO[0m Connected (version 2.0, client OpenSSH_8.0)
+2021-07-08 13:47:15 [32mINFO[0m Authentication (publickey) failed.
+2021-07-08 13:47:15 [32mINFO[0m Authentication (password) successful!
+2021-07-08 13:48:11 [33mWARNING[0m Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.VerifiedHTTPSConnection object at 0x7f234c636760>: Failed to establish a new connection: [Errno 113] No route to host')': /management/v1/oauth2/token
+2021-07-08 13:48:21 [33mWARNING[0m Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.VerifiedHTTPSConnection object at 0x7f234c636910>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /management/v1/oauth2/token
+2021-07-08 13:48:31 [33mWARNING[0m Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.VerifiedHTTPSConnection object at 0x7f234c636a90>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /management/v1/oauth2/token

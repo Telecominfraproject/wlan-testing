@@ -1,0 +1,518 @@
+-9d6959:~# logread
+Thu Jul  8 04:55:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending device stats load 0.01 0.02 0.00
+Thu Jul  8 04:55:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MISC: radio0: temperature : 40
+Thu Jul  8 04:55:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending device stats 5G temp 40
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan1
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MISC: qm_conn_write_req(2 t:null ds:470): b:526
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MISC: qm_conn_read_res: b:48
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MISC: qm_conn_send_fd: req c:2 dt:2 ds:470 to:null result:1 response:2 err:0
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: Sent message to QM (size: 470 type: stats)
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending 2.4G radio1 off-chan survey report at '2021-07-08 04:55:54+0000'
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending 2.4G radio1 on-chan neighbor report at '2021-07-08 04:55:54+0000'
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending 2.4G radio1 on-chan survey report at '2021-07-08 04:55:54+0000'
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 client report (Interface  not configured)
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending 2.4G radio1 off-chan neighbor report at '2021-07-08 04:55:54+0000'
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 client report (Interface  not configured)
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 on-chan 6 (6) survey sample 1
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 on-chan survey report (interface  not configured)
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 client report (Interface  not configured)
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending 5G radio0 off-chan survey report at '2021-07-08 04:55:55+0000'
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 on-chan 36 (36) survey sample 6
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 on-chan survey report (interface  not configured)
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending 5G radio0 off-chan neighbor report at '2021-07-08 04:55:55+0000'
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending 5G radio0 on-chan neighbor report at '2021-07-08 04:55:55+0000'
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 client report (Interface  not configured)
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending 5G radio0 on-chan survey report at '2021-07-08 04:55:55+0000'
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 04:55:58 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan0
+Thu Jul  8 04:55:59 2021 user.info WM[2473]: <INFO>      MISC: APC_state Updating: mode: DR, dr-addr: 172.16.224.106 bdr-addr: 0.0.0.0
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan1
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 2 reschedule requested (same 9000 ms)
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 off-chan 157 (36) survey sample 1
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 off-chan survey report (interface  not configured)
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 off-chan 3 (6) survey sample 1
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 off-chan survey report (interface  not configured)
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 on-chan 6 (6) survey sample 2
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 on-chan survey report (interface  not configured)
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 client report (Interface  not configured)
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 on-chan 36 (36) survey sample 1
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 on-chan survey report (interface  not configured)
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 client report (Interface  not configured)
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 04:56:07 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan0
+Thu Jul  8 04:56:09 2021 user.info WM[2473]: <INFO>      MISC: APC_state Updating: mode: DR, dr-addr: 172.16.224.106 bdr-addr: 0.0.0.0
+Thu Jul  8 04:56:11 2021 user.notice WM[2473]: <NOTICE>    MAIN: wlan1: duplicate SSID (TipWlan-cloud-wifi) in wlan1_1
+Thu Jul  8 04:56:11 2021 user.info WM[2473]: <INFO>      MAIN: wlan1: invalid VIF config found
+Thu Jul  8 04:56:11 2021 user.notice WM[2473]: <NOTICE>    MAIN: wlan1_1: duplicate SSID (TipWlan-cloud-wifi) in wlan1
+Thu Jul  8 04:56:11 2021 user.info WM[2473]: <INFO>      MAIN: wlan1_1: invalid VIF config found
+Thu Jul  8 04:56:11 2021 user.notice WM[2473]: <NOTICE>    MAIN: wlan0: duplicate SSID (TipWlan-cloud-wifi) in wlan0_1
+Thu Jul  8 04:56:11 2021 user.info WM[2473]: <INFO>      MAIN: wlan0: invalid VIF config found
+Thu Jul  8 04:56:11 2021 user.notice WM[2473]: <NOTICE>    MAIN: wlan0_1: duplicate SSID (TipWlan-cloud-wifi) in wlan0
+Thu Jul  8 04:56:11 2021 user.info WM[2473]: <INFO>      MAIN: wlan0_1: invalid VIF config found
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan1
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 2 reschedule requested (same 9000 ms)
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 off-chan 157 (36) survey sample 2
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 off-chan survey report (interface  not configured)
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 off-chan 3 (6) survey sample 2
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 off-chan survey report (interface  not configured)
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 client report (Interface  not configured)
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 on-chan 6 (6) survey sample 3
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 on-chan survey report (interface  not configured)
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 client report (Interface  not configured)
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 on-chan 36 (36) survey sample 2
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 on-chan survey report (interface  not configured)
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 04:56:16 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan0
+Thu Jul  8 04:56:19 2021 user.info WM[2473]: <INFO>      MISC: APC_state Updating: mode: DR, dr-addr: 172.16.224.106 bdr-addr: 0.0.0.0
+Thu Jul  8 04:56:23 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: MOD table: Wifi_Radio_Config row: 7d338ad3-fc4e-4d90-9abe-93615ad7c29f cached: y key: radio1
+Thu Jul  8 04:56:23 2021 user.info WM[2473]: <INFO>     OVSDB: <<< DONE: MON upd: MOD table: Wifi_Radio_Config row: 7d338ad3-fc4e-4d90-9abe-93615ad7c29f ver:
+Thu Jul  8 04:56:23 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: MOD table: Wifi_Radio_Config row: e068cede-bfd6-49a4-bbe5-b221385c4220 cached: y key: radio0
+Thu Jul  8 04:56:23 2021 user.info WM[2473]: <INFO>     OVSDB: <<< DONE: MON upd: MOD table: Wifi_Radio_Config row: e068cede-bfd6-49a4-bbe5-b221385c4220 ver:
+Thu Jul  8 04:56:23 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: DEL table: Wifi_VIF_Config row: a0f78b47-cf54-43d1-946c-5810c6e8bded cached: y key: wlan1_1
+Thu Jul  8 04:56:23 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: DEL table: Wifi_VIF_Config row: 6e5bb531-84c6-44dc-b026-fcaba99c02d0 cached: y key: wlan0_1
+Thu Jul  8 04:56:23 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: DEL table: Wifi_VIF_Config row: 34ff472e-164e-49bf-aed4-a1e300b1be4c cached: y key: wlan0
+Thu Jul  8 04:56:23 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: DEL table: Wifi_VIF_Config row: 9b8b3a26-8598-4075-adaf-0969f482696c cached: y key: wlan1
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>       MISC: zone: failed to delete dhcp
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: <<< DONE: MON upd: MOD table: Wifi_Inet_Config row: 8a22ed53-64bf-4237-9b22-cabc3797d6cb ver: 9d0d2430-9de2-4c84-9915-0434e490540c
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: JSON RECV: {"id":null,"method":"update","params":[1,{"Wifi_Inet_Config":{"79df3591-9f07-429a-8530-cc02d14d3324":{"old":{"dhcpd":["map",[]],"if_name":"wlan1_1","dhcp_sniff":true,"upnp_mode":["set",[]],"if_type":"vif","netmask":["set",[]],"softwds_wrap":["set",[]],"mesh_options":["map",[]],"NAT":false,"mtu":["set",[]],"network":true,"ppp_options":["map",[]],"igmp_proxy":["set",[]],"gre_ifname":["set",[]],"broadcast":["set",[]],"igmp_tsize":["set",[]],"gateway":["set",[]],"gre_local_inet_addr":["set",[]],"igmp_age":["set",[]],"softwds_mac_addr":["set",[]],"enabled":true,"gre_remote_mac_addr":["set",[]],"vlan_id":["set",[]],"gre_remote_inet_addr":["set",[]],"igmp":["set",[]],"if_uuid":"","inet_addr":["set",[]],"_version":["uuid","539bbcb8-c4a7-4f8a-9e1e-e743de23e959"],"parent_ifname":["set",[]],"dns":["map",[]],"mld_proxy":["set",[]],"ip_assign_scheme":["set",[]]}},"64245299-89d5-4a25-94c8-0f543e84e3a5":{"old":{"dhcpd":["map",[]],"if_name":"wlan0"
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>  TRACEBACK: <TRACE>    OVSDB: MON upd: DEL table: Wifi_Inet_Config row: 79df3591-9f07-429a-8530-cc02d14d3324
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>       MISC: zone: failed to delete firewall
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>       MISC: network: failed to delete network
+Thu Jul  8 04:56:24 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_Inet_Config uuid:79df3591-9f07-429a-8530-cc02d14d3324 Action:2======
+Thu Jul  8 04:56:24 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_Inet_Config uuid:64245299-89d5-4a25-94c8-0f543e84e3a5 Action:2======
+Thu Jul  8 04:56:24 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_Inet_Config uuid:74c0b641-8507-49e6-9752-56161a391afa Action:2======
+Thu Jul  8 04:56:24 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_Inet_Config uuid:8a22ed53-64bf-4237-9b22-cabc3797d6cb Action:2======
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>       MISC: zone: failed to delete dhcp
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: <<< DONE: MON upd: DEL table: Wifi_Inet_Config row: 79df3591-9f07-429a-8530-cc02d14d3324 ver: 539bbcb8-c4a7-4f8a-9e1e-e743de23e959
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>  TRACEBACK: <TRACE>    OVSDB: MON upd: DEL table: Wifi_Inet_Config row: 64245299-89d5-4a25-94c8-0f543e84e3a5
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>       MISC: zone: failed to delete firewall
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>       MISC: network: failed to delete network
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>       MISC: zone: failed to delete dhcp
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: <<< DONE: MON upd: DEL table: Wifi_Inet_Config row: 64245299-89d5-4a25-94c8-0f543e84e3a5 ver: 77e46719-7e7b-40a7-9c43-ac9f5534f071
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>  TRACEBACK: <TRACE>    OVSDB: MON upd: DEL table: Wifi_Inet_Config row: 74c0b641-8507-49e6-9752-56161a391afa
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>       MISC: zone: failed to delete firewall
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>       MISC: network: failed to delete network
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>       MISC: zone: failed to delete dhcp
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: <<< DONE: MON upd: DEL table: Wifi_Inet_Config row: 74c0b641-8507-49e6-9752-56161a391afa ver: 52f53201-83a5-4fd3-8dca-5e7462f42cdc
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>  TRACEBACK: <TRACE>    OVSDB: MON upd: DEL table: Wifi_Inet_Config row: 8a22ed53-64bf-4237-9b22-cabc3797d6cb
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>       MISC: zone: failed to delete firewall
+Thu Jul  8 04:56:24 2021 user.err NM[2467]: <ERR>       MISC: network: failed to delete network
+Thu Jul  8 04:56:24 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_RRM_Config uuid:37b40579-2d26-4c47-ad6d-2f38a396f07e Action:2======
+Thu Jul  8 04:56:24 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_RRM_Config uuid:97a5cd3e-dba7-4029-b30c-2085346dcb7b Action:2======
+Thu Jul  8 04:56:25 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_RRM_Config uuid:bed4e234-63d8-4515-8937-a1b487102075 Action:0======
+Thu Jul  8 04:56:25 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_RRM_Config uuid:43612117-5ac2-4b99-8da6-b1ab61cc88ce Action:0======
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan1
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 2 reschedule requested (same 9000 ms)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 off-chan 157 (36) survey sample 3
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 off-chan survey report (interface  not configured)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 off-chan 3 (6) survey sample 3
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 off-chan survey report (interface  not configured)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 on-chan 6 (6) survey sample 4
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 on-chan survey report (interface  not configured)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 client report (Interface  not configured)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 on-chan 36 (36) survey sample 3
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 on-chan survey report (interface  not configured)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 client report (Interface  not configured)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 04:56:25 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan0
+Thu Jul  8 04:56:26 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: NEW table: Wifi_VIF_Config row: 61d0e908-3b88-459a-9d44-f499993f2b08 cached: n
+Thu Jul  8 04:56:26 2021 user.info WM[2473]: <INFO>      MAIN: wlan1: no radio config found, will retry later
+Thu Jul  8 04:56:26 2021 user.info WM[2473]: <INFO>     OVSDB: <<< DONE: MON upd: NEW table: Wifi_VIF_Config row: 61d0e908-3b88-459a-9d44-f499993f2b08 ver: 00000000-0000-0000-0000-000000000000
+Thu Jul  8 04:56:26 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_Inet_Config uuid:5ef99ebd-4850-43ba-aa7d-92781d529c79 Action:0======
+Thu Jul  8 04:56:26 2021 user.err NM[2467]: <ERR>       MISC: Unable to modify interface wlan1, could't find it.
+Thu Jul  8 04:56:26 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: <<< DONE: MON upd: DEL table: Wifi_Inet_Config row: 8a22ed53-64bf-4237-9b22-cabc3797d6cb ver: 9d0d2430-9de2-4c84-9915-0434e490540c
+Thu Jul  8 04:56:26 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: JSON RECV: {"id":null,"method":"update","params":[1,{"Wifi_Inet_Config":{"5ef99ebd-4850-43ba-aa7d-92781d529c79":{"new":{"dhcpd":["map",[]],"if_name":"wlan1","dhcp_sniff":["set",[]],"upnp_mode":["set",[]],"if_type":"vif","netmask":["set",[]],"softwds_wrap":["set",[]],"mesh_options":["map",[]],"NAT":false,"mtu":["set",[]],"network":true,"ppp_options":["map",[]],"igmp_proxy":["set",[]],"gre_ifname":["set",[]],"broadcast":["set",[]],"igmp_tsize":["set",[]],"gateway":["set",[]],"gre_local_inet_addr":["set",[]],"igmp_age":["set",[]],"softwds_mac_addr":["set",[]],"enabled":true,"gre_remote_mac_addr":["set",[]],"vlan_id":["set",[]],"gre_remote_inet_addr":["set",[]],"igmp":["set",[]],"if_uuid":"","inet_addr":["set",[]],"_version":["uuid","0685ecec-12a4-4e37-aa64-a94964dcfc24"],"parent_ifname":["set",[]],"dns":["map",[]],"mld_proxy":["set",[]],"ip_assign_scheme":["set",[]]}}}}]}
+Thu Jul  8 04:56:26 2021 user.err NM[2467]: <ERR>  TRACEBACK: <TRACE>    OVSDB: MON upd: NEW table: Wifi_Inet_Config row: 5ef99ebd-4850-43ba-aa7d-92781d529c79
+Thu Jul  8 04:56:26 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: <<< DONE: MON upd: NEW table: Wifi_Inet_Config row: 5ef99ebd-4850-43ba-aa7d-92781d529c79 ver: 0685ecec-12a4-4e37-aa64-a94964dcfc24
+Thu Jul  8 04:56:26 2021 user.err NM[2467]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: JSON RECV: {"id":null,"method":"update","params":[1,{"Wifi_Inet_Config":{"5ef99ebd-4850-43ba-aa7d-92781d529c79":{"new":{"dhcpd":["map",[]],"if_name":"wlan1","dhcp_sniff":true,"upnp_mode":["set",[]],"if_type":"vif","netmask":["set",[]],"softwds_wrap":["set",[]],"mesh_options":["map",[]],"NAT":false,"mtu":["set",[]],"network":true,"ppp_options":["map",[]],"igmp_proxy":["set",[]],"gre_ifname":["set",[]],"broadcast":["set",[]],"igmp_tsize":["set",[]],"gateway":["set",[]],"gre_local_inet_addr":["set",[]],"igmp_age":["set",[]],"softwds_mac_addr":["set",[]],"enabled":true,"gre_remote_mac_addr":["set",[]],"vlan_id":["set",[]],"gre_remote_inet_addr":["set",[]],"igmp":["set",[]],"if_uuid":"","inet_addr":["set",[]],"_version":["uuid","a45401f3-2ac4-4343-94df-3c91b426c501"],"parent_ifname":["set",[]],"dns":["map",[]],"mld_proxy":["set",[]],"ip_assign_scheme":["set",[]]},"old":{"_version":["uuid","0685ecec-12a4-4e37-aa64-a94964dcfc24"],"dhcp_sniff":["set",
+Thu Jul  8 04:56:26 2021 user.err NM[2467]: <ERR>  TRACEBACK: <TRACE>    OVSDB: MON upd: MOD table: Wifi_Inet_Config row: 5ef99ebd-4850-43ba-aa7d-92781d529c79
+Thu Jul  8 04:56:26 2021 user.info WM[2473]: <INFO>      MISC: =====Received config update - table:Wifi_Inet_Config uuid:5ef99ebd-4850-43ba-aa7d-92781d529c79 Action:1======
+Thu Jul  8 04:56:26 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: MOD table: Wifi_Radio_Config row: 7d338ad3-fc4e-4d90-9abe-93615ad7c29f cached: y key: radio1
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>        VIF: Failed to get base BSSID (mac)
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'ft_psk' changed
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'vlan_id' changed
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'rrm' changed
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'btm' changed
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'bridge' changed
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'mac_list_type' changed
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'mode' changed
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'ssid' changed
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'ssid_broadcast' changed
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'min_hw_mode' changed
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'mac_list' changed
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'security' changed
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'wps_pbc_key_id' changed
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'custom_options' changed
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'captive_portal' changed
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: 'captive_allowlist' changed
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MAIN: wlan1: changed (forced=1)
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: SYNC: Writing sync operation: {"method": "transact", "params": ["Open_vSwitch", {"table": "Wifi_VIF_State", "op": "select", "where": [["if_name", "==", "wlan1"]]}], "id": 679805}
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: query result: [{"rows": []}]
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: ovsdb_sync_select_where: result no rows
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: SYNC: Writing sync operation: {"method": "transact", "params": ["Open_vSwitch", {"table": "Wifi_VIF_Config", "op": "select", "where": [["if_name", "==", "wlan1"]]}], "id": 679806}
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: query result: [{"rows": [{"vif_radio_idx": ["set", []], "if_name": "wlan1", "ap_bridge": true, "wps_pbc": ["set", []], "mac_list": ["set", []], "ssid": "ssid_wpa2_2g", "uapsd_enable": true, "btm": 1, "mesh_options": ["map", []], "_uuid": ["uuid", "61d0e908-3b88-459a-9d44-f499993f2b08"], "ssid_broadcast": "enabled", "wps": ["set", []], "mcast2ucast": ["set", []], "mode": "ap", "mac_list_type": "none", "wps_pbc_key_id": "", "credential_configs": ["set", []], "ft_psk": 0, "parent": ["set", []], "multi_ap": ["set", []], "security": ["map", [["encryption", "WPA-PSK"], ["key", "something"], ["mode", "2"]]], "wds": ["set", []], "enabled": true, "vlan_id": 1, "min_hw_mode": "11ax", "vif_dbg_lvl": ["set", []], "custom_options": ["map", [["client_dl_limit", "0"], ["client_ul_limit", "0"], ["dtim_period", "2"], ["dynamic_vlan", "0"], ["ieee80211k", "1"], ["radproxy", "0"], ["rate_limit_en", "0"], ["rts_threshold", "65535"], ["ssid_dl_limit", "0"], ["ssid
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: ovsdb_sync_select_where return: [{"vif_radio_idx": ["set", []], "if_name": "wlan1", "ap_bridge": true, "wps_pbc": ["set", []], "mac_list": ["set", []], "ssid": "ssid_wpa2_2g", "uapsd_enable": true, "btm": 1, "mesh_options": ["map", []], "_uuid": ["uuid", "61d0e908-3b88-459a-9d44-f499993f2b08"], "ssid_broadcast": "enabled", "wps": ["set", []], "mcast2ucast": ["set", []], "mode": "ap", "mac_list_type": "none", "wps_pbc_key_id": "", "credential_configs": ["set", []], "ft_psk": 0, "parent": ["set", []], "multi_ap": ["set", []], "security": ["map", [["encryption", "WPA-PSK"], ["key", "something"], ["mode", "2"]]], "wds": ["set", []], "enabled": true, "vlan_id": 1, "min_hw_mode": "11ax", "vif_dbg_lvl": ["set", []], "custom_options": ["map", [["client_dl_limit", "0"], ["client_ul_limit", "0"], ["dtim_period", "2"], ["dynamic_vlan", "0"], ["ieee80211k", "1"], ["radproxy", "0"], ["rate_limit_en", "0"], ["rts_threshold", "65535"], ["ssid_dl_limit", "0"]
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>     MISC: Found is_inarray()::argc=1|i=0|argv[i]=port_state
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <TRACE>    OVSDB: filter keep key: port_state
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: Table Wifi_Master_State where: '[["if_name", "==", "wlan1"]]' update: {"port_state": "inactive"}
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: SYNC: Writing sync operation: {"method": "transact", "params": ["Open_vSwitch", {"op": "comment", "comment": "WM - update, if_name==wlan1"}, {"table": "Wifi_Master_State", "op": "update", "where": [["if_name", "==", "wlan1"]], "row": {"port_state": "inactive"}}], "id": 679807}
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: Table Wifi_Master_State update result: [{}, {"count": 0}] off: 0
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: Table Wifi_Master_State update count: 0
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: OVSDB: Update table 'Wifi_Master_State' where '[["if_name", "==", "wlan1"]]': no match
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>     MAIN: wlan1: updated (0) master state to 'inactive'
+Thu Jul  8 04:56:26 2021 user.err WM[2473]: <ERR>  TRACEBACK: <DEBUG>     MAIN: wlan1@radio1: changed, configuring
+Thu Jul  8 04:56:26 2021 user.info WM[2473]: <INFO>     OVSDB: <<< DONE: MON upd: MOD table: Wifi_Radio_Config row: 7d338ad3-fc4e-4d90-9abe-93615ad7c29f ver:
+Thu Jul  8 04:56:26 2021 user.info WM[2473]: <INFO>     OVSDB: MON upd: MOD table: Wifi_Radio_Config row: e068cede-bfd6-49a4-bbe5-b221385c4220 cached: y key: radio0
+Thu Jul  8 04:56:26 2021 user.info WM[2473]: <INFO>     OVSDB: <<< DONE: MON upd: MOD table: Wifi_Radio_Config row: e068cede-bfd6-49a4-bbe5-b221385c4220 ver:
+Thu Jul  8 04:56:29 2021 user.info WM[2473]: <INFO>      MISC: APC_state Updating: mode: DR, dr-addr: 172.16.224.106 bdr-addr: 0.0.0.0
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan1
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 2 reschedule requested (same 9000 ms)
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 off-chan 157 (36) survey sample 4
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 off-chan survey report (interface  not configured)
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 off-chan 3 (6) survey sample 4
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 off-chan survey report (interface  not configured)
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 04:56:34 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan0
+Thu Jul  8 04:56:39 2021 user.info WM[2473]: <INFO>      MISC: APC_state Updating: mode: DR, dr-addr: 172.16.224.106 bdr-addr: 0.0.0.0
+Thu Jul  8 04:56:41 2021 user.notice WM[2473]: <NOTICE>     VIF: wlan1: Failed to get base BSSID (mac)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan1
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 2 reschedule requested (same 9000 ms)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 client report (Interface  not configured)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 on-chan 6 (6) survey sample 5
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 on-chan survey report (interface  not configured)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 client report (Interface  not configured)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 on-chan 36 (36) survey sample 4
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 on-chan survey report (interface  not configured)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 off-chan 157 (36) survey sample 5
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 off-chan survey report (interface  not configured)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: JSON RECV: {"id":null,"method":"update","params":[1,{"Wifi_Radio_State":{"40bdcbd6-4776-4a57-b6ea-963ff896d66e":{"new":{"if_name":"radio0","dfs_demo":["set",[]],"thermal_downgraded":["set",[]],"temperature_control":["map",[]],"mac":"90:3c:b3:9d:6a:01","bcn_int":100,"allowed_channels":["set",[36,40,44,48,149,153,157,161,165]],"radio_config":["uuid","e068cede-bfd6-49a4-bbe5-b221385c4220"],"thermal_tx_chainmask":["set",[]],"channel_sync":["set",[]],"thermal_shutdown":["set",[]],"hw_type":["set",[]],"vif_states":["set",[]],"country":"US","radar":["map",[]],"tx_chainmask":15,"fallback_parents":["map",[]],"hw_config":["map",[["dfs_enable","1"],["dfs_ignorecac","0"],["dfs_usenol","1"]]],"channel":36,"tx_power":18,"rx_chainmask":15,"ht_mode":"HT20","thermal_downgrade_temp":["set",[]],"hw_mode":"11ax","zero_wait_dfs":["set",[]],"enabled":true,"hw_params":["map",[]],"thermal_upgrade_temp":["set",[]],"channels":["map",[["allowed","36,40,44,48,149,153,157
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Radio Config: No interfaces associated with 5G radio0 radio.
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Radio Config: No interfaces associated with 2.4G radio1 radio.
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: JSON RECV: {"id":null,"method":"update","params":[1,{"Wifi_Radio_State":{"c1b180a9-441e-4727-b1c7-3828f9be8cd0":{"new":{"if_name":"radio1","dfs_demo":["set",[]],"thermal_downgraded":["set",[]],"temperature_control":["map",[]],"mac":"90:3c:b3:9d:6b:01","bcn_int":100,"allowed_channels":["set",[1,2,3,4,5,6,7,8,9,10,11]],"radio_config":["uuid","7d338ad3-fc4e-4d90-9abe-93615ad7c29f"],"thermal_tx_chainmask":["set",[]],"channel_sync":["set",[]],"thermal_shutdown":["set",[]],"hw_type":["set",[]],"vif_states":["set",[]],"country":"US","radar":["map",[]],"tx_chainmask":3,"fallback_parents":["map",[]],"hw_config":["map",[]],"channel":6,"tx_power":18,"rx_chainmask":3,"ht_mode":"HT20","thermal_downgrade_temp":["set",[]],"hw_mode":"11ax","zero_wait_dfs":["set",[]],"enabled":true,"hw_params":["map",[]],"thermal_upgrade_temp":["set",[]],"channels":["map",[["allowed","1,2,3,4,5,6,7,8,9,10,11,"],["disabled","12,13,14,"]]],"custom_options":["map",[["max_clients"
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Radio Config: No interfaces associated with 5G radio0 radio.
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Radio Config: No interfaces associated with 2.4G radio1 radio.
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 off-chan 3 (6) survey sample 5
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 off-chan survey report (interface  not configured)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 04:56:43 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan0
+Thu Jul  8 04:56:49 2021 user.info WM[2473]: <INFO>      MISC: APC_state Updating: mode: DR, dr-addr: 172.16.224.106 bdr-addr: 0.0.0.0
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>       MISC: radio1: hwmon is missing
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 2 reschedule requested (same 9000 ms)
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 on-chan 6 (6) survey sample 6
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 on-chan survey report (interface  not configured)
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 client report (Interface  not configured)
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 on-chan 36 (36) survey sample 5
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 on-chan survey report (interface  not configured)
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 client report (Interface  not configured)
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 off-chan 157 (36) survey sample 6
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 off-chan survey report (interface  not configured)
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: radio0: tx_chainmask 240
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: radio1: tx_chainmask 3
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>   TARGET: Parsed device load 0.00 0.01 0.00
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>   TARGET: Parsed device uptime 256126
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending device stats load 0.00 0.01 0.00
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MISC: radio0: temperature : 40
+Thu Jul  8 04:56:50 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending device stats 5G temp 40
+Thu Jul  8 04:56:52 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan1
+Thu Jul  8 04:56:52 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: uptime=256126, mem=214112/949112, cpu=1
+Thu Jul  8 04:56:52 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending device report at '2021-07-08 04:56:50+0000'
+Thu Jul  8 04:56:52 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>      DPP: Q len: 1 size: 64
+Thu Jul  8 04:56:52 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:52 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 off-chan 3 (6) survey sample 6
+Thu Jul  8 04:56:52 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 off-chan survey report (interface  not configured)
+Thu Jul  8 04:56:52 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:56:52 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 04:56:52 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 04:56:52 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 04:56:52 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 04:56:52 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 04:56:52 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 04:56:52 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 04:56:52 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 04:56:52 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 04:56:52 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan0
+Thu Jul  8 04:56:56 2021 user.notice WM[2473]: <NOTICE>     VIF: wlan1: Failed to get base BSSID (mac)
+Thu Jul  8 04:56:59 2021 user.info WM[2473]: <INFO>      MISC: APC_state Updating: mode: DR, dr-addr: 172.16.224.106 bdr-addr: 0.0.0.0
+Thu Jul  8 04:57:01 2021 user.info WM[2473]: <INFO>      MISC: timer_expiry_check Timer Expired..Executing callback
+Thu Jul  8 04:57:01 2021 user.info WM[2473]: <INFO>      MISC: ====Calling reload_config====
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan1
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MISC: qm_conn_read_res: b:48
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MISC: qm_conn_send_fd: req c:2 dt:2 ds:446 to:null result:1 response:2 err:0
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: Sent message to QM (size: 446 type: stats)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending 2.4G radio1 on-chan neighbor report at '2021-07-08 04:56:54+0000'
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 client report (Interface  not configured)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 on-chan 6 (6) survey sample 7
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 on-chan survey report (interface  not configured)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 client report (Interface  not configured)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending 2.4G radio1 on-chan survey report at '2021-07-08 04:56:54+0000'
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending 5G radio0 on-chan survey report at '2021-07-08 04:56:54+0000'
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 client report (Interface  not configured)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 client report (Interface  not configured)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 on-chan 36 (36) survey sample 1
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 on-chan survey report (interface  not configured)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Sending 5G radio0 on-chan neighbor report at '2021-07-08 04:56:55+0000'
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 off-chan 157 (36) survey sample 7
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 off-chan survey report (interface  not configured)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 04:57:01 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan0
+Thu Jul  8 04:57:02 2021 daemon.notice netifd: radio0 (24301): Command failed: Invalid argument
+Thu Jul  8 04:57:02 2021 daemon.notice netifd: radio1 (24304): Command failed: Invalid argument
+Thu Jul  8 04:57:02 2021 daemon.notice netifd: radio1 (24304): sh: out of range
+Thu Jul  8 04:57:02 2021 daemon.notice netifd: radio1 (24304): sh: out of range
+Thu Jul  8 04:57:02 2021 daemon.notice hostapd: Configuration file: /var/run/hostapd-phy1.conf (phy wlan1) --> new PHY
+Thu Jul  8 04:57:02 2021 kern.info kernel: [256132.499649] IPv6: ADDRCONF(NETDEV_UP): wlan1: link is not ready
+Thu Jul  8 04:57:02 2021 kern.info kernel: [256132.501159] device wlan1 entered promiscuous mode
+Thu Jul  8 04:57:02 2021 kern.info kernel: [256132.504923] br-wan: port 2(wlan1) entered forwarding state
+Thu Jul  8 04:57:02 2021 kern.info kernel: [256132.509403] br-wan: port 2(wlan1) entered forwarding state
+Thu Jul  8 04:57:02 2021 daemon.notice hostapd: wlan1: interface state UNINITIALIZED->COUNTRY_UPDATE
+Thu Jul  8 04:57:02 2021 kern.info kernel: [256132.523434] br-wan: port 2(wlan1) entered disabled state
+Thu Jul  8 04:57:02 2021 user.emerg WM[2473]: platform/openwrt/src/lib/target/src/radio_nl80211.c:nl80211_recv[537]60
+Thu Jul  8 04:57:02 2021 kern.info kernel: [256132.606747] ath11k c000000.wifi1: bss color param 0xc000000 set on vdev 0
+Thu Jul  8 04:57:02 2021 kern.info kernel: [256132.609244] IPv6: ADDRCONF(NETDEV_CHANGE): wlan1: link becomes ready
+Thu Jul  8 04:57:02 2021 kern.info kernel: [256132.612845] br-wan: port 2(wlan1) entered forwarding state
+Thu Jul  8 04:57:02 2021 kern.info kernel: [256132.619131] br-wan: port 2(wlan1) entered forwarding state
+Thu Jul  8 04:57:02 2021 daemon.notice hostapd: wlan1: interface state COUNTRY_UPDATE->ENABLED
+Thu Jul  8 04:57:02 2021 daemon.notice hostapd: wlan1: AP-ENABLED
+Thu Jul  8 04:57:02 2021 user.notice nft-qos: flush
+Thu Jul  8 04:57:02 2021 user.notice nft-qos: flush
+Thu Jul  8 04:57:02 2021 user.notice nft-qos: 2021-07-08T04:57:02+0000 INIT /etc/rc.common
+Thu Jul  8 04:57:03 2021 user.notice hotplug: Set Tx rates for device wlan1
+Thu Jul  8 04:57:03 2021 daemon.notice netifd: Network device 'wlan1' link is up
+Thu Jul  8 04:57:04 2021 kern.info kernel: [256134.613276] br-wan: port 2(wlan1) entered forwarding state
+Thu Jul  8 04:57:08 2021 daemon.info hostapd: wlan1: STA 04:f0:21:5d:e0:4d IEEE 802.11: auth request, signal -21 (Accepted)
+Thu Jul  8 04:57:08 2021 user.info WM[2473]: <INFO>      MISC: Add mac rate rule:wlan1: 04:F0:21:5D:E0:4D
+Thu Jul  8 04:57:08 2021 daemon.info hostapd: wlan1: STA 04:f0:21:5d:e0:4d IEEE 802.11: authenticated
+Thu Jul  8 04:57:08 2021 user.notice mac-rate: add wlan1 04:F0:21:5D:E0:4D
+Thu Jul  8 04:57:08 2021 user.notice mac-rate: exists = 0
+Thu Jul  8 04:57:08 2021 user.notice WM[2473]: <NOTICE>    MAIN: Client '04:f0:21:5d:e0:4d' connected on 'wlan1' with key ''
+Thu Jul  8 04:57:08 2021 user.info WM[2473]: <INFO>      MAIN: 04:f0:21:5d:e0:4d: applying workaround wm2_clients_war_esw_2684_noc_163_plat_878
+Thu Jul  8 04:57:08 2021 user.emerg WM[2473]: platform/openwrt/src/lib/target/src/radio_nl80211.c:nl80211_recv[537]60
+Thu Jul  8 04:57:09 2021 daemon.info hostapd: wlan1: STA 04:f0:21:5d:e0:4d IEEE 802.11: assoc request, signal -21 (Accepted)
+Thu Jul  8 04:57:09 2021 daemon.info hostapd: wlan1: STA 04:f0:21:5d:e0:4d IEEE 802.11: associated (aid 1)
+Thu Jul  8 04:57:09 2021 user.emerg WM[2473]: platform/openwrt/src/lib/target/src/radio_nl80211.c:nl80211_recv[537]60
+Thu Jul  8 04:57:09 2021 daemon.notice hostapd: wlan1: AP-STA-CONNECTED 04:f0:21:5d:e0:4d
+Thu Jul  8 04:57:09 2021 daemon.info hostapd: wlan1: STA 04:f0:21:5d:e0:4d RADIUS: starting accounting session 4C9431F7641176BB
+Thu Jul  8 04:57:09 2021 daemon.info hostapd: wlan1: STA 04:f0:21:5d:e0:4d WPA: pairwise key handshake completed (RSN)
+Thu Jul  8 04:57:09 2021 daemon.warn dnsmasq-dhcp[2725]: no address range available for DHCP request via br-wan
+Thu Jul  8 04:57:09 2021 user.info WM[2473]: <INFO>      MISC: APC_state Updating: mode: DR, dr-addr: 172.16.224.106 bdr-addr: 0.0.0.0
+Thu Jul  8 04:57:10 2021 daemon.warn dnsmasq-dhcp[2725]: no address range available for DHCP request via br-wan
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan0
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 2 reschedule requested (same 9000 ms)
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 off-chan 3 (6) survey sample 7
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 off-chan survey report (interface  not configured)
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 2.4G radio1 on-chan 6 (6) survey sample 1
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 on-chan survey report (interface  not configured)
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 2.4G radio1 client report (Interface  not configured)
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 client report (Interface  not configured)
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 on-chan 36 (36) survey sample 2
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 on-chan survey report (interface  not configured)
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 off-chan 157 (36) survey sample 8
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 off-chan survey report (interface  not configured)
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 04:57:10 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 04:57:10 2021 kern.debug kernel: [256140.258907] flow 0 (10010ac 430044) started
+Thu Jul  8 04:57:11 2021 user.info SM[2470]: <INFO>      MAIN: Started 2.4G radio1 on-chan neighbor reporting
+Thu Jul  8 04:57:11 2021 user.info SM[2470]: <INFO>      MAIN: Started 2.4G radio1 off-chan neighbor reporting
+Thu Jul  8 04:57:11 2021 user.info SM[2470]: <INFO>      MAIN: Initialized 2.4G radio1 on-chan survey stats
+Thu Jul  8 04:57:11 2021 user.info SM[2470]: <INFO>      MAIN: Started 2.4G radio1 on-chan survey reporting
+Thu Jul  8 04:57:11 2021 user.info SM[2470]: <INFO>      MAIN: Initialized 2.4G radio1 off-chan survey stats
+Thu Jul  8 04:57:11 2021 user.info SM[2470]: <INFO>      MAIN: Started 2.4G radio1 off-chan survey reporting
+Thu Jul  8 04:57:11 2021 user.info SM[2470]: <INFO>      MAIN: Started 2.4G radio1 client reporting
+Thu Jul  8 04:57:11 2021 user.info WM[2473]: <INFO>      MISC: wlan1: add client 04:f0:21:5d:e0:4d
+Thu Jul  8 04:57:11 2021 user.info WM[2473]: <INFO>      MAIN: 04:f0:21:5d:e0:4d: applying workaround wm2_clients_war_esw_2684_noc_163_plat_878
+Thu Jul  8 04:57:13 2021 daemon.err odhcpd[1435]: Failed to send to ff02::1%lan@br-lan (Address not available)
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan0
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <INFO>      MAIN: Started 2.4G radio1 off-chan survey reporting
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Fetched 2.4G radio1 (null) survey reporting context
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip starting 2.4G radio1 (null) survey reporting (Stats not configured)
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Fetched 2.4G radio1 client reporting context
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: wlan1: assoc returned 1, list 0
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Marked 2.4G radio1 client 04:F0:21:5D:E0:4D connected (cc=1 dc=0 dur=0ms)
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Fetched 2.4G radio1 rssi reporting context
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <INFO>      MAIN: Started 2.4G radio1 client reporting
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Fetched 2.4G radio1 rssi reporting context
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip starting 2.4G radio1 rssi reporting (Stats not configured)
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>    OVSDB: JSON RECV: {"id":null,"method":"update","params":[2,{"Wifi_VIF_State":{"695b356d-2661-40b4-98ed-af494a1e2f03":{"new":{"if_name":"wlan1","vif_radio_idx":["set",[]],"state":"up","mac":"90:3c:b3:9d:6b:01","uapsd_enable":true,"ap_bridge":true,"mac_list":["set",[]],"ssid":"ssid_wpa2_2g","wps_pbc":["set",[]],"associated_clients":["uuid","feb941dd-a0b4-4fb1-a9d1-73c93c6b8b2c"],"mesh_options":["map",[]],"btm":1,"ssid_broadcast":"enabled","mcast2ucast":["set",[]],"wps":["set",[]],"mode":"ap","mac_list_type":"none","wps_pbc_key_id":"","ft_psk":0,"channel":6,"parent":["set",[]],"multi_ap":["set",[]],"ap_vlan_sta_addr":["set",[]],"security":["map",[["encryption","WPA-PSK"],["key","something"],["mode","2"]]],"wds":["set",[]],"enabled":true,"vlan_id":1,"custom_options":["map",[["client_dl_limit","0"],["client_ul_limit","0"],["dtim_period","2"],["dynamic_vlan","0"],["ieee80211k","1"],["radius_nas_id","90:3c:b3:9d:6b:01"],["radproxy","0"],["rate_limit_en","0"
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Radio Config: No interfaces associated with 5G radio0 radio.
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Initializing 2.4G radio1 radio tx_stats on radio1
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_session_cb
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processing 5G radio0 on-chan 36 (36) survey sample 3
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 on-chan survey report (interface  not configured)
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>     MAIN: Skip processing 5G radio0 client report (Interface  not configured)
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:19 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:19 2021 user.info WM[2473]: <INFO>      MISC: APC_state Updating: mode: DR, dr-addr: 172.16.224.106 bdr-addr: 0.0.0.0
+Thu Jul  8 04:57:21 2021 daemon.info lldpd[1883]: interface 49 does not have a name or an address, skip
+Thu Jul  8 04:57:27 2021 daemon.info lldpd[1883]: interface 49 does not have a name or an address, skip
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>       MISC: ubus_collector: could not find ubus object hostapd.wlan0
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processed 2.4G radio1 off-chan 1 survey percent {busy=0 tx=0 self=0 rx=0 ext=0 noise=154 duration=10}
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: Survey convert scan_type 3 chan 2
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processed 2.4G radio1 off-chan 2 survey percent {busy=0 tx=0 self=0 rx=0 ext=0 noise=154 duration=10}
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: Survey convert scan_type 3 chan 3
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processed 2.4G radio1 off-chan 3 survey percent {busy=0 tx=0 self=0 rx=0 ext=0 noise=154 duration=50}
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: Survey convert scan_type 3 chan 4
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processed 2.4G radio1 off-chan 4 survey percent {busy=0 tx=0 self=0 rx=0 ext=0 noise=155 duration=50}
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: Survey convert scan_type 3 chan 5
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processed 2.4G radio1 off-chan 5 survey percent {busy=0 tx=0 self=0 rx=0 ext=0 noise=155 duration=50}
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: Survey convert scan_type 3 chan 7
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processed 2.4G radio1 off-chan 7 survey percent {busy=2 tx=0 self=0 rx=0 ext=0 noise=159 duration=50}
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: Survey convert scan_type 3 chan 8
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processed 2.4G radio1 off-chan 8 survey percent {busy=0 tx=0 self=0 rx=0 ext=0 noise=160 duration=50}
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: Survey convert scan_type 3 chan 9
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processed 2.4G radio1 off-chan 9 survey percent {busy=0 tx=0 self=0 rx=0 ext=0 noise=159 duration=50}
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: Survey convert scan_type 3 chan 10
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processed 2.4G radio1 off-chan 10 survey percent {busy=0 tx=0 self=0 rx=0 ext=0 noise=159 duration=50}
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: Survey convert scan_type 3 chan 11
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processed 2.4G radio1 off-chan 11 survey percent {busy=0 tx=0 self=0 rx=0 ext=0 noise=154 duration=50}
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MAIN: Processed 2.4G radio1 off-chan survey records 28
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: wlan1: delete scan context
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 1 reschedule requested (same 7000 ms)
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: requesting hostapd channel switch data
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 4 reschedule requested (same 7000 ms)
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <TRACE>    SCHED: Task 3 reschedule requested (same 1000 ms)
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_bss_cb
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector: received ubus collector chan event message
+Thu Jul  8 04:57:28 2021 user.err SM[2470]: <ERR>  TRACEBACK: <DEBUG>     MISC: ubus_collector_complete_channel_switch_cb
+Thu Jul  8 04:57:29 2021 user.info WM[2473]: <INFO>      MISC: APC_state Updating: mode: DR, dr-addr: 172.16.224.106 bdr-addr: 0.0.0.0
+
