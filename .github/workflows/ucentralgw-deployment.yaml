@@ -1,0 +1,122 @@
+name: Update uCentral
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  AWS_EKS_NAME: tip-wlan-main
+  AWS_DEFAULT_OUTPUT: json
+  AWS_DEFAULT_REGION: us-east-2
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+
+  # DigiCert certs
+  DIGICERT_CERT: ${{ secrets.DIGICERT_CERT }}
+  DIGICERT_KEY: ${{ secrets.DIGICERT_KEY }}
+
+  # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
+  testbeds: '[
+    {
+      "namespace": "qa",
+      "ucentralgw_version": "master",
+      "ucentralgwui_version": "main"
+    }
+  ]'
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  generate-matrix:
+    name: Generate matrix for build
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    - name: generate-matrix
+      id: set-matrix
+      run: |
+        echo '::set-output name=matrix::{"include":${{ env.testbeds }}}'
+
+  deploy:
+    name: Update uCentral instances
+    runs-on: ubuntu-latest
+    needs: [ generate-matrix ]
+    strategy:
+      matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
+      fail-fast: false
+    steps:
+
+    - name: Checkout uCentral assembly chart repo
+      uses: actions/checkout@v2
+      with:
+        path: wlan-cloud-ucentral-deploy
+        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
+    - name: Checkout Helm values repo
+      uses: actions/checkout@v2
+      with:
+        path: toolsmith
+        repository: Telecominfraproject/Toolsmith
+        token: ${{ secrets.PAT_TOKEN }}
+
+    - name: Prepare certificates from secrets
+      run: |
+        echo "${{ env.DIGICERT_CERT }}" | base64 -d > cert.pem
+        echo "${{ env.DIGICERT_KEY }}" | base64 -d > key.pem
+
+    - name: Fetch kubeconfig
+      run: |
+        aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    - name: Deploy uCentralGW
+      working-directory: wlan-cloud-ucentral-deploy/chart
+      run: |
+        helm plugin install https://github.com/aslafy-z/helm-git --version 0.10.0
+        sed -i '/wlan-cloud-ucentralgw@/s/ref=.*/ref='${{ matrix.ucentralgw_version }}'\"/g' Chart.yaml
+        sed -i '/wlan-cloud-ucentralgw-ui@/s/ref=.*/ref='${{ matrix.ucentralgwui_version }}'\"/g' Chart.yaml
+        helm repo add bitnami https://charts.bitnami.com/bitnami
+        helm repo update
+        helm dependency update
+        helm upgrade --install --create-namespace \
+          --namespace ucentral-${{ matrix.namespace }} --wait --timeout 20m \
+          -f ../../toolsmith/helm-values/assembly-ucentral/values.ucentral-${{ matrix.namespace }}.yaml \
+          --set ucentralgw.configProperties."rtty\.token"=${{ secrets.RTTY_TOKEN }} \
+          --set ucentralgw.configProperties."authentication\.default\.username"=${{ secrets.UCENTRALGW_AUTH_USERNAME }} \
+          --set ucentralgw.configProperties."authentication\.default\.password"=${{ secrets.UCENTRALGW_AUTH_PASSWORD }} \
+          --set rttys.config.token=${{ secrets.RTTY_TOKEN }} \
+          --set-file ucentralgw.certs."restapi-cert\.pem"=../../cert.pem \
+          --set-file ucentralgw.certs."restapi-key\.pem"=../../key.pem \
+          --set-file ucentralgw.certs."websocket-cert\.pem"=../../cert.pem \
+          --set-file ucentralgw.certs."websocket-key\.pem"=../../key.pem \
+          --set-file rttys.certs."restapi-cert\.pem"=../../cert.pem \
+          --set-file rttys.certs."restapi-key\.pem"=../../key.pem \
+          --set ucentralgw.images.ucentralgw.tag=${{ matrix.ucentralgw_version }} \
+          --set ucentralgwui.images.ucentralgwui.tag=${{ matrix.ucentralgwui_version }} \
+          tip-ucentral .
+
+    - name: Show resource state on deployment failure
+      if: failure()
+      run: |
+        kubectl get pods --namespace ucentral-${{ matrix.namespace }}
+        kubectl get services --namespace ucentral-${{ matrix.namespace }}
+        kubectl get persistentvolumeclaims --namespace ucentral-${{ matrix.namespace }}
+    - name: Describe pods on deployment failure
+      if: failure()
+      run: |
+        kubectl describe pods --namespace ucentral-${{ matrix.namespace }}
+    - name: Describe services on deployment failure
+      if: failure()
+      run: |
+        kubectl describe services --namespace ucentral-${{ matrix.namespace }}
+    - name: Describe persistentvolumeclaims on deployment failure
+      if: failure()
+      run: |
+        kubectl describe persistentvolumeclaims --namespace ucentral-${{ matrix.namespace }}
+
+    - name: Rollback Cloud SDK
+      if: failure()
+      run: |
+        helm rollback tip-ucentral --namespace ucentral-${{ matrix.namespace }} --wait --timeout 20m
+
