@@ -90,7 +90,7 @@ class TestRatevsRangeNat(object):
                                    name=get_configuration["access_point"][0]["model"] + "ratevsrange")
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_twog)
-            kpi_val = lf_tools.read_kpi_file(column_name='numeric-score', dir_name=report_name)
+            kpi_val = lf_tools.read_kpi_file(column_name=None, dir_name=report_name)
             print(str(kpi_val))
             allure.attach(name="Kpi Data", body=str(kpi_val))
             assert station
@@ -143,7 +143,7 @@ class TestRatevsRangeNat(object):
                                    name=get_configuration["access_point"][0]["model"] + "ratevsrange")
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_twog)
-            kpi_val = lf_tools.read_kpi_file(column_name='numeric-score', dir_name=report_name)
+            kpi_val = lf_tools.read_kpi_file(column_name=None, dir_name=report_name)
             print(str(kpi_val))
             allure.attach(name="Kpi Data", body=str(kpi_val))
             assert station
@@ -183,7 +183,7 @@ class TestRatevsRangeNat(object):
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
-                                        instance_name="WPA2_2G_nat_rvr_11a",
+                                        instance_name="WPA2_2G_nat_rvr_11a1",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -196,7 +196,7 @@ class TestRatevsRangeNat(object):
                                    name=get_configuration["access_point"][0]["model"] + "ratevsrange")
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_fiveg)
-            kpi_val = lf_tools.read_kpi_file(column_name='numeric-score', dir_name=report_name)
+            kpi_val = lf_tools.read_kpi_file(column_name=None, dir_name=report_name)
             print(str(kpi_val))
             allure.attach(name="Kpi Data", body=str(kpi_val))
             assert station
@@ -236,7 +236,7 @@ class TestRatevsRangeNat(object):
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
-                                        instance_name="WPA2_2G_nat_rvr_11an",
+                                        instance_name="WPA2_2G_nat_rvr_11an1",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -249,7 +249,7 @@ class TestRatevsRangeNat(object):
                                    name=get_configuration["access_point"][0]["model"] + "ratevsrange")
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_fiveg)
-            kpi_val = lf_tools.read_kpi_file(column_name='numeric-score', dir_name=report_name)
+            kpi_val = lf_tools.read_kpi_file(column_name=None, dir_name=report_name)
             print(str(kpi_val))
             allure.attach(name="Kpi Data", body=str(kpi_val))
             assert station
@@ -289,7 +289,7 @@ class TestRatevsRangeNat(object):
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
-                                        instance_name="WPA2_2G_nat_rvr_11an_ac",
+                                        instance_name="WPA2_2G_nat_rvr_11an_ac1",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -302,7 +302,7 @@ class TestRatevsRangeNat(object):
                                    name=get_configuration["access_point"][0]["model"] + "ratevsrange")
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_fiveg)
-            kpi_val = lf_tools.read_kpi_file(column_name='numeric-score', dir_name=report_name)
+            kpi_val = lf_tools.read_kpi_file(column_name=None, dir_name=report_name)
             print(str(kpi_val))
             allure.attach(name="Kpi Data", body=str(kpi_val))
             assert station

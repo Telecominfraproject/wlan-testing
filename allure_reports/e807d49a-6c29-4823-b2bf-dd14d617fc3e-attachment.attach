@@ -1,0 +1,5 @@
+            Date  test-rig dut-hw-version                           dut-sw-version dut-model-num dut-serial-num  test-priority  ... pass/fail numeric-score                       test details  Units Graph-Group Subtest-Pass Subtest-Fail
+0  1625749922786       NaN         eap102  eap102-2021-06-25-pending-b6743c3.tar.g        eap102   903cb39d6959             90  ...       NaN    114.328741  Throughput at specified settings.   Mbps  Throughput            0            0
+1  1625749984205       NaN         eap102  eap102-2021-06-25-pending-b6743c3.tar.g        eap102   903cb39d6959             90  ...       NaN    107.821642  Throughput at specified settings.   Mbps  Throughput            0            0
+
+[2 rows x 16 columns]
