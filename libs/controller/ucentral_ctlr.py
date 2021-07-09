@@ -14,8 +14,12 @@ import requests
 from pathlib import Path
 
 from requests.adapters import HTTPAdapter
+import logging
 
-
+logging.basicConfig(level=logging.DEBUG)
+from http.client import HTTPConnection
+HTTPConnection.debuglevel = 1
+requests.logging.getLogger()
 class ConfigureController:
 
     def __init__(self, controller_data):
@@ -221,15 +225,30 @@ class UProfileUtility:
             print("Invalid Mode")
             return 0
 
-    def add_ssid(self, ssid_data):
-        # print("ssid data : ", ssid_data)
+    def add_ssid(self, ssid_data, radius=False, radius_auth_data={}, radius_accounting_data={}):
+        print("ssid data : ", ssid_data)
         ssid_info = {'name': ssid_data["ssid_name"], "bss-mode": "ap", "wifi-bands": []}
         for i in ssid_data["appliedRadios"]:
             ssid_info["wifi-bands"].append(i)
         ssid_info['encryption'] = {}
         ssid_info['encryption']['proto'] = ssid_data["security"]
-        ssid_info['encryption']['key'] = ssid_data["security_key"]
+        try:
+            ssid_info['encryption']['key'] = ssid_data["security_key"]
+        except:
+            pass
         ssid_info['encryption']['ieee80211w'] = "optional"
+        if radius:
+            ssid_info["radius"] = {}
+            ssid_info["radius"]["authentication"] = {
+                "host": radius_auth_data["ip"],
+                "port": radius_auth_data["port"],
+                "secret": radius_auth_data["secret"]
+            }
+            ssid_info["radius"]["accounting"] = {
+                "host": radius_accounting_data["ip"],
+                "port": radius_accounting_data["port"],
+                "secret": radius_accounting_data["secret"]
+            }
         if self.mode == "NAT":
             self.base_profile_config['interfaces'][1]['ssids'].append(ssid_info)
         elif self.mode == "BRIDGE":
@@ -282,6 +301,7 @@ class UProfileUtility:
 
         uri = self.sdk_client.build_uri("device/" + serial_number + "/configure")
         basic_cfg_str = json.dumps(payload)
+        print(self.base_profile_config)
         resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
                              verify=False, timeout=100)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
@@ -420,6 +440,23 @@ class UProfileUtility:
 #     }
 # }
 #
+RADIUS_SERVER_DATA = {
+    "ip": "10.10.10.72",
+    "port": 1812,
+    "secret": "testing123",
+    "user": "user",
+    "password": "password",
+    "pk_password": "whatever"
+}
+
+RADIUS_ACCOUNTING_DATA = {
+    "ip": "10.10.10.72",
+    "port": 1813,
+    "secret": "testing123",
+    "user": "user",
+    "password": "password",
+    "pk_password": "whatever"
+}
 controller = {
     # 'url': "https://tip-f34.candelatech.com:16001/api/v1/oauth2",  # API base url for the controller
     'url': 'https://sdk-ucentral-2.cicd.lab.wlan.tip.build:16001/api/v1/oauth2',
@@ -439,21 +476,21 @@ controller = {
 #     "radius": False
 # }
 # obj = UController(controller_data=controller)
-# time.sleep(10)
-# obj.logout()
-# # # # # # # print(obj.get_devices())
-# # # # # # # print(obj.get_device_uuid(serial_number="903cb3944873"))
-# # # # # # # obj.get_device_uuid(serial_number="c4411ef53f23")
+# # # # time.sleep(10)
+# # # obj.logout()
+# # # # # # # # # # print(obj.get_devices())
+# # # # # # # # # # print(obj.get_device_uuid(serial_number="903cb3944873"))
+# # # # # # # # # # # obj.get_device_uuid(serial_number="c4411ef53f23")
 # profile_client = UProfileUtility(sdk_client=obj)
 # profile_client.set_radio_config()
-# profile_client.set_mode(mode="VLAN")
-# ssid_data = {"ssid_name": "ssid_wpa_test_3_vlan", "vlan": 100, "appliedRadios": ["2G", "5G"], "security_key": "something", "security": "none"}
-# profile_client.add_ssid(ssid_data=ssid_data)
-# ssid_data = {"ssid_name": "ssid_wpa_test_4_vlan", "vlan": 100, "appliedRadios": ["2G", "5G"], "security_key": "something", "security": "none"}
-# profile_client.add_ssid(ssid_data=ssid_data)
+# profile_client.set_mode(mode="BRIDGE")
+# ssid_data = {"ssid_name": "ssid_shivam_psk", "appliedRadios": ["2G", "5G", "6G"], "security_key": "something", "security": "wpa2"} # sae # sae-mixed
+# profile_client.add_ssid(ssid_data=ssid_data, radius=True, radius_auth_data=RADIUS_SERVER_DATA, radius_accounting_data=RADIUS_ACCOUNTING_DATA)
+# # # # # ssid_data = {"ssid_name": "ssid_wpa_test_4_vlan", "vlan": 100, "appliedRadios": ["2G", "5G"], "security_key": "something", "security": "none"}
+# # # # # profile_client.add_ssid(ssid_data=ssid_data)
 # # # # print(profile_client.base_profile_config)
 # profile_client.push_config(serial_number="903cb39d6918")
-# b = json.loads(str(profile_client.base_profile_config).replace(" ", "").replace("'", '"'))#, json.dumps(b, sort_keys=True)
+# # b = json.loads(str(profile_client.base_profile_config).replace(" ", "").replace("'", '"'))#, json.dumps(b, sort_keys=True)
 # print(b["interfaces"])#, b["interfaces"])
 # # print(profile_client.base_profile_config)
 # # equipments = obj.get_devices()
@@ -463,7 +500,10 @@ controller = {
 #         for k in j:
 #             print(k, j[k])
 # print(equipments)
+
+# obj.logout()
 # #
+
 #
 #
 #
