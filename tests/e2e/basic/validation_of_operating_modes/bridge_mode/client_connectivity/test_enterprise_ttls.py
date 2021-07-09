@@ -8,7 +8,7 @@ import allure
 import pytest
 
 pytestmark = [pytest.mark.client_connectivity, pytest.mark.bridge, pytest.mark.enterprise, pytest.mark.ttls,
-              pytest.mark.sanity, pytest.mark.usefixtures("setup_test_run")]
+              pytest.mark.sanity]#, pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_enterprise = {
     "mode": "BRIDGE",
@@ -116,6 +116,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
                 pytest.exit("Test Case Failed")
         assert passes
 
+    @pytest.mark.uc_sanity
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
@@ -134,6 +135,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -156,6 +158,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
                 pytest.exit("Test Case Failed")
         assert passes
 
+    @pytest.mark.uc_sanity
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
@@ -174,6 +177,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")

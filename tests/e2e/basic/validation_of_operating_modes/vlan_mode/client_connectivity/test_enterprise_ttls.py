@@ -1,8 +1,8 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.client_connectivity, pytest.mark.usefixtures("setup_test_run"), pytest.mark.vlan, pytest.mark.enterprise, pytest.mark.ttls,
-              pytest.mark.sanity]
+pytestmark = [pytest.mark.client_connectivity, pytest.mark.vlan, pytest.mark.enterprise, pytest.mark.ttls,
+              pytest.mark.sanity] # pytest.mark.usefixtures("setup_test_run")
 
 setup_params_enterprise = {
     "mode": "VLAN",
@@ -11,8 +11,8 @@ setup_params_enterprise = {
             {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["is2dot4GHz"]},
             {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
         "wpa2_enterprise": [
-            {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["is2dot4GHz"]},
-            {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
+            {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["is2dot4GHz"], "vlan":100},
+            {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"], "vlan":100}],
         "wpa3_enterprise": [
             {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["is2dot4GHz"]},
             {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}]},
@@ -105,6 +105,7 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
                 pytest.exit("Test Case Failed")
         assert passes
 
+    @pytest.mark.uc_sanity
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
@@ -119,6 +120,7 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -141,6 +143,7 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
                 pytest.exit("Test Case Failed")
         assert passes
 
+    @pytest.mark.uc_sanity
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
@@ -155,6 +158,7 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")

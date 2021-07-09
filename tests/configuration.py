@@ -212,10 +212,10 @@ CONFIGURATION = {
                 'mode': 'wifi6',
                 'serial': '903cb39d6918',
                 'jumphost': True,
-                'ip': "localhost",  # 10.28.3.103
+                'ip': "10.28.3.103",  # 10.28.3.103
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 8806,  # 22
+                'port': 22,  # 22
                 'jumphost_tty': '/dev/ttyAP2',
                 'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
             }
@@ -223,11 +223,11 @@ CONFIGURATION = {
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "localhost",  # 10.28.3.30
-                "port": 8802,  # 8080
-                "ssh_port": 8804,
-                "2.4G-Radio": ["wiphy4"],
-                "5G-Radio": ["wiphy5"],
+                "ip": "10.28.3.30",  # 10.28.3.30
+                "port": 8080,  # 8080
+                "ssh_port": 22,
+                "2.4G-Radio": ["wiphy0"],
+                "5G-Radio": ["wiphy1"],
                 "AX-Radio": ["wiphy0", "wiphy1", "wiphy2", "wiphy3"],
                 "upstream": "1.1.eth2",
                 "upstream_subnet": "10.28.2.1/24",
@@ -250,6 +250,14 @@ RADIUS_SERVER_DATA = {
     "pk_password": "whatever"
 }
 
+RADIUS_ACCOUNTING_DATA = {
+    "ip": "10.10.10.72",
+    "port": 1812,
+    "secret": "testing123",
+    "user": "user",
+    "password": "password",
+    "pk_password": "whatever"
+}
 TEST_CASES = {
     "ap_upgrade": 2233,
     "5g_wpa2_bridge": 2236,

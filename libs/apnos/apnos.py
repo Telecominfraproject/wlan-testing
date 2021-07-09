@@ -439,10 +439,10 @@ if __name__ == '__main__':
         'mode': 'wifi6',
         'serial': '903cb39d6918',
         'jumphost': True,
-        'ip': "localhost",  # 10.28.3.103
+        'ip': "10.28.3.103",  # 10.28.3.103
         'username': "lanforge",
         'password': "pumpkin77",
-        'port': 8806,  # 22
+        'port': 22,  # 22
         'jumphost_tty': '/dev/ttyAP2',
         'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
     }

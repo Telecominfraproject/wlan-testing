@@ -39,6 +39,7 @@ import pytest
 from cv_test_manager import cv_test
 from configuration import CONFIGURATION
 from configuration import RADIUS_SERVER_DATA
+from configuration import RADIUS_ACCOUNTING_DATA
 from configuration import TEST_CASES
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
@@ -194,6 +195,13 @@ def radius_info():
 
 
 @pytest.fixture(scope="session")
+def radius_accounting_info():
+    """yields the radius accounting information from lab info file"""
+    allure.attach(body=str(RADIUS_ACCOUNTING_DATA), name="Radius server Info: ")
+    yield RADIUS_ACCOUNTING_DATA
+
+
+@pytest.fixture(scope="session")
 def get_configuration(testbed, request):
     """yields the selected testbed information from lab info file (configuration.py)"""
     allure.attach(body=str(testbed), name="Testbed Selected: ")
@@ -221,7 +229,6 @@ def get_equipment_id(request, setup_controller, testbed, get_configuration):
             equipment_id_list.append(setup_controller.get_equipment_id(
                 serial_number=i['serial']))
     yield equipment_id_list
-
 
 
 @pytest.fixture(scope="session")
@@ -543,6 +550,14 @@ def create_lanforge_chamberview_dut(get_configuration, testbed):
     ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
                 testbed=testbed, access_point_data=get_configuration["access_point"])
     yield True
+
+
+@pytest.fixture(scope="session")
+def lf_tools(get_configuration, testbed):
+    """ Create a DUT on LANforge"""
+    obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
+                      testbed=testbed, access_point_data=get_configuration["access_point"])
+    yield obj
 
 
 @pytest.fixture(scope="module")

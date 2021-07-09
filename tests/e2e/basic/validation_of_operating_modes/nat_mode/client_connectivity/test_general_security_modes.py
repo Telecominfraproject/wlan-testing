@@ -298,6 +298,7 @@ class TestBridgeModeConnectivitySuiteB(object):
         pytest -m "client_connectivity and bridge and suiteB"
     """
 
+    @pytest.mark.uc_sanity
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
@@ -314,6 +315,7 @@ class TestBridgeModeConnectivitySuiteB(object):
         mode = "NAT"
         band = "twog"
         vlan = 1
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -333,6 +335,7 @@ class TestBridgeModeConnectivitySuiteB(object):
                                               passes))
         assert result
 
+    @pytest.mark.uc_sanity
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
@@ -348,6 +351,7 @@ class TestBridgeModeConnectivitySuiteB(object):
         mode = "NAT"
         band = "fiveg"
         vlan = 1
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -367,6 +371,7 @@ class TestBridgeModeConnectivitySuiteB(object):
                                               passes))
         assert result
 
+    @pytest.mark.uc_sanity
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
@@ -384,6 +389,7 @@ class TestBridgeModeConnectivitySuiteB(object):
         mode = "NAT"
         band = "twog"
         vlan = 1
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -403,6 +409,7 @@ class TestBridgeModeConnectivitySuiteB(object):
                                               passes))
         assert result
 
+    @pytest.mark.uc_sanity
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
@@ -419,6 +426,7 @@ class TestBridgeModeConnectivitySuiteB(object):
         mode = "NAT"
         band = "fiveg"
         vlan = 1
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -438,6 +446,7 @@ class TestBridgeModeConnectivitySuiteB(object):
                                               passes))
         assert result
 
+    @pytest.mark.uc_sanity
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
@@ -456,6 +465,7 @@ class TestBridgeModeConnectivitySuiteB(object):
         mode = "NAT"
         band = "twog"
         vlan = 1
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -475,6 +485,7 @@ class TestBridgeModeConnectivitySuiteB(object):
                                               passes))
         assert result
 
+    @pytest.mark.uc_sanity
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
@@ -491,6 +502,7 @@ class TestBridgeModeConnectivitySuiteB(object):
         mode = "NAT"
         band = "fiveg"
         vlan = 1
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -509,7 +521,6 @@ class TestBridgeModeConnectivitySuiteB(object):
                                           msg='5G WPA2-Mixed Client Connectivity Failed - bridge mode' + str(
                                               passes))
         assert result
-
 
 # WEP Security Feature not available
 # setup_params_wep = {
@@ -590,4 +601,3 @@ class TestBridgeModeConnectivitySuiteB(object):
 #                                           msg='2G WPA Client Connectivity Failed - bridge mode' + str(
 #                                               passes))
 #         assert passes
-
