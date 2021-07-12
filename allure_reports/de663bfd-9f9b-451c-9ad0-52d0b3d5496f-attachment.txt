@@ -1,3 +1,0 @@
-2021-07-08 16:49:10 [32mINFO[0m Connected (version 2.0, client OpenSSH_8.0)
-2021-07-08 16:49:11 [32mINFO[0m Authentication (publickey) failed.
-2021-07-08 16:49:12 [32mINFO[0m Authentication (password) successful!
