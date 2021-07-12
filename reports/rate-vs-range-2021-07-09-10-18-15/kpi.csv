@@ -1,0 +1,17 @@
+Date	test-rig	dut-hw-version	dut-sw-version	dut-model-num	dut-serial-num	test-priority	test-id	short-description	pass/fail	numeric-score	test details	Units	Graph-Group	Subtest-Pass	Subtest-Fail
+1625849737868		eap102	eap102-2021-06-25-pending-b6743c3.tar.g	eap102	903cb39d6959	90	Rate vs Range	TCP-DUT-TX-MTU-0atten		146.795187	Throughput at specified settings.	Mbps	Throughput	0	0
+1625849799370		eap102	eap102-2021-06-25-pending-b6743c3.tar.g	eap102	903cb39d6959	90	Rate vs Range	TCP-DUT-TX-MTU-50atten		155.521886	Throughput at specified settings.	Mbps	Throughput	0	0
+1625849860843		eap102	eap102-2021-06-25-pending-b6743c3.tar.g	eap102	903cb39d6959	90	Rate vs Range	TCP-DUT-TX-MTU-100atten		155.292086	Throughput at specified settings.	Mbps	Throughput	0	0
+1625849922376		eap102	eap102-2021-06-25-pending-b6743c3.tar.g	eap102	903cb39d6959	90	Rate vs Range	TCP-DUT-TX-MTU-150atten		154.188536	Throughput at specified settings.	Mbps	Throughput	0	0
+1625849983847		eap102	eap102-2021-06-25-pending-b6743c3.tar.g	eap102	903cb39d6959	90	Rate vs Range	TCP-DUT-TX-MTU-200atten		155.403394	Throughput at specified settings.	Mbps	Throughput	0	0
+1625850045408		eap102	eap102-2021-06-25-pending-b6743c3.tar.g	eap102	903cb39d6959	90	Rate vs Range	TCP-DUT-TX-MTU-250atten		155.907854	Throughput at specified settings.	Mbps	Throughput	0	0
+1625850106912		eap102	eap102-2021-06-25-pending-b6743c3.tar.g	eap102	903cb39d6959	90	Rate vs Range	TCP-DUT-TX-MTU-300atten		154.977016	Throughput at specified settings.	Mbps	Throughput	0	0
+1625850168548		eap102	eap102-2021-06-25-pending-b6743c3.tar.g	eap102	903cb39d6959	90	Rate vs Range	TCP-DUT-TX-MTU-350atten		121.911444	Throughput at specified settings.	Mbps	Throughput	0	0
+1625850230001		eap102	eap102-2021-06-25-pending-b6743c3.tar.g	eap102	903cb39d6959	90	Rate vs Range	TCP-DUT-TX-MTU-400atten		109.866105	Throughput at specified settings.	Mbps	Throughput	0	0
+1625850291549		eap102	eap102-2021-06-25-pending-b6743c3.tar.g	eap102	903cb39d6959	90	Rate vs Range	TCP-DUT-TX-MTU-450atten		68.045519	Throughput at specified settings.	Mbps	Throughput	0	0
+1625850360171		eap102	eap102-2021-06-25-pending-b6743c3.tar.g	eap102	903cb39d6959	90	Rate vs Range	TCP-DUT-TX-MTU-500atten		32.539306	Throughput at specified settings.	Mbps	Throughput	0	0
+1625850428797		eap102	eap102-2021-06-25-pending-b6743c3.tar.g	eap102	903cb39d6959	90	Rate vs Range	TCP-DUT-TX-MTU-550atten		16.285944	Throughput at specified settings.	Mbps	Throughput	0	0
+1625850501395		eap102	eap102-2021-06-25-pending-b6743c3.tar.g	eap102	903cb39d6959	90	Rate vs Range	TCP-DUT-TX-MTU-600atten		6.851581	Throughput at specified settings.	Mbps	Throughput	0	0
+1625850690088		eap102	eap102-2021-06-25-pending-b6743c3.tar.g	eap102	903cb39d6959	90	Rate vs Range	TCP-DUT-TX-MTU-650atten		0.0	Throughput at specified settings.	Mbps	Throughput	0	0
+1625850887164		eap102	eap102-2021-06-25-pending-b6743c3.tar.g	eap102	903cb39d6959	90	Rate vs Range	TCP-DUT-TX-MTU-700atten		0.0	Throughput at specified settings.	Mbps	Throughput	0	0
+1625851079008		eap102	eap102-2021-06-25-pending-b6743c3.tar.g	eap102	903cb39d6959	90	Rate vs Range	TCP-DUT-TX-MTU-750atten		0.0	Throughput at specified settings.	Mbps	Throughput	0	0

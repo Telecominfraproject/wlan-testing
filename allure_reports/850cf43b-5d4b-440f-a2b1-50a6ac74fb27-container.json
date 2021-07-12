@@ -1,0 +1,1 @@
+{"uuid": "beb2471b-2daa-4ee5-8c07-1e92a995f61f", "children": ["9a024f89-b469-4ff9-a82a-02ebccd53667"], "befores": [{"name": "instantiate_firmware", "status": "passed", "start": 1625751716495, "stop": 1625751716495}], "afters": [{"name": "instantiate_firmware::0", "status": "passed", "start": 1625752115104, "stop": 1625752115104}], "start": 1625751716495, "stop": 1625752115104}

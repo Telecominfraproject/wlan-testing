@@ -1,0 +1,1 @@
+2021-07-12 10:21:51 [32mINFO[0m Connected (version 2.0, client OpenSSH_8.3)

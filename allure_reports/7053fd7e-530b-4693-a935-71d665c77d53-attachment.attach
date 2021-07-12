@@ -1,0 +1,1 @@
+{'model': 'eap102', 'mode': 'wifi6', 'serial': '903cb39d6959', 'jumphost': True, 'ip': 'localhost', 'username': 'lanforge', 'password': 'pumpkin77', 'port': 8803, 'jumphost_tty': '/dev/ttyAP3', 'version': 'https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/dev/eap102-2021-06-25-pending-b6743c3.tar.gz'}

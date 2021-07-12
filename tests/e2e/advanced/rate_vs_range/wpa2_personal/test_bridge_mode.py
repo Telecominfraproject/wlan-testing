@@ -15,7 +15,7 @@ import os.path
 import csv
 import pandas as pd
 
-pytestmark = [pytest.mark.performance, pytest.mark.ratevsrange, pytest.mark.bridge ,pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.performance_advanced , pytest.mark.ratevsrange, pytest.mark.bridge ,pytest.mark.usefixtures("setup_test_run")]
 
 
 setup_params_general = {
@@ -76,13 +76,13 @@ class TestRatevsRangeBridge(object):
                                          station_name=station_names_twog, vlan_id=vlan)
         print("station", station)
 
-        val = [['modes: 802.11b'],['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types: TCP'],
-               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'] , ['attenuations: 0..+50']]
-
+        val = [['modes: 802.11b'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
+               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
-                                       instance_name="WPA2_2G_bridge_rvr_11b",
+                                       instance_name="BRIDGE_RVR_11B",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             print("report name ", report_name)
@@ -140,13 +140,13 @@ class TestRatevsRangeBridge(object):
                                          station_name=station_names_twog, vlan_id=vlan)
         print("station", station)
 
-        val = [['modes: 802.11g'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types: TCP'],
-               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuations: 0..+50']]
-
+        val = [['modes: 802.11g'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
+               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
-                                        instance_name="WPA2_2G_bridge_rvr_11g",
+                                        instance_name="BRIDGE_RVR_11G",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -201,13 +201,13 @@ class TestRatevsRangeBridge(object):
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
 
-        val = [['modes: 802.11a'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types: TCP'],
-               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuations: 0..+50']]
-
+        val = [['modes: 802.11a'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
+               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
-                                        instance_name="WPA2_2G_bridge_rvr_11a",
+                                        instance_name="BRIDGE_RVR_11A",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -260,13 +260,13 @@ class TestRatevsRangeBridge(object):
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
 
-        val = [['modes: 802.11an'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types: TCP'],
-               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuations: 0..+50']]
-
+        val = [['modes: 802.11an'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
+               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
-                                        instance_name="WPA2_2G_bridge_rvr_11an",
+                                        instance_name="BRIDGE_RVR_11AN",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -319,13 +319,13 @@ class TestRatevsRangeBridge(object):
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
 
-        val = [['modes: 802.11an-AC'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types: TCP'],
-               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuations: 0..+50']]
+        val = [['modes: 802.11an-AC'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
+               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'] ,['attenuator2: 1.1.3059'], ['attenuations: 0..+50..950'],['attenuations2: 0..+50..950']]
 
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
-                                        instance_name="WPA2_2G_bridge_rvr_11an_ac",
+                                        instance_name="BRIDGE_RVR_11AC",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
