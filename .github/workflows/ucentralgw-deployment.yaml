@@ -21,6 +21,7 @@ env:
     {
       "namespace": "qa",
       "ucentralgw_version": "master",
+      "ucentralsec_version": "main",
       "ucentralgwui_version": "main"
     }
   ]'
@@ -76,6 +77,7 @@ jobs:
         helm plugin install https://github.com/aslafy-z/helm-git --version 0.10.0
         sed -i '/wlan-cloud-ucentralgw@/s/ref=.*/ref='${{ matrix.ucentralgw_version }}'\"/g' Chart.yaml
         sed -i '/wlan-cloud-ucentralgw-ui@/s/ref=.*/ref='${{ matrix.ucentralgwui_version }}'\"/g' Chart.yaml
+        sed -i '/wlan-cloud-ucentralsec@/s/ref=.*/ref='${{ matrix.ucentralsec_version }}'\"/g' Chart.yaml
         helm repo add bitnami https://charts.bitnami.com/bitnami
         helm repo update
         helm dependency update
@@ -83,8 +85,8 @@ jobs:
           --namespace ucentral-${{ matrix.namespace }} --wait --timeout 20m \
           -f ../../toolsmith/helm-values/assembly-ucentral/values.ucentral-${{ matrix.namespace }}.yaml \
           --set ucentralgw.configProperties."rtty\.token"=${{ secrets.RTTY_TOKEN }} \
-          --set ucentralgw.configProperties."authentication\.default\.username"=${{ secrets.UCENTRALGW_AUTH_USERNAME }} \
-          --set ucentralgw.configProperties."authentication\.default\.password"=${{ secrets.UCENTRALGW_AUTH_PASSWORD }} \
+          --set ucentralsec.configProperties."authentication\.default\.username"=${{ secrets.UCENTRALGW_AUTH_USERNAME }} \
+          --set ucentralsec.configProperties."authentication\.default\.password"=${{ secrets.UCENTRALGW_AUTH_PASSWORD }} \
           --set rttys.config.token=${{ secrets.RTTY_TOKEN }} \
           --set-file ucentralgw.certs."restapi-cert\.pem"=../../cert.pem \
           --set-file ucentralgw.certs."restapi-key\.pem"=../../key.pem \
@@ -92,8 +94,11 @@ jobs:
           --set-file ucentralgw.certs."websocket-key\.pem"=../../key.pem \
           --set-file rttys.certs."restapi-cert\.pem"=../../cert.pem \
           --set-file rttys.certs."restapi-key\.pem"=../../key.pem \
+          --set-file ucentralsec.certs."restapi-cert\.pem"=../../cert.pem \
+          --set-file ucentralsec.certs."restapi-key\.pem"=../../key.pem \
           --set ucentralgw.images.ucentralgw.tag=${{ matrix.ucentralgw_version }} \
           --set ucentralgwui.images.ucentralgwui.tag=${{ matrix.ucentralgwui_version }} \
+          --set ucentralsec.images.ucentralsec.tag=${{ matrix.ucentralsec_version }} \
           tip-ucentral .
 
     - name: Show resource state on deployment failure
