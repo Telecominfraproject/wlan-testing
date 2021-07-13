@@ -45,13 +45,17 @@ class TestAcessPointConnection(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_AccessPointConnection_5g_WPA2_Personal(self, request, get_APToMobileDevice_data, setup_perfectoMobile_android):
+    def test_AccessPointConnection_5g_WPA2_Personal(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_android):
         
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
+
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_android[1]
         driver = setup_perfectoMobile_android[0]
@@ -71,13 +75,17 @@ class TestAcessPointConnection(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_AccessPointConnection_2g_WPA2_Personal(self,request, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_AccessPointConnection_2g_WPA2_Personal(self,request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0] 
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
+
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_android[1]
         driver = setup_perfectoMobile_android[0]
@@ -97,13 +105,17 @@ class TestAcessPointConnection(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_AccessPointConnection_5g_WPA(self, request, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_AccessPointConnection_5g_WPA(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
+
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_android[1]
         driver = setup_perfectoMobile_android[0]
@@ -123,13 +135,17 @@ class TestAcessPointConnection(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_AccessPointConnection_2g_WPA(self, request, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_AccessPointConnection_2g_WPA(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
+
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_android[1]
         driver = setup_perfectoMobile_android[0]
