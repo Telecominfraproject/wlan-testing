@@ -11,7 +11,7 @@ import time
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance_advanced, pytest.mark.ratevsrange, pytest.mark.nat ,pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.ratevsrange, pytest.mark.nat ,pytest.mark.usefixtures("setup_test_run")]
 
 
 setup_params_general = {
@@ -260,6 +260,7 @@ class TestRatevsRangeNat(object):
         else:
             assert False
 
+    @pytest.mark.performance_advanced
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.client11ac
