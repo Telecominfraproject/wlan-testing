@@ -23,6 +23,12 @@ env:
       "ucentralgw_version": "master",
       "ucentralsec_version": "main",
       "ucentralgwui_version": "main"
+    },
+    {
+      "namespace": "dev01",
+      "ucentralgw_version": "master",
+      "ucentralsec_version": "main",
+      "ucentralgwui_version": "main"
     }
   ]'
 
