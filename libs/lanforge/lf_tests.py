@@ -32,6 +32,8 @@ import lf_dataplane_test
 from lf_dataplane_test import DataplaneTest
 from csv_to_influx import CSVtoInflux
 from influx2 import RecordInflux
+import lf_rvr_test
+from lf_rvr_test import RvrTest
 
 
 class RunTest:
@@ -271,6 +273,7 @@ class RunTest:
             raw_lines = [['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types: UDP;TCP'],
                          ["show_3s: 1"], ["show_ll_graphs: 1"], ["show_log: 1"]]
 
+
         self.dataplane_obj = DataplaneTest(lf_host=self.lanforge_ip,
                                            lf_port=self.lanforge_port,
                                            ssh_port=self.lf_ssh_port,
@@ -297,6 +300,41 @@ class RunTest:
         influx.post_to_influx()
 
         return self.dataplane_obj
+
+    def ratevsrange(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
+                  upload_rate="0", duration="1m", instance_name="test_demo", raw_lines=None):
+        if mode == "BRIDGE":
+            self.client_connect.upstream_port = self.upstream_port
+        elif mode == "NAT":
+            self.client_connect.upstream_port = self.upstream_port
+        elif mode == "VLAN":
+            self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
+
+        self.rvr_obj = RvrTest(lf_host=self.lanforge_ip,
+                 lf_port=self.lanforge_port,
+                 ssh_port=self.lf_ssh_port,
+                 local_path=self.local_report_path,
+                 lf_user="lanforge",
+                 lf_password="lanforge",
+                 instance_name=instance_name,
+                 config_name="rvr_config",
+                 upstream="1.1." + self.upstream_port,
+                 pull_report=True,
+                 load_old_cfg=False,
+                 upload_speed=upload_rate,
+                 download_speed=download_rate,
+                 duration=duration,
+                 station="1.1." + station_name[0],
+                 dut=dut_name,
+                 raw_lines=raw_lines)
+        self.rvr_obj.setup()
+        self.rvr_obj.run()
+        report_name = self.rvr_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
+                             target_csv=self.local_report_path + report_name + "/kpi.csv")
+        influx.post_to_influx()
+
+        return self.rvr_obj
 
 
 if __name__ == '__main__':
