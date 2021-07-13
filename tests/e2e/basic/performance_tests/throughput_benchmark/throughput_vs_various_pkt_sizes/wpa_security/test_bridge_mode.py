@@ -14,7 +14,7 @@ pytestmark = [pytest.mark.performance, pytest.mark.throughput_vs_pkt, pytest.mar
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
+        "wpa_personal": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
                 {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
                  "security_key": "something"}]},
     "rf": {},
@@ -322,7 +322,7 @@ class TestThroughputVsPktBridgeWpa2G(object):
 setup_params_5g = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
+        "wpa_personal": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
                 {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
                  "security_key": "something"}]},
 
