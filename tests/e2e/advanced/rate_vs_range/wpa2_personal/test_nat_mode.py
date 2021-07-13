@@ -11,7 +11,7 @@ import time
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.ratevsrange, pytest.mark.nat ,pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.performance_advanced, pytest.mark.ratevsrange, pytest.mark.nat ,pytest.mark.usefixtures("setup_test_run")]
 
 
 setup_params_general = {
