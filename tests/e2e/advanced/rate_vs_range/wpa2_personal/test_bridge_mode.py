@@ -15,7 +15,7 @@ import os.path
 import csv
 import pandas as pd
 
-pytestmark = [pytest.mark.performance_advanced , pytest.mark.ratevsrange, pytest.mark.bridge ,pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.ratevsrange, pytest.mark.bridge ,pytest.mark.usefixtures("setup_test_run")]
 
 
 setup_params_general = {
@@ -292,6 +292,7 @@ class TestRatevsRangeBridge(object):
         else:
             assert False
 
+    @pytest.mark.performance_advanced 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.client11ac
