@@ -40,7 +40,7 @@ from cv_test_manager import cv_test
 from configuration import CONFIGURATION
 from configuration import RADIUS_SERVER_DATA
 from configuration import RADIUS_ACCOUNTING_DATA
-from configuration import TEST_CASES
+# from configuration import TEST_CASES
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
 from lf_tools import ChamberView
@@ -84,10 +84,10 @@ def pytest_addoption(parser):
 
     # change to Ucentral Ctlr
     parser.addoption(
-        "--ucentral",
+        "--1.x",
         action="store_true",
         default=False,
-        help="skip updating firmware on the AP (useful for local testing)"
+        help="Option to run Test Cases on 1.x SDK"
     )
 
     # change behaviour
@@ -113,8 +113,8 @@ def pytest_addoption(parser):
     )
     parser.addoption(
         "--skip-testrail",
-        action="store_true",
-        default=False,
+        action="store_false",
+        default=True,
         help="Stop using Testrails"
     )
 
@@ -157,7 +157,7 @@ Test session base fixture
 @pytest.fixture(scope="session")
 def test_cases():
     """Yields the test cases from configuration.py: will be depreciated"""
-    yield TEST_CASES
+    yield []
 
 
 @pytest.fixture(scope="session")
@@ -219,15 +219,15 @@ def get_apnos():
 @pytest.fixture(scope="session")
 def get_equipment_id(request, setup_controller, testbed, get_configuration):
     """"""
-    if request.config.getoption("--ucentral"):
-        equipment_id_list = []
-        for i in get_configuration['access_point']:
-            equipment_id_list.append(i['serial'])
-    else:
+    if request.config.getoption("1.x"):
         equipment_id_list = []
         for i in get_configuration['access_point']:
             equipment_id_list.append(setup_controller.get_equipment_id(
                 serial_number=i['serial']))
+    else:
+        equipment_id_list = []
+        for i in get_configuration['access_point']:
+            equipment_id_list.append(i['serial'])
     yield equipment_id_list
 
 
@@ -251,7 +251,18 @@ def instantiate_access_point(testbed, get_apnos, get_configuration):
 def setup_controller(request, get_configuration, test_access_point):
     """sets up the controller connection and yields the sdk_client object"""
     try:
-        if request.config.getoption("--ucentral"):
+        if request.config.getoption("1.x"):
+            sdk_client = Controller(controller_data=get_configuration["controller"])
+            allure.attach(body=str(get_configuration["controller"]), name="Controller Instantiated: ")
+
+            def teardown_controller():
+                print("\nTest session Completed")
+                allure.attach(body=str(get_configuration["controller"]), name="Controller Teardown: ")
+                sdk_client.disconnect_Controller()
+
+            request.addfinalizer(teardown_controller)
+
+        else:
             sdk_client = UController(controller_data=get_configuration["controller"])
             allure.attach(body=str(get_configuration["controller"]), name="Ucentral Controller Instantiated: ")
 
@@ -266,16 +277,7 @@ def setup_controller(request, get_configuration, test_access_point):
 
             request.addfinalizer(teardown_ucontroller)
 
-        else:
-            sdk_client = Controller(controller_data=get_configuration["controller"])
-            allure.attach(body=str(get_configuration["controller"]), name="Controller Instantiated: ")
 
-            def teardown_controller():
-                print("\nTest session Completed")
-                allure.attach(body=str(get_configuration["controller"]), name="Controller Teardown: ")
-                sdk_client.disconnect_Controller()
-
-            request.addfinalizer(teardown_controller)
     except Exception as e:
         print(e)
         allure.attach(body=str(e), name="Controller Instantiation Failed: ")
@@ -469,19 +471,7 @@ def get_markers(request, get_security_flags):
 def test_access_point(request, testbed, get_apnos, get_configuration):
     """used to check the manager status of AP, should be used as a setup to verify if ap can reach cloud"""
     mgr_status = []
-    if request.config.getoption("--ucentral"):
-        # for access_point_info in get_configuration['access_point']:
-        #     ap_ssh = get_apnos(access_point_info)
-        #     status = ap_ssh.get_manager_state()
-        #     if "ACTIVE" not in status:
-        #         time.sleep(30)
-        #         ap_ssh = APNOS(access_point_info)
-        #         status = ap_ssh.get_manager_state()
-        #     mgr_status.append(status)
-        # pass
-        pass
-
-    else:
+    if request.config.getoption("1.x"):
         for access_point_info in get_configuration['access_point']:
             ap_ssh = get_apnos(access_point_info)
             status = ap_ssh.get_manager_state()
@@ -490,6 +480,16 @@ def test_access_point(request, testbed, get_apnos, get_configuration):
                 ap_ssh = APNOS(access_point_info)
                 status = ap_ssh.get_manager_state()
             mgr_status.append(status)
+    else:
+        # for access_point_info in get_configuration['access_point']:
+        #     ap_ssh = get_apnos(access_point_info)
+        #     status = ap_ssh.get_manager_state()
+        #     if "ACTIVE" not in status:
+        #         time.sleep(30)
+        #         ap_ssh = APNOS(access_point_info)
+        #         status = ap_ssh.get_manager_state()
+        #     mgr_status.append(status)
+        pass
     yield mgr_status
 
 

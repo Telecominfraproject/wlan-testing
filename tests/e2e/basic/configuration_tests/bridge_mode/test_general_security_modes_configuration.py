@@ -49,17 +49,7 @@ class TestSetupBridgeSuiteA(object):
         """ SSID Profile Creation open 2.4G
             pytest -m "setup and bridge and general and suiteA and open and twog"
         """
-
-        if setup_profiles['open_2g']:
-            update_report.update_testrail(case_id=test_cases["ssid_2g_open_bridge"],
-                                          status_id=1,
-                                          msg='profile created successfully')
-            assert setup_profiles['open_2g']
-        else:
-            update_report.update_testrail(case_id=test_cases["ssid_2g_open_bridge"],
-                                          status_id=5,
-                                          msg='Failed to create profile')
-            assert False
+        assert setup_profiles['open_2g']
 
     @pytest.mark.open
     @pytest.mark.fiveg
@@ -67,16 +57,7 @@ class TestSetupBridgeSuiteA(object):
         """ SSID Profile Creation open 5G
             pytest -m "setup and bridge and general and suiteA and open and fiveg"
          """
-        if setup_profiles['open_5g']:
-            update_report.update_testrail(case_id=test_cases["ssid_5g_open_bridge"],
-                                          status_id=1,
-                                          msg='profile created successfully')
-            assert setup_profiles['open_5g']
-        else:
-            update_report.update_testrail(case_id=test_cases["ssid_5g_open_bridge"],
-                                          status_id=5,
-                                          msg='Failed to create profile')
-            assert False
+        assert setup_profiles['open_5g']
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa
@@ -85,16 +66,7 @@ class TestSetupBridgeSuiteA(object):
         """ SSID Profile Creation wpa 2.4G
             pytest -m "setup and bridge and general and suiteA and wpa and twog"
         """
-        if setup_profiles['wpa_2g']:
-            update_report.update_testrail(case_id=test_cases["ssid_2g_wpa_bridge"],
-                                          status_id=1,
-                                          msg='profile created successfully')
-            assert setup_profiles['wpa_2g']
-        else:
-            update_report.update_testrail(case_id=test_cases["ssid_2g_wpa_bridge"],
-                                          status_id=5,
-                                          msg='Failed to create profile')
-            assert False
+        assert setup_profiles['wpa_2g']
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa
@@ -103,16 +75,7 @@ class TestSetupBridgeSuiteA(object):
         """ SSID Profile Creation wpa 5G
             pytest -m "setup and bridge and general and suiteA and wpa and fiveg"
         """
-        if setup_profiles['wpa_5g']:
-            update_report.update_testrail(case_id=test_cases["ssid_5g_wpa_bridge"],
-                                          status_id=1,
-                                          msg='profile created successfully')
-            assert setup_profiles['wpa_5g']
-        else:
-            update_report.update_testrail(case_id=test_cases["ssid_5g_wpa_bridge"],
-                                          status_id=5,
-                                          msg='Failed to create profile')
-            assert False
+        assert setup_profiles['wpa_5g']
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_personal
@@ -122,16 +85,7 @@ class TestSetupBridgeSuiteA(object):
         """ SSID Profile Creation wpa2_personal 2.4G
             pytest -m "setup and bridge and general and suiteA and wpa2_personal and twog"
         """
-        if setup_profiles['wpa2_personal_2g']:
-            update_report.update_testrail(case_id=test_cases["ssid_2g_wpa2_bridge"],
-                                          status_id=1,
-                                          msg='profile created successfully')
-            assert setup_profiles['wpa2_personal_2g']
-        else:
-            update_report.update_testrail(case_id=test_cases["ssid_2g_wpa2_bridge"],
-                                          status_id=5,
-                                          msg='Failed to create profile')
-            assert False
+        assert setup_profiles['wpa2_personal_2g']
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_personal
@@ -141,46 +95,19 @@ class TestSetupBridgeSuiteA(object):
         """ SSID Profile Creation wpa2_personal 5G
             pytest -m "setup and bridge and general and suiteA and wpa2_personal and fiveg"
          """
-        if setup_profiles['wpa2_personal_5g']:
-            update_report.update_testrail(case_id=test_cases["ssid_5g_wpa2_bridge"],
-                                          status_id=1,
-                                          msg='profile created successfully')
-            assert setup_profiles['wpa2_personal_5g']
-        else:
-            update_report.update_testrail(case_id=test_cases["ssid_5g_wpa2_bridge"],
-                                          status_id=5,
-                                          msg='Failed to create profile')
-            assert False
+        assert setup_profiles['wpa2_personal_5g']
 
     @pytest.mark.sanity_light
     def test_setup_equipment_ap_profile(self, setup_profiles, update_report,
                                         test_cases):
         """ Equipment AP Profile SuiteA General """
-        if setup_profiles['equipment_ap']:
-            update_report.update_testrail(case_id=test_cases["ap_profile_bridge"],
-                                          status_id=1,
-                                          msg='profile created successfully')
-            assert setup_profiles['equipment_ap']
-        else:
-            update_report.update_testrail(case_id=test_cases["ap_profile_bridge"],
-                                          status_id=5,
-                                          msg='Failed to create profile')
-            assert False
+        assert setup_profiles['equipment_ap']
 
     @pytest.mark.sanity_light
     def test_verify_vif_config(self, setup_profiles, update_report,
                                test_cases):
         """ vifc SuiteA General """
-        if setup_profiles['vifc']:
-            update_report.update_testrail(case_id=test_cases["bridge_vifc"],
-                                          status_id=1,
-                                          msg='profile pushed successfully')
-            assert setup_profiles['vifc']
-        else:
-            update_report.update_testrail(case_id=test_cases["bridge_vifc"],
-                                          status_id=5,
-                                          msg='Failed to push profile')
-            assert False
+        assert setup_profiles['vifc']
 
     @pytest.mark.sanity_light
     @allure.severity(allure.severity_level.BLOCKER)
@@ -188,16 +115,7 @@ class TestSetupBridgeSuiteA(object):
                               test_cases):
         """ vifs SuiteA General """
         time.sleep(200)
-        if setup_profiles['vifs']:
-            update_report.update_testrail(case_id=test_cases["bridge_vifs"],
-                                          status_id=1,
-                                          msg='profile pushed successfully')
-            assert setup_profiles['vifs']
-        else:
-            update_report.update_testrail(case_id=test_cases["bridge_vifs"],
-                                          status_id=5,
-                                          msg='Failed to push profile')
-            assert False
+        assert setup_profiles['vifs']
 
 
 setup_params_general_two = {
@@ -239,16 +157,7 @@ class TestBridgeModeConnectivitySuiteB(object):
         """ SSID Profile Creation wpa3_personal 2.4G
             pytest -m "setup and bridge and general and suiteB and wpa3_personal and twog"
          """
-        if setup_profiles['wpa3_personal_2g']:
-            update_report.update_testrail(case_id=test_cases["ssid_2g_wpa3_bridge"],
-                                          status_id=1,
-                                          msg='profile created successfully')
-            assert setup_profiles['wpa3_personal_2g']
-        else:
-            update_report.update_testrail(case_id=test_cases["ssid_2g_wpa3_bridge"],
-                                          status_id=5,
-                                          msg='Failed to create profile')
-            assert False
+        assert setup_profiles['wpa3_personal_2g']
 
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
@@ -256,16 +165,8 @@ class TestBridgeModeConnectivitySuiteB(object):
         """ SSID Profile Creation wpa3_personal 5G
             pytest -m "setup and bridge and general and suiteB and wpa3_personal and fiveg"
         """
-        if setup_profiles['wpa3_personal_5g']:
-            update_report.update_testrail(case_id=test_cases["ssid_5g_wpa3_bridge"],
-                                          status_id=1,
-                                          msg='profile created successfully')
-            assert setup_profiles['wpa3_personal_5g']
-        else:
-            update_report.update_testrail(case_id=test_cases["ssid_5g_wpa3_bridge"],
-                                          status_id=5,
-                                          msg='Failed to create profile')
-            assert False
+
+        assert setup_profiles['wpa3_personal_5g']
 
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.twog
@@ -273,17 +174,7 @@ class TestBridgeModeConnectivitySuiteB(object):
         """ SSID Profile Creation wpa3_personal_mixed 2.4G
             pytest -m "setup and bridge and general and suiteB and wpa3_personal_mixed and twog"
          """
-
-        if setup_profiles['wpa3_personal_mixed_2g']:
-            update_report.update_testrail(case_id=test_cases["ssid_2g_wpa3_mixed_bridge"],
-                                          status_id=1,
-                                          msg='profile created successfully')
-            assert setup_profiles['wpa3_personal_mixed_2g']
-        else:
-            update_report.update_testrail(case_id=test_cases["ssid_2g_wpa3_mixed_bridge"],
-                                          status_id=5,
-                                          msg='Failed to create profile')
-            assert False
+        assert setup_profiles['wpa3_personal_mixed_2g']
 
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.fiveg
@@ -292,16 +183,7 @@ class TestBridgeModeConnectivitySuiteB(object):
             pytest -m "setup and bridge and general and suiteB and wpa3_personal_mixed and fiveg"
 
          """
-        if setup_profiles['wpa3_personal_mixed_5g']:
-            update_report.update_testrail(case_id=test_cases["ssid_5g_wpa3_mixed_bridge"],
-                                          status_id=1,
-                                          msg='profile created successfully')
-            assert setup_profiles['wpa3_personal_mixed_5g']
-        else:
-            update_report.update_testrail(case_id=test_cases["ssid_5g_wpa3_mixed_bridge"],
-                                          status_id=5,
-                                          msg='Failed to create profile')
-            assert False
+        assert setup_profiles['wpa3_personal_mixed_5g']
 
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
@@ -311,16 +193,7 @@ class TestBridgeModeConnectivitySuiteB(object):
             pytest -m "setup and bridge and general and suiteB and wpa_wpa2_personal_mixed and twog"
 
         """
-        if setup_profiles['wpa_wpa2_personal_mixed_2g']:
-            update_report.update_testrail(case_id=test_cases["ssid_2g_wpa2_mixed_bridge"],
-                                          status_id=1,
-                                          msg='profile created successfully')
-            assert setup_profiles['wpa_wpa2_personal_mixed_2g']
-        else:
-            update_report.update_testrail(case_id=test_cases["ssid_2g_wpa2_mixed_bridge"],
-                                          status_id=5,
-                                          msg='Failed to create profile')
-            assert False
+        assert setup_profiles['wpa_wpa2_personal_mixed_2g']
 
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
@@ -330,57 +203,21 @@ class TestBridgeModeConnectivitySuiteB(object):
             pytest -m "setup and bridge and general and suiteB and wpa_wpa2_personal_mixed and fiveg"
 
          """
-        if setup_profiles['wpa_wpa2_personal_mixed_5g']:
-            update_report.update_testrail(case_id=test_cases["ssid_5g_wpa2_mixed_bridge"],
-                                          status_id=1,
-                                          msg='profile created successfully')
-            assert setup_profiles['wpa_wpa2_personal_mixed_5g']
-        else:
-            update_report.update_testrail(case_id=test_cases["ssid_5g_wpa2_mixed_bridge"],
-                                          status_id=5,
-                                          msg='Failed to create profile')
-            assert False
+        assert setup_profiles['wpa_wpa2_personal_mixed_5g']
 
     def test_setup_equipment_ap_profile(self, setup_profiles, update_report,
                                         test_cases):
         """ Equipment AP Suite B """
-        if setup_profiles['equipment_ap']:
-            update_report.update_testrail(case_id=test_cases["ap_profile_bridge"],
-                                          status_id=1,
-                                          msg='profile created successfully')
-            assert setup_profiles['equipment_ap']
-        else:
-            update_report.update_testrail(case_id=test_cases["ap_profile_bridge"],
-                                          status_id=5,
-                                          msg='Failed to create profile')
-            assert False
+        assert setup_profiles['equipment_ap']
 
     def test_verify_vif_config(self, setup_profiles, update_report,
                                test_cases):
         """ vif config Suite B """
-        if setup_profiles['vifc']:
-            update_report.update_testrail(case_id=test_cases["bridge_vifc"],
-                                          status_id=1,
-                                          msg='profile pushed successfully')
-            assert setup_profiles['vifc']
-        else:
-            update_report.update_testrail(case_id=test_cases["bridge_vifc"],
-                                          status_id=5,
-                                          msg='Failed to push profile')
-            assert False
+        assert setup_profiles['vifc']
 
     @allure.severity(allure.severity_level.BLOCKER)
     def test_verify_vif_state(self, setup_profiles, update_report,
                               test_cases):
         """ vif state Suite B """
         time.sleep(200)
-        if setup_profiles['vifs']:
-            update_report.update_testrail(case_id=test_cases["bridge_vifs"],
-                                          status_id=1,
-                                          msg='profile pushed successfully')
-            assert setup_profiles['vifs']
-        else:
-            update_report.update_testrail(case_id=test_cases["bridge_vifs"],
-                                          status_id=5,
-                                          msg='Failed to push profile')
-            assert False
+        assert setup_profiles['vifs']

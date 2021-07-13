@@ -8,7 +8,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.client_connectivity, pytest.mark.vlan, pytest.mark.general,
+pytestmark = [pytest.mark.client_connectivity, pytest.mark.vlan, pytest.mark.general, pytest.mark.ucentral,
               pytest.mark.sanity]  # pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
@@ -319,17 +319,6 @@ class TestvlanModeConnectivitySuiteTwo(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
-
-        if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa3_vlan"],
-                                          status_id=1,
-                                          msg='2G WPA3 Client Connectivity Passed successfully - vlan mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa3_vlan"],
-                                          status_id=5,
-                                          msg='2G WPA3 Client Connectivity Failed - vlan mode' + str(
-                                              passes))
         assert result
 
     @pytest.mark.uc_sanity
@@ -355,17 +344,6 @@ class TestvlanModeConnectivitySuiteTwo(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
-
-        if result:
-            update_report.update_testrail(case_id=test_cases["5g_wpa3_vlan"],
-                                          status_id=1,
-                                          msg='5G WPA3 Client Connectivity Passed successfully - vlan mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["5g_wpa3_vlan"],
-                                          status_id=5,
-                                          msg='5G WPA3 Client Connectivity Failed - vlan mode' + str(
-                                              passes))
         assert result
 
     @pytest.mark.uc_sanity
@@ -393,17 +371,6 @@ class TestvlanModeConnectivitySuiteTwo(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
-
-        if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa3_mixed_wpa3_vlan"],
-                                          status_id=1,
-                                          msg='2G WPA3-Mixed Client Connectivity Passed successfully - vlan mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa3_mixed_wpa3_vlan"],
-                                          status_id=5,
-                                          msg='2G WPA3-Mixed Client Connectivity Failed - vlan mode' + str(
-                                              passes))
         assert result
 
     @pytest.mark.uc_sanity
@@ -430,17 +397,6 @@ class TestvlanModeConnectivitySuiteTwo(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
-
-        if result:
-            update_report.update_testrail(case_id=test_cases["5g_wpa3_mixed_wpa3_vlan"],
-                                          status_id=1,
-                                          msg='5G WPA3-Mixed Client Connectivity Passed successfully - vlan mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["5g_wpa3_mixed_wpa3_vlan"],
-                                          status_id=5,
-                                          msg='5G WPA3-Mixed Client Connectivity Failed - vlan mode' + str(
-                                              passes))
         assert result
 
     @pytest.mark.uc_sanity
@@ -469,17 +425,6 @@ class TestvlanModeConnectivitySuiteTwo(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
-
-        if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa2_mixed_wpa2_vlan"],
-                                          status_id=1,
-                                          msg='2G WPA2-Mixed Client Connectivity Passed successfully - vlan mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa2_mixed_wpa2_vlan"],
-                                          status_id=5,
-                                          msg='2G WPA2-Mixed Client Connectivity Failed - vlan mode' + str(
-                                              passes))
         assert result
 
     @pytest.mark.uc_sanity
@@ -507,16 +452,6 @@ class TestvlanModeConnectivitySuiteTwo(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
-        if result:
-            update_report.update_testrail(case_id=test_cases["5g_wpa2_mixed_wpa2_vlan"],
-                                          status_id=1,
-                                          msg='5G WPA2-Mixed Client Connectivity Passed successfully - vlan mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["5g_wpa2_mixed_wpa2_vlan"],
-                                          status_id=5,
-                                          msg='5G WPA2-Mixed Client Connectivity Failed - vlan mode' + str(
-                                              passes))
         assert result
 
 # WEP Security Feature not available

@@ -2,7 +2,7 @@ import allure
 import pytest
 
 pytestmark = [pytest.mark.client_connectivity, pytest.mark.nat, pytest.mark.enterprise, pytest.mark.ttls,
-              pytest.mark.sanity] #pytest.mark.usefixtures("setup_test_run"),
+              pytest.mark.ucentral, pytest.mark.sanity] #pytest.mark.usefixtures("setup_test_run"),
 
 setup_params_enterprise = {
     "mode": "NAT",
@@ -53,18 +53,6 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_twog, vlan_id=vlan)
 
-        if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_eap_ttls_nat"],
-                                          status_id=1,
-                                          msg='2G WPA Enterprise Client Connectivity Passed successfully - NAT mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_eap_ttls_nat"],
-                                          status_id=5,
-                                          msg='2G WPA Enterprise Client Connectivity Failed - NAT mode' + str(
-                                              passes))
-            if exit_on_fail:
-                pytest.exit("Test Case Failed")
         assert passes
 
     @pytest.mark.wpa_enterprise
@@ -89,18 +77,6 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_fiveg, vlan_id=vlan)
 
-        if passes:
-            update_report.update_testrail(case_id=test_cases["5g_wpa_eap_ttls_nat"],
-                                          status_id=1,
-                                          msg='5G WPA Enterprise Client Connectivity Passed successfully - NAT mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["5g_wpa_eap_ttls_nat"],
-                                          status_id=5,
-                                          msg='5G WPA Enterprise Client Connectivity Failed - NAT mode' + str(
-                                              passes))
-            if exit_on_fail:
-                pytest.exit("Test Case Failed")
         assert passes
 
     @pytest.mark.uc_sanity
@@ -127,18 +103,6 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_twog, vlan_id=vlan)
 
-        if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa2_eap_ttls_nat"],
-                                          status_id=1,
-                                          msg='2G WPA2 Enterprise Client Connectivity Passed successfully - NAT mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa2_eap_ttls_nat"],
-                                          status_id=5,
-                                          msg='2G WPA2 Enterprise Client Connectivity Failed - NAT mode' + str(
-                                              passes))
-            if exit_on_fail:
-                pytest.exit("Test Case Failed")
         assert passes
 
     @pytest.mark.uc_sanity
@@ -165,18 +129,6 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_fiveg, vlan_id=vlan)
 
-        if passes:
-            update_report.update_testrail(case_id=test_cases["5g_wpa2_eap_ttls_nat"],
-                                          status_id=1,
-                                          msg='5G WPA2 Enterprise Client Connectivity Passed successfully - NAT mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["5g_wpa2_eap_ttls_nat"],
-                                          status_id=5,
-                                          msg='5G WPA2 Enterprise Client Connectivity Failed - NAT mode' + str(
-                                              passes))
-            if exit_on_fail:
-                pytest.exit("Test Case Failed")
         assert passes
 
     @pytest.mark.wpa3_enterprise
@@ -200,18 +152,6 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_twog, vlan_id=vlan)
 
-        if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa3_eap_ttls_nat"],
-                                          status_id=1,
-                                          msg='2G WPA3 Enterprise Client Connectivity Passed successfully - NAT mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa3_eap_ttls_nat"],
-                                          status_id=5,
-                                          msg='2G WPA3 Enterprise Client Connectivity Failed - NAT mode' + str(
-                                              passes))
-            if exit_on_fail:
-                pytest.exit("Test Case Failed")
         assert passes
 
     @pytest.mark.wpa3_enterprise
@@ -235,18 +175,6 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_fiveg, vlan_id=vlan)
 
-        if passes:
-            update_report.update_testrail(case_id=test_cases["5g_wpa3_eap_ttls_nat"],
-                                          status_id=1,
-                                          msg='5G WPA3 Enterprise Client Connectivity Passed successfully - NAT mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["5g_wpa3_eap_ttls_nat"],
-                                          status_id=5,
-                                          msg='5G WPA3 Enterprise Client Connectivity Failed - NAT mode' + str(
-                                              passes))
-            if exit_on_fail:
-                pytest.exit("Test Case Failed")
         assert passes
 
 
@@ -297,18 +225,6 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_twog, vlan_id=vlan)
 
-        if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa2_mixed_eap_ttls_wpa2_nat"],
-                                          status_id=1,
-                                          msg='2G WPA2 Mixed Enterprise Client Connectivity Passed successfully - NAT mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa2_mixed_eap_ttls_wpa2_nat"],
-                                          status_id=5,
-                                          msg='2G WPA2 Mixed Enterprise Client Connectivity Failed - NAT mode' + str(
-                                              passes))
-            if exit_on_fail:
-                pytest.exit("Test Case Failed")
         assert passes
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
@@ -333,18 +249,6 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_fiveg, vlan_id=vlan)
 
-        if passes:
-            update_report.update_testrail(case_id=test_cases["5g_wpa2_mixed_eap_ttls_wpa2_nat"],
-                                          status_id=1,
-                                          msg='5G WPA2 Mixed Enterprise Client Connectivity Passed successfully - NAT mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["5g_wpa2_mixed_eap_ttls_wpa2_nat"],
-                                          status_id=5,
-                                          msg='5G WPA2 Mixed Client Connectivity Failed - NAT mode' + str(
-                                              passes))
-            if exit_on_fail:
-                pytest.exit("Test Case Failed")
         assert passes
 
     @pytest.mark.wpa3_enterprise_mixed
@@ -368,18 +272,6 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_twog, vlan_id=vlan)
 
-        if passes:
-            update_report.update_testrail(case_id=test_cases["2g_wpa3_mixed_eap_ttls_wpa3_nat"],
-                                          status_id=1,
-                                          msg='2G WPA3 Mixed Enterprise Client Connectivity Passed successfully - NAT mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa3_mixed_eap_ttls_wpa3_nat"],
-                                          status_id=5,
-                                          msg='2G WPA3 Mixed Enterprise Client Connectivity Failed - NAT mode' + str(
-                                              passes))
-            if exit_on_fail:
-                pytest.exit("Test Case Failed")
         assert passes
 
     @pytest.mark.wpa3_enterprise_mixed
@@ -404,16 +296,4 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_fiveg, vlan_id=vlan)
 
-        if passes:
-            update_report.update_testrail(case_id=test_cases["5g_wpa3_mixed_eap_ttls_wpa3_nat"],
-                                          status_id=1,
-                                          msg='5G WPA3 Mixed Enterprise Client Connectivity Passed successfully - NAT mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["5g_wpa3_mixed_eap_ttls_wpa3_nat"],
-                                          status_id=5,
-                                          msg='5G WPA3 Mixed Enterprise Client Connectivity Failed - NAT mode' + str(
-                                              passes))
-            if exit_on_fail:
-                pytest.exit("Test Case Failed")
         assert passes
