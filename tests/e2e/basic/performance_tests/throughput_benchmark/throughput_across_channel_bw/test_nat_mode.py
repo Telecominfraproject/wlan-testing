@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.throughput_across_bw_test, pytest.mark.nat,
+pytestmark = [pytest.mark.throughput_across_bw_test, pytest.mark.nat,
               pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general_20Mhz = {
