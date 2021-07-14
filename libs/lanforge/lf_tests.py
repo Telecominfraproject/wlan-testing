@@ -67,7 +67,7 @@ class RunTest:
         # self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
 
     def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[],
-                            station_name=[], mode="BRIDGE", vlan_id=1, band="twog"):
+                            station_name=[], mode="BRIDGE", vlan_id=1, band="twog", cleanup=True):
         """SINGLE CLIENT CONNECTIVITY using test_connect2.py"""
         self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
         self.staConnect.sta_mode = 0
@@ -111,7 +111,8 @@ class RunTest:
             except Exception as e:
                 print(e)
         self.staConnect.stop()
-        self.staConnect.cleanup()
+        if cleanup:
+            self.staConnect.cleanup()
         run_results = self.staConnect.get_result_list()
         for result in run_results:
             print("test result: " + result)
@@ -246,11 +247,11 @@ class RunTest:
         if band == "fiveg":
             self.client_connect.radio = self.fiveg_radios[0]
         self.client_connect.build()
-        self.client_connect.wait_for_ip(station_name)
-        print(self.client_connect.wait_for_ip(station_name))
-        if self.client_connect.wait_for_ip(station_name):
+
+        self.client_connect.wait_for_ip(station_name, timeout_sec=60)
+        if self.client_connect.wait_for_ip(station_name, timeout_sec=60):
             self.client_connect._pass("ALL Stations got IP's", print_=True)
-            return self.client_connect
+            return True
         else:
             return False
 
@@ -261,13 +262,17 @@ class RunTest:
         return True
 
     def dataplane(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
-                  upload_rate="85%", duration="1m", instance_name="test_demo"):
+                  upload_rate="85%", duration="1m", instance_name="test_demo", raw_lines=None):
         if mode == "BRIDGE":
             self.client_connect.upstream_port = self.upstream_port
         elif mode == "NAT":
             self.client_connect.upstream_port = self.upstream_port
-        else:
+        elif mode == "VLAN":
             self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
+
+        if raw_lines is None:
+            raw_lines = [['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types: UDP;TCP'],
+                         ["show_3s: 1"], ["show_ll_graphs: 1"], ["show_log: 1"]]
 
         self.dataplane_obj = DataplaneTest(lf_host=self.lanforge_ip,
                                            lf_port=self.lanforge_port,
@@ -285,18 +290,15 @@ class RunTest:
                                            duration=duration,
                                            dut=dut_name,
                                            station="1.1." + station_name[0],
-                                           raw_lines=[['pkts: Custom;60;142;256;512;1024;MTU'],
-                                                      ['directions: DUT Transmit;DUT Receive'],
-                                                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
-                                                      ["show_ll_graphs: 1"], ["show_log: 1"]],
-                                           )
+                                           raw_lines=raw_lines)
+
         self.dataplane_obj.setup()
         self.dataplane_obj.run()
         report_name = self.dataplane_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        influx = CSVtoInflux(influxdb=self.influxdb,
-                             _influx_tag=self.influx_params["influx_tag"],
+        influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
                              target_csv=self.local_report_path + report_name + "/kpi.csv")
         influx.post_to_influx()
+
         return self.dataplane_obj
 
     def dualbandperformancetest(self,ssid_5G="[BLANK]",ssid_2G="[BLANK]",mode="BRIDGE", vlan_id=100,dut_name="TIP",

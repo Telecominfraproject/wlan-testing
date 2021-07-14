@@ -20,16 +20,17 @@ on:
   workflow_dispatch:
     inputs:
       testbeds:
-        default: '["basic-01","basic-02"]'
+        default: 'basic-01,basic-02'
         description: 'Testbed(s) to test'
         required: false
       marker_expression:
         default: 'sanity'
         description: 'Pytest marker expression that will be used to select the tests to execute'
         required: false
-  push:
-    branches:
-      - master
+      ap_firmware_url:
+        default: 'null'
+        description: 'Option for adding AP Firmware Image: <URL to File> from JFrog, takes from configuration.py when it is null'
+        required: false
   schedule:
   - cron: '15 0 * * *'
 
@@ -126,12 +127,10 @@ jobs:
     - name: generate-matrix
       id: set-matrix
       run: |
-        set -x
-        TESTBEDS="${{ github.event.inputs.testbeds || '[\"basic-01\",\"basic-02\"]' }}"
-        echo "$TESTBEDS"
-        TESTBED_ARRAY=$(echo "$TESTBEDS" | jq -c 'map({"testbed":.})')
-        echo "$TESTBED_ARRAY"
-        echo "::set-output name=matrix::{\"include\":${TESTBED_ARRAY}}"
+        TESTBEDS="${{ github.event.inputs.testbeds || 'basic-01,basic-02' }}"
+        TESTBEDS=$(echo $TESTBEDS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
+        TESTBEDS=$(echo "$TESTBEDS" | jq -c 'map({"testbed":.})')
+        echo "::set-output name=matrix::{\"include\":${TESTBEDS}}"
 
   test:
     runs-on: ubuntu-latest
@@ -188,7 +187,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression || 'sanity' }}" -s -vvv --testbed="${{ matrix.testbed }}" --skip-testrail --alluredir=/tmp/allure-results
+                    pytest -m "${{ github.event.inputs.marker_expression || 'sanity and not interop' }}" -s -vvv --testbed="${{ matrix.testbed }}" --skip-testrail --alluredir=/tmp/allure-results -o build=${{ github.event.inputs.ap_firmware_url || 'null'}}
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -306,15 +305,19 @@ jobs:
       with:
         name: allure-report-${{ matrix.testbed }}
         path: allure-report
+
+    # doing this to be able to aggregate multiple reports together later on
+    - name: copy results into report
+      run: cp -r allure-results allure-report/results
     
     - name: copy new report
-      if: ${{ (github.event.inputs.marker_expression || 'sanity') == 'sanity' }}
+      if: ${{ (github.event.inputs.marker_expression || 'sanity and not interop') == 'sanity and not interop' }}
       run: |
         mkdir -p reports/sanity/${{ matrix.testbed }}
         cp -Tr allure-report reports/sanity/${{ matrix.testbed }}/${{ github.run_number }}
 
     - name: update latest symlink
-      if: ${{ (github.event.inputs.marker_expression || 'sanity') == 'sanity' }}
+      if: ${{ (github.event.inputs.marker_expression || 'sanity and not interop') == 'sanity and not interop' }}
       working-directory: reports/sanity/${{ matrix.testbed }}
       run: ln -fns ${{ github.run_number }} latest
 

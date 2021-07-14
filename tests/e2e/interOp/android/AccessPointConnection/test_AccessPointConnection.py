@@ -13,6 +13,8 @@ from selenium.common.exceptions import NoSuchElementException
 import sys
 import allure
 
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.interop_and, pytest.mark.android, pytest.mark.AccessPointConnection]
+
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
@@ -30,8 +32,6 @@ setup_params_general = {
     "radius": False
 }
 
-@pytest.mark.AccessPointConnectionAndroid
-@pytest.mark.interop_and
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',

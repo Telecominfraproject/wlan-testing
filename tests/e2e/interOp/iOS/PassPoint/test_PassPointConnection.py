@@ -14,6 +14,7 @@ from urllib3 import exceptions
 import sys
 import allure
 
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.interop_ios, pytest.mark.ios, pytest.mark.PassPointConnection]
 
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
@@ -32,8 +33,6 @@ setup_params_general = {
     "radius": False
 }
 
-@pytest.mark.PassPointConnection
-@pytest.mark.interop_iOS
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
