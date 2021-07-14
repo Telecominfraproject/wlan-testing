@@ -28,8 +28,10 @@ import time
 from test_ipv4_ttls import TTLSTest
 from lf_wifi_capacity_test import WiFiCapacityTest
 from create_station import CreateStation
+import lf_ap_auto_test
 import lf_dataplane_test
 from lf_dataplane_test import DataplaneTest
+from lf_ap_auto_test import ApAutoTest
 from csv_to_influx import CSVtoInflux
 from influx2 import RecordInflux
 import lf_rvr_test
@@ -52,6 +54,7 @@ class RunTest:
         self.lf_ssh_port = lanforge_data["ssh_port"]
         self.staConnect = None
         self.dataplane_obj = None
+        self.dualbandptest_obj = None
         self.influx_params = influx_params
         self.influxdb = RecordInflux(_lfjson_host=self.lanforge_ip,
                                      _lfjson_port=self.lanforge_port,
@@ -300,6 +303,41 @@ class RunTest:
         influx.post_to_influx()
 
         return self.dataplane_obj
+
+
+    def dualbandperformancetest(self,ssid_5G="[BLANK]",ssid_2G="[BLANK]",mode="BRIDGE", vlan_id=100,dut_name="TIP",
+                                instance_name="test_demo"):
+
+        self.dualbandptest_obj = ApAutoTest(lf_host=self.lanforge_ip,
+                                         lf_port=self.lanforge_port,
+                                         lf_user="lanforge",
+                                         lf_password="lanforge",
+                                         instance_name=instance_name,
+                                         config_name="dbp_config",
+                                         local_path=self.local_report_path,
+                                         upstream="1.1." + self.upstream_port,
+                                         pull_report=True,
+                                         dut5_0=dut_name + ' ' + ssid_5G,
+                                         dut2_0=dut_name + ' ' + ssid_2G,
+                                         load_old_cfg=False,
+                                         max_stations_2=1,
+                                         max_stations_5=1,
+                                         max_stations_dual=2,
+                                         radio2=[["1.1.wiphy0"]],
+                                         radio5=[["1.1.wiphy1"]],
+                                         sets=[['Basic Client Connectivity', '0'], ['Multi Band Performance', '1'],
+                                               ['Throughput vs Pkt Size', '0'], ['Capacity', '0'], ['Stability', '0'],
+                                               ['Band-Steering', '0'], ['Multi-Station Throughput vs Pkt Size', '0'],
+                                               ['Long-Term', '0']]
+                                             )
+        self.dualbandptest_obj.setup()
+        self.dualbandptest_obj.run()
+        report_name = self.dualbandptest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        influx = CSVtoInflux(influxdb=self.influxdb,
+                             _influx_tag=self.influx_params["influx_tag"],
+                             target_csv=self.local_report_path + report_name + "/kpi.csv")
+        influx.post_to_influx()
+        return self.dualbandptest_obj
 
     def ratevsrange(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
                   upload_rate="0", duration="1m", instance_name="test_demo", raw_lines=None):
