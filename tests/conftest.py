@@ -253,7 +253,7 @@ def instantiate_firmware(request, setup_controller, get_configuration):
 
     for access_point_info in get_configuration['access_point']:
         version = access_point_info["version"]
-        if request.config.getini("build") != "0":
+        if request.config.getini("build").__contains__("https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/"):
             version = request.config.getini("build")
         firmware_client = FirmwareUtility(sdk_client=setup_controller,
                                           model=access_point_info["model"],
@@ -512,6 +512,13 @@ def create_lanforge_chamberview_dut(get_configuration, testbed):
     ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
                 testbed=testbed, access_point_data=get_configuration["access_point"])
     yield True
+
+@pytest.fixture(scope="session")
+def lf_tools(get_configuration, testbed):
+    """ Create a DUT on LANforge"""
+    obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
+                testbed=testbed, access_point_data=get_configuration["access_point"])
+    yield obj
 
 
 @pytest.fixture(scope="module")
