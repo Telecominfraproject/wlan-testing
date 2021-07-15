@@ -1,15 +1,15 @@
 """
 
-    Performance Test: Throughput vs Various Pkt Size Test: VLAN MODE
-    pytest -m "throughput_vs_pkt and vlan"
+    Performance Test: Wifi Capacity Test : Vlan Mode
+    pytest -m "wifi_capacity_test and vlan"
 
 """
 import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.throughput_vs_pkt, pytest.mark.vlan, pytest.mark.wpa2,
-              pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.wifi_capacity_test, pytest.mark.vlan]
+
 
 setup_params_general = {
     "mode": "VLAN",
@@ -18,13 +18,12 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
              "security_key": "something"}]},
-
     "rf": {},
     "radius": False
 }
 
 
-@allure.feature("VLAN MODE CLIENT CONNECTIVITY")
+@allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -32,91 +31,36 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestThroughputVsPktVlanWpa22G(object):
-    """Throughput vs Various Pkt Size Test vlan mode
-       pytest -m "throughput_vs_pkt and vlan"
+class TestWifiCapacityVlanMode(object):
+    """ Wifi Capacity Test Vlan Mode
+           pytest -m "wifi_capacity_test and vlan"
     """
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.pkt60
-    def test_client_wpa2_personal_vlan_pkt_60_2g(self, get_vif_state,
-                                                 lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                                 get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa2_personal and twog"
+    def test_client_wpa2_vlan_2g(self, get_vif_state,
+                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                   get_configuration):
+        """ Wifi Capacity Test Vlan Mode
+            pytest -m "wifi_capacity_test and vlan and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "VLAN"
-        band = "twog"
-        vlan = 1
-        dut_name = create_lanforge_chamberview_dut
-        raw_lines = [['pkts: 60'],
-                     ['directions: DUT Transmit;DUT Receive'],
-                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
-                     ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
-                                         mode=mode, band=band,
-                                         station_name=station_names_twog, vlan_id=vlan)
-
-        if station:
-            dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_2G",
-                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
-            print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_twog)
-            assert station
-        else:
-            assert False
-
-    @pytest.mark.wpa2_personal
-    @pytest.mark.twog
-    @pytest.mark.pkt142
-    def test_client_wpa2_personal_vlan_pkt_142_2g(self, get_vif_state,
-                                                  lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                                  get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa2_personal and twog"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
-        ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        security = "wpa2"
-        mode = "VLAN"
         band = "twog"
         vlan = 1
-        dut_name = create_lanforge_chamberview_dut
-        raw_lines = [['pkts: 142'],
-                     ['directions: DUT Transmit;DUT Receive'],
-                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
-                     ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
-
         if station:
-            dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_2G",
-                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            wct_obj = lf_test.wifi_capacity(stations="1.1.%s" % station_names_twog[0],
+                                            instance_name="test_wct_wpa2_vlan", mode=mode, vlan_id=vlan)
+            report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -131,196 +75,7 @@ class TestThroughputVsPktVlanWpa22G(object):
         else:
             assert False
 
-    @pytest.mark.wpa2_personal
-    @pytest.mark.twog
-    @pytest.mark.pkt256
-    def test_client_wpa2_personal_vlan_pkt_256_2g(self, get_vif_state,
-                                                  lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                                  get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa2_personal and twog"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "wpa2"
-        mode = "VLAN"
-        band = "twog"
-        vlan = 1
-        dut_name = create_lanforge_chamberview_dut
-        raw_lines = [['pkts: 256'],
-                     ['directions: DUT Transmit;DUT Receive'],
-                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
-                     ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
-                                         mode=mode, band=band,
-                                         station_name=station_names_twog, vlan_id=vlan)
-
-        if station:
-            dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_2G",
-                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
-            print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_twog)
-            assert station
-        else:
-            assert False
-
-    @pytest.mark.wpa2_personal
-    @pytest.mark.twog
-    @pytest.mark.pkt512
-    def test_client_wpa2_personal_vlan_pkt_512_2g(self, get_vif_state,
-                                                  lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                                  get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa2_personal and twog"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "wpa2"
-        mode = "VLAN"
-        band = "twog"
-        vlan = 1
-        dut_name = create_lanforge_chamberview_dut
-        raw_lines = [['pkts: 512'],
-                     ['directions: DUT Transmit;DUT Receive'],
-                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
-                     ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
-                                         mode=mode, band=band,
-                                         station_name=station_names_twog, vlan_id=vlan)
-
-        if station:
-            dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_2G",
-                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
-            print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_twog)
-            assert station
-        else:
-            assert False
-
-    @pytest.mark.wpa2_personal
-    @pytest.mark.twog
-    @pytest.mark.pkt1024
-    def test_client_wpa2_personal_vlan_pkt_1024_2g(self, get_vif_state,
-                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                                   get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa2_personal and twog"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "wpa2"
-        mode = "VLAN"
-        band = "twog"
-        vlan = 1
-        dut_name = create_lanforge_chamberview_dut
-        raw_lines = [['pkts: 1024'],
-                     ['directions: DUT Transmit;DUT Receive'],
-                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
-                     ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
-                                         mode=mode, band=band,
-                                         station_name=station_names_twog, vlan_id=vlan)
-
-        if station:
-            dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_2G",
-                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
-            print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_twog)
-            assert station
-        else:
-            assert False
-
-    @pytest.mark.wpa2_personal
-    @pytest.mark.twog
-    @pytest.mark.pktMTU
-    def test_client_wpa2_personal_vlan_pkt_MTU_2g(self, get_vif_state,
-                                                  lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                                  get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa2_personal and twog"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "wpa2"
-        mode = "VLAN"
-        band = "twog"
-        vlan = 1
-        dut_name = create_lanforge_chamberview_dut
-        raw_lines = [['pkts: MTU'],
-                     ['directions: DUT Transmit;DUT Receive'],
-                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
-                     ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
-                                         mode=mode, band=band,
-                                         station_name=station_names_twog, vlan_id=vlan)
-
-        if station:
-            dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_2G",
-                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
-            print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_twog)
-            assert station
-        else:
-            assert False
-
-
-setup_params_5g = {
+setup_params_general_5g = {
     "mode": "VLAN",
     "ssid_modes": {
         "wpa2_personal": [
@@ -335,284 +90,41 @@ setup_params_5g = {
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_5g],
+    [setup_params_general_5g],
     indirect=True,
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestThroughputVsPktVlan5G(object):
-    """Throughput vs Various Pkt Size Test vlan mode
-       pytest -m "throughput_vs_pkt and vlan"
+class TestWifiCapacityVlanMode5g(object):
+    """ Wifi Capacity Test Vlan mode
+           pytest -m "wifi_capacity_test and vlan"
     """
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.pkt60
-    def test_client_wpa2_personal_vlan_pkt_60_5g(self, get_vif_state,
-                                                 lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-                                                 get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa2_personal and fiveg"
+    def test_client_wpa2_vlan_5g(self, get_vif_state,
+                                   lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+                                   get_configuration):
+        """ Wifi Capacity Test Vlan mode
+            pytest -m "wifi_capacity_test and vlan and wpa2_personal and fiveg"
         """
-        profile_data = setup_params_5g["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general_5g["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "VLAN"
+        security_key = profile_data["security_key"]
         band = "fiveg"
         vlan = 1
-        dut_name = create_lanforge_chamberview_dut
-        raw_lines = [['pkts: 60'],
-                     ['directions: DUT Transmit;DUT Receive'],
-                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
-                     ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
-
         if station:
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_5G",
-                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
-            print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
-            assert station
-        else:
-            assert False
-
-    @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
-    @pytest.mark.pkt142
-    def test_client_wpa2_personal_vlan_pkt_142_5g(self, get_vif_state,
-                                                  lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-                                                  get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa2_personal and fiveg"
-        """
-        profile_data = setup_params_5g["ssid_modes"]["wpa2_personal"][1]
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "wpa2"
-        mode = "VLAN"
-        band = "fiveg"
-        vlan = 1
-        dut_name = create_lanforge_chamberview_dut
-        raw_lines = [['pkts: 142'],
-                     ['directions: DUT Transmit;DUT Receive'],
-                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
-                     ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
-                                         mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
-
-        if station:
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_5G",
-                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
-            print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
-            assert station
-        else:
-            assert False
-
-    @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
-    @pytest.mark.pkt256
-    def test_client_wpa2_personal_vlan_pkt_256_5g(self, get_vif_state,
-                                                  lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-                                                  get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa2_personal and fiveg"
-        """
-        profile_data = setup_params_5g["ssid_modes"]["wpa2_personal"][1]
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "wpa2"
-        mode = "VLAN"
-        band = "fiveg"
-        vlan = 1
-        dut_name = create_lanforge_chamberview_dut
-        raw_lines = [['pkts: 256'],
-                     ['directions: DUT Transmit;DUT Receive'],
-                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
-                     ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
-                                         mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
-
-        if station:
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_5G",
-                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
-            print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
-            assert station
-        else:
-            assert False
-
-    @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
-    @pytest.mark.pkt512
-    def test_client_wpa2_personal_vlan_pkt_512_5g(self, get_vif_state,
-                                                  lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-                                                  get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa2_personal and fiveg"
-        """
-        profile_data = setup_params_5g["ssid_modes"]["wpa2_personal"][1]
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "wpa2"
-        mode = "VLAN"
-        band = "fiveg"
-        vlan = 1
-        dut_name = create_lanforge_chamberview_dut
-        raw_lines = [['pkts: 512'],
-                     ['directions: DUT Transmit;DUT Receive'],
-                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
-                     ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
-                                         mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
-
-        if station:
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_5G",
-                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
-            print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
-            assert station
-        else:
-            assert False
-
-    @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
-    @pytest.mark.pkt1024
-    def test_client_wpa2_personal_vlan_pkt_1024_5g(self, get_vif_state,
-                                                   lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-                                                   get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa2_personal and fiveg"
-        """
-        profile_data = setup_params_5g["ssid_modes"]["wpa2_personal"][1]
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "wpa2"
-        mode = "VLAN"
-        band = "fiveg"
-        vlan = 1
-        dut_name = create_lanforge_chamberview_dut
-        raw_lines = [['pkts: 1024'],
-                     ['directions: DUT Transmit;DUT Receive'],
-                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
-                     ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
-                                         mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
-
-        if station:
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_5G",
-                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
-            print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
-            assert station
-        else:
-            assert False
-
-    @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
-    @pytest.mark.pktMTU
-    def test_client_wpa2_personal_vlan_pkt_MTU_5g(self, get_vif_state,
-                                                  lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-                                                  get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa2_personal and fiveg"
-        """
-        profile_data = setup_params_5g["ssid_modes"]["wpa2_personal"][1]
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "wpa2"
-        mode = "VLAN"
-        band = "fiveg"
-        vlan = 1
-        dut_name = create_lanforge_chamberview_dut
-        raw_lines = [['pkts: MTU'],
-                     ['directions: DUT Transmit;DUT Receive'],
-                     ['traffic_types: UDP;TCP'], ["show_3s: 1"],
-                     ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
-                                         mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
-
-        if station:
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_5G",
-                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            wct_obj = lf_test.wifi_capacity(stations="1.1.%s" % station_names_fiveg[0],
+                                            instance_name="test_wct_wpa2_vlan", mode=mode, vlan_id=vlan)
+            report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
