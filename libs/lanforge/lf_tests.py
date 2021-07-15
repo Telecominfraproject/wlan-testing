@@ -54,9 +54,7 @@ class RunTest:
         self.dataplane_obj = None
         self.dualbandptest_obj = None
         self.influx_params = influx_params
-        self.influxdb = RecordInflux(_lfjson_host=self.lanforge_ip,
-                                     _lfjson_port=self.lanforge_port,
-                                     _influx_host=influx_params["influx_host"],
+        self.influxdb = RecordInflux(_influx_host=influx_params["influx_host"],
                                      _influx_port=influx_params["influx_port"],
                                      _influx_org=influx_params["influx_org"],
                                      _influx_token=influx_params["influx_token"],
@@ -210,10 +208,11 @@ class RunTest:
         elif mode == "VLAN":
             self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
         '''SINGLE WIFI CAPACITY using lf_wifi_capacity.py'''
-        self.wificapacity_obj = WiFiCapacityTest(lfclient_host=self.lanforge_ip,
+        wificapacity_obj = WiFiCapacityTest(lfclient_host=self.lanforge_ip,
                                                  lf_port=self.lanforge_port,
                                                  lf_user="lanforge",
                                                  lf_password="lanforge",
+                                                 local_lf_report_dir=self.local_report_path,
                                                  instance_name=instance_name,
                                                  config_name="wifi_config",
                                                  upstream="1.1." + self.upstream_port,
@@ -238,13 +237,14 @@ class RunTest:
                                                  raw_lines_file="",
                                                  sets=[])
 
-        self.wificapacity_obj.setup()
-        self.wificapacity_obj.run()
+        wificapacity_obj.setup()
+        wificapacity_obj.run()
 
-        report_name = self.wificapacity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        report_name = wificapacity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
                              target_csv=self.local_report_path + report_name + "/kpi.csv")
         influx.post_to_influx()
+        return wificapacity_obj
 
     def Client_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog",
                        vlan_id=100,

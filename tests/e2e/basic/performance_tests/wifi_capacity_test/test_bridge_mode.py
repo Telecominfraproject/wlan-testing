@@ -68,37 +68,12 @@ class TestWifiCapacityBridgeMode(object):
                     pdf = i
             if pdf:
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
+                                   name=get_configuration["access_point"][0]["model"] + "_wifi_capacity_test")
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
-
-setup_params_general_5g = {
-    "mode": "BRIDGE",
-    "ssid_modes": {
-        "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
-             "security_key": "something"}]},
-    "rf": {},
-    "radius": False
-}
-
-
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
-@pytest.mark.parametrize(
-    'setup_profiles',
-    [setup_params_general_5g],
-    indirect=True,
-    scope="class"
-)
-@pytest.mark.usefixtures("setup_profiles")
-class TestWifiCapacityBridgeMode5g(object):
-    """ Wifi Capacity Test Bridge mode
-           pytest -m "wifi_capacity_test and bridge"
-    """
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -108,7 +83,7 @@ class TestWifiCapacityBridgeMode5g(object):
         """ Wifi Capacity Test Bridge mode
             pytest -m "wifi_capacity_test and bridge and wpa2_personal and fiveg"
         """
-        profile_data = setup_params_general_5g["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security = "wpa2"
         mode = "BRIDGE"
@@ -132,7 +107,7 @@ class TestWifiCapacityBridgeMode5g(object):
                     pdf = i
             if pdf:
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
+                                   name=get_configuration["access_point"][0]["model"] + "_wifi_capacity_test")
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_fiveg)
             assert station
