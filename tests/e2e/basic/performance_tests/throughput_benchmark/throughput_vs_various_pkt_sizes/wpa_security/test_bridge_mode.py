@@ -8,15 +8,15 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.throughput_vs_pkt, pytest.mark.Bridge, pytest.mark.wpa,
+pytestmark = [pytest.mark.throughput_vs_pkt, pytest.mark.bridge, pytest.mark.wpa,
               pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa_personal": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
-                 "security_key": "something"}]},
+                         {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+                          "security_key": "something"}]},
     "rf": {},
     "radius": False
 }
@@ -38,9 +38,9 @@ class TestThroughputVsPktBridgeWpa2G(object):
     @pytest.mark.wpa_personal
     @pytest.mark.twog
     @pytest.mark.pkt60
-    def test_client_wpa_personal_pkt_60_2g(self, get_vif_state,
-                                            lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                            get_configuration):
+    def test_client_wpa_personal_bridge_pkt_60_2g(self, get_vif_state,
+                                                  lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                  get_configuration):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and twog"
         """
@@ -82,13 +82,12 @@ class TestThroughputVsPktBridgeWpa2G(object):
         else:
             assert False
 
-
     @pytest.mark.wpa_personal
     @pytest.mark.twog
     @pytest.mark.pkt142
-    def test_client_wpa_personal_pkt_142_2g(self, get_vif_state,
-                                            lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                            get_configuration):
+    def test_client_wpa_personal_bridge_pkt_142_2g(self, get_vif_state,
+                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                   get_configuration):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and twog"
         """
@@ -133,9 +132,9 @@ class TestThroughputVsPktBridgeWpa2G(object):
     @pytest.mark.wpa_personal
     @pytest.mark.twog
     @pytest.mark.pkt256
-    def test_client_wpa_personal_pkt_256_2g(self, get_vif_state,
-                                            lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                            get_configuration):
+    def test_client_wpa_personal_bridge_pkt_256_2g(self, get_vif_state,
+                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                   get_configuration):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and twog"
         """
@@ -180,9 +179,9 @@ class TestThroughputVsPktBridgeWpa2G(object):
     @pytest.mark.wpa_personal
     @pytest.mark.twog
     @pytest.mark.pkt512
-    def test_client_wpa_personal_pkt_512_2g(self, get_vif_state,
-                                            lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                            get_configuration):
+    def test_client_wpa_personal_bridge_pkt_512_2g(self, get_vif_state,
+                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                   get_configuration):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and twog"
         """
@@ -227,9 +226,9 @@ class TestThroughputVsPktBridgeWpa2G(object):
     @pytest.mark.wpa_personal
     @pytest.mark.twog
     @pytest.mark.pkt1024
-    def test_client_wpa_personal_pkt_1024_2g(self, get_vif_state,
-                                             lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                             get_configuration):
+    def test_client_wpa_personal_bridge_pkt_1024_2g(self, get_vif_state,
+                                                    lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                    get_configuration):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and twog"
         """
@@ -274,9 +273,9 @@ class TestThroughputVsPktBridgeWpa2G(object):
     @pytest.mark.wpa_personal
     @pytest.mark.twog
     @pytest.mark.pktMTU
-    def test_client_wpa_personal_pkt_MTU_2g(self, get_vif_state,
-                                            lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                            get_configuration):
+    def test_client_wpa_personal_bridge_pkt_MTU_2g(self, get_vif_state,
+                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                   get_configuration):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and twog"
         """
@@ -323,8 +322,8 @@ setup_params_5g = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa_personal": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
-                 "security_key": "something"}]},
+                         {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+                          "security_key": "something"}]},
 
     "rf": {},
     "radius": False
@@ -343,12 +342,13 @@ class TestThroughputVsPktBridgeWpa5G(object):
     """Throughput vs Various Pkt Size Test BRIDGE MODE
        pytest -m "throughput_vs_pkt and Bridge"
     """
+
     @pytest.mark.wpa_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt60
-    def test_client_wpa_personal_pkt_60_5g(self, get_vif_state,
-                                           lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-                                           get_configuration):
+    def test_client_wpa_personal_bridge_pkt_60_5g(self, get_vif_state,
+                                                  lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+                                                  get_configuration):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and fiveg"
         """
@@ -393,9 +393,9 @@ class TestThroughputVsPktBridgeWpa5G(object):
     @pytest.mark.wpa_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt142
-    def test_client_wpa_personal_pkt_142_5g(self, get_vif_state,
-                                            lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-                                            get_configuration):
+    def test_client_wpa_personal_bridge_pkt_142_5g(self, get_vif_state,
+                                                   lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+                                                   get_configuration):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and fiveg"
         """
@@ -440,9 +440,9 @@ class TestThroughputVsPktBridgeWpa5G(object):
     @pytest.mark.wpa_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt256
-    def test_client_wpa_personal_pkt_256_5g(self, get_vif_state,
-                                            lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-                                            get_configuration):
+    def test_client_wpa_personal_bridge_pkt_256_5g(self, get_vif_state,
+                                                   lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+                                                   get_configuration):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and fiveg"
         """
@@ -487,9 +487,9 @@ class TestThroughputVsPktBridgeWpa5G(object):
     @pytest.mark.wpa_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt512
-    def test_client_wpa_personal_pkt_512_5g(self, get_vif_state,
-                                            lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-                                            get_configuration):
+    def test_client_wpa_personal_bridge_pkt_512_5g(self, get_vif_state,
+                                                   lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+                                                   get_configuration):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and fiveg"
         """
@@ -534,9 +534,9 @@ class TestThroughputVsPktBridgeWpa5G(object):
     @pytest.mark.wpa_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt1024
-    def test_client_wpa_personal_pkt_1024_5g(self, get_vif_state,
-                                             lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-                                             get_configuration):
+    def test_client_wpa_personal_bridge_pkt_1024_5g(self, get_vif_state,
+                                                    lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+                                                    get_configuration):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and fiveg"
         """
@@ -581,9 +581,9 @@ class TestThroughputVsPktBridgeWpa5G(object):
     @pytest.mark.wpa_personal
     @pytest.mark.fiveg
     @pytest.mark.pktMTU
-    def test_client_wpa_personal_pkt_MTU_5g(self, get_vif_state,
-                                            lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-                                            get_configuration):
+    def test_client_wpa_personal_bridge_pkt_MTU_5g(self, get_vif_state,
+                                                   lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+                                                   get_configuration):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and fiveg"
         """
