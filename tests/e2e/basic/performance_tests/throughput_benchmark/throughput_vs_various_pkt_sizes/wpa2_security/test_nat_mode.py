@@ -8,8 +8,8 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.wifi_capacity_test, pytest.mark.nat,
-              pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.wifi_capacity_test, pytest.mark.nat]
+
 
 setup_params_general = {
     "mode": "NAT",

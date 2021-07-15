@@ -8,8 +8,8 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.wifi_capacity_test, pytest.mark.vlan,
-              pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.wifi_capacity_test, pytest.mark.vlan]
+
 
 setup_params_general = {
     "mode": "VLAN",
