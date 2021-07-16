@@ -34,8 +34,6 @@ from lf_dataplane_test import DataplaneTest
 from lf_ap_auto_test import ApAutoTest
 from csv_to_influx import CSVtoInflux
 from influx2 import RecordInflux
-import lf_rvr_test
-from lf_rvr_test import RvrTest
 
 
 class RunTest:
@@ -56,9 +54,7 @@ class RunTest:
         self.dataplane_obj = None
         self.dualbandptest_obj = None
         self.influx_params = influx_params
-        self.influxdb = RecordInflux(_lfjson_host=self.lanforge_ip,
-                                     _lfjson_port=self.lanforge_port,
-                                     _influx_host=influx_params["influx_host"],
+        self.influxdb = RecordInflux(_influx_host=influx_params["influx_host"],
                                      _influx_port=influx_params["influx_port"],
                                      _influx_org=influx_params["influx_org"],
                                      _influx_token=influx_params["influx_token"],
@@ -69,7 +65,7 @@ class RunTest:
         # self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
 
     def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[],
-                            station_name=[], mode="BRIDGE", vlan_id=1, band="twog", cleanup=True):
+                            station_name=[], mode="BRIDGE", vlan_id=1, band="twog"):
         """SINGLE CLIENT CONNECTIVITY using test_connect2.py"""
         self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
         self.staConnect.sta_mode = 0
@@ -113,8 +109,7 @@ class RunTest:
             except Exception as e:
                 print(e)
         self.staConnect.stop()
-        if cleanup:
-            self.staConnect.cleanup()
+        self.staConnect.cleanup()
         run_results = self.staConnect.get_result_list()
         for result in run_results:
             print("test result: " + result)
@@ -205,28 +200,51 @@ class RunTest:
         self.eap_connect.cleanup(station_name)
         return self.eap_connect.passes()
 
-    def wifi_capacity(self, ssid="[BLANK]", paswd="[BLANK]", security="open", mode="BRIDGE", band="twog",
-                      instance_name="wct_instance"):
+    def wifi_capacity(self, mode="BRIDGE", vlan_id=100, instance_name="wct_instance", stations=None):
+        if mode == "BRIDGE":
+            self.client_connect.upstream_port = self.upstream_port
+        elif mode == "NAT":
+            self.client_connect.upstream_port = self.upstream_port
+        elif mode == "VLAN":
+            self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
         '''SINGLE WIFI CAPACITY using lf_wifi_capacity.py'''
-        self.wfc_test = WiFiCapacityTest(lfclient_host=self.lanforge_ip, lf_port=self.lanforge_port,
-                                         lf_user="lanforge", lf_password="lanforge", instance_name=instance_name,
-                                         config_name="wifi_config", upstream=self.upstream_port, batch_size="1",
-                                         loop_iter="1", protocol="UDP-IPv4", duration="3000", pull_report=False,
-                                         load_old_cfg=False, upload_rate="10Mbps", download_rate="1Gbps",
-                                         sort="interleave", stations="1.1.sta0000,1.1.sta0001", create_stations=True,
-                                         radio=["wiphy0"], security=security, paswd=paswd, ssid=ssid, enables=[],
-                                         disables=[], raw_lines=[], raw_lines_file="", sets=[])
+        wificapacity_obj = WiFiCapacityTest(lfclient_host=self.lanforge_ip,
+                                                 lf_port=self.lanforge_port,
+                                                 lf_user="lanforge",
+                                                 lf_password="lanforge",
+                                                 local_lf_report_dir=self.local_report_path,
+                                                 instance_name=instance_name,
+                                                 config_name="wifi_config",
+                                                 upstream="1.1." + self.upstream_port,
+                                                 batch_size="1",
+                                                 loop_iter="1",
+                                                 protocol="UDP-IPv4",
+                                                 duration="3000",
+                                                 pull_report=True,
+                                                 load_old_cfg=False,
+                                                 upload_rate="10Mbps",
+                                                 download_rate="1Gbps",
+                                                 sort="interleave",
+                                                 stations=stations,
+                                                 create_stations=False,
+                                                 radio=None,
+                                                 security=None,
+                                                 paswd=None,
+                                                 ssid=None,
+                                                 enables=[],
+                                                 disables=[],
+                                                 raw_lines=[],
+                                                 raw_lines_file="",
+                                                 sets=[])
 
-        if band == "twog":
-            self.wfc_test.radio = self.twog_radios[0]
-        if band == "fiveg":
-            self.wfc_test.radio = self.fiveg_radios[0]
+        wificapacity_obj.setup()
+        wificapacity_obj.run()
 
-        self.wfc_test.setup()
-        self.wfc_test.run()
-
-        result = True
-        return result
+        report_name = wificapacity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
+                             target_csv=self.local_report_path + report_name + "/kpi.csv")
+        influx.post_to_influx()
+        return wificapacity_obj
 
     def Client_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog",
                        vlan_id=100,
@@ -249,11 +267,11 @@ class RunTest:
         if band == "fiveg":
             self.client_connect.radio = self.fiveg_radios[0]
         self.client_connect.build()
-
-        self.client_connect.wait_for_ip(station_name, timeout_sec=60)
-        if self.client_connect.wait_for_ip(station_name, timeout_sec=60):
+        self.client_connect.wait_for_ip(station_name)
+        print(self.client_connect.wait_for_ip(station_name))
+        if self.client_connect.wait_for_ip(station_name):
             self.client_connect._pass("ALL Stations got IP's", print_=True)
-            return True
+            return self.client_connect
         else:
             return False
 
@@ -264,18 +282,13 @@ class RunTest:
         return True
 
     def dataplane(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
-                  upload_rate="85%", duration="1m", instance_name="test_demo", raw_lines=None):
+                  upload_rate="85%", duration="1m", instance_name="test_demo"):
         if mode == "BRIDGE":
             self.client_connect.upstream_port = self.upstream_port
         elif mode == "NAT":
             self.client_connect.upstream_port = self.upstream_port
-        elif mode == "VLAN":
+        else:
             self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
-
-        if raw_lines is None:
-            raw_lines = [['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types: UDP;TCP'],
-                         ["show_3s: 1"], ["show_ll_graphs: 1"], ["show_log: 1"]]
-
 
         self.dataplane_obj = DataplaneTest(lf_host=self.lanforge_ip,
                                            lf_port=self.lanforge_port,
@@ -293,20 +306,28 @@ class RunTest:
                                            duration=duration,
                                            dut=dut_name,
                                            station="1.1." + station_name[0],
-                                           raw_lines=raw_lines)
-
+                                           raw_lines=[['pkts: Custom;60;142;256;512;1024;MTU'],
+                                                      ['directions: DUT Transmit;DUT Receive'],
+                                                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
+                                                      ["show_ll_graphs: 1"], ["show_log: 1"]],
+                                           )
         self.dataplane_obj.setup()
         self.dataplane_obj.run()
         report_name = self.dataplane_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
+        influx = CSVtoInflux(influxdb=self.influxdb,
+                             _influx_tag=self.influx_params["influx_tag"],
                              target_csv=self.local_report_path + report_name + "/kpi.csv")
         influx.post_to_influx()
-
         return self.dataplane_obj
-
 
     def dualbandperformancetest(self,ssid_5G="[BLANK]",ssid_2G="[BLANK]",mode="BRIDGE", vlan_id=100,dut_name="TIP",
                                 instance_name="test_demo"):
+        if mode == "BRIDGE":
+            self.client_connect.upstream_port = self.upstream_port
+        elif mode == "NAT":
+            self.client_connect.upstream_port = self.upstream_port
+        else:
+            self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
 
         self.dualbandptest_obj = ApAutoTest(lf_host=self.lanforge_ip,
                                          lf_port=self.lanforge_port,
@@ -314,7 +335,6 @@ class RunTest:
                                          lf_password="lanforge",
                                          instance_name=instance_name,
                                          config_name="dbp_config",
-                                         local_path=self.local_report_path,
                                          upstream="1.1." + self.upstream_port,
                                          pull_report=True,
                                          dut5_0=dut_name + ' ' + ssid_5G,
@@ -332,47 +352,13 @@ class RunTest:
                                              )
         self.dualbandptest_obj.setup()
         self.dualbandptest_obj.run()
-        report_name = self.dualbandptest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        report_name = self.dataplane_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         influx = CSVtoInflux(influxdb=self.influxdb,
                              _influx_tag=self.influx_params["influx_tag"],
                              target_csv=self.local_report_path + report_name + "/kpi.csv")
         influx.post_to_influx()
         return self.dualbandptest_obj
 
-    def ratevsrange(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
-                  upload_rate="0", duration="1m", instance_name="test_demo", raw_lines=None):
-        if mode == "BRIDGE":
-            self.client_connect.upstream_port = self.upstream_port
-        elif mode == "NAT":
-            self.client_connect.upstream_port = self.upstream_port
-        elif mode == "VLAN":
-            self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
-
-        self.rvr_obj = RvrTest(lf_host=self.lanforge_ip,
-                 lf_port=self.lanforge_port,
-                 ssh_port=self.lf_ssh_port,
-                 local_path=self.local_report_path,
-                 lf_user="lanforge",
-                 lf_password="lanforge",
-                 instance_name=instance_name,
-                 config_name="rvr_config",
-                 upstream="1.1." + self.upstream_port,
-                 pull_report=True,
-                 load_old_cfg=False,
-                 upload_speed=upload_rate,
-                 download_speed=download_rate,
-                 duration=duration,
-                 station="1.1." + station_name[0],
-                 dut=dut_name,
-                 raw_lines=raw_lines)
-        self.rvr_obj.setup()
-        self.rvr_obj.run()
-        report_name = self.rvr_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
-                             target_csv=self.local_report_path + report_name + "/kpi.csv")
-        influx.post_to_influx()
-
-        return self.rvr_obj
 
 
 if __name__ == '__main__':
