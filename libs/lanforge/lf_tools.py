@@ -3,6 +3,8 @@ from create_chamberview_dut import DUT
 import time
 from LANforge.lfcli_base import LFCliBase
 import json
+import os
+import pandas as pd
 
 class ChamberView:
 
@@ -103,5 +105,23 @@ class ChamberView:
         }
         cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port, )
         return cli_base.json_post(req_url, data)
+
+    def read_kpi_file(self, column_name, dir_name ):
+        if column_name == None:
+            df = pd.read_csv("../reports/" + str(dir_name) + "/kpi.csv", sep=r'\t', engine='python')
+            if df.empty == True:
+                return "empty"
+            else:
+                return df
+        else:
+            df = pd.read_csv("../reports/" + str(dir_name) + "/kpi.csv", sep=r'\t', usecols=column_name, engine='python')
+            if df.empty == True:
+                return "empty"
+            else:
+                return df
+
+
+
+
 
 

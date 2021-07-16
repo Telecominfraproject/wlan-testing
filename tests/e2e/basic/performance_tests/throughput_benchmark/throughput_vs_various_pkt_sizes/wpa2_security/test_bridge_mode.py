@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.throughput_vs_pkt, pytest.mark.Bridge, pytest.mark.wpa2,
+pytestmark = [pytest.mark.throughput_vs_pkt, pytest.mark.Bridge, pytest.mark.wpa2,
               pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
@@ -66,7 +66,7 @@ class TestThroughputVsPktBridge2G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_2G",
+                                       instance_name="TIP_PERF_DPT_WPA2_2G_60",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')

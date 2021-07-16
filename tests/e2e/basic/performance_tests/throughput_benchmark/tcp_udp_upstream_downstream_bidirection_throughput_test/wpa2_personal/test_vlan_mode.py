@@ -11,7 +11,7 @@ import time
 import pytest
 import allure
 
-#pytestmark = [pytest.mark.performance, pytest.mark.throughput_benchmark_test, pytest.mark.vlan, pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.throughput_benchmark_test, pytest.mark.vlan, pytest.mark.usefixtures("setup_test_run")]
 
 
 setup_params_general = {
