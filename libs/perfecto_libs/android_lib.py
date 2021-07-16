@@ -117,16 +117,21 @@ def setup_perfectoMobile_android(request):
             print("\n\n---------- Tear Down ----------")
             testFailed = 0
             testFailed = request.session.testsfailed
+            print("Testcase Failure Count: ", str(testFailed))
             if testFailed>0:
                 print ("Test Case Failure, please check report link: " + testCaseName)
-                exceptionFailure = request.config.cache.get("SelectingWifiFailed", None)
-                reporting_client.test_stop(TestResultFactory.create_failure(exceptionFailure))
+                try:
+                    exceptionFailure = request.config.cache.get("SelectingWifiFailed", None)
+                    reporting_client.test_stop(TestResultFactory.create_failure(exceptionFailure))
+                except Exception as e:
+                    reporting_client.test_stop(TestResultFactory.create_failure("Test Case failed -- See perfecto reports"))
+
                 #seen = {None}
                 #session = request.node
                 #print(session)
             elif testFailed<=0:
                 reporting_client.test_stop(TestResultFactory.create_success())
-                
+
             #amount = len(request.session.items)
             #print("Test Session Items: ")
             #print(amount)
