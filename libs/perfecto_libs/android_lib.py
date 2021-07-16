@@ -115,6 +115,7 @@ def setup_perfectoMobile_android(request):
     def teardown():
         try:
             print("\n\n---------- Tear Down ----------")
+            testFailed = 0
             testFailed = request.session.testsfailed
             if testFailed>0:
                 print ("Test Case Failure, please check report link: " + testCaseName)
