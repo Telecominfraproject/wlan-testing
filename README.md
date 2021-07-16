@@ -62,16 +62,16 @@ http://pythontesting.net/framework/pytest/pytest-introduction/
 
 ### Test status
 
-![total test count](.img/total-count.svg)
+![total test count](https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/badges/total-count.svg)
 
 [![sanity testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/sanity.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/sanity.yml)
-![sanity test count](.img/sanity-count.svg)
+![sanity test count](https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/badges/sanity-count.svg)
 
 [![interop testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/interop.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/interop.yml)
-![interop test count](.img/interop-count.svg)
+![interop test count](https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/badges/interop-count.svg)
 
 [![performance testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/performance.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/performance.yml)
-![performance test count](.img/performance-count.svg)
+![performance test count](https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/badges/performance-count.svg)
 
 ### Best Practice
 
