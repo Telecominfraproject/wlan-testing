@@ -89,11 +89,25 @@ jobs:
         helm dependency update
         helm upgrade --install --create-namespace \
           --namespace ucentral-${{ matrix.namespace }} --wait --timeout 20m \
-          -f ../../toolsmith/helm-values/assembly-ucentral/values.ucentral-${{ matrix.namespace }}.yaml \
+          -f ../../toolsmith/helm-values/assembly-ucentral/values.ucentral-qa.yaml \
           --set ucentralgw.configProperties."rtty\.token"=${{ secrets.RTTY_TOKEN }} \
           --set ucentralsec.configProperties."authentication\.default\.username"=${{ secrets.UCENTRALGW_AUTH_USERNAME }} \
           --set ucentralsec.configProperties."authentication\.default\.password"=${{ secrets.UCENTRALGW_AUTH_PASSWORD }} \
           --set rttys.config.token=${{ secrets.RTTY_TOKEN }} \
+          --set ucentralgw.services.ucentralgw.annotations."external-dns\.alpha\.kubernetes.io/hostname"=gw-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
+          --set ucentralgw.configProperties."ucentral\.fileuploader\.host\.0\.name"=gw-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
+          --set ucentralgw.configProperties."rtty\.server"=rtty-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
+          --set ucentralgw.configProperties."ucentral\.system\.uri\.public"=https://gw-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build:16002 \
+          --set ucentralgw.configProperties."ucentral\.system\.uri\.private"=https://gw-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build:17002 \
+          --set ucentralgw.configProperties."ucentral\.system\.uri\.ui"=https://webui-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
+          --set ucentralsec.services.ucentralsec.annotations."external-dns\.alpha\.kubernetes.io/hostname"=sec-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
+          --set ucentralsec.configProperties."ucentral\.system\.uri\.public"=https://sec-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build:16001 \
+          --set ucentralsec.configProperties."ucentral\.system\.uri\.private"=https://sec-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build:17001 \
+          --set ucentralsec.configProperties."ucentral\.system\.uri\.ui"=https://webui-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
+          --set rttys.services.rttys.annotations."external-dns\.alpha\.kubernetes.io/hostname"=rtty-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
+          --set ucentralgwui.ingresses.default.annotations."external-dns\.alpha\.kubernetes.io/hostname"=webui-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
+          --set ucentralgwui.ingresses.default.hosts={webui-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build} \
+          --set ucentralgwui.public_env_variables.DEFAULT_UCENTRALSEC_URL=https://sec-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build:16001 \
           --set-file ucentralgw.certs."restapi-cert\.pem"=../../cert.pem \
           --set-file ucentralgw.certs."restapi-key\.pem"=../../key.pem \
           --set-file ucentralgw.certs."websocket-cert\.pem"=../../cert.pem \
