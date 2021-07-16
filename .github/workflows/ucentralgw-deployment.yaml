@@ -19,7 +19,13 @@ env:
   # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
   testbeds: '[
     {
-      "namespace": "qa",
+      "namespace": "qa01",
+      "ucentralgw_version": "master",
+      "ucentralsec_version": "main",
+      "ucentralgwui_version": "main"
+    },
+    {
+      "namespace": "dev01",
       "ucentralgw_version": "master",
       "ucentralsec_version": "main",
       "ucentralgwui_version": "main"

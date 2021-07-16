@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.throughput_across_bw_test, pytest.mark.Bridge,
+pytestmark = [pytest.mark.throughput_across_bw_test, pytest.mark.Bridge,
               pytest.mark.usefixtures("setup_test_run")]
 raw_lines = [['pkts: %s' % 1],
                          ['directions: DUT Transmit;DUT Receive'],

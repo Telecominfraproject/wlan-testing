@@ -6,7 +6,56 @@
 
 """
 CONFIGURATION = {
-    "basic-01": {
+    "advanced-02": {
+        "controller": {
+            'url': "https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build",  # API base url for the controller
+            'username': 'support@example.com',  # cloud controller Login
+            'password': 'support',  # Cloud Controller Login Password
+            'version': '1.1.0-SNAPSHOT',  # Controller version
+            'commit_date': "2021-04-27"  # Controller version sdk, commit date
+        },
+        'access_point': [
+            {
+                'model': 'eap102',  # AP Model, can be found in ap console using "node" command
+                'mode': 'wifi6',  # wifi5/wifi6   can be found on AP Hardware page on Confluence
+                'serial': '903cb39d6959',  # "node" command has serial_number information
+                'jumphost': True,
+                # True, if you have AP On serial console and not ssh access, False, if you have AP ssh access from the machine
+                'ip': "localhost",
+                # IP Address of System, which has AP Connected to serial cable (if jumphost is True), else -  AP IP Address
+                'username': "lanforge",  # ssh username of system (lab-ctlr/ap)
+                'password': "pumpkin77",  # ssh password for system (lab-ctlr/ap)
+                'port': 8803,  # 22,        # ssh port for system (lab-ctlr/ap)
+                'jumphost_tty': '/dev/ttyAP3',  # if jumphost is True, enter the serial console device name
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/dev/eap102-2021-06-25-pending-b6743c3.tar.gz"
+                # Enter the Target AP Version URL for Testing
+            }
+        ],
+        # Traffic generator
+        "traffic_generator": {
+            "name": "lanforge",  # ( lanforge/ perfecto)
+            # Details for LANforge system
+            "details": {
+                "ip": "localhost",  # localhost,
+                "port": 8802,  # 8802,
+                "ssh_port": 8804,
+                "2.4G-Radio": ["wiphy2", "wiphy4"],
+                "5G-Radio": ["wiphy5", "wiphy3"],
+                "AX-Radio": [],
+                "upstream": "1.1.eth1",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            }
+        }
+
+    },
+
+
+
+"basic-01": {
         "controller": {
             'url': "https://wlan-portal-svc-nola-02.cicd.lab.wlan.tip.build",  # API base url for the controller
             'username': 'support@example.com',
