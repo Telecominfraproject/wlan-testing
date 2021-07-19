@@ -113,48 +113,60 @@ def setup_perfectoMobile_android(request):
     reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
 
     def teardown():
+        reporting_client.test_stop(TestResultFactory.create_success())
+        driver.close()
+        print("\n------------")
+        print("Driver Closed")
         try:
-            print("\n\n---------- Tear Down ----------")
-            testFailed = 0
-            testFailed = request.session.testsfailed
-            print("Testcase Failure Count: ", str(testFailed))
-            if testFailed>0:
-                print ("Test Case Failure, please check report link: " + testCaseName)
-                try:
-                    exceptionFailure = request.config.cache.get("SelectingWifiFailed", None)
-                    reporting_client.test_stop(TestResultFactory.create_failure(exceptionFailure))
-                except Exception as e:
-                    reporting_client.test_stop(TestResultFactory.create_failure("Test Case failed -- See perfecto reports"))
-
-                #seen = {None}
-                #session = request.node
-                #print(session)
-            elif testFailed<=0:
-                reporting_client.test_stop(TestResultFactory.create_success())
-
-            #amount = len(request.session.items)
-            #print("Test Session Items: ")
-            #print(amount)
-
-            #tests_count = request.session.testscollected
-            #print("Test Collected: ")
-            #print(tests_count)
-
-            print('Report-Url: ' + reporting_client.report_url())
-            print("----------------------------------------------------------")
-            driver.close()
+            driver.quit()
+            print("Driver Quit")
+            print("------------")
         except Exception as e:
-            print(" -- Exception While Tear Down --")    
-            reporting_client.test_stop(TestResultFactory.create_failure(e))
-            print('Report-Url-Failure: ' + reporting_client.report_url() + '\n')
-            driver.close()
-            print (e)
-        finally:
-            try:
-                driver.quit()
-            except Exception as e:
-                print(" -- Exception Not Able To Quit --")    
-                print (e)
+            print(" -- Exception Not Able To Quit --")
+            print(e)
+        # try:
+        #     # print("\n\n---------- Tear Down ----------")
+        #     testFailed = 0
+        #     testFailed = request.session.testsfailed
+        #     print("Testcase Failure Count: ", str(testFailed))
+        #     if testFailed>0:
+        #         print ("Test Case Failure, please check report link: " + testCaseName)
+        #         try:
+        #             exceptionFailure = request.config.cache.get("SelectingWifiFailed", None)
+        #             reporting_client.test_stop(TestResultFactory.create_failure(exceptionFailure))
+        #         except Exception as e:
+        #             reporting_client.test_stop(TestResultFactory.create_failure("Test Case failed -- See perfecto reports"))
+        #
+        #         seen = {None}
+        #         session = request.node
+        #         print(session)
+        #     elif testFailed<=0:
+        #         reporting_client.test_stop(TestResultFactory.create_success())
+        #
+        #     #amount = len(request.session.items)
+        #     #print("Test Session Items: ")
+        #     #print(amount)
+        #
+        #     #tests_count = request.session.testscollected
+        #     #print("Test Collected: ")
+        #     #print(tests_count)
+        #
+        #     # print('Report-Url: ' + reporting_client.report_url())
+        #     # print("----------------------------------------------------------")
+        #     # reporting_client.test_stop()
+        #     driver.close()
+        # except Exception as e:
+        #     print(" -- Exception While Tear Down --")
+        #     reporting_client.test_stop(TestResultFactory.create_failure(e))
+        #     print('Report-Url-Failure: ' + reporting_client.report_url() + '\n')
+        #     driver.close()
+        #     print (e)
+        # finally:
+        #     try:
+        #         driver.quit()
+        #     except Exception as e:
+        #         print(" -- Exception Not Able To Quit --")
+        #         print (e)
 
     request.addfinalizer(teardown)
 
