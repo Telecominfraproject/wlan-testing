@@ -8,8 +8,8 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.throughput_vs_pkt, pytest.mark.bridge, pytest.mark.wpa,
-              pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.wifi_capacity_test, pytest.mark.bridge]
+
 
 setup_params_general = {
     "mode": "BRIDGE",
