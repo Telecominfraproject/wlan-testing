@@ -113,7 +113,7 @@ def setup_perfectoMobile_android(request):
     reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
 
     def teardown():
-        reporting_client.test_stop(TestResultFactory.create_success())
+        reporting_client.test_stop(TestResultFactory.create_failure("See Allure Report"))
         driver.close()
         print("\n------------")
         print("Driver Closed")
