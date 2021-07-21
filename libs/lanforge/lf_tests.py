@@ -362,8 +362,8 @@ class RunTest:
         influx.post_to_influx()
         return self.dualbandptest_obj
 
-    def rx_sensitivity(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
-                       upload_rate="85%", duration="1m", instance_name="test_demo", raw_lines=None):
+    def rx_sensitivity(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="75%", dut_name="TIP",
+                       upload_rate="75%", duration="5s", instance_name="test_demo", raw_lines=None):
         if mode == "BRIDGE":
             self.client_connect.upstream_port = self.upstream_port
         elif mode == "NAT":

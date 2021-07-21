@@ -50,7 +50,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -77,7 +77,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS0_NSS0",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -102,7 +102,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -129,7 +129,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS1_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -154,7 +154,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -181,7 +181,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS2_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -206,7 +206,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -232,7 +232,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS3_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -257,7 +257,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -284,7 +284,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS4_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -309,7 +309,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -335,7 +335,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS5_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -360,7 +360,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -387,7 +387,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS6_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -412,7 +412,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -438,7 +438,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS7_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -463,7 +463,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -490,7 +490,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS8_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -515,7 +515,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -541,7 +541,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS9_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -568,7 +568,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -595,7 +595,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS0_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -620,7 +620,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -647,7 +647,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS1_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -672,7 +672,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -699,7 +699,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS2_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -724,7 +724,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -751,7 +751,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS3_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -776,7 +776,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -803,7 +803,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS4_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -828,7 +828,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -855,7 +855,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS5_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -880,7 +880,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -907,7 +907,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS6_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -932,7 +932,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -959,7 +959,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS7_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -984,7 +984,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1011,7 +1011,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS8_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1036,7 +1036,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1063,7 +1063,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS9_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1090,7 +1090,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1117,7 +1117,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS0_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1142,7 +1142,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1169,7 +1169,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS1_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1194,7 +1194,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1221,7 +1221,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS2_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1246,7 +1246,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1273,7 +1273,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS3_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1298,7 +1298,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1325,7 +1325,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS4_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1350,7 +1350,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1377,7 +1377,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS5_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1402,7 +1402,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1429,7 +1429,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS6_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1454,7 +1454,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1481,7 +1481,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS7_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1506,7 +1506,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1533,7 +1533,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS8_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1558,7 +1558,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1585,7 +1585,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS9_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1612,7 +1612,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1639,7 +1639,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS0_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1664,7 +1664,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1691,7 +1691,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS1_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1716,7 +1716,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1743,7 +1743,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS2_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1768,7 +1768,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1795,7 +1795,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS3_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1820,7 +1820,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1847,7 +1847,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS4_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1872,7 +1872,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1899,7 +1899,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS5_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1924,7 +1924,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -1951,7 +1951,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS6_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -1976,7 +1976,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -2003,7 +2003,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS7_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -2028,7 +2028,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -2055,7 +2055,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS8_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:
@@ -2080,7 +2080,7 @@ class TestRxSensitivityNAT2G(object):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -2107,7 +2107,7 @@ class TestRxSensitivityNAT2G(object):
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
                                             instance_name="TIP_PERF_RX_SEN_WPA2_2G_MCS9_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[0].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             pdf = False
             for i in entries:

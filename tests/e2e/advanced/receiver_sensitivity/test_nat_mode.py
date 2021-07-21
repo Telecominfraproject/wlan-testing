@@ -64,7 +64,7 @@ class TestRxSensitivityNAT5G(object):
                      ['txo_mcs: 0 CCK, OFDM, HT, VHT'],
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2],
-                     ["show_3s: 1"], ['txo_txpower: 17'],
+                     ["show_3s: 1"], ['txo_txpower: 15'], ['path_loss: 23'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -75,7 +75,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS0_NSS0",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_NAT_5G_MCS0_NSS0",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -115,7 +115,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 1 CCK, OFDM, HT, VHT'],
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -167,7 +167,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 2 CCK, OFDM, HT, VHT'],
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -219,7 +219,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 3 CCK, OFDM, HT, VHT'],
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -270,7 +270,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 4 OFDM, HT, VHT'],
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -322,7 +322,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 5 OFDM, HT, VHT'],
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -373,7 +373,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 6 OFDM, HT, VHT'],
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -425,7 +425,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 7 OFDM, HT, VHT'],
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -476,7 +476,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 8 VHT'],
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -528,7 +528,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 9 VHT'],
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -581,7 +581,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 0 CCK, OFDM, HT, VHT'],
                      ['spatial_streams: 2'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -633,7 +633,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 1 CCK, OFDM, HT, VHT'],
                      ['spatial_streams: 2'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -685,7 +685,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 2 CCK, OFDM, HT, VHT'],
                      ['spatial_streams: 2'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -737,7 +737,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 3 CCK, OFDM, HT, VHT'],
                      ['spatial_streams: 2'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -789,7 +789,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 4 OFDM, HT, VHT'],
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -841,7 +841,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 5 OFDM, HT, VHT'],
                      ['spatial_streams: 2'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -893,7 +893,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 6 CCK, OFDM, HT, VHT'],
                      ['spatial_streams: 2'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -945,7 +945,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 7 OFDM, HT, VHT'],
                      ['spatial_streams: 2'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -997,7 +997,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 8 VHT'],
                      ['spatial_streams: 2'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1049,7 +1049,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 9 VHT'],
                      ['spatial_streams: 2'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1103,7 +1103,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 0 CCK, OFDM, HT, VHT'],
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1155,7 +1155,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 1 CCK, OFDM, HT, VHT'],
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1207,7 +1207,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 2 CCK, OFDM, HT, VHT'],
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1259,7 +1259,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 3 CCK, OFDM, HT, VHT'],
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1311,7 +1311,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 4 OFDM, HT, VHT'],
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1363,7 +1363,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 5 OFDM, HT, VHT'],
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1415,7 +1415,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 6 OFDM, HT, VHT'],
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1467,7 +1467,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 7 OFDM, HT, VHT'],
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1519,7 +1519,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 8 VHT'],
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1571,7 +1571,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 9 VHT'],
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1625,7 +1625,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 0 CCK, OFDM, HT, VHT'],
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1677,7 +1677,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 1 CCK, OFDM, HT, VHT'],
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1729,7 +1729,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 2 CCK, OFDM, HT, VHT'],
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1781,7 +1781,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 3 CCK, OFDM, HT, VHT'],
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1833,7 +1833,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 4 OFDM, HT, VHT'],
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1885,7 +1885,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 5 OFDM, HT, VHT'],
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1937,7 +1937,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 6 OFDM, HT, VHT'],
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -1989,7 +1989,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 7 OFDM, HT, VHT'],
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -2041,7 +2041,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 8 VHT'],
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -2093,7 +2093,7 @@ class TestRxSensitivityNAT5G(object):
         raw_lines = [['txo_preamble: VHT'],
                      ['txo_mcs: 9 VHT'],
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'],
+                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
