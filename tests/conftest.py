@@ -6,6 +6,7 @@ import sys
 import os
 import time
 import allure
+import re
 import logging
 
 if "logs" not in os.listdir():
@@ -585,5 +586,6 @@ def setup_influx(request, testbed, get_configuration):
     }
     yield influx_params
 
-
-
+# Need for Perforce Mobile Device Execution
+def pytest_sessionstart(session):
+    session.results = dict()

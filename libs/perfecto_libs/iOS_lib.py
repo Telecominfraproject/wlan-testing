@@ -145,7 +145,8 @@ def set_APconnMobileDevice_iOS(request, WifiNameSSID, WifiPass, setup_perfectoMo
             print("Join Button Not Enabled...Verify if Password is set properly  ")
 
         try:
-            WifiInternetErrMsg2 = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
+            WifiInternetErrMsg2 = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
+             #= driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
             reportFlag = False
         except NoSuchElementException:
             reportFlag = True
