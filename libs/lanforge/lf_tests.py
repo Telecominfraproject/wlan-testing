@@ -200,42 +200,43 @@ class RunTest:
         self.eap_connect.cleanup(station_name)
         return self.eap_connect.passes()
 
-    def wifi_capacity(self, mode="BRIDGE", vlan_id=100, instance_name="wct_instance", stations=None):
+    def wifi_capacity(self, mode="BRIDGE", vlan_id=100, instance_name="wct_instance", download_rate="1Gbps",
+                      upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000"):
         if mode == "BRIDGE":
-            self.client_connect.upstream_port = self.upstream_port
+            upstream_port = self.upstream_port
         elif mode == "NAT":
-            self.client_connect.upstream_port = self.upstream_port
+            upstream_port = self.upstream_port
         elif mode == "VLAN":
-            self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
+            upstream_port = self.upstream_port + "." + str(vlan_id)
         '''SINGLE WIFI CAPACITY using lf_wifi_capacity.py'''
         wificapacity_obj = WiFiCapacityTest(lfclient_host=self.lanforge_ip,
-                                                 lf_port=self.lanforge_port,
-                                                 lf_user="lanforge",
-                                                 lf_password="lanforge",
-                                                 local_lf_report_dir=self.local_report_path,
-                                                 instance_name=instance_name,
-                                                 config_name="wifi_config",
-                                                 upstream="1.1." + self.upstream_port,
-                                                 batch_size="1",
-                                                 loop_iter="1",
-                                                 protocol="UDP-IPv4",
-                                                 duration="3000",
-                                                 pull_report=True,
-                                                 load_old_cfg=False,
-                                                 upload_rate="10Mbps",
-                                                 download_rate="1Gbps",
-                                                 sort="interleave",
-                                                 stations=stations,
-                                                 create_stations=False,
-                                                 radio=None,
-                                                 security=None,
-                                                 paswd=None,
-                                                 ssid=None,
-                                                 enables=[],
-                                                 disables=[],
-                                                 raw_lines=[],
-                                                 raw_lines_file="",
-                                                 sets=[])
+                                            lf_port=self.lanforge_port,
+                                            lf_user="lanforge",
+                                            lf_password="lanforge",
+                                            local_lf_report_dir=self.local_report_path,
+                                            instance_name=instance_name,
+                                            config_name="wifi_config",
+                                            upstream="1.1." + upstream_port,
+                                            batch_size="1,5,10,20,40,64",
+                                            loop_iter="1",
+                                            protocol=protocol,
+                                            duration=duration,
+                                            pull_report=True,
+                                            load_old_cfg=False,
+                                            upload_rate=upload_rate,
+                                            download_rate=download_rate,
+                                            sort="interleave",
+                                            # stations=stations,
+                                            create_stations=True,
+                                            radio=None,
+                                            security=None,
+                                            paswd=None,
+                                            ssid=None,
+                                            enables=[],
+                                            disables=[],
+                                            raw_lines=[],
+                                            raw_lines_file="",
+                                            sets=[])
 
         wificapacity_obj.setup()
         wificapacity_obj.run()
@@ -282,13 +283,17 @@ class RunTest:
         return True
 
     def dataplane(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
-                  upload_rate="85%", duration="1m", instance_name="test_demo"):
+                  upload_rate="85%", duration="1m", instance_name="test_demo", raw_lines=None):
         if mode == "BRIDGE":
             self.client_connect.upstream_port = self.upstream_port
         elif mode == "NAT":
             self.client_connect.upstream_port = self.upstream_port
-        else:
+        elif mode == "VLAN":
             self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
+
+        if raw_lines is None:
+            raw_lines = [['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types: UDP;TCP'],
+                         ["show_3s: 1"], ["show_ll_graphs: 1"], ["show_log: 1"]]
 
         self.dataplane_obj = DataplaneTest(lf_host=self.lanforge_ip,
                                            lf_port=self.lanforge_port,
@@ -306,21 +311,18 @@ class RunTest:
                                            duration=duration,
                                            dut=dut_name,
                                            station="1.1." + station_name[0],
-                                           raw_lines=[['pkts: Custom;60;142;256;512;1024;MTU'],
-                                                      ['directions: DUT Transmit;DUT Receive'],
-                                                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
-                                                      ["show_ll_graphs: 1"], ["show_log: 1"]],
-                                           )
+                                           raw_lines=raw_lines)
+
         self.dataplane_obj.setup()
         self.dataplane_obj.run()
         report_name = self.dataplane_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        influx = CSVtoInflux(influxdb=self.influxdb,
-                             _influx_tag=self.influx_params["influx_tag"],
+        influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
                              target_csv=self.local_report_path + report_name + "/kpi.csv")
         influx.post_to_influx()
+
         return self.dataplane_obj
 
-    def dualbandperformancetest(self,ssid_5G="[BLANK]",ssid_2G="[BLANK]",mode="BRIDGE", vlan_id=100,dut_name="TIP",
+    def dualbandperformancetest(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
                                 instance_name="test_demo"):
         if mode == "BRIDGE":
             self.client_connect.upstream_port = self.upstream_port
@@ -330,26 +332,27 @@ class RunTest:
             self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
 
         self.dualbandptest_obj = ApAutoTest(lf_host=self.lanforge_ip,
-                                         lf_port=self.lanforge_port,
-                                         lf_user="lanforge",
-                                         lf_password="lanforge",
-                                         instance_name=instance_name,
-                                         config_name="dbp_config",
-                                         upstream="1.1." + self.upstream_port,
-                                         pull_report=True,
-                                         dut5_0=dut_name + ' ' + ssid_5G,
-                                         dut2_0=dut_name + ' ' + ssid_2G,
-                                         load_old_cfg=False,
-                                         max_stations_2=1,
-                                         max_stations_5=1,
-                                         max_stations_dual=2,
-                                         radio2=[["1.1.wiphy0"]],
-                                         radio5=[["1.1.wiphy1"]],
-                                         sets=[['Basic Client Connectivity', '0'], ['Multi Band Performance', '1'],
-                                               ['Throughput vs Pkt Size', '0'], ['Capacity', '0'], ['Stability', '0'],
-                                               ['Band-Steering', '0'], ['Multi-Station Throughput vs Pkt Size', '0'],
-                                               ['Long-Term', '0']]
-                                             )
+                                            lf_port=self.lanforge_port,
+                                            lf_user="lanforge",
+                                            lf_password="lanforge",
+                                            instance_name=instance_name,
+                                            config_name="dbp_config",
+                                            upstream="1.1." + self.upstream_port,
+                                            pull_report=True,
+                                            dut5_0=dut_name + ' ' + ssid_5G,
+                                            dut2_0=dut_name + ' ' + ssid_2G,
+                                            load_old_cfg=False,
+                                            max_stations_2=1,
+                                            max_stations_5=1,
+                                            max_stations_dual=2,
+                                            radio2=[["1.1.wiphy0"]],
+                                            radio5=[["1.1.wiphy1"]],
+                                            sets=[['Basic Client Connectivity', '0'], ['Multi Band Performance', '1'],
+                                                  ['Throughput vs Pkt Size', '0'], ['Capacity', '0'],
+                                                  ['Stability', '0'],
+                                                  ['Band-Steering', '0'], ['Multi-Station Throughput vs Pkt Size', '0'],
+                                                  ['Long-Term', '0']]
+                                            )
         self.dualbandptest_obj.setup()
         self.dualbandptest_obj.run()
         report_name = self.dataplane_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -358,7 +361,6 @@ class RunTest:
                              target_csv=self.local_report_path + report_name + "/kpi.csv")
         influx.post_to_influx()
         return self.dualbandptest_obj
-
 
 
 if __name__ == '__main__':

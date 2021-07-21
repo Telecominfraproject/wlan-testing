@@ -6,6 +6,7 @@ import json
 import os
 import pandas as pd
 
+
 class ChamberView:
 
     def __init__(self, lanforge_data=None, access_point_data=None, debug=True, testbed=None):
@@ -57,6 +58,15 @@ class ChamberView:
                                  )
             self.CreateDut.ssid = []
 
+    def reset_scenario(self):
+        self.raw_line = [
+            ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " + self.upstream_port.split(".")
+            [2] + ",AUTO -1 NA"],
+            ["profile_link " + self.uplink_resources + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
+             + "' NA " + self.uplink_port.split(".")[2] + "," + self.upstream_port.split(".")[2] + " -1 NA"]
+        ]
+        self.Chamber_View()
+
     def Chamber_View(self):
         if self.delete_old_scenario:
             self.CreateChamberview.clean_cv_scenario(type="Network-Connectivity", scenario_name=self.scenario_name)
@@ -69,6 +79,23 @@ class ChamberView:
         self.CreateChamberview.show_text_blob(None, None, True)  # Show changes on GUI
         self.CreateChamberview.sync_cv()
         return self.CreateChamberview, self.scenario_name
+
+    def add_stations(self, band="twog", num_stations=50, dut="NA"):
+        if band == "twog":
+            radio = ",".join(self.twog_radios)
+            if len(self.twog_radios) == 1:
+                radio = radio + ",AUTO"
+            # self.eap_connect.sta_prefix = self.twog_prefix
+        if band == "fiveg":
+            radio = ",".join(self.fiveg_radios)
+            if len(self.fiveg_radios) == 1:
+                radio = radio + ",AUTO"
+            # self.eap_connect.sta_prefix = self.fiveg_prefix
+
+        station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-1'" + " NA " + radio]
+        self.raw_line.append(station_data)
+
+
 
     def Create_Dut(self):
         self.CreateDut.setup()
@@ -106,7 +133,7 @@ class ChamberView:
         cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port, )
         return cli_base.json_post(req_url, data)
 
-    def read_kpi_file(self, column_name, dir_name ):
+    def read_kpi_file(self, column_name, dir_name):
         if column_name == None:
             df = pd.read_csv("../reports/" + str(dir_name) + "/kpi.csv", sep=r'\t', engine='python')
             if df.empty == True:
@@ -114,14 +141,9 @@ class ChamberView:
             else:
                 return df
         else:
-            df = pd.read_csv("../reports/" + str(dir_name) + "/kpi.csv", sep=r'\t', usecols=column_name, engine='python')
+            df = pd.read_csv("../reports/" + str(dir_name) + "/kpi.csv", sep=r'\t', usecols=column_name,
+                             engine='python')
             if df.empty == True:
                 return "empty"
             else:
                 return df
-
-
-
-
-
-
