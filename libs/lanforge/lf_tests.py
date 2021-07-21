@@ -211,33 +211,33 @@ class RunTest:
             self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
         '''SINGLE WIFI CAPACITY using lf_wifi_capacity.py'''
         wificapacity_obj = WiFiCapacityTest(lfclient_host=self.lanforge_ip,
-                                                 lf_port=self.lanforge_port,
-                                                 lf_user="lanforge",
-                                                 lf_password="lanforge",
-                                                 local_lf_report_dir=self.local_report_path,
-                                                 instance_name=instance_name,
-                                                 config_name="wifi_config",
-                                                 upstream="1.1." + self.upstream_port,
-                                                 batch_size="1",
-                                                 loop_iter="1",
-                                                 protocol="UDP-IPv4",
-                                                 duration="3000",
-                                                 pull_report=True,
-                                                 load_old_cfg=False,
-                                                 upload_rate="10Mbps",
-                                                 download_rate="1Gbps",
-                                                 sort="interleave",
-                                                 stations=stations,
-                                                 create_stations=False,
-                                                 radio=None,
-                                                 security=None,
-                                                 paswd=None,
-                                                 ssid=None,
-                                                 enables=[],
-                                                 disables=[],
-                                                 raw_lines=[],
-                                                 raw_lines_file="",
-                                                 sets=[])
+                                            lf_port=self.lanforge_port,
+                                            lf_user="lanforge",
+                                            lf_password="lanforge",
+                                            local_lf_report_dir=self.local_report_path,
+                                            instance_name=instance_name,
+                                            config_name="wifi_config",
+                                            upstream="1.1." + self.upstream_port,
+                                            batch_size="1",
+                                            loop_iter="1",
+                                            protocol="UDP-IPv4",
+                                            duration="3000",
+                                            pull_report=True,
+                                            load_old_cfg=False,
+                                            upload_rate="10Mbps",
+                                            download_rate="1Gbps",
+                                            sort="interleave",
+                                            stations=stations,
+                                            create_stations=False,
+                                            radio=None,
+                                            security=None,
+                                            paswd=None,
+                                            ssid=None,
+                                            enables=[],
+                                            disables=[],
+                                            raw_lines=[],
+                                            raw_lines_file="",
+                                            sets=[])
 
         wificapacity_obj.setup()
         wificapacity_obj.run()
@@ -363,36 +363,37 @@ class RunTest:
         return self.dualbandptest_obj
 
     def rx_sensitivity(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
-                       upload_rate="85%", duration="1m", instance_name="test_demo"):
+                       upload_rate="85%", duration="1m", instance_name="test_demo", raw_lines=None):
         if mode == "BRIDGE":
             self.client_connect.upstream_port = self.upstream_port
         elif mode == "NAT":
             self.client_connect.upstream_port = self.upstream_port
         else:
             self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
+        if raw_lines is None:
+            raw_lines = [['txo_preamble: VHT'],
+                         ['txo_mcs: 4 OFDM, HT, VHT;5 OFDM, HT, VHT;6 OFDM, HT, VHT;7 OFDM, HT, VHT'],
+                         ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
+                         ['txo_retries: No Retry'], ["show_3s: 1"], ['txo_txpower: 17'],
+                         ["show_ll_graphs: 1"], ["show_log: 1"]]
 
         self.rx_sensitivity_obj = RxSensitivityTest(lf_host=self.lanforge_ip,
-                                           lf_port=self.lanforge_port,
-                                           ssh_port=self.lf_ssh_port,
-                                           local_path=self.local_report_path,
-                                           lf_user="lanforge",
-                                           lf_password="lanforge",
-                                           instance_name=instance_name,
-                                           config_name="rx_sen_config",
-                                           upstream="1.1." + self.upstream_port,
-                                           pull_report=True,
-                                           load_old_cfg=False,
-                                           download_speed=download_rate,
-                                           upload_speed=upload_rate,
-                                           duration=duration,
-                                           dut=dut_name,
-                                           station="1.1." + station_name[0],
-                                           raw_lines=[['txo_preamble: VHT'],
-                                                      ['txo_mcs: 4 OFDM, HT, VHT;5 OFDM, HT, VHT;6 OFDM, HT, VHT;7 '
-                                                       'OFDM, HT, VHT'], ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
-                                                      ['txo_retries: No Retry'], ["show_3s: 1"], ['txo_txpower: 17'],
-                                                      ["show_ll_graphs: 1"], ["show_log: 1"]],
-                                           )
+                                                    lf_port=self.lanforge_port,
+                                                    ssh_port=self.lf_ssh_port,
+                                                    local_path=self.local_report_path,
+                                                    lf_user="lanforge",
+                                                    lf_password="lanforge",
+                                                    instance_name=instance_name,
+                                                    config_name="rx_sen_config",
+                                                    upstream="1.1." + self.upstream_port,
+                                                    pull_report=True,
+                                                    load_old_cfg=False,
+                                                    download_speed=download_rate,
+                                                    upload_speed=upload_rate,
+                                                    duration=duration,
+                                                    dut=dut_name,
+                                                    station="1.1." + station_name[0],
+                                                    raw_lines=raw_lines)
         self.rx_sensitivity_obj.setup()
         self.rx_sensitivity_obj.run()
         report_name = self.rx_sensitivity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]

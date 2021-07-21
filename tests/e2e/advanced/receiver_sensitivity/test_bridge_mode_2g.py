@@ -1,18 +1,18 @@
 """
 
-    Performance Test: Receiver Sensitivity Test: nat Mode
-    pytest -m "rx_sensitivity_test and nat"
+    Performance Test: Receiver Sensitivity Test: bridge Mode
+    pytest -m "rx_sensitivity_test and bridge"
 
 """
 import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.rx_sensitivity_test, pytest.mark.nat,
+pytestmark = [pytest.mark.rx_sensitivity_test, pytest.mark.bridge,
               pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
-    "mode": "NAT",
+    "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [
             {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
@@ -31,7 +31,7 @@ setup_params_general = {
 }
 
 
-@allure.feature("NAT MODE CLIENT CONNECTIVITY")
+@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -39,16 +39,16 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestRxSensitivityNAT5G(object):
+class TestRxSensitivityBRIDGE2G(object):
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs0
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs0_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs0_nss1_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -56,8 +56,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -71,11 +71,11 @@ class TestRxSensitivityNAT5G(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS0_NSS0",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS0_NSS0",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -87,20 +87,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs1
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs1_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs1_nss1_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -108,8 +108,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -123,11 +123,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS1_NSS1",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS1_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -139,20 +139,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs2
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs2_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs2_nss1_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -160,8 +160,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -175,11 +175,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS2_NSS1",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS2_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -191,20 +191,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs3
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs3_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs3_nss1_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -212,8 +212,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -226,11 +226,11 @@ class TestRxSensitivityNAT5G(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS3_NSS1",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS3_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -242,20 +242,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs4
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs4_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs4_nss1_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -263,8 +263,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -278,11 +278,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS4_NSS1",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS4_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -294,20 +294,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs5
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs5_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs5_nss1_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -315,8 +315,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -329,11 +329,11 @@ class TestRxSensitivityNAT5G(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS5_NSS1",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS5_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -345,20 +345,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs6
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs6_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs6_nss1_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -366,8 +366,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -381,11 +381,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS6_NSS1",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS6_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -397,20 +397,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs7
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs7_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs7_nss1_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -418,8 +418,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -432,11 +432,11 @@ class TestRxSensitivityNAT5G(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS7_NSS1",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS7_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -448,20 +448,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs8
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs8_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs8_nss1_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -469,8 +469,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -484,11 +484,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS8_NSS1",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS8_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -500,20 +500,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs9
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs9_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs9_nss1_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -521,8 +521,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -535,11 +535,11 @@ class TestRxSensitivityNAT5G(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS9_NSS1",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS9_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -551,7 +551,7 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
@@ -559,14 +559,14 @@ class TestRxSensitivityNAT5G(object):
     # Test case for mcs0-9,Nss 2, bw 20MHz
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs0
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs0_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs0_nss2_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -574,8 +574,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -589,11 +589,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS0_NSS2",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS0_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -605,20 +605,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs1
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs1_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs1_nss2_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -626,8 +626,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -641,11 +641,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS1_NSS2",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS1_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -657,20 +657,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs2
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs2_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs2_nss2_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -678,8 +678,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -693,11 +693,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS2_NSS2",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS2_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -709,20 +709,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs3
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs3_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs3_nss2_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -730,8 +730,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -745,11 +745,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS3_NSS2",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS3_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -761,20 +761,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs4
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs4_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs4_nss2_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -782,8 +782,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -797,11 +797,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS4_NSS2",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS4_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -813,20 +813,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs5
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs5_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs5_nss2_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -834,8 +834,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -849,11 +849,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS5_NSS2",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS5_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -865,20 +865,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs6
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs6_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs6_nss2_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -886,8 +886,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -901,11 +901,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS6_NSS2",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS6_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -917,20 +917,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs7
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs7_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs7_nss2_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -938,8 +938,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -953,11 +953,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS7_NSS2",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS7_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -969,20 +969,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs8
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs8_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs8_nss2_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -990,8 +990,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1005,11 +1005,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS8_NSS2",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS8_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1021,20 +1021,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs9
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs9_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs9_nss2_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1042,8 +1042,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1057,11 +1057,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS9_NSS2",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS9_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1073,7 +1073,7 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
@@ -1081,14 +1081,14 @@ class TestRxSensitivityNAT5G(object):
     # Test case for mcs0-9,Nss 3, bw 20MHz
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs0
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs0_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs0_nss3_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1096,8 +1096,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1111,11 +1111,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS0_NSS3",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS0_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1127,20 +1127,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs1
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs1_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs1_nss3_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1148,8 +1148,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1163,11 +1163,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS1_NSS3",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS1_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1179,20 +1179,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs2
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs2_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs2_nss3_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1200,8 +1200,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1215,11 +1215,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS2_NSS3",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS2_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1231,20 +1231,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs3
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs3_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs3_nss3_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1252,8 +1252,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1267,11 +1267,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS3_NSS3",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS3_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1283,20 +1283,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs4
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs4_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs4_nss3_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1304,8 +1304,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1319,11 +1319,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS4_NSS3",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS4_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1335,20 +1335,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs5
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs5_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs5_nss3_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1356,8 +1356,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1371,11 +1371,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS5_NSS3",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS5_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1387,20 +1387,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs6
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs6_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs6_nss3_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1408,8 +1408,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1423,11 +1423,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS6_NSS3",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS6_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1439,20 +1439,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs7
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs7_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs7_nss3_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1460,8 +1460,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1475,11 +1475,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS7_NSS3",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS7_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1491,20 +1491,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs8
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs8_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs8_nss3_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1512,8 +1512,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1527,11 +1527,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS8_NSS3",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS8_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1543,20 +1543,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs9
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs9_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs9_nss3_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1564,8 +1564,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1579,11 +1579,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS9_NSS3",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS9_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1595,7 +1595,7 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
@@ -1603,14 +1603,14 @@ class TestRxSensitivityNAT5G(object):
     # Test case for mcs0-9,Nss 4, bw 20MHz
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs0
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs0_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs0_nss4_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1618,8 +1618,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1633,11 +1633,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS0_NSS4",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS0_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1649,20 +1649,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs1
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs1_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs1_nss4_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1670,8 +1670,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1685,11 +1685,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS1_NSS4",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS1_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1701,20 +1701,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs2
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs2_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs2_nss4_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1722,8 +1722,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1737,11 +1737,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS2_NSS4",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS2_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1753,20 +1753,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs3
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs3_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs3_nss4_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1774,8 +1774,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1789,11 +1789,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS3_NSS4",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS3_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1805,20 +1805,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs4
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs4_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs4_nss4_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1826,8 +1826,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1841,11 +1841,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS4_NSS4",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS4_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1857,20 +1857,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs5
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs5_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs5_nss4_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1878,8 +1878,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1893,11 +1893,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS5_NSS4",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS5_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1909,20 +1909,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs6
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs6_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs6_nss4_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1930,8 +1930,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1945,11 +1945,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS6_NSS4",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS6_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1961,20 +1961,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs7
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs7_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs7_nss4_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1982,8 +1982,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -1997,11 +1997,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS7_NSS4",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS7_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -2013,20 +2013,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs8
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs8_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs8_nss4_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -2034,8 +2034,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -2049,11 +2049,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS8_NSS4",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS8_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -2065,20 +2065,20 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False
 
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
+    @pytest.mark.twog
     @pytest.mark.mcs9
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs9_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_bridge_mcs9_nss4_2g(self, get_vif_state,
+                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity Bridge Mode
+           pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -2086,8 +2086,8 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
-        band = "fiveg"
+        mode = "BRIDGE"
+        band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
@@ -2101,11 +2101,11 @@ class TestRxSensitivityNAT5G(object):
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
+                                         station_name=station_names_twog, vlan_id=vlan)
 
         if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS9_NSS4",
+            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS9_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -2117,7 +2117,7 @@ class TestRxSensitivityNAT5G(object):
                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
             assert False

@@ -1,18 +1,18 @@
 """
 
-    Performance Test: Receiver Sensitivity Test: nat Mode
-    pytest -m "rx_sensitivity_test and nat"
+    Performance Test: Receiver Sensitivity Test: vlan mode
+    pytest -m "rx_sensitivity_test and vlan"
 
 """
 import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.rx_sensitivity_test, pytest.mark.nat,
+pytestmark = [pytest.mark.rx_sensitivity_test, pytest.mark.vlan,
               pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
-    "mode": "NAT",
+    "mode": "VLAN",
     "ssid_modes": {
         "wpa2_personal": [
             {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
@@ -31,7 +31,7 @@ setup_params_general = {
 }
 
 
-@allure.feature("NAT MODE CLIENT CONNECTIVITY")
+@allure.feature("VLAN MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -39,16 +39,16 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestRxSensitivityNAT5G(object):
+class TestRxSensitivityVLAN5G(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.mcs0
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs0_nss1_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs0_nss1_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -56,7 +56,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -75,7 +75,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS0_NSS0",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS0_NSS0",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -96,11 +96,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs1
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs1_nss1_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs1_nss1_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -108,7 +108,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -127,7 +127,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS1_NSS1",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS1_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -148,11 +148,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs2
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs2_nss1_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs2_nss1_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -160,7 +160,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -179,7 +179,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS2_NSS1",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS2_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -200,11 +200,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs3
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs3_nss1_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs3_nss1_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -212,7 +212,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -230,7 +230,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS3_NSS1",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS3_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -251,11 +251,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs4
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs4_nss1_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs4_nss1_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -263,7 +263,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -282,7 +282,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS4_NSS1",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS4_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -303,11 +303,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs5
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs5_nss1_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs5_nss1_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -315,7 +315,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -333,7 +333,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS5_NSS1",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS5_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -354,11 +354,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs6
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs6_nss1_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs6_nss1_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -366,7 +366,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -385,7 +385,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS6_NSS1",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS6_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -406,11 +406,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs7
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs7_nss1_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs7_nss1_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -418,7 +418,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -436,7 +436,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS7_NSS1",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS7_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -457,11 +457,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs8
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs8_nss1_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs8_nss1_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -469,7 +469,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -488,7 +488,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS8_NSS1",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS8_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -509,11 +509,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs9
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs9_nss1_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs9_nss1_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -521,7 +521,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -539,7 +539,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS9_NSS1",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS9_NSS1",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -562,11 +562,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs0
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs0_nss2_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs0_nss2_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -574,7 +574,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -593,7 +593,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS0_NSS2",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS0_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -614,11 +614,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs1
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs1_nss2_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs1_nss2_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -626,7 +626,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -645,7 +645,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS1_NSS2",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS1_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -666,11 +666,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs2
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs2_nss2_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs2_nss2_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -678,7 +678,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -697,7 +697,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS2_NSS2",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS2_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -718,11 +718,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs3
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs3_nss2_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs3_nss2_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -730,7 +730,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -749,7 +749,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS3_NSS2",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS3_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -770,11 +770,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs4
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs4_nss2_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs4_nss2_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -782,7 +782,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -801,7 +801,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS4_NSS2",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS4_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -822,11 +822,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs5
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs5_nss2_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs5_nss2_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -834,7 +834,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -853,7 +853,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS5_NSS2",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS5_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -874,11 +874,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs6
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs6_nss2_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs6_nss2_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -886,7 +886,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -905,7 +905,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS6_NSS2",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS6_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -926,11 +926,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs7
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs7_nss2_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs7_nss2_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -938,7 +938,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -957,7 +957,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS7_NSS2",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS7_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -978,11 +978,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs8
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs8_nss2_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs8_nss2_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -990,7 +990,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1009,7 +1009,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS8_NSS2",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS8_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1030,11 +1030,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs9
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs9_nss2_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs9_nss2_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1042,7 +1042,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1061,7 +1061,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS9_NSS2",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS9_NSS2",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1084,11 +1084,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs0
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs0_nss3_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs0_nss3_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1096,7 +1096,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1115,7 +1115,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS0_NSS3",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS0_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1136,11 +1136,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs1
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs1_nss3_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs1_nss3_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1148,7 +1148,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1167,7 +1167,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS1_NSS3",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS1_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1188,11 +1188,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs2
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs2_nss3_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs2_nss3_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1200,7 +1200,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1219,7 +1219,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS2_NSS3",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS2_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1240,11 +1240,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs3
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs3_nss3_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs3_nss3_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1252,7 +1252,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1271,7 +1271,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS3_NSS3",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS3_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1292,11 +1292,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs4
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs4_nss3_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs4_nss3_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1304,7 +1304,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1323,7 +1323,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS4_NSS3",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS4_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1344,11 +1344,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs5
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs5_nss3_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs5_nss3_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1356,7 +1356,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1375,7 +1375,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS5_NSS3",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS5_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1396,11 +1396,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs6
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs6_nss3_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs6_nss3_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1408,7 +1408,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1427,7 +1427,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS6_NSS3",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS6_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1448,11 +1448,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs7
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs7_nss3_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs7_nss3_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1460,7 +1460,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1479,7 +1479,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS7_NSS3",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS7_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1500,11 +1500,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs8
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs8_nss3_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs8_nss3_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1512,7 +1512,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1531,7 +1531,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS8_NSS3",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS8_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1552,11 +1552,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs9
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs9_nss3_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs9_nss3_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1564,7 +1564,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1583,7 +1583,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS9_NSS3",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS9_NSS3",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1606,11 +1606,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs0
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs0_nss4_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs0_nss4_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1618,7 +1618,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1637,7 +1637,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS0_NSS4",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS0_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1658,11 +1658,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs1
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs1_nss4_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs1_nss4_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1670,7 +1670,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1689,7 +1689,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS1_NSS4",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS1_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1710,11 +1710,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs2
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs2_nss4_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs2_nss4_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1722,7 +1722,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1741,7 +1741,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS2_NSS4",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS2_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1762,11 +1762,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs3
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs3_nss4_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs3_nss4_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1774,7 +1774,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1793,7 +1793,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS3_NSS4",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS3_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1814,11 +1814,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs4
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs4_nss4_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs4_nss4_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1826,7 +1826,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1845,7 +1845,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS4_NSS4",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS4_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1866,11 +1866,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs5
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs5_nss4_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs5_nss4_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1878,7 +1878,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1897,7 +1897,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS5_NSS4",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS5_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1918,11 +1918,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs6
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs6_nss4_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs6_nss4_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1930,7 +1930,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -1949,7 +1949,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS6_NSS4",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS6_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -1970,11 +1970,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs7
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs7_nss4_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs7_nss4_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1982,7 +1982,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -2001,7 +2001,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS7_NSS4",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS7_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -2022,11 +2022,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs8
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs8_nss4_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs8_nss4_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -2034,7 +2034,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -2053,7 +2053,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS8_NSS4",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS8_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -2074,11 +2074,11 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs9
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs9_nss4_5g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs9_nss4_5g(self, get_vif_state,
                                                lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
-        """Receiver Sensitivity nat Mode
-           pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
+        """Receiver Sensitivity vlan Mode
+           pytest -m "rx_sensitivity_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -2086,7 +2086,7 @@ class TestRxSensitivityNAT5G(object):
         security = "wpa2"
         attenuator = setup_params_general["attenuator"]["attenuator"]
         attenuator2 = setup_params_general["attenuator"]["attenuator2"]
-        mode = "NAT"
+        mode = "VLAN"
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
@@ -2105,7 +2105,7 @@ class TestRxSensitivityNAT5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_5G_MCS9_NSS4",
+                                            instance_name="TIP_PERF_RX_SEN_WPA2_VLAN_5G_MCS9_NSS4",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
