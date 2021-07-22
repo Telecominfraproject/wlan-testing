@@ -165,7 +165,7 @@ class TestToggleAirplaneMode(object):
 
         # Toggle AirplaneMode
         Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
-        #sg
+
         # Verify AP After AirplaneMode
         assert verify_APconnMobileDevice_iOS(request, ssidName, setup_perfectoMobile_iOS, connData)
 
