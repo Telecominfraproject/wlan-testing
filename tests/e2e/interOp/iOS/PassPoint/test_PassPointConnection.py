@@ -95,7 +95,7 @@ class TestPassPointConnection(object):
         driver = setup_perfectoMobile_iOS[0]
         connData = get_PassPointConniOS_data
 
-        # Set Wifi Access Mode to #Default-SSID-5gl-perfecto-b/#Default-SSID-2gl-perfecto-b
+        # Set Wifi Access Mode to #Default-SSID-5gl-perfecto-b/#Default-SSID-2gl-perfecto-b.
         set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         # Toggle Airplane Mode and Ensure Wifi Connection.
