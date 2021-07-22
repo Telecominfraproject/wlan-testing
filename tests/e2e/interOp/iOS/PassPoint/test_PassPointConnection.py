@@ -104,7 +104,7 @@ class TestPassPointConnection(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
-        # Close Settings App
+        # Close Settings App.
         closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile_iOS)
 
     @pytest.mark.twog
