@@ -650,14 +650,15 @@ def pytest_runtest_makereport(item, call):
             print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
             #print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
 
-        if result.outcome == "failed":
-            testCaseFailedStatusValue = "FAILED"
-            exception = call.excinfo.value
-            exception_class = call.excinfo.type
-            exception_class_name = call.excinfo.typename
-            exception_type_and_message_formatted = call.excinfo.exconly()
-            exception_traceback = call.excinfo.traceback
+        #exception = call.excinfo.value
+        #exception_class = call.excinfo.type
+        #exception_class_name = call.excinfo.typename
+        
+        #exception_traceback = call.excinfo.traceback
 
+        if result.outcome == "failed":
+            exception_type_and_message_formatted = call.excinfo.exconly()
+            testCaseFailedStatusValue = "FAILED"
             reporting_client.test_stop(TestResultFactory.create_failure(str(testCaseErrorMsg)))
             testCaseNameList.append(TestCaseName)
             testCaseStatusList.append(testCaseFailedStatusValue)
@@ -677,21 +678,37 @@ def pytest_runtest_makereport(item, call):
             print("\n     TestStatus:  " + testCasePassedStatusValue)
             reportPerfecto(TestCaseName, testCasePassedStatusValue, "N/A", str(reporting_client.report_url()))
 
+        if result.outcome == "skipped":
+            testCaseSkippedStatusValue = "SKIPPED"
+            exception_type_Skipped_message_formatted = call.excinfo.exconly()
+            reporting_client.test_stop(TestResultFactory.create_failure(str(exception_type_Skipped_message_formatted)))
+            testCaseNameList.append(TestCaseName)
+            testCaseStatusList.append("SKIPPED")
+            testCaseErrorMsg.append(str(exception_type_Skipped_message_formatted))
+            testCaseReportURL.append(reporting_client.report_url())
+            print("\n     TestStatus: " + testCaseSkippedStatusValue)
+            print("     FailureMsg: " + str(testCaseErrorMsg))    
+            reportPerfecto(TestCaseName, testCaseSkippedStatusValue, testCaseErrorMsg, str(reporting_client.report_url()))       
+            
+
 def pytest_sessionfinish(session, exitstatus):
 
     print()
+    skipped_amount = 0
     #print('Perfecto TestCase Execution Status:', exitstatus)
     passed_amount = sum(1 for result in session.results.values() if result.passed)
     failed_amount = sum(1 for result in session.results.values() if result.failed)
+    skipped_amount = sum(1 for result in session.results.values() if result.skipped)
     #  print(f'There are {passed_amount} passed and {failed_amount} failed tests')        
-    TotalExecutedCount = failed_amount + passed_amount
+    TotalExecutedCount = failed_amount + passed_amount + skipped_amount
 
     print('\n------------------------------------')
     print('Perfecto TestCase Execution Summary')  
     print('------------------------------------')
     print('Total TestCase Executed: ' + str(TotalExecutedCount))  
     print('Total Passed: ' + str(passed_amount))
-    print('Total Failed: ' + str(failed_amount) + "\n")
+    print('Total Failed: ' + str(failed_amount))
+    print('Total Skipped: ' + str(skipped_amount) + "\n")
   
     for index in range(len(testCaseNameList)):
         print(str(index+1) + ") " + str(testCaseNameList[index]) + " : " + str(testCaseStatusList[index]))

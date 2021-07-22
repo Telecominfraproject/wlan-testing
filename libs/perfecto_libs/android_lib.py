@@ -271,7 +271,7 @@ def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMo
 
             try:
                 report.step_start("Verify if Wifi is Connected") 
-                WifiInternetErrMsg = WebDriverWait(driver, 35).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                WifiInternetErrMsg = WebDriverWait(driver, 60).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                 print("Wifi Successfully Connected")
                 
             except NoSuchElementException:

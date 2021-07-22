@@ -68,6 +68,7 @@ class TestNatMode(object):
 
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
+       
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
@@ -95,6 +96,7 @@ class TestNatMode(object):
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
+     
 
     @pytest.mark.twog
     @pytest.mark.wpa
@@ -121,8 +123,7 @@ class TestNatMode(object):
 
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
-        
-
+      
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_ClientConnectivity_5g_WPA(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_android):
@@ -148,4 +149,3 @@ class TestNatMode(object):
 
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
-
