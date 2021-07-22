@@ -181,7 +181,6 @@ class ChamberView:
         file_names = [fn for fn in os.listdir(relevant_path)
                       if any(fn.endswith(ext) for ext in included_extensions)]
 
-        a = [item for item in file_names if 'kpi' not in item]
         a = [item for item in a if 'print' not in item]
         a = [item for item in a if 'logo' not in item]
         a = [item for item in a if 'Logo' not in item]
