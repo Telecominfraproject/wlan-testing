@@ -101,14 +101,14 @@ class TestToggleWifiMode(object):
         # Set Wifi/AP Mode
         set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
-        # Toggle WifiMode
+        # Toggle WifiMode.
         Toggle_WifiMode_iOS(request, setup_perfectoMobile_iOS, connData)
 
-        # Verify AP After AirplaneMode
+        # Verify AP After AirplaneMode.
         value = verify_APconnMobileDevice_iOS(request, ssidName, setup_perfectoMobile_iOS, connData)
         assert value
 
-        # ForgetWifi
+        # ForgetWifi.
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
     @pytest.mark.fiveg
