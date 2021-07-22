@@ -1,3 +1,6 @@
+import re
+
+import allure
 from create_chamberview import CreateChamberview
 from create_chamberview_dut import DUT
 import time
@@ -29,7 +32,7 @@ class ChamberView:
         self.scenario_name = "TIP-" + self.testbed
         self.debug = debug
         self.exit_on_error = False
-
+        self.dut_idx_mapping = {}
         self.raw_line = [
             ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " + self.upstream_port.split(".")
             [2] + ",AUTO -1 NA"],
@@ -80,19 +83,34 @@ class ChamberView:
         self.CreateChamberview.sync_cv()
         return self.CreateChamberview, self.scenario_name
 
-    def add_stations(self, band="twog", num_stations=50, dut="NA"):
-        if band == "twog":
+    def add_stations(self, band="2G", num_stations=50, dut="NA", ssid_name=[]):
+        idx = 0
+        print(self.dut_idx_mapping)
+        for i in self.dut_idx_mapping:
+            if self.dut_idx_mapping[i][0] == ssid_name and self.dut_idx_mapping[i][3] == band:
+                idx = i
+        max_stations = 0
+        print(idx)
+        if band == "2G":
+            max_stations = 64 * len(self.twog_radios)
             radio = ",".join(self.twog_radios)
             if len(self.twog_radios) == 1:
                 radio = radio + ",AUTO"
             # self.eap_connect.sta_prefix = self.twog_prefix
-        if band == "fiveg":
+        if band == "5G":
+            max_stations = 64 * len(self.twog_radios)
             radio = ",".join(self.fiveg_radios)
             if len(self.fiveg_radios) == 1:
                 radio = radio + ",AUTO"
-            # self.eap_connect.sta_prefix = self.fiveg_prefix
-
-        station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-1'" + " NA " + radio]
+        if band == "ax":
+            max_stations = len(self.twog_radios)
+            radio = ",".join(self.fiveg_radios)
+            if len(self.fiveg_radios) == 1:
+                radio = radio + ",AUTO"
+        # self.eap_connect.sta_prefix = self.fiveg_prefix
+        if num_stations != "max":
+            max_stations = num_stations
+        station_data = ["profile_link 1.1 STA-AUTO " + str(max_stations) + " 'DUT: " + dut + " Radio-" + str(int(idx)+1) + "'" + " NA " + radio]
         self.raw_line.append(station_data)
 
 
@@ -147,3 +165,31 @@ class ChamberView:
                 return "empty"
             else:
                 return df
+
+    def attach_report_graphs(self, report_name=None, pdf_name="WIFI Capacity Test PDF Report"):
+        relevant_path = "../reports/" + report_name + "/"
+        entries = os.listdir("../reports/" + report_name + '/')
+        pdf = False
+        for i in entries:
+            if ".pdf" in i:
+                pdf = i
+        if pdf:
+            allure.attach.file(source=relevant_path + pdf,
+                               name=pdf_name)
+
+        included_extensions = ['png']
+        file_names = [fn for fn in os.listdir(relevant_path)
+                      if any(fn.endswith(ext) for ext in included_extensions)]
+
+        a = [item for item in file_names if 'kpi' not in item]
+        a = [item for item in a if 'print' not in item]
+        a = [item for item in a if 'logo' not in item]
+        a = [item for item in a if 'Logo' not in item]
+        a = [item for item in a if 'candela' not in item]
+
+        a.sort()
+        for i in a:
+            allure.attach.file(source=relevant_path + i,
+                               name=i,
+                               attachment_type="image/png", extension=None)
+
