@@ -14,8 +14,8 @@ pytestmark = [pytest.mark.throughput_vs_pkt, pytest.mark.nat, pytest.mark.wpa,
 setup_params_general = {
     "mode": "NAT",
     "ssid_modes": {
-        "wpa_personal": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+        "wpa_personal": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
                  "security_key": "something"}]},
 
     "rf": {},
@@ -323,8 +323,8 @@ class TestThroughputVsPktNatAWpa2G(object):
 setup_params_5g = {
     "mode": "NAT",
     "ssid_modes": {
-        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
                  "security_key": "something"}]},
     "rf": {},
     "radius": False

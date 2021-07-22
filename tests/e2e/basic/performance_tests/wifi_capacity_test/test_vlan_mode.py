@@ -43,8 +43,8 @@ class TestWifiCapacityVLANModeDualBand(object):
 
     @pytest.mark.tcp_download
     def test_client_wpa2_VLAN_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
-                                       lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                       get_configuration):
+                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                     get_configuration):
         """ Wifi Capacity Test VLAN mode
             pytest -m "wifi_capacity_test and VLAN and wpa2_personal and twog"
         """
@@ -70,8 +70,8 @@ class TestWifiCapacityVLANModeDualBand(object):
 
     @pytest.mark.udp_download
     def test_client_wpa2_VLAN_udp_dl(self, get_vif_state, lf_tools,
-                                       lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                       get_configuration):
+                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                     get_configuration):
         """ Wifi Capacity Test VLAN mode
             pytest -m "wifi_capacity_test and VLAN and wpa2_personal and twog"
         """
@@ -97,8 +97,8 @@ class TestWifiCapacityVLANModeDualBand(object):
 
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_VLAN_tcp_bidirectional(self, get_vif_state, lf_tools,
-                                                  lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                                  get_configuration):
+                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                get_configuration):
         """ Wifi Capacity Test VLAN mode
             pytest -m "wifi_capacity_test and VLAN and wpa2_personal and twog"
         """
@@ -124,8 +124,8 @@ class TestWifiCapacityVLANModeDualBand(object):
 
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_VLAN_udp_bidirectional(self, get_vif_state, lf_tools,
-                                                  lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                                  get_configuration):
+                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                get_configuration):
         """ Wifi Capacity Test VLAN mode
             pytest -m "wifi_capacity_test and VLAN and wpa2_personal and twog"
         """
@@ -154,7 +154,7 @@ setup_params_general_2G = {
     "mode": "VLAN",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"}
+            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ]
     },
     "rf": {},
@@ -180,8 +180,8 @@ class TestWifiCapacityVLANMode2G(object):
 
     @pytest.mark.tcp_download
     def test_client_wpa2_VLAN_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
-                                       lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                       get_configuration):
+                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                     get_configuration):
         """ Wifi Capacity Test VLAN mode
             pytest -m "wifi_capacity_test and VLAN and wpa2_personal and twog"
         """
@@ -206,8 +206,8 @@ class TestWifiCapacityVLANMode2G(object):
 
     @pytest.mark.udp_download
     def test_client_wpa2_VLAN_udp_dl(self, get_vif_state, lf_tools,
-                                       lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                       get_configuration):
+                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                     get_configuration):
         """ Wifi Capacity Test VLAN mode
             pytest -m "wifi_capacity_test and VLAN and wpa2_personal and twog"
         """
@@ -232,8 +232,8 @@ class TestWifiCapacityVLANMode2G(object):
 
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_VLAN_tcp_bidirectional(self, get_vif_state, lf_tools,
-                                                  lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                                  get_configuration):
+                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                get_configuration):
         """ Wifi Capacity Test VLAN mode
             pytest -m "wifi_capacity_test and VLAN and wpa2_personal and twog"
         """
@@ -258,8 +258,8 @@ class TestWifiCapacityVLANMode2G(object):
 
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_VLAN_udp_bidirectional(self, get_vif_state, lf_tools,
-                                                  lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                                  get_configuration):
+                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                get_configuration):
         """ Wifi Capacity Test VLAN mode
             pytest -m "wifi_capacity_test and VLAN and wpa2_personal and twog"
         """
@@ -313,8 +313,8 @@ class TestWifiCapacityVLANMode5G(object):
 
     @pytest.mark.tcp_download
     def test_client_wpa2_VLAN_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
-                                       lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                       get_configuration):
+                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                     get_configuration):
         """ Wifi Capacity Test VLAN mode
             pytest -m "wifi_capacity_test and VLAN and wpa2_personal and twog"
         """
@@ -339,8 +339,8 @@ class TestWifiCapacityVLANMode5G(object):
 
     @pytest.mark.udp_download
     def test_client_wpa2_VLAN_udp_dl(self, get_vif_state, lf_tools,
-                                       lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                       get_configuration):
+                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                     get_configuration):
         """ Wifi Capacity Test VLAN mode
             pytest -m "wifi_capacity_test and VLAN and wpa2_personal and twog"
         """
@@ -365,8 +365,8 @@ class TestWifiCapacityVLANMode5G(object):
 
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_VLAN_tcp_bidirectional(self, get_vif_state, lf_tools,
-                                                  lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                                  get_configuration):
+                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                get_configuration):
         """ Wifi Capacity Test VLAN mode
             pytest -m "wifi_capacity_test and VLAN and wpa2_personal and twog"
         """
@@ -391,8 +391,8 @@ class TestWifiCapacityVLANMode5G(object):
 
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_VLAN_udp_bidirectional(self, get_vif_state, lf_tools,
-                                                  lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                                  get_configuration):
+                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                get_configuration):
         """ Wifi Capacity Test VLAN mode
             pytest -m "wifi_capacity_test and VLAN and wpa2_personal and twog"
         """
