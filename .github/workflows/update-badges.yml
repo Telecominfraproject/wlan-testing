@@ -1,0 +1,59 @@
+name: Update test number badges
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "tests/**"
+
+jobs:
+  update_badges:
+    runs-on: ubuntu-latest
+    container: python:3.8
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+      with:
+        repository: Telecominfraproject/wlan-lanforge-scripts
+        path: lanforge/lanforge-scripts
+    - uses: actions/checkout@v2
+      with:
+        ref: badges
+        path: badges
+
+    - name: add TIP pypi repo
+      run: |
+        mkdir -p ~/.pip
+        echo "[global]" > ~/.pip/pip.conf
+        echo "index-url = https://pypi.org/simple" >> ~/.pip/pip.conf
+        echo "extra-index-url = https://tip-read:tip-read@tip.jfrog.io/artifactory/api/pypi/tip-wlan-python-pypi-local/simple" >> ~/.pip/pip.conf
+
+    - name: install dependencies
+      run: pip install -r requirements.txt
+
+    - name: download badges
+      working-directory: tests
+      run: |
+        mkdir -p ../.img
+        wget https://img.shields.io/badge/total_tests-$(pytest --collect-only -q | tail -1 | cut  -d ' ' -f 1)-green?style=flat-square -O ../badges/total-count.svg
+        wget https://img.shields.io/badge/interop_tests-$(pytest --collect-only -m "interop" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/interop-count.svg
+        wget https://img.shields.io/badge/sanity_tests-$(pytest --collect-only -m "sanity and not interop" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/sanity-count.svg
+        wget https://img.shields.io/badge/performance_tests-$(pytest --collect-only -m "performance" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/performance-count.svg
+
+    - name: commit changes
+      working-directory: badges
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+        git add .
+        git commit -m "Updating test count badges: $(date -u)"
+
+    - name: push changes
+      uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        directory: badges
+        branch: badges
+        force: true

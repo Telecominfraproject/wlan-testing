@@ -16,6 +16,8 @@ import allure
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.interop_ios, pytest.mark.ClientConnectivity]
+
 from iOS_lib import closeApp, openApp, verifyUploadDownloadSpeediOS, ForgetWifiConnection, Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
 
 setup_params_general = {
@@ -30,8 +32,6 @@ setup_params_general = {
     "radius": False
 }
 
-@pytest.mark.ClientConnectivity
-@pytest.mark.interop_iOS
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
@@ -45,13 +45,17 @@ class TestNatMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ClientConnectivity_5g_WPA2_Personal(self, request, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_5g_WPA2_Personal(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
         
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1] 
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
+
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
@@ -66,71 +70,82 @@ class TestNatMode(object):
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
+
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ClientConnectivity_2g_WPA2_Personal(self, request, get_APToMobileDevice_data, setup_perfectoMobileWeb):
+    def test_ClientConnectivity_2g_WPA2_Personal(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
             
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobileWeb[1]
-        driver = setup_perfectoMobileWeb[0]
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
         connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(ssidName, request, ssidPassword, setup_perfectoMobileWeb, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Verify Upload download Speed from device Selection
-        assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobileWeb, connData)
+        verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(request, setup_perfectoMobileWeb, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
+
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_ClientConnectivity_2g_WPA(self, request, get_APToMobileDevice_data, setup_perfectoMobileWeb):
+    def test_ClientConnectivity_2g_WPA(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
             
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobileWeb[1]
-        driver = setup_perfectoMobileWeb[0]
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
         connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobileWeb, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Verify Upload download Speed from device Selection
-        verifyUploadDownloadSpeediOS(request, setup_perfectoMobileWeb, connData)
+        verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(request, setup_perfectoMobileWeb, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ClientConnectivity_5g_WPA(self, request, get_APToMobileDevice_data, setup_perfectoMobileWeb):
+    def test_ClientConnectivity_5g_WPA(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
             
         profile_data = setup_params_general["ssid_modes"]["wpa"][1] 
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobileWeb[1]
-        driver = setup_perfectoMobileWeb[0]
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
         connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
-        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobileWeb, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         #Verify Upload download Speed from device Selection
-        verifyUploadDownloadSpeediOS(request, setup_perfectoMobileWeb, connData)
+        verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
 
         #ForgetWifi
-        ForgetWifiConnection(request, setup_perfectoMobileWeb, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)

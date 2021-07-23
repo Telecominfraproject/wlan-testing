@@ -6,6 +6,7 @@ import sys
 import os
 import time
 import allure
+import re
 import logging
 
 if "logs" not in os.listdir():
@@ -293,7 +294,7 @@ def instantiate_firmware(request, setup_controller, get_configuration):
 
     for access_point_info in get_configuration['access_point']:
         version = access_point_info["version"]
-        if request.config.getini("build") != "0":
+        if request.config.getini("build").__contains__("https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/"):
             version = request.config.getini("build")
         firmware_client = FirmwareUtility(sdk_client=setup_controller,
                                           model=access_point_info["model"],
@@ -331,11 +332,21 @@ def upload_firmware(should_upload_firmware, instantiate_firmware):
 
 @pytest.fixture(scope="session")
 def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_firmware_cloud, get_latest_firmware,
-                     should_upgrade_firmware, should_upload_firmware):
+                     should_upgrade_firmware, should_upload_firmware, get_apnos, get_configuration):
     """yields the status of upgrade of firmware. waits for 300 sec after each upgrade request"""
     print(should_upgrade_firmware, should_upload_firmware)
     status_list = []
-    if get_latest_firmware != check_ap_firmware_cloud:
+    active_fw_list = []
+    try:
+        for access_point in get_configuration['access_point']:
+            ap_ssh = get_apnos(access_point)
+            active_fw = ap_ssh.get_active_firmware()
+            active_fw_list.append(active_fw)
+    except Exception as e:
+        print(e)
+        active_fw_list = []
+    print(active_fw_list, get_latest_firmware)
+    if get_latest_firmware != active_fw_list:
         if request.config.getoption("--skip-upgrade"):
             status = "skip-upgrade"
             status_list.append(status)
@@ -349,7 +360,8 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
     else:
         if should_upgrade_firmware:
             for i in range(0, len(instantiate_firmware)):
-                status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i], force_upload=False,
+                status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i],
+                                                            force_upload=should_upload_firmware,
                                                             force_upgrade=should_upgrade_firmware)
                 allure.attach(name="Firmware Upgrade Request", body=str(status))
                 status_list.append(status)
@@ -387,6 +399,7 @@ def check_ap_firmware_ssh(get_configuration):
 def setup_test_run(setup_controller, upgrade_firmware, get_configuration, get_equipment_id, get_latest_firmware,
                    get_apnos):
     """used to upgrade the firmware on AP and should be called on each test case on a module level"""
+
     active_fw_list = []
     try:
         for access_point in get_configuration['access_point']:
@@ -396,6 +409,7 @@ def setup_test_run(setup_controller, upgrade_firmware, get_configuration, get_eq
     except Exception as e:
         print(e)
         active_fw_list = []
+    print(active_fw_list, get_latest_firmware)
     if active_fw_list == get_latest_firmware:
         yield True
     else:
@@ -439,7 +453,7 @@ def get_security_flags():
     """used to get the essential markers on security and band"""
     # Add more classifications as we go
     security = ["open", "wpa", "wep", "wpa2_personal", "wpa3_personal", "wpa3_personal_mixed",
-                "wpa_wpa2_enterprise_mixed",
+                "wpa_wpa2_enterprise_mixed", "wpa2_eap", "wpa2_only_eap",
                 "wpa_wpa2_personal_mixed", "wpa_enterprise", "wpa2_enterprise", "wpa3_enterprise_mixed",
                 "wpa3_enterprise", "twog", "fiveg", "radius"]
     yield security
@@ -551,6 +565,13 @@ def create_lanforge_chamberview_dut(get_configuration, testbed):
                 testbed=testbed, access_point_data=get_configuration["access_point"])
     yield True
 
+@pytest.fixture(scope="session")
+def lf_tools(get_configuration, testbed):
+    """ Create a DUT on LANforge"""
+    obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
+                testbed=testbed, access_point_data=get_configuration["access_point"])
+    yield obj
+
 
 @pytest.fixture(scope="session")
 def lf_tools(get_configuration, testbed):
@@ -592,20 +613,23 @@ def create_vlan(request, testbed, get_configuration):
             upstream_resources = upstream_port.split(".")[0] + "." + upstream_port.split(".")[1]
 
             for vlan in vlan_list:
-                chamberview_obj.raw_line.append(["profile_link " + upstream_resources + " vlan-100 1 NA "
+                chamberview_obj.raw_line.append(["profile_link " + upstream_resources + " Vlan 1 NA "
                                                  + "NA " + upstream_port.split(".")[2] + ",AUTO -1 " + str(vlan)])
 
             chamberview_obj.Chamber_View()
             port_resource = upstream_resources.split(".")
 
-            try:
-                ip = (chamberview_obj.json_get("/port/" + port_resource[0] + "/" + port_resource[1] +
-                                               "/" + upstream_port.split(".")[2] + "." + str(vlan))["interface"]["ip"])
-                if ip:
-                    yield vlan_list
-            except Exception as e:
-                print(e)
-                yield False
+            yield vlan_list
+        else:
+            yield False
+            # try:
+            #     ip = chamberview_obj.json_get("/port/" + port_resource[0] + "/" + port_resource[1] +
+            #                                    "/" + upstream_port.split(".")[2] + "." + str(vlan))["interface"]["ip"]
+            #     if ip:
+            #         yield vlan_list, ip
+            # except Exception as e:
+            #     print(e)
+            #     yield False
 
 
 @pytest.fixture(scope="session")
@@ -620,3 +644,7 @@ def setup_influx(request, testbed, get_configuration):
         "influx_tag": [testbed, get_configuration["access_point"][0]["model"]],
     }
     yield influx_params
+
+# Need for Perforce Mobile Device Execution
+def pytest_sessionstart(session):
+    session.results = dict()

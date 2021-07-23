@@ -53,7 +53,6 @@ def setup_vlan():
     allure.attach(body=str(vlan_id), name="VLAN Created: ")
     yield vlan_id[0]
 
-
 @pytest.fixture(scope="class")
 def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment_id,
                    instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
@@ -855,6 +854,8 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
         yield True
 
 
+
+
 @pytest.fixture(scope="session")
 def lf_test(get_configuration, setup_influx):
     # print(get_configuration)
@@ -897,12 +898,12 @@ def get_vif_state(get_apnos, get_configuration, request):
         yield []
 
 
-"""UCentral Fixtures"""
+@pytest.fixture(scope="class")
+def get_vlan_list(get_apnos, get_configuration):
+    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
+    vlan_list = list(ap_ssh.get_vlan())
+    vlan_list.sort()
+    allure.attach(name="vlan_list", body=str(vlan_list))
+    yield vlan_list
 
-# @pytest.fixture(scope="session")
-# def get_uuid(request, setup_controller, get_equipment_id):
-#     # if request.config.getoption("1.x"):
-#     #     UUID = 1 #setup_controller.get_device_uuid(serial_number=get_equipment_id[0])
-#     #     yield UUID
-#     # else:
-#     yield False
+

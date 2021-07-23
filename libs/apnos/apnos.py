@@ -339,7 +339,7 @@ class APNOS:
                       f"cmd --value \"{cmd}\" "
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read().decode('utf-8').splitlines()[1]
-            json_output = json.loads(output)#, sort_keys=True)
+            json_output = json.loads(output)  # , sort_keys=True)
             print(type(json_output))
             client.close()
         except Exception as e:
@@ -357,7 +357,7 @@ class APNOS:
                       f"cmd --value \"{cmd}\" "
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read().decode('utf-8').splitlines()[1]
-            json_output = json.loads(output)#, sort_keys=True)
+            json_output = json.loads(output)  # , sort_keys=True)
             print(json_output)
             client.close()
         except Exception as e:
@@ -423,18 +423,67 @@ class APNOS:
                 pass
         return vlan_list
 
+    def logread(self):
+        try:
+            client = self.ssh_cli_connect()
+            cmd = "logread"
+            if self.mode:
+                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                      f"cmd --value \"{cmd}\" "
+            stdin, stdout, stderr = client.exec_command(cmd)
+            output = stdout.read()
+            status = output.decode('utf-8').splitlines()
+            logread = status
+            logs = ""
+            for i in logread:
+                logs = logs + i + "\n"
+            client.close()
+        except Exception as e:
+            print(e)
+            logs = ""
+        return logs
+
+    def get_vifc(self):
+        client = self.ssh_cli_connect()
+        cmd = "vifC"
+        if self.mode:
+            cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                  f"cmd --value \"{cmd}\" "
+        stdin, stdout, stderr = client.exec_command(cmd)
+        output = stdout.read()
+        client.close()
+        allure.attach(name="vif state Output Msg: ", body=str(output))
+        allure.attach(name="vif state Err Msg: ", body=str(stderr))
+        return output
+
+    def get_vifs(self):
+        client = self.ssh_cli_connect()
+        cmd = "vifS"
+        if self.mode:
+            cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                  f"cmd --value \"{cmd}\" "
+        stdin, stdout, stderr = client.exec_command(cmd)
+        output = stdout.read()
+        client.close()
+        allure.attach(name="vif state Output Msg: ", body=str(output))
+        allure.attach(name="vif state Err Msg: ", body=str(stderr))
+        return output
+
+    def get_vlan(self):
+        stdout = self.get_vifs()
+        vlan_list = []
+        for i in stdout.splitlines():
+            vlan = str(i.strip()).replace("|", ".").split(".")
+            try:
+                if not vlan[0].find("b'vlan_id"):
+                    vlan_list.append(vlan[1].strip())
+            except:
+                pass
+        return vlan_list
+
 
 if __name__ == '__main__':
     obj = {
-        'jumphost': True,
-        'ip': "localhost",
-        'username': "lanforge",
-        'password': "pumpkin77",
-        'port': 8803,
-        'jumphost_tty': '/dev/ttyAP1',
-
-    }
-    abc = {
         'model': 'eap102',
         'mode': 'wifi6',
         'serial': '903cb39d6918',
@@ -446,6 +495,6 @@ if __name__ == '__main__':
         'jumphost_tty': '/dev/ttyAP2',
         'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
     }
-    var = APNOS(credentials=abc, sdk="2.x")
+    var = APNOS(credentials=obj, sdk="2.x")
     r = var.get_uc_latest_config()
     print(r)

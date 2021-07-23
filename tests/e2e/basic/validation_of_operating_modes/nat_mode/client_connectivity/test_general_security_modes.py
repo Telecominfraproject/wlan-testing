@@ -71,16 +71,7 @@ class TestNATModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
 
-        if result:
-            update_report.update_testrail(case_id=test_cases["2g_open_nat"],
-                                          status_id=1,
-                                          msg='2G Open Client Connectivity Passed successfully - NAT mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["2g_open_nat"],
-                                          status_id=5,
-                                          msg='2G Open Client Connectivity Failed - NAT mode' + str(
-                                              passes))
+       
         assert result
 
     @pytest.mark.open
@@ -106,16 +97,7 @@ class TestNATModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
-        if result:
-            update_report.update_testrail(case_id=test_cases["5g_open_nat"],
-                                          status_id=1,
-                                          msg='5G Open Client Connectivity Passed successfully - bridge mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["5g_open_nat"],
-                                          status_id=5,
-                                          msg='5G Open Client Connectivity Failed - bridge mode' + str(
-                                              passes))
+       
         assert result
 
     @pytest.mark.sanity_light
@@ -142,16 +124,7 @@ class TestNATModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
 
-        if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
-                                          status_id=1,
-                                          msg='2G WPA Client Connectivity Passed successfully - bridge mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
-                                          status_id=5,
-                                          msg='2G WPA Client Connectivity Failed - bridge mode' + str(
-                                              passes))
+        
         assert result
 
     @pytest.mark.sanity_light
@@ -178,16 +151,7 @@ class TestNATModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
-        if result:
-            update_report.update_testrail(case_id=test_cases["5g_wpa_nat"],
-                                          status_id=1,
-                                          msg='5G WPA Client Connectivity Passed successfully - bridge mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["5g_wpa_nat"],
-                                          status_id=5,
-                                          msg='5G WPA Client Connectivity Failed - bridge mode' + str(
-                                              passes))
+        
         assert result
 
     @pytest.mark.sanity_light
@@ -214,16 +178,7 @@ class TestNATModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
 
-        if result:
-            update_report.update_testrail(case_id=test_cases["2g_wpa2_nat"],
-                                          status_id=1,
-                                          msg='2G WPA2 Client Connectivity Passed successfully - bridge mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["2g_wpa2_nat"],
-                                          status_id=5,
-                                          msg='2G WPA2 Client Connectivity Failed - bridge mode' + str(
-                                              passes))
+        
         assert result
 
     @pytest.mark.sanity_light
@@ -251,16 +206,7 @@ class TestNATModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
-        if result:
-            update_report.update_testrail(case_id=test_cases["5g_wpa2_nat"],
-                                          status_id=1,
-                                          msg='5G WPA2 Client Connectivity Passed successfully - bridge mode' + str(
-                                              passes))
-        else:
-            update_report.update_testrail(case_id=test_cases["5g_wpa2_nat"],
-                                          status_id=5,
-                                          msg='5G WPA2 Client Connectivity Failed - bridge mode' + str(
-                                              passes))
+        
         assert result
 
 

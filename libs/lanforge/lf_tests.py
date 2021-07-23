@@ -5,6 +5,8 @@
 import sys
 import os
 
+import allure
+
 sys.path.append(
     os.path.dirname(
         os.path.realpath(__file__)
@@ -26,8 +28,10 @@ import time
 from test_ipv4_ttls import TTLSTest
 from lf_wifi_capacity_test import WiFiCapacityTest
 from create_station import CreateStation
+import lf_ap_auto_test
 import lf_dataplane_test
 from lf_dataplane_test import DataplaneTest
+from lf_ap_auto_test import ApAutoTest
 from csv_to_influx import CSVtoInflux
 from influx2 import RecordInflux
 
@@ -48,10 +52,9 @@ class RunTest:
         self.lf_ssh_port = lanforge_data["ssh_port"]
         self.staConnect = None
         self.dataplane_obj = None
+        self.dualbandptest_obj = None
         self.influx_params = influx_params
-        self.influxdb = RecordInflux(_lfjson_host=self.lanforge_ip,
-                                     _lfjson_port=self.lanforge_port,
-                                     _influx_host=influx_params["influx_host"],
+        self.influxdb = RecordInflux(_influx_host=influx_params["influx_host"],
                                      _influx_port=influx_params["influx_port"],
                                      _influx_org=influx_params["influx_org"],
                                      _influx_token=influx_params["influx_token"],
@@ -59,6 +62,7 @@ class RunTest:
         self.local_report_path = local_report_path
         if not os.path.exists(self.local_report_path):
             os.mkdir(self.local_report_path)
+        # self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
 
     def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[],
                             station_name=[], mode="BRIDGE", vlan_id=1, band="twog"):
@@ -84,13 +88,26 @@ class RunTest:
         self.staConnect.dut_security = security
         self.staConnect.station_names = station_name
         self.staConnect.runtime_secs = 40
-        self.staConnect.bringup_time_sec = 60
+        self.staConnect.bringup_time_sec = 80
         self.staConnect.cleanup_on_exit = True
         # self.staConnect.cleanup()
         self.staConnect.setup(extra_securities=extra_securities)
         self.staConnect.start()
         print("napping %f sec" % self.staConnect.runtime_secs)
         time.sleep(self.staConnect.runtime_secs)
+        for sta_name in self.staConnect.station_names:
+            try:
+                station_data_str = ""
+                sta_url = self.staConnect.get_station_url(sta_name)
+                station_info = self.staConnect.json_get(sta_url)
+                for i in station_info["interface"]:
+                    try:
+                        station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
+                    except Exception as e:
+                        print(e)
+                allure.attach(name=str(sta_name), body=str(station_data_str))
+            except Exception as e:
+                print(e)
         self.staConnect.stop()
         self.staConnect.cleanup()
         run_results = self.staConnect.get_result_list()
@@ -110,7 +127,7 @@ class RunTest:
                     mode="BRIDGE", band="twog", vlan_id=100,
                     station_name=[], key_mgmt="WPA-EAP",
                     pairwise="NA", group="NA", wpa_psk="DEFAULT",
-                    ttls_passwd="nolastart",
+                    ttls_passwd="nolastart", ieee80211w=1,
                     wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius"):
         self.eap_connect = TTLSTest(host=self.lanforge_ip, port=self.lanforge_port,
                                     sta_list=station_name, vap=False, _debug_on=self.debug)
@@ -134,10 +151,13 @@ class RunTest:
             # self.eap_connect.sta_prefix = self.fiveg_prefix
         # self.eap_connect.resource = 1
         if eap == "TTLS":
-            self.eap_connect.ieee80211w = 0
+            self.eap_connect.ieee80211w = ieee80211w
+            self.eap_connect.key_mgmt = key_mgmt
             self.eap_connect.station_profile.set_command_flag("add_sta", "80211u_enable", 0)
             self.eap_connect.identity = identity
             self.eap_connect.ttls_passwd = ttls_passwd
+            self.eap_connect.pairwise = pairwise
+            self.eap_connect.group = group
         if eap == "TLS":
             self.eap_connect.key_mgmt = "WPA-EAP-SUITE-B"
             self.eap_connect.station_profile.set_command_flag("add_sta", "80211u_enable", 0)
@@ -152,32 +172,79 @@ class RunTest:
         self.eap_connect.sta_list = station_name
         self.eap_connect.build(extra_securities=extra_securities)
         self.eap_connect.start(station_name, True, True)
+        for sta_name in station_name:
+            # try:
+            station_data_str = ""
+            # sta_url = self.eap_connect.get_station_url(sta_name)
+            # station_info = self.eap_connect.json_get(sta_url)
+            station_info = self.eap_connect.json_get("port/1/1/" + sta_name)
+            for i in station_info["interface"]:
+                try:
+                    station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
+                except Exception as e:
+                    print(e)
+            allure.attach(name=str(sta_name), body=str(station_data_str))
+            # except Exception as e:
+            #     print(e)
+
         self.eap_connect.stop()
+        endp_data = []
+        for i in self.eap_connect.resulting_endpoints:
+            endp_data.append(self.eap_connect.resulting_endpoints[i]["endpoint"])
+        cx_data = ""
+        for i in endp_data:
+            for j in i:
+                cx_data = cx_data + str(j) + " : " + str(i[j]) + "\n"
+            cx_data = cx_data + "\n"
+        allure.attach(name="cx_data", body=str(cx_data))
         self.eap_connect.cleanup(station_name)
         return self.eap_connect.passes()
 
-    def wifi_capacity(self, ssid="[BLANK]", paswd="[BLANK]", security="open", mode="BRIDGE", band="twog",
-                      instance_name="wct_instance"):
+    def wifi_capacity(self, mode="BRIDGE", vlan_id=100, instance_name="wct_instance", stations=None):
+        if mode == "BRIDGE":
+            self.client_connect.upstream_port = self.upstream_port
+        elif mode == "NAT":
+            self.client_connect.upstream_port = self.upstream_port
+        elif mode == "VLAN":
+            self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
         '''SINGLE WIFI CAPACITY using lf_wifi_capacity.py'''
-        self.wfc_test = WiFiCapacityTest(lfclient_host=self.lanforge_ip, lf_port=self.lanforge_port,
-                                         lf_user="lanforge", lf_password="lanforge", instance_name=instance_name,
-                                         config_name="wifi_config", upstream=self.upstream_port, batch_size="1",
-                                         loop_iter="1", protocol="UDP-IPv4", duration="3000", pull_report=False,
-                                         load_old_cfg=False, upload_rate="10Mbps", download_rate="1Gbps",
-                                         sort="interleave", stations="1.1.sta0000,1.1.sta0001", create_stations=True,
-                                         radio=["wiphy0"], security=security, paswd=paswd, ssid=ssid, enables=[],
-                                         disables=[], raw_lines=[], raw_lines_file="", sets=[])
+        wificapacity_obj = WiFiCapacityTest(lfclient_host=self.lanforge_ip,
+                                                 lf_port=self.lanforge_port,
+                                                 lf_user="lanforge",
+                                                 lf_password="lanforge",
+                                                 local_lf_report_dir=self.local_report_path,
+                                                 instance_name=instance_name,
+                                                 config_name="wifi_config",
+                                                 upstream="1.1." + self.upstream_port,
+                                                 batch_size="1",
+                                                 loop_iter="1",
+                                                 protocol="UDP-IPv4",
+                                                 duration="3000",
+                                                 pull_report=True,
+                                                 load_old_cfg=False,
+                                                 upload_rate="10Mbps",
+                                                 download_rate="1Gbps",
+                                                 sort="interleave",
+                                                 stations=stations,
+                                                 create_stations=False,
+                                                 radio=None,
+                                                 security=None,
+                                                 paswd=None,
+                                                 ssid=None,
+                                                 enables=[],
+                                                 disables=[],
+                                                 raw_lines=[],
+                                                 raw_lines_file="",
+                                                 sets=[])
 
-        if band == "twog":
-            self.wfc_test.radio = self.twog_radios[0]
-        if band == "fiveg":
-            self.wfc_test.radio = self.fiveg_radios[0]
+        wificapacity_obj.setup()
+        wificapacity_obj.run()
 
-        self.wfc_test.setup()
-        self.wfc_test.run()
-
-        result = True
-        return result
+        report_name = wificapacity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
+                             target_csv=self.local_report_path + report_name + "/kpi.csv")
+        influx.post_to_influx()
+        return wificapacity_obj
 
     def Client_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog",
                        vlan_id=100,
@@ -239,10 +306,10 @@ class RunTest:
                                            duration=duration,
                                            dut=dut_name,
                                            station="1.1." + station_name[0],
-                                           raw_lines=['pkts: Custom;60;142;256;512;1024;MTU',
-                                                      'directions: DUT Transmit;DUT Receive',
-                                                      'traffic_types: UDP;TCP', "show_3s: 1",
-                                                      "show_ll_graphs: 1", "show_log: 1"],
+                                           raw_lines=[['pkts: Custom;60;142;256;512;1024;MTU'],
+                                                      ['directions: DUT Transmit;DUT Receive'],
+                                                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
+                                                      ["show_ll_graphs: 1"], ["show_log: 1"]],
                                            )
         self.dataplane_obj.setup()
         self.dataplane_obj.run()
@@ -253,11 +320,52 @@ class RunTest:
         influx.post_to_influx()
         return self.dataplane_obj
 
+    def dualbandperformancetest(self,ssid_5G="[BLANK]",ssid_2G="[BLANK]",mode="BRIDGE", vlan_id=100,dut_name="TIP",
+                                instance_name="test_demo"):
+        if mode == "BRIDGE":
+            self.client_connect.upstream_port = self.upstream_port
+        elif mode == "NAT":
+            self.client_connect.upstream_port = self.upstream_port
+        else:
+            self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
+
+        self.dualbandptest_obj = ApAutoTest(lf_host=self.lanforge_ip,
+                                         lf_port=self.lanforge_port,
+                                         lf_user="lanforge",
+                                         lf_password="lanforge",
+                                         instance_name=instance_name,
+                                         config_name="dbp_config",
+                                         upstream="1.1." + self.upstream_port,
+                                         pull_report=True,
+                                         dut5_0=dut_name + ' ' + ssid_5G,
+                                         dut2_0=dut_name + ' ' + ssid_2G,
+                                         load_old_cfg=False,
+                                         max_stations_2=1,
+                                         max_stations_5=1,
+                                         max_stations_dual=2,
+                                         radio2=[["1.1.wiphy0"]],
+                                         radio5=[["1.1.wiphy1"]],
+                                         sets=[['Basic Client Connectivity', '0'], ['Multi Band Performance', '1'],
+                                               ['Throughput vs Pkt Size', '0'], ['Capacity', '0'], ['Stability', '0'],
+                                               ['Band-Steering', '0'], ['Multi-Station Throughput vs Pkt Size', '0'],
+                                               ['Long-Term', '0']]
+                                             )
+        self.dualbandptest_obj.setup()
+        self.dualbandptest_obj.run()
+        report_name = self.dataplane_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        influx = CSVtoInflux(influxdb=self.influxdb,
+                             _influx_tag=self.influx_params["influx_tag"],
+                             target_csv=self.local_report_path + report_name + "/kpi.csv")
+        influx.post_to_influx()
+        return self.dualbandptest_obj
+
+
 
 if __name__ == '__main__':
     lanforge_data = {
-        "ip": "192.168.200.81",
-        "port": 8080,
+        "ip": "localhost",
+        "port": 8801,
+        "ssh_port": 22,
         "2.4G-Radio": ["wiphy0"],
         "5G-Radio": ["wiphy1"],
         "AX-Radio": ["wiphy2"],
@@ -267,5 +375,7 @@ if __name__ == '__main__':
         "AX-Station-Name": "ax",
     }
     obj = RunTest(lanforge_data=lanforge_data, debug=False)
+    # a = obj.staConnect.json_get("/events/since/")
+    # print(a)
     # print(obj.eap_connect.json_get("port/1/1/sta0000?fields=ap,ip"))
     # obj.EAP_Connect(station_name=["sta0000", "sta0001"], eap="TTLS", ssid="testing_radius")

@@ -1,4 +1,4 @@
-name: nightly build
+name: sanity testing
 env:
   # thirdparties
   DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
@@ -19,17 +19,18 @@ env:
 on:
   workflow_dispatch:
     inputs:
-      testbed:
-        default: 'basic-02'
-        description: 'Testbed to test'
+      testbeds:
+        default: 'basic-01,basic-02'
+        description: 'Testbed(s) to test'
         required: false
       marker_expression:
         default: 'sanity'
         description: 'Pytest marker expression that will be used to select the tests to execute'
         required: false
-  push:
-    branches:
-      - master
+      ap_firmware_url:
+        default: 'null'
+        description: 'Option for adding AP Firmware Image: <URL to File> from JFrog, takes from configuration.py when it is null'
+        required: false
   schedule:
   - cron: '15 0 * * *'
 
@@ -117,9 +118,27 @@ jobs:
 #        kubectl get pods -n tip
 #        kubectl describe pods -n tip
 
+  generate-matrix:
+    name: generate testbed matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    - name: generate-matrix
+      id: set-matrix
+      run: |
+        TESTBEDS="${{ github.event.inputs.testbeds || 'basic-01,basic-02' }}"
+        TESTBEDS=$(echo $TESTBEDS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
+        TESTBEDS=$(echo "$TESTBEDS" | jq -c 'map({"testbed":.})')
+        echo "::set-output name=matrix::{\"include\":${TESTBEDS}}"
+
   test:
     runs-on: ubuntu-latest
-    needs: [ build ]
+    needs: [ build, generate-matrix ]
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
     steps:
     - name: get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -131,7 +150,15 @@ jobs:
 
     - name: set job name
       id: job
-      run: echo "::set-output name=name::nightly-ci-${{ github.run_number }}"
+      run: echo "::set-output name=name::testing-${{ github.run_number }}"
+
+    - name: prepare namespace
+      id: namespace
+      run: |
+        NAMESPACE="testing-${{ github.run_number }}-${{ matrix.testbed }}"
+        kubectl create ns $NAMESPACE
+        kubectl config set-context --current --namespace=$NAMESPACE
+        echo "::set-output name=name::${NAMESPACE}"
 
     - name: create configuration.py secret
       run: |
@@ -160,7 +187,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression || 'sanity' }}" -s -vvv --testbed="${{ github.event.inputs.testbed || 'basic-02' }}" --skip-testrail --alluredir=/tmp/allure-results
+                    pytest -m "${{ github.event.inputs.marker_expression || 'sanity and not interop' }}" -s -vvv --testbed="${{ matrix.testbed }}" --skip-testrail --alluredir=/tmp/allure-results -o build=${{ github.event.inputs.ap_firmware_url || 'null'}}
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -180,9 +207,14 @@ jobs:
           backoffLimit: 0
         EOF
 
-        sleep 60 # wait for the pod to come up
+        # wait for pod to spawn
+        sleep 1
 
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
+
+        kubectl wait "pod/$podname" --for condition=ready
+
+        #sleep 30 # wait for the pod to come up
 
         until [ -s test_everything.xml ]
         do
@@ -210,19 +242,22 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v2
       with:
-        name: allure-results
+        name: allure-results-${{ matrix.testbed }}
         path: allure-results
 
     - name: cleanup
       if: always()
       run: |
-        kubectl delete job "${{ steps.job.outputs.name }}" --wait=true --ignore-not-found=true
-        kubectl delete secret configuration --wait=true --ignore-not-found=true
+        kubectl delete ns "${{ steps.namespace.outputs.name }}" --wait=true
 
   report:
-    needs: [ test ]
-    if: always()
     runs-on: ubuntu-latest
+    needs: [ test, generate-matrix ]
+    if: always()
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
     steps:
     - name: install Allure CLI tool
       run: |
@@ -231,7 +266,7 @@ jobs:
 
     - uses: actions/download-artifact@v2
       with:
-        name: allure-results
+        name: allure-results-${{ matrix.testbed }}
         path: allure-results
 
     - name: checkout testing repo
@@ -248,14 +283,14 @@ jobs:
 
     - name: copy history into results
       run: |
-        if [ -e "reports/sanity/latest" ] ; then
-          cp -r reports/sanity/latest/history/ allure-results/history
+        if [ -e "reports/sanity/${{ matrix.testbed }}/latest" ] ; then
+          cp -r reports/sanity/${{ matrix.testbed }}/latest/history/ allure-results/history
         fi
 
     - name: add report metadata
       run: |
         cat << EOF >> allure-results/environment.properties
-        Testbed=${{ github.event.inputs.testbed || 'basic-02' }}
+        Testbed=${{ matrix.testbed }}
         Tests.CommitId=$(cd wlan-testing && git rev-parse --short HEAD)
         CiRun.Id=${{ github.run_id }}
         CiRun.Number=${{ github.run_number }}
@@ -268,18 +303,22 @@ jobs:
     - name: upload Allure report as artifact
       uses: actions/upload-artifact@v2
       with:
-        name: allure-report
+        name: allure-report-${{ matrix.testbed }}
         path: allure-report
+
+    # doing this to be able to aggregate multiple reports together later on
+    - name: copy results into report
+      run: cp -r allure-results allure-report/results
     
     - name: copy new report
-      if: ${{ (github.event.inputs.marker_expression || 'sanity') == 'sanity' }}
+      if: ${{ (github.event.inputs.marker_expression || 'sanity and not interop') == 'sanity and not interop' }}
       run: |
-        mkdir -p reports/sanity
-        cp -Tr allure-report reports/sanity/${{ github.run_number }}
+        mkdir -p reports/sanity/${{ matrix.testbed }}
+        cp -Tr allure-report reports/sanity/${{ matrix.testbed }}/${{ github.run_number }}
 
     - name: update latest symlink
-      if: ${{ (github.event.inputs.marker_expression || 'sanity') == 'sanity' }}
-      working-directory: reports/sanity
+      if: ${{ (github.event.inputs.marker_expression || 'sanity and not interop') == 'sanity and not interop' }}
+      working-directory: reports/sanity/${{ matrix.testbed }}
       run: ln -fns ${{ github.run_number }} latest
 
     - name: generate new index.html
@@ -295,6 +334,7 @@ jobs:
         git commit -m "Automated deployment: $(date -u)"
 
     - name: push
+      if: github.ref == 'refs/heads/master'
       uses: ad-m/github-push-action@v0.6.0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
