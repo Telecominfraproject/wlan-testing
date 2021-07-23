@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.performance_release, pytest.mark.dataplane_throughput_test,
+pytestmark = [pytest.mark.performance, pytest.mark.dataplane_throughput_test,
               pytest.mark.nat, pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
@@ -16,13 +16,14 @@ setup_params_general = {
     "ssid_modes": {
         "wpa2_personal": [
             {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"],
-             "security_key": "something"}]},
+            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}]},
     "rf": {},
     "radius": False
 }
 
 
+@allure.suite("performance")
+@allure.feature("BRIDGE MODE Dataplane Throughput Test")
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',

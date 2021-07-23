@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.wifi_capacity_test, pytest.mark.vlan]
+pytestmark = [pytest.mark.performance, pytest.mark.vlan]
 # """pytest.mark.usefixtures("setup_test_run")"""]
 
 

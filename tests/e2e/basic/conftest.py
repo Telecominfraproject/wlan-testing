@@ -27,6 +27,10 @@ def lf_tools(get_configuration, testbed):
     lf_tools_obj = ChamberView(lanforge_data=get_configuration['traffic_generator']['details'],
                                access_point_data=get_configuration['access_point'],
                                testbed=testbed)
+    lf_tools_obj.add_stations(band="2G", num_stations=0, dut="NA", ssid_name=[])
+    lf_tools_obj.add_stations(band="5G", num_stations=0, dut="NA", ssid_name=[])
+    lf_tools_obj.add_stations(band="ax", num_stations=0, dut="NA", ssid_name=[])
+    lf_tools_obj.Chamber_View()
     yield lf_tools_obj
 
 

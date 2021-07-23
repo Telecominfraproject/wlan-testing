@@ -83,7 +83,7 @@ class ChamberView:
         self.CreateChamberview.sync_cv()
         return self.CreateChamberview, self.scenario_name
 
-    def add_stations(self, band="2G", num_stations=50, dut="NA", ssid_name=[]):
+    def add_stations(self, band="2G", num_stations="max", dut="NA", ssid_name=[]):
         idx = 0
         print(self.dut_idx_mapping)
         for i in self.dut_idx_mapping:
@@ -181,7 +181,7 @@ class ChamberView:
         file_names = [fn for fn in os.listdir(relevant_path)
                       if any(fn.endswith(ext) for ext in included_extensions)]
 
-        a = [item for item in a if 'print' not in item]
+        a = [item for item in file_names if 'print' not in item]
         a = [item for item in a if 'logo' not in item]
         a = [item for item in a if 'Logo' not in item]
         a = [item for item in a if 'candela' not in item]

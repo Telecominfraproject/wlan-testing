@@ -9,11 +9,11 @@ import os
 import allure
 import pytest
 
-pytestmark = [pytest.mark.performance, pytest.mark.dual_band_test, pytest.mark.bridge, pytest.mark.performance_release]#,
-#              pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.performance, pytest.mark.dual_band_test, pytest.mark.bridge,
+              pytest.mark.single_station_dual_band_throughput, pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
-    "mode": "BRIDGE",
+    "mode": "NAT",
     "ssid_modes": {
         "wpa2_personal": [
             {"ssid_name": "ssid_wpa2p_2g", "appliedRadios": ["2G", "5G"], "security_key": "something"}

@@ -24,6 +24,9 @@ sys.path.append(f'../libs')
 sys.path.append(f'../libs/lanforge/')
 from sta_connect2 import StaConnect2
 import time
+import string
+import random
+S = 12
 # from eap_connect import EAPConnect
 from test_ipv4_ttls import TTLSTest
 from lf_wifi_capacity_test import WiFiCapacityTest
@@ -202,6 +205,7 @@ class RunTest:
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, instance_name="wct_instance", download_rate="1Gbps",
                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000"):
+        instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         if mode == "BRIDGE":
             upstream_port = self.upstream_port
         elif mode == "NAT":
@@ -284,6 +288,8 @@ class RunTest:
 
     def dataplane(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
                   upload_rate="0", duration="15s", instance_name="test_demo", raw_lines=None):
+        instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
+
         if mode == "BRIDGE":
             self.client_connect.upstream_port = self.upstream_port
         elif mode == "NAT":
@@ -292,7 +298,7 @@ class RunTest:
             self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
 
         if raw_lines is None:
-            raw_lines = [['pkts: 60, 142, 256, 512, 1024, MTU, 4000'], ['directions: DUT Transmit;DUT Receive'],
+            raw_lines = [['pkts: 60;142;256;512;1024;MTU;4000'], ['directions: DUT Transmit;DUT Receive'],
                          ['traffic_types: UDP;TCP'],
                          ["show_3s: 1"], ["show_ll_graphs: 1"], ["show_log: 1"]]
 
@@ -325,6 +331,8 @@ class RunTest:
 
     def dualbandperformancetest(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
                                 instance_name="test_demo", dut_5g="", dut_2g=""):
+        instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
+
         if mode == "BRIDGE":
             self.upstream_port = self.upstream_port
         elif mode == "NAT":

@@ -66,6 +66,7 @@ class TestWifiCapacityNATModeDualBand(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.reset_scenario()
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -93,6 +94,8 @@ class TestWifiCapacityNATModeDualBand(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.reset_scenario()
+
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -120,6 +123,8 @@ class TestWifiCapacityNATModeDualBand(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.reset_scenario()
+
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -147,6 +152,8 @@ class TestWifiCapacityNATModeDualBand(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.reset_scenario()
+
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -202,6 +209,7 @@ class TestWifiCapacityNATMode2G(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.reset_scenario()
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -228,6 +236,8 @@ class TestWifiCapacityNATMode2G(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.reset_scenario()
+
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -254,6 +264,8 @@ class TestWifiCapacityNATMode2G(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.reset_scenario()
+
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -280,6 +292,8 @@ class TestWifiCapacityNATMode2G(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.reset_scenario()
+
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -335,6 +349,8 @@ class TestWifiCapacityNATMode5G(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.reset_scenario()
+
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -361,6 +377,8 @@ class TestWifiCapacityNATMode5G(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.reset_scenario()
+
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -387,6 +405,8 @@ class TestWifiCapacityNATMode5G(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.reset_scenario()
+
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -413,5 +433,7 @@ class TestWifiCapacityNATMode5G(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphss(report_name=report_name)
+        lf_tools.reset_scenario()
+
         print("Test Completed... Cleaning up Stations")
         assert True
