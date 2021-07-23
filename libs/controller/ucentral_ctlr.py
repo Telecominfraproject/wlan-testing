@@ -16,40 +16,62 @@ from pathlib import Path
 from requests.adapters import HTTPAdapter
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
-from http.client import HTTPConnection
-HTTPConnection.debuglevel = 1
-requests.logging.getLogger()
+# logging.basicConfig(level=logging.DEBUG)
+# from http.client import HTTPConnection
+#
+# HTTPConnection.debuglevel = 1
+# requests.logging.getLogger()
+
+
 class ConfigureController:
 
     def __init__(self, controller_data):
         self.username = controller_data["username"]
         self.password = controller_data["password"]
         self.host = urlparse(controller_data["url"])
+        print(self.host)
         self.access_token = ""
         # self.session = requests.Session()
-
         self.login_resp = self.login()
+        self.gw_host = self.get_endpoint()
 
-    def build_uri(self, path):
+    def build_uri_sec(self, path):
         new_uri = 'https://%s:%d/api/v1/%s' % (self.host.hostname, self.host.port, path)
         print(new_uri)
         return new_uri
 
+    def build_uri(self, path):
+
+        new_uri = 'https://%s:%d/api/v1/%s' % (self.gw_host.hostname, self.gw_host.port, path)
+        print(new_uri)
+        return new_uri
+
     def login(self):
-        uri = self.build_uri("oauth2")
+        uri = self.build_uri_sec("oauth2")
         # self.session.mount(uri, HTTPAdapter(max_retries=15))
         payload = json.dumps({"userId": self.username, "password": self.password})
         resp = requests.post(uri, data=payload, verify=False, timeout=100)
         self.check_response("POST", resp, "", payload, uri)
         token = resp.json()
         self.access_token = token["access_token"]
-        print(resp)
+        print(token)
+
         # self.session.headers.update({'Authorization': self.access_token})
         return resp
 
+    def get_endpoint(self):
+        uri = self.build_uri_sec("systemEndpoints")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        devices = resp.json()
+        print(devices["endpoints"][0]["uri"])
+        gw_host = urlparse(devices["endpoints"][0]["uri"])
+        return gw_host
+
     def logout(self):
-        uri = self.build_uri('oauth2/%s' % self.access_token)
+        uri = self.build_uri_sec('oauth2/%s' % self.access_token)
         resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("DELETE", resp, self.make_headers(), "", uri)
         print('Logged out:', resp.status_code)
@@ -308,3 +330,15 @@ class UProfileUtility:
         print(resp.url)
         # resp.close()()
         print(resp)
+
+
+# controller = {
+#     'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+#     'username': "tip@ucentral.com",
+#     'password': 'openwifi',
+# }
+# obj = UController(controller_data=controller)
+#
+# print(obj.get_devices())
+#
+# obj.logout()

@@ -202,7 +202,7 @@ CONFIGURATION = {
     },
     "basic-06": {
         "controller": {
-            'url': 'https://sdk-ucentral-2.cicd.lab.wlan.tip.build:16001/api/v1/oauth2',  # API base url for the controller
+            'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
             'username': "tip@ucentral.com",
             'password': 'openwifi',
         },
