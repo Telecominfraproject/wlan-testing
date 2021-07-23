@@ -84,6 +84,9 @@ jobs:
         sed -i '/wlan-cloud-ucentralgw@/s/ref=.*/ref='${{ matrix.ucentralgw_version }}'\"/g' Chart.yaml
         sed -i '/wlan-cloud-ucentralgw-ui@/s/ref=.*/ref='${{ matrix.ucentralgwui_version }}'\"/g' Chart.yaml
         sed -i '/wlan-cloud-ucentralsec@/s/ref=.*/ref='${{ matrix.ucentralsec_version }}'\"/g' Chart.yaml
+        export UCENTRALGW_VERSION_TAG=$(echo ${{ matrix.ucentralgw_version }} | tr '/' '-')
+        export UCENTRALGWUI_VERSION_TAG=$(echo ${{ matrix.ucentralgwui_version }} | tr '/' '-')
+        export UCENTRALSEC_VERSION_TAG=$(echo ${{ matrix.ucentralsec_version }} | tr '/' '-')
         helm repo add bitnami https://charts.bitnami.com/bitnami
         helm repo update
         helm dependency update
@@ -116,9 +119,9 @@ jobs:
           --set-file rttys.certs."restapi-key\.pem"=../../key.pem \
           --set-file ucentralsec.certs."restapi-cert\.pem"=../../cert.pem \
           --set-file ucentralsec.certs."restapi-key\.pem"=../../key.pem \
-          --set ucentralgw.images.ucentralgw.tag=${{ matrix.ucentralgw_version }} \
-          --set ucentralgwui.images.ucentralgwui.tag=${{ matrix.ucentralgwui_version }} \
-          --set ucentralsec.images.ucentralsec.tag=${{ matrix.ucentralsec_version }} \
+          --set ucentralgw.images.ucentralgw.tag=$UCENTRALGW_VERSION_TAG \
+          --set ucentralgwui.images.ucentralgwui.tag=$UCENTRALGWUI_VERSION_TAG \
+          --set ucentralsec.images.ucentralsec.tag=$UCENTRALSEC_VERSION_TAG \
           tip-ucentral .
 
     - name: Show resource state on deployment failure
