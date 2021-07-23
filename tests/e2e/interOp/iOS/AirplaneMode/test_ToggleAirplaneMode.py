@@ -19,19 +19,23 @@ if 'perfecto_libs' not in sys.path:
 from iOS_lib import closeApp, openApp, Toggle_AirplaneMode_iOS, ForgetWifiConnection, set_APconnMobileDevice_iOS, \
     verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
 
-pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.ToggleAirplaneMode]
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
+              pytest.mark.ToggleAirplaneMode]
 
 setup_params_general = {
     "mode": "NAT",
     "ssid_modes": {
         "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],"security_key": "something"}],
+                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+                 "security_key": "something"}],
         "wpa2_personal": [
             {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],"security_key": "something"}]},
+            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+             "security_key": "something"}]},
     "rf": {},
     "radius": False
 }
+
 
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
@@ -40,28 +44,32 @@ setup_params_general = {
     indirect=True,
     scope="class"
 )
-
 @pytest.mark.usefixtures("setup_profiles")
 class TestToggleAirplaneMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ToogleAirplaneMode_5g_WPA2_Personal(self, request, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
+    def test_ToogleAirplaneMode_5g_WPA2_Personal(self, request, get_vif_state, get_ToggleAirplaneMode_data,
+                                                 setup_perfectoMobile_iOS):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
 
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
         connData = get_ToggleAirplaneMode_data
 
         # Set Wifi/AP Mode
         set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-        #print("ReportFlag: " + resultFlag)
-        #setReportResultFlag(resultFlag)
-        
+        # print("ReportFlag: " + resultFlag)
+        # setReportResultFlag(resultFlag)
+
         # Toggle AirplaneMode
         Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
 
@@ -73,12 +81,17 @@ class TestToggleAirplaneMode(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ToogleAirplaneMode_2g_WPA2_Personal(self, request, get_ToggleAirplaneMode_data,setup_perfectoMobile_iOS):
+    def test_ToogleAirplaneMode_2g_WPA2_Personal(self, request, get_vif_state, get_ToggleAirplaneMode_data,
+                                                 setup_perfectoMobile_iOS):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
+
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
@@ -86,10 +99,10 @@ class TestToggleAirplaneMode(object):
 
         # Set Wifi/AP Mode
         set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-        #print("ResultFlag: " + resultFlag)
-       # print(resultFlag)
-       # reportResultFlag.reportFlag = resultFlag
-        
+        # print("ResultFlag: " + resultFlag)
+        # print(resultFlag)
+        # reportResultFlag.reportFlag = resultFlag
+
         # Toggle AirplaneMode
         Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
 
@@ -101,12 +114,17 @@ class TestToggleAirplaneMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ToogleAirplaneMode_5g_WPA(self, request, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
+    def test_ToogleAirplaneMode_5g_WPA(self, request, get_vif_state, get_ToggleAirplaneMode_data,
+                                       setup_perfectoMobile_iOS):
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
+
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
@@ -126,12 +144,17 @@ class TestToggleAirplaneMode(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_ToogleAirplaneMode_2g_WPA(self, request, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
+    def test_ToogleAirplaneMode_2g_WPA(self, request, get_vif_state, get_ToggleAirplaneMode_data,
+                                       setup_perfectoMobile_iOS):
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
+
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
