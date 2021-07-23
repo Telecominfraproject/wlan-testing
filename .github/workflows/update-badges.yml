@@ -13,6 +13,14 @@ jobs:
     container: python:3.8
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+      with:
+        repository: Telecominfraproject/wlan-lanforge-scripts
+        path: lanforge/lanforge-scripts
+    - uses: actions/checkout@v2
+      with:
+        ref: badges
+        path: badges
 
     - name: add TIP pypi repo
       run: |
@@ -28,12 +36,13 @@ jobs:
       working-directory: tests
       run: |
         mkdir -p ../.img
-        wget https://img.shields.io/badge/total_tests-$(pytest --collect-only -q | tail -1 | cut  -d ' ' -f 1)-green?style=flat-square -O ../.img/total-count.svg
-        wget https://img.shields.io/badge/interop_tests-$(pytest --collect-only -m "interop" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../.img/interop-count.svg
-        wget https://img.shields.io/badge/sanity_tests-$(pytest --collect-only -m "sanity and not interop" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../.img/sanity-count.svg
-        wget https://img.shields.io/badge/performance_tests-$(pytest --collect-only -m "performance" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../.img/performance-count.svg
+        wget https://img.shields.io/badge/total_tests-$(pytest --collect-only -q | tail -1 | cut  -d ' ' -f 1)-green?style=flat-square -O ../badges/total-count.svg
+        wget https://img.shields.io/badge/interop_tests-$(pytest --collect-only -m "interop" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/interop-count.svg
+        wget https://img.shields.io/badge/sanity_tests-$(pytest --collect-only -m "sanity and not interop" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/sanity-count.svg
+        wget https://img.shields.io/badge/performance_tests-$(pytest --collect-only -m "performance" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/performance-count.svg
 
     - name: commit changes
+      working-directory: badges
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -45,4 +54,6 @@ jobs:
       uses: ad-m/github-push-action@v0.6.0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: master
+        directory: badges
+        branch: badges
+        force: true
