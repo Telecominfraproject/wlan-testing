@@ -258,3 +258,78 @@ RADIUS_ACCOUNTING_DATA = {
     "password": "password",
     "pk_password": "whatever"
 }
+
+PASSPOINT_RADIUS_SERVER_DATA = {
+    "ip": "52.234.179.191",
+    "port": 11812,
+    "secret": "yeababy20!",
+    "user": "nolaradius",
+    "password": "nolastart",
+    "pk_password": "whatever"
+}
+
+PASSPOINT_RADIUS_ACCOUNTING_SERVER_DATA = {
+    "ip": "52.234.179.191",
+    "port": 11813,
+    "secret": "yeababy20!"
+}
+
+PASSPOINT_PROVIDER_INFO = {
+    "mcc": None,
+    "mnc": None,
+    "network": None,
+    "nai_realms": {
+        "domain": "oss.ameriband.com",
+        "encoding": 0,
+        "eap_map": {"EAP-TTLS with username/password": ["Credential Type:username/password",
+                                                        "Non-EAP Inner Authentication Type:MSCHAPV2"]}
+    },
+    "osu_nai_standalone": "anonymous@ameriband.com",
+    "osu_nai_shared": "anonymous@ameriband.com",
+    "roaming_oi": []
+}
+
+PASSPOINT_OPERATOR_INFO = {
+    "osen": "Disabled",
+    "domain_name_list": ["telecominfraproject.atlassian.net"],
+    "operator_names": [
+        {"locale": "eng", "name": "Default friendly passpoint_operator name"},
+        {"locale": "fra", "name": "Nom de l'opérateur convivial par défaut"}
+    ]
+}
+
+PASSPOINT_VENUE_INFO = {
+    "venue_type": {"group": "Business", "type": "Police Station"},
+    "venue_names": [
+        {"locale": "eng", "name": "Example passpoint_venue", "url": "http://www.example.com/info-eng"},
+        {"locale": "fra", "name": "Exemple de lieu", "url": "http://www.example.com/info-fra"}
+    ]
+}
+
+PASSPOINT_PROFILE_INFO = {
+    "profile_download_url_ios": "https://onboard.almondlabs.net/ttls/AmeriBand-Profile.mobileconfig",
+    "profile_download_url_android": "https://onboard.almondlabs.net/ttls/androidconfig.cfg",
+    "profile_name_on_device": "AmeriBand",
+    "radius_configuration": {
+        "user_defined_nas_id": "FB001AP001",
+        "operator_id": "AmeribandTIP",
+        "radius_acounting_service_interval": 60
+    },
+    "interworking_hs2dot0": "Enabled",
+    "hessid": None,
+    "access_network": {
+        "Access Network Type": "Free Public Network",
+        "Authentication Type": "Acceptance of Terms & Conditions",
+        "Emergency Services Reachable": "Enabled",
+        "Unauthenticated Emergency Service": "Disabled",
+    },
+    "ip_connectivity": {
+        "Internet Connectivity": "Enabled",
+        "IP Address Type": "Public IPv4 Address Available",
+        "Connection Capability": [{"status": "open", "protocol": "TCP", "port": 8888}],
+        "ANQP Domain ID": 1234,
+        "GAS Address 3 Behaviour": "P2P Spec Workaround From Request",
+        "Disable DGAF": False
+    }
+}
+
