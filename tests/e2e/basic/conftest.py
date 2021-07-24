@@ -894,6 +894,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
             ssid_data.append(ssid)
             lf_tools.ssid_list.append(ap_wifi_data[ap_interfaces[interface]][0])
         lf_tools.dut_idx_mapping = idx_mapping
+        lf_tools.update_ssid(ssid_data=ssid_data)
         yield test_cases
 
 
