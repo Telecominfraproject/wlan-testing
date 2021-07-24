@@ -16,14 +16,14 @@ pytestmark = [pytest.mark.client_connectivity, pytest.mark.bridge, pytest.mark.g
 setup_params_general = {
     "mode": mode,
     "ssid_modes": {
-        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"]},
-                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
-        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"]},
+                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"]}],
+        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
                  "security_key": "something"}],
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"],
              "security_key": "something"}]},
     "rf": {},
     "radius": False
@@ -260,16 +260,16 @@ setup_params_general_two = {
     "mode": mode,
     "ssid_modes": {
         "wpa3_personal": [
-            {"ssid_name": "ssid_wpa3_p_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa3_p_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+            {"ssid_name": "ssid_wpa3_p_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa3_p_5g", "appliedRadios": ["5G"],
              "security_key": "something"}],
         "wpa3_personal_mixed": [
-            {"ssid_name": "ssid_wpa3_p_m_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa3_p_m_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+            {"ssid_name": "ssid_wpa3_p_m_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa3_p_m_5g", "appliedRadios": ["5G"],
              "security_key": "something"}],
         "wpa_wpa2_personal_mixed": [
-            {"ssid_name": "ssid_wpa_wpa2_p_m_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa_wpa2_p_m_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+            {"ssid_name": "ssid_wpa_wpa2_p_m_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa_wpa2_p_m_5g", "appliedRadios": ["5G"],
              "security_key": "something"}]
     },
     "rf": {},
@@ -509,9 +509,9 @@ class TestbridgeModeConnectivitySuiteB(object):
 # setup_params_wep = {
 #     "mode": "BRIDGE",
 #     "ssid_modes": {
-#         "wep": [ {"ssid_name": "ssid_wep_2g", "appliedRadios": ["is2dot4GHz"], "default_key_id": 1,
+#         "wep": [ {"ssid_name": "ssid_wep_2g", "appliedRadios": ["2G"], "default_key_id": 1,
 #                   "wep_key": 1234567890},
-#                 {"ssid_name": "ssid_wep_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+#                 {"ssid_name": "ssid_wep_5g", "appliedRadios": ["5G"],
 #                  "default_key_id": 1, "wep_key": 1234567890}]
 #     },
 #     "rf": {},
