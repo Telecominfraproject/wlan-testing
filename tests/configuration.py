@@ -400,7 +400,7 @@ CONFIGURATION = {
             }
         }
     },  # checked
-    "interop": {
+  "interop": {
         "controller": {
             'url': "https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build",  # API base url for the controller
             'username': 'support@example.com',

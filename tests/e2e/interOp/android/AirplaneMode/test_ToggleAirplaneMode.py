@@ -18,7 +18,7 @@ if 'perfecto_libs' not in sys.path:
 
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.ToggleAirplaneMode]
 
-from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, setup_perfectoMobile_android
+from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp
 
 setup_params_general = {
     "mode": "NAT",
@@ -46,12 +46,11 @@ class TestToggleAirplaneModeAndroid(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_ToogleAirplaneMode_5g_WPA2_Personal(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
-        
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]  
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
-        print ("SSID_PASS: " + ssidPassword)
+        #print ("SSID_PASS: " + ssidPassword)
 
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -72,13 +71,12 @@ class TestToggleAirplaneModeAndroid(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ToogleAirplaneMode_2g_WPA2_Personal(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
-        
+    def test_ToogleAirplaneMode_2g_WPA2_Personal(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android): 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0] 
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
-        print ("SSID_PASS: " + ssidPassword)
+        #print ("SSID_PASS: " + ssidPassword)
 
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -99,13 +97,12 @@ class TestToggleAirplaneModeAndroid(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ToogleAirplaneMode_5g_WPA(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
-        
+    def test_ToogleAirplaneMode_5g_WPA(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):   
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
-        print ("SSID_PASS: " + ssidPassword)
+        #print ("SSID_PASS: " + ssidPassword)
 
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -126,13 +123,12 @@ class TestToggleAirplaneModeAndroid(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_ToogleAirplaneMode_2g_WPA(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
-        
+    def test_ToogleAirplaneMode_2g_WPA(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):  
         profile_data = setup_params_general["ssid_modes"]["wpa"][0] 
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
-        print ("SSID_PASS: " + ssidPassword)
+        #print ("SSID_PASS: " + ssidPassword)
 
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
