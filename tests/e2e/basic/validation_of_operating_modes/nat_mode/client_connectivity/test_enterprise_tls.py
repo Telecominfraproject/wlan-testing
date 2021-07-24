@@ -7,14 +7,14 @@
 #     "mode": "NAT",
 #     "ssid_modes": {
 #         "wpa_enterprise": [
-#             {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["2G"]},
-#             {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["5G"]}],
+#             {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["is2dot4GHz"]},
+#             {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
 #         "wpa2_enterprise": [
-#             {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["2G"]},
-#             {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"]}],
+#             {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["is2dot4GHz"]},
+#             {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
 #         "wpa3_enterprise": [
-#             {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"]},
-#             {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"]}]},
+#             {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["is2dot4GHz"]},
+#             {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}]},
 #
 #     "rf": {},
 #     "radius": True
@@ -218,14 +218,14 @@
 #     "mode": "NAT",
 #     "ssid_modes": {
 #         "wpa_enterprise": [
-#             {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["2G"]},
-#             {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["5G"]}],
+#             {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["is2dot4GHz"]},
+#             {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
 #         "wpa2_enterprise": [
-#             {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["2G"]},
-#             {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"]}],
+#             {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["is2dot4GHz"]},
+#             {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
 #         "wpa3_enterprise": [
-#             {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"]},
-#             {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"]}]},
+#             {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["is2dot4GHz"]},
+#             {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}]},
 #
 #     "rf": {},
 #     "radius": True

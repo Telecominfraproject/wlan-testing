@@ -14,8 +14,8 @@ pytestmark = [pytest.mark.wifi_capacity_test, pytest.mark.bridge]
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa_personal": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
-                         {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
+        "wpa_personal": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
+                         {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
                           "security_key": "something"}]},
     "rf": {},
     "radius": False
@@ -321,8 +321,8 @@ class TestThroughputVsPktBridgeWpa2G(object):
 setup_params_5g = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa_personal": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
-                         {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
+        "wpa_personal": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
+                         {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
                           "security_key": "something"}]},
 
     "rf": {},

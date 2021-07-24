@@ -81,38 +81,18 @@ class APNOS:
         return output
 
     # Method to get the iwinfo status of AP using AP-CLI/ JUMPHOST-CLI
-    def get_bssid_band_mapping(self):
+    def iwinfo_status(self):
         client = self.ssh_cli_connect()
         cmd = 'iwinfo'
         if self.mode:
             cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                   f"cmd --value \"{cmd}\" "
         stdin, stdout, stderr = client.exec_command(cmd)
-        data = stdout.read()
+        output = stdout.read()
         client.close()
-        allure.attach(name="iwinfo Output Msg: ", body=str(data))
+        allure.attach(name="iwinfo Output Msg: ", body=str(output))
         allure.attach(name="iwinfo config Err Msg: ", body=str(stderr))
-        data = str(data).replace(" ", "").split("\\r\\n")
-        band_info = []
-        for i in data:
-            tmp = []
-            if i.__contains__("AccessPoint"):
-                bssid = i.replace("AccessPoint:", "")
-                tmp.append(bssid.casefold())
-            elif i.__contains__("MasterChannel"):
-                if i.split(":")[2].__contains__("2.4"):
-                    tmp.append("2G")
-                else:
-                    tmp.append("5G")
-            else:
-                tmp = []
-            if tmp != []:
-                band_info.append(tmp)
-        bssi_band_mapping = {}
-        for i in range(len(band_info)):
-            if (i % 2) == 0:
-                bssi_band_mapping[band_info[i][0]] = band_info[i+1][0]
-        return bssi_band_mapping
+        return output
 
     # Method to get the vif_config of AP using AP-CLI/ JUMPHOST-CLI
     def get_vif_config(self):
@@ -382,20 +362,15 @@ class APNOS:
 if __name__ == '__main__':
     obj = {
         'jumphost': True,
-        'ip': "10.28.3.100",
+        'ip': "localhost",
         'username': "lanforge",
         'password': "pumpkin77",
-        'port': 22,
-        'jumphost_tty': '/dev/ttyAP1'
+        'port': 8803,
+        'jumphost_tty': '/dev/ttyAP2'
     }
     var = APNOS(credentials=obj)
-    abc = var.get_bssid_band_mapping()
-
-
-    # lst.remove("")
-    print(abc)
-    # r = var.get_ssid_info()
-    # print(r)
-    # print(var.get_ssid_info())
-    # print(var.get_manager_state())
-    # print(var.get_vlan())
+    r = var.get_ssid_info()
+    print(r)
+    print(var.get_ssid_info())
+    print(var.get_manager_state())
+    print(var.get_vlan())
