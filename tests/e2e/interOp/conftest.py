@@ -39,167 +39,11 @@ from configuration import CONFIGURATION
 
 from urllib3 import exceptions
 
-@pytest.fixture(scope="class")
-def setup_perfectoMobileWeb(request):
-    from selenium import webdriver
-    rdriver = None
-    reporting_client = None
-    
-    warnings.simplefilter("ignore", ResourceWarning)
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-    capabilities = {
-            'platformName': request.config.getini("platformName-iOS"),
-            'model': request.config.getini("model-iOS"),
-            'browserName': request.config.getini("browserType-iOS"),
-            'securityToken' : request.config.getini("securityToken"),
-    }
-
-    rdriver = webdriver.Remote('https://'+request.config.getini("perfectoURL")+'.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
-    rdriver.implicitly_wait(35)
-
-    projectname = request.config.getini("projectName")
-    projectversion = request.config.getini("projectVersion")
-    jobname = request.config.getini("jobName")
-    jobnumber = request.config.getini("jobNumber")
-    tags = request.config.getini("reportTags")
-    testCaseName = request.config.getini("jobName")
-
-    print("Setting Perfecto ReportClient....")
-    perfecto_execution_context = PerfectoExecutionContext(rdriver, tags, Job(jobname, jobnumber),Project(projectname, projectversion))
-    reporting_client = PerfectoReportiumClient(perfecto_execution_context)
-    reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
-
-    def teardown():
-        try:
-            print(" -- Tear Down --")     
-            reporting_client.test_stop(TestResultFactory.create_success())
-            print('Report-Url: ' + reporting_client.report_url() + '\n')
-            rdriver.close()
-        except Exception as e:
-            print(" -- Exception Not Able To close --")    
-            print (e.message)
-        finally:
-            try:
-                rdriver.quit()
-            except Exception as e:
-                print(" -- Exception Not Able To Quit --")    
-                print (e.message)
-
-    request.addfinalizer(teardown)
-
-    if rdriver is None:
-        yield -1
-    else:
-        yield rdriver,reporting_client 
-
-
-@pytest.fixture(scope="function")
-def setup_perfectoMobile_iOS(request):
-    from appium import webdriver
-    driver = None
-    reporting_client = None
-    
-    warnings.simplefilter("ignore", ResourceWarning)
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-   
-    capabilities = {
-            'platformName': request.config.getini("platformName-iOS"),
-            'model': request.config.getini("model-iOS"),
-            'browserName': 'safari',
-            #'automationName' : 'Appium',
-            'securityToken' : request.config.getini("securityToken"),  
-            'useAppiumForWeb' : 'false', 
-            'autoAcceptAlerts' : 'true',
-            #'bundleId' : request.config.getini("bundleId-iOS"),
-            'useAppiumForHybrid' : 'false',
-    }
-
-    driver = webdriver.Remote('https://'+request.config.getini("perfectoURL")+'.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
-    driver.implicitly_wait(35)
-   
-    TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
-    nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
-    try:
-        TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
-        print ("\nTestCaseName: " + TestCaseName)
-    except Exception as e:
-        TestCaseName = nCurrentTestMethodNameSplit
-        print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
-        print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
-        
-    projectname = request.config.getini("projectName")
-    projectversion = request.config.getini("projectVersion")
-    jobname = request.config.getini("jobName")
-    jobnumber = request.config.getini("jobNumber")
-    tags = request.config.getini("reportTags")
-    testCaseName = TestCaseName
-
-    print("\nSetting Perfecto ReportClient....")
-    perfecto_execution_context = PerfectoExecutionContext(driver, tags, Job(jobname, jobnumber),Project(projectname, projectversion))
-    reporting_client = PerfectoReportiumClient(perfecto_execution_context)
-    reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
-
-    def teardown():
-        reporting_client.test_stop(TestResultFactory.create_failure("See Allure Report"))
-        driver.close()
-        print("\n------------")
-        print("Driver Closed")
-        try:
-            driver.quit()
-            print("Driver Quit")
-            print("------------")
-        except Exception as e:
-            print(" -- Exception Not Able To Quit --")
-            print(e)
-
-        # try:
-        #     print("\n\n---------- Tear Down ----------")
-        #
-        #     testFailed = request.session.testsfailed
-        #     if testFailed>0:
-        #         print ("Test Case Failure, please check report link: " + testCaseName)
-        #         reporting_client.test_stop(TestResultFactory.create_failure(request.config.cache.get("SelectingWifiFailed", None)))
-        #         request.config.cache.set(key="SelectingWifiFailed", value="Cache Cleared!!")
-        #         #seen = {None}
-        #         #session = request.node
-        #         #print(session)
-        #     elif testFailed<=0:
-        #         reporting_client.test_stop(TestResultFactory.create_success())
-        #
-        #     #amount = len(request.session.items)
-        #     #print("Test Session Items: ")
-        #     #print(amount)
-        #
-        #     #tests_count = request.session.testscollected
-        #     #print("Test Collected: ")
-        #     #print(tests_count)
-        #
-        #     print('Report-Url: ' + reporting_client.report_url())
-        #     print("----------------------------------------------------------")
-        #     driver.close()
-        # except Exception as e:
-        #     print(" -- Exception While Tear Down --")
-        #     reporting_client.test_stop(TestResultFactory.create_failure("Exception"))
-        #     print('Report-Url-Failure: ' + reporting_client.report_url() + '\n')
-        #
-        #     driver.close()
-        #
-        #     print (e)
-        # finally:
-        #     try:
-        #         driver.quit()
-        #     except Exception as e:
-        #         print(" -- Exception Not Able To Quit --")
-        #         print (e)
-    
-
-    request.addfinalizer(teardown)
-
-    if driver is None:
-        yield -1
-    else:
-        yield driver,reporting_client 
+reporting_client = None
+testCaseNameList = []
+testCaseStatusList = []
+testCaseErrorMsg = []
+testCaseReportURL = []
 
 
 @pytest.fixture(scope="function")
@@ -775,3 +619,313 @@ def get_vif_state(get_apnos, get_configuration):
     vif_state.sort()
     allure.attach(name="vif_state", body=str(vif_state))
     yield vif_state
+
+
+
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    result = outcome.get_result()
+    #testCaseStatusValue = ""
+    testCasePassedStatusValue = ""
+    testCaseFailedStatusValue = ""
+    testCaseNameList = []
+    testCaseStatusList = []
+    testCaseErrorMsg = []
+    testCaseReportURL = []
+
+    if result.when == 'call':
+        item.session.results[item] = result
+
+        #Gets the Current Test Case Name
+        TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
+        nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
+        #print("TestCasefullNameTEST: " + TestCaseFullName)
+        try:      
+            #TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
+            TestCaseName = nCurrentTestMethodNameSplit.replace('test_', '')
+            #print ("\nTestCaseName: " + TestCaseName)
+        except Exception as e:
+            TestCaseName = nCurrentTestMethodNameSplit
+            print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
+            #print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
+
+        #exception = call.excinfo.value
+        #exception_class = call.excinfo.type
+        #exception_class_name = call.excinfo.typename
+        
+        #exception_traceback = call.excinfo.traceback
+
+        if result.outcome == "failed":
+            exception_type_and_message_formatted = call.excinfo.exconly()
+            testCaseFailedStatusValue = "FAILED"
+            reporting_client.test_stop(TestResultFactory.create_failure(str(testCaseErrorMsg)))
+            testCaseNameList.append(TestCaseName)
+            testCaseStatusList.append(testCaseFailedStatusValue)
+            testCaseErrorMsg.append(exception_type_and_message_formatted)
+            testCaseReportURL.append(reporting_client.report_url())           
+
+            print("\n     TestStatus: " + testCaseFailedStatusValue)
+            print("     FailureMsg: " + str(testCaseErrorMsg))
+            reportPerfecto(TestCaseName, testCaseFailedStatusValue, testCaseErrorMsg, str(reporting_client.report_url()))
+
+        if result.outcome == "passed":
+            testCasePassedStatusValue = "PASSED"
+            reporting_client.test_stop(TestResultFactory.create_success())
+            testCaseNameList.append(TestCaseName)
+            testCaseStatusList.append(testCasePassedStatusValue)
+            testCaseReportURL.append(reporting_client.report_url())
+            print("\n     TestStatus:  " + testCasePassedStatusValue)
+            reportPerfecto(TestCaseName, testCasePassedStatusValue, "N/A", str(reporting_client.report_url()))
+
+        if result.outcome == "skipped":
+            testCaseSkippedStatusValue = "SKIPPED"
+            exception_type_Skipped_message_formatted = call.excinfo.exconly()
+            reporting_client.test_stop(TestResultFactory.create_failure(str(exception_type_Skipped_message_formatted)))
+            testCaseNameList.append(TestCaseName)
+            testCaseStatusList.append("SKIPPED")
+            testCaseErrorMsg.append(str(exception_type_Skipped_message_formatted))
+            testCaseReportURL.append(reporting_client.report_url())
+            print("\n     TestStatus: " + testCaseSkippedStatusValue)
+            print("     FailureMsg: " + str(testCaseErrorMsg))    
+            reportPerfecto(TestCaseName, testCaseSkippedStatusValue, testCaseErrorMsg, str(reporting_client.report_url()))       
+            
+
+def pytest_sessionfinish(session, exitstatus):
+
+    print()
+    skipped_amount = 0
+    #print('Perfecto TestCase Execution Status:', exitstatus)
+    passed_amount = sum(1 for result in session.results.values() if result.passed)
+    failed_amount = sum(1 for result in session.results.values() if result.failed)
+    skipped_amount = sum(1 for result in session.results.values() if result.skipped)
+    #  print(f'There are {passed_amount} passed and {failed_amount} failed tests')        
+    TotalExecutedCount = failed_amount + passed_amount + skipped_amount
+
+    print('\n------------------------------------')
+    print('Perfecto TestCase Execution Summary')  
+    print('------------------------------------')
+    print('Total TestCase Executed: ' + str(TotalExecutedCount))  
+    print('Total Passed: ' + str(passed_amount))
+    print('Total Failed: ' + str(failed_amount))
+    print('Total Skipped: ' + str(skipped_amount) + "\n")
+  
+    for index in range(len(testCaseNameList)):
+        print(str(index+1) + ") " + str(testCaseNameList[index]) + " : " + str(testCaseStatusList[index]))
+        print("     ReportURL: " + str(testCaseReportURL[index]))
+        print("     FailureMsg: " + str(testCaseErrorMsg[index]) + "\n")
+        
+    print('------------------------------------------------------------------\n\n\n\n')
+
+@pytest.fixture(scope="function")
+def setup_perfectoMobile_android(request):
+    from appium import webdriver
+    driver = None
+    reporting_client = None
+    
+    warnings.simplefilter("ignore", ResourceWarning)
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+   
+    capabilities = {
+            'platformName': request.config.getini("platformName-android"),
+            'model': request.config.getini("model-android"),
+            'browserName': 'mobileOS',
+            #'automationName' : 'Appium',
+            'securityToken' : request.config.getini("securityToken"),  
+            'useAppiumForWeb' : 'false',
+            'useAppiumForHybrid' : 'false',
+            #'bundleId' : request.config.getini("appPackage-android"),
+    }
+
+    driver = webdriver.Remote('https://'+request.config.getini("perfectoURL")+'.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
+    driver.implicitly_wait(35)
+   
+    TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
+    nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
+    try:
+        #TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
+        TestCaseName = nCurrentTestMethodNameSplit.replace('test_', '')
+        print ("\n\nExecuting TestCase: " + TestCaseName)
+    except Exception as e:
+        TestCaseName = nCurrentTestMethodNameSplit
+        print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
+        #print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
+        
+    projectname = request.config.getini("projectName")
+    projectversion = request.config.getini("projectVersion")
+    jobname = request.config.getini("jobName")
+    jobnumber = request.config.getini("jobNumber")
+    tags = request.config.getini("reportTags")
+    testCaseName = TestCaseName
+
+    #print("\nSetting Perfecto ReportClient....")
+    perfecto_execution_context = PerfectoExecutionContext(driver, tags, Job(jobname, jobnumber),Project(projectname, projectversion))
+    reporting_client = PerfectoReportiumClient(perfecto_execution_context)
+    reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
+    reportClient(reporting_client)
+
+    def teardown():
+        try:
+            print("\n---------- Tear Down ----------")
+            print('Report-Url: ' + reporting_client.report_url())
+            print("----------------------------------------------------------\n\n\n\n")
+            driver.close()
+        except Exception as e:
+            print(" -- Exception While Tear Down --")    
+            driver.close()
+            print (e)
+        finally:
+            try:
+                driver.quit()
+            except Exception as e:
+                print(" -- Exception Not Able To Quit --")    
+                print (e)
+
+    request.addfinalizer(teardown)
+
+    if driver is None:
+        yield -1
+    else:
+        yield driver,reporting_client 
+
+def reportClient(value):
+    global reporting_client   # declare a to be a global
+    reporting_client = value  # this sets the global value of a
+
+def reportPerfecto(testCaseName, testCaseStatus, testErrorMsg, reportURL):
+    global testCaseNameList   # declare a to be a global
+    global testCaseStatusList
+    global testCaseErrorMsg
+    global testCaseReportURL
+
+    testCaseNameList.append(testCaseName)
+    testCaseStatusList.append(testCaseStatus)
+    testCaseErrorMsg.append(str(testErrorMsg))
+    testCaseReportURL.append(reportURL)
+
+@pytest.fixture(scope="class")
+def setup_perfectoMobileWeb(request):
+    from selenium import webdriver
+    rdriver = None
+    reporting_client = None
+    
+    warnings.simplefilter("ignore", ResourceWarning)
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+    capabilities = {
+            'platformName': request.config.getini("platformName-iOS"),
+            'model': request.config.getini("model-iOS"),
+            'browserName': request.config.getini("browserType-iOS"),
+            'securityToken' : request.config.getini("securityToken"),
+    }
+
+    rdriver = webdriver.Remote('https://'+request.config.getini("perfectoURL")+'.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
+    rdriver.implicitly_wait(35)
+
+    projectname = request.config.getini("projectName")
+    projectversion = request.config.getini("projectVersion")
+    jobname = request.config.getini("jobName")
+    jobnumber = request.config.getini("jobNumber")
+    tags = request.config.getini("reportTags")
+    testCaseName = request.config.getini("jobName")
+
+    print("Setting Perfecto ReportClient....")
+    perfecto_execution_context = PerfectoExecutionContext(rdriver, tags, Job(jobname, jobnumber),Project(projectname, projectversion))
+    reporting_client = PerfectoReportiumClient(perfecto_execution_context)
+    reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
+
+    def teardown():
+        try:
+            print(" -- Tear Down --")     
+            reporting_client.test_stop(TestResultFactory.create_success())
+            print('Report-Url: ' + reporting_client.report_url() + '\n')
+            rdriver.close()
+        except Exception as e:
+            print(" -- Exception Not Able To close --")    
+            print (e.message)
+        finally:
+            try:
+                rdriver.quit()
+            except Exception as e:
+                print(" -- Exception Not Able To Quit --")    
+                print (e.message)
+
+    request.addfinalizer(teardown)
+
+    if rdriver is None:
+        yield -1
+    else:
+        yield rdriver,reporting_client 
+
+@pytest.fixture(scope="function")
+def setup_perfectoMobile_iOS(request):
+    from appium import webdriver
+    driver = None
+    reporting_client = None
+    
+    warnings.simplefilter("ignore", ResourceWarning)
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+   
+    capabilities = {
+            'platformName': request.config.getini("platformName-iOS"),
+            'model': request.config.getini("model-iOS"),
+            'browserName': 'safari',
+            #'automationName' : 'Appium',
+            'securityToken' : request.config.getini("securityToken"),  
+            'useAppiumForWeb' : 'false', 
+            'autoAcceptAlerts' : 'true',
+            #'bundleId' : request.config.getini("bundleId-iOS"),
+            'useAppiumForHybrid' : 'false',
+    }
+
+    driver = webdriver.Remote('https://'+request.config.getini("perfectoURL")+'.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
+    driver.implicitly_wait(35)
+   
+    TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
+    nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
+    try:
+        #TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
+        TestCaseName = nCurrentTestMethodNameSplit.replace('test_', '')
+        print ("\n\nExecuting TestCase: " + TestCaseName)
+    except Exception as e:
+        TestCaseName = nCurrentTestMethodNameSplit
+        print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
+        #print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
+        
+    projectname = request.config.getini("projectName")
+    projectversion = request.config.getini("projectVersion")
+    jobname = request.config.getini("jobName")
+    jobnumber = request.config.getini("jobNumber")
+    tags = request.config.getini("reportTags")
+    testCaseName = TestCaseName
+
+    print("\nSetting Perfecto ReportClient....")
+    perfecto_execution_context = PerfectoExecutionContext(driver, tags, Job(jobname, jobnumber),Project(projectname, projectversion))
+    reporting_client = PerfectoReportiumClient(perfecto_execution_context)
+    reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
+    reportClient(reporting_client)
+
+    def teardown():
+        try:
+            print("\n---------- Tear Down ----------")
+            print('Report-Url: ' + reporting_client.report_url())
+            print("----------------------------------------------------------\n\n\n\n")
+            driver.close()
+        except Exception as e:
+            print(" -- Exception While Tear Down --")    
+            driver.close()
+            print (e)
+        finally:
+            try:
+                driver.quit()
+            except Exception as e:
+                print(" -- Exception Not Able To Quit --")    
+                print (e)
+    
+    request.addfinalizer(teardown)
+
+    if driver is None:
+        yield -1
+    else:
+        yield driver,reporting_client 
+
