@@ -16,8 +16,8 @@ pytestmark = [pytest.mark.client_connectivity, pytest.mark.vlan, pytest.mark.gen
 setup_params_general = {
     "mode": mode,
     "ssid_modes": {
-        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"]},
-                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"]}],
+        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"], "vlan": 100},
+                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"], "vlan": 100}],
         "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
                 {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
                  "security_key": "something"}],

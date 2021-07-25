@@ -11,14 +11,14 @@ setup_params_enterprise = {
     "mode": mode,
     "ssid_modes": {
         "wpa_enterprise": [
-            {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["5G"]}],
+            {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["5G"], "vlan": 100}],
         "wpa2_enterprise": [
-            {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"]}],
+            {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"], "vlan": 100}],
         "wpa3_enterprise": [
-            {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"]}]},
+            {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "vlan": 100}]},
 
     "rf": {},
     "radius": True
@@ -32,6 +32,13 @@ setup_params_enterprise = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.parametrize(
+    'create_vlan',
+    [setup_params_enterprise],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("create_vlan")
 class TestvlanModeEnterpriseTTLSSuiteOne(object):
 
     @pytest.mark.wpa_enterprise
@@ -265,11 +272,11 @@ setup_params_enterprise_two = {
     "mode": mode,
     "ssid_modes": {
         "wpa_wpa2_enterprise_mixed": [
-            {"ssid_name": "ssid_wpa_wpa2_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "ssid_wpa_wpa2_eap_5g", "appliedRadios": ["5G"]}],
+            {"ssid_name": "ssid_wpa_wpa2_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa_wpa2_eap_5g", "appliedRadios": ["5G"], "vlan": 100}],
         "wpa3_enterprise_mixed": [
-            {"ssid_name": "ssid_wpa3_mixed_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "ssid_wpa3_mixed_eap_5g", "appliedRadios": ["5G"]}]
+            {"ssid_name": "ssid_wpa3_mixed_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa3_mixed_eap_5g", "appliedRadios": ["5G"], "vlan": 100}]
     },
     "rf": {},
     "radius": True
@@ -284,6 +291,13 @@ setup_params_enterprise_two = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.parametrize(
+    'create_vlan',
+    [setup_params_enterprise],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("create_vlan")
 class TestvlanModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
