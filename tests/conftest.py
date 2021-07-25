@@ -114,8 +114,8 @@ def pytest_addoption(parser):
     )
     parser.addoption(
         "--skip-testrail",
-        action="store_false",
-        default=True,
+        action="store_true",
+        default=False,
         help="Stop using Testrails"
     )
 
