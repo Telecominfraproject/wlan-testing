@@ -56,6 +56,7 @@ class RunTest:
         self.staConnect = None
         self.dataplane_obj = None
         self.dualbandptest_obj = None
+        self.apstab_obj = None
         self.influx_params = influx_params
         self.influxdb = RecordInflux(_influx_host=influx_params["influx_host"],
                                      _influx_port=influx_params["influx_port"],
@@ -373,41 +374,50 @@ class RunTest:
         #                      target_csv=self.local_report_path + report_name + "/kpi.csv")
         # influx.post_to_influx()
         return self.dualbandptest_obj
-    
-    def ratevsrange(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
-                  upload_rate="0", duration="1m", instance_name="test_demo", raw_lines=None):
+
+    def apstabilitytest(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
+                                instance_name="test_demo", dut_5g="", dut_2g=""):
+        instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
+
         if mode == "BRIDGE":
-            self.client_connect.upstream_port = self.upstream_port
+            self.upstream_port = self.upstream_port
         elif mode == "NAT":
-            self.client_connect.upstream_port = self.upstream_port
-        elif mode == "VLAN":
-            self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
+            self.upstream_port = self.upstream_port
+        else:
+            self.upstream_port = self.upstream_port + "." + str(vlan_id)
 
-        self.rvr_obj = RvrTest(lf_host=self.lanforge_ip,
-                 lf_port=self.lanforge_port,
-                 ssh_port=self.lf_ssh_port,
-                 local_path=self.local_report_path,
-                 lf_user="lanforge",
-                 lf_password="lanforge",
-                 instance_name=instance_name,
-                 config_name="rvr_config",
-                 upstream="1.1." + self.upstream_port,
-                 pull_report=True,
-                 load_old_cfg=False,
-                 upload_speed=upload_rate,
-                 download_speed=download_rate,
-                 duration=duration,
-                 station="1.1." + station_name[0],
-                 dut=dut_name,
-                 raw_lines=raw_lines)
-        self.rvr_obj.setup()
-        self.rvr_obj.run()
-        report_name = self.rvr_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
-                             target_csv=self.local_report_path + report_name + "/kpi.csv")
-        influx.post_to_influx()
+        self.apstab_obj = ApAutoTest(lf_host=self.lanforge_ip,
+                                            lf_port=self.lanforge_port,
+                                            lf_user="lanforge",
+                                            lf_password="lanforge",
+                                            instance_name=instance_name,
+                                            config_name="dbp_config",
+                                            upstream="1.1." + self.upstream_port,
+                                            pull_report=True,
+                                            dut5_0=dut_5g,
+                                            dut2_0=dut_2g,
+                                            load_old_cfg=False,
+                                            local_lf_report_dir=self.local_report_path,
+                                            max_stations_2=5,
+                                            max_stations_5=5,
+                                            max_stations_dual=10,
+                                            radio2=[self.twog_radios],
+                                            radio5=[self.fiveg_radios],
+                                            sets=[['Basic Client Connectivity', '0'], ['Multi Band Performance', '0'],
+                                                  ['Throughput vs Pkt Size', '0'], ['Capacity', '0'],
+                                                  ['Stability', '1'],
+                                                  ['Band-Steering', '0'], ['Multi-Station Throughput vs Pkt Size', '0'],
+                                                  ['Long-Term', '0']]
+                                            )
+        self.apstab_obj.setup()
+        self.apstab_obj.run()
+        report_name = self.apstab_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        # influx = CSVtoInflux(influxdb=self.influxdb,
+        #                      _influx_tag=self.influx_params["influx_tag"],
+        #                      target_csv=self.local_report_path + report_name + "/kpi.csv")
+        # influx.post_to_influx()
+        return self.apstab_obj
 
-        return self.rvr_obj
 
 if __name__ == '__main__':
     lanforge_data = {
