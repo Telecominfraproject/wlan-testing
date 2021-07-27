@@ -31,6 +31,7 @@ setup_params_general = {
 
 @pytest.mark.uc_sanity
 @pytest.mark.suiteA
+@pytest.mark.sudo
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',

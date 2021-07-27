@@ -365,7 +365,7 @@ class APNOS:
             print(type(json_output))
             client.close()
         except Exception as e:
-            json_output = False
+            json_output = {}
             print(e)
         return json_output
 
@@ -383,7 +383,7 @@ class APNOS:
             print(json_output)
             client.close()
         except Exception as e:
-            json_output = False
+            json_output = {}
             print(e)
         return json_output
 
@@ -416,6 +416,8 @@ class APNOS:
                     else:
                         wifi_info[j["ifname"]] = [j["config"]["ssid"], j["config"]["encryption"], ""]
             data = self.get_iwinfo()
+            print(wifi_info)
+            print(data)
             for i in wifi_info.keys():
                 wifi_info[i].append(data[i])
             return wifi_info
@@ -529,17 +531,17 @@ class APNOS:
 
 if __name__ == '__main__':
     obj = {
-        'model': 'eap102',
-        'mode': 'wifi6',
-        'serial': '0000c1018812',
+        'model': 'ec420',
+        'mode': 'wifi5',
+        'serial': '001122090801',
         'jumphost': True,
-        'ip': "10.28.3.100",  # 10.28.3.103
+        'ip': "10.28.3.100",
         'username': "lanforge",
         'password': "pumpkin77",
-        'port': 22,  # 22
-        'jumphost_tty': '/dev/ttyAP1',
+        'port': 22,
+        'jumphost_tty': '/dev/ttyAP3',
         'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
     }
-    var = APNOS(credentials=obj, sdk="1.x")
+    var = APNOS(credentials=obj, sdk="2.x")
     x = var.get_interface_details()
     print(x)

@@ -225,7 +225,7 @@ class UProfileUtility:
             "country": "US",
             # "channel-mode": "HE",
             "channel-width": 80,
-            # "channel": 36
+            # "channel": "auto"
         })
 
         self.vlan_section["ssids"] = []
@@ -335,6 +335,7 @@ class UProfileUtility:
 
         uri = self.sdk_client.build_uri("device/" + serial_number + "/configure")
         basic_cfg_str = json.dumps(payload)
+        allure.attach(name="ucentral_config: ", body=str(self.base_profile_config))
         # print(self.base_profile_config)
         resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
                              verify=False, timeout=100)
