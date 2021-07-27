@@ -58,6 +58,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -85,6 +86,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -112,6 +114,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -139,6 +142,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -194,6 +198,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -220,6 +225,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -246,6 +252,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -272,6 +279,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -327,6 +335,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -353,6 +362,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -379,6 +389,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -405,6 +416,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
