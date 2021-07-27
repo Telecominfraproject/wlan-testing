@@ -5,13 +5,21 @@ import datetime
 import sys
 import os
 import time
+
+
 import allure
 import re
 import logging
 
-if "logs" not in os.listdir():
-    os.mkdir("logs/")
-logging.basicConfig(level=logging.INFO, filename="logs/" + '{:%Y-%m-%d-%H-%M-%S}.log'.format(datetime.datetime.now()))
+from _pytest.fixtures import SubRequest
+from pyparsing import Optional
+
+ALLURE_ENVIRONMENT_PROPERTIES_FILE = 'environment.properties'
+ALLUREDIR_OPTION = '--alluredir'
+
+# if "logs" not in os.listdir():
+#     os.mkdir("logs/")
+# logging.basicConfig(level=logging.INFO, filename="logs/" + '{:%Y-%m-%d-%H-%M-%S}.log'.format(datetime.datetime.now()))
 sys.path.append(
     os.path.dirname(
         os.path.realpath(__file__)
@@ -46,6 +54,11 @@ from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
 from lf_tools import ChamberView
 from sta_connect2 import StaConnect2
+from os import path
+from typing import Any, Callable, Optional
+
+from _pytest.fixtures import SubRequest
+from pytest import fixture
 
 
 def pytest_addoption(parser):
@@ -249,7 +262,7 @@ def instantiate_access_point(testbed, get_apnos, get_configuration):
 
 # Controller Fixture
 @pytest.fixture(scope="session")
-def setup_controller(request, get_configuration, test_access_point):
+def setup_controller(request, get_configuration, test_access_point, add_env_properties):
     """sets up the controller connection and yields the sdk_client object"""
     try:
         if request.config.getoption("1.x"):
@@ -633,3 +646,35 @@ def setup_influx(request, testbed, get_configuration):
 # Need for Perforce Mobile Device Execution
 def pytest_sessionstart(session):
     session.results = dict()
+
+
+ALLURE_ENVIRONMENT_PROPERTIES_FILE = 'environment.properties'
+ALLUREDIR_OPTION = '--alluredir'
+
+
+@fixture(scope='session', autouse=True)
+def add_allure_environment_property(request: SubRequest) -> Optional[Callable]:
+    environment_properties = dict()
+
+    def maker(key: str, value: Any):
+        environment_properties.update({key: value})
+
+    yield maker
+
+    alluredir = request.config.getoption(ALLUREDIR_OPTION)
+
+    if not alluredir or not os.path.isdir(alluredir) or not environment_properties:
+        return
+
+    allure_env_path = path.join(alluredir, ALLURE_ENVIRONMENT_PROPERTIES_FILE)
+
+    with open(allure_env_path, 'w') as _f:
+        data = '\n'.join([f'{variable}={value}' for variable, value in environment_properties.items()])
+        _f.write(data)
+
+
+@fixture(scope='session')
+def add_env_properties(get_configuration, add_allure_environment_property: Callable) -> None:
+    add_allure_environment_property('Access-Point-Model', get_configuration["access_point"][0]["model"])
+    add_allure_environment_property('Access-Point-Firmware-Version', get_configuration["access_point"][0]["version"])
+    add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
