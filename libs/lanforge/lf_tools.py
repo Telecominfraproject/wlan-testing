@@ -123,7 +123,8 @@ class ChamberView:
                 station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
                                 str(int(idx) + 1) + "'" + " NA " + radio]
                 self.raw_line.append(station_data)
-        print("shivam", self.raw_line)
+        
+
 
     def Create_Dut(self):
         self.CreateDut.setup()
@@ -201,3 +202,4 @@ class ChamberView:
             allure.attach.file(source=relevant_path + i,
                                name=i,
                                attachment_type="image/png", extension=None)
+

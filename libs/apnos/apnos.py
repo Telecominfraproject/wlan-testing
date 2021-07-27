@@ -86,7 +86,7 @@ class APNOS:
         return output
 
     # Method to get the iwinfo status of AP using AP-CLI/ JUMPHOST-CLI
-    # Method to get the iwinfo status of AP using AP-CLI/ JUMPHOST-CLI
+
     def get_bssid_band_mapping(self):
         client = self.ssh_cli_connect()
         cmd = 'iwinfo'

@@ -1,4 +1,4 @@
-name: performance testing
+name: uCentral sanity testing
 env:
   # thirdparties
   DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
@@ -20,9 +20,15 @@ on:
   workflow_dispatch:
     inputs:
       testbeds:
-        default: 'basic-01,basic-02'
+        default: 'basic-03'
         description: 'Testbed(s) to test'
         required: false
+      marker_expression:
+        default: 'uc_sanity'
+        description: 'Markers expression that will be passed to the pytest command.'
+        required: false
+  schedule:
+  - cron: '15 0 * * *'
 
 defaults:
   run:
@@ -37,6 +43,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         path: wlan-testing
+        ref: feature-ucentral-wifi-2526
 
     - name: Checkout LANforge scripts
       uses: actions/checkout@v2
@@ -57,57 +64,6 @@ jobs:
     - name: push docker image
       run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
 
-#  cloudsdk:
-#    runs-on: ubuntu-latest
-#    steps:
-#    - name: Checkout pki scripts repo
-#      uses: actions/checkout@v2
-#      with:
-#        path: wlan-pki
-#        repository: Telecominfraproject/wlan-pki-cert-scripts
-#    - name: Checkout Cloud SDK repo
-#      uses: actions/checkout@v2
-#      with:
-#        path: wlan-helm
-#        repository: Telecominfraproject/wlan-cloud-helm
-#    - name: Checkout helm values repo
-#      uses: actions/checkout@v2
-#      with:
-#        path: toolsmith
-#        repository: Telecominfraproject/Toolsmith
-#        token: ${{ secrets.PAT_TOKEN }}
-#
-#    - name: Prepare environment
-#      run: |
-#        mkdir -p ./wlan-pki/testCA/private
-#        mkdir -p ./wlan-pki/testCA/newcerts
-#        mkdir -p ./wlan-pki/generated
-#        touch ./wlan-pki/testCA/index.txt
-#        echo "01" > ./wlan-pki/testCA/serial.txt
-#        echo "${{ env.CACERT }}" | base64 -d > ./wlan-pki/testCA/cacert.pem
-#        echo "${{ env.CAKEY }}" | base64 -d > ./wlan-pki/testCA/private/cakey.pem
-#        cp ./toolsmith/helm-values/aws-cicd.yaml ./wlan-helm/tip-wlan/resources/environments/aws-cicd.yaml
-#
-#    - name: Generate certs
-#      run: |
-#        cd ./wlan-pki
-#        ./generate_all.sh true
-#        ./copy-certs-to-helm.sh "../wlan-helm"
-#
-#    - name: Deploy Cloud SDK
-#      run: |
-#        cd ./wlan-helm/tip-wlan
-#        aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-#        # start deployment
-#        helm dependency update
-#        helm upgrade --install tip . -f resources/environments/aws-cicd.yaml --create-namespace --namespace tip
-#
-#    - name: Show pod state on deployment failure
-#      if: failure()
-#      run: |
-#        kubectl get pods -n tip
-#        kubectl describe pods -n tip
-
   generate-matrix:
     name: generate testbed matrix
     runs-on: ubuntu-latest
@@ -117,8 +73,7 @@ jobs:
     - name: generate-matrix
       id: set-matrix
       run: |
-        TESTBEDS="${{ github.event.inputs.testbeds || 'basic-01,basic-02' }}"
-        # convert to JSON array
+        TESTBEDS="${{ github.event.inputs.testbeds || 'basic-03' }}"
         TESTBEDS=$(echo $TESTBEDS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
         TESTBEDS=$(echo "$TESTBEDS" | jq -c 'map({"testbed":.})')
         echo "::set-output name=matrix::{\"include\":${TESTBEDS}}"
@@ -141,12 +96,12 @@ jobs:
 
     - name: set job name
       id: job
-      run: echo "::set-output name=name::perf-${{ github.run_number }}"
+      run: echo "::set-output name=name::testing-${{ github.run_number }}"
 
     - name: prepare namespace
       id: namespace
       run: |
-        NAMESPACE="testing-${{ github.run_number }}-${{ matrix.testbed }}"
+        NAMESPACE="testing-${{ github.run_id }}-${{ matrix.testbed }}"
         kubectl create ns $NAMESPACE
         kubectl config set-context --current --namespace=$NAMESPACE
         echo "::set-output name=name::${NAMESPACE}"
@@ -159,7 +114,7 @@ jobs:
 
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
 
-    - name: run perf tests
+    - name: run sanity tests
       run: |
         cat <<EOF | kubectl apply -f -
         apiVersion: batch/v1
@@ -178,7 +133,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "performance" -s -vvv --testbed="${{ matrix.testbed }}" --skip-testrail --alluredir=/tmp/allure-results
+                    pytest -m "${{ github.event.inputs.marker_expression || 'uc_sanity' }}" -s -vvv --testbed="${{ matrix.testbed }}" --skip-testrail --alluredir=/tmp/allure-results
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -274,8 +229,8 @@ jobs:
 
     - name: copy history into results
       run: |
-        if [ -e "reports/performance/${{ matrix.testbed }}/latest" ] ; then
-          cp -r reports/performance/${{ matrix.testbed }}/latest/history/ allure-results/history
+        if [ -e "reports/sanity/${{ matrix.testbed }}/latest" ] ; then
+          cp -r reports/sanity/${{ matrix.testbed }}/latest/history/ allure-results/history
         fi
 
     - name: add report metadata
@@ -300,14 +255,16 @@ jobs:
     # doing this to be able to aggregate multiple reports together later on
     - name: copy results into report
       run: cp -r allure-results allure-report/results
-
+    
     - name: copy new report
+      if: ${{ (github.event.inputs.marker_expression || 'uc_sanity') == 'uc_sanity' }}
       run: |
-        mkdir -p reports/performance/${{ matrix.testbed }}
-        cp -Tr allure-report reports/performance/${{ matrix.testbed }}/${{ github.run_number }}
+        mkdir -p reports/sanity/${{ matrix.testbed }}
+        cp -Tr allure-report reports/sanity/${{ matrix.testbed }}/${{ github.run_number }}
 
     - name: update latest symlink
-      working-directory: reports/performance/${{ matrix.testbed }}
+      if: ${{ (github.event.inputs.marker_expression || 'uc_sanity') == 'uc_sanity' }}
+      working-directory: reports/sanity/${{ matrix.testbed }}
       run: ln -fns ${{ github.run_number }} latest
 
     - name: generate new index.html
@@ -323,7 +280,7 @@ jobs:
         git commit -m "Automated deployment: $(date -u)"
 
     - name: push
-      if: github.ref == 'refs/heads/master'
+      #if: github.ref == 'refs/heads/master'
       uses: ad-m/github-push-action@v0.6.0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
