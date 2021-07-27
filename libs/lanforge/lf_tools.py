@@ -84,6 +84,12 @@ class ChamberView:
         self.CreateChamberview.sync_cv()
         return self.CreateChamberview, self.scenario_name
 
+    def add_vlan(self, vlan_ids=[]):
+        for vlans in vlan_ids:
+            self.raw_line.append(["profile_link 1.1 " + "vlan-100 1 " + self.upstream_port
+                                  + " NA " + self.upstream_port.split(".")[2] + ",AUTO -1 " + str(vlans)])
+        self.Chamber_View()
+
     def add_stations(self, band="2G", num_stations="max", dut="NA", ssid_name=[]):
         idx = 0
         print(self.dut_idx_mapping)
@@ -123,8 +129,6 @@ class ChamberView:
                 station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
                                 str(int(idx) + 1) + "'" + " NA " + radio]
                 self.raw_line.append(station_data)
-        
-
 
     def Create_Dut(self):
         self.CreateDut.setup()
@@ -202,4 +206,3 @@ class ChamberView:
             allure.attach.file(source=relevant_path + i,
                                name=i,
                                attachment_type="image/png", extension=None)
-

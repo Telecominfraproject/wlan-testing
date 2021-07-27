@@ -570,6 +570,7 @@ def lf_tools(get_configuration, testbed):
     """ Create a DUT on LANforge"""
     obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
                 testbed=testbed, access_point_data=get_configuration["access_point"])
+
     yield obj
 
 
@@ -581,55 +582,10 @@ def lf_tools(get_configuration, testbed):
     yield obj
 
 
-@pytest.fixture(scope="module")
-def create_vlan(request, testbed, get_configuration):
-    """Create a vlan on lanforge"""
-    if request.param["mode"] == "VLAN":
-        vlan_list = list()
-        refactored_vlan_list = list()
-        ssid_modes = request.param["ssid_modes"].keys()
-        for mode in ssid_modes:
-            for ssid in range(len(request.param["ssid_modes"][mode])):
-                if "vlan" in request.param["ssid_modes"][mode][ssid]:
-                    vlan_list.append(request.param["ssid_modes"][mode][ssid]["vlan"])
-                else:
-                    pass
-        if vlan_list:
-            [refactored_vlan_list.append(x) for x in vlan_list if x not in refactored_vlan_list]
-            vlan_list = refactored_vlan_list
-            for i in range(len(vlan_list)):
-                if vlan_list[i] > 4095 or vlan_list[i] < 1:
-                    vlan_list.pop(i)
-
-        if not vlan_list:
-            vlan_list.append(100)
-
-        if vlan_list:
-            chamberview_obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
-                                          testbed=testbed, access_point_data=get_configuration["access_point"])
-
-            lanforge_data = get_configuration["traffic_generator"]["details"]
-            upstream_port = lanforge_data["upstream"]
-            upstream_resources = upstream_port.split(".")[0] + "." + upstream_port.split(".")[1]
-
-            for vlan in vlan_list:
-                chamberview_obj.raw_line.append(["profile_link " + upstream_resources + " Vlan 1 NA "
-                                                 + "NA " + upstream_port.split(".")[2] + ",AUTO -1 " + str(vlan)])
-
-            chamberview_obj.Chamber_View()
-            port_resource = upstream_resources.split(".")
-
-            yield vlan_list
-        else:
-            yield False
-            # try:
-            #     ip = chamberview_obj.json_get("/port/" + port_resource[0] + "/" + port_resource[1] +
-            #                                    "/" + upstream_port.split(".")[2] + "." + str(vlan))["interface"]["ip"]
-            #     if ip:
-            #         yield vlan_list, ip
-            # except Exception as e:
-            #     print(e)
-            #     yield False
+# @pytest.fixture(scope="class")
+# def create_vlan(request, testbed, get_configuration, lf_tools):
+#     """Create a vlan on lanforge"""
+#
 
 
 @pytest.fixture(scope="session")
