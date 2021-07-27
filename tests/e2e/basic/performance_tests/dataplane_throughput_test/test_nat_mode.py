@@ -9,7 +9,7 @@ import pytest
 import allure
 
 pytestmark = [pytest.mark.performance, pytest.mark.dataplane_throughput_test,
-              pytest.mark.nat]# pytest.mark.usefixtures("setup_test_run")]
+              pytest.mark.nat]
 
 setup_params_general = {
     "mode": "NAT",
@@ -53,7 +53,6 @@ class TestDataplaneThroughputNAT(object):
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
-        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
