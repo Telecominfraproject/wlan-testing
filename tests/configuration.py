@@ -252,7 +252,7 @@ RADIUS_SERVER_DATA = {
 
 RADIUS_ACCOUNTING_DATA = {
     "ip": "10.10.10.72",
-    "port": 1812,
+    "port": 1813,
     "secret": "testing123",
     "user": "user",
     "password": "password",

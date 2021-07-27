@@ -230,7 +230,6 @@ class RunTest:
                                             upload_rate=upload_rate,
                                             download_rate=download_rate,
                                             sort="interleave",
-                                            # stations=stations,
                                             create_stations=True,
                                             radio=None,
                                             security=None,
@@ -244,7 +243,6 @@ class RunTest:
 
         wificapacity_obj.setup()
         wificapacity_obj.run()
-
         report_name = wificapacity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
                              target_csv=self.local_report_path + report_name + "/kpi.csv")
