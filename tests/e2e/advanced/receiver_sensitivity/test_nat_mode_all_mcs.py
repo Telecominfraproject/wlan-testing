@@ -92,6 +92,9 @@ class TestRxSensitivityNATAllMcs5G(object):
         else:
             assert False
 
+    @pytest.mark.wpa2_personal
+    @pytest.mark.twog
+    @pytest.mark.all_mcs
     def test_client_wpa2_personal_nat_all_mcs_2g(self, get_vif_state,
                                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                     get_configuration):

@@ -60,7 +60,7 @@ class TestRxSensitivityBRIDGEAllMcs5G(object):
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['txo_preamble: VHT'],
-                     ['txo_mcs: 0 CCK, OFDM, HT, VHT;1 CCK, OFDM, HT, VHT;2 CCK, OFDM, HT, VHT;3 CCK, OFDM, HT, VHT'
+                     ['txo_mcs: 0 CCK, OFDM, HT, VHT;1 CCK, OFDM, HT, VHT;2 CCK, OFDM, HT, VHT;3 CCK, OFDM, HT, VHT;'
                       '4 OFDM, HT, VHT;5 OFDM, HT, VHT;6 OFDM, HT, VHT;7 OFDM, HT, VHT;8 VHT;9 VHT'],
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: OFF'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2],
@@ -75,7 +75,7 @@ class TestRxSensitivityBRIDGEAllMcs5G(object):
 
         if station:
             dp_obj = lf_test.rx_sensitivity(station_name=station_names_fiveg, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_5G_ALL_MCS",
+                                            instance_name="TIP_RX_SEN_WPA2_BRIDGE_5G_ALL_MCS",
                                             vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -92,6 +92,9 @@ class TestRxSensitivityBRIDGEAllMcs5G(object):
         else:
             assert False
 
+    @pytest.mark.wpa2_personal
+    @pytest.mark.twog
+    @pytest.mark.all_mcs
     def test_client_wpa2_personal_bridge_all_mcs_2g(self, get_vif_state,
                                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                     get_configuration):
