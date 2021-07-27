@@ -409,7 +409,7 @@ class RunTest:
                                            ['Stability', '1'],
                                            ['Band-Steering', '0'], ['Multi-Station Throughput vs Pkt Size', '0'],
                                            ['Long-Term', '0']],
-                                     raw_lines=[['reset_dur:300']]
+                                     raw_lines=[['reset_dur:300'],['reset_batch_size:2']]
                                      )
         self.apstab_obj.setup()
         self.apstab_obj.run()
