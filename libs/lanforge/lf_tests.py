@@ -26,6 +26,7 @@ from sta_connect2 import StaConnect2
 import time
 import string
 import random
+
 S = 12
 # from eap_connect import EAPConnect
 from test_ipv4_ttls import TTLSTest
@@ -376,7 +377,7 @@ class RunTest:
         return self.dualbandptest_obj
 
     def apstabilitytest(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
-                                instance_name="test_demo", dut_5g="", dut_2g=""):
+                        instance_name="test_demo", dut_5g="", dut_2g=""):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
 
         if mode == "BRIDGE":
@@ -387,28 +388,29 @@ class RunTest:
             self.upstream_port = self.upstream_port + "." + str(vlan_id)
 
         self.apstab_obj = ApAutoTest(lf_host=self.lanforge_ip,
-                                            lf_port=self.lanforge_port,
-                                            lf_user="lanforge",
-                                            lf_password="lanforge",
-                                            instance_name=instance_name,
-                                            config_name="dbp_config",
-                                            upstream="1.1." + self.upstream_port,
-                                            pull_report=True,
-                                            dut5_0=dut_5g,
-                                            dut2_0=dut_2g,
-                                            load_old_cfg=False,
-                                            local_lf_report_dir=self.local_report_path,
-                                            max_stations_2=5,
-                                            max_stations_5=5,
-                                            max_stations_dual=10,
-                                            radio2=[self.twog_radios],
-                                            radio5=[self.fiveg_radios],
-                                            sets=[['Basic Client Connectivity', '0'], ['Multi Band Performance', '0'],
-                                                  ['Throughput vs Pkt Size', '0'], ['Capacity', '0'],
-                                                  ['Stability', '1'],
-                                                  ['Band-Steering', '0'], ['Multi-Station Throughput vs Pkt Size', '0'],
-                                                  ['Long-Term', '0']]
-                                            )
+                                     lf_port=self.lanforge_port,
+                                     lf_user="lanforge",
+                                     lf_password="lanforge",
+                                     instance_name=instance_name,
+                                     config_name="dbp_config",
+                                     upstream="1.1." + self.upstream_port,
+                                     pull_report=True,
+                                     dut5_0=dut_5g,
+                                     dut2_0=dut_2g,
+                                     load_old_cfg=False,
+                                     local_lf_report_dir=self.local_report_path,
+                                     max_stations_2=5,
+                                     max_stations_5=5,
+                                     max_stations_dual=10,
+                                     radio2=[self.twog_radios],
+                                     radio5=[self.fiveg_radios],
+                                     sets=[['Basic Client Connectivity', '0'], ['Multi Band Performance', '0'],
+                                           ['Throughput vs Pkt Size', '0'], ['Capacity', '0'],
+                                           ['Stability', '1'],
+                                           ['Band-Steering', '0'], ['Multi-Station Throughput vs Pkt Size', '0'],
+                                           ['Long-Term', '0']],
+                                     raw_lines=[['reset_dur:300']]
+                                     )
         self.apstab_obj.setup()
         self.apstab_obj.run()
         report_name = self.apstab_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
