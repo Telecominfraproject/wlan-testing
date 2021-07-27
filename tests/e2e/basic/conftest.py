@@ -878,20 +878,20 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                                                ap_wifi_data[ap_interfaces[interface]][3][0]
                                                ]
                 # pass
-            # else:
-            #     ssid = ["ssid_idx=" + str(interface) +
-            #             " ssid=" + ap_wifi_data[ap_interfaces[interface]][0] +
-            #             " security=EAP-TTLS" +
-            #             " password=" + ap_wifi_data[ap_interfaces[interface]][2] +
-            #             " bssid=" + str(ap_wifi_data[ap_interfaces[interface]][3][0]).lower()
-            #             ]
-            #
-            #     idx_mapping[str(interface)] = [ap_wifi_data[ap_interfaces[interface]][0],
-            #                                    ap_wifi_data[ap_interfaces[interface]][2],
-            #                                    ap_wifi_data[ap_interfaces[interface]][1],
-            #                                    ap_wifi_data[ap_interfaces[interface]][3][1],
-            #                                    ap_wifi_data[ap_interfaces[interface]][3][0]
-            #                                    ]
+            if ap_wifi_data[ap_interfaces[interface]][1] == "wpa2":
+                ssid = ["ssid_idx=" + str(interface) +
+                        " ssid=" + ap_wifi_data[ap_interfaces[interface]][0] +
+                        " security=EAP-TTLS" +
+                        " password=" + ap_wifi_data[ap_interfaces[interface]][2] +
+                        " bssid=" + str(ap_wifi_data[ap_interfaces[interface]][3][0]).lower()
+                        ]
+
+                idx_mapping[str(interface)] = [ap_wifi_data[ap_interfaces[interface]][0],
+                                               ap_wifi_data[ap_interfaces[interface]][2],
+                                               ap_wifi_data[ap_interfaces[interface]][1],
+                                               ap_wifi_data[ap_interfaces[interface]][3][1],
+                                               ap_wifi_data[ap_interfaces[interface]][3][0]
+                                               ]
                 # pass
             ssid_data.append(ssid)
             lf_tools.ssid_list.append(ap_wifi_data[ap_interfaces[interface]][0])
