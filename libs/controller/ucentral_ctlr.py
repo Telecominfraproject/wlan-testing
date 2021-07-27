@@ -340,7 +340,7 @@ class UProfileUtility:
                              verify=False, timeout=100)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
         print(resp.url)
-        resp.close()()
+        resp.close()
         print(resp)
 
 
