@@ -226,8 +226,8 @@ CONFIGURATION = {
                 "ip": "10.28.3.30",  # 10.28.3.30
                 "port": 8080,  # 8080
                 "ssh_port": 22,
-                "2.4G-Radio": ["wiphy0", "wiphy2"],
-                "5G-Radio": ["wiphy1", "wiphy3"],
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
+                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
                 "AX-Radio": ["wiphy4", "wiphy5", "wiphy6", "wiphy7"],
                 "upstream": "1.1.eth2",
                 "upstream_subnet": "10.28.2.1/24",
