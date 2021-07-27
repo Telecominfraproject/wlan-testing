@@ -15,10 +15,10 @@ CONFIGURATION = {
                 'mode': 'wifi5',
                 'serial': '3c2c99f44e77',
                 'jumphost': True,
-                'ip': "10.28.3.100",
+                'ip': "localhost",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 22,
+                'port': 8832,
                 'jumphost_tty': '/dev/ttyAP1',
                 'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/dev/ecw5410-2021-06-25-pending-b6743c3.tar.gz"
             }
@@ -26,9 +26,9 @@ CONFIGURATION = {
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "10.28.3.6",
-                "port": 8080,
-                "ssh_port": 22,
+                "ip": "localhost",
+                "port": 8830,
+                "ssh_port": 8834,
                 "2.4G-Radio": ["1.1.wiphy4"],
                 "5G-Radio": ["1.1.wiphy5"],
                 "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
