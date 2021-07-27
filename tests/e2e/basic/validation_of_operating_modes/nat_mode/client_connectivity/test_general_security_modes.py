@@ -14,7 +14,7 @@ pytestmark = [pytest.mark.client_connectivity, pytest.mark.nat, pytest.mark.gene
 setup_params_general = {
     "mode": "NAT",
     "ssid_modes": {
-        "open": [{"ssid_name": "ssid_shivam", "appliedRadios": ["2G"], "security_key": "something"},
+        "open": [{"ssid_name": "ssid_open_2g_nat", "appliedRadios": ["2G"], "security_key": "something"},
                  {"ssid_name": "ssid_open_5g_nat", "appliedRadios": ["5G"],
                   "security_key": "something"}],
         "wpa": [{"ssid_name": "ssid_wpa_2g_nat", "appliedRadios": ["2G"], "security_key": "something"},
@@ -71,7 +71,6 @@ class TestNATModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
 
-       
         assert result
 
     @pytest.mark.open
@@ -80,7 +79,7 @@ class TestNATModeConnectivitySuiteA(object):
     def test_open_ssid_5g(self, get_vif_state, get_lanforge_data, lf_test, test_cases, station_names_fiveg,
                           update_report):
         """Client Connectivity open ssid 5G
-           pytest -m "client_connectivity and bridge and general and open and fiveg"
+           pytest -m "client_connectivity and NAT and general and open and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["open"][1]
         ssid_name = profile_data["ssid_name"]
@@ -97,7 +96,6 @@ class TestNATModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
-       
         assert result
 
     @pytest.mark.sanity_light
@@ -107,7 +105,7 @@ class TestNATModeConnectivitySuiteA(object):
     def test_wpa_ssid_2g(self, get_vif_state, get_lanforge_data, update_report,
                          lf_test, test_cases, station_names_twog):
         """Client Connectivity wpa ssid 2.4G
-           pytest -m "client_connectivity and bridge and general and wpa and twog"
+           pytest -m "client_connectivity and NAT and general and wpa and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
@@ -124,7 +122,6 @@ class TestNATModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
 
-        
         assert result
 
     @pytest.mark.sanity_light
@@ -134,7 +131,7 @@ class TestNATModeConnectivitySuiteA(object):
     def test_wpa_ssid_5g(self, get_vif_state, lf_test, update_report, test_cases, station_names_fiveg,
                          get_lanforge_data):
         """Client Connectivity wpa ssid 5G
-           pytest -m "client_connectivity and bridge and general and wpa and fiveg"
+           pytest -m "client_connectivity and NAT and general and wpa and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
@@ -151,7 +148,6 @@ class TestNATModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
-        
         assert result
 
     @pytest.mark.sanity_light
@@ -161,7 +157,7 @@ class TestNATModeConnectivitySuiteA(object):
     def test_wpa2_personal_ssid_2g(self, get_vif_state, get_lanforge_data, lf_test, update_report, test_cases,
                                    station_names_twog):
         """Client Connectivity wpa2_personal ssid 2.4G
-           pytest -m "client_connectivity and bridge and general and wpa2_personal and twog"
+           pytest -m "client_connectivity and NAT and general and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -178,7 +174,6 @@ class TestNATModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
 
-        
         assert result
 
     @pytest.mark.sanity_light
@@ -189,7 +184,7 @@ class TestNATModeConnectivitySuiteA(object):
                                    station_names_fiveg,
                                    lf_test):
         """Client Connectivity wpa2_personal ssid 5G
-           pytest -m "client_connectivity and bridge and general and wpa2_personal and fiveg"
+           pytest -m "client_connectivity and NAT and general and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -206,12 +201,11 @@ class TestNATModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
-        
         assert result
 
 
 setup_params_general_two = {
-    "mode": "BRIDGE",
+    "mode": "NAT",
     "ssid_modes": {
         "wpa3_personal": [
             {"ssid_name": "ssid_wpa3_p_2g", "appliedRadios": ["2G"], "security_key": "something"},
@@ -232,7 +226,7 @@ setup_params_general_two = {
 
 
 @pytest.mark.suiteB
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general_two],
@@ -240,9 +234,9 @@ setup_params_general_two = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestBridgeModeConnectivitySuiteB(object):
+class TestNATModeConnectivitySuiteB(object):
     """ Client Connectivity SuiteA
-        pytest -m "client_connectivity and bridge and suiteB"
+        pytest -m "client_connectivity and NAT and suiteB"
     """
 
     @pytest.mark.uc_sanity
@@ -253,7 +247,7 @@ class TestBridgeModeConnectivitySuiteB(object):
                                    update_report,
                                    test_cases):
         """Client Connectivity open ssid 2.4G
-           pytest -m "client_connectivity and bridge and general and wpa3_personal and twog"
+           pytest -m "client_connectivity and NAT and general and wpa3_personal and twog"
         """
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -279,7 +273,7 @@ class TestBridgeModeConnectivitySuiteB(object):
     def test_wpa3_personal_ssid_5g(self, get_vif_state, station_names_fiveg, get_lanforge_data, lf_test, test_cases,
                                    update_report):
         """Client Connectivity open ssid 2.4G
-           pytest -m "client_connectivity and bridge and general and wpa3_personal and fiveg"
+           pytest -m "client_connectivity and NAT and general and wpa3_personal and fiveg"
         """
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -307,7 +301,7 @@ class TestBridgeModeConnectivitySuiteB(object):
                                          update_report,
                                          test_cases):
         """Client Connectivity open ssid 2.4G
-           pytest -m "client_connectivity and bridge and general and wpa3_personal_mixed and twog"
+           pytest -m "client_connectivity and NAT and general and wpa3_personal_mixed and twog"
         """
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
@@ -334,7 +328,7 @@ class TestBridgeModeConnectivitySuiteB(object):
                                          test_cases,
                                          update_report):
         """Client Connectivity open ssid 2.4G
-           pytest -m "client_connectivity and bridge and general and wpa3_personal_mixed and fiveg"
+           pytest -m "client_connectivity and NAT and general and wpa3_personal_mixed and fiveg"
         """
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][1]
         ssid_name = profile_data["ssid_name"]
@@ -362,7 +356,7 @@ class TestBridgeModeConnectivitySuiteB(object):
                                        update_report,
                                        test_cases):
         """Client Connectivity open ssid 2.4G
-           pytest -m "client_connectivity and bridge and general and wpa_wpa2_personal_mixed and twog"
+           pytest -m "client_connectivity and NAT and general and wpa_wpa2_personal_mixed and twog"
         """
         profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
@@ -389,7 +383,7 @@ class TestBridgeModeConnectivitySuiteB(object):
     def test_wpa_wpa2_personal_ssid_5g(self, get_vif_state, station_names_fiveg, get_lanforge_data, lf_test, test_cases,
                                        update_report):
         """Client Connectivity open ssid 2.4G
-           pytest -m "client_connectivity and bridge and general and wpa_wpa2_personal_mixed and fiveg"
+           pytest -m "client_connectivity and NAT and general and wpa_wpa2_personal_mixed and fiveg"
         """
         profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
         ssid_name = profile_data["ssid_name"]
@@ -411,7 +405,7 @@ class TestBridgeModeConnectivitySuiteB(object):
 
 # WEP Security Feature not available
 # setup_params_wep = {
-#     "mode": "BRIDGE",
+#     "mode": "NAT",
 #     "ssid_modes": {
 #         "wep": [ {"ssid_name": "ssid_wep_2g", "appliedRadios": ["2G"], "default_key_id": 1,
 #                   "wep_key": 1234567890},
@@ -431,7 +425,7 @@ class TestBridgeModeConnectivitySuiteB(object):
 #     scope="class"
 # )
 # @pytest.mark.usefixtures("setup_profiles")
-# class TestBridgeModeWEP(object):
+# class TestNATModeWEP(object):
 #
 #     @pytest.mark.wep
 #     @pytest.mark.twog
@@ -452,12 +446,12 @@ class TestBridgeModeConnectivitySuiteB(object):
 #         if passes:
 #             update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
 #                                           status_id=1,
-#                                           msg='2G WPA Client Connectivity Passed successfully - bridge mode' + str(
+#                                           msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
 #                                               passes))
 #         else:
 #             update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
 #                                           status_id=5,
-#                                           msg='2G WPA Client Connectivity Failed - bridge mode' + str(
+#                                           msg='2G WPA Client Connectivity Failed - NAT mode' + str(
 #                                               passes))
 #         assert passes
 #
@@ -480,11 +474,11 @@ class TestBridgeModeConnectivitySuiteB(object):
 #         if passes:
 #             update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
 #                                           status_id=1,
-#                                           msg='2G WPA Client Connectivity Passed successfully - bridge mode' + str(
+#                                           msg='2G WPA Client Connectivity Passed successfully - NAT mode' + str(
 #                                               passes))
 #         else:
 #             update_report.update_testrail(case_id=test_cases["2g_wpa_nat"],
 #                                           status_id=5,
-#                                           msg='2G WPA Client Connectivity Failed - bridge mode' + str(
+#                                           msg='2G WPA Client Connectivity Failed - NAT mode' + str(
 #                                               passes))
 #         assert passes

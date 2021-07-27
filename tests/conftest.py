@@ -278,7 +278,6 @@ def setup_controller(request, get_configuration, test_access_point):
 
             request.addfinalizer(teardown_ucontroller)
 
-
     except Exception as e:
         print(e)
         allure.attach(body=str(e), name="Controller Instantiation Failed: ")
@@ -290,44 +289,56 @@ def setup_controller(request, get_configuration, test_access_point):
 @pytest.fixture(scope="session")
 def instantiate_firmware(request, setup_controller, get_configuration):
     """sets up firmware utility and yields the object for firmware upgrade"""
-    firmware_client_obj = []
+    if request.config.getoption("--1.x"):
+        firmware_client_obj = []
 
-    for access_point_info in get_configuration['access_point']:
-        version = access_point_info["version"]
-        if request.config.getini("build").__contains__("https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/"):
-            version = request.config.getini("build")
-        firmware_client = FirmwareUtility(sdk_client=setup_controller,
-                                          model=access_point_info["model"],
-                                          version_url=version)
-        firmware_client_obj.append(firmware_client)
-    yield firmware_client_obj
+        for access_point_info in get_configuration['access_point']:
+            version = access_point_info["version"]
+            if request.config.getini("build").__contains__("https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/"):
+                version = request.config.getini("build")
+            firmware_client = FirmwareUtility(sdk_client=setup_controller,
+                                              model=access_point_info["model"],
+                                              version_url=version)
+            firmware_client_obj.append(firmware_client)
+        yield firmware_client_obj
+    else:
+        # 2.x
+        pass
 
 
 @pytest.fixture(scope="session")
-def get_latest_firmware(instantiate_firmware):
+def get_latest_firmware(request, instantiate_firmware):
     """yields the list of firmware version"""
-    fw_version_list = []
-    try:
-
-        for fw_obj in instantiate_firmware:
-            latest_firmware = fw_obj.get_fw_version()
-            latest_firmware = latest_firmware.replace(".tar.gz", "")
-            fw_version_list.append(latest_firmware)
-    except Exception as e:
-        print(e)
+    if request.config.getoption("--1.x"):
         fw_version_list = []
+        try:
 
-    yield fw_version_list
+            for fw_obj in instantiate_firmware:
+                latest_firmware = fw_obj.get_fw_version()
+                latest_firmware = latest_firmware.replace(".tar.gz", "")
+                fw_version_list.append(latest_firmware)
+        except Exception as e:
+            print(e)
+            fw_version_list = []
+
+        yield fw_version_list
+    else:
+        # 2.x
+        pass
 
 
 @pytest.fixture(scope="session")
-def upload_firmware(should_upload_firmware, instantiate_firmware):
+def upload_firmware(request, should_upload_firmware, instantiate_firmware):
     """yields the firmware_id that is uploaded to cloud"""
-    firmware_id_list = []
-    for i in range(0, len(instantiate_firmware)):
-        firmware_id = instantiate_firmware[i].upload_fw_on_cloud(force_upload=should_upload_firmware)
-        firmware_id_list.append(firmware_id)
-    yield firmware_id_list
+    if request.config.getoption("--1.x"):
+        firmware_id_list = []
+        for i in range(0, len(instantiate_firmware)):
+            firmware_id = instantiate_firmware[i].upload_fw_on_cloud(force_upload=should_upload_firmware)
+            firmware_id_list.append(firmware_id)
+        yield firmware_id_list
+    else:
+        # 2.x release
+        yield True
 
 
 @pytest.fixture(scope="session")
@@ -335,85 +346,101 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
                      should_upgrade_firmware, should_upload_firmware, get_apnos, get_configuration):
     """yields the status of upgrade of firmware. waits for 300 sec after each upgrade request"""
     print(should_upgrade_firmware, should_upload_firmware)
-    status_list = []
-    active_fw_list = []
-    try:
-        for access_point in get_configuration['access_point']:
-            ap_ssh = get_apnos(access_point)
-            active_fw = ap_ssh.get_active_firmware()
-            active_fw_list.append(active_fw)
-    except Exception as e:
-        print(e)
+    if request.config.getoption("--1.x"):
+        status_list = []
         active_fw_list = []
-    print(active_fw_list, get_latest_firmware)
-    if get_latest_firmware != active_fw_list:
-        if request.config.getoption("--skip-upgrade"):
-            status = "skip-upgrade"
-            status_list.append(status)
-        else:
-
-            for i in range(0, len(instantiate_firmware)):
-                status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i], force_upload=True,
-                                                            force_upgrade=should_upgrade_firmware)
-                allure.attach(name="Firmware Upgrade Request", body=str(status))
+        try:
+            for access_point in get_configuration['access_point']:
+                ap_ssh = get_apnos(access_point)
+                active_fw = ap_ssh.get_active_firmware()
+                active_fw_list.append(active_fw)
+        except Exception as e:
+            print(e)
+            active_fw_list = []
+        print(active_fw_list, get_latest_firmware)
+        if get_latest_firmware != active_fw_list:
+            if request.config.getoption("--skip-upgrade"):
+                status = "skip-upgrade"
                 status_list.append(status)
+            else:
+
+                for i in range(0, len(instantiate_firmware)):
+                    status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i], force_upload=True,
+                                                                force_upgrade=should_upgrade_firmware)
+                    allure.attach(name="Firmware Upgrade Request", body=str(status))
+                    status_list.append(status)
+        else:
+            if should_upgrade_firmware:
+                for i in range(0, len(instantiate_firmware)):
+                    status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i],
+                                                                force_upload=should_upload_firmware,
+                                                                force_upgrade=should_upgrade_firmware)
+                    allure.attach(name="Firmware Upgrade Request", body=str(status))
+                    status_list.append(status)
+            else:
+                status = "skip-upgrade Version Already Available"
+                status_list.append(status)
+        yield status_list
     else:
-        if should_upgrade_firmware:
-            for i in range(0, len(instantiate_firmware)):
-                status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i],
-                                                            force_upload=should_upload_firmware,
-                                                            force_upgrade=should_upgrade_firmware)
-                allure.attach(name="Firmware Upgrade Request", body=str(status))
-                status_list.append(status)
-        else:
-            status = "skip-upgrade Version Already Available"
-            status_list.append(status)
-    yield status_list
+        # 2.x release
+        pass
 
 
 @pytest.fixture(scope="session")
-def check_ap_firmware_cloud(setup_controller, get_equipment_id):
+def check_ap_firmware_cloud(request, setup_controller, get_equipment_id):
     """yields the active version of firmware on cloud"""
-    ap_fw_list = []
-    for i in get_equipment_id:
-        ap_fw_list.append(setup_controller.get_ap_firmware_old_method(equipment_id=i))
-    yield ap_fw_list
+    if request.config.getoption("--1.x"):
+        ap_fw_list = []
+        for i in get_equipment_id:
+            ap_fw_list.append(setup_controller.get_ap_firmware_old_method(equipment_id=i))
+        yield ap_fw_list
+    else:
+        # 2.x
+        pass
 
 
 @pytest.fixture(scope="session")
-def check_ap_firmware_ssh(get_configuration):
+def check_ap_firmware_ssh(get_configuration, request):
     """yields the active version of firmware on ap"""
-    active_fw_list = []
-    try:
-        for access_point in get_configuration['access_point']:
-            ap_ssh = APNOS(access_point)
-            active_fw = ap_ssh.get_active_firmware()
-            active_fw_list.append(active_fw)
-    except Exception as e:
-        print(e)
+    if request.config.getoption("--1.x"):
         active_fw_list = []
-    yield active_fw_list
+        try:
+            for access_point in get_configuration['access_point']:
+                ap_ssh = APNOS(access_point)
+                active_fw = ap_ssh.get_active_firmware()
+                active_fw_list.append(active_fw)
+        except Exception as e:
+            print(e)
+            active_fw_list = []
+        yield active_fw_list
+    else:
+        # 2.x
+        pass
 
 
 @pytest.fixture(scope="session")
-def setup_test_run(setup_controller, upgrade_firmware, get_configuration, get_equipment_id, get_latest_firmware,
+def setup_test_run(setup_controller, request, upgrade_firmware, get_configuration,
+                   get_equipment_id, get_latest_firmware,
                    get_apnos):
     """used to upgrade the firmware on AP and should be called on each test case on a module level"""
-
-    active_fw_list = []
-    try:
-        for access_point in get_configuration['access_point']:
-            ap_ssh = get_apnos(access_point)
-            active_fw = ap_ssh.get_active_firmware()
-            active_fw_list.append(active_fw)
-    except Exception as e:
-        print(e)
+    if request.config.getoption("--1.x"):
         active_fw_list = []
-    print(active_fw_list, get_latest_firmware)
-    if active_fw_list == get_latest_firmware:
-        yield True
+        try:
+            for access_point in get_configuration['access_point']:
+                ap_ssh = get_apnos(access_point)
+                active_fw = ap_ssh.get_active_firmware()
+                active_fw_list.append(active_fw)
+        except Exception as e:
+            print(e)
+            active_fw_list = []
+        print(active_fw_list, get_latest_firmware)
+        if active_fw_list == get_latest_firmware:
+            yield True
+        else:
+            pytest.exit("AP is not Upgraded tp Target Firmware versions")
     else:
-        pytest.exit("AP is not Upgraded tp Target Firmware versions")
+        # 2.x
+        pass
 
 
 """
@@ -565,11 +592,12 @@ def create_lanforge_chamberview_dut(get_configuration, testbed):
                 testbed=testbed, access_point_data=get_configuration["access_point"])
     yield True
 
+
 @pytest.fixture(scope="session")
 def lf_tools(get_configuration, testbed):
     """ Create a DUT on LANforge"""
     obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
-                testbed=testbed, access_point_data=get_configuration["access_point"])
+                      testbed=testbed, access_point_data=get_configuration["access_point"])
 
     yield obj
 
@@ -600,6 +628,7 @@ def setup_influx(request, testbed, get_configuration):
         "influx_tag": [testbed, get_configuration["access_point"][0]["model"]],
     }
     yield influx_params
+
 
 # Need for Perforce Mobile Device Execution
 def pytest_sessionstart(session):

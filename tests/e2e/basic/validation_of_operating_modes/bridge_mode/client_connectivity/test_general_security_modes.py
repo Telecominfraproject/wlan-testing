@@ -14,9 +14,9 @@ pytestmark = [pytest.mark.client_connectivity, pytest.mark.bridge, pytest.mark.g
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "open": [{"ssid_name": "ssid_open_2g_br", "appliedRadios": ["2G"], "security_key": "something", },
+        "open": [{"ssid_name": "ssid_open_2g_br", "appliedRadios": ["2G"], "security_key": "something" },
                  {"ssid_name": "ssid_open_5g_br", "appliedRadios": ["5G"],
-                  "security_key": "something", }],
+                  "security_key": "something" }],
         "wpa": [{"ssid_name": "ssid_wpa_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
                 {"ssid_name": "ssid_wpa_5g_br", "appliedRadios": ["5G"],
                  "security_key": "something"}],

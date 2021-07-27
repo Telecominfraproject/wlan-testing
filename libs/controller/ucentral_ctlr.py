@@ -243,6 +243,22 @@ class UProfileUtility:
             del self.base_profile_config['interfaces'][1]
             self.base_profile_config['interfaces'][0]['ssids'] = []
             self.base_profile_config['interfaces'] = []
+            wan_section_vlan = {
+                "name": "WAN",
+                "role": "upstream",
+                "services": ["lldp"],
+                "ethernet": [
+                    {
+                        "select-ports": [
+                            "WAN*"
+                        ]
+                    }
+                ],
+                "ipv4": {
+                    "addressing": "dynamic"
+                }
+            }
+            self.base_profile_config['interfaces'].append(wan_section_vlan)
         else:
             print("Invalid Mode")
             return 0
@@ -310,10 +326,6 @@ class UProfileUtility:
                 self.base_profile_config['interfaces'].append(vlan_section)
                 print(vlan_section)
                 vsection = 0
-            # Add to the ssid section
-            # print(self.base_profile_config)
-            # self.base_profile_config['interfaces'][vsection]['vlan'] = {'id': int(vid)}
-            # self.base_profile_config['interfaces'][vsection]['ssids'].append(ssid_info)
         else:
             print("invalid mode")
             pytest.exit("invalid Operating Mode")
@@ -328,17 +340,24 @@ class UProfileUtility:
                              verify=False, timeout=100)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
         print(resp.url)
-        # resp.close()()
+        resp.close()()
         print(resp)
 
 
-# controller = {
-#     'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
-#     'username': "tip@ucentral.com",
-#     'password': 'openwifi',
-# }
-# obj = UController(controller_data=controller)
-#
-# print(obj.get_devices())
-#
-# obj.logout()
+if __name__ == '__main__':
+
+
+    controller = {
+    'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+    'username': "tip@ucentral.com",
+    'password': 'openwifi',
+    }
+    obj = UController(controller_data=controller)
+    profile = UProfileUtility(sdk_client=obj)
+    profile.set_mode(mode="VLAN")
+    profile.set_radio_config()
+    ssid = {"ssid_name": "ssid_wpa2_2g_nat", "appliedRadios": ["2G"], "security": "psk", "security_key": "something", "vlan": 100}
+    profile.add_ssid(ssid_data=ssid)
+    # profile.push_config(serial_number="903cb39d6918")
+    # print(obj.get_devices())
+    obj.logout()
