@@ -354,6 +354,7 @@ class APNOS:
     def get_uc_latest_config(self):
         try:
             connected, latest, active = self.get_ucentral_status()
+            print()
             client = self.ssh_cli_connect()
             cmd = "cat /etc/ucentral/ucentral.cfg." + latest
             if self.mode:
@@ -361,6 +362,7 @@ class APNOS:
                       f"cmd --value \"{cmd}\" "
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read().decode('utf-8').splitlines()[1]
+            print(output)
             json_output = json.loads(output)  # , sort_keys=True)
             print(type(json_output))
             client.close()
@@ -411,7 +413,7 @@ class APNOS:
                 for j in r[i]["interfaces"]:
                     encryption = j["config"]["encryption"]
                     if encryption == "psk" or encryption == "psk2" or encryption == "psk-mixed" or \
-                       encryption == "sae" or encryption == "sae-mixed":
+                            encryption == "sae" or encryption == "sae-mixed":
                         wifi_info[j["ifname"]] = [j["config"]["ssid"], j["config"]["encryption"], j["config"]["key"]]
                     else:
                         wifi_info[j["ifname"]] = [j["config"]["ssid"], j["config"]["encryption"], ""]
@@ -490,6 +492,17 @@ class APNOS:
             logs = ""
         return logs
 
+    def get_ap_version_ucentral(self):
+        client = self.ssh_cli_connect()
+        cmd = "cat /tmp/ucentral.version"
+        if self.mode:
+            cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                  f"cmd --value \"{cmd}\" "
+        stdin, stdout, stderr = client.exec_command(cmd)
+        output = stdout.read().replace(b":~# cat /tmp/ucentral.version", b"").decode('utf-8')
+        client.close()
+        return output
+
     def get_vifc(self):
         client = self.ssh_cli_connect()
         cmd = "vifC"
@@ -543,5 +556,5 @@ if __name__ == '__main__':
         'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
     }
     var = APNOS(credentials=obj, sdk="2.x")
-    x = var.get_interface_details()
+    x = var.get_ap_version_ucentral()
     print(x)

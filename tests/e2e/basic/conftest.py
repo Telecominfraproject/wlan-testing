@@ -813,7 +813,6 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                 ssid = ["ssid_idx=" + str(interface) +
                         " ssid=" + ap_wifi_data[ap_interfaces[interface]][0] +
                         " security=OPEN" +
-                        " password=" + ap_wifi_data[ap_interfaces[interface]][2] +
                         " bssid=" + ap_wifi_data[ap_interfaces[interface]][3][0]
                         ]
                 idx_mapping[str(interface)] = [ap_wifi_data[ap_interfaces[interface]][0],
@@ -898,7 +897,6 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                 ssid = ["ssid_idx=" + str(interface) +
                         " ssid=" + ap_wifi_data[ap_interfaces[interface]][0] +
                         " security=EAP-TTLS" +
-                        " password=" + ap_wifi_data[ap_interfaces[interface]][2] +
                         " bssid=" + str(ap_wifi_data[ap_interfaces[interface]][3][0]).lower()
                         ]
 

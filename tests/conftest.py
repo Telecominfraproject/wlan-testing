@@ -6,7 +6,6 @@ import sys
 import os
 import time
 
-
 import allure
 import re
 import logging
@@ -674,7 +673,17 @@ def add_allure_environment_property(request: SubRequest) -> Optional[Callable]:
 
 
 @fixture(scope='session')
-def add_env_properties(get_configuration, add_allure_environment_property: Callable) -> None:
+def get_uc_ap_version(get_apnos, get_configuration):
+    version_list = []
+    for access_point_info in get_configuration['access_point']:
+        ap_ssh = get_apnos(access_point_info)
+        version = ap_ssh.get_ap_version_ucentral()
+        version_list.append(version)
+    yield version_list
+
+
+@fixture(scope='session')
+def add_env_properties(get_configuration, get_uc_ap_version, add_allure_environment_property: Callable) -> None:
     add_allure_environment_property('Access-Point-Model', get_configuration["access_point"][0]["model"])
-    add_allure_environment_property('Access-Point-Firmware-Version', get_configuration["access_point"][0]["version"])
+    add_allure_environment_property('Access-Point-Firmware-Version', "\n".join(get_uc_ap_version))
     add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])

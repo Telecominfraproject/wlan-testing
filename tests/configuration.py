@@ -255,7 +255,7 @@ CONFIGURATION = {
                 'password': "pumpkin77",
                 'port': 22,
                 'jumphost_tty': '/dev/ttyAP3',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/tplink_ec420/20210728-tplink_ec420-uCentral-trunk-12ad0d5-upgrade.bin"
             }
         ],
         "traffic_generator": {
@@ -264,14 +264,14 @@ CONFIGURATION = {
                 "ip": "10.28.3.10",
                 "port": 8080,
                 "ssh_port": 22,
-                "2.4G-Radio": ["1.1.wiphy4"],
-                "5G-Radio": ["1.1.wiphy5"],
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy4"],
+                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy5"],
                 "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
                 "upstream": "1.1.eth2",
                 "upstream_subnet": "10.28.2.1/24",
                 "uplink": "1.1.eth3",
-                "2.4G-Station-Name": "wlan0",
-                "5G-Station-Name": "wlan1",
+                "2.4G-Station-Name": "sta00",
+                "5G-Station-Name": "sta10",
                 "AX-Station-Name": "ax"
             }
         }

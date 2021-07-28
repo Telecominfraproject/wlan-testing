@@ -2,7 +2,7 @@ import allure
 import pytest
 
 pytestmark = [pytest.mark.client_connectivity, pytest.mark.vlan, pytest.mark.enterprise, pytest.mark.ttls,
-              pytest.mark.ucentral, pytest.mark.sanity] # pytest.mark.usefixtures("setup_test_run")
+              pytest.mark.ucentral, pytest.mark.sanity]  # pytest.mark.usefixtures("setup_test_run")
 
 setup_params_enterprise = {
     "mode": "VLAN",
@@ -11,8 +11,8 @@ setup_params_enterprise = {
             {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["2G"]},
             {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["5G"]}],
         "wpa2_enterprise": [
-            {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["2G"], "vlan":100},
-            {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"], "vlan":100}],
+            {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"], "vlan": 100}],
         "wpa3_enterprise": [
             {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"]},
             {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"]}]},
@@ -28,14 +28,13 @@ setup_params_enterprise = {
     indirect=True,
     scope="class"
 )
-
-
 @pytest.mark.usefixtures("setup_profiles")
 class TestVLANModeEnterpriseTTLSSuiteOne(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
-    def test_wpa_enterprise_2g(self, get_vif_state,station_names_twog, setup_profiles, get_lanforge_data, lf_test, update_report,
+    def test_wpa_enterprise_2g(self, get_vif_state, station_names_twog, setup_profiles, get_lanforge_data, lf_test,
+                               update_report,
                                test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
@@ -59,7 +58,8 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
-    def test_wpa_enterprise_5g(self, get_vif_state,station_names_fiveg, setup_profiles, get_lanforge_data, lf_test, update_report,
+    def test_wpa_enterprise_5g(self, get_vif_state, station_names_fiveg, setup_profiles, get_lanforge_data, lf_test,
+                               update_report,
                                test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa_enterprise"][1]
         ssid_name = profile_data["ssid_name"]
@@ -85,7 +85,8 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
-    def test_wpa2_enterprise_2g(self, get_vif_state,station_names_twog, setup_profiles, get_lanforge_data, lf_test, update_report,
+    def test_wpa2_enterprise_2g(self, get_vif_state, station_names_twog, setup_profiles, get_lanforge_data, lf_test,
+                                update_report,
                                 test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
@@ -111,7 +112,8 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
-    def test_wpa2_enterprise_5g(self, get_vif_state,station_names_fiveg, setup_profiles, get_lanforge_data, lf_test, update_report,
+    def test_wpa2_enterprise_5g(self, get_vif_state, station_names_fiveg, setup_profiles, get_lanforge_data, lf_test,
+                                update_report,
                                 test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][1]
         ssid_name = profile_data["ssid_name"]
@@ -135,7 +137,8 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
-    def test_wpa3_enterprise_2g(self, get_vif_state,station_names_twog, setup_profiles, get_lanforge_data, lf_test, update_report,
+    def test_wpa3_enterprise_2g(self, get_vif_state, station_names_twog, setup_profiles, get_lanforge_data, lf_test,
+                                update_report,
                                 test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
@@ -158,7 +161,8 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
-    def test_wpa3_enterprise_5g(self, get_vif_state,station_names_fiveg, setup_profiles, get_lanforge_data, lf_test, update_report,
+    def test_wpa3_enterprise_5g(self, get_vif_state, station_names_fiveg, setup_profiles, get_lanforge_data, lf_test,
+                                update_report,
                                 test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][1]
         ssid_name = profile_data["ssid_name"]
@@ -207,7 +211,8 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.twog
-    def test_wpa_wpa2_enterprise_2g(self, get_vif_state,station_names_twog, setup_profiles, get_lanforge_data, lf_test, update_report,
+    def test_wpa_wpa2_enterprise_2g(self, get_vif_state, station_names_twog, setup_profiles, get_lanforge_data, lf_test,
+                                    update_report,
                                     test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise_two["ssid_modes"]["wpa_wpa2_enterprise_mixed"][0]
         ssid_name = profile_data["ssid_name"]
@@ -231,7 +236,8 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.fiveg
-    def test_wpa_wpa2_enterprise_5g(self, get_vif_state,station_names_fiveg, setup_profiles, get_lanforge_data, lf_test,
+    def test_wpa_wpa2_enterprise_5g(self, get_vif_state, station_names_fiveg, setup_profiles, get_lanforge_data,
+                                    lf_test,
                                     update_report, test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise_two["ssid_modes"]["wpa_wpa2_enterprise_mixed"][1]
         ssid_name = profile_data["ssid_name"]
@@ -255,7 +261,8 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.twog
-    def test_wpa3_enterprise_mixed_2g(self, get_vif_state,station_names_twog, setup_profiles, get_lanforge_data, lf_test,
+    def test_wpa3_enterprise_mixed_2g(self, get_vif_state, station_names_twog, setup_profiles, get_lanforge_data,
+                                      lf_test,
                                       update_report, test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise_two["ssid_modes"]["wpa3_enterprise_mixed"][0]
         ssid_name = profile_data["ssid_name"]
@@ -278,7 +285,8 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.fiveg
-    def test_wpa3_enterprise_mixed_5g(self, get_vif_state,station_names_fiveg, setup_profiles, get_lanforge_data, lf_test,
+    def test_wpa3_enterprise_mixed_5g(self, get_vif_state, station_names_fiveg, setup_profiles, get_lanforge_data,
+                                      lf_test,
                                       update_report, exit_on_fail,
                                       test_cases, radius_info):
         profile_data = setup_params_enterprise_two["ssid_modes"]["wpa3_enterprise_mixed"][1]
