@@ -795,6 +795,7 @@ def deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile
             try:
                 elementProfiles = driver.find_element_by_xpath("//*[@name='ManagedConfigurationList' and @label='Profiles']")
                 elementProfiles.click()
+                
                 print("Exception Select Profile Button")
             except NoSuchElementException:
                 print("No Profile Installed")
@@ -825,7 +826,7 @@ def deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile
         except Exception as e:
             print("Exception Remove Button")
             assert False
-            
+
     except Exception:
         print("Exception There may be No Profiles Installed")
         report.step_start("Exception There may be No Profiles Installed")  
