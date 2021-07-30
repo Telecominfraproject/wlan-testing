@@ -231,7 +231,7 @@ class RunTest:
                                             instance_name=instance_name,
                                             config_name="wifi_config",
                                             upstream="1.1." + upstream_port,
-                                            batch_size="1,5,10,20,40,64",
+                                            batch_size="1,5,10,20,40,64,128",
                                             loop_iter="1",
                                             protocol=protocol,
                                             duration=duration,

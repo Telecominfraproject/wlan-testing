@@ -544,7 +544,7 @@ class APNOS:
 
 if __name__ == '__main__':
     obj = {
-        'model': 'ec420',
+        'model': 'ecw5211',
         'mode': 'wifi5',
         'serial': '001122090801',
         'jumphost': True,
@@ -556,5 +556,5 @@ if __name__ == '__main__':
         'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
     }
     var = APNOS(credentials=obj, sdk="2.x")
-    x = var.get_ap_version_ucentral()
+    x = var.get_interface_details()
     print(x)

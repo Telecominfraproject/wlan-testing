@@ -508,14 +508,12 @@ def get_markers(request, get_security_flags):
     for item in session.items:
         for j in item.iter_markers():
             markers.append(j.name)
-    # print(set(markers))
     for i in security:
         if set(markers).__contains__(i):
             security_dict[i] = True
         else:
             security_dict[i] = False
-    # print(security_dict)
-    allure.attach(body=str(security_dict), name="Test Cases Requires: ")
+
     yield security_dict
 
 

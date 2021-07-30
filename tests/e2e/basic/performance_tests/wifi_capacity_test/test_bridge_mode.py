@@ -32,10 +32,11 @@ setup_params_general_dual_band = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-@pytest.mark.wpa2_personal
+@pytest.mark.bridge
 @pytest.mark.twog
 @pytest.mark.fiveg
 @pytest.mark.dual_band
+@pytest.mark.wpa2_personal
 @pytest.mark.wifi_capacity_test
 class TestWifiCapacityBRIDGEModeDualBand(object):
     """ Wifi Capacity Test BRIDGE mode
@@ -53,6 +54,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         vlan = 1
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -81,6 +83,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         vlan = 1
+        get_vif_state.append(ssid_name)
         if ssid_name not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")

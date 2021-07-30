@@ -804,115 +804,115 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
             allure.attach(name="Config Info", body="AP is Not Broadcasting Applied Config: " + str(allure_body))
         ap_logs = ap_ssh.logread()
         allure.attach(body=ap_logs, name="AP LOgs: ")
-        ap_wifi_data = ap_ssh.get_interface_details()
-        idx_mapping = {}
-        ssid_data = []
-        ap_interfaces = list(ap_wifi_data.keys())
-        for interface in range(len(ap_interfaces)):
-            if ap_wifi_data[ap_interfaces[interface]][1] == "none":
-                ssid = ["ssid_idx=" + str(interface) +
-                        " ssid=" + ap_wifi_data[ap_interfaces[interface]][0] +
-                        " security=OPEN" +
-                        " bssid=" + ap_wifi_data[ap_interfaces[interface]][3][0]
-                        ]
-                idx_mapping[str(interface)] = [ap_wifi_data[ap_interfaces[interface]][0],
-                                               ap_wifi_data[ap_interfaces[interface]][2],
-                                               ap_wifi_data[ap_interfaces[interface]][1],
-                                               ap_wifi_data[ap_interfaces[interface]][3][1],
-                                               ap_wifi_data[ap_interfaces[interface]][3][0]
-                                               ]
-                # pass
-            if ap_wifi_data[ap_interfaces[interface]][1] == "psk":
-                ssid = ["ssid_idx=" + str(interface) +
-                        " ssid=" + ap_wifi_data[ap_interfaces[interface]][0] +
-                        " security=WPA" +
-                        " password=" + ap_wifi_data[ap_interfaces[interface]][2] +
-                        " bssid=" + ap_wifi_data[ap_interfaces[interface]][3][0]
-                        ]
-                idx_mapping[str(interface)] = [ap_wifi_data[ap_interfaces[interface]][0],
-                                               ap_wifi_data[ap_interfaces[interface]][2],
-                                               ap_wifi_data[ap_interfaces[interface]][1],
-                                               ap_wifi_data[ap_interfaces[interface]][3][1],
-                                               ap_wifi_data[ap_interfaces[interface]][3][0]
-                                               ]
-                # pass
-            if ap_wifi_data[ap_interfaces[interface]][1] == "psk-mixed":
-                ssid = ["ssid_idx=" + str(interface) +
-                        " ssid=" + ap_wifi_data[ap_interfaces[interface]][0] +
-                        " security=WPA|WPA2" +
-                        " password=" + ap_wifi_data[ap_interfaces[interface]][2] +
-                        " bssid=" + ap_wifi_data[ap_interfaces[interface]][3][0]
-                        ]
-                idx_mapping[str(interface)] = [ap_wifi_data[ap_interfaces[interface]][0],
-                                               ap_wifi_data[ap_interfaces[interface]][2],
-                                               ap_wifi_data[ap_interfaces[interface]][1],
-                                               ap_wifi_data[ap_interfaces[interface]][3][1],
-                                               ap_wifi_data[ap_interfaces[interface]][3][0]
-                                               ]
-                # pass
-            if ap_wifi_data[ap_interfaces[interface]][1] == "psk2":
-                ssid = ["ssid_idx=" + str(interface) +
-                        " ssid=" + ap_wifi_data[ap_interfaces[interface]][0] +
-                        " security=WPA2" +
-                        " password=" + ap_wifi_data[ap_interfaces[interface]][2] +
-                        " bssid=" + str(ap_wifi_data[ap_interfaces[interface]][3][0]).lower()
-                        ]
-                print(ssid)
-                idx_mapping[str(interface)] = [ap_wifi_data[ap_interfaces[interface]][0],
-                                               ap_wifi_data[ap_interfaces[interface]][2],
-                                               ap_wifi_data[ap_interfaces[interface]][1],
-                                               ap_wifi_data[ap_interfaces[interface]][3][1],
-                                               ap_wifi_data[ap_interfaces[interface]][3][0]
-                                               ]
-                # pass
-            if ap_wifi_data[ap_interfaces[interface]][1] == "sae":
-                ssid = ["ssid_idx=" + str(interface) +
-                        " ssid=" + ap_wifi_data[ap_interfaces[interface]][0] +
-                        " security=WPA3" +
-                        " password=" + ap_wifi_data[ap_interfaces[interface]][2] +
-                        " bssid=" + ap_wifi_data[ap_interfaces[interface]][3][0]
-                        ]
-                idx_mapping[str(interface)] = [ap_wifi_data[ap_interfaces[interface]][0],
-                                               ap_wifi_data[ap_interfaces[interface]][2],
-                                               ap_wifi_data[ap_interfaces[interface]][1],
-                                               ap_wifi_data[ap_interfaces[interface]][3][1],
-                                               ap_wifi_data[ap_interfaces[interface]][3][0]
-                                               ]
-                # pass
-            if ap_wifi_data[ap_interfaces[interface]][1] == "sae-mixed":
-                ssid = ["ssid_idx=" + str(interface) +
-                        " ssid=" + ap_wifi_data[ap_interfaces[interface]][0] +
-                        " security=WPA3" +
-                        " password=" + ap_wifi_data[ap_interfaces[interface]][2] +
-                        " bssid=" + ap_wifi_data[ap_interfaces[interface]][3][0]
-                        ]
-                idx_mapping[str(interface)] = [ap_wifi_data[ap_interfaces[interface]][0],
-                                               ap_wifi_data[ap_interfaces[interface]][2],
-                                               ap_wifi_data[ap_interfaces[interface]][1],
-                                               ap_wifi_data[ap_interfaces[interface]][3][1],
-                                               ap_wifi_data[ap_interfaces[interface]][3][0]
-                                               ]
-                # pass
-            if ap_wifi_data[ap_interfaces[interface]][1] == "wpa2":
-                ssid = ["ssid_idx=" + str(interface) +
-                        " ssid=" + ap_wifi_data[ap_interfaces[interface]][0] +
-                        " security=EAP-TTLS" +
-                        " bssid=" + str(ap_wifi_data[ap_interfaces[interface]][3][0]).lower()
-                        ]
-
-                idx_mapping[str(interface)] = [ap_wifi_data[ap_interfaces[interface]][0],
-                                               ap_wifi_data[ap_interfaces[interface]][2],
-                                               ap_wifi_data[ap_interfaces[interface]][1],
-                                               ap_wifi_data[ap_interfaces[interface]][3][1],
-                                               ap_wifi_data[ap_interfaces[interface]][3][0]
-                                               ]
-                # pass
-            ssid_data.append(ssid)
-            lf_tools.ssid_list.append(ap_wifi_data[ap_interfaces[interface]][0])
-        lf_tools.dut_idx_mapping = idx_mapping
-        print(ssid_data)
-        lf_tools.reset_scenario()
-        lf_tools.update_ssid(ssid_data=ssid_data)
+        # ap_wifi_data = ap_ssh.get_interface_details()
+        # idx_mapping = {}
+        # ssid_data = []
+        # ap_interfaces = list(ap_wifi_data.keys())
+        # for interface in range(len(ap_interfaces)):
+        #     if ap_wifi_data[ap_interfaces[interface]][1] == "none":
+        #         ssid = ["ssid_idx=" + str(interface) +
+        #                 " ssid=" + ap_wifi_data[ap_interfaces[interface]][0] +
+        #                 " security=OPEN" +
+        #                 " bssid=" + ap_wifi_data[ap_interfaces[interface]][3][0]
+        #                 ]
+        #         idx_mapping[str(interface)] = [ap_wifi_data[ap_interfaces[interface]][0],
+        #                                        ap_wifi_data[ap_interfaces[interface]][2],
+        #                                        ap_wifi_data[ap_interfaces[interface]][1],
+        #                                        ap_wifi_data[ap_interfaces[interface]][3][1],
+        #                                        ap_wifi_data[ap_interfaces[interface]][3][0]
+        #                                        ]
+        #         # pass
+        #     if ap_wifi_data[ap_interfaces[interface]][1] == "psk":
+        #         ssid = ["ssid_idx=" + str(interface) +
+        #                 " ssid=" + ap_wifi_data[ap_interfaces[interface]][0] +
+        #                 " security=WPA" +
+        #                 " password=" + ap_wifi_data[ap_interfaces[interface]][2] +
+        #                 " bssid=" + ap_wifi_data[ap_interfaces[interface]][3][0]
+        #                 ]
+        #         idx_mapping[str(interface)] = [ap_wifi_data[ap_interfaces[interface]][0],
+        #                                        ap_wifi_data[ap_interfaces[interface]][2],
+        #                                        ap_wifi_data[ap_interfaces[interface]][1],
+        #                                        ap_wifi_data[ap_interfaces[interface]][3][1],
+        #                                        ap_wifi_data[ap_interfaces[interface]][3][0]
+        #                                        ]
+        #         # pass
+        #     if ap_wifi_data[ap_interfaces[interface]][1] == "psk-mixed":
+        #         ssid = ["ssid_idx=" + str(interface) +
+        #                 " ssid=" + ap_wifi_data[ap_interfaces[interface]][0] +
+        #                 " security=WPA|WPA2" +
+        #                 " password=" + ap_wifi_data[ap_interfaces[interface]][2] +
+        #                 " bssid=" + ap_wifi_data[ap_interfaces[interface]][3][0]
+        #                 ]
+        #         idx_mapping[str(interface)] = [ap_wifi_data[ap_interfaces[interface]][0],
+        #                                        ap_wifi_data[ap_interfaces[interface]][2],
+        #                                        ap_wifi_data[ap_interfaces[interface]][1],
+        #                                        ap_wifi_data[ap_interfaces[interface]][3][1],
+        #                                        ap_wifi_data[ap_interfaces[interface]][3][0]
+        #                                        ]
+        #         # pass
+        #     if ap_wifi_data[ap_interfaces[interface]][1] == "psk2":
+        #         ssid = ["ssid_idx=" + str(interface) +
+        #                 " ssid=" + ap_wifi_data[ap_interfaces[interface]][0] +
+        #                 " security=WPA2" +
+        #                 " password=" + ap_wifi_data[ap_interfaces[interface]][2] +
+        #                 " bssid=" + str(ap_wifi_data[ap_interfaces[interface]][3][0]).lower()
+        #                 ]
+        #         print(ssid)
+        #         idx_mapping[str(interface)] = [ap_wifi_data[ap_interfaces[interface]][0],
+        #                                        ap_wifi_data[ap_interfaces[interface]][2],
+        #                                        ap_wifi_data[ap_interfaces[interface]][1],
+        #                                        ap_wifi_data[ap_interfaces[interface]][3][1],
+        #                                        ap_wifi_data[ap_interfaces[interface]][3][0]
+        #                                        ]
+        #         # pass
+        #     if ap_wifi_data[ap_interfaces[interface]][1] == "sae":
+        #         ssid = ["ssid_idx=" + str(interface) +
+        #                 " ssid=" + ap_wifi_data[ap_interfaces[interface]][0] +
+        #                 " security=WPA3" +
+        #                 " password=" + ap_wifi_data[ap_interfaces[interface]][2] +
+        #                 " bssid=" + ap_wifi_data[ap_interfaces[interface]][3][0]
+        #                 ]
+        #         idx_mapping[str(interface)] = [ap_wifi_data[ap_interfaces[interface]][0],
+        #                                        ap_wifi_data[ap_interfaces[interface]][2],
+        #                                        ap_wifi_data[ap_interfaces[interface]][1],
+        #                                        ap_wifi_data[ap_interfaces[interface]][3][1],
+        #                                        ap_wifi_data[ap_interfaces[interface]][3][0]
+        #                                        ]
+        #         # pass
+        #     if ap_wifi_data[ap_interfaces[interface]][1] == "sae-mixed":
+        #         ssid = ["ssid_idx=" + str(interface) +
+        #                 " ssid=" + ap_wifi_data[ap_interfaces[interface]][0] +
+        #                 " security=WPA3" +
+        #                 " password=" + ap_wifi_data[ap_interfaces[interface]][2] +
+        #                 " bssid=" + ap_wifi_data[ap_interfaces[interface]][3][0]
+        #                 ]
+        #         idx_mapping[str(interface)] = [ap_wifi_data[ap_interfaces[interface]][0],
+        #                                        ap_wifi_data[ap_interfaces[interface]][2],
+        #                                        ap_wifi_data[ap_interfaces[interface]][1],
+        #                                        ap_wifi_data[ap_interfaces[interface]][3][1],
+        #                                        ap_wifi_data[ap_interfaces[interface]][3][0]
+        #                                        ]
+        #         # pass
+        #     if ap_wifi_data[ap_interfaces[interface]][1] == "wpa2":
+        #         ssid = ["ssid_idx=" + str(interface) +
+        #                 " ssid=" + ap_wifi_data[ap_interfaces[interface]][0] +
+        #                 " security=EAP-TTLS" +
+        #                 " bssid=" + str(ap_wifi_data[ap_interfaces[interface]][3][0]).lower()
+        #                 ]
+        #
+        #         idx_mapping[str(interface)] = [ap_wifi_data[ap_interfaces[interface]][0],
+        #                                        ap_wifi_data[ap_interfaces[interface]][2],
+        #                                        ap_wifi_data[ap_interfaces[interface]][1],
+        #                                        ap_wifi_data[ap_interfaces[interface]][3][1],
+        #                                        ap_wifi_data[ap_interfaces[interface]][3][0]
+        #                                        ]
+        #         # pass
+        #     ssid_data.append(ssid)
+        #     lf_tools.ssid_list.append(ap_wifi_data[ap_interfaces[interface]][0])
+        # lf_tools.dut_idx_mapping = idx_mapping
+        # print(ssid_data)
+        # lf_tools.reset_scenario()
+        # lf_tools.update_ssid(ssid_data=ssid_data)
         if request.param["mode"] == "VLAN":
             lf_tools.add_vlan(vlan_ids=vlan_list)
         yield test_cases
