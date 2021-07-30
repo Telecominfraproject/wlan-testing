@@ -112,8 +112,9 @@ def set_APconnMobileDevice_iOS(request, WifiNameSSID, WifiPass, setup_perfectoMo
         report.step_start("Checking Internet Connection Error..")
 
         try:
-            WifiInternetErrMsg = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
-        except NoSuchElementException:
+            #WifiInternetErrMsg = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
+            NoInternetConnectionMsg = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
+        except Exception as e:
             print("No Error with Wifi-AP Connection: " + Wifi_AP_Name)
 
     else:
@@ -795,7 +796,7 @@ def deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile
             try:
                 elementProfiles = driver.find_element_by_xpath("//*[@name='ManagedConfigurationList' and @label='Profiles']")
                 elementProfiles.click()
-                
+
                 print("Exception Select Profile Button")
             except NoSuchElementException:
                 print("No Profile Installed")
