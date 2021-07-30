@@ -58,7 +58,9 @@ def setup_vlan():
 def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment_id,
                    instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                    get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
+    lf_tools.reset_scenario()
     if request.param["mode"] == "VLAN":
+
         vlan_list = list()
         refactored_vlan_list = list()
         ssid_modes = request.param["ssid_modes"].keys()
@@ -74,6 +76,8 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
             for i in range(len(vlan_list)):
                 if vlan_list[i] > 4095 or vlan_list[i] < 1:
                     vlan_list.pop(i)
+    if request.param["mode"] == "VLAN":
+        lf_tools.add_vlan(vlan_ids=vlan_list)
     if request.config.getoption("1.x"):
         instantiate_profile = instantiate_profile(sdk_client=setup_controller)
         vlan_id, mode = 0, 0
@@ -913,8 +917,6 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
         # print(ssid_data)
         # lf_tools.reset_scenario()
         # lf_tools.update_ssid(ssid_data=ssid_data)
-        if request.param["mode"] == "VLAN":
-            lf_tools.add_vlan(vlan_ids=vlan_list)
         yield test_cases
 
 
