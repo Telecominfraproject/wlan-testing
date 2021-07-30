@@ -177,9 +177,9 @@ CONFIGURATION = {
                 "ip": "10.28.3.12",
                 "port": 8080,
                 "ssh_port": 22,
-                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy4"],
-                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy5"],
-                "AX-Radio": ["1.1.wiphy2", "1.1.wiphy3"],
+                "2.4G-Radio": ["1.1.wiphy4"],
+                "5G-Radio": [ "1.1.wiphy5"],
+                "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
                 "upstream": "1.1.eth2",
                 "upstream_subnet": "10.28.2.1/24",
                 "uplink": "1.1.eth3",
@@ -215,12 +215,12 @@ CONFIGURATION = {
                 "ip": "10.28.3.28",
                 "port": 8080,
                 "ssh_port": 22,
-                "2.4G-Radio": ["wiphy4"],
-                "5G-Radio": ["wiphy5"],
-                "AX-Radio": ["wiphy0", "wiphy1", "wiphy2", "wiphy3"],
+                "2.4G-Radio": ["1.1.wiphy2"],
+                "5G-Radio": ["1.1.wiphy3"],
+                "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
                 "upstream": "1.1.eth2",
                 "upstream_subnet": "10.28.2.1/24",
-                "uplink": "1.1.eth3",
+                "uplink": "1.1.eth1",
                 "2.4G-Station-Name": "sta00",
                 "5G-Station-Name": "sta10",
                 "AX-Station-Name": "ax"
@@ -255,7 +255,7 @@ CONFIGURATION = {
                 "ssh_port": 22,
                 "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
                 "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
-                "AX-Radio": ["wiphy4", "wiphy5", "wiphy6", "wiphy7"],
+                "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
                 "upstream": "1.1.eth2",
                 "upstream_subnet": "10.28.2.1/24",
                 "uplink": "1.1.eth3",
@@ -313,14 +313,14 @@ CONFIGURATION = {
             {
                 'model': 'wf194c',
                 'mode': 'wifi6',
-                'serial': '089B4BB2F10C',
+                'serial': '089b4bb2f10c',
                 'jumphost': True,
                 'ip': "10.28.3.103",  # 10.28.3.103
                 'username': "lanforge",
                 'password': "pumpkin77",
                 'port': 22,  # 22
                 'jumphost_tty': '/dev/ttyAP5',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/wf194c/trunk/wf194c-1.1.0.tar.gz"
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf194c/20210729-cig_wf194c-v2.0.0-rc2-02244b8-upgrade.bin"
             }
         ],
         "traffic_generator": {
@@ -329,9 +329,9 @@ CONFIGURATION = {
                 "ip": "10.28.3.34",  # 10.28.3.34
                 "port": 8080,  # 8080
                 "ssh_port": 22,
-                "2.4G-Radio": ["wiphy0", "wiphy2"],
-                "5G-Radio": ["wiphy1", "wiphy3"],
-                "AX-Radio": ["wiphy4", "wiphy5", "wiphy6", "wiphy7"],
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
+                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
+                "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
                 "upstream": "1.1.eth2",
                 "upstream_subnet": "10.28.2.1/24",
                 "uplink": "1.1.eth3",
