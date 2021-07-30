@@ -56,7 +56,6 @@ class TestAcessPointConnection(object):
 
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_android[1]
@@ -164,7 +163,7 @@ class TestAcessPointConnection(object):
 
     @pytest.mark.twog
     @pytest.mark.open
-    def test_ClientConnectivity_2g_OPEN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_android):
+    def test_AccessPointConnection_2g_OPEN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssidName = profile_data["ssid_name"]
@@ -190,7 +189,7 @@ class TestAcessPointConnection(object):
 
     @pytest.mark.fiveg
     @pytest.mark.open
-    def test_ClientConnectivity_5g_OPEN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_android):
+    def test_AccessPointConnection_5g_OPEN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["open"][1]
         ssidName = profile_data["ssid_name"]
