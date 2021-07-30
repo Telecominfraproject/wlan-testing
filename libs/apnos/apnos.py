@@ -19,7 +19,7 @@ import allure
 
 class APNOS:
 
-    def __init__(self, credentials=None, pwd=os.getcwd(), sdk="1.x"):
+    def __init__(self, credentials=None, pwd=os.getcwd(), sdk="2.x"):
         allure.attach(name="APNOS LIbrary: ", body=str(credentials))
         self.serial = credentials['serial']
         self.owrt_args = "--prompt root@OpenAp -s serial --log stdout --user root --passwd openwifi"

@@ -64,7 +64,3 @@ class TestResources(object):
 
         assert traffic_generator_connectivity
 
-
-@pytest.mark.shivam
-def test_ucentral(setup_controller):
-    assert True
