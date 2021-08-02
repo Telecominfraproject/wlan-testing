@@ -703,18 +703,21 @@ def pytest_sessionfinish(session, exitstatus):
     TotalExecutedCount = failed_amount + passed_amount + skipped_amount
 
     print('\n------------------------------------')
-    print('Perfecto TestCase Execution Summary')  
+    print('Interop Perfecto TestCase Execution Summary')  
     print('------------------------------------')
     print('Total TestCase Executed: ' + str(TotalExecutedCount))  
     print('Total Passed: ' + str(passed_amount))
     print('Total Failed: ' + str(failed_amount))
     print('Total Skipped: ' + str(skipped_amount) + "\n")
   
-    for index in range(len(testCaseNameList)):
-        print(str(index+1) + ") " + str(testCaseNameList[index]) + " : " + str(testCaseStatusList[index]))
-        print("     ReportURL: " + str(testCaseReportURL[index]))
-        print("     FailureMsg: " + str(testCaseErrorMsg[index]) + "\n")
-        
+    try:
+        for index in range(len(testCaseNameList)):
+            print(str(index+1) + ") " + str(testCaseNameList[index]) + " : " + str(testCaseStatusList[index]))
+            print("     ReportURL: " + str(testCaseReportURL[index]))
+            print("     FailureMsg: " + str(testCaseErrorMsg[index]) + "\n")
+    except Exception as e:
+        print('No Interop Test Cases Executed')
+
     print('------------------------------------------------------------------\n\n\n\n')
 
 @pytest.fixture(scope="function")
