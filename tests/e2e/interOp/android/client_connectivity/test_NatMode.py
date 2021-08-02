@@ -178,7 +178,6 @@ class TestNatMode(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
-    @pytest.mark.and_cliconn
     @pytest.mark.fiveg
     @pytest.mark.open
     def test_ClientConnectivity_5g_OPEN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_android):
