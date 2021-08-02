@@ -20,6 +20,7 @@ env:
   testbeds: '[
     {
       "namespace": "qa01",
+      "chart_version": "2.0.0",
       "ucentralgw_version": "v2.0.0",
       "ucentralsec_version": "v2.0.0",
       "ucentralgwui_version": "v2.0.0"
@@ -50,11 +51,6 @@ jobs:
       fail-fast: false
     steps:
 
-    - name: Checkout uCentral assembly chart repo
-      uses: actions/checkout@v2
-      with:
-        path: wlan-cloud-ucentral-deploy
-        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
     - name: Checkout repo with Helm values
       uses: actions/checkout@v2
       with:
@@ -70,21 +66,15 @@ jobs:
         aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
     - name: Deploy uCentralGW
-      working-directory: wlan-cloud-ucentral-deploy/chart
+      working-directory: wlan-testing
       run: |
-        helm plugin install https://github.com/aslafy-z/helm-git --version 0.10.0
-        sed -i '/wlan-cloud-ucentralgw@/s/ref=.*/ref='${{ matrix.ucentralgw_version }}'\"/g' Chart.yaml
-        sed -i '/wlan-cloud-ucentralgw-ui@/s/ref=.*/ref='${{ matrix.ucentralgwui_version }}'\"/g' Chart.yaml
-        sed -i '/wlan-cloud-ucentralsec@/s/ref=.*/ref='${{ matrix.ucentralsec_version }}'\"/g' Chart.yaml
         export UCENTRALGW_VERSION_TAG=$(echo ${{ matrix.ucentralgw_version }} | tr '/' '-')
         export UCENTRALGWUI_VERSION_TAG=$(echo ${{ matrix.ucentralgwui_version }} | tr '/' '-')
         export UCENTRALSEC_VERSION_TAG=$(echo ${{ matrix.ucentralsec_version }} | tr '/' '-')
-        helm repo add bitnami https://charts.bitnami.com/bitnami
-        helm repo update
-        helm dependency update
+        helm repo add tip-wlan-cloud-ucentral-helm https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/
         helm upgrade --install --create-namespace \
           --namespace ucentral-${{ matrix.namespace }} --wait --timeout 20m \
-          -f ../../wlan-testing/helm/ucentral/values.ucentral-qa.yaml \
+          -f helm/ucentral/values.ucentral-qa.yaml \
           --set ucentralgw.configProperties."rtty\.token"=${{ secrets.RTTY_TOKEN }} \
           --set ucentralsec.configProperties."authentication\.default\.username"=${{ secrets.UCENTRALGW_AUTH_USERNAME }} \
           --set ucentralsec.configProperties."authentication\.default\.password"=${{ secrets.UCENTRALGW_AUTH_PASSWORD }} \
@@ -114,7 +104,7 @@ jobs:
           --set ucentralgw.images.ucentralgw.tag=$UCENTRALGW_VERSION_TAG \
           --set ucentralgwui.images.ucentralgwui.tag=$UCENTRALGWUI_VERSION_TAG \
           --set ucentralsec.images.ucentralsec.tag=$UCENTRALSEC_VERSION_TAG \
-          tip-ucentral .
+          tip-ucentral tip-wlan-cloud-ucentral-helm/wlan-cloud-ucentral --version ${{ matrix.chart_version }}
 
     - name: Show resource state on deployment failure
       if: failure()
