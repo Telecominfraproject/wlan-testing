@@ -18,7 +18,7 @@ if 'perfecto_libs' not in sys.path:
 
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.PassPointConnection]
 
-from android_lib import closeApp, set_APconnMobileDevice_android, verifyUploadDownloadSpeed_android, Toggle_WifiMode_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, setup_perfectoMobile_android
+from android_lib import closeApp, set_APconnMobileDevice_android, verifyUploadDownloadSpeed_android, Toggle_WifiMode_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp
 
 setup_params_general = {
     "mode": "NAT",

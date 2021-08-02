@@ -13,12 +13,14 @@ from selenium.common.exceptions import NoSuchElementException
 import sys
 import allure
 
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.ToggleAirplaneMode]
+
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.ToggleAirplaneMode]
 
-from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, setup_perfectoMobile_android
+from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp
+
 
 setup_params_general = {
     "mode": "NAT",
