@@ -112,8 +112,9 @@ def set_APconnMobileDevice_iOS(request, WifiNameSSID, WifiPass, setup_perfectoMo
         report.step_start("Checking Internet Connection Error..")
 
         try:
-            WifiInternetErrMsg = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
-        except NoSuchElementException:
+            #WifiInternetErrMsg = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
+            NoInternetConnectionMsg = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
+        except Exception as e:
             print("No Error with Wifi-AP Connection: " + Wifi_AP_Name)
 
     else:
@@ -135,20 +136,19 @@ def set_APconnMobileDevice_iOS(request, WifiNameSSID, WifiPass, setup_perfectoMo
             wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
             wifiPassword.send_keys(WifiPass)
         except NoSuchElementException:
-            
-            print("Enter Password Page Not Loaded  ")
+            print("Enter Password Page Not Loaded")
         
         try:
             joinBTN = driver.find_element_by_xpath("//*[@label='Join']")
             joinBTN.click()
-        except NoSuchElementException:
-            print("Join Button Not Enabled...Verify if Password is set properly  ")
+        except Exception as e:
+            print("Join Button Not Enabled...Password may not be needed")
 
         try:
             WifiInternetErrMsg2 = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
              #= driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
             reportFlag = False
-        except NoSuchElementException:
+        except Exception as e:
             reportFlag = True
             print("No Wifi-AP Error Internet Error: " + WifiNameSSID)
             #Need to add Wait for Selected Wifi Xpath
@@ -231,39 +231,39 @@ def verify_APconnMobileDevice_iOS(request, WifiName, setup_perfectoMobile, connD
         #element = driver.find_element_by_xpath("")
         element.click()
         
-        print("Verifying if SSID Wifi Shows up")
-        report.step_start("Verifying if SSID Wifi Shows up")  
-        wifiXpath2 = WebDriverWait(driver, 45).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='"+ WifiName + "']")))
-        print("SSID is Present: " + WifiName)
-        report.step_start("SSID is Present: " + WifiName)  
-
-        try: 
-            print("Waiting for Auto Connection to: " + WifiName)
-            report.step_start("Waiting for Auto Connection to: " + WifiName)   
-            selectedWifiNetwork = "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeStaticText[@label='"+ WifiName + "']/parent::*/XCUIElementTypeButton[@label='More Info']"
-            passPointWifi = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, selectedWifiNetwork)))
-        except Exception as e:
-            #Toggle Wifi Mode
-            Toggle_WifiMode_iOS(request, setup_perfectoMobile, connData)  
-            time.sleep(15)
-
-            try:
-                print("Waiting for Auto Connection After Toggle: " + WifiName)
-                selectedWifiNetwork2 = "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeStaticText[@label='"+ WifiName + "']/parent::*/XCUIElementTypeButton[@label='More Info']"
-                passPointWifi = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, selectedWifiNetwork2)))
-            except Exception as e:
-                print("SSID Not Connected Within allocated Time: " + WifiName)
-                report.step_start("SSID Not Connected: " + WifiName)  
-                request.config.cache.set(key="SelectingWifiFailed", value=str(e))
-                reportFlag = False
-                assert reportFlag
-
     except Exception as e:
         print("SSID Not Connected Within allocated Time: " + WifiName)
         report.step_start("SSID Not Connected: " + WifiName)  
         request.config.cache.set(key="SelectingWifiFailed", value=str(e))
         reportFlag = False
-        assert reportFlag
+        assert reportFlag  
+
+        #print("Verifying if SSID Wifi Shows up")
+        #report.step_start("Verifying if SSID Wifi Shows up")  
+        #wifiXpath2 = WebDriverWait(driver, 45).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='"+ WifiName + "']")))
+        #print("SSID is Present: " + WifiName)
+        #report.step_start("SSID is Present: " + WifiName)  
+
+    try: 
+        print("Waiting for Auto Connection to: " + WifiName)
+        report.step_start("Waiting for Auto Connection to: " + WifiName)   
+        selectedWifiNetwork = "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeStaticText[@label='"+ WifiName + "']/parent::*/XCUIElementTypeButton[@label='More Info']"
+        passPointWifi = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, selectedWifiNetwork)))
+    except Exception as e:
+        #Toggle Wifi Mode
+        Toggle_WifiMode_iOS(request, setup_perfectoMobile, connData)  
+        time.sleep(15)
+
+        try:
+            print("Waiting for Auto Connection After Toggling Wifi: " + WifiName)
+            selectedWifiNetwork2 = "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeStaticText[@label='"+ WifiName + "']/parent::*/XCUIElementTypeButton[@label='More Info']"
+            passPointWifi = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, selectedWifiNetwork2)))
+        except Exception as e:
+            print("SSID Not Connected Within allocated Time: " + WifiName)
+            report.step_start("SSID Not Connected: " + WifiName)  
+            request.config.cache.set(key="SelectingWifiFailed", value=str(e))
+            reportFlag = False
+            assert reportFlag
 
     return True
 
@@ -796,6 +796,7 @@ def deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile
             try:
                 elementProfiles = driver.find_element_by_xpath("//*[@name='ManagedConfigurationList' and @label='Profiles']")
                 elementProfiles.click()
+
                 print("Exception Select Profile Button")
             except NoSuchElementException:
                 print("No Profile Installed")
@@ -823,27 +824,12 @@ def deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile
             report.step_start("Click Remove Button")  
             element = driver.find_element_by_xpath("//*[@label='Remove']")
             element.click()
-        except NoSuchElementException:
+        except Exception as e:
             print("Exception Remove Button")
             assert False
-
-        #try:
-         #   print("Verify No Profile Installed Msg")
-         #   report.step_start("Verify No Profile Installed Msg")  
-         #   wifiXpath2 = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No profiles are currently installed.']")))
-         #   assert True
-        #except NoSuchElementException and TimeoutException and Exception:
-        #    assert True
-         #   print("Exception Verify No Profile Installed Msg, There may be more Profiles Installed")
-            
-          #  try: 
-          #      print("Checking if " + profileName + " is removed")
-           #     element = driver.find_element_by_xpath("//XCUIElementTypeStaticText[@label='" + profileName + "']")
-           #     assert False
-           # except NoSuchElementException and Exception:
-           #     print("Exception Verify No Profile Installed Msg, There may be more Profiles Installed")
-           #     assert True
 
     except Exception:
         print("Exception There may be No Profiles Installed")
         report.step_start("Exception There may be No Profiles Installed")  
+
+    closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
