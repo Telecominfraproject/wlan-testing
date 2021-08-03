@@ -117,7 +117,7 @@ class TestPassPointConnection(object):
 
         report = setup_perfectoMobile_android[1]
         driver = setup_perfectoMobile_android[0]
-        connData = get_APToMobileDevice_data
+        connData = get_ToggleAirplaneMode_data
 
         #Set Wifi/AP Mode
         set_APconnMobileDevice_android(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
