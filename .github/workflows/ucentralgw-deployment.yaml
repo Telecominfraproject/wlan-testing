@@ -20,15 +20,9 @@ env:
   testbeds: '[
     {
       "namespace": "qa01",
-      "ucentralgw_version": "master",
-      "ucentralsec_version": "main",
-      "ucentralgwui_version": "main"
-    },
-    {
-      "namespace": "dev01",
-      "ucentralgw_version": "master",
-      "ucentralsec_version": "main",
-      "ucentralgwui_version": "main"
+      "ucentralgw_version": "v2.0.0",
+      "ucentralsec_version": "v2.0.0",
+      "ucentralgwui_version": "v2.0.0"
     }
   ]'
 
@@ -61,12 +55,10 @@ jobs:
       with:
         path: wlan-cloud-ucentral-deploy
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
-    - name: Checkout Helm values repo
+    - name: Checkout repo with Helm values
       uses: actions/checkout@v2
       with:
-        path: toolsmith
-        repository: Telecominfraproject/Toolsmith
-        token: ${{ secrets.PAT_TOKEN }}
+        path: wlan-testing
 
     - name: Prepare certificates from secrets
       run: |
@@ -92,7 +84,7 @@ jobs:
         helm dependency update
         helm upgrade --install --create-namespace \
           --namespace ucentral-${{ matrix.namespace }} --wait --timeout 20m \
-          -f ../../toolsmith/helm-values/assembly-ucentral/values.ucentral-qa.yaml \
+          -f ../../wlan-testing/helm/ucentral/values.ucentral-qa.yaml \
           --set ucentralgw.configProperties."rtty\.token"=${{ secrets.RTTY_TOKEN }} \
           --set ucentralsec.configProperties."authentication\.default\.username"=${{ secrets.UCENTRALGW_AUTH_USERNAME }} \
           --set ucentralsec.configProperties."authentication\.default\.password"=${{ secrets.UCENTRALGW_AUTH_PASSWORD }} \
