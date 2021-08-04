@@ -31,7 +31,8 @@ ubuntu@3.130.51.163
 
 """
 
-
+Customer = ""
+server = ""
 CONFIGURATION = {
     "basic-01": {
         "controller": {
@@ -139,8 +140,8 @@ CONFIGURATION = {
                 "ip": "10.28.3.10",
                 "port": 8080,
                 "ssh_port": 22,
-                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy4"],
-                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy5"],
+                "2.4G-Radio": ["1.1.wiphy4"],
+                "5G-Radio": ["1.1.wiphy5"],
                 "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
                 "upstream": "1.1.eth2",
                 "upstream_subnet": "10.28.2.1/24",
@@ -167,7 +168,7 @@ CONFIGURATION = {
                 'username': "lanforge",
                 'password': "pumpkin77",
                 'port': 22,
-                'jumphost_tty': '/dev/ttyAP5',
+                'jumphost_tty': "/dev/ttyAP5",
                 'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
             }
         ],

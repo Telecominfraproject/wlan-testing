@@ -20,7 +20,6 @@ import allure
 class APNOS:
 
     def __init__(self, credentials=None, pwd=os.getcwd(), sdk="2.x"):
-        allure.attach(name="APNOS LIbrary: ", body=str(credentials))
         self.serial = credentials['serial']
         self.owrt_args = "--prompt root@OpenAp -s serial --log stdout --user root --passwd openwifi"
         self.sdk = sdk
@@ -55,10 +54,8 @@ class APNOS:
             stdin, stdout, stderr = client.exec_command(cmd)
             var = str(stdout.read())
             if var.__contains__("True"):
-                allure.attach(name="openwrt_ctl Setup", body=str(var))
                 print("APNOS Serial Setup OK")
             else:
-                allure.attach(name="openwrt_ctl Setup", body=str(var))
                 print("APNOS Serial Setup Fail")
 
     # Method to connect AP-CLI/ JUMPHOST-CLI
@@ -82,7 +79,6 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
-        allure.attach(name="AP Reboot", body=str(output))
         return output
 
     # Method to get the iwinfo status of AP using AP-CLI/ JUMPHOST-CLI
@@ -96,8 +92,6 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         data = stdout.read()
         client.close()
-        allure.attach(name="iwinfo Output Msg: ", body=str(data))
-        allure.attach(name="iwinfo config Err Msg: ", body=str(stderr))
         data = str(data).replace(" ", "").split("\\r\\n")
         band_info = []
         for i in data:
@@ -130,8 +124,7 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
-        allure.attach(name="vif config Output Msg: ", body=str(output))
-        allure.attach(name="vif config Err Msg: ", body=str(stderr))
+
 
         return output
 
@@ -145,8 +138,6 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
-        allure.attach(name="vif state Output Msg: ", body=str(output))
-        allure.attach(name="vif state Err Msg: ", body=str(stderr))
         return output
 
     # Method to get the vif_config ssid's of AP using AP-CLI/ JUMPHOST-CLI
@@ -157,7 +148,6 @@ class APNOS:
             ssid = str(i).replace(" ", "").split(".")
             if ssid[0].split(":")[0] == "b'ssid":
                 ssid_list.append(ssid[0].split(":")[1].replace("'", ""))
-        allure.attach(name="get_vif_config_ssids ", body=str(ssid_list))
         return ssid_list
 
     # Method to get the vif_state ssid's of AP using AP-CLI/ JUMPHOST-CLI
@@ -209,7 +199,6 @@ class APNOS:
                 ssid_info_list.append(info)
                 info = []
         print(ssid_info_list)
-        # allure.attach(name="get_vif_state_ssids ", body=str(ssid_list))
         return ssid_info_list
 
     # Get VIF State parameters
@@ -220,7 +209,6 @@ class APNOS:
             ssid = str(i).replace(" ", "").split(".")
             if ssid[0].split(":")[0] == "b'ssid":
                 ssid_list.append(ssid[0].split(":")[1].replace("'", ""))
-        allure.attach(name="get_vif_state_ssids ", body=str(ssid_list))
         return ssid_list
 
     # Method to get the active firmware of AP using AP-CLI/ JUMPHOST-CLI
@@ -240,9 +228,7 @@ class APNOS:
             client.close()
         except Exception as e:
             print(e)
-            allure.attach(name="get_active_firmware - Exception ", body=str(e))
             cli_active_fw = "Error"
-        allure.attach(name="get_active_firmware ", body=str(cli_active_fw))
         return cli_active_fw
 
     # Method to get the manager state of AP using AP-CLI/ JUMPHOST-CLI
@@ -260,9 +246,7 @@ class APNOS:
             client.close()
         except Exception as e:
             print(e)
-            allure.attach(name="get_active_firmware - Exception ", body=str(e))
             status = "Error"
-        allure.attach(name="get_active_firmware ", body=str(status))
         return status
 
     def get_serial_number(self):
@@ -275,14 +259,11 @@ class APNOS:
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
             output = output.decode('utf-8').splitlines()
-            allure.attach(name="get_serial_number output ", body=str(stderr))
             serial = output[1].replace(" ", "").split("|")[1]
             client.close()
         except Exception as e:
             print(e)
-            allure.attach(name="get_serial_number - Exception ", body=str(e))
             serial = "Error"
-        allure.attach(name="get_serial_number ", body=str(serial))
         return serial
 
     def get_redirector(self):
@@ -296,14 +277,11 @@ class APNOS:
             output = stdout.read()
             print(output, stderr.read())
             status = output.decode('utf-8').splitlines()
-            allure.attach(name="get_redirector output ", body=str(stderr))
             redirector = status[1].replace(" ", "").split("|")[1]
             client.close()
         except Exception as e:
             print(e)
-            allure.attach(name="get_redirector - Exception ", body=str(e))
             redirector = "Error"
-        allure.attach(name="get_redirector ", body=redirector)
         return redirector
 
     def run_generic_command(self, cmd=""):
@@ -317,13 +295,10 @@ class APNOS:
             output = stdout.read()
             print(output, stderr.read())
             status = output.decode('utf-8').splitlines()
-            allure.attach(name="get_redirector output ", body=str(stderr))
             client.close()
         except Exception as e:
             print(e)
-            allure.attach(name="get_redirector - Exception ", body=str(e))
             status = "Error"
-        allure.attach(name="get_redirector ", body=status)
         return status
 
     def get_ucentral_status(self):
@@ -343,12 +318,9 @@ class APNOS:
             latest = output.decode('utf-8').splitlines()[3].split(":")[1].replace(" ", "").replace(",", "")
             active = output.decode('utf-8').splitlines()[4].split(":")[1].replace(" ", "").replace(",", "")
             client.close()
-            allure.attach(name="ubus call ucentral status ", body=str(connected) + "\n" + latest + "\n" + active)
         except Exception as e:
             print(e)
-            allure.attach(name="Exception ", body=str(e))
             connected, latest, active = "Error", "Error", "Error"
-            allure.attach(name="ubus call ucentral status ", body=str(connected) + "\n" + latest + "\n" + active)
         return connected, latest, active
 
     def get_uc_latest_config(self):
@@ -512,8 +484,6 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
-        allure.attach(name="vif state Output Msg: ", body=str(output))
-        allure.attach(name="vif state Err Msg: ", body=str(stderr))
         return output
 
     def get_vifs(self):
@@ -525,8 +495,6 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
-        allure.attach(name="vif state Output Msg: ", body=str(output))
-        allure.attach(name="vif state Err Msg: ", body=str(stderr))
         return output
 
     def get_vlan(self):
@@ -556,5 +524,5 @@ if __name__ == '__main__':
         'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
     }
     var = APNOS(credentials=obj, sdk="2.x")
-    x = var.get_interface_details()
+    x = var.get_ap_version_ucentral()
     print(x)

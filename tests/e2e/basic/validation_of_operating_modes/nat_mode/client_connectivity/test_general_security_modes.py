@@ -241,7 +241,6 @@ class TestNATModeConnectivitySuiteB(object):
         pytest -m "client_connectivity and NAT and suiteB"
     """
 
-    @pytest.mark.uc_sanity
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
@@ -265,11 +264,9 @@ class TestNATModeConnectivitySuiteB(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
-        if not result:
-            pytest.xfail("ssid issue")
+
         assert result
 
-    @pytest.mark.uc_sanity
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
@@ -292,11 +289,9 @@ class TestNATModeConnectivitySuiteB(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
-        if not result:
-            pytest.xfail("ssid issue")
+
         assert result
 
-    @pytest.mark.uc_sanity
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
@@ -321,11 +316,9 @@ class TestNATModeConnectivitySuiteB(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
-        if not result:
-            pytest.xfail("ssid issue")
+
         assert result
 
-    @pytest.mark.uc_sanity
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
@@ -349,11 +342,9 @@ class TestNATModeConnectivitySuiteB(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
-        if not result:
-            pytest.xfail("ssid issue")
+
         assert result
 
-    @pytest.mark.uc_sanity
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
@@ -379,11 +370,9 @@ class TestNATModeConnectivitySuiteB(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
-        if not result:
-            pytest.xfail("ssid issue")
+
         assert result
 
-    @pytest.mark.uc_sanity
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
@@ -407,8 +396,6 @@ class TestNATModeConnectivitySuiteB(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
-        if not result:
-            pytest.xfail("ssid issue")
         assert result
 
 # WEP Security Feature not available

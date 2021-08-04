@@ -14,9 +14,9 @@ pytestmark = [pytest.mark.client_connectivity, pytest.mark.bridge, pytest.mark.g
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "open": [{"ssid_name": "ssid_open_2g_br", "appliedRadios": ["2G"], "security_key": "something" },
+        "open": [{"ssid_name": "ssid_open_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
                  {"ssid_name": "ssid_open_5g_br", "appliedRadios": ["5G"],
-                  "security_key": "something" }],
+                  "security_key": "something"}],
         "wpa": [{"ssid_name": "ssid_wpa_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
                 {"ssid_name": "ssid_wpa_5g_br", "appliedRadios": ["5G"],
                  "security_key": "something"}],
@@ -119,8 +119,7 @@ class TestBridgeModeConnectivitySuiteA(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
-        if not result:
-            pytest.xfail("ssid issue")
+
         assert result
 
     @pytest.mark.sanity_light
@@ -146,8 +145,7 @@ class TestBridgeModeConnectivitySuiteA(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
-        if not result:
-            pytest.xfail("ssid issue")
+
         assert result
 
     @pytest.mark.sanity_light
@@ -239,7 +237,6 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         pytest -m "client_connectivity and bridge and suiteB"
     """
 
-
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
@@ -293,7 +290,6 @@ class TestBridgeModeConnectivitySuiteTwo(object):
 
         assert result
 
-    @pytest.mark.uc_sanity
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
@@ -321,7 +317,6 @@ class TestBridgeModeConnectivitySuiteTwo(object):
 
         assert result
 
-    @pytest.mark.uc_sanity
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
@@ -348,7 +343,6 @@ class TestBridgeModeConnectivitySuiteTwo(object):
 
         assert result
 
-    @pytest.mark.uc_sanity
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
@@ -377,7 +371,6 @@ class TestBridgeModeConnectivitySuiteTwo(object):
 
         assert result
 
-    @pytest.mark.uc_sanity
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')

@@ -66,8 +66,6 @@ class TestvlanModeConnectivitySuiteA(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
-        if not result:
-            pytest.xfail("ssid issue")
         assert result
 
     @pytest.mark.open
@@ -93,8 +91,6 @@ class TestvlanModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
-        if not result:
-            pytest.xfail("ssid issue")
         assert result
 
     @pytest.mark.sanity_light
@@ -121,8 +117,6 @@ class TestvlanModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
 
-        if not result:
-            pytest.xfail("ssid issue")
         assert result
 
     @pytest.mark.sanity_light
@@ -149,8 +143,6 @@ class TestvlanModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
-        if not result:
-            pytest.xfail("ssid issue")
         assert result
 
     @pytest.mark.sanity_light
@@ -266,8 +258,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
-        if not result:
-            pytest.xfail("ssid issue")
+
         assert result
 
     @pytest.mark.uc_sanity
@@ -293,8 +284,6 @@ class TestvlanModeConnectivitySuiteTwo(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
-        if not result:
-            pytest.xfail("ssid issue")
         assert result
 
     @pytest.mark.uc_sanity
@@ -322,8 +311,6 @@ class TestvlanModeConnectivitySuiteTwo(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
-        if not result:
-            pytest.xfail("ssid issue")
         assert result
 
     @pytest.mark.uc_sanity
@@ -350,8 +337,6 @@ class TestvlanModeConnectivitySuiteTwo(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
-        if not result:
-            pytest.xfail("ssid issue")
         assert result
 
     @pytest.mark.uc_sanity
@@ -380,8 +365,6 @@ class TestvlanModeConnectivitySuiteTwo(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
-        if not result:
-            pytest.xfail("ssid issue")
         assert result
 
     @pytest.mark.uc_sanity
@@ -409,8 +392,6 @@ class TestvlanModeConnectivitySuiteTwo(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
 
-        if not result:
-            pytest.xfail("ssid issue")
         assert result
 
 # WEP Security Feature not available

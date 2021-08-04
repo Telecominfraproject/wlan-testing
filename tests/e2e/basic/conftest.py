@@ -591,7 +591,6 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
         profile_data = {}
         if parameter['mode'] not in ["BRIDGE", "NAT", "VLAN"]:
             print("Invalid Mode: ", parameter['mode'])
-            allure.attach(body=parameter['mode'], name="Invalid Mode: ")
             yield test_cases
         instantiate_profile_obj.set_radio_config()
         if parameter['mode'] == "NAT":
@@ -626,13 +625,9 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                             j['security'] = 'none'
                             creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j)
                             test_cases["wpa_2g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
                         except Exception as e:
                             print(e)
                             test_cases["wpa_2g"] = False
-                            allure.attach(body=str(e),
-                                          name="SSID Profile Creation Failed")
             if mode == "wpa":
                 for j in profile_data["ssid"][mode]:
                     if mode in get_markers.keys() and get_markers[mode]:
@@ -645,13 +640,9 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                             j['security'] = 'psk'
                             creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j)
                             test_cases["wpa_2g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
                         except Exception as e:
                             print(e)
                             test_cases["wpa_2g"] = False
-                            allure.attach(body=str(e),
-                                          name="SSID Profile Creation Failed")
             if mode == "wpa2_personal":
                 for j in profile_data["ssid"][mode]:
                     if mode in get_markers.keys() and get_markers[mode]:
@@ -664,13 +655,9 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                             j['security'] = 'psk2'
                             creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j)
                             test_cases["wpa_2g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
                         except Exception as e:
                             print(e)
                             test_cases["wpa2_personal"] = False
-                            allure.attach(body=str(e),
-                                          name="SSID Profile Creation Failed")
             if mode == "wpa_wpa2_personal_mixed":
                 for j in profile_data["ssid"][mode]:
                     if mode in get_markers.keys() and get_markers[mode]:
@@ -683,13 +670,9 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                             j['security'] = 'psk-mixed'
                             creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j)
                             test_cases["wpa_2g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
                         except Exception as e:
                             print(e)
                             test_cases["wpa2_personal"] = False
-                            allure.attach(body=str(e),
-                                          name="SSID Profile Creation Failed")
             if mode == "wpa3_personal":
                 for j in profile_data["ssid"][mode]:
                     if mode in get_markers.keys() and get_markers[mode]:
@@ -702,13 +685,9 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                             j['security'] = 'sae'
                             creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j)
                             test_cases["wpa_2g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
                         except Exception as e:
                             print(e)
                             test_cases["wpa2_personal"] = False
-                            allure.attach(body=str(e),
-                                          name="SSID Profile Creation Failed")
             if mode == "wpa3_personal_mixed":
                 for j in profile_data["ssid"][mode]:
                     if mode in get_markers.keys() and get_markers[mode]:
@@ -721,13 +700,9 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                             j['security'] = 'sae-mixed'
                             creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j)
                             test_cases["wpa_2g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
                         except Exception as e:
                             print(e)
                             test_cases["wpa2_personal"] = False
-                            allure.attach(body=str(e),
-                                          name="SSID Profile Creation Failed")
 
             # EAP SSID Modes
             if mode == "wpa2_enterprise":
@@ -746,18 +721,13 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                                                                                radius_auth_data=RADIUS_SERVER_DATA,
                                                                                radius_accounting_data=RADIUS_ACCOUNTING_DATA)
                             test_cases["wpa_2g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
                         except Exception as e:
                             print(e)
                             test_cases["wpa2_personal"] = False
-                            allure.attach(body=str(e),
-                                          name="SSID Profile Creation Failed")
         ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="2.x")
         connected, latest, active = ap_ssh.get_ucentral_status()
-        print(2, instantiate_profile_obj.sdk_client)
         if connected == False:
-            pytest.exit("AP is disconnected")
+            pytest.exit("AP is disconnected from UC Gateway")
         instantiate_profile_obj.push_config(serial_number=get_equipment_id[0])
         config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"'))
         config["uuid"] = 0
@@ -773,6 +743,8 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
             x += 1
             ap_config_latest = ap_ssh.get_uc_latest_config()
             ap_config_latest["uuid"] = 0
+            print("latest config:   ", ap_config_latest)
+            print("config:  ", config)
             if x == 19:
                 break
         if x < 19:
@@ -787,11 +759,11 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
             time.sleep(5)
             x += 1
             ap_config_latest = ap_ssh.get_uc_latest_config()
-            print(ap_config_latest)
             ap_config_latest["uuid"] = 0
 
             ap_config_active = ap_ssh.get_uc_active_config()
-            print(ap_config_active)
+            print("latest config:   ", ap_config_latest)
+            print("Active config:  ", ap_config_active)
             ap_config_active["uuid"] = 0
             if x == 19:
                 break
@@ -956,7 +928,6 @@ def get_vif_state(get_apnos, get_configuration, request, lf_tools):
         ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
         vif_state = list(ap_ssh.get_vif_state_ssids())
         vif_state.sort()
-        allure.attach(name="vif_state", body=str(vif_state))
         yield vif_state
     else:
         yield lf_tools.ssid_list
@@ -967,5 +938,4 @@ def get_vlan_list(get_apnos, get_configuration):
     ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
     vlan_list = list(ap_ssh.get_vlan())
     vlan_list.sort()
-    allure.attach(name="vlan_list", body=str(vlan_list))
     yield vlan_list

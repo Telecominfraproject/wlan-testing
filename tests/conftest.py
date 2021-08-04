@@ -177,8 +177,6 @@ def test_cases():
 def testbed(request):
     """yields the testbed option selection"""
     var = request.config.getoption("--testbed")
-    allure.attach(body=str(var),
-                  name="Testbed Selected : ")
     yield var
 
 
@@ -217,7 +215,6 @@ def radius_accounting_info():
 @pytest.fixture(scope="session")
 def get_configuration(testbed, request):
     """yields the selected testbed information from lab info file (configuration.py)"""
-    allure.attach(body=str(testbed), name="Testbed Selected: ")
     if request.config.getini("cloud_ctlr") != "0":
         CONFIGURATION[testbed]["controller"]["url"] = request.config.getini("cloud_ctlr")
     yield CONFIGURATION[testbed]
@@ -249,12 +246,9 @@ def instantiate_access_point(testbed, get_apnos, get_configuration):
     """setup the access point connectivity"""
     for access_point_info in get_configuration['access_point']:
         if access_point_info["jumphost"]:
-            allure.attach(name="added openwrtctl.py to :",
-                          body=access_point_info['ip'] + ":" + str(access_point_info["port"]))
             get_apnos(access_point_info, pwd="../libs/apnos/")
         else:
-            allure.attach(name="Direct AP SSH : ",
-                          body=access_point_info['ip'] + ":" + str(access_point_info["port"]))
+            pass
         # Write a code to verify Access Point Connectivity
     yield True
 
@@ -266,23 +260,20 @@ def setup_controller(request, get_configuration, test_access_point, add_env_prop
     try:
         if request.config.getoption("1.x"):
             sdk_client = Controller(controller_data=get_configuration["controller"])
-            allure.attach(body=str(get_configuration["controller"]), name="Controller Instantiated: ")
 
             def teardown_controller():
                 print("\nTest session Completed")
-                allure.attach(body=str(get_configuration["controller"]), name="Controller Teardown: ")
                 sdk_client.disconnect_Controller()
 
             request.addfinalizer(teardown_controller)
 
         else:
             sdk_client = UController(controller_data=get_configuration["controller"])
-            allure.attach(body=str(get_configuration["controller"]), name="Ucentral Controller Instantiated: ")
+
 
             def teardown_ucontroller():
                 print("\nTest session Completed")
                 sdk_client.logout()
-                allure.attach(body=str(get_configuration["controller"]), name="Controller Teardown: ")
                 try:
                     sdk_client.logout()
                 except Exception as e:
@@ -379,7 +370,6 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
                 for i in range(0, len(instantiate_firmware)):
                     status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i], force_upload=True,
                                                                 force_upgrade=should_upgrade_firmware)
-                    allure.attach(name="Firmware Upgrade Request", body=str(status))
                     status_list.append(status)
         else:
             if should_upgrade_firmware:
@@ -387,7 +377,6 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
                     status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i],
                                                                 force_upload=should_upload_firmware,
                                                                 force_upgrade=should_upgrade_firmware)
-                    allure.attach(name="Firmware Upgrade Request", body=str(status))
                     status_list.append(status)
             else:
                 status = "skip-upgrade Version Already Available"

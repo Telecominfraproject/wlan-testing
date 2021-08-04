@@ -16,6 +16,7 @@ from pathlib import Path
 from requests.adapters import HTTPAdapter
 import logging
 
+
 # logging.basicConfig(level=logging.DEBUG)
 # from http.client import HTTPConnection
 #
@@ -141,7 +142,7 @@ class UProfileUtility:
             "interfaces": [{
                 "name": "WAN",
                 "role": "upstream",
-                "services": ["lldp"],
+                "services": ["lldp", "dhcp-snooping"],
                 "ethernet": [
                     {
                         "select-ports": [
@@ -156,7 +157,7 @@ class UProfileUtility:
                 {
                     "name": "LAN",
                     "role": "downstream",
-                    "services": ["ssh", "lldp"],
+                    "services": ["ssh", "lldp", "dhcp-snooping"],
                     "ethernet": [
                         {
                             "select-ports": [
@@ -176,17 +177,32 @@ class UProfileUtility:
                 }],
             "metrics": {
                 "statistics": {
-                    "interval": 120,
+                    "interval": 60,
                     "types": ["ssids", "lldp", "clients"]
                 },
                 "health": {
                     "interval": 120
+                },
+                "wifi-frames": {
+                    "filters": ["probe",
+                                "auth",
+                                "assoc",
+                                "disassoc",
+                                "deauth",
+                                "local-deauth",
+                                "inactive-deauth",
+                                "key-mismatch",
+                                "beacon-report",
+                                "radar-detected"]
+                },
+                "dhcp-snooping": {
+                    "filters": ["ack", "discover", "offer", "request", "solicit", "reply", "renew"]
                 }
             },
             "services": {
                 "lldp": {
-                    "describe": "uCentral",
-                    "location": "universe"
+                    "describe": "TIP OpenWiFi",
+                    "location": "QA"
                 },
                 "ssh": {
                     "port": 22
@@ -265,14 +281,14 @@ class UProfileUtility:
 
     def add_ssid(self, ssid_data, radius=False, radius_auth_data={}, radius_accounting_data={}):
         print("ssid data : ", ssid_data)
-        ssid_info = {'name': ssid_data["ssid_name"], "bss-mode": "ap", "wifi-bands": []}
+        ssid_info = {'name': ssid_data["ssid_name"], "bss-mode": "ap", "wifi-bands": [], "services": ["wifi-frames"]}
         for i in ssid_data["appliedRadios"]:
             ssid_info["wifi-bands"].append(i)
         ssid_info['encryption'] = {}
         ssid_info['encryption']['proto'] = ssid_data["security"]
         try:
             ssid_info['encryption']['key'] = ssid_data["security_key"]
-        except:
+        except Exception as e:
             pass
         ssid_info['encryption']['ieee80211w'] = "optional"
         if radius:
@@ -296,6 +312,7 @@ class UProfileUtility:
             self.vlan_section = {
                 "name": "WAN100",
                 "role": "upstream",
+                "services": ["lldp", "dhcp-snooping"],
                 "vlan": {
                     "id": 100
                 },
@@ -331,12 +348,12 @@ class UProfileUtility:
             pytest.exit("invalid Operating Mode")
 
     def push_config(self, serial_number):
-        payload = {"configuration": self.base_profile_config, 'serialNumber': serial_number, 'UUID': 0}
+        payload = {"configuration": self.base_profile_config, "serialNumber": serial_number, "UUID": 0}
 
         uri = self.sdk_client.build_uri("device/" + serial_number + "/configure")
         basic_cfg_str = json.dumps(payload)
-        allure.attach(name="ucentral_config: ", body=str(self.base_profile_config))
-        # print(self.base_profile_config)
+        # allure.attach(name="ucentral_config: ", body=str(self.base_profile_config))
+        print(self.base_profile_config)
         resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
                              verify=False, timeout=100)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
@@ -346,19 +363,18 @@ class UProfileUtility:
 
 
 if __name__ == '__main__':
-
-
     controller = {
-    'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
-    'username': "tip@ucentral.com",
-    'password': 'openwifi',
+        'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+        'username': "tip@ucentral.com",
+        'password': 'openwifi',
     }
     obj = UController(controller_data=controller)
     profile = UProfileUtility(sdk_client=obj)
-    profile.set_mode(mode="VLAN")
+    profile.set_mode(mode="BRIDGE")
     profile.set_radio_config()
-    ssid = {"ssid_name": "ssid_wpa2_2g_nat", "appliedRadios": ["2G"], "security": "psk", "security_key": "something", "vlan": 100}
+    ssid = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security": "psk", "security_key": "something",
+            "vlan": 100}
     profile.add_ssid(ssid_data=ssid)
-    # profile.push_config(serial_number="903cb39d6918")
+    profile.push_config(serial_number="903cb39d6918")
     # print(obj.get_devices())
     obj.logout()
