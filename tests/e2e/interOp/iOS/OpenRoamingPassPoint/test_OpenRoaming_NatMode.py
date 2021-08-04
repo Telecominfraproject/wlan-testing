@@ -209,7 +209,7 @@ class TestOpenRoamingNAT(object):
         scope="function"
     )
     @pytest.mark.usefixtures("push_ap_profile")
-    def test_wpa2_only_eap_2g_NAT(self, passpoint_profile_info, push_ap_profile, request, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_OpenRoaming_wpa2_only_eap_2g_NAT(self, passpoint_profile_info, push_ap_profile, request, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
         """
              EAP Passpoint BRIDGE Mode
              pytest -m "interop_iOS and eap_passpoint and bridge and wpa2_only_eap and twog"
@@ -283,7 +283,7 @@ class TestOpenRoamingNAT(object):
         scope="function"
     )
     @pytest.mark.usefixtures("push_ap_profile")
-    def test_wpa2_only_eap_5g_NAT(self, passpoint_profile_info, push_ap_profile, request, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_OpenRoaming_wpa2_only_eap_5g_NAT(self, passpoint_profile_info, push_ap_profile, request, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
         """
              EAP Passpoint BRIDGE Mode
              pytest -m "interop_iOS and eap_passpoint and bridge and wpa2_only_eap and fiveg"
