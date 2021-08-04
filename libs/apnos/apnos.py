@@ -525,4 +525,4 @@ if __name__ == '__main__':
     }
     var = APNOS(credentials=obj, sdk="2.x")
     x = var.get_ap_version_ucentral()
-    print(x)
+    print(x.split("\n")[1])

@@ -672,5 +672,5 @@ def get_uc_ap_version(get_apnos, get_configuration):
 @fixture(scope='session')
 def add_env_properties(get_configuration, get_uc_ap_version, add_allure_environment_property: Callable) -> None:
     add_allure_environment_property('Access-Point-Model', get_configuration["access_point"][0]["model"])
-    add_allure_environment_property('Access-Point-Firmware-Version', "\n".join(get_uc_ap_version))
+    add_allure_environment_property('Access-Point-Firmware-Version', get_uc_ap_version[0].split("\n")[1])
     add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])

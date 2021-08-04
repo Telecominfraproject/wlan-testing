@@ -398,6 +398,7 @@ class TestNATModeConnectivitySuiteB(object):
                                                      station_name=station_names_fiveg, vlan_id=vlan)
         assert result
 
+
 # WEP Security Feature not available
 # setup_params_wep = {
 #     "mode": "NAT",
