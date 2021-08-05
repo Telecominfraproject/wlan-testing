@@ -22,12 +22,14 @@ env:
       "namespace": "qa01",
       "ucentralgw_version": "v2.0.0",
       "ucentralsec_version": "v2.0.0",
+      "ucentralfms_version": "main",
       "ucentralgwui_version": "v2.0.0"
     },
     {
       "namespace": "dev01",
       "ucentralgw_version": "v2.0.0",
       "ucentralsec_version": "v2.0.0",
+      "ucentralfms_version": "main",
       "ucentralgwui_version": "v2.0.0"
     }
   ]'
@@ -82,9 +84,11 @@ jobs:
         sed -i '/wlan-cloud-ucentralgw@/s/ref=.*/ref='${{ matrix.ucentralgw_version }}'\"/g' Chart.yaml
         sed -i '/wlan-cloud-ucentralgw-ui@/s/ref=.*/ref='${{ matrix.ucentralgwui_version }}'\"/g' Chart.yaml
         sed -i '/wlan-cloud-ucentralsec@/s/ref=.*/ref='${{ matrix.ucentralsec_version }}'\"/g' Chart.yaml
+        sed -i '/wlan-cloud-ucentralfms@/s/ref=.*/ref='${{ matrix.ucentralfms_version }}'\"/g' Chart.yaml
         export UCENTRALGW_VERSION_TAG=$(echo ${{ matrix.ucentralgw_version }} | tr '/' '-')
         export UCENTRALGWUI_VERSION_TAG=$(echo ${{ matrix.ucentralgwui_version }} | tr '/' '-')
         export UCENTRALSEC_VERSION_TAG=$(echo ${{ matrix.ucentralsec_version }} | tr '/' '-')
+        export UCENTRALFMS_VERSION_TAG=$(echo ${{ matrix.ucentralfms_version }} | tr '/' '-')
         helm repo add bitnami https://charts.bitnami.com/bitnami
         helm repo update
         helm dependency update
@@ -95,6 +99,8 @@ jobs:
           --set ucentralsec.configProperties."authentication\.default\.username"=${{ secrets.UCENTRALGW_AUTH_USERNAME }} \
           --set ucentralsec.configProperties."authentication\.default\.password"=${{ secrets.UCENTRALGW_AUTH_PASSWORD }} \
           --set rttys.config.token=${{ secrets.RTTY_TOKEN }} \
+          --set ucentralfms.configProperties."s3\.secret"=${{ secrets.UCENTRALFMS_S3_SECRET }} \
+          --set ucentralfms.configProperties."s3\.key"=${{ secrets.UCENTRALFMS_S3_KEY }} \
           --set ucentralgw.services.ucentralgw.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=gw-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
           --set ucentralgw.configProperties."ucentral\.fileuploader\.host\.0\.name"=gw-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
           --set ucentralgw.configProperties."rtty\.server"=rtty-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
@@ -109,6 +115,10 @@ jobs:
           --set ucentralgwui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=webui-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
           --set ucentralgwui.ingresses.default.hosts={webui-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build} \
           --set ucentralgwui.public_env_variables.DEFAULT_UCENTRALSEC_URL=https://sec-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build:16001 \
+          --set ucentralfms.services.ucentralfms.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=fms-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
+          --set ucentralfms.configProperties."ucentral\.system\.uri\.public"=https://fms-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build:16004 \
+          --set ucentralfms.configProperties."ucentral\.system\.uri\.private"=https://fms-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build:17004 \
+          --set ucentralfms.configProperties."ucentral\.system\.uri\.ui"=https://webui-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
           --set-file ucentralgw.certs."restapi-cert\.pem"=../../cert.pem \
           --set-file ucentralgw.certs."restapi-key\.pem"=../../key.pem \
           --set-file ucentralgw.certs."websocket-cert\.pem"=../../cert.pem \
@@ -117,9 +127,12 @@ jobs:
           --set-file rttys.certs."restapi-key\.pem"=../../key.pem \
           --set-file ucentralsec.certs."restapi-cert\.pem"=../../cert.pem \
           --set-file ucentralsec.certs."restapi-key\.pem"=../../key.pem \
+          --set-file ucentralfms.certs."restapi-cert\.pem"=../../cert.pem \
+          --set-file ucentralfms.certs."restapi-key\.pem"=../../key.pem \
           --set ucentralgw.images.ucentralgw.tag=$UCENTRALGW_VERSION_TAG \
           --set ucentralgwui.images.ucentralgwui.tag=$UCENTRALGWUI_VERSION_TAG \
           --set ucentralsec.images.ucentralsec.tag=$UCENTRALSEC_VERSION_TAG \
+          --set ucentralfms.images.ucentralfms.tag=$UCENTRALFMS_VERSION_TAG \
           tip-ucentral .
 
     - name: Show resource state on deployment failure
