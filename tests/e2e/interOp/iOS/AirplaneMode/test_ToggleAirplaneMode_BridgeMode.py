@@ -20,7 +20,7 @@ from iOS_lib import closeApp, openApp, Toggle_AirplaneMode_iOS, ForgetWifiConnec
     verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
 
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
-              pytest.mark.ToggleAirplaneMode]
+              pytest.mark.ToggleAirplaneMode, pytest.mark.tamallbr]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -49,7 +49,7 @@ setup_params_general = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestToggleAirplaneModeBridge(object):
-
+    @pytest.mark.fob
     @pytest.mark.open
     @pytest.mark.fiveg
     def test_ToogleAirplaneMode_5g_OPEN_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):

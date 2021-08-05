@@ -49,6 +49,55 @@ def setup_vlan():
     yield vlan_id[0]
 
 
+@pytest.fixture(scope="function")
+def setup_perfectoMobile_android(request):
+    from appium import webdriver
+    driver = None
+    reporting_client = None
+
+    warnings.simplefilter("ignore", ResourceWarning)
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+    capabilities = {
+        'platformName': request.config.getini("platformName-android"),
+        'model': request.config.getini("model-android"),
+        'browserName': 'mobileOS',
+        # 'automationName' : 'Appium',
+        'securityToken': request.config.getini("securityToken"),
+        'useAppiumForWeb': 'false',
+        'useAppiumForHybrid': 'false',
+        # 'bundleId' : request.config.getini("appPackage-android"),
+    }
+
+    driver = webdriver.Remote(
+        'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
+        capabilities)
+    driver.implicitly_wait(35)
+
+    TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
+    nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
+    try:
+        TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
+        print("\nTestCaseName: " + TestCaseName)
+    except Exception as e:
+        TestCaseName = nCurrentTestMethodNameSplit
+        print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
+        print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
+
+    projectname = request.config.getini("projectName")
+    projectversion = request.config.getini("projectVersion")
+    jobname = request.config.getini("jobName")
+    jobnumber = request.config.getini("jobNumber")
+    tags = request.config.getini("reportTags")
+    testCaseName = TestCaseName
+
+    print("\nSetting Perfecto ReportClient....")
+    perfecto_execution_context = PerfectoExecutionContext(driver, tags, Job(jobname, jobnumber),
+                                                          Project(projectname, projectversion))
+    reporting_client = PerfectoReportiumClient(perfecto_execution_context)
+    reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
+
+
 @allure.feature("CLIENT CONNECTIVITY SETUP")
 @pytest.fixture(scope="class")
 def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment_id,
