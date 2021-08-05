@@ -52,7 +52,7 @@ class TestToggleWifiModeBridgeMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ToogleWifiMode_5g_WPA2_Personal_Bridge(self, request, get_vif_state, get_ToggleWifiMode_data,
+    def test_ToogleWifiMode_5g_WPA2_Personal_BRIDGE(self, request, get_vif_state, get_ToggleWifiMode_data,
                                              setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -80,7 +80,7 @@ class TestToggleWifiModeBridgeMode(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ToogleWifiMode_2g_WPA2_Personal_Bridge(self, request, get_vif_state, get_ToggleWifiMode_data,
+    def test_ToogleWifiMode_2g_WPA2_Personal_BRIDGE(self, request, get_vif_state, get_ToggleWifiMode_data,
                                              setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -108,7 +108,7 @@ class TestToggleWifiModeBridgeMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ToogleWifiMode_5g_WPA_Bridge(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_android):
+    def test_ToogleWifiMode_5g_WPA_BRIDGE(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
@@ -135,7 +135,7 @@ class TestToggleWifiModeBridgeMode(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_ToogleWifiMode_2g_WPA_Bridge(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_android):
+    def test_ToogleWifiMode_2g_WPA_BRIDGE(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
@@ -162,7 +162,7 @@ class TestToggleWifiModeBridgeMode(object):
 
     @pytest.mark.open
     @pytest.mark.fiveg
-    def test_ToogleWifiMode_5g_Open_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data,
+    def test_ToogleWifiMode_5g_OPEN_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data,
                                         setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["open"][1]
@@ -190,7 +190,7 @@ class TestToggleWifiModeBridgeMode(object):
 
     @pytest.mark.open
     @pytest.mark.twog
-    def test_ToogleWifiMode_2g_Open_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data,
+    def test_ToogleWifiMode_2g_OPEN_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data,
                                         setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["open"][0]

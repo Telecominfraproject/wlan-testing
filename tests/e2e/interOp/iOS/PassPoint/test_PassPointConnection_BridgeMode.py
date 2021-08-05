@@ -14,14 +14,12 @@ from urllib3 import exceptions
 import sys
 import allure
 
-pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.interop_ios, pytest.mark.ios,
-              pytest.mark.PassPointConnection,pytest.mark.ppcbridge]
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.interop_ios, pytest.mark.ios, pytest.mark.PassPointConnection]
 
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-from iOS_lib import closeApp, openApp, Toggle_AirplaneMode_iOS, ForgetWifiConnection, set_APconnMobileDevice_iOS, \
-    verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
+from iOS_lib import closeApp, openApp, Toggle_AirplaneMode_iOS, ForgetWifiConnection, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -29,8 +27,7 @@ setup_params_general = {
         "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"]},
                  {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
         "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
-                 "security_key": "something"}],
+                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],"security_key": "something"}],
         "wpa2_personal": [
             {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
@@ -48,71 +45,11 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestPassPointConnectionBridge(object):
+class TestPassPointConnectionBridgeMode(object):
 
-    @pytest.mark.open
-    @pytest.mark.fiveg
-    def test_PassPointConnection_5g_OPEN_BRIDGE(self, request, get_vif_state, get_PassPointConniOS_data, setup_perfectoMobile_iOS):
-
-        profile_data = setup_params_general["ssid_modes"]["open"][1]
-        ssidName = profile_data["ssid_name"]
-        ssidPassword = "[BLANK]"
-        print ("SSID_NAME: " + ssidName)
-        print ("SSID_PASS: " + ssidPassword)
-
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-
-        report = setup_perfectoMobile_iOS[1]
-        driver = setup_perfectoMobile_iOS[0]
-        connData = get_PassPointConniOS_data
-
-        # Set Wifi Access Mode to #Default-SSID-5gl-perfecto-b/#Default-SSID-2gl-perfecto-b
-        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-
-        # Toggle Airplane Mode and Ensure Wifi Connection.
-        assert Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
-
-        # ForgetWifi
-        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
-
-        # Close Settings App
-        closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile_iOS)
-
-    @pytest.mark.open
-    @pytest.mark.twog
-    def test_PassPointConnection_2g_OPEN_BRIDGE(self, request, get_vif_state, get_PassPointConniOS_data, setup_perfectoMobile_iOS):
-
-        profile_data = setup_params_general["ssid_modes"]["open"][0]
-        ssidName = profile_data["ssid_name"]
-        ssidPassword = "[BLANK]"
-        print ("SSID_NAME: " + ssidName)
-        print ("SSID_PASS: " + ssidPassword)
-
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-
-        report = setup_perfectoMobile_iOS[1]
-        driver = setup_perfectoMobile_iOS[0]
-        connData = get_PassPointConniOS_data
-
-        # Set Wifi Access Mode to #Default-SSID-5gl-perfecto-b/#Default-SSID-2gl-perfecto-b
-        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-
-        # Toggle Airplane Mode and Ensure Wifi Connection.
-        assert Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
-
-        # ForgetWifi
-        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
-
-        # Close Settings App
-        closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile_iOS)
-    @pytest.mark.ppcwpa25b
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_PassPointConnection_5g_WPA2_Personal_Bridge(self, request, get_vif_state, setup_perfectoMobile_iOS,
+    def test_PassPointConnection_5g_WPA2_Personal_BRIDGE(self, request, get_vif_state, setup_perfectoMobile_iOS,
                                                   get_PassPointConniOS_data):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -140,10 +77,10 @@ class TestPassPointConnectionBridge(object):
 
         # Close Settings App
         closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile_iOS)
-    @pytest.mark.ppcwpa22b
+
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_PassPointConnection_2g_WPA2_Personal_Bridge(self, request, get_vif_state, setup_perfectoMobile_iOS,
+    def test_PassPointConnection_2g_WPA2_Personal_BRIDGE(self, request, get_vif_state, setup_perfectoMobile_iOS,
                                                   get_PassPointConniOS_data):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -160,21 +97,21 @@ class TestPassPointConnectionBridge(object):
         driver = setup_perfectoMobile_iOS[0]
         connData = get_PassPointConniOS_data
 
-        # Set Wifi Access Mode to #Default-SSID-5gl-perfecto-b/#Default-SSID-2gl-perfecto-b
+        # Set Wifi Access Mode to #Default-SSID-5gl-perfecto-b/#Default-SSID-2gl-perfecto-b.
         set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         # Toggle Airplane Mode and Ensure Wifi Connection.
-        assert Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
+        Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
 
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
-        # Close Settings App
+        # Close Settings App.
         closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile_iOS)
 
     @pytest.mark.twog
-    @pytest.mark.wpa_bridge
-    def test_PassPointConnection_2g_WPA_Bridge(self, request, get_vif_state, setup_perfectoMobile_iOS,
+    @pytest.mark.wpa
+    def test_PassPointConnection_2g_WPA_BRIDGE(self, request, get_vif_state, setup_perfectoMobile_iOS,
                                         get_PassPointConniOS_data):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
@@ -195,7 +132,7 @@ class TestPassPointConnectionBridge(object):
         set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         # Toggle Airplane Mode and Ensure Wifi Connection.
-        assert Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
+        Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
 
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
@@ -205,12 +142,43 @@ class TestPassPointConnectionBridge(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_PassPointConnection_5g_WPA_Bridge(self, request, get_vif_state, setup_perfectoMobile_iOS,
+    def test_PassPointConnection_5g_WPA_BRIDGE(self, request, get_vif_state, setup_perfectoMobile_iOS,
                                         get_PassPointConniOS_data):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
+        print("SSID_NAME: " + ssidName)
+        print("SSID_PASS: " + ssidPassword)
+
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
+        connData = get_PassPointConniOS_data
+
+        # Set Wifi Access Mode to #Default-SSID-5gl-perfecto-b/#Default-SSID-2gl-perfecto-b
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+
+        # Toggle Airplane Mode and Ensure Wifi Connection.
+        Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
+
+        # ForgetWifi
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
+
+        # Close Settings App
+        closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile_iOS)
+
+    @pytest.mark.fiveg
+    @pytest.mark.wpa2_open
+    def test_PassPointConnection_5g_OPEN_BRIDGE(self, request, get_vif_state, setup_perfectoMobile_iOS,
+                                                  get_PassPointConniOS_data):
+
+        profile_data = setup_params_general["ssid_modes"]["open"][1]
+        ssidName = profile_data["ssid_name"]
+        ssidPassword = "[BLANK]"
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
 
@@ -232,4 +200,35 @@ class TestPassPointConnectionBridge(object):
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
         # Close Settings App
+        closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile_iOS)
+
+    @pytest.mark.twog
+    @pytest.mark.open
+    def test_PassPointConnection_2g_OPEN_BRIDGE(self, request, get_vif_state, setup_perfectoMobile_iOS,
+                                                  get_PassPointConniOS_data):
+
+        profile_data = setup_params_general["ssid_modes"]["open"][0]
+        ssidName = profile_data["ssid_name"]
+        ssidPassword = "[BLANK]"
+        print("SSID_NAME: " + ssidName)
+        print("SSID_PASS: " + ssidPassword)
+
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
+        connData = get_PassPointConniOS_data
+
+        # Set Wifi Access Mode to #Default-SSID-5gl-perfecto-b/#Default-SSID-2gl-perfecto-b.
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+
+        # Toggle Airplane Mode and Ensure Wifi Connection.
+        Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
+
+        # ForgetWifi
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
+
+        # Close Settings App.
         closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile_iOS)

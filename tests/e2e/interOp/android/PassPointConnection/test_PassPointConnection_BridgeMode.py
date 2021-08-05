@@ -47,7 +47,7 @@ class TestPassPointConnectionBridgeMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_PassPointConnection_5g_WPA2_Personal_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_PassPointConnection_5g_WPA2_Personal_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
@@ -77,7 +77,7 @@ class TestPassPointConnectionBridgeMode(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_PassPointConnection_2g_WPA2_Personal_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_PassPointConnection_2g_WPA2_Personal_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -107,7 +107,7 @@ class TestPassPointConnectionBridgeMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_PassPointConnection_5g_WPA_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_PassPointConnection_5g_WPA_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
@@ -137,7 +137,7 @@ class TestPassPointConnectionBridgeMode(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_PassPointConnection_2g_WPA_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_PassPointConnection_2g_WPA_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
@@ -167,7 +167,7 @@ class TestPassPointConnectionBridgeMode(object):
 
     @pytest.mark.open
     @pytest.mark.fiveg
-    def test_PassPointConnection_5g_Open_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data,
+    def test_PassPointConnection_5g_Open_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data,
                                         setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["open"][1]
@@ -195,7 +195,7 @@ class TestPassPointConnectionBridgeMode(object):
 
     @pytest.mark.open
     @pytest.mark.twog
-    def test_PassPointConnection_2g_Open_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data,
+    def test_PassPointConnection_2g_Open_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data,
                                         setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["open"][0]

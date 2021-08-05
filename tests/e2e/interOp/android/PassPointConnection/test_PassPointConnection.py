@@ -167,7 +167,7 @@ class TestPassPointConnection(object):
 
     @pytest.mark.open
     @pytest.mark.fiveg
-    def test_PassPointConnection_5g_Open(self, request, get_vif_state, get_ToggleAirplaneMode_data,
+    def test_PassPointConnection_5g_OPEN(self, request, get_vif_state, get_ToggleAirplaneMode_data,
                                         setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["open"][1]
@@ -195,7 +195,7 @@ class TestPassPointConnection(object):
 
     @pytest.mark.open
     @pytest.mark.twog
-    def test_PassPointConnection_2g_Open(self, request, get_vif_state, get_ToggleAirplaneMode_data,
+    def test_PassPointConnection_2g_OPEN(self, request, get_vif_state, get_ToggleAirplaneMode_data,
                                         setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["open"][0]

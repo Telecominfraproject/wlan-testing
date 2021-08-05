@@ -23,11 +23,15 @@ from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_Airplan
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
+        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"]},
+                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
         "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],"security_key": "something"}],
+                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+                 "security_key": "something"}],
         "wpa2_personal": [
             {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],"security_key": "something"}]},
+            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+             "security_key": "something"}]},
     "rf": {},
     "radius": False
 }
@@ -45,7 +49,7 @@ class TestToggleAirplaneModeAndroidBridgeMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ToogleAirplaneMode_5g_WPA2_Personal_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_ToogleAirplaneMode_5g_WPA2_Personal_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
@@ -72,7 +76,7 @@ class TestToggleAirplaneModeAndroidBridgeMode(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ToogleAirplaneMode_2g_WPA2_Personal_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_ToogleAirplaneMode_2g_WPA2_Personal_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -99,7 +103,7 @@ class TestToggleAirplaneModeAndroidBridgeMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ToogleAirplaneMode_5g_WPA_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_ToogleAirplaneMode_5g_WPA_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
@@ -126,7 +130,7 @@ class TestToggleAirplaneModeAndroidBridgeMode(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_ToogleAirplaneMode_2g_WPA_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_ToogleAirplaneMode_2g_WPA_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
@@ -152,7 +156,7 @@ class TestToggleAirplaneModeAndroidBridgeMode(object):
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
     @pytest.mark.fiveg
     @pytest.mark.open
-    def test_ToogleAirplaneMode_5g_Open_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_ToogleAirplaneMode_5g_Open_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
@@ -179,7 +183,7 @@ class TestToggleAirplaneModeAndroidBridgeMode(object):
 
     @pytest.mark.twog
     @pytest.mark.open
-    def test_ToogleAirplaneMode_2g_Open_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_ToogleAirplaneMode_2g_Open_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
