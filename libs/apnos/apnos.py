@@ -9,6 +9,7 @@ Currently Having Methods:
     5. Get current Firmware
 
 """
+import json
 
 import paramiko
 from scp import SCPClient
@@ -18,9 +19,12 @@ import allure
 
 class APNOS:
 
-    def __init__(self, credentials=None, pwd=os.getcwd()):
-        allure.attach(name="APNOS LIbrary: ", body=str(credentials))
+    def __init__(self, credentials=None, pwd=os.getcwd(), sdk="2.x"):
+        self.serial = credentials['serial']
         self.owrt_args = "--prompt root@OpenAp -s serial --log stdout --user root --passwd openwifi"
+        self.sdk = sdk
+        if sdk == "2.x":
+            self.owrt_args = "--prompt root@" + self.serial + " -s serial --log stdout --user root --passwd openwifi"
         if credentials is None:
             print("No credentials Given")
             exit()
@@ -34,26 +38,24 @@ class APNOS:
             client = self.ssh_cli_connect()
             cmd = '[ -f ~/cicd-git/ ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
-            print(stdout.read())
-            if str(stdout.read()).__contains__("False"):
+            output = str(stdout.read())
+            print(output)
+            if output.__contains__("False"):
                 cmd = 'mkdir ~/cicd-git/'
-                client.exec_command(cmd)
+                stdin, stdout, stderr = client.exec_command(cmd)
             cmd = '[ -f ~/cicd-git/openwrt_ctl.py ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
-            print(stdout.read())
-            if str(stdout.read()).__contains__("False"):
+            output = str(stdout.read())
+            if output.__contains__("False"):
                 print("Copying openwrt_ctl serial control Script...")
                 with SCPClient(client.get_transport()) as scp:
-                    scp.put(pwd + 'openwrt_ctl.py', '~/cicd-git/openwrt_ctl.py')  # Copy my_file.txt to the server
+                    scp.put(pwd + '/openwrt_ctl.py', '~/cicd-git/openwrt_ctl.py')  # Copy my_file.txt to the server
             cmd = '[ -f ~/cicd-git/openwrt_ctl.py ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
             var = str(stdout.read())
-            print(var)
             if var.__contains__("True"):
-                allure.attach(name="openwrt_ctl Setup", body=str(var))
                 print("APNOS Serial Setup OK")
             else:
-                allure.attach(name="openwrt_ctl Setup", body=str(var))
                 print("APNOS Serial Setup Fail")
 
     # Method to connect AP-CLI/ JUMPHOST-CLI
@@ -77,10 +79,10 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
-        allure.attach(name="AP Reboot", body=str(output))
         return output
 
     # Method to get the iwinfo status of AP using AP-CLI/ JUMPHOST-CLI
+
     def get_bssid_band_mapping(self):
         client = self.ssh_cli_connect()
         cmd = 'iwinfo'
@@ -90,8 +92,6 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         data = stdout.read()
         client.close()
-        allure.attach(name="iwinfo Output Msg: ", body=str(data))
-        allure.attach(name="iwinfo config Err Msg: ", body=str(stderr))
         data = str(data).replace(" ", "").split("\\r\\n")
         band_info = []
         for i in data:
@@ -111,7 +111,7 @@ class APNOS:
         bssi_band_mapping = {}
         for i in range(len(band_info)):
             if (i % 2) == 0:
-                bssi_band_mapping[band_info[i][0]] = band_info[i+1][0]
+                bssi_band_mapping[band_info[i][0]] = band_info[i + 1][0]
         return bssi_band_mapping
 
     # Method to get the vif_config of AP using AP-CLI/ JUMPHOST-CLI
@@ -124,8 +124,7 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
-        allure.attach(name="vif config Output Msg: ", body=str(output))
-        allure.attach(name="vif config Err Msg: ", body=str(stderr))
+
 
         return output
 
@@ -139,8 +138,6 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
-        allure.attach(name="vif state Output Msg: ", body=str(output))
-        allure.attach(name="vif state Err Msg: ", body=str(stderr))
         return output
 
     # Method to get the vif_config ssid's of AP using AP-CLI/ JUMPHOST-CLI
@@ -151,7 +148,6 @@ class APNOS:
             ssid = str(i).replace(" ", "").split(".")
             if ssid[0].split(":")[0] == "b'ssid":
                 ssid_list.append(ssid[0].split(":")[1].replace("'", ""))
-        allure.attach(name="get_vif_config_ssids ", body=str(ssid_list))
         return ssid_list
 
     # Method to get the vif_state ssid's of AP using AP-CLI/ JUMPHOST-CLI
@@ -203,7 +199,6 @@ class APNOS:
                 ssid_info_list.append(info)
                 info = []
         print(ssid_info_list)
-        # allure.attach(name="get_vif_state_ssids ", body=str(ssid_list))
         return ssid_info_list
 
     # Get VIF State parameters
@@ -214,7 +209,6 @@ class APNOS:
             ssid = str(i).replace(" ", "").split(".")
             if ssid[0].split(":")[0] == "b'ssid":
                 ssid_list.append(ssid[0].split(":")[1].replace("'", ""))
-        allure.attach(name="get_vif_state_ssids ", body=str(ssid_list))
         return ssid_list
 
     # Method to get the active firmware of AP using AP-CLI/ JUMPHOST-CLI
@@ -234,9 +228,7 @@ class APNOS:
             client.close()
         except Exception as e:
             print(e)
-            allure.attach(name="get_active_firmware - Exception ", body=str(e))
             cli_active_fw = "Error"
-        allure.attach(name="get_active_firmware ", body=str(cli_active_fw))
         return cli_active_fw
 
     # Method to get the manager state of AP using AP-CLI/ JUMPHOST-CLI
@@ -254,9 +246,7 @@ class APNOS:
             client.close()
         except Exception as e:
             print(e)
-            allure.attach(name="get_active_firmware - Exception ", body=str(e))
             status = "Error"
-        allure.attach(name="get_active_firmware ", body=str(status))
         return status
 
     def get_serial_number(self):
@@ -269,14 +259,11 @@ class APNOS:
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
             output = output.decode('utf-8').splitlines()
-            allure.attach(name="get_serial_number output ", body=str(stderr))
             serial = output[1].replace(" ", "").split("|")[1]
             client.close()
         except Exception as e:
             print(e)
-            allure.attach(name="get_serial_number - Exception ", body=str(e))
             serial = "Error"
-        allure.attach(name="get_serial_number ", body=str(serial))
         return serial
 
     def get_redirector(self):
@@ -290,14 +277,11 @@ class APNOS:
             output = stdout.read()
             print(output, stderr.read())
             status = output.decode('utf-8').splitlines()
-            allure.attach(name="get_redirector output ", body=str(stderr))
             redirector = status[1].replace(" ", "").split("|")[1]
             client.close()
         except Exception as e:
             print(e)
-            allure.attach(name="get_redirector - Exception ", body=str(e))
             redirector = "Error"
-        allure.attach(name="get_redirector ", body=redirector)
         return redirector
 
     def run_generic_command(self, cmd=""):
@@ -311,15 +295,154 @@ class APNOS:
             output = stdout.read()
             print(output, stderr.read())
             status = output.decode('utf-8').splitlines()
-            allure.attach(name="get_redirector output ", body=str(stderr))
-            redirector = status[1].replace(" ", "").split("|")[1]
             client.close()
         except Exception as e:
             print(e)
-            allure.attach(name="get_redirector - Exception ", body=str(e))
-            redirector = "Error"
-        allure.attach(name="get_redirector ", body=redirector)
-        return redirector
+            status = "Error"
+        return status
+
+    def get_ucentral_status(self):
+        try:
+            client = self.ssh_cli_connect()
+            cmd = "ubus call ucentral status"
+            if self.mode:
+                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                      f"cmd --value \"{cmd}\" "
+            stdin, stdout, stderr = client.exec_command(cmd)
+            output = stdout.read()
+            # print(output, stderr.read())
+            connected = False
+            if "connected" in output.decode('utf-8').splitlines()[2]:
+                connected = True
+            # connected = output.decode('utf-8').splitlines()[2]
+            latest = output.decode('utf-8').splitlines()[3].split(":")[1].replace(" ", "").replace(",", "")
+            active = output.decode('utf-8').splitlines()[4].split(":")[1].replace(" ", "").replace(",", "")
+            client.close()
+        except Exception as e:
+            print(e)
+            connected, latest, active = "Error", "Error", "Error"
+        return connected, latest, active
+
+    def get_uc_latest_config(self):
+        try:
+            connected, latest, active = self.get_ucentral_status()
+            print()
+            client = self.ssh_cli_connect()
+            cmd = "cat /etc/ucentral/ucentral.cfg." + latest
+            if self.mode:
+                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                      f"cmd --value \"{cmd}\" "
+            stdin, stdout, stderr = client.exec_command(cmd)
+            output = stdout.read().decode('utf-8').splitlines()[1]
+            print(output)
+            json_output = json.loads(output)  # , sort_keys=True)
+            print(type(json_output))
+            client.close()
+        except Exception as e:
+            json_output = {}
+            print(e)
+        return json_output
+
+    def get_uc_active_config(self):
+        try:
+            connected, latest, active = self.get_ucentral_status()
+            client = self.ssh_cli_connect()
+            cmd = "cat /etc/ucentral/ucentral.cfg." + active
+            if self.mode:
+                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                      f"cmd --value \"{cmd}\" "
+            stdin, stdout, stderr = client.exec_command(cmd)
+            output = stdout.read().decode('utf-8').splitlines()[1]
+            json_output = json.loads(output)  # , sort_keys=True)
+            print(json_output)
+            client.close()
+        except Exception as e:
+            json_output = {}
+            print(e)
+        return json_output
+
+    def get_interface_details(self):
+        r = self.get_wifi_status()
+        print(r)
+        wifi_info = {}
+        if self.sdk == "1.x":
+            for i in r:
+                for j in r[i]["interfaces"]:
+                    encryption = j["config"]["encryption"]
+                    if encryption == "psk" or encryption == "psk2" or encryption == "psk-mixed" or \
+                            encryption == "sae" or encryption == "sae-mixed":
+                        wifi_info[j["ifname"]] = [j["config"]["ssid"], j["config"]["encryption"], j["config"]["key"]]
+                    else:
+                        wifi_info[j["ifname"]] = [j["config"]["ssid"], j["config"]["encryption"], ""]
+            print(wifi_info)
+            data = self.get_iwinfo()
+            for i in wifi_info.keys():
+                wifi_info[i].append(data[i])
+
+            return wifi_info
+        if self.sdk == "2.x":
+            for i in r:
+                for j in r[i]["interfaces"]:
+                    encryption = j["config"]["encryption"]
+                    if encryption == "psk" or encryption == "psk2" or encryption == "psk-mixed" or \
+                            encryption == "sae" or encryption == "sae-mixed":
+                        wifi_info[j["ifname"]] = [j["config"]["ssid"], j["config"]["encryption"], j["config"]["key"]]
+                    else:
+                        wifi_info[j["ifname"]] = [j["config"]["ssid"], j["config"]["encryption"], ""]
+            data = self.get_iwinfo()
+            print(wifi_info)
+            print(data)
+            for i in wifi_info.keys():
+                wifi_info[i].append(data[i])
+            return wifi_info
+
+    def get_wifi_status(self):
+        try:
+
+            client = self.ssh_cli_connect()
+            cmd = "wifi status"
+            if self.mode:
+                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                      f"cmd --value \"{cmd}\" "
+            stdin, stdout, stderr = client.exec_command(cmd)
+
+            output = stdout.read().decode('utf-8')
+            data = output.split()
+            data.pop(0)
+            data.pop(0)
+            data.pop(0)
+            OUT = "".join(data)
+            json_output = json.loads(OUT)
+            client.close()
+        except Exception as e:
+            json_output = False
+            print(e)
+        return json_output
+
+    def get_iwinfo(self):
+        try:
+
+            client = self.ssh_cli_connect()
+            cmd = "iwinfo"
+            if self.mode:
+                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                      f"cmd --value \"{cmd}\" "
+            stdin, stdout, stderr = client.exec_command(cmd)
+            output = stdout.read().replace(b":~# iwinfo", b"").decode('utf-8')
+            o = output.split()
+            iwinfo_bssid_data = {}
+            for i in range(len(o)):
+                if o[i].__contains__("ESSID"):
+                    if o[i + 9].__contains__("2.4"):
+                        band = "2G"
+                    else:
+                        band = "5G"
+                    iwinfo_bssid_data[o[i - 1]] = [o[i + 4], band]
+            client.close()
+        except Exception as e:
+            iwinfo_bssid_data = False
+            print(e)
+        return iwinfo_bssid_data
 
     def logread(self):
         try:
@@ -341,6 +464,17 @@ class APNOS:
             logs = ""
         return logs
 
+    def get_ap_version_ucentral(self):
+        client = self.ssh_cli_connect()
+        cmd = "cat /tmp/ucentral.version"
+        if self.mode:
+            cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                  f"cmd --value \"{cmd}\" "
+        stdin, stdout, stderr = client.exec_command(cmd)
+        output = stdout.read().replace(b":~# cat /tmp/ucentral.version", b"").decode('utf-8')
+        client.close()
+        return output
+
     def get_vifc(self):
         client = self.ssh_cli_connect()
         cmd = "vifC"
@@ -350,8 +484,6 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
-        allure.attach(name="vif state Output Msg: ", body=str(output))
-        allure.attach(name="vif state Err Msg: ", body=str(stderr))
         return output
 
     def get_vifs(self):
@@ -363,15 +495,13 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
-        allure.attach(name="vif state Output Msg: ", body=str(output))
-        allure.attach(name="vif state Err Msg: ", body=str(stderr))
         return output
 
     def get_vlan(self):
         stdout = self.get_vifs()
         vlan_list = []
         for i in stdout.splitlines():
-            vlan = str(i.strip()).replace("|",".").split(".")
+            vlan = str(i.strip()).replace("|", ".").split(".")
             try:
                 if not vlan[0].find("b'vlan_id"):
                     vlan_list.append(vlan[1].strip())
@@ -379,23 +509,20 @@ class APNOS:
                 pass
         return vlan_list
 
+
 if __name__ == '__main__':
     obj = {
+        'model': 'ecw5211',
+        'mode': 'wifi5',
+        'serial': '001122090801',
         'jumphost': True,
         'ip': "10.28.3.100",
         'username': "lanforge",
         'password': "pumpkin77",
         'port': 22,
-        'jumphost_tty': '/dev/ttyAP1'
+        'jumphost_tty': '/dev/ttyAP3',
+        'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
     }
-    var = APNOS(credentials=obj)
-    abc = var.get_bssid_band_mapping()
-
-
-    # lst.remove("")
-    print(abc)
-    # r = var.get_ssid_info()
-    # print(r)
-    # print(var.get_ssid_info())
-    # print(var.get_manager_state())
-    # print(var.get_vlan())
+    var = APNOS(credentials=obj, sdk="2.x")
+    x = var.get_ap_version_ucentral()
+    print(x.split("\n")[1])

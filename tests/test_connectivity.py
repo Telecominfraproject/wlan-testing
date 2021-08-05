@@ -5,7 +5,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.usefixtures("setup_test_run"), pytest.mark.test_resources, pytest.mark.sanity,
+pytestmark = [pytest.mark.test_resources, pytest.mark.sanity,
               pytest.mark.sanity_55]
 
 
@@ -63,3 +63,4 @@ class TestResources(object):
             pytest.exit("LANforgeGUI-5.4.3 is not available")
 
         assert traffic_generator_connectivity
+

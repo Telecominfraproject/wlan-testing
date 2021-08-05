@@ -1,10 +1,24 @@
 ## Test Case Execution Suite
 
+### Run on 1.X SDK
 ```commandline
-pytest -m sanity -s -vvv --testbed=basic-01 -o build=<firmware URL>
-pytest -m sanity_55 -s -vvv --testbed=basic-01 -o build=<firmware URL>
+pytest -m sanity and not interop -s -vvv --testbed=basic-01 -o build=<firmware URL> --1.x
+pytest -m sanity and interop -s -vvv --testbed=basic-01 -o build=<firmware URL> --1.x
+pytest -m sanity_55 -s -vvv --testbed=basic-01 -o build=<firmware URL> --1.x  
+pytest -m performance -s -vvv --testbed=basic-01 -o build=<firmware URL> --1.x
+pytest -m firmware -s -vvv --testbed=basic-01 -o build=<firmware URL> --1.x
+
+```
+### Run on 2.X SDK
+
+```commandline
+pytest -m sanity and not interop -s -vvv --testbed=basic-01 -o build=<firmware URL> 
+pytest -m sanity and interop -s -vvv --testbed=basic-01 -o build=<firmware URL>
+pytest -m sanity_55 -s -vvv --testbed=basic-01 -o build=<firmware URL> 
 pytest -m performance -s -vvv --testbed=basic-01 -o build=<firmware URL>
 pytest -m firmware -s -vvv --testbed=basic-01 -o build=<firmware URL>
+
+
 ```
 ## You can customize the markets with and/or/not logical options
 

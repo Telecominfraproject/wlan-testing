@@ -26,6 +26,7 @@ from sta_connect2 import StaConnect2
 import time
 import string
 import random
+
 S = 12
 # from eap_connect import EAPConnect
 from test_ipv4_ttls import TTLSTest
@@ -118,6 +119,15 @@ class RunTest:
             print("test result: " + result)
         result = True
         print("Client Connectivity :", self.staConnect.passes)
+        endp_data = []
+        for i in self.staConnect.resulting_endpoints:
+            endp_data.append(self.staConnect.resulting_endpoints[i]["endpoint"])
+        cx_data = ""
+        for i in endp_data:
+            for j in i:
+                cx_data = cx_data + str(j) + " : " + str(i[j]) + "\n"
+            cx_data = cx_data + "\n"
+        allure.attach(name="cx_data", body=str(cx_data))
         if self.staConnect.passes():
             print("client connection to", self.staConnect.dut_ssid, "successful. Test Passed")
         else:
@@ -221,7 +231,7 @@ class RunTest:
                                             instance_name=instance_name,
                                             config_name="wifi_config",
                                             upstream="1.1." + upstream_port,
-                                            batch_size="1,5,10,20,40,64",
+                                            batch_size="1,5,10,20,40,64,128",
                                             loop_iter="1",
                                             protocol=protocol,
                                             duration=duration,
@@ -230,7 +240,6 @@ class RunTest:
                                             upload_rate=upload_rate,
                                             download_rate=download_rate,
                                             sort="interleave",
-                                            # stations=stations,
                                             create_stations=True,
                                             radio=None,
                                             security=None,
@@ -244,7 +253,6 @@ class RunTest:
 
         wificapacity_obj.setup()
         wificapacity_obj.run()
-
         report_name = wificapacity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
                              target_csv=self.local_report_path + report_name + "/kpi.csv")
@@ -291,8 +299,17 @@ class RunTest:
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
 
         if mode == "BRIDGE":
-            self.client_connect.upstream_port = self.upstream_port
+            self.upstream_port = self.upstream_port
         elif mode == "NAT":
+
+            self.upstream_port = self.upstream_port
+        elif mode == "VLAN":
+            self.upstream_port = self.upstream_port + "." + str(vlan_id)
+
+        if raw_lines is None:
+            raw_lines = [['pkts: 60;142;256;512;1024;MTU;4000'], ['directions: DUT Transmit;DUT Receive'],
+                         ['traffic_types: UDP;TCP'],
+                         ["show_3s: 1"], ["show_ll_graphs: 1"], ["show_log: 1"]]
             self.client_connect.upstream_port = self.upstream_port
         elif mode == "VLAN":
             self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
@@ -373,9 +390,9 @@ class RunTest:
         #                      target_csv=self.local_report_path + report_name + "/kpi.csv")
         # influx.post_to_influx()
         return self.dualbandptest_obj
-    
+
     def ratevsrange(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
-                  upload_rate="0", duration="1m", instance_name="test_demo", raw_lines=None):
+                    upload_rate="0", duration="1m", instance_name="test_demo", raw_lines=None):
         if mode == "BRIDGE":
             self.client_connect.upstream_port = self.upstream_port
         elif mode == "NAT":
@@ -384,30 +401,30 @@ class RunTest:
             self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
 
         self.rvr_obj = RvrTest(lf_host=self.lanforge_ip,
-                 lf_port=self.lanforge_port,
-                 ssh_port=self.lf_ssh_port,
-                 local_path=self.local_report_path,
-                 lf_user="lanforge",
-                 lf_password="lanforge",
-                 instance_name=instance_name,
-                 config_name="rvr_config",
-                 upstream="1.1." + self.upstream_port,
-                 pull_report=True,
-                 load_old_cfg=False,
-                 upload_speed=upload_rate,
-                 download_speed=download_rate,
-                 duration=duration,
-                 station="1.1." + station_name[0],
-                 dut=dut_name,
-                 raw_lines=raw_lines)
+                               lf_port=self.lanforge_port,
+                               ssh_port=self.lf_ssh_port,
+                               local_path=self.local_report_path,
+                               lf_user="lanforge",
+                               lf_password="lanforge",
+                               instance_name=instance_name,
+                               config_name="rvr_config",
+                               upstream="1.1." + self.upstream_port,
+                               pull_report=True,
+                               load_old_cfg=False,
+                               upload_speed=upload_rate,
+                               download_speed=download_rate,
+                               duration=duration,
+                               station="1.1." + station_name[0],
+                               dut=dut_name,
+                               raw_lines=raw_lines)
         self.rvr_obj.setup()
         self.rvr_obj.run()
         report_name = self.rvr_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
                              target_csv=self.local_report_path + report_name + "/kpi.csv")
         influx.post_to_influx()
-
         return self.rvr_obj
+
 
 if __name__ == '__main__':
     lanforge_data = {
