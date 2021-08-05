@@ -108,7 +108,6 @@ class TestAccessPointConnectivety(object):
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
-
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_AccessPointConnection_5g_WPA(self, request, get_vif_state, get_AccessPointConn_data, setup_perfectoMobile_iOS):
