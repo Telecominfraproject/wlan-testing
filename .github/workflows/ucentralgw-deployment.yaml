@@ -119,7 +119,6 @@ jobs:
           --set ucentralfms.configProperties."ucentral\.system\.uri\.public"=https://fms-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build:16004 \
           --set ucentralfms.configProperties."ucentral\.system\.uri\.private"=https://fms-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build:17004 \
           --set ucentralfms.configProperties."ucentral\.system\.uri\.ui"=https://webui-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
-
           --set-file ucentralgw.certs."restapi-cert\.pem"=../../cert.pem \
           --set-file ucentralgw.certs."restapi-key\.pem"=../../key.pem \
           --set-file ucentralgw.certs."websocket-cert\.pem"=../../cert.pem \
