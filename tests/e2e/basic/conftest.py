@@ -774,14 +774,14 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
                                              "Applied Config: ", str(config)
         if x < 19:
             print("AP is Broadcasting Applied Config")
-            allure.attach(name="AP is Broadcasting Applied Config")
+            allure.attach(name="AP is Broadcasting Applied Config", body="")
             allure.attach(name="Config Info", body="Applied Config: " + str(ap_config_active))
             allure.attach(name="Config Info", body="AP is Broadc3asting Applied Config: " + str(ap_ssh.get_uc_active_config()))
             allure.attach(name="Config Info", body="AP is Broadcasting Applied Config: " + str(allure_body))
 
         else:
             print("AP is Not Broadcasting Applied Config")
-            allure.attach(name="AP is Not Broadcasting Applied Config")
+            allure.attach(name="AP is Not Broadcasting Applied Config", body="")
             allure.attach(name="Config Info", body="Applied Config: " + str(ap_config_active))
             allure.attach(name="Config Info",
                           body="AP is Broadc3asting Applied Config: " + str(ap_ssh.get_uc_active_config()))
