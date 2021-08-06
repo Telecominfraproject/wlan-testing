@@ -20,10 +20,10 @@ env:
   testbeds: '[
     {
       "namespace": "qa01",
-      "ucentralgw_version": "v2.0.0",
-      "ucentralsec_version": "v2.0.0",
+      "ucentralgw_version": "master",
+      "ucentralsec_version": "main",
       "ucentralfms_version": "main",
-      "ucentralgwui_version": "v2.0.0"
+      "ucentralgwui_version": "main"
     },
     {
       "namespace": "dev01",
