@@ -9,7 +9,7 @@ import allure
 import pytest
 
 pytestmark = [pytest.mark.client_connectivity, pytest.mark.bridge, pytest.mark.general, pytest.mark.ucentral,
-              pytest.mark.sanity]  # pytest.mark.usefixtures("setup_test_run")]
+              pytest.mark.sanity, pytest.mark.uc_sanity]  # pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -29,7 +29,6 @@ setup_params_general = {
 }
 
 
-@pytest.mark.uc_sanity
 @pytest.mark.suiteA
 @pytest.mark.sudo
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")

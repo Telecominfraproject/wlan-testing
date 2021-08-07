@@ -10,6 +10,7 @@ import allure
 import re
 import logging
 
+
 from _pytest.fixtures import SubRequest
 from pyparsing import Optional
 
@@ -41,7 +42,6 @@ if 'py-json' not in sys.path:
     sys.path.append('../py-scripts')
 from apnos.apnos import APNOS
 from controller.controller import Controller
-from controller.ucentral_ctlr import UController
 from controller.controller import FirmwareUtility
 import pytest
 from cv_test_manager import cv_test
@@ -58,6 +58,14 @@ from typing import Any, Callable, Optional
 
 from _pytest.fixtures import SubRequest
 from pytest import fixture
+
+import fixtures_1x
+from fixtures_1x import Fixtures_1x
+import fixtures_2x
+from fixtures_2x import Fixtures_2x
+
+ALLURE_ENVIRONMENT_PROPERTIES_FILE = 'environment.properties'
+ALLUREDIR_OPTION = '--alluredir'
 
 
 def pytest_addoption(parser):
@@ -201,14 +209,12 @@ def exit_on_fail(request):
 @pytest.fixture(scope="session")
 def radius_info():
     """yields the radius server information from lab info file"""
-    allure.attach(body=str(RADIUS_SERVER_DATA), name="Radius server Info: ")
     yield RADIUS_SERVER_DATA
 
 
 @pytest.fixture(scope="session")
 def radius_accounting_info():
     """yields the radius accounting information from lab info file"""
-    allure.attach(body=str(RADIUS_ACCOUNTING_DATA), name="Radius server Info: ")
     yield RADIUS_ACCOUNTING_DATA
 
 
@@ -255,38 +261,17 @@ def instantiate_access_point(testbed, get_apnos, get_configuration):
 
 # Controller Fixture
 @pytest.fixture(scope="session")
-def setup_controller(request, get_configuration, test_access_point, add_env_properties):
+def setup_controller(request, get_configuration, test_access_point, add_env_properties, fixtures_ver):
     """sets up the controller connection and yields the sdk_client object"""
-    try:
-        if request.config.getoption("1.x"):
-            sdk_client = Controller(controller_data=get_configuration["controller"])
-
-            def teardown_controller():
-                print("\nTest session Completed")
-                sdk_client.disconnect_Controller()
-
-            request.addfinalizer(teardown_controller)
-
-        else:
-            sdk_client = UController(controller_data=get_configuration["controller"])
-
-
-            def teardown_ucontroller():
-                print("\nTest session Completed")
-                sdk_client.logout()
-                try:
-                    sdk_client.logout()
-                except Exception as e:
-                    print(e)
-
-            request.addfinalizer(teardown_ucontroller)
-
-    except Exception as e:
-        print(e)
-        allure.attach(body=str(e), name="Controller Instantiation Failed: ")
-        sdk_client = False
-        pytest.exit("unable to communicate to Controller" + str(e))
+    sdk_client = fixtures_ver.controller_obj
+    request.addfinalizer(fixtures_ver.disconnect)
     yield sdk_client
+
+
+@pytest.fixture(scope="session")
+def setup_firmware(fixtures_ver):
+    """ Fixture to Setup Firmware with the selected sdk """
+    yield True
 
 
 @pytest.fixture(scope="session")
@@ -609,12 +594,6 @@ def lf_tools(get_configuration, testbed):
     yield obj
 
 
-# @pytest.fixture(scope="class")
-# def create_vlan(request, testbed, get_configuration, lf_tools):
-#     """Create a vlan on lanforge"""
-#
-
-
 @pytest.fixture(scope="session")
 def setup_influx(request, testbed, get_configuration):
     """ Setup Influx Parameters: Used in CV Automation"""
@@ -632,10 +611,6 @@ def setup_influx(request, testbed, get_configuration):
 # Need for Perforce Mobile Device Execution
 def pytest_sessionstart(session):
     session.results = dict()
-
-
-ALLURE_ENVIRONMENT_PROPERTIES_FILE = 'environment.properties'
-ALLUREDIR_OPTION = '--alluredir'
 
 
 @fixture(scope='session', autouse=True)
@@ -660,17 +635,18 @@ def add_allure_environment_property(request: SubRequest) -> Optional[Callable]:
 
 
 @fixture(scope='session')
-def get_uc_ap_version(get_apnos, get_configuration):
-    version_list = []
-    for access_point_info in get_configuration['access_point']:
-        ap_ssh = get_apnos(access_point_info)
-        version = ap_ssh.get_ap_version_ucentral()
-        version_list.append(version)
-    yield version_list
-
-
-@fixture(scope='session')
-def add_env_properties(get_configuration, get_uc_ap_version, add_allure_environment_property: Callable) -> None:
+def add_env_properties(get_configuration, get_apnos, fixtures_ver, add_allure_environment_property: Callable) -> None:
     add_allure_environment_property('Access-Point-Model', get_configuration["access_point"][0]["model"])
-    add_allure_environment_property('Access-Point-Firmware-Version', get_uc_ap_version[0].split("\n")[1])
+    add_allure_environment_property('Access-Point-Firmware-Version',
+                                    fixtures_ver.get_ap_version(get_apnos, get_configuration)[0].split("\n")[1])
     add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
+    add_allure_environment_property('AP-Serial-Number', get_configuration["access_point"][0]["serial"])
+
+
+@pytest.fixture(scope="session")
+def fixtures_ver(request, get_configuration):
+    if request.config.getoption("1.x") is False:
+        obj = Fixtures_2x(configuration=get_configuration)
+    if request.config.getoption("1.x"):
+        obj = Fixtures_1x(configuration=get_configuration)
+    yield obj
