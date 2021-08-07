@@ -10,7 +10,7 @@ sys.path.append(
 if "libs" not in sys.path:
     sys.path.append(f'../libs')
 
-from controller.controller import ProfileUtility
+from controller.controller_1x.controller import ProfileUtility
 from controller.controller_2x.controller import UProfileUtility
 import time
 from lanforge.lf_tests import RunTest
