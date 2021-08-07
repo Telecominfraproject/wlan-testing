@@ -12,11 +12,12 @@ import pytest
 pytestmark = [pytest.mark.performance, pytest.mark.vlan]#,
 #              pytest.mark.usefixtures("setup_test_run")]
 
+
 setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2p_2g", "appliedRadios": ["2G", "5G"], "security_key": "something"}
+            {"ssid_name": "ssid_wpa2_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something", "vlan": 100}
             ]},
     "rf": {},
     "radius": False

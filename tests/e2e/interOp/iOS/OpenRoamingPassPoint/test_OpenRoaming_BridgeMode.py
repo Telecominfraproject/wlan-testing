@@ -199,7 +199,7 @@ class TestOpenRoamingBridge(object):
         scope="function"
     )
     @pytest.mark.usefixtures("push_ap_profile")
-    def test_wpa2_only_eap_2g_BRIDGE(self, passpoint_profile_info, push_ap_profile, request, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_OpenRoaming_wpa2_only_eap_2g_BRIDGE(self, passpoint_profile_info, push_ap_profile, request, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         result = push_ap_profile['ssid_wpa2_only_eap_passpoint_2g']['vif_config']
         if result:
@@ -262,7 +262,7 @@ class TestOpenRoamingBridge(object):
         scope="function"
     )
     @pytest.mark.usefixtures("push_ap_profile")
-    def test_wpa2_only_eap_5g_BRIDGE(self, passpoint_profile_info, push_ap_profile, request, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_OpenRoaming_wpa2_only_eap_5g_BRIDGE(self, passpoint_profile_info, push_ap_profile, request, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
       
         result = push_ap_profile['ssid_wpa2_only_eap_passpoint_5g']['vif_config']
         if result:

@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.wifi_capacity_test, pytest.mark.nat]
+pytestmark = [pytest.mark.performance, pytest.mark.nat]
 # """pytest.mark.usefixtures("setup_test_run")"""]
 
 
@@ -36,7 +36,7 @@ setup_params_general_dual_band = {
 @pytest.mark.twog
 @pytest.mark.fiveg
 @pytest.mark.dual_band
-@pytest.mark.performance_release
+@pytest.mark.wifi_capacity_test
 class TestWifiCapacityNATModeDualBand(object):
     """ Wifi Capacity Test NAT mode
            pytest -m "wifi_capacity_test and NAT"
@@ -58,6 +58,7 @@ class TestWifiCapacityNATModeDualBand(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_tcp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -66,7 +67,6 @@ class TestWifiCapacityNATModeDualBand(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
-        lf_tools.reset_scenario()
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -86,6 +86,7 @@ class TestWifiCapacityNATModeDualBand(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_udp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -94,8 +95,6 @@ class TestWifiCapacityNATModeDualBand(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
-        lf_tools.reset_scenario()
-
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -115,6 +114,7 @@ class TestWifiCapacityNATModeDualBand(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_tcp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -123,8 +123,6 @@ class TestWifiCapacityNATModeDualBand(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
-        lf_tools.reset_scenario()
-
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -144,6 +142,7 @@ class TestWifiCapacityNATModeDualBand(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_udp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -152,8 +151,6 @@ class TestWifiCapacityNATModeDualBand(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
-        lf_tools.reset_scenario()
-
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -180,7 +177,7 @@ setup_params_general_2G = {
 @pytest.mark.usefixtures("setup_profiles")
 @pytest.mark.wpa2_personal
 @pytest.mark.twog
-@pytest.mark.fiveg_band
+@pytest.mark.twog_band
 class TestWifiCapacityNATMode2G(object):
     """ Wifi Capacity Test NAT mode
            pytest -m "wifi_capacity_test and NAT"
@@ -201,6 +198,7 @@ class TestWifiCapacityNATMode2G(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_tcp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -209,7 +207,6 @@ class TestWifiCapacityNATMode2G(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
-        lf_tools.reset_scenario()
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -228,6 +225,7 @@ class TestWifiCapacityNATMode2G(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_udp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -236,8 +234,6 @@ class TestWifiCapacityNATMode2G(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
-        lf_tools.reset_scenario()
-
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -256,6 +252,7 @@ class TestWifiCapacityNATMode2G(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_tcp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -264,8 +261,6 @@ class TestWifiCapacityNATMode2G(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
-        lf_tools.reset_scenario()
-
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -284,6 +279,7 @@ class TestWifiCapacityNATMode2G(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_udp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -292,8 +288,6 @@ class TestWifiCapacityNATMode2G(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
-        lf_tools.reset_scenario()
-
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -302,7 +296,7 @@ setup_params_general_5G = {
     "mode": "NAT",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is5GHz"], "security_key": "something"}
+            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
     "rf": {},
@@ -341,6 +335,7 @@ class TestWifiCapacityNATMode5G(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_tcp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -349,8 +344,6 @@ class TestWifiCapacityNATMode5G(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
-        lf_tools.reset_scenario()
-
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -369,6 +362,7 @@ class TestWifiCapacityNATMode5G(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_udp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -377,8 +371,6 @@ class TestWifiCapacityNATMode5G(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
-        lf_tools.reset_scenario()
-
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -397,6 +389,7 @@ class TestWifiCapacityNATMode5G(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_tcp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -405,8 +398,6 @@ class TestWifiCapacityNATMode5G(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
-        lf_tools.reset_scenario()
-
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -425,6 +416,7 @@ class TestWifiCapacityNATMode5G(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_udp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -432,8 +424,6 @@ class TestWifiCapacityNATMode5G(object):
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
-        lf_tools.attach_report_graphss(report_name=report_name)
-        lf_tools.reset_scenario()
-
+        lf_tools.attach_report_graphs(report_name=report_name)
         print("Test Completed... Cleaning up Stations")
         assert True

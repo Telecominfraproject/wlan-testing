@@ -77,7 +77,6 @@ jobs:
         TESTBEDS=$(echo $TESTBEDS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
         TESTBEDS=$(echo "$TESTBEDS" | jq -c 'map({"testbed":.})')
         echo "::set-output name=matrix::{\"include\":${TESTBEDS}}"
-
   test:
     runs-on: ubuntu-latest
     needs: [ build, generate-matrix ]
@@ -92,7 +91,6 @@ jobs:
       run: |
         wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
         tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-
     - name: set job name
       id: job
       run: echo "::set-output name=name::testing-${{ github.run_number }}"
@@ -104,15 +102,12 @@ jobs:
         kubectl create ns $NAMESPACE
         kubectl config set-context --current --namespace=$NAMESPACE
         echo "::set-output name=name::${NAMESPACE}"
-
     - name: create configuration.py secret
       run: |
         cat << EOF > configuration.py
         ${{ secrets.LAB_CONFIGURATION }}
         EOF
-
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
-
     - name: run sanity tests
       run: |
         cat <<EOF | kubectl apply -f -
@@ -151,16 +146,11 @@ jobs:
                   secretName: configuration
           backoffLimit: 0
         EOF
-
         # wait for pod to spawn
         sleep 1
-
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-
         kubectl wait "pod/$podname" --for condition=ready
-
         #sleep 30 # wait for the pod to come up
-
         until [ -s test_everything.xml ]
         do
           sleep 10
@@ -168,21 +158,16 @@ jobs:
           kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
         done
         echo "tests completed"
-
         echo "downloading allure results..."
         kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
-
         echo "waiting for pod to exit"
         kubectl logs -f $podname >/dev/null 2>&1
-
         exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
-
     - name: print logs
       if: always()
       run: |
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
         kubectl logs $podname
-
     - name: upload Allure results as artifact
       if: always()
       uses: actions/upload-artifact@v2
@@ -194,7 +179,6 @@ jobs:
       if: always()
       run: |
         kubectl delete ns "${{ steps.namespace.outputs.name }}" --wait=true
-
   report:
     runs-on: ubuntu-latest
     needs: [ test, generate-matrix ]
@@ -208,7 +192,6 @@ jobs:
       run: |
         wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
         tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-
     - uses: actions/download-artifact@v2
       with:
         name: allure-results-${{ matrix.testbed }}
@@ -231,7 +214,6 @@ jobs:
         if [ -e "reports/sanity/${{ matrix.testbed }}/latest" ] ; then
           cp -r reports/sanity/${{ matrix.testbed }}/latest/history/ allure-results/history
         fi
-
     - name: add report metadata
       run: |
         cat << EOF >> allure-results/environment.properties
@@ -241,7 +223,6 @@ jobs:
         CiRun.Number=${{ github.run_number }}
         CiRun.Url=https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
         EOF
-
     - name: generate Allure report
       run: allure-${{ env.ALLURE_CLI_VERSION }}/bin/allure generate
 
@@ -254,13 +235,12 @@ jobs:
     # doing this to be able to aggregate multiple reports together later on
     - name: copy results into report
       run: cp -r allure-results allure-report/results
-    
+
     - name: copy new report
       if: ${{ (github.event.inputs.marker_expression || 'uc_sanity') == 'uc_sanity' }}
       run: |
         mkdir -p reports/sanity/${{ matrix.testbed }}
         cp -Tr allure-report reports/sanity/${{ matrix.testbed }}/${{ github.run_number }}
-
     - name: update latest symlink
       if: ${{ (github.event.inputs.marker_expression || 'uc_sanity') == 'uc_sanity' }}
       working-directory: reports/sanity/${{ matrix.testbed }}
@@ -274,10 +254,8 @@ jobs:
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
         git add .
         git commit -m "Automated deployment: $(date -u)"
-
     - name: push
       if: github.ref == 'refs/heads/master'
       uses: ad-m/github-push-action@v0.6.0
