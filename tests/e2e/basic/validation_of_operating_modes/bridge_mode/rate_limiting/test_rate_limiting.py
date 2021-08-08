@@ -16,16 +16,16 @@ setup_params_general = {
              "appliedRadios": ["2G"],
              "security_key": "something",
              "rate-limit": {
-                 "ingress-rate": 20,
-                 "egress-rate": 20
+                 "ingress-rate": 100,
+                 "egress-rate": 100
              }
              },
             {"ssid_name": "ssid_wpa2_5g_br",
              "appliedRadios": ["5G"],
              "security_key": "something",
              "rate-limit": {
-                 "ingress-rate": 50,
-                 "egress-rate": 50
+                 "ingress-rate": 100,
+                 "egress-rate": 100
              }
              }]},
     "rf": {},
@@ -46,7 +46,7 @@ class TestRateLimitingBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.story('Rate Limiting Open SSID 2.4 GHZ Band')
-    def test_open_ssid_5g(self, lf_test, get_vif_state, lf_tools):
+    def test_wpa2_personal_ssid_2g(self, lf_test, get_vif_state, lf_tools):
         """
             Test Rate Limiting Scenario
         """
