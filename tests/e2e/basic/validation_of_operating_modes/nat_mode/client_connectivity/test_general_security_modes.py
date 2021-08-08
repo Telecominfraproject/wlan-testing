@@ -9,7 +9,7 @@ import allure
 import pytest
 
 pytestmark = [pytest.mark.client_connectivity, pytest.mark.nat, pytest.mark.general, pytest.mark.sanity,
-              pytest.mark.ucentral]
+              pytest.mark.uc_sanity, pytest.mark.ucentral]
 
 setup_params_general = {
     "mode": "NAT",
@@ -29,7 +29,7 @@ setup_params_general = {
 }
 
 
-@pytest.mark.uc_sanity
+
 @pytest.mark.suiteA
 @pytest.mark.sanity_ucentral
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
