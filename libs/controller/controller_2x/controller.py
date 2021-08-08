@@ -282,6 +282,9 @@ class UProfileUtility:
     def add_ssid(self, ssid_data, radius=False, radius_auth_data={}, radius_accounting_data={}):
         print("ssid data : ", ssid_data)
         ssid_info = {'name': ssid_data["ssid_name"], "bss-mode": "ap", "wifi-bands": [], "services": ["wifi-frames"]}
+        for options in ssid_data:
+            if options == "rate-limit":
+                ssid_info[options] = ssid_data[options]
         for i in ssid_data["appliedRadios"]:
             ssid_info["wifi-bands"].append(i)
         ssid_info['encryption'] = {}
@@ -373,7 +376,7 @@ if __name__ == '__main__':
     # profile.set_mode(mode="BRIDGE")
     # profile.set_radio_config()
     # ssid = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security": "psk", "security_key": "something",
-    #         "vlan": 100}
+    #         "vlan": 100, "rate-limit": {"ingress-rate": 50, "egress-rate": 50}}
     # profile.add_ssid(ssid_data=ssid)
     # profile.push_config(serial_number="903cb39d6918")
     # print(obj.get_devices())

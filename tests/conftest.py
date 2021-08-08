@@ -10,7 +10,6 @@ import allure
 import re
 import logging
 
-
 from _pytest.fixtures import SubRequest
 from pyparsing import Optional
 

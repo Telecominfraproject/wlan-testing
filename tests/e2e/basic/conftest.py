@@ -47,14 +47,9 @@ def create_lanforge_chamberview_dut(lf_tools):
     return dut_name
 
 
-@pytest.fixture(scope="session")
-def setup_vlan():
-    vlan_id = [100]
-    yield vlan_id[0]
-
 
 @pytest.fixture(scope="class")
-def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment_id, fixtures_ver,
+def setup_profiles(request, setup_controller, testbed, get_equipment_id, fixtures_ver,
                    instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                    get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
     lf_tools.reset_scenario()
@@ -82,12 +77,12 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
         lf_tools.add_vlan(vlan_ids=vlan_list)
 
     # call this, if 1.x
-    return_1x = fixtures_ver.setup_profiles(request, param, setup_controller, testbed, setup_vlan, get_equipment_id,
+    return_var = fixtures_ver.setup_profiles(request, param, setup_controller, testbed, get_equipment_id,
                                               instantiate_profile,
                                               get_markers, create_lanforge_chamberview_dut, lf_tools,
                                               get_security_flags, get_configuration, radius_info, get_apnos,
                                               radius_accounting_info)
-    yield return_1x
+    yield return_var
 
 
 @pytest.fixture(scope="session")

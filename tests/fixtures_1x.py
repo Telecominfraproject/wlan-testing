@@ -68,7 +68,7 @@ class Fixtures_1x:
             version_list.append(version)
         return version_list
 
-    def setup_profiles(self, request, param, setup_controller, testbed, setup_vlan, get_equipment_id, instantiate_profile,
+    def setup_profiles(self, request, param, setup_controller, testbed, get_equipment_id, instantiate_profile,
                      get_markers, create_lanforge_chamberview_dut, lf_tools,
                      get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
 
@@ -92,7 +92,6 @@ class Fixtures_1x:
             vlan_id = 1
         if parameter['mode'] == "VLAN":
             mode = "BRIDGE"
-            vlan_id = setup_vlan
 
         instantiate_profile.delete_profile_by_name(profile_name=testbed + "-Equipment-AP-" + parameter['mode'])
 

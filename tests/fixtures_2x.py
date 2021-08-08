@@ -62,7 +62,7 @@ class Fixtures_2x:
             version_list.append(version)
         return version_list
 
-    def setup_profiles(self, request, param, setup_controller, testbed, setup_vlan, get_equipment_id,
+    def setup_profiles(self, request, param, setup_controller, testbed, get_equipment_id,
                        instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                        get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
         print("inside conftest_2x")
@@ -93,7 +93,6 @@ class Fixtures_2x:
             if parameter['mode'] == "VLAN":
                 mode = "VLAN"
                 instantiate_profile_obj.set_mode(mode=mode)
-                vlan_id = setup_vlan
             profile_data["ssid"] = {}
 
             for i in parameter["ssid_modes"]:
@@ -256,12 +255,18 @@ class Fixtures_2x:
                     break
             if x < 19:
                 print("Config properly applied into AP", config)
+
+            time_2 = time.time()
+            time_interval = time_2 - time_1
+            allure.attach(name="Time Took to apply Config: " + str(time_interval), body="")
+
             ap_config_latest = ap_ssh.get_uc_latest_config()
             ap_config_latest["uuid"] = 0
 
             ap_config_active = ap_ssh.get_uc_active_config()
             ap_config_active["uuid"] = 0
             x = 1
+
             while ap_config_active != ap_config_latest:
                 time.sleep(5)
                 x += 1
@@ -274,30 +279,14 @@ class Fixtures_2x:
                 ap_config_active["uuid"] = 0
                 if x == 19:
                     break
-            allure_body = "AP config status: \n" + \
-                          "Active Config: " + str(ap_ssh.get_uc_active_config()) + "\n" \
-                                                                                   "Latest Config: ", str(
-                ap_ssh.get_uc_latest_config()) + "\n" \
-                                                 "Applied Config: ", str(config)
-
             if x < 19:
                 print("AP is Broadcasting Applied Config")
-                allure.attach(name="AP is Broadcasting Applied Config", body="")
-                allure.attach(name="Config Info", body="Applied Config: " + str(ap_config_active))
-                allure.attach(name="Config Info",
-                              body="AP is Broadc3asting Applied Config: " + str(ap_ssh.get_uc_active_config()))
-                allure.attach(name="Config Info", body="AP is Broadcasting Applied Config: " + str(allure_body))
+                allure.attach(name="Success : Active Config in AP: ", body=str(ap_config_active))
 
             else:
                 print("AP is Not Broadcasting Applied Config")
-                allure.attach(name="AP is Not Broadcasting Applied Config", body="")
-                allure.attach(name="Config Info", body="Applied Config: " + str(ap_config_active))
-                allure.attach(name="Config Info",
-                              body="AP is Broadc3asting Applied Config: " + str(ap_ssh.get_uc_active_config()))
-                allure.attach(name="Config Info", body="AP is Broadcasting Applied Config: " + str(allure_body))
-            time_2 = time.time()
-            time_interval = time_2 - time_1
-            allure.attach(name="Time Took to apply Config: " + str(time_interval), body="")
+                allure.attach(name="Failed to Apply Config : Active Config in AP : ", body=str(ap_config_active))
+
             ap_logs = ap_ssh.logread()
             allure.attach(body=ap_logs, name="AP LOgs: ")
             ap_wifi_data = ap_ssh.get_interface_details()
@@ -407,7 +396,6 @@ class Fixtures_2x:
                 lf_tools.ssid_list.append(ap_wifi_data[ap_interfaces[interface]][0])
             lf_tools.dut_idx_mapping = idx_mapping
             print(ssid_data)
-            lf_tools.reset_scenario()
             lf_tools.update_ssid(ssid_data=ssid_data)
             return test_cases
         else:
