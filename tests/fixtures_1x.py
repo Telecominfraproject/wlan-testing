@@ -61,12 +61,12 @@ class Fixtures_1x:
         pass
 
     def get_ap_version(self, get_apnos, get_configuration):
-        version_list = []
-        for access_point_info in get_configuration['access_point']:
-            ap_ssh = get_apnos(access_point_info)
-            version = ap_ssh.get_ap_version_ucentral()
-            version_list.append(version)
-        return version_list
+#         version_list = []
+#         for access_point_info in get_configuration['access_point']:
+#             ap_ssh = get_apnos(access_point_info)
+#             version = ap_ssh.get_ap_version_ucentral()
+#             version_list.append(version)
+        return ["-\n-"]
 
     def setup_profiles(self, request, param, setup_controller, testbed, get_equipment_id, instantiate_profile,
                      get_markers, create_lanforge_chamberview_dut, lf_tools,
