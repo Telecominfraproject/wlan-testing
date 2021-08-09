@@ -87,3 +87,10 @@ def main(argv: Optional[Sequence[str]]=None):
 if __name__ == '__main__':
     main()
 
+# Command line to be used as
+# python pdu_automation.py --host 192.168.200.90 --user user --password 1234 --action on_all
+# python pdu_automation.py --host 192.168.200.90 --user user --password 1234 --action on --port 2
+# python pdu_automation.py --host 192.168.200.90 --user user --password 1234 --action off_all
+# python pdu_automation.py --host 192.168.200.90 --user user --password 1234 --action off --port 4
+# python pdu_automation.py --host 192.168.200.90 --user user --password 1234 --action cycle_all
+# python pdu_automation.py --host 192.168.200.90 --user user --password 1234 --action cycle --port 6
