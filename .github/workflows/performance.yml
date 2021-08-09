@@ -58,7 +58,7 @@ jobs:
       run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     needs: [ build ]
     strategy:
       max-parallel: 1
@@ -73,6 +73,17 @@ jobs:
       testbed: ${{ steps.testbed.outputs.name }}
 
     steps:
+    - name: install aws CLI tool
+      run: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
+
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
     - name: get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
@@ -80,6 +91,7 @@ jobs:
       run: |
         wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
         tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+
     - name: set job name
       id: job
       run: echo "::set-output name=name::perf-${{ github.run_id }}"
@@ -95,12 +107,14 @@ jobs:
         kubectl create ns $NAMESPACE
         kubectl config set-context --current --namespace=$NAMESPACE
         echo "::set-output name=name::${NAMESPACE}"
+
     - name: create configuration.py secret
       run: |
         cat << EOF > configuration.py
         ${{ secrets.LAB_CONFIGURATION }}
         EOF
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
+
     - name: run perf tests
       run: |
         cat <<EOF | kubectl apply -f -
@@ -156,11 +170,13 @@ jobs:
         echo "waiting for pod to exit"
         kubectl logs -f $podname >/dev/null 2>&1
         exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
+
     - name: print logs
       if: always()
       run: |
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
         kubectl logs $podname
+
     - name: upload Allure results as artifact
       if: always()
       uses: actions/upload-artifact@v2
@@ -218,6 +234,7 @@ jobs:
     - name: add report metadata
       run: |
         cat << EOF >> allure-results-dataplane_throughput_test/environment.properties
+
         Testbed=${{ needs.test.outputs.testbed }}
         Tests.CommitId=$(cd wlan-testing && git rev-parse --short HEAD)
         CiRun.Id=${{ github.run_id }}
