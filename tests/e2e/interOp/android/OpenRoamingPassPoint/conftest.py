@@ -20,7 +20,7 @@ from configuration import PASSPOINT_PROVIDER_INFO
 from configuration import PASSPOINT_OPERATOR_INFO
 from configuration import PASSPOINT_VENUE_INFO
 from configuration import PASSPOINT_PROFILE_INFO
-from controller.controller import ProfileUtility
+from controller.controller_1x.controller import ProfileUtility
 
 
 @allure.feature("PASSPOINT CONNECTIVITY SETUP")
@@ -37,7 +37,6 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
     profile_data = {}
     if parameter["mode"] not in ["BRIDGE", "NAT", "VLAN"]:
         print("Invalid Mode: ", parameter["mode"])
-        allure.attach(body=parameter["mode"], name="Invalid Mode: ")
         yield test_cases
 
     if parameter["mode"] == "NAT":

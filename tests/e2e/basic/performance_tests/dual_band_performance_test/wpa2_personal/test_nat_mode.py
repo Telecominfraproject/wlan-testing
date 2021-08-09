@@ -16,7 +16,7 @@ setup_params_general = {
     "mode": "NAT",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2p_2g", "appliedRadios": ["2G", "5G"], "security_key": "something"}
+            {"ssid_name": "ssid_wpa2_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something"}
             ]},
     "rf": {},
     "radius": False

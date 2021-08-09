@@ -484,7 +484,6 @@ class ProfileUtility:
             profile = self.profile_client.create_profile(body=default_profile)
             self.profile_creation_ids['rf'].append(profile._id)
             return profile
-
         if mode == "wifi6":
             default_profile = self.default_profiles['rf']
             default_profile._name = profile_data["name"]
@@ -1402,6 +1401,8 @@ if __name__ == '__main__':
     }
     profile.set_rf_profile(profile_data=profile_data, mode="wifi6")
     print(profile.default_profiles["rf"])
+    # profile.cleanup_profiles()
+
     # profile.get_default_profiles()
     # profile_data = {
     #     "profile_name": "ssid_wep_2g",
