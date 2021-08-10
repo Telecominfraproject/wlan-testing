@@ -41,8 +41,7 @@ class APNOS:
             stdin, stdout, stderr = client.exec_command(cmd)
             a = str(stdout.read()).split("\\n")
             for i in a:
-                print("shivam", i.__contains__("minicom ap" + self.minicom_ap))
-                if i.__contains__("minicom ap" + self.minicom_ap):
+                if i.__contains__("minicom ap" + self.tty[-1]):
                     temp = i.split("minicom")
                     a = temp[0].replace(" ", "")
                     cmd = "kill " + str(a).replace("b'", "")
