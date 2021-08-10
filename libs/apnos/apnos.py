@@ -37,8 +37,18 @@ class APNOS:
             self.tty = credentials['jumphost_tty']  # /dev/ttyAP1
             # kill minicom instance
             client = self.ssh_cli_connect()
-            cmd = "killall -9 minicom"
-            client.exec_command(cmd)
+            cmd = "pgrep 'minicom' -a"
+            stdin, stdout, stderr = client.exec_command(cmd)
+            a = str(stdout.read()).split("\\n")
+            for i in a:
+                print("shivam", i.__contains__("minicom ap" + self.minicom_ap))
+                if i.__contains__("minicom ap" + self.minicom_ap):
+                    temp = i.split("minicom")
+                    a = temp[0].replace(" ", "")
+                    cmd = "kill " + str(a).replace("b'", "")
+                    print(cmd)
+                    stdin, stdout, stderr = client.exec_command(cmd)
+                    print(stdout)
             client = self.ssh_cli_connect()
             cmd = '[ -f ~/cicd-git/ ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
