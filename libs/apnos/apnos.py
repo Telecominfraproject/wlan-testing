@@ -36,6 +36,7 @@ class APNOS:
         if self.mode:
             self.tty = credentials['jumphost_tty']  # /dev/ttyAP1
             # kill minicom instance
+            client = self.ssh_cli_connect()
             cmd = "killall -9 minicom"
             client.exec_command(cmd)
             client = self.ssh_cli_connect()
@@ -69,7 +70,6 @@ class APNOS:
             self.username, self.ip, self.port))
         client.connect(self.ip, username=self.username, password=self.password,
                        port=self.port, timeout=10, allow_agent=False, banner_timeout=200)
-
         return client
 
     def reboot(self):
