@@ -35,10 +35,13 @@ class APNOS:
         self.mode = credentials['jumphost']  # 1 for jumphost, 0 for direct ssh
         if self.mode:
             self.tty = credentials['jumphost_tty']  # /dev/ttyAP1
+            # kill minicom instance
+            cmd = "killall -9 minicom"
+            client.exec_command(cmd)
             client = self.ssh_cli_connect()
             cmd = '[ -f ~/cicd-git/ ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
-            output = str(stdout.read())
+            output = str(stdout.read())            
             print(output)
             if output.__contains__("False"):
                 cmd = 'mkdir ~/cicd-git/'
