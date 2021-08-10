@@ -24,10 +24,13 @@ class switch_on(setup):
     def __init__(self, hostname, user, password, port=None):
         super().__init__(hostname, user, password)
         self.port = port
-        # print(self.power_switch)
-        if self.port != None:
-            # String Manupulation
-            self.power_switch[int(self.port)-1].state = "ON"
+        if self.port != 'all':
+            self.i = 0
+            for i in self.power_switch:
+                # print(i.description)
+                if i.description == self.port:
+                    self.power_switch[self.i].state = "ON"
+                self.i += 1
         else:
             for outlet in self.power_switch:
                 outlet.state = 'ON'
@@ -37,12 +40,22 @@ class switch_off(setup):
     def __init__(self, hostname, user, password, port=None):
         super().__init__(hostname, user, password)
         self.port = port
-        if self.port != None:
-            self.power_switch[int(self.port)-1].state = "OFF"
+        if self.port != 'all':
+            self.i = 0
+            for i in self.power_switch:
+                # print(i.description)
+                if i.description == self.port:
+                    self.power_switch[self.i].state = "OFF"
+                self.i += 1
+            # self.power_switch[int(self.port)-1].state = "OFF"
         else:
             for outlet in self.power_switch:
                 outlet.state = 'OFF'
 
+class print_status(setup):
+    def __init__(self, hostname, user, password):
+        super().__init__(hostname, user, password)
+        print(self.power_switch)
 
 def main(argv: Optional[Sequence[str]]=None):
     parser = argparse.ArgumentParser()
@@ -58,24 +71,13 @@ def main(argv: Optional[Sequence[str]]=None):
     args = parser.parse_args(argv)
     dic = vars(args)
     # print(dic)
-    if dic['action'] == 'on_all':
-        set = setup(dic['host'], dic['username'], dic['password'])
-        on = switch_on(dic['host'], dic['username'], dic['password'])
-    elif dic['action'] == 'off_all':
-        set = setup(dic['host'], dic['username'], dic['password'])
-        off = switch_off(dic['host'], dic['username'], dic['password'])
-    elif dic['action'] == 'on':
+    if dic['action'] == 'on':
         set = setup(dic['host'], dic['username'], dic['password'])
         on = switch_on(dic['host'], dic['username'], dic['password'], dic['port'])
-        # off = switch_on(dic['action'])
     elif dic['action'] == 'off':
         set = setup(dic['host'], dic['username'], dic['password'])
-        on = switch_off(dic['host'], dic['username'], dic['password'], dic['port'])
+        off = switch_off(dic['host'], dic['username'], dic['password'], dic['port'])
         # off = switch_on(dic['action'])
-    elif dic['action'] == 'cycle_all':
-        set = setup(dic['host'], dic['username'], dic['password'])
-        off = switch_off(dic['host'], dic['username'], dic['password'])
-        on = switch_on(dic['host'], dic['username'], dic['password'])
     elif dic['action'] == 'cycle':
         set = setup(dic['host'], dic['username'], dic['password'])
         on = switch_off(dic['host'], dic['username'], dic['password'], dic['port'])
@@ -88,9 +90,6 @@ if __name__ == '__main__':
     main()
 
 # Command line to be used as
-# python pdu_automation.py --host 192.168.200.90 --user user --password 1234 --action on_all
-# python pdu_automation.py --host 192.168.200.90 --user user --password 1234 --action on --port 2
-# python pdu_automation.py --host 192.168.200.90 --user user --password 1234 --action off_all
-# python pdu_automation.py --host 192.168.200.90 --user user --password 1234 --action off --port 4
-# python pdu_automation.py --host 192.168.200.90 --user user --password 1234 --action cycle_all
-# python pdu_automation.py --host 192.168.200.90 --user user --password 1234 --action cycle --port 6
+# python pdu_automation.py --host 192.168.200.90 --user admin --password 1234 --action on --port all
+# python pdu_automation.py --host 192.168.200.90 --user admin --password 1234 --action off --port 'Outlet 1'
+# python pdu_automation.py --host 192.168.200.90 --user admin --password 1234 --action cycle --port all
