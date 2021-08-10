@@ -52,12 +52,14 @@ class switch_off(setup):
             for outlet in self.power_switch:
                 outlet.state = 'OFF'
 
+
 class print_status(setup):
     def __init__(self, hostname, user, password):
         super().__init__(hostname, user, password)
         print(self.power_switch)
 
-def main(argv: Optional[Sequence[str]]=None):
+
+def main(argv: Optional[Sequence[str]] = None):
     parser = argparse.ArgumentParser()
     parser.add_argument('--host', help='Please provide host name eg: 192.168.200.65')
     parser.add_argument('--username', help='Please provide username eg: admin')
