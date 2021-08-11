@@ -33,6 +33,7 @@ class ChamberView:
         self.debug = debug
         self.exit_on_error = False
         self.dut_idx_mapping = {}
+        self.ssid_list = []
         self.raw_line = [
             ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " + self.upstream_port.split(".")
             [2] + ",AUTO -1 NA"],
@@ -83,6 +84,12 @@ class ChamberView:
         self.CreateChamberview.sync_cv()
         return self.CreateChamberview, self.scenario_name
 
+    def add_vlan(self, vlan_ids=[]):
+        for vlans in vlan_ids:
+            self.raw_line.append(["profile_link 1.1 " + "vlan-100 1 " + self.upstream_port
+                                  + " NA " + self.upstream_port.split(".")[2] + ",AUTO -1 " + str(vlans)])
+        self.Chamber_View()
+
     def add_stations(self, band="2G", num_stations="max", dut="NA", ssid_name=[]):
         idx = 0
         print(self.dut_idx_mapping)
@@ -92,28 +99,36 @@ class ChamberView:
         max_stations = 0
         print(idx)
         if band == "2G":
-            max_stations = 64 * len(self.twog_radios)
-            radio = ",".join(self.twog_radios)
-            if len(self.twog_radios) == 1:
-                radio = radio + ",AUTO"
-            # self.eap_connect.sta_prefix = self.twog_prefix
+            if num_stations != "max":
+                num_stations = int(num_stations / len(self.twog_radios))
+            for radio in self.twog_radios:
+                max_stations = 64
+                if num_stations == "max":
+                    num_stations = max_stations
+                station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                str(int(idx) + 1) + "'" + " NA " + radio]
+                self.raw_line.append(station_data)
+
         if band == "5G":
-            max_stations = 64 * len(self.twog_radios)
-            radio = ",".join(self.fiveg_radios)
-            if len(self.fiveg_radios) == 1:
-                radio = radio + ",AUTO"
+            if num_stations != "max":
+                num_stations = int(num_stations / len(self.fiveg_radios))
+            for radio in self.fiveg_radios:
+                max_stations = 64
+                if num_stations == "max":
+                    num_stations = max_stations
+                station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                str(int(idx) + 1) + "'" + " NA " + radio]
+                self.raw_line.append(station_data)
         if band == "ax":
-            max_stations = len(self.twog_radios)
-            radio = ",".join(self.fiveg_radios)
-            if len(self.fiveg_radios) == 1:
-                radio = radio + ",AUTO"
-        # self.eap_connect.sta_prefix = self.fiveg_prefix
-        if num_stations != "max":
-            max_stations = num_stations
-        station_data = ["profile_link 1.1 STA-AUTO " + str(max_stations) + " 'DUT: " + dut + " Radio-" + str(int(idx)+1) + "'" + " NA " + radio]
-        self.raw_line.append(station_data)
-
-
+            if num_stations != "max":
+                num_stations = int(num_stations / len(self.fiveg_radios))
+            for radio in self.ax_radios:
+                max_stations = 1
+                if num_stations == "max":
+                    num_stations = max_stations
+                station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                str(int(idx) + 1) + "'" + " NA " + radio]
+                self.raw_line.append(station_data)
 
     def Create_Dut(self):
         self.CreateDut.setup()
@@ -191,4 +206,3 @@ class ChamberView:
             allure.attach.file(source=relevant_path + i,
                                name=i,
                                attachment_type="image/png", extension=None)
-

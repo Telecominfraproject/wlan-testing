@@ -20,9 +20,9 @@ if "libs" not in sys.path:
     sys.path.append(f'../libs')
 import allure
 from apnos.apnos import APNOS
-from controller.controller import Controller
-from controller.controller import ProfileUtility
-from controller.controller import FirmwareUtility
+from controller.controller_1x.controller import Controller
+from controller.controller_1x.controller import ProfileUtility
+from controller.controller_1x.controller import FirmwareUtility
 import pytest
 import logging
 from configuration import RADIUS_SERVER_DATA
@@ -68,7 +68,7 @@ def get_APToMobileDevice_data(request):
         "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
         #Android
         "platformName-android": request.config.getini("platformName-android"),
-        "appPackage-android": request.config.getini("appPackage-android")      
+        "appPackage-android": request.config.getini("appPackage-android")
     }
     yield passPoint_data
 
@@ -93,7 +93,7 @@ def get_ToggleAirplaneMode_data(request):
         "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
         #Android
         "platformName-android": request.config.getini("platformName-android"),
-        "appPackage-android": request.config.getini("appPackage-android")      
+        "appPackage-android": request.config.getini("appPackage-android")
     }
     yield passPoint_data
 
@@ -104,7 +104,7 @@ def get_ToggleWifiMode_data(request):
         "bundleId-iOS-Settings": request.config.getini("bundleId-iOS-Settings"),
          #Android
         "platformName-android": request.config.getini("platformName-android"),
-        "appPackage-android": request.config.getini("appPackage-android")      
+        "appPackage-android": request.config.getini("appPackage-android")
     }
     yield passPoint_data
 
@@ -189,7 +189,6 @@ def get_current_profile_cloud(instantiate_profile):
 @pytest.fixture(scope="session")
 def setup_vlan():
     vlan_id = [100]
-    allure.attach(body=str(vlan_id), name="VLAN Created: ")
     yield vlan_id[0]
 
 
@@ -533,7 +532,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
         print(e)
         print("failed to create AP Profile")
 
-    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
+    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
     ssid_names = []
     for i in instantiate_profile.profile_creation_ids["ssid"]:
         ssid_names.append(instantiate_profile.get_ssid_name_by_profile_id(profile_id=i))
@@ -553,7 +552,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
         time.sleep(10)
     allure.attach(body=str("VIF Config: " + str(vif_config) + "\n" + "SSID Pushed from Controller: " + str(ssid_names)),
                   name="SSID Profiles in VIF Config and Controller: ")
-    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
+    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
 
     # This loop will check the VIF Config with VIF State
     test_cases['vifs'] = False
@@ -587,6 +586,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
 
 
 
+
 @pytest.fixture(scope="function")
 def update_ssid(request, instantiate_profile, setup_profile_data):
     requested_profile = str(request.param).replace(" ", "").split(",")
@@ -610,11 +610,11 @@ def failure_tracking_fixture(request):
     print("tests_failed_during_module: ")
     print(tests_failed_during_module)
     yield tests_failed_during_module
-    
+
 
 @pytest.fixture(scope="class")
 def get_vif_state(get_apnos, get_configuration):
-    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
+    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
     vif_state = list(ap_ssh.get_vif_state_ssids())
     vif_state.sort()
     allure.attach(name="vif_state", body=str(vif_state))
@@ -641,7 +641,7 @@ def pytest_runtest_makereport(item, call):
         TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
         nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
         #print("TestCasefullNameTEST: " + TestCaseFullName)
-        try:      
+        try:
             #TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
             TestCaseName = nCurrentTestMethodNameSplit.replace('test_', '')
             #print ("\nTestCaseName: " + TestCaseName)
@@ -653,7 +653,7 @@ def pytest_runtest_makereport(item, call):
         #exception = call.excinfo.value
         #exception_class = call.excinfo.type
         #exception_class_name = call.excinfo.typename
-        
+
         #exception_traceback = call.excinfo.traceback
 
         if result.outcome == "failed":
@@ -663,7 +663,7 @@ def pytest_runtest_makereport(item, call):
             testCaseNameList.append(TestCaseName)
             testCaseStatusList.append(testCaseFailedStatusValue)
             testCaseErrorMsg.append(exception_type_and_message_formatted)
-            testCaseReportURL.append(reporting_client.report_url())           
+            testCaseReportURL.append(reporting_client.report_url())
 
             print("\n     TestStatus: " + testCaseFailedStatusValue)
             print("     FailureMsg: " + str(testCaseErrorMsg))
@@ -687,9 +687,9 @@ def pytest_runtest_makereport(item, call):
             testCaseErrorMsg.append(str(exception_type_Skipped_message_formatted))
             testCaseReportURL.append(reporting_client.report_url())
             print("\n     TestStatus: " + testCaseSkippedStatusValue)
-            print("     FailureMsg: " + str(testCaseErrorMsg))    
-            reportPerfecto(TestCaseName, testCaseSkippedStatusValue, testCaseErrorMsg, str(reporting_client.report_url()))       
-            
+            print("     FailureMsg: " + str(testCaseErrorMsg))
+            reportPerfecto(TestCaseName, testCaseSkippedStatusValue, testCaseErrorMsg, str(reporting_client.report_url()))
+
 
 def pytest_sessionfinish(session, exitstatus):
 
@@ -699,17 +699,17 @@ def pytest_sessionfinish(session, exitstatus):
     passed_amount = sum(1 for result in session.results.values() if result.passed)
     failed_amount = sum(1 for result in session.results.values() if result.failed)
     skipped_amount = sum(1 for result in session.results.values() if result.skipped)
-    #  print(f'There are {passed_amount} passed and {failed_amount} failed tests')        
+    #  print(f'There are {passed_amount} passed and {failed_amount} failed tests')
     TotalExecutedCount = failed_amount + passed_amount + skipped_amount
 
     print('\n------------------------------------')
-    print('Interop Perfecto TestCase Execution Summary')  
+    print('Interop Perfecto TestCase Execution Summary')
     print('------------------------------------')
-    print('Total TestCase Executed: ' + str(TotalExecutedCount))  
+    print('Total TestCase Executed: ' + str(TotalExecutedCount))
     print('Total Passed: ' + str(passed_amount))
     print('Total Failed: ' + str(failed_amount))
     print('Total Skipped: ' + str(skipped_amount) + "\n")
-  
+
     try:
         for index in range(len(testCaseNameList)):
             print(str(index+1) + ") " + str(testCaseNameList[index]) + " : " + str(testCaseStatusList[index]))
@@ -725,16 +725,16 @@ def setup_perfectoMobile_android(request):
     from appium import webdriver
     driver = None
     reporting_client = None
-    
+
     warnings.simplefilter("ignore", ResourceWarning)
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-   
+
     capabilities = {
             'platformName': request.config.getini("platformName-android"),
             'model': request.config.getini("model-android"),
             'browserName': 'mobileOS',
             #'automationName' : 'Appium',
-            'securityToken' : request.config.getini("securityToken"),  
+            'securityToken' : request.config.getini("securityToken"),
             'useAppiumForWeb' : 'false',
             'useAppiumForHybrid' : 'false',
             #'bundleId' : request.config.getini("appPackage-android"),
@@ -742,7 +742,7 @@ def setup_perfectoMobile_android(request):
 
     driver = webdriver.Remote('https://'+request.config.getini("perfectoURL")+'.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
     driver.implicitly_wait(35)
-   
+
     TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
     nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
     try:
@@ -753,7 +753,7 @@ def setup_perfectoMobile_android(request):
         TestCaseName = nCurrentTestMethodNameSplit
         print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
         #print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
-        
+
     projectname = request.config.getini("projectName")
     projectversion = request.config.getini("projectVersion")
     jobname = request.config.getini("jobName")
@@ -774,14 +774,14 @@ def setup_perfectoMobile_android(request):
             print("----------------------------------------------------------\n\n\n\n")
             driver.close()
         except Exception as e:
-            print(" -- Exception While Tear Down --")    
+            print(" -- Exception While Tear Down --")
             driver.close()
             print (e)
         finally:
             try:
                 driver.quit()
             except Exception as e:
-                print(" -- Exception Not Able To Quit --")    
+                print(" -- Exception Not Able To Quit --")
                 print (e)
 
     request.addfinalizer(teardown)
@@ -789,7 +789,7 @@ def setup_perfectoMobile_android(request):
     if driver is None:
         yield -1
     else:
-        yield driver,reporting_client 
+        yield driver,reporting_client
 
 def reportClient(value):
     global reporting_client   # declare a to be a global
@@ -811,7 +811,7 @@ def setup_perfectoMobileWeb(request):
     from selenium import webdriver
     rdriver = None
     reporting_client = None
-    
+
     warnings.simplefilter("ignore", ResourceWarning)
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -839,18 +839,18 @@ def setup_perfectoMobileWeb(request):
 
     def teardown():
         try:
-            print(" -- Tear Down --")     
+            print(" -- Tear Down --")
             reporting_client.test_stop(TestResultFactory.create_success())
             print('Report-Url: ' + reporting_client.report_url() + '\n')
             rdriver.close()
         except Exception as e:
-            print(" -- Exception Not Able To close --")    
+            print(" -- Exception Not Able To close --")
             print (e.message)
         finally:
             try:
                 rdriver.quit()
             except Exception as e:
-                print(" -- Exception Not Able To Quit --")    
+                print(" -- Exception Not Able To Quit --")
                 print (e.message)
 
     request.addfinalizer(teardown)
@@ -858,24 +858,24 @@ def setup_perfectoMobileWeb(request):
     if rdriver is None:
         yield -1
     else:
-        yield rdriver,reporting_client 
+        yield rdriver,reporting_client
 
 @pytest.fixture(scope="function")
 def setup_perfectoMobile_iOS(request):
     from appium import webdriver
     driver = None
     reporting_client = None
-    
+
     warnings.simplefilter("ignore", ResourceWarning)
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-   
+
     capabilities = {
             'platformName': request.config.getini("platformName-iOS"),
             'model': request.config.getini("model-iOS"),
             'browserName': 'safari',
             #'automationName' : 'Appium',
-            'securityToken' : request.config.getini("securityToken"),  
-            'useAppiumForWeb' : 'false', 
+            'securityToken' : request.config.getini("securityToken"),
+            'useAppiumForWeb' : 'false',
             'autoAcceptAlerts' : 'true',
             #'bundleId' : request.config.getini("bundleId-iOS"),
             'useAppiumForHybrid' : 'false',
@@ -883,7 +883,7 @@ def setup_perfectoMobile_iOS(request):
 
     driver = webdriver.Remote('https://'+request.config.getini("perfectoURL")+'.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
     driver.implicitly_wait(35)
-   
+
     TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
     nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
     try:
@@ -894,7 +894,7 @@ def setup_perfectoMobile_iOS(request):
         TestCaseName = nCurrentTestMethodNameSplit
         print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
         #print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
-        
+
     projectname = request.config.getini("projectName")
     projectversion = request.config.getini("projectVersion")
     jobname = request.config.getini("jobName")
@@ -915,20 +915,20 @@ def setup_perfectoMobile_iOS(request):
             print("----------------------------------------------------------\n\n\n\n")
             driver.close()
         except Exception as e:
-            print(" -- Exception While Tear Down --")    
+            print(" -- Exception While Tear Down --")
             driver.close()
             print (e)
         finally:
             try:
                 driver.quit()
             except Exception as e:
-                print(" -- Exception Not Able To Quit --")    
+                print(" -- Exception Not Able To Quit --")
                 print (e)
-    
+
     request.addfinalizer(teardown)
 
     if driver is None:
         yield -1
     else:
-        yield driver,reporting_client 
+        yield driver,reporting_client
 

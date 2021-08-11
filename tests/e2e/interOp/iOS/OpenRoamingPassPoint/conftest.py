@@ -20,7 +20,7 @@ from configuration import PASSPOINT_PROVIDER_INFO
 from configuration import PASSPOINT_OPERATOR_INFO
 from configuration import PASSPOINT_VENUE_INFO
 from configuration import PASSPOINT_PROFILE_INFO
-from controller.controller import ProfileUtility
+from controller.controller_1x.controller import ProfileUtility
 
 
 @allure.feature("PASSPOINT CONNECTIVITY SETUP")

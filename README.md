@@ -64,7 +64,9 @@ http://pythontesting.net/framework/pytest/pytest-introduction/
 
 ![total test count](https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/badges/total-count.svg)
 
-[![sanity testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/sanity.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/sanity.yml)
+[![R2.x sanity testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/uc_sanity.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/uc_sanity.yml)
+
+[![R1.x sanity testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/sanity.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/sanity.yml)
 ![sanity test count](https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/badges/sanity-count.svg)
 
 [![interop testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/interop.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/interop.yml)
