@@ -126,10 +126,10 @@ CONFIGURATION = {
                 'mode': 'wifi5',
                 'serial': '001122090801',
                 'jumphost': True,
-                'ip': "10.28.3.100",
+                'ip': "127.0.0.1",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 22,
+                'port': 8833,
                 'jumphost_tty': '/dev/ttyAP3',
                 'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/tplink_ec420/20210728-tplink_ec420-uCentral-trunk-12ad0d5-upgrade.bin"
             }
