@@ -11,7 +11,8 @@ import allure
 
 class TestUcentralSecService(object):
     """
-        pytest -m "uci_login or uci_logout"
+        Test the oauth endpoint
+        WIFI-3447
     """
     @pytest.mark.sdk_restapi
     def test_secservice_oauth(self, setup_controller):
@@ -26,7 +27,8 @@ class TestUcentralSecService(object):
     @pytest.mark.sdk_restapi
     def test_secservice_oauth_revoke(self, setup_controller):
         """
-            pytest -m "uci_logout"
+            Test the oauth revoke endpoint
+            WIFI-3448
         """
         resp = setup_controller.logout()
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
@@ -37,8 +39,8 @@ class TestUcentralSecService(object):
     @pytest.mark.sdk_restapi
     def test_secservice_system_endpoints(self, setup_controller):
         """
-            pytest -m "uci_endpoints"
-            look for ucentralgw and ucentralfms services for 2.1 release
+            Test the system endpoints to verify list of services present
+            WIFI-3449
         """
         resp = setup_controller.request("sec", "systemEndpoints", "GET", None, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
@@ -74,8 +76,8 @@ class TestUcentralSecService(object):
     @pytest.mark.sdk_restapi
     def test_secservice_get_version(self, setup_controller):
         """
-            pytest -m "uci_endpoints"
-            look for ucentralgw and ucentralfms services for 2.1 release
+            Test the system endpoint to verify the version of the service
+            WIFI-3450
         """
 
         params = {'command': 'version'}
@@ -97,7 +99,8 @@ class TestUcentralSecService(object):
     @pytest.mark.sdk_restapi
     def test_secservice_get_uptime(self, setup_controller):
         """
-            look for ucentralgw and ucentralfms services for 2.1 release
+            Test the system endpoint to verify the uptime of the service
+            WIFI-3451
         """
 
         params = {'command': 'times'}
