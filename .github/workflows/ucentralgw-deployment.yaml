@@ -17,9 +17,19 @@ env:
   DIGICERT_KEY: ${{ secrets.DIGICERT_KEY }}
 
   # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
+  # Required object fiels per environment:
+  # - namespace - namespace suffix that will used added for the Kubernetes environment (i.e. if you pass 'test', kubernetes namespace will be named 'ucentral-test')
+  # - deploy_method - deployment method for the chart deployment (supported methods - 'git' (will use helm-git from assembly chart) and 'bundle' (will use chart stored in the Artifactory0
+  # - chart_version - version of chart to be deployed from assembly chart (for 'git' method git ref may be passed, for 'bundle' method version of chart may be passed)
+  # - ucentralgw_version - uCentralGW version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+  # - ucentralsec_version - uCentralSec version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+  # - ucentralfms_version - uCentralFMS version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+  # - ucentralgwui_version - uCentralGW UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
   testbeds: '[
     {
       "namespace": "qa01",
+      "deploy_method": "git",
+      "chart_version": "main",
       "ucentralgw_version": "master",
       "ucentralsec_version": "main",
       "ucentralfms_version": "main",
@@ -27,6 +37,8 @@ env:
     },
     {
       "namespace": "dev01",
+      "deploy_method": "git",
+      "chart_version": "main",
       "ucentralgw_version": "master",
       "ucentralsec_version": "main",
       "ucentralfms_version": "main",
@@ -58,17 +70,13 @@ jobs:
       fail-fast: false
     steps:
 
-    - name: Checkout uCentral assembly chart repo
-      uses: actions/checkout@v2
-      with:
-        path: wlan-cloud-ucentral-deploy
-        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
     - name: Checkout repo with Helm values
       uses: actions/checkout@v2
       with:
         path: wlan-testing
 
     - name: Prepare certificates from secrets
+      working-directory: wlan-testing/helm/ucentral
       run: |
         echo "${{ env.DIGICERT_CERT }}" | base64 -d > cert.pem
         echo "${{ env.DIGICERT_KEY }}" | base64 -d > key.pem
@@ -78,62 +86,22 @@ jobs:
         aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
     - name: Deploy uCentralGW
-      working-directory: wlan-cloud-ucentral-deploy/chart
+      working-directory: wlan-testing/helm/ucentral
       run: |
-        helm plugin install https://github.com/aslafy-z/helm-git --version 0.10.0
-        sed -i '/wlan-cloud-ucentralgw@/s/ref=.*/ref='${{ matrix.ucentralgw_version }}'\"/g' Chart.yaml
-        sed -i '/wlan-cloud-ucentralgw-ui@/s/ref=.*/ref='${{ matrix.ucentralgwui_version }}'\"/g' Chart.yaml
-        sed -i '/wlan-cloud-ucentralsec@/s/ref=.*/ref='${{ matrix.ucentralsec_version }}'\"/g' Chart.yaml
-        sed -i '/wlan-cloud-ucentralfms@/s/ref=.*/ref='${{ matrix.ucentralfms_version }}'\"/g' Chart.yaml
-        export UCENTRALGW_VERSION_TAG=$(echo ${{ matrix.ucentralgw_version }} | tr '/' '-')
-        export UCENTRALGWUI_VERSION_TAG=$(echo ${{ matrix.ucentralgwui_version }} | tr '/' '-')
-        export UCENTRALSEC_VERSION_TAG=$(echo ${{ matrix.ucentralsec_version }} | tr '/' '-')
-        export UCENTRALFMS_VERSION_TAG=$(echo ${{ matrix.ucentralfms_version }} | tr '/' '-')
-        helm repo add bitnami https://charts.bitnami.com/bitnami
-        helm repo update
-        helm dependency update
-        helm upgrade --install --create-namespace \
-          --namespace ucentral-${{ matrix.namespace }} --wait --timeout 20m \
-          -f ../../wlan-testing/helm/ucentral/values.ucentral-qa.yaml \
-          --set ucentralgw.configProperties."rtty\.token"=${{ secrets.RTTY_TOKEN }} \
-          --set ucentralsec.configProperties."authentication\.default\.username"=${{ secrets.UCENTRALGW_AUTH_USERNAME }} \
-          --set ucentralsec.configProperties."authentication\.default\.password"=${{ secrets.UCENTRALGW_AUTH_PASSWORD }} \
-          --set rttys.config.token=${{ secrets.RTTY_TOKEN }} \
-          --set ucentralfms.configProperties."s3\.secret"=${{ secrets.UCENTRALFMS_S3_SECRET }} \
-          --set ucentralfms.configProperties."s3\.key"=${{ secrets.UCENTRALFMS_S3_KEY }} \
-          --set ucentralgw.services.ucentralgw.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=gw-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
-          --set ucentralgw.configProperties."ucentral\.fileuploader\.host\.0\.name"=gw-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
-          --set ucentralgw.configProperties."rtty\.server"=rtty-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
-          --set ucentralgw.configProperties."ucentral\.system\.uri\.public"=https://gw-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build:16002 \
-          --set ucentralgw.configProperties."ucentral\.system\.uri\.private"=https://gw-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build:17002 \
-          --set ucentralgw.configProperties."ucentral\.system\.uri\.ui"=https://webui-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
-          --set ucentralsec.services.ucentralsec.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=sec-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
-          --set ucentralsec.configProperties."ucentral\.system\.uri\.public"=https://sec-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build:16001 \
-          --set ucentralsec.configProperties."ucentral\.system\.uri\.private"=https://sec-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build:17001 \
-          --set ucentralsec.configProperties."ucentral\.system\.uri\.ui"=https://webui-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
-          --set rttys.services.rttys.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=rtty-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
-          --set ucentralgwui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=webui-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
-          --set ucentralgwui.ingresses.default.hosts={webui-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build} \
-          --set ucentralgwui.public_env_variables.DEFAULT_UCENTRALSEC_URL=https://sec-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build:16001 \
-          --set ucentralfms.services.ucentralfms.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=fms-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
-          --set ucentralfms.configProperties."ucentral\.system\.uri\.public"=https://fms-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build:16004 \
-          --set ucentralfms.configProperties."ucentral\.system\.uri\.private"=https://fms-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build:17004 \
-          --set ucentralfms.configProperties."ucentral\.system\.uri\.ui"=https://webui-ucentral-${{ matrix.namespace }}.cicd.lab.wlan.tip.build \
-          --set-file ucentralgw.certs."restapi-cert\.pem"=../../cert.pem \
-          --set-file ucentralgw.certs."restapi-key\.pem"=../../key.pem \
-          --set-file ucentralgw.certs."websocket-cert\.pem"=../../cert.pem \
-          --set-file ucentralgw.certs."websocket-key\.pem"=../../key.pem \
-          --set-file rttys.certs."restapi-cert\.pem"=../../cert.pem \
-          --set-file rttys.certs."restapi-key\.pem"=../../key.pem \
-          --set-file ucentralsec.certs."restapi-cert\.pem"=../../cert.pem \
-          --set-file ucentralsec.certs."restapi-key\.pem"=../../key.pem \
-          --set-file ucentralfms.certs."restapi-cert\.pem"=../../cert.pem \
-          --set-file ucentralfms.certs."restapi-key\.pem"=../../key.pem \
-          --set ucentralgw.images.ucentralgw.tag=$UCENTRALGW_VERSION_TAG \
-          --set ucentralgwui.images.ucentralgwui.tag=$UCENTRALGWUI_VERSION_TAG \
-          --set ucentralsec.images.ucentralsec.tag=$UCENTRALSEC_VERSION_TAG \
-          --set ucentralfms.images.ucentralfms.tag=$UCENTRALFMS_VERSION_TAG \
-          tip-ucentral .
+        export NAMESPACE="${{ matrix.namespace }}"
+        export DEPLOY_METHOD="${{ matrix.deploy_method }}"
+        export CHART_VERSION="${{ matrix.chart_version }}"
+        export UCENTRALGW_VERSION="${{ matrix.ucentralgw_version }}"
+        export UCENTRALGWUI_VERSION="${{ matrix.ucentralgwui_version }}"
+        export UCENTRALSEC_VERSION="{{ matrix.ucentralsec_version }}"
+        export UCENTRALFMS_VERSION="${{ matrix.ucentralfms_version }}"
+        export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
+        export RTTY_TOKEN="${{ secrets.RTTY_TOKEN }}"
+        export UCENTRALGW_AUTH_USERNAME="${{ secrets.UCENTRALGW_AUTH_USERNAME }}"
+        export UCENTRALGW_AUTH_PASSWORD="${{ secrets.UCENTRALGW_AUTH_PASSWORD }}"
+        export UCENTRALFMS_S3_SECRET="${{ secrets.UCENTRALFMS_S3_SECRET }}"
+        export UCENTRALFMS_S3_KEY="${{ secrets.UCENTRALFMS_S3_KEY }}"
+        ./deploy.sh
 
     - name: Show resource state on deployment failure
       if: failure()
