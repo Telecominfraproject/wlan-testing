@@ -93,7 +93,7 @@ CONFIGURATION = {
                 'password': "pumpkin77",
                 'port': 22,
                 'jumphost_tty': '/dev/ttyAP2',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/eap101/dev/eap101-2021-06-25-pending-b6743c3.tar.gz"
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/eap101/trunk/eap101-1.2.0-rc1.tar.gz"
             }
         ],
         "traffic_generator": {
