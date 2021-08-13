@@ -45,13 +45,13 @@ class TestSetupBridgeEnterpriseSuiteA(object):
     @pytest.mark.twog
     def test_setup_wpa_enterprise_2g_ssid_profile(self, setup_profiles, update_report, test_cases):
         """ WPA Enterprise SSID 2.4G """
-        assert setup_profiles['wpa2_enterprise_2g']
+        assert setup_profiles['wpa_enterprise_2g']
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
     def test_setup_wpa_enterprise_5g_ssid_profile(self, setup_profiles, update_report, test_cases):
         """ WPA Enterprise SSID 5G """
-        assert setup_profiles['wpa2_enterprise_5g']
+        assert setup_profiles['wpa_enterprise_5g']
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
