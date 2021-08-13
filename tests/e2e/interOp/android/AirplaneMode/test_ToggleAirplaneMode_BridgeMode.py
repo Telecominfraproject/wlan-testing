@@ -158,7 +158,7 @@ class TestToggleAirplaneModeAndroidBridgeMode(object):
     @pytest.mark.open
     def test_ToogleAirplaneMode_5g_Open_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["open"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = "[BLANK]"
         print ("SSID_NAME: " + ssidName)
@@ -185,7 +185,7 @@ class TestToggleAirplaneModeAndroidBridgeMode(object):
     @pytest.mark.open
     def test_ToogleAirplaneMode_2g_Open_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssidName = profile_data["ssid_name"]
         ssidPassword = "[BLANK]"
         print ("SSID_NAME: " + ssidName)
