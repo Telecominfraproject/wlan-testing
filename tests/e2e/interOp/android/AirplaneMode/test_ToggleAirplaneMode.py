@@ -74,7 +74,7 @@ class TestToggleAirplaneModeAndroid(object):
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
     @pytest.mark.twog
-    @pytest.mark.wpa2_personal
+    @pytest.mark.wpa2_personal.
     def test_ToogleAirplaneMode_2g_WPA2_Personal(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
