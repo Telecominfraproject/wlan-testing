@@ -116,7 +116,7 @@ def num_stations(request):
 @pytest.fixture(scope="class")
 def get_vif_state(get_apnos, get_configuration, request, lf_tools):
     if request.config.getoption("1.x"):
-        ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
+        ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
         vif_state = list(ap_ssh.get_vif_state_ssids())
         vif_state.sort()
         yield vif_state
