@@ -17,7 +17,7 @@ if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.interop_and, pytest.mark.android,
-              pytest.mark.ToggleWifiMode]
+              pytest.mark.ToggleWifiMode, pytest.mark.twmandg]
 
 from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_WifiMode_android, Toggle_AirplaneMode_android, \
     ForgetWifiConnection, openApp
@@ -25,6 +25,8 @@ from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_WifiMod
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
+        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"]},
+                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
         "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
                 {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
                  "security_key": "something"}],
@@ -32,8 +34,6 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
              "security_key": "something"}]},
-    "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"]},
-             {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
     "rf": {},
     "radius": False
 }
@@ -47,8 +47,7 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestToggleWifiModeBridgeMode(object):
-
+class TestToggleWifiModeBridge(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
