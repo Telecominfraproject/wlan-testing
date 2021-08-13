@@ -581,58 +581,58 @@ class Fixtures_1x:
 
         ap_logs = ap_ssh.logread()
         allure.attach(body=ap_logs, name="AP LOgs: ")
-        ssid_info = ap_ssh.get_ssid_info()
-        ssid_data = []
-        print(ssid_info)
-        band_mapping = ap_ssh.get_bssid_band_mapping()
-        print(band_mapping)
-        idx_mapping = {}
-        for i in range(0, len(ssid_info)):
-            if ssid_info[i][1] == "OPEN":
-                ssid_info[i].append("")
-            if ssid_info[i][1] == "OPEN":
-                ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] + " security=OPEN" +
-                        " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
-                idx_mapping[str(i)] = [ssid_info[i][3], ssid_info[i][2], ssid_info[i][1], band_mapping[ssid_info[i][0]],
-                                       ssid_info[i][0]]
-
-            if ssid_info[i][1] == "WPA":
-                ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] + " security=WPA" +
-                        " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
-                idx_mapping[str(i)] = [ssid_info[i][3], ssid_info[i][2], ssid_info[i][1], band_mapping[ssid_info[i][0]],
-                                       ssid_info[i][0]]
-            if ssid_info[i][1] == "WPA2":
-                ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] + " security=WPA2" +
-                        " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
-                idx_mapping[str(i)] = [ssid_info[i][3], ssid_info[i][2], ssid_info[i][1], band_mapping[ssid_info[i][0]],
-                                       ssid_info[i][0]]
-            if ssid_info[i][1] == "WPA3_PERSONAL":
-                ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] + " security=WPA3" +
-                        " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
-                idx_mapping[str(i)] = [ssid_info[i][3], ssid_info[i][2], ssid_info[i][1], band_mapping[ssid_info[i][0]],
-                                       ssid_info[i][0]]
-
-            if ssid_info[i][1] == "WPA | WPA2":
-                ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] + " security=WPA|WPA2" +
-                        " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
-                idx_mapping[str(i)] = [ssid_info[i][3], ssid_info[i][2], ssid_info[i][1], band_mapping[ssid_info[i][0]],
-                                       ssid_info[i][0]]
-
-            if ssid_info[i][1] == "EAP-TTLS":
-                ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] + " security=EAP-TTLS" +
-                        " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
-                idx_mapping[str(i)] = [ssid_info[i][3], ssid_info[i][2], ssid_info[i][1], band_mapping[ssid_info[i][0]],
-                                       ssid_info[i][0]]
-            ssid_data.append(ssid)
-        lf_tools.dut_idx_mapping = idx_mapping
-        # Add bssid password and security from iwinfo data
-        # Format SSID Data in the below format
-        # ssid_data = [
-        #     ['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58'],
-        #     ['ssid_idx=1 ssid=Default-SSID-5gl password=12345678 bssid=90:3c:b3:94:48:59']
-        # ]
-        allure.attach(name="SSID DATA IN LF DUT", body=str(ssid_data))
-        lf_tools.update_ssid(ssid_data=ssid_data)
+        # ssid_info = ap_ssh.get_ssid_info()
+        # ssid_data = []
+        # print(ssid_info)
+        # band_mapping = ap_ssh.get_bssid_band_mapping()
+        # print(band_mapping)
+        # idx_mapping = {}
+        # for i in range(0, len(ssid_info)):
+        #     if ssid_info[i][1] == "OPEN":
+        #         ssid_info[i].append("")
+        #     if ssid_info[i][1] == "OPEN":
+        #         ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] + " security=OPEN" +
+        #                 " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
+        #         idx_mapping[str(i)] = [ssid_info[i][3], ssid_info[i][2], ssid_info[i][1], band_mapping[ssid_info[i][0]],
+        #                                ssid_info[i][0]]
+        #
+        #     if ssid_info[i][1] == "WPA":
+        #         ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] + " security=WPA" +
+        #                 " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
+        #         idx_mapping[str(i)] = [ssid_info[i][3], ssid_info[i][2], ssid_info[i][1], band_mapping[ssid_info[i][0]],
+        #                                ssid_info[i][0]]
+        #     if ssid_info[i][1] == "WPA2":
+        #         ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] + " security=WPA2" +
+        #                 " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
+        #         idx_mapping[str(i)] = [ssid_info[i][3], ssid_info[i][2], ssid_info[i][1], band_mapping[ssid_info[i][0]],
+        #                                ssid_info[i][0]]
+        #     if ssid_info[i][1] == "WPA3_PERSONAL":
+        #         ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] + " security=WPA3" +
+        #                 " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
+        #         idx_mapping[str(i)] = [ssid_info[i][3], ssid_info[i][2], ssid_info[i][1], band_mapping[ssid_info[i][0]],
+        #                                ssid_info[i][0]]
+        #
+        #     if ssid_info[i][1] == "WPA | WPA2":
+        #         ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] + " security=WPA|WPA2" +
+        #                 " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
+        #         idx_mapping[str(i)] = [ssid_info[i][3], ssid_info[i][2], ssid_info[i][1], band_mapping[ssid_info[i][0]],
+        #                                ssid_info[i][0]]
+        #
+        #     if ssid_info[i][1] == "EAP-TTLS":
+        #         ssid = ["ssid_idx=" + str(i) + " ssid=" + ssid_info[i][3] + " security=EAP-TTLS" +
+        #                 " password=" + ssid_info[i][2] + " bssid=" + ssid_info[i][0]]
+        #         idx_mapping[str(i)] = [ssid_info[i][3], ssid_info[i][2], ssid_info[i][1], band_mapping[ssid_info[i][0]],
+        #                                ssid_info[i][0]]
+        #     ssid_data.append(ssid)
+        # lf_tools.dut_idx_mapping = idx_mapping
+        # # Add bssid password and security from iwinfo data
+        # # Format SSID Data in the below format
+        # # ssid_data = [
+        # #     ['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58'],
+        # #     ['ssid_idx=1 ssid=Default-SSID-5gl password=12345678 bssid=90:3c:b3:94:48:59']
+        # # ]
+        # allure.attach(name="SSID DATA IN LF DUT", body=str(ssid_data))
+        # lf_tools.update_ssid(ssid_data=ssid_data)
 
         def teardown_session():
             print("\nRemoving Profiles")
