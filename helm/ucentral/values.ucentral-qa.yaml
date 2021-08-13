@@ -157,3 +157,22 @@ ucentralfms:
       L+/DtiR5fDVMNdBSGU89UNTi0wHY9+RFuNlIuvZC+x/swF0V9R5mN+ywquTPtDLA
       5IOM7ItsRmen6u3qu+JXros54e4juQ==
       -----END CERTIFICATE-----
+
+kafka:
+  heapOpts: -Xmx512m -Xms512m
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: 200m
+      memory: 700Mi
+  zookeeper:
+    heapSize: 256
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 200m
+        memory: 384Mi
