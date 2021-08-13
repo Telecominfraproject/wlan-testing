@@ -168,12 +168,18 @@ class Fixtures_1x:
                                 j["appliedRadios"][i] = j["appliedRadios"][i].replace("5G", "is5GHz")
                                 j["appliedRadios"][i] = j["appliedRadios"][i].replace("2G", "is2dot4GHz")
                             creates_profile = instantiate_profile.create_open_ssid_profile(profile_data=j)
-                            test_cases["open_2g"] = True
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["open_2g"] = True
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["open_5g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
                         except Exception as e:
                             print(e)
-                            test_cases["open_2g"] = False
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["open_2g"] = False
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["open_5g"] = False
                             allure.attach(body=str(e),
                                           name="SSID Profile Creation Failed")
 
@@ -192,12 +198,18 @@ class Fixtures_1x:
                                 j["appliedRadios"][i] = j["appliedRadios"][i].replace("5G", "is5GHz")
                                 j["appliedRadios"][i] = j["appliedRadios"][i].replace("2G", "is2dot4GHz")
                             creates_profile = instantiate_profile.create_wpa_ssid_profile(profile_data=j)
-                            test_cases["wpa_2g"] = True
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa_2g"] = True
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa_5g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
                         except Exception as e:
                             print(e)
-                            test_cases["wpa_2g"] = False
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa_2g"] = False
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa_5g"] = False
                             allure.attach(body=str(e),
                                           name="SSID Profile Creation Failed")
 
@@ -217,12 +229,18 @@ class Fixtures_1x:
                                 j["appliedRadios"][i] = j["appliedRadios"][i].replace("5G", "is5GHz")
                                 j["appliedRadios"][i] = j["appliedRadios"][i].replace("2G", "is2dot4GHz")
                             creates_profile = instantiate_profile.create_wpa2_personal_ssid_profile(profile_data=j)
-                            test_cases["wpa2_personal_2g"] = True
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa2_personal_2g"] = True
+                            if j["appliedRadios"].__contains__("5G"):
+                                test_cases["wpa2_personal_5g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
                         except Exception as e:
                             print(e)
-                            test_cases["wpa2_personal_2g"] = False
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa2_personal_2g"] = False
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa2_personal_5g"] = False
                             allure.attach(body=str(e),
                                           name="SSID Profile Creation Failed")
 
@@ -243,12 +261,18 @@ class Fixtures_1x:
 
                             creates_profile = instantiate_profile.create_wpa_wpa2_personal_mixed_ssid_profile(
                                 profile_data=j)
-                            test_cases["wpa_wpa2_personal_mixed_2g"] = True
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa_wpa2_personal_mixed_2g"] = True
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa_wpa2_personal_mixed_5g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
                         except Exception as e:
                             print(e)
-                            test_cases["wpa_wpa2_personal_mixed_2g"] = False
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa_wpa2_personal_mixed_2g"] = False
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa_wpa2_personal_mixed_5g"] = False
                             allure.attach(body=str(e),
                                           name="SSID Profile Creation Failed")
 
@@ -268,12 +292,18 @@ class Fixtures_1x:
                                 j["appliedRadios"][i] = j["appliedRadios"][i].replace("2G", "is2dot4GHz")
 
                             creates_profile = instantiate_profile.create_wpa3_personal_ssid_profile(profile_data=j)
-                            test_cases["wpa3_personal_2g"] = True
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa3_personal_2g"] = True
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa3_personal_5g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
                         except Exception as e:
                             print(e)
-                            test_cases["wpa3_personal_2g"] = False
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa3_personal_2g"] = False
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa3_personal_5g"] = False
                             allure.attach(body=str(e),
                                           name="SSID Profile Creation Failed")
             if mode == "wpa3_personal_mixed":
@@ -292,12 +322,18 @@ class Fixtures_1x:
                                 j["appliedRadios"][i] = j["appliedRadios"][i].replace("2G", "is2dot4GHz")
                             creates_profile = instantiate_profile.create_wpa3_personal_mixed_ssid_profile(
                                 profile_data=j)
-                            test_cases["wpa3_personal_mixed_2g"] = True
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa3_personal_mixed_2g"] = True
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa3_personal_mixed_5g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
                         except Exception as e:
                             print(e)
-                            test_cases["wpa3_personal_2g"] = False
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa3_personal_mixed_2g"] = False
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa3_personal_mixed_5g"] = False
                             allure.attach(body=str(e),
                                           name="SSID Profile Creation Failed")
 
@@ -316,13 +352,19 @@ class Fixtures_1x:
                                 j["appliedRadios"][i] = j["appliedRadios"][i].replace("5G", "is5GHz")
                                 j["appliedRadios"][i] = j["appliedRadios"][i].replace("2G", "is2dot4GHz")
                             creates_profile = instantiate_profile.create_wpa_enterprise_ssid_profile(profile_data=j)
-                            test_cases["wpa_enterprise_2g"] = True
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa_enterprise_2g"] = True
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa_enterprise_5g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
 
                         except Exception as e:
                             print(e)
-                            test_cases["wpa_enterprise_2g"] = False
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa_enterprise_2g"] = False
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa_enterprise_5g"] = False
                             allure.attach(body=str(e),
                                           name="SSID Profile Creation Failed")
             if mode == "wpa2_enterprise":
@@ -340,12 +382,19 @@ class Fixtures_1x:
                                 j["appliedRadios"][i] = j["appliedRadios"][i].replace("5G", "is5GHz")
                                 j["appliedRadios"][i] = j["appliedRadios"][i].replace("2G", "is2dot4GHz")
                             creates_profile = instantiate_profile.create_wpa2_enterprise_ssid_profile(profile_data=j)
-                            test_cases["wpa2_enterprise_2g"] = True
+
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa2_enterprise_2g"] = True
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa2_enterprise_5g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
                         except Exception as e:
                             print(e)
-                            test_cases["wpa2_enterprise_2g"] = False
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa2_enterprise_2g"] = False
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa2_enterprise_5g"] = False
                             allure.attach(body=str(e),
                                           name="SSID Profile Creation Failed")
             if mode == "wpa3_enterprise":
@@ -363,12 +412,18 @@ class Fixtures_1x:
                                 j["appliedRadios"][i] = j["appliedRadios"][i].replace("5G", "is5GHz")
                                 j["appliedRadios"][i] = j["appliedRadios"][i].replace("2G", "is2dot4GHz")
                             creates_profile = instantiate_profile.create_wpa3_enterprise_ssid_profile(profile_data=j)
-                            test_cases["wpa3_enterprise_2g"] = True
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa3_enterprise_2g"] = True
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa3_enterprise_5g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
                         except Exception as e:
                             print(e)
-                            test_cases["wpa3_enterprise_2g"] = False
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa3_enterprise_2g"] = False
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa3_enterprise_5g"] = False
                             allure.attach(body=str(e),
                                           name="SSID Profile Creation Failed")
 
@@ -388,12 +443,18 @@ class Fixtures_1x:
                                 j["appliedRadios"][i] = j["appliedRadios"][i].replace("2G", "is2dot4GHz")
                             creates_profile = instantiate_profile.create_wpa_wpa2_enterprise_mixed_ssid_profile(
                                 profile_data=j)
-                            test_cases["wpa_wpa2_enterprise_mixed_2g"] = True
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa_wpa2_enterprise_mixed_2g"] = True
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa_wpa2_enterprise_mixed_5g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
                         except Exception as e:
                             print(e)
-                            test_cases["wpa_wpa2_enterprise_mixed_2g"] = False
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa_wpa2_enterprise_mixed_2g"] = False
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa_wpa2_enterprise_mixed_5g"] = False
                             allure.attach(body=str(e),
                                           name="SSID Profile Creation Failed")
             if mode == "wpa3_enterprise_mixed":
@@ -412,12 +473,18 @@ class Fixtures_1x:
                                 j["appliedRadios"][i] = j["appliedRadios"][i].replace("2G", "is2dot4GHz")
                             creates_profile = instantiate_profile.create_wpa3_enterprise_mixed_ssid_profile(
                                 profile_data=j)
-                            test_cases["wpa3_enterprise_mixed_2g"] = True
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa3_enterprise_mixed_2g"] = True
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa3_enterprise_mixed_5g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
                         except Exception as e:
                             print(e)
-                            test_cases["wpa3_enterprise_mixed_2g"] = False
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wpa3_enterprise_mixed_2g"] = False
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wpa3_enterprise_mixed_5g"] = False
                             allure.attach(body=str(e),
                                           name="SSID Profile Creation Failed")
 
@@ -436,12 +503,18 @@ class Fixtures_1x:
                                 j["appliedRadios"][i] = j["appliedRadios"][i].replace("5G", "is5GHz")
                                 j["appliedRadios"][i] = j["appliedRadios"][i].replace("2G", "is2dot4GHz")
                             creates_profile = instantiate_profile.create_wep_ssid_profile(profile_data=j)
-                            test_cases["wpa3_enterprise_2g"] = True
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wep_2g"] = True
+                            if j["appliedRadios"].__contains__("is5GHzU"):
+                                test_cases["wep_5g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
                         except Exception as e:
                             print(e)
-                            test_cases["wpa3_enterprise_2g"] = False
+                            if j["appliedRadios"].__contains__("is2dot4GHz"):
+                                test_cases["wep_2g"] = False
+                            if j["appliedRadios"].__contains__("is5GHz"):
+                                test_cases["wep_5g"] = False
                             allure.attach(body=str(e),
                                           name="SSID Profile Creation Failed")
         # Equipment AP Profile Creation
@@ -464,7 +537,7 @@ class Fixtures_1x:
             print(e)
             print("failed to create AP Profile")
 
-        ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
+        ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
         # ssid_names = []
         # for i in instantiate_profile.profile_creation_ids["ssid"]:
         #     ssid_names.append(instantiate_profile.get_ssid_name_by_profile_id(profile_id=i))
@@ -488,7 +561,7 @@ class Fixtures_1x:
         allure.attach(
             body=str("VIF Config: " + str(vif_config) + "\n" + "SSID Pushed from Controller: " + str(ssid_names)),
             name="SSID Profiles in VIF Config and Controller: ")
-        ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
+        ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
 
         # This loop will check the VIF Config with VIF State
         test_cases['vifs'] = False
