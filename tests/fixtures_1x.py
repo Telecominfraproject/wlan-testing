@@ -231,7 +231,7 @@ class Fixtures_1x:
                             creates_profile = instantiate_profile.create_wpa2_personal_ssid_profile(profile_data=j)
                             if j["appliedRadios"].__contains__("is2dot4GHz"):
                                 test_cases["wpa2_personal_2g"] = True
-                            if j["appliedRadios"].__contains__("5G"):
+                            if j["appliedRadios"].__contains__("is5GHz"):
                                 test_cases["wpa2_personal_5g"] = True
                             allure.attach(body=str(creates_profile),
                                           name="SSID Profile Created")
