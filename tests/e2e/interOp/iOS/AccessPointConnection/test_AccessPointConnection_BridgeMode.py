@@ -104,7 +104,7 @@ class TestAccessPointConnectivetyBridge(object):
         set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         # Need An ip To ping
-        wifi_ip = get_WifiIPAddress_iOS(request, setup_perfectoMobile_iOS, connData)
+        wifi_ip = get_WifiIPAddress_iOS(request, setup_perfectoMobile_iOS, connData, ssidName)
 
         # Open Ping Application
         openApp(connData["bundleId-iOS-Ping"], setup_perfectoMobile_iOS)
