@@ -20,7 +20,7 @@ from iOS_lib import closeApp, openApp, Toggle_AirplaneMode_iOS, ForgetWifiConnec
     verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
 
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
-              pytest.mark.ToggleAirplaneMode, pytest.mark.tamallbr]
+              pytest.mark.ToggleAirplaneMode]
 
 setup_params_general = {
     "mode": "BRIDGE",
