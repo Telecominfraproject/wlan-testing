@@ -180,8 +180,8 @@ class TestToggleWifiMode(object):
     def test_ToogleWifiMode_5g_OPEN(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["open"][1]
-        ssidName = "[BLANK]"
-        ssidPassword = profile_data["security_key"]
+        ssidName = profile_data["ssid_name"]
+        ssidPassword = "[BLANK]"
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
 
