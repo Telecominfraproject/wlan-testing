@@ -244,7 +244,7 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
         security = "wpa"
         extra_secu = ["wpa2"]
         mode = "VLAN"
-        band = "twog"
+        band = "fiveg"
         vlan = 100
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
