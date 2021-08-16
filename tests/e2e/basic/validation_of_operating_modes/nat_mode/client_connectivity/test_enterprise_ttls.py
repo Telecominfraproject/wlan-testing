@@ -64,7 +64,7 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
         security = "wpa"
         extra_secu = ["wpa2"]
         mode = "NAT"
-        band = "twog"
+        band = "fiveg"
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
