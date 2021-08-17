@@ -249,12 +249,15 @@ def get_equipment_id(request, setup_controller, testbed, get_configuration):
 @pytest.fixture(scope="session")
 def instantiate_access_point(testbed, get_apnos, get_configuration):
     """setup the access point connectivity"""
-    for access_point_info in get_configuration['access_point']:
-        if access_point_info["jumphost"]:
-            get_apnos(access_point_info, pwd="../libs/apnos/")
-        else:
-            pass
-        # Write a code to verify Access Point Connectivity
+    if request.config.getoption("1.x"):
+        for access_point_info in get_configuration['access_point']:
+            if access_point_info["jumphost"]:
+                get_apnos(access_point_info, pwd="../libs/apnos/", sdk="1.x")
+            else:
+                pass
+    else:
+        get_apnos(access_point_info, pwd="../libs/apnos/")
+            # Write a code to verify Access Point Connectivity
     yield True
 
 
@@ -338,7 +341,7 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
         active_fw_list = []
         try:
             for access_point in get_configuration['access_point']:
-                ap_ssh = get_apnos(access_point)
+                ap_ssh = get_apnos(access_point, sdk="1.x")
                 active_fw = ap_ssh.get_active_firmware()
                 active_fw_list.append(active_fw)
         except Exception as e:
@@ -412,7 +415,7 @@ def setup_test_run(setup_controller, request, upgrade_firmware, get_configuratio
         active_fw_list = []
         try:
             for access_point in get_configuration['access_point']:
-                ap_ssh = get_apnos(access_point)
+                ap_ssh = get_apnos(access_point, sdk="1.x")
                 active_fw = ap_ssh.get_active_firmware()
                 active_fw_list.append(active_fw)
         except Exception as e:
@@ -497,7 +500,7 @@ def test_access_point(request, testbed, get_apnos, get_configuration):
     mgr_status = []
     if request.config.getoption("1.x"):
         for access_point_info in get_configuration['access_point']:
-            ap_ssh = get_apnos(access_point_info)
+            ap_ssh = get_apnos(access_point_info, sdk="1.x")
             status = ap_ssh.get_manager_state()
             if "ACTIVE" not in status:
                 time.sleep(30)

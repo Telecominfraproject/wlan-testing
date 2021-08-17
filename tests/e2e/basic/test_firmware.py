@@ -6,7 +6,8 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.firmware, pytest.mark.sanity, pytest.mark.sanity_light, pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.firmware, pytest.mark.sanity, pytest.mark.sanity_light,
+              pytest.mark.usefixtures("setup_test_run")]
 
 
 @allure.testcase("firmware upgrade from Cloud")
@@ -16,14 +17,8 @@ class TestFirmware(object):
     @pytest.mark.firmware_create
     def test_firmware_create(self, upload_firmware, update_report, test_cases):
         if upload_firmware != 0:
-            update_report.update_testrail(case_id=test_cases["create_fw"],
-                                          status_id=1,
-                                          msg='Create new FW version by API successful')
             PASS = True
         else:
-            update_report.update_testrail(case_id=test_cases["create_fw"],
-                                          status_id=5,
-                                          msg='Error creating new FW version by API')
             PASS = False
         assert PASS
 
@@ -31,14 +26,8 @@ class TestFirmware(object):
     def test_firmware_upgrade_request(self, upgrade_firmware, update_report, test_cases):
         print(upgrade_firmware)
         if not upgrade_firmware:
-            update_report.update_testrail(case_id=test_cases["upgrade_api"],
-                                          status_id=0,
-                                          msg='Error requesting upgrade via API')
             PASS = False
         else:
-            update_report.update_testrail(case_id=test_cases["upgrade_api"],
-                                          status_id=1,
-                                          msg='Upgrade request using API successful')
             PASS = True
         assert PASS
 
@@ -48,39 +37,21 @@ class TestFirmware(object):
         ap_fw_list = []
         for i in get_equipment_id:
             ap_fw_list.append(setup_controller.get_ap_firmware_old_method(equipment_id=i))
-        if get_latest_firmware != ap_fw_list:
-            update_report.update_testrail(case_id=test_cases["cloud_fw"],
-                                          status_id=5,
-                                          msg='CLOUDSDK reporting incorrect firmware version.')
-        else:
-            update_report.update_testrail(case_id=test_cases["cloud_fw"],
-                                          status_id=1,
-                                          msg='CLOUDSDK reporting correct firmware version.')
 
         assert get_latest_firmware == ap_fw_list
 
 
 @pytest.mark.firmware_ap
-
 def test_ap_firmware(get_configuration, get_apnos, get_latest_firmware, update_report,
                      test_cases):
     """yields the active version of firmware on ap"""
     active_fw_list = []
     try:
         for access_point in get_configuration['access_point']:
-            ap_ssh = get_apnos(access_point)
+            ap_ssh = get_apnos(access_point, sdk="1.x")
             active_fw = ap_ssh.get_active_firmware()
             active_fw_list.append(active_fw)
     except Exception as e:
         print(e)
         active_fw_list = []
-    if active_fw_list == get_latest_firmware:
-        update_report.update_testrail(case_id=test_cases["ap_upgrade"],
-                                      status_id=1,
-                                      msg='Upgrade to ' + str(get_latest_firmware) + ' successful')
-    else:
-        update_report.update_testrail(case_id=test_cases["ap_upgrade"],
-                                      status_id=4,
-                                      msg='Cannot reach AP after upgrade to check CLI - re-test required')
-
     assert active_fw_list == get_latest_firmware
