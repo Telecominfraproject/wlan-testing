@@ -19,12 +19,8 @@ class TestResources(object):
         """Test case to verify cloud Controller Connectivity"""
         if setup_controller.bearer:
             allure.attach(name="Controller Connectivity Success", body="")
-            update_report.update_testrail(case_id=test_cases["cloud_ver"],
-                                          status_id=1, msg='Read CloudSDK version from API successfully')
         else:
             allure.attach(name="Controller Connectivity Failed", body="")
-            update_report.update_testrail(case_id=test_cases["cloud_ver"],
-                                          status_id=0, msg='Could not read CloudSDK version from API')
             pytest.exit("Controller Not Available")
         assert setup_controller.bearer
 
@@ -38,16 +34,9 @@ class TestResources(object):
                 flag = False
         if flag is False:
             allure.attach(name="Access Point Connectivity Success", body=str(test_access_point))
-            update_report.update_testrail(case_id=test_cases["cloud_connection"],
-                                          status_id=5,
-                                          msg='CloudSDK connectivity failed')
-
             pytest.exit("Access Point Manager state is not Active")
         else:
             allure.attach(name="Access Point Connectivity Failed", body=str(test_access_point))
-            update_report.update_testrail(case_id=test_cases["cloud_connection"],
-                                          status_id=1,
-                                          msg='Manager status is Active')
 
         assert flag
 
@@ -59,7 +48,6 @@ class TestResources(object):
             allure.attach(name="LANforge-", body=str(traffic_generator_connectivity))
 
         else:
-            allure.attach(name="LANforgeGUI-5.4.3 is not available", body=str(traffic_generator_connectivity))
             pytest.exit("LANforgeGUI-5.4.3 is not available")
 
         assert traffic_generator_connectivity
