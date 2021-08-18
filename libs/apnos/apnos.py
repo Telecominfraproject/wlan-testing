@@ -35,10 +35,23 @@ class APNOS:
         self.mode = credentials['jumphost']  # 1 for jumphost, 0 for direct ssh
         if self.mode:
             self.tty = credentials['jumphost_tty']  # /dev/ttyAP1
+            # kill minicom instance
+            client = self.ssh_cli_connect()
+            cmd = "pgrep 'minicom' -a"
+            stdin, stdout, stderr = client.exec_command(cmd)
+            a = str(stdout.read()).split("\\n")
+            for i in a:
+                if i.__contains__("minicom ap" + self.tty[-1]):
+                    temp = i.split("minicom")
+                    a = temp[0].replace(" ", "")
+                    cmd = "kill " + str(a).replace("b'", "")
+                    print(cmd)
+                    stdin, stdout, stderr = client.exec_command(cmd)
+                    print(stdout)
             client = self.ssh_cli_connect()
             cmd = '[ -f ~/cicd-git/ ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
-            output = str(stdout.read())
+            output = str(stdout.read())            
             print(output)
             if output.__contains__("False"):
                 cmd = 'mkdir ~/cicd-git/'
@@ -66,7 +79,6 @@ class APNOS:
             self.username, self.ip, self.port))
         client.connect(self.ip, username=self.username, password=self.password,
                        port=self.port, timeout=10, allow_agent=False, banner_timeout=200)
-
         return client
 
     def reboot(self):

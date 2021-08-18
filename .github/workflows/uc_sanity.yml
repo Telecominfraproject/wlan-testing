@@ -43,7 +43,6 @@ jobs:
       uses: actions/checkout@v2
       with:
         path: wlan-testing
-        ref: feature-ucentral-wifi-2526
 
     - name: Checkout LANforge scripts
       uses: actions/checkout@v2
