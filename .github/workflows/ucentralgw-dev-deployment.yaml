@@ -1,0 +1,120 @@
+name: Update DEV uCentral clusters
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  AWS_EKS_NAME: tip-wlan-main
+  AWS_DEFAULT_OUTPUT: json
+  AWS_DEFAULT_REGION: us-east-2
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+
+  # DigiCert certs
+  DIGICERT_CERT: ${{ secrets.DIGICERT_CERT }}
+  DIGICERT_KEY: ${{ secrets.DIGICERT_KEY }}
+
+  # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
+  # Required object fiels per environment:
+  # - namespace - namespace suffix that will used added for the Kubernetes environment (i.e. if you pass 'test', kubernetes namespace will be named 'ucentral-test')
+  # - deploy_method - deployment method for the chart deployment (supported methods - 'git' (will use helm-git from assembly chart) and 'bundle' (will use chart stored in the Artifactory0
+  # - chart_version - version of chart to be deployed from assembly chart (for 'git' method git ref may be passed, for 'bundle' method version of chart may be passed)
+  # - ucentralgw_version - uCentralGW version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+  # - ucentralsec_version - uCentralSec version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+  # - ucentralfms_version - uCentralFMS version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+  # - ucentralgwui_version - uCentralGW UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+  testbeds: '[
+    {
+      "namespace": "dev01",
+      "deploy_method": "git",
+      "chart_version": "main",
+      "ucentralgw_version": "master",
+      "ucentralsec_version": "main",
+      "ucentralfms_version": "main",
+      "ucentralgwui_version": "main"
+    }
+  ]'
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  generate-matrix:
+    name: Generate matrix for build
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    - name: generate-matrix
+      id: set-matrix
+      run: |
+        echo '::set-output name=matrix::{"include":${{ env.testbeds }}}'
+
+  deploy:
+    name: Update uCentral instances
+    runs-on: ubuntu-latest
+    needs: [ generate-matrix ]
+    strategy:
+      matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
+      fail-fast: false
+    steps:
+
+    - name: Checkout repo with Helm values
+      uses: actions/checkout@v2
+      with:
+        path: wlan-testing
+
+    - name: Prepare certificates from secrets
+      working-directory: wlan-testing/helm/ucentral
+      run: |
+        echo "${{ env.DIGICERT_CERT }}" | base64 -d > cert.pem
+        echo "${{ env.DIGICERT_KEY }}" | base64 -d > key.pem
+
+    - name: Fetch kubeconfig
+      run: |
+        aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    - name: Deploy uCentralGW
+      working-directory: wlan-testing/helm/ucentral
+      run: |
+        export NAMESPACE="${{ matrix.namespace }}"
+        export DEPLOY_METHOD="${{ matrix.deploy_method }}"
+        export CHART_VERSION="${{ matrix.chart_version }}"
+        export UCENTRALGW_VERSION="${{ matrix.ucentralgw_version }}"
+        export UCENTRALGWUI_VERSION="${{ matrix.ucentralgwui_version }}"
+        export UCENTRALSEC_VERSION="{{ matrix.ucentralsec_version }}"
+        export UCENTRALFMS_VERSION="${{ matrix.ucentralfms_version }}"
+        export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
+        export RTTY_TOKEN="${{ secrets.RTTY_TOKEN }}"
+        export UCENTRALGW_AUTH_USERNAME="${{ secrets.UCENTRALGW_AUTH_USERNAME }}"
+        export UCENTRALGW_AUTH_PASSWORD="${{ secrets.UCENTRALGW_AUTH_PASSWORD }}"
+        export UCENTRALFMS_S3_SECRET="${{ secrets.UCENTRALFMS_S3_SECRET }}"
+        export UCENTRALFMS_S3_KEY="${{ secrets.UCENTRALFMS_S3_KEY }}"
+        ./deploy.sh
+
+    - name: Show resource state on deployment failure
+      if: failure()
+      run: |
+        kubectl get pods --namespace ucentral-${{ matrix.namespace }}
+        kubectl get services --namespace ucentral-${{ matrix.namespace }}
+        kubectl get persistentvolumeclaims --namespace ucentral-${{ matrix.namespace }}
+    - name: Describe pods on deployment failure
+      if: failure()
+      run: |
+        kubectl describe pods --namespace ucentral-${{ matrix.namespace }}
+    - name: Describe services on deployment failure
+      if: failure()
+      run: |
+        kubectl describe services --namespace ucentral-${{ matrix.namespace }}
+    - name: Describe persistentvolumeclaims on deployment failure
+      if: failure()
+      run: |
+        kubectl describe persistentvolumeclaims --namespace ucentral-${{ matrix.namespace }}
+
+    - name: Rollback Cloud SDK
+      if: failure()
+      run: |
+        helm rollback tip-ucentral --namespace ucentral-${{ matrix.namespace }} --wait --timeout 20m
+
