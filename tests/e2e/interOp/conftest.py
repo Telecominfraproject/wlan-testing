@@ -532,7 +532,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
         print(e)
         print("failed to create AP Profile")
 
-    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
+    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
     ssid_names = []
     for i in instantiate_profile.profile_creation_ids["ssid"]:
         ssid_names.append(instantiate_profile.get_ssid_name_by_profile_id(profile_id=i))
@@ -552,7 +552,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
         time.sleep(10)
     allure.attach(body=str("VIF Config: " + str(vif_config) + "\n" + "SSID Pushed from Controller: " + str(ssid_names)),
                   name="SSID Profiles in VIF Config and Controller: ")
-    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
+    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
 
     # This loop will check the VIF Config with VIF State
     test_cases['vifs'] = False
@@ -614,7 +614,7 @@ def failure_tracking_fixture(request):
 
 @pytest.fixture(scope="class")
 def get_vif_state(get_apnos, get_configuration):
-    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
+    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
     vif_state = list(ap_ssh.get_vif_state_ssids())
     vif_state.sort()
     allure.attach(name="vif_state", body=str(vif_state))
