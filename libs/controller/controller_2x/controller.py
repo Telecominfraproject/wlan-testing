@@ -34,7 +34,7 @@ class ConfigureController:
         self.access_token = ""
         # self.session = requests.Session()
         self.login_resp = self.login()
-        self.gw_host = self.get_endpoint()
+        self.gw_host = self.get_gw_endpoint()
 
     def build_uri_sec(self, path):
         new_uri = 'https://%s:%d/api/v1/%s' % (self.host.hostname, self.host.port, path)
@@ -46,6 +46,31 @@ class ConfigureController:
         new_uri = 'https://%s:%d/api/v1/%s' % (self.gw_host.hostname, self.gw_host.port, path)
         print(new_uri)
         return new_uri
+
+    def request(self, service, command, method, params, payload):
+        if service == "sec":
+            uri = self.build_uri_sec(command)
+        elif service == "gw":
+            uri = self.build_uri(command)
+        elif service == "fms":
+            uri = self.build_url_fms(command)
+        else:
+            raise NameError("Invalid service code for request.")
+
+        print(uri)
+        params = params
+        if method == "GET":
+            resp = requests.get(uri, headers=self.make_headers(), params=params, verify=False, timeout=100)
+        elif method == "POST":
+            resp = requests.post(uri, data=payload, verify=False, timeout=100)
+        elif method == "PUT":
+            resp = requests.put(uri, data=payload, verify=False, timeout=100)
+        elif method == "DELETE":
+            resp = requests.delete(uri, headers=self.make_headers(), params=params, verify=False, timeout=100)
+
+        self.check_response(method, resp, self.make_headers(), payload, uri)
+        print (resp)
+        return resp
 
     def login(self):
         uri = self.build_uri_sec("oauth2")
@@ -60,16 +85,17 @@ class ConfigureController:
         # self.session.headers.update({'Authorization': self.access_token})
         return resp
 
-    def get_endpoint(self):
+    def get_gw_endpoint(self):
         uri = self.build_uri_sec("systemEndpoints")
         print(uri)
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         print(resp)
         self.check_response("GET", resp, self.make_headers(), "", uri)
-        devices = resp.json()
-        print(devices["endpoints"][0]["uri"])
-        gw_host = urlparse(devices["endpoints"][0]["uri"])
+        services = resp.json()
+        print(services["endpoints"][0]["uri"])
+        gw_host = urlparse(services["endpoints"][0]["uri"])
         return gw_host
+
 
     def logout(self):
         uri = self.build_uri_sec('oauth2/%s' % self.access_token)
