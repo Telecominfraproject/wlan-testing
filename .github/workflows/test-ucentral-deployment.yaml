@@ -83,6 +83,8 @@ jobs:
         export UCENTRALGW_AUTH_PASSWORD="${{ secrets.UCENTRALGW_AUTH_PASSWORD }}"
         export UCENTRALFMS_S3_SECRET="${{ secrets.UCENTRALFMS_S3_SECRET }}"
         export UCENTRALFMS_S3_KEY="${{ secrets.UCENTRALFMS_S3_KEY }}"
+        export CERT_LOCATION=cert.pem
+        export KEY_LOCATION=key.pem
         ./deploy.sh
 
     - name: Show resource state on deployment failure
