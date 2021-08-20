@@ -70,19 +70,19 @@ jobs:
       env:
         TOFILL: YES
       run: |
-        export NAMESPACE="ucentral-$GITHUB_RUN_ID"
-        export DEPLOY_METHOD="${{ github.event.inputs.deploy_method }}"
-        export CHART_VERSION="${{ github.event.inputs.chart_version }}"
-        export UCENTRALGW_VERSION="${{ github.event.inputs.ucentralgw_version }}"
-        export UCENTRALGWUI_VERSION="${{ github.event.inputs.ucentralgwui_version }}"
-        export UCENTRALSEC_VERSION="${{ github.event.inputs.ucentralsec_version }}"
-        export UCENTRALFMS_VERSION="${{ github.event.inputs.ucentralfms_version }}"
+        export NAMESPACE=ucentral-$GITHUB_RUN_ID
+        export DEPLOY_METHOD=${{ github.event.inputs.deploy_method }}
+        export CHART_VERSION=${{ github.event.inputs.chart_version }}
+        export UCENTRALGW_VERSION=${{ github.event.inputs.ucentralgw_version }}
+        export UCENTRALGWUI_VERSION=${{ github.event.inputs.ucentralgwui_version }}
+        export UCENTRALSEC_VERSION=${{ github.event.inputs.ucentralsec_version }}
+        export UCENTRALFMS_VERSION=${{ github.event.inputs.ucentralfms_version }}
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
-        export RTTY_TOKEN="${{ secrets.RTTY_TOKEN }}"
-        export UCENTRALGW_AUTH_USERNAME="${{ secrets.UCENTRALGW_AUTH_USERNAME }}"
-        export UCENTRALGW_AUTH_PASSWORD="${{ secrets.UCENTRALGW_AUTH_PASSWORD }}"
-        export UCENTRALFMS_S3_SECRET="${{ secrets.UCENTRALFMS_S3_SECRET }}"
-        export UCENTRALFMS_S3_KEY="${{ secrets.UCENTRALFMS_S3_KEY }}"
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
+        export UCENTRALGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
+        export UCENTRALGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
+        export UCENTRALFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
+        export UCENTRALFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
         export CERT_LOCATION=cert.pem
         export KEY_LOCATION=key.pem
         ./deploy.sh

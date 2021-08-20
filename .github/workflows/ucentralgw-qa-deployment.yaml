@@ -79,19 +79,19 @@ jobs:
     - name: Deploy uCentralGW
       working-directory: wlan-testing/helm/ucentral
       run: |
-        export NAMESPACE="${{ matrix.namespace }}"
-        export DEPLOY_METHOD="${{ matrix.deploy_method }}"
-        export CHART_VERSION="${{ matrix.chart_version }}"
-        export UCENTRALGW_VERSION="${{ matrix.ucentralgw_version }}"
-        export UCENTRALGWUI_VERSION="${{ matrix.ucentralgwui_version }}"
-        export UCENTRALSEC_VERSION="{{ matrix.ucentralsec_version }}"
-        export UCENTRALFMS_VERSION="${{ matrix.ucentralfms_version }}"
+        export NAMESPACE=${{ matrix.namespace }}
+        export DEPLOY_METHOD=${{ matrix.deploy_method }}
+        export CHART_VERSION=${{ matrix.chart_version }}
+        export UCENTRALGW_VERSION=${{ matrix.ucentralgw_version }}
+        export UCENTRALGWUI_VERSION=${{ matrix.ucentralgwui_version }}
+        export UCENTRALSEC_VERSION=${{ matrix.ucentralsec_version }}
+        export UCENTRALFMS_VERSION=${{ matrix.ucentralfms_version }}
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
-        export RTTY_TOKEN="${{ secrets.RTTY_TOKEN }}"
-        export UCENTRALGW_AUTH_USERNAME="${{ secrets.UCENTRALGW_AUTH_USERNAME }}"
-        export UCENTRALGW_AUTH_PASSWORD="${{ secrets.UCENTRALGW_AUTH_PASSWORD }}"
-        export UCENTRALFMS_S3_SECRET="${{ secrets.UCENTRALFMS_S3_SECRET }}"
-        export UCENTRALFMS_S3_KEY="${{ secrets.UCENTRALFMS_S3_KEY }}"
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
+        export UCENTRALGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
+        export UCENTRALGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
+        export UCENTRALFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
+        export UCENTRALFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
         export CERT_LOCATION=cert.pem
         export KEY_LOCATION=key.pem
         ./deploy.sh
