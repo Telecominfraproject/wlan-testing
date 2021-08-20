@@ -1,0 +1,110 @@
+name: Test uCentral chart deployment
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  AWS_EKS_NAME: tip-wlan-main
+  AWS_DEFAULT_OUTPUT: json
+  AWS_DEFAULT_REGION: us-east-2
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+
+  # DigiCert certs
+  DIGICERT_CERT: ${{ secrets.DIGICERT_CERT }}
+  DIGICERT_KEY: ${{ secrets.DIGICERT_KEY }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_method:
+        default: 'git'
+        description: 'Deploy method to use (git or bundle is supported, git is default)'
+        required: true
+      chart_version:
+        default: 'main'
+        description: 'Chart version to deploy (git tag or helm package version may be used, main is default)'
+        required: true
+      ucentralgw_version:
+        default: 'master'
+        description: 'uCentralGW version to be deployed (git tag or helm package version may be used, msater is default)'
+        required: true
+      ucentralgwui_version:
+        default: 'main'
+        description: 'uCentralGW UI version to be deployed (git tag or helm package version may be used, main is default)'
+        required: true
+      ucentralsec_version:
+        default: 'main'
+        description: 'uCentralSec version to be deployed (git tag or helm package version may be used, main is default)'
+        required: true
+      ucentralfms_version:
+        default: 'main'
+        description: 'uCentralFMS version to be deployed (git tag or helm package version may be used, main is default)'
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy test uCentral instance
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout repo with Helm values
+      uses: actions/checkout@v2
+      with:
+        path: wlan-testing
+
+    - name: Prepare certificates from secrets
+      working-directory: wlan-testing/helm/ucentral
+      run: |
+        echo "${{ env.DIGICERT_CERT }}" | base64 -d > cert.pem
+        echo "${{ env.DIGICERT_KEY }}" | base64 -d > key.pem
+
+    - name: Fetch kubeconfig
+      run: |
+        aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    - name: Deploy uCentralGW
+      working-directory: wlan-testing/helm/ucentral
+      env:
+        TOFILL: YES
+      run: |
+        export NAMESPACE="ucentral-$GITHUB_RUN_ID"
+        export DEPLOY_METHOD="${{ github.event.inputs.deploy_method }}"
+        export CHART_VERSION="${{ github.event.inputs.chart_version }}"
+        export UCENTRALGW_VERSION="${{ github.event.inputs.ucentralgw_version }}"
+        export UCENTRALGWUI_VERSION="${{ github.event.inputs.ucentralgwui_version }}"
+        export UCENTRALSEC_VERSION="${{ github.event.inputs.ucentralsec_version }}"
+        export UCENTRALFMS_VERSION="${{ github.event.inputs.ucentralfms_version }}"
+        export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
+        export RTTY_TOKEN="${{ secrets.RTTY_TOKEN }}"
+        export UCENTRALGW_AUTH_USERNAME="${{ secrets.UCENTRALGW_AUTH_USERNAME }}"
+        export UCENTRALGW_AUTH_PASSWORD="${{ secrets.UCENTRALGW_AUTH_PASSWORD }}"
+        export UCENTRALFMS_S3_SECRET="${{ secrets.UCENTRALFMS_S3_SECRET }}"
+        export UCENTRALFMS_S3_KEY="${{ secrets.UCENTRALFMS_S3_KEY }}"
+        ./deploy.sh
+
+    - name: Show resource state on deployment failure
+      if: failure()
+      run: |
+        kubectl get pods --namespace ucentral-$GITHUB_RUN_ID
+        kubectl get services --namespace ucentral-$GITHUB_RUN_ID
+        kubectl get persistentvolumeclaims --namespace ucentral-$GITHUB_RUN_ID
+    - name: Describe pods on deployment failure
+      if: failure()
+      run: |
+        kubectl describe pods --namespace ucentral-$GITHUB_RUN_ID
+    - name: Describe services on deployment failure
+      if: failure()
+      run: |
+        kubectl describe services --namespace ucentral-$GITHUB_RUN_ID
+    - name: Describe persistentvolumeclaims on deployment failure
+      if: failure()
+      run: |
+        kubectl describe persistentvolumeclaims --namespace ucentral-$GITHUB_RUN_ID
+
+    - name: Delete Cloud SDK
+      if: always()
+      run: |
+        kubectl delete namespace ucentral-$GITHUB_RUN_ID

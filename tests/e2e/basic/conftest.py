@@ -47,7 +47,6 @@ def create_lanforge_chamberview_dut(lf_tools):
     return dut_name
 
 
-
 @pytest.fixture(scope="class")
 def setup_profiles(request, setup_controller, testbed, get_equipment_id, fixtures_ver,
                    instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
@@ -78,10 +77,10 @@ def setup_profiles(request, setup_controller, testbed, get_equipment_id, fixture
 
     # call this, if 1.x
     return_var = fixtures_ver.setup_profiles(request, param, setup_controller, testbed, get_equipment_id,
-                                              instantiate_profile,
-                                              get_markers, create_lanforge_chamberview_dut, lf_tools,
-                                              get_security_flags, get_configuration, radius_info, get_apnos,
-                                              radius_accounting_info)
+                                             instantiate_profile,
+                                             get_markers, create_lanforge_chamberview_dut, lf_tools,
+                                             get_security_flags, get_configuration, radius_info, get_apnos,
+                                             radius_accounting_info)
     yield return_var
 
 
@@ -116,7 +115,7 @@ def num_stations(request):
 @pytest.fixture(scope="class")
 def get_vif_state(get_apnos, get_configuration, request, lf_tools):
     if request.config.getoption("1.x"):
-        ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")
+        ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
         vif_state = list(ap_ssh.get_vif_state_ssids())
         vif_state.sort()
         yield vif_state

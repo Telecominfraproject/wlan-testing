@@ -69,7 +69,16 @@ class ChamberView:
             ["profile_link " + self.uplink_resources + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
              + "' NA " + self.uplink_port.split(".")[2] + "," + self.upstream_port.split(".")[2] + " -1 NA"]
         ]
+        self.reset_dut()
         self.Chamber_View()
+
+    def reset_dut(self):
+        temp = []
+        for i in range(0, 8):
+            temp.append(['ssid_idx=' + str(i) + ' ssid=-'])
+        print(temp)
+        self.CreateDut.ssid = temp
+        self.CreateDut.add_ssids()
 
     def Chamber_View(self):
         if self.delete_old_scenario:

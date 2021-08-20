@@ -53,7 +53,7 @@ CONFIGURATION = {
                 'password': "pumpkin77",
                 'port': 22,
                 'jumphost_tty': '/dev/ttyAP1',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/dev/ecw5410-2021-06-25-pending-b6743c3.tar.gz"
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.2.0-rc2.tar.gz"
             }
         ],
         "traffic_generator": {
@@ -93,7 +93,7 @@ CONFIGURATION = {
                 'password': "pumpkin77",
                 'port': 22,
                 'jumphost_tty': '/dev/ttyAP2',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/eap101/dev/eap101-2021-06-25-pending-b6743c3.tar.gz"
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/eap101/trunk/eap101-1.2.0-rc2.tar.gz"
             }
         ],
         "traffic_generator": {
@@ -102,9 +102,9 @@ CONFIGURATION = {
                 "ip": "10.28.3.8",
                 "port": 8080,
                 "ssh_port": 22,
-                "2.4G-Radio": ["wiphy4"],
-                "5G-Radio": ["wiphy5"],
-                "AX-Radio": ["wiphy0", "wiphy1", "wiphy2", "wiphy3"],
+                "2.4G-Radio": ["1.1.wiphy4"],
+                "5G-Radio": ["1.1.wiphy5"],
+                "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
                 "upstream": "1.1.eth2",
                 "upstream_subnet": "10.28.2.1/24",
                 "uplink": "1.1.eth3",
