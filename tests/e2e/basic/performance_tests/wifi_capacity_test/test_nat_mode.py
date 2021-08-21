@@ -36,7 +36,6 @@ setup_params_general_dual_band = {
 @pytest.mark.twog
 @pytest.mark.fiveg
 @pytest.mark.dual_band
-@pytest.mark.wifi_capacity_test
 class TestWifiCapacityNATModeDualBand(object):
     """ Wifi Capacity Test NAT mode
            pytest -m "wifi_capacity_test and NAT"
