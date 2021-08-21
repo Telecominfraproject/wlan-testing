@@ -23,7 +23,7 @@ from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_WifiMod
     ForgetWifiConnection, openApp
 
 setup_params_general = {
-    "mode": "NAT",
+    "mode": "BRIDGE",
     "ssid_modes": {
         "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"]},
                  {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
@@ -39,7 +39,7 @@ setup_params_general = {
 }
 
 
-@allure.feature("NAT MODE CLIENT CONNECTIVITY")
+@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -47,11 +47,11 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestToggleWifiMode(object):
+class TestToggleWifiModeBridge(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ToogleWifiMode_5g_WPA2_Personal(self, request, get_vif_state, get_ToggleWifiMode_data,
+    def test_ToogleWifiMode_5g_WPA2_Personal_BRIDGE(self, request, get_vif_state, get_ToggleWifiMode_data,
                                              setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -79,7 +79,7 @@ class TestToggleWifiMode(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ToogleWifiMode_2g_WPA2_Personal(self, request, get_vif_state, get_ToggleWifiMode_data,
+    def test_ToogleWifiMode_2g_WPA2_Personal_BRIDGE(self, request, get_vif_state, get_ToggleWifiMode_data,
                                              setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -107,7 +107,7 @@ class TestToggleWifiMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ToogleWifiMode_5g_WPA(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_android):
+    def test_ToogleWifiMode_5g_WPA_BRIDGE(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
@@ -134,7 +134,7 @@ class TestToggleWifiMode(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_ToogleWifiMode_2g_WPA(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_android):
+    def test_ToogleWifiMode_2g_WPA_BRIDGE(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
@@ -161,7 +161,7 @@ class TestToggleWifiMode(object):
 
     @pytest.mark.open
     @pytest.mark.fiveg
-    def test_ToogleWifiMode_5g_OPEN(self, request, get_vif_state, get_ToggleWifiMode_data,
+    def test_ToogleWifiMode_5g_OPEN_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data,
                                         setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["open"][1]
@@ -176,20 +176,20 @@ class TestToggleWifiMode(object):
 
         report = setup_perfectoMobile_android[1]
         driver = setup_perfectoMobile_android[0]
-        connData = get_ToggleWifiMode_data
+        connData = get_ToggleAirplaneMode_data
 
         # Set Wifi/AP Mode
         set_APconnMobileDevice_android(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
 
-        # Toggle Wifi Mode
-        assert Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
+        # Toggle AirplaneMode
+        assert Toggle_AirplaneMode_android(request, setup_perfectoMobile_android, connData)
 
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
     @pytest.mark.open
     @pytest.mark.twog
-    def test_ToogleWifiMode_2g_OPEN(self, request, get_vif_state, get_ToggleWifiMode_data,
+    def test_ToogleWifiMode_2g_OPEN_BRIDGE(self, request, get_vif_state, get_ToggleAirplaneMode_data,
                                         setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["open"][0]
@@ -204,13 +204,13 @@ class TestToggleWifiMode(object):
 
         report = setup_perfectoMobile_android[1]
         driver = setup_perfectoMobile_android[0]
-        connData = get_ToggleWifiMode_data
+        connData = get_ToggleAirplaneMode_data
 
         # Set Wifi/AP Mode
         set_APconnMobileDevice_android(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
 
-        # Toggle Wifi Mode
-        assert Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
+        # Toggle AirplaneMode
+        assert Toggle_AirplaneMode_android(request, setup_perfectoMobile_android, connData)
 
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)

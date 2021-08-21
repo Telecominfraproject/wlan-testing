@@ -22,7 +22,7 @@ if 'perfecto_libs' not in sys.path:
 from iOS_lib import closeApp, openApp, Toggle_AirplaneMode_iOS, ForgetWifiConnection, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
 
 setup_params_general = {
-    "mode": "NAT",
+    "mode": "BRIDGE",
     "ssid_modes": {
         "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"]},
                  {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
@@ -37,7 +37,7 @@ setup_params_general = {
 }
 
 
-@allure.feature("NAT MODE CLIENT CONNECTIVITY")
+@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -45,11 +45,11 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestPassPointConnection(object):
+class TestPassPointConnectionBridgeMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_PassPointConnection_5g_WPA2_Personal(self, request, get_vif_state, setup_perfectoMobile_iOS,
+    def test_PassPointConnection_5g_WPA2_Personal_BRIDGE(self, request, get_vif_state, setup_perfectoMobile_iOS,
                                                   get_PassPointConniOS_data):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -80,7 +80,7 @@ class TestPassPointConnection(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_PassPointConnection_2g_WPA2_Personal(self, request, get_vif_state, setup_perfectoMobile_iOS,
+    def test_PassPointConnection_2g_WPA2_Personal_BRIDGE(self, request, get_vif_state, setup_perfectoMobile_iOS,
                                                   get_PassPointConniOS_data):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -111,7 +111,7 @@ class TestPassPointConnection(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_PassPointConnection_2g_WPA(self, request, get_vif_state, setup_perfectoMobile_iOS,
+    def test_PassPointConnection_2g_WPA_BRIDGE(self, request, get_vif_state, setup_perfectoMobile_iOS,
                                         get_PassPointConniOS_data):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
@@ -142,7 +142,7 @@ class TestPassPointConnection(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_PassPointConnection_5g_WPA(self, request, get_vif_state, setup_perfectoMobile_iOS,
+    def test_PassPointConnection_5g_WPA_BRIDGE(self, request, get_vif_state, setup_perfectoMobile_iOS,
                                         get_PassPointConniOS_data):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
@@ -172,8 +172,8 @@ class TestPassPointConnection(object):
         closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile_iOS)
 
     @pytest.mark.fiveg
-    @pytest.mark.open
-    def test_PassPointConnection_5g_OPEN(self, request, get_vif_state, setup_perfectoMobile_iOS,
+    @pytest.mark.wpa2_open
+    def test_PassPointConnection_5g_OPEN_BRIDGE(self, request, get_vif_state, setup_perfectoMobile_iOS,
                                                   get_PassPointConniOS_data):
 
         profile_data = setup_params_general["ssid_modes"]["open"][1]
@@ -196,15 +196,15 @@ class TestPassPointConnection(object):
         # Toggle Airplane Mode and Ensure Wifi Connection.
         assert Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
 
-        # ForgetWifi.
+        # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
         # Close Settings App
         closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile_iOS)
 
     @pytest.mark.twog
-    @pytest.mark.Open
-    def test_PassPointConnection_2g_OPEN(self, request, get_vif_state, setup_perfectoMobile_iOS,
+    @pytest.mark.open
+    def test_PassPointConnection_2g_OPEN_BRIDGE(self, request, get_vif_state, setup_perfectoMobile_iOS,
                                                   get_PassPointConniOS_data):
 
         profile_data = setup_params_general["ssid_modes"]["open"][0]
