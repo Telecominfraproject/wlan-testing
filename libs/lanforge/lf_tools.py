@@ -69,7 +69,6 @@ class ChamberView:
             ["profile_link " + self.uplink_resources + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
              + "' NA " + self.uplink_port.split(".")[2] + "," + self.upstream_port.split(".")[2] + " -1 NA"]
         ]
-        self.reset_dut()
         self.Chamber_View()
 
     def reset_dut(self):
@@ -109,35 +108,74 @@ class ChamberView:
         print(idx)
         if band == "2G":
             if num_stations != "max":
-                num_stations = int(num_stations / len(self.twog_radios))
-            for radio in self.twog_radios:
-                max_stations = 64
-                if num_stations == "max":
-                    num_stations = max_stations
-                station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
-                                str(int(idx) + 1) + "'" + " NA " + radio]
-                self.raw_line.append(station_data)
+                if num_stations > 64:
+                    num_stations = int(num_stations / len(self.twog_radios))
+                    for radio in self.twog_radios:
+                        station_data = ["profile_link " + radio.split(".")[0] + "." + radio.split(".")[1] +
+                                        " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                        str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
+                        self.raw_line.append(station_data)
+                else:
+                    num_stations = num_stations
+                    station_data = ["profile_link " + self.fiveg_radios[0].split(".")[0] + "." +
+                                    self.fiveg_radios[0].split(".")[1] +
+                                    " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                    str(int(idx) + 1) + "'" + " NA " + self.twog_radios[0].split(".")[2]]
+                    self.raw_line.append(station_data)
+            if num_stations == "max":
+                for radio in self.twog_radios:
+                    num_stations = 64
+                    station_data = ["profile_link " + radio.split(".")[0] + "." + radio.split(".")[1] +
+                                    " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                    str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
+                    self.raw_line.append(station_data)
 
         if band == "5G":
             if num_stations != "max":
-                num_stations = int(num_stations / len(self.fiveg_radios))
-            for radio in self.fiveg_radios:
-                max_stations = 64
-                if num_stations == "max":
-                    num_stations = max_stations
-                station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
-                                str(int(idx) + 1) + "'" + " NA " + radio]
-                self.raw_line.append(station_data)
+                if num_stations > 64:
+                    num_stations = int(num_stations / len(self.fiveg_radios))
+                    for radio in self.fiveg_radios:
+                        station_data = ["profile_link " + radio.split(".")[0] + "." + radio.split(".")[1] +
+                                        " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                        str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
+                        print(station_data)
+                        self.raw_line.append(station_data)
+                else:
+                    num_stations = num_stations
+                    station_data = ["profile_link " + self.fiveg_radios[0].split(".")[0] + "." +
+                                    self.fiveg_radios[0].split(".")[1] +
+                                    " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                    str(int(idx) + 1) + "'" + " NA " + self.fiveg_radios[0].split(".")[2]]
+                    print(station_data)
+                    self.raw_line.append(station_data)
+            if num_stations == "max":
+                for radio in self.fiveg_radios:
+                    num_stations = 64
+                    station_data = ["profile_link " + radio.split(".")[0] + "." + radio.split(".")[1] +
+                                    " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                    str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
+                    print(station_data)
+                    self.raw_line.append(station_data)
+
         if band == "ax":
             if num_stations != "max":
-                num_stations = int(num_stations / len(self.fiveg_radios))
-            for radio in self.ax_radios:
-                max_stations = 1
-                if num_stations == "max":
-                    num_stations = max_stations
-                station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
-                                str(int(idx) + 1) + "'" + " NA " + radio]
-                self.raw_line.append(station_data)
+                if num_stations > 64:
+                    num_stations = int(num_stations / len(self.ax_radios))
+                    for radio in self.ax_radios:
+                        station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                        str(int(idx) + 1) + "'" + " NA " + radio]
+                        self.raw_line.append(station_data)
+                else:
+                    num_stations = num_stations
+                    station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                    str(int(idx) + 1) + "'" + " NA " + self.ax_radios[0]]
+                    self.raw_line.append(station_data)
+            if num_stations == "max":
+                for radio in self.ax_radios:
+                    num_stations = 64
+                    station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                    str(int(idx) + 1) + "'" + " NA " + radio]
+                    self.raw_line.append(station_data)
 
     def Create_Dut(self):
         self.CreateDut.setup()
