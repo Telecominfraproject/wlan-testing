@@ -508,7 +508,7 @@ def test_access_point(request, testbed, get_apnos, get_configuration):
                 status = ap_ssh.get_manager_state()
             mgr_status.append(status)
     else:
-        # for access_point_info in get_configuration['access_point']:
+        # forgit access_point_info in get_configuration['access_point']:
         #     ap_ssh = get_apnos(access_point_info)
         #     status = ap_ssh.get_manager_state()
         #     if "ACTIVE" not in status:

@@ -6,7 +6,7 @@ import warnings
 from selenium.common.exceptions import NoSuchElementException
 import urllib3
 from perfecto.model.model import Job, Project
-from perfecto import (PerfectoExecutionContext, PerfectoReportiumClient,TestContext, TestResultFactory)
+from perfecto import (PerfectoExecutionContext, PerfectoReportiumClient, TestContext, TestResultFactory)
 import pytest
 import logging
 import re
@@ -55,6 +55,7 @@ def get_PassPointConniOS_data(request):
     }
     yield passPoint_data
 
+
 @pytest.fixture(scope="function")
 def get_APToMobileDevice_data(request):
     passPoint_data = {
@@ -66,11 +67,12 @@ def get_APToMobileDevice_data(request):
         "bundleId-iOS-Safari": request.config.getini("bundleId-iOS-Safari"),
         "downloadMbps": "//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']",
         "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
-        #Android
+        # Android
         "platformName-android": request.config.getini("platformName-android"),
         "appPackage-android": request.config.getini("appPackage-android")
     }
     yield passPoint_data
+
 
 @pytest.fixture(scope="function")
 def get_AccessPointConn_data(request):
@@ -79,6 +81,7 @@ def get_AccessPointConn_data(request):
         "bundleId-iOS-Ping": request.config.getini("bundleId-iOS-Ping")
     }
     yield passPoint_data
+
 
 @pytest.fixture(scope="function")
 def get_ToggleAirplaneMode_data(request):
@@ -91,18 +94,19 @@ def get_ToggleAirplaneMode_data(request):
         "bundleId-iOS-Safari": request.config.getini("bundleId-iOS-Safari"),
         "downloadMbps": "//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']",
         "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
-        #Android
+        # Android
         "platformName-android": request.config.getini("platformName-android"),
         "appPackage-android": request.config.getini("appPackage-android")
     }
     yield passPoint_data
 
+
 @pytest.fixture(scope="function")
 def get_ToggleWifiMode_data(request):
     passPoint_data = {
-        #iOS
+        # iOS
         "bundleId-iOS-Settings": request.config.getini("bundleId-iOS-Settings"),
-         #Android
+        # Android
         "platformName-android": request.config.getini("platformName-android"),
         "appPackage-android": request.config.getini("appPackage-android")
     }
@@ -133,6 +137,7 @@ def get_lanforge_data(testbed):
 def instantiate_profile():
     yield ProfileUtility
 
+
 @pytest.fixture(scope="session")
 def get_equipment_id(setup_controller, testbed, get_configuration):
     equipment_id_list = []
@@ -140,6 +145,7 @@ def get_equipment_id(setup_controller, testbed, get_configuration):
         equipment_id_list.append(setup_controller.get_equipment_id(
             serial_number=i['serial']))
     yield equipment_id_list
+
 
 @pytest.fixture(scope="session")
 def upload_firmware(should_upload_firmware, instantiate_firmware, get_latest_firmware):
@@ -192,399 +198,41 @@ def setup_vlan():
     yield vlan_id[0]
 
 
-@allure.feature("CLIENT CONNECTIVITY SETUP")
 @pytest.fixture(scope="class")
-def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment_id,
-                   instantiate_profile, get_markers,
-                   get_security_flags, get_configuration, radius_info, get_apnos):
-    instantiate_profile = instantiate_profile(sdk_client=setup_controller)
-    vlan_id, mode = 0, 0
-    instantiate_profile.cleanup_objects()
-    parameter = dict(request.param)
-    print(parameter)
-    test_cases = {}
-    profile_data = {}
-    if parameter['mode'] not in ["BRIDGE", "NAT", "VLAN"]:
-        print("Invalid Mode: ", parameter['mode'])
-        allure.attach(body=parameter['mode'], name="Invalid Mode: ")
-        yield test_cases
+def setup_profiles(request, setup_controller, testbed, get_equipment_id, fixtures_ver,
+                   instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
+                   get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
+    lf_tools.reset_scenario()
+    param = dict(request.param)
 
-    if parameter['mode'] == "NAT":
-        mode = "NAT"
-        vlan_id = 1
-    if parameter['mode'] == "BRIDGE":
-        mode = "BRIDGE"
-        vlan_id = 1
-    if parameter['mode'] == "VLAN":
-        mode = "BRIDGE"
-        vlan_id = setup_vlan
+    # VLAN Setup
+    if request.param["mode"] == "VLAN":
 
-    instantiate_profile.delete_profile_by_name(profile_name=testbed + "-Equipment-AP-" + parameter['mode'])
+        vlan_list = list()
+        refactored_vlan_list = list()
+        ssid_modes = request.param["ssid_modes"].keys()
+        for mode in ssid_modes:
+            for ssid in range(len(request.param["ssid_modes"][mode])):
+                if "vlan" in request.param["ssid_modes"][mode][ssid]:
+                    vlan_list.append(request.param["ssid_modes"][mode][ssid]["vlan"])
+                else:
+                    pass
+        if vlan_list:
+            [refactored_vlan_list.append(x) for x in vlan_list if x not in refactored_vlan_list]
+            vlan_list = refactored_vlan_list
+            for i in range(len(vlan_list)):
+                if vlan_list[i] > 4095 or vlan_list[i] < 1:
+                    vlan_list.pop(i)
+    if request.param["mode"] == "VLAN":
+        lf_tools.add_vlan(vlan_ids=vlan_list)
 
-    profile_data["equipment_ap"] = {"profile_name": testbed + "-Equipment-AP-" + parameter['mode']}
-    profile_data["ssid"] = {}
-    for i in parameter["ssid_modes"]:
-        profile_data["ssid"][i] = []
-        for j in range(len(parameter["ssid_modes"][i])):
-            profile_name = testbed + "-SSID-" + i + "-" + str(j) + "-" + parameter['mode']
-            data = parameter["ssid_modes"][i][j]
-            data["profile_name"] = profile_name
-            if "mode" not in dict(data).keys():
-                data["mode"] = mode
-            if "vlan" not in dict(data).keys():
-                data["vlan"] = vlan_id
-            instantiate_profile.delete_profile_by_name(profile_name=profile_name)
-            profile_data["ssid"][i].append(data)
-    #         print(profile_name)
-    # print(profile_data)
-
-    instantiate_profile.delete_profile_by_name(profile_name=testbed + "-Automation-Radius-Profile-" + mode)
-    time.sleep(10)
-    """
-      Setting up rf profile
-    """
-    rf_profile_data = {
-        "name": "RF-Profile-" + testbed + "-" + parameter['mode'] + "-" +
-                get_configuration['access_point'][0]['mode']
-    }
-
-    for i in parameter["rf"]:
-        rf_profile_data[i] = parameter['rf'][i]
-    # print(rf_profile_data)
-
-    try:
-        instantiate_profile.delete_profile_by_name(profile_name=rf_profile_data['name'])
-        instantiate_profile.set_rf_profile(profile_data=rf_profile_data,
-                                           mode=get_configuration['access_point'][0]['mode'])
-        allure.attach(body=str(rf_profile_data),
-                      name="RF Profile Created : " + get_configuration['access_point'][0]['mode'])
-    except Exception as e:
-        print(e)
-        allure.attach(body=str(e), name="Exception ")
-
-    # Radius Profile Creation
-    if parameter["radius"]:
-        radius_info = radius_info
-        radius_info["name"] = testbed + "-Automation-Radius-Profile-" + testbed
-        instantiate_profile.delete_profile_by_name(profile_name=testbed + "-Automation-Radius-Profile-" + testbed)
-        try:
-            # pass
-            instantiate_profile.create_radius_profile(radius_info=radius_info)
-            allure.attach(body=str(radius_info),
-                          name="Radius Profile Created")
-            test_cases['radius_profile'] = True
-        except Exception as e:
-            print(e)
-            test_cases['radius_profile'] = False
-
-    # SSID Profile Creation
-    print(get_markers)
-    for mode in profile_data['ssid']:
-        if mode == "open":
-            for j in profile_data["ssid"][mode]:
-                # print(j)
-                if mode in get_markers.keys() and get_markers[mode]:
-                    try:
-                        if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
-                                j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_open_ssid_profile(profile_data=j)
-                            test_cases["open_2g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
-                    except Exception as e:
-                        print(e)
-                        test_cases["open_2g"] = False
-                        allure.attach(body=str(e),
-                                      name="SSID Profile Creation Failed")
-
-                    try:
-                        if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
-                                j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_open_ssid_profile(profile_data=j)
-                            test_cases["open_5g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
-                    except Exception as e:
-                        print(e)
-                        test_cases["open_5g"] = False
-                        allure.attach(body=str(e),
-                                      name="SSID Profile Creation Failed")
-
-        if mode == "wpa":
-            for j in profile_data["ssid"][mode]:
-                # print(j)
-                if mode in get_markers.keys() and get_markers[mode]:
-                    try:
-                        if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
-                                j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_wpa_ssid_profile(profile_data=j)
-                            test_cases["wpa_2g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
-                    except Exception as e:
-                        print(e)
-                        test_cases["wpa_2g"] = False
-                        allure.attach(body=str(e),
-                                      name="SSID Profile Creation Failed")
-                    try:
-                        if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
-                                j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_wpa_ssid_profile(profile_data=j)
-                            test_cases["wpa_5g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
-                    except Exception as e:
-                        print(e)
-                        test_cases["wpa_5g"] = False
-                        allure.attach(body=str(e),
-                                      name="SSID Profile Creation Failed")
-        if mode == "wpa2_personal":
-            for j in profile_data["ssid"][mode]:
-                # print(j)
-                if mode in get_markers.keys() and get_markers[mode]:
-                    try:
-                        if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
-                                j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_wpa2_personal_ssid_profile(profile_data=j)
-                            test_cases["wpa2_personal_2g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
-                    except Exception as e:
-                        print(e)
-                        test_cases["wpa2_personal_2g"] = False
-                        allure.attach(body=str(e),
-                                      name="SSID Profile Creation Failed")
-                    try:
-                        if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
-                                j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_wpa2_personal_ssid_profile(profile_data=j)
-                            test_cases["wpa2_personal_5g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
-                    except Exception as e:
-                        print(e)
-                        test_cases["wpa2_personal_5g"] = False
-                        allure.attach(body=str(e),
-                                      name="SSID Profile Creation Failed")
-
-        if mode == "wpa_wpa2_personal_mixed":
-            for j in profile_data["ssid"][mode]:
-                # print(j)
-                if mode in get_markers.keys() and get_markers[mode]:
-                    try:
-                        if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
-                                j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_wpa_wpa2_personal_mixed_ssid_profile(profile_data=j)
-                            test_cases["wpa_wpa2_personal_mixed_2g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
-                    except Exception as e:
-                        print(e)
-                        test_cases["wpa_wpa2_personal_mixed_2g"] = False
-                        allure.attach(body=str(e),
-                                      name="SSID Profile Creation Failed")
-                    try:
-                        if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
-                                j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_wpa_wpa2_personal_mixed_ssid_profile(profile_data=j)
-                            test_cases["wpa_wpa2_personal_mixed_5g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
-                    except Exception as e:
-                        print(e)
-                        test_cases["wpa_wpa2_personal_mixed_5g"] = False
-                        allure.attach(body=str(e),
-                                      name="SSID Profile Creation Failed")
-        if mode == "wpa3_personal":
-            for j in profile_data["ssid"][mode]:
-                print(j)
-                if mode in get_markers.keys() and get_markers[mode]:
-                    try:
-                        if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
-                                j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_wpa3_personal_ssid_profile(profile_data=j)
-                            test_cases["wpa3_personal_2g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
-                    except Exception as e:
-                        print(e)
-                        test_cases["wpa3_personal_2g"] = False
-                        allure.attach(body=str(e),
-                                      name="SSID Profile Creation Failed")
-                    try:
-                        if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
-                                j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_wpa3_personal_ssid_profile(profile_data=j)
-                            test_cases["wpa3_personal_5g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
-                    except Exception as e:
-                        print(e)
-                        test_cases["wpa3_personal_5g"] = False
-                        allure.attach(body=str(e),
-                                      name="SSID Profile Creation Failed")
-        if mode == "wpa3_personal_mixed":
-            for j in profile_data["ssid"][mode]:
-                print(j)
-                if mode in get_markers.keys() and get_markers[mode]:
-                    try:
-                        if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
-                                j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_wpa3_personal_mixed_ssid_profile(
-                                profile_data=j)
-                            test_cases["wpa3_personal_mixed_2g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
-                    except Exception as e:
-                        print(e)
-                        test_cases["wpa3_personal_2g"] = False
-                        allure.attach(body=str(e),
-                                      name="SSID Profile Creation Failed")
-                    try:
-                        if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
-                                j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_wpa3_personal_mixed_ssid_profile(
-                                profile_data=j)
-                            test_cases["wpa3_personal_mixed_5g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
-                    except Exception as e:
-                        print(e)
-                        test_cases["wpa3_personal_5g"] = False
-                        allure.attach(body=str(e),
-                                      name="SSID Profile Creation Failed")
-
-        if mode == "wpa2_enterprise":
-            for j in profile_data["ssid"][mode]:
-                # print(j)
-                if mode in get_markers.keys() and get_markers[mode]:
-                    try:
-                        if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
-                                j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_wpa2_enterprise_ssid_profile(profile_data=j)
-                            test_cases["wpa2_enterprise_2g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
-                    except Exception as e:
-                        print(e)
-                        test_cases["wpa2_enterprise_2g"] = False
-                        allure.attach(body=str(e),
-                                      name="SSID Profile Creation Failed")
-                    try:
-                        if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
-                                j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_wpa2_enterprise_ssid_profile(profile_data=j)
-                            test_cases["wpa2_enterprise_5g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
-                    except Exception as e:
-                        print(e)
-                        test_cases["wpa2_enterprise_5g"] = False
-                        allure.attach(body=str(e),
-                                      name="SSID Profile Creation Failed")
-
-        if mode == "wpa3_enterprise":
-            for j in profile_data["ssid"][mode]:
-                # print(j)
-                if mode in get_markers.keys() and get_markers[mode]:
-                    try:
-                        if "twog" in get_markers.keys() and get_markers["twog"] and "is2dot4GHz" in list(
-                                j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_wpa3_enterprise_ssid_profile(profile_data=j)
-                            test_cases["wpa3_enterprise_2g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
-                    except Exception as e:
-                        print(e)
-                        test_cases["wpa3_enterprise_2g"] = False
-                        allure.attach(body=str(e),
-                                      name="SSID Profile Creation Failed")
-                    try:
-                        if "fiveg" in get_markers.keys() and get_markers["fiveg"] and "is5GHz" in list(
-                                j["appliedRadios"]):
-                            creates_profile = instantiate_profile.create_wpa3_enterprise_ssid_profile(profile_data=j)
-                            test_cases["wpa3_enterprise_5g"] = True
-                            allure.attach(body=str(creates_profile),
-                                          name="SSID Profile Created")
-                    except Exception as e:
-                        print(e)
-                        test_cases["wpa3_enterprise_5g"] = False
-                        allure.attach(body=str(e),
-                                      name="SSID Profile Creation Failed")
-
-    # Equipment AP Profile Creation
-    try:
-        instantiate_profile.set_ap_profile(profile_data=profile_data['equipment_ap'])
-        test_cases["equipment_ap"] = True
-        allure.attach(body=str(profile_data['equipment_ap']),
-                      name="Equipment AP Profile Created")
-    except Exception as e:
-        print(e)
-        test_cases["equipment_ap"] = False
-        allure.attach(body=str(e),
-                      name="Equipment AP Profile Creation Failed")
-
-    # Push the Equipment AP Profile to AP
-    try:
-        for i in get_equipment_id:
-            instantiate_profile.push_profile_old_method(equipment_id=i)
-    except Exception as e:
-        print(e)
-        print("failed to create AP Profile")
-
-    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
-    ssid_names = []
-    for i in instantiate_profile.profile_creation_ids["ssid"]:
-        ssid_names.append(instantiate_profile.get_ssid_name_by_profile_id(profile_id=i))
-    ssid_names.sort()
-
-    # This loop will check the VIF Config with cloud profile
-    vif_config = []
-    test_cases['vifc'] = False
-    for i in range(0, 18):
-        vif_config = list(ap_ssh.get_vif_config_ssids())
-        vif_config.sort()
-        print(vif_config)
-        print(ssid_names)
-        if ssid_names == vif_config:
-            test_cases['vifc'] = True
-            break
-        time.sleep(10)
-    allure.attach(body=str("VIF Config: " + str(vif_config) + "\n" + "SSID Pushed from Controller: " + str(ssid_names)),
-                  name="SSID Profiles in VIF Config and Controller: ")
-    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
-
-    # This loop will check the VIF Config with VIF State
-    test_cases['vifs'] = False
-    for i in range(0, 18):
-        vif_state = list(ap_ssh.get_vif_state_ssids())
-        vif_state.sort()
-        vif_config = list(ap_ssh.get_vif_config_ssids())
-        vif_config.sort()
-        print(vif_config)
-        print(vif_state)
-        if vif_state == vif_config:
-            test_cases['vifs'] = True
-            break
-        time.sleep(10)
-    allure.attach(body=str("VIF Config: " + str(vif_config) + "\n" + "VIF State: " + str(vif_state)),
-                  name="SSID Profiles in VIF Config and VIF State: ")
-    print(test_cases)
-
-    def teardown_session():
-        print("\nRemoving Profiles")
-        instantiate_profile.delete_profile_by_name(profile_name=profile_data['equipment_ap']['profile_name'])
-        instantiate_profile.delete_profile(instantiate_profile.profile_creation_ids["ssid"])
-        instantiate_profile.delete_profile(instantiate_profile.profile_creation_ids["radius"])
-        instantiate_profile.delete_profile(instantiate_profile.profile_creation_ids["rf"])
-        allure.attach(body=str(profile_data['equipment_ap']['profile_name'] + "\n"),
-                      name="Tear Down in Profiles ")
-        time.sleep(20)
-
-    request.addfinalizer(teardown_session)
-    yield test_cases
-
-
+    # call this, if 1.x
+    return_var = fixtures_ver.setup_profiles(request, param, setup_controller, testbed, get_equipment_id,
+                                             instantiate_profile,
+                                             get_markers, create_lanforge_chamberview_dut, lf_tools,
+                                             get_security_flags, get_configuration, radius_info, get_apnos,
+                                             radius_accounting_info)
+    yield return_var
 
 
 @pytest.fixture(scope="function")
@@ -601,7 +249,7 @@ def update_ssid(request, instantiate_profile, setup_profile_data):
     yield status
 
 
-#@pytest.fixture(scope="module", autouse=True)
+# @pytest.fixture(scope="module", autouse=True)
 def failure_tracking_fixture(request):
     tests_failed_before_module = request.session.testsfailed
     print("\n\ntests_failed_before_module: ")
@@ -621,12 +269,11 @@ def get_vif_state(get_apnos, get_configuration):
     yield vif_state
 
 
-
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     outcome = yield
     result = outcome.get_result()
-    #testCaseStatusValue = ""
+    # testCaseStatusValue = ""
     testCasePassedStatusValue = ""
     testCaseFailedStatusValue = ""
     testCaseNameList = []
@@ -637,24 +284,24 @@ def pytest_runtest_makereport(item, call):
     if result.when == 'call':
         item.session.results[item] = result
 
-        #Gets the Current Test Case Name
+        # Gets the Current Test Case Name
         TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
         nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
-        #print("TestCasefullNameTEST: " + TestCaseFullName)
+        # print("TestCasefullNameTEST: " + TestCaseFullName)
         try:
-            #TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
+            # TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
             TestCaseName = nCurrentTestMethodNameSplit.replace('test_', '')
-            #print ("\nTestCaseName: " + TestCaseName)
+            # print ("\nTestCaseName: " + TestCaseName)
         except Exception as e:
             TestCaseName = nCurrentTestMethodNameSplit
             print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
-            #print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
+            # print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
 
-        #exception = call.excinfo.value
-        #exception_class = call.excinfo.type
-        #exception_class_name = call.excinfo.typename
+        # exception = call.excinfo.value
+        # exception_class = call.excinfo.type
+        # exception_class_name = call.excinfo.typename
 
-        #exception_traceback = call.excinfo.traceback
+        # exception_traceback = call.excinfo.traceback
 
         if result.outcome == "failed":
             exception_type_and_message_formatted = call.excinfo.exconly()
@@ -667,7 +314,8 @@ def pytest_runtest_makereport(item, call):
 
             print("\n     TestStatus: " + testCaseFailedStatusValue)
             print("     FailureMsg: " + str(testCaseErrorMsg))
-            reportPerfecto(TestCaseName, testCaseFailedStatusValue, testCaseErrorMsg, str(reporting_client.report_url()))
+            reportPerfecto(TestCaseName, testCaseFailedStatusValue, testCaseErrorMsg,
+                           str(reporting_client.report_url()))
 
         if result.outcome == "passed":
             testCasePassedStatusValue = "PASSED"
@@ -688,14 +336,14 @@ def pytest_runtest_makereport(item, call):
             testCaseReportURL.append(reporting_client.report_url())
             print("\n     TestStatus: " + testCaseSkippedStatusValue)
             print("     FailureMsg: " + str(testCaseErrorMsg))
-            reportPerfecto(TestCaseName, testCaseSkippedStatusValue, testCaseErrorMsg, str(reporting_client.report_url()))
+            reportPerfecto(TestCaseName, testCaseSkippedStatusValue, testCaseErrorMsg,
+                           str(reporting_client.report_url()))
 
 
 def pytest_sessionfinish(session, exitstatus):
-
     print()
     skipped_amount = 0
-    #print('Perfecto TestCase Execution Status:', exitstatus)
+    # print('Perfecto TestCase Execution Status:', exitstatus)
     passed_amount = sum(1 for result in session.results.values() if result.passed)
     failed_amount = sum(1 for result in session.results.values() if result.failed)
     skipped_amount = sum(1 for result in session.results.values() if result.skipped)
@@ -712,13 +360,14 @@ def pytest_sessionfinish(session, exitstatus):
 
     try:
         for index in range(len(testCaseNameList)):
-            print(str(index+1) + ") " + str(testCaseNameList[index]) + " : " + str(testCaseStatusList[index]))
+            print(str(index + 1) + ") " + str(testCaseNameList[index]) + " : " + str(testCaseStatusList[index]))
             print("     ReportURL: " + str(testCaseReportURL[index]))
             print("     FailureMsg: " + str(testCaseErrorMsg[index]) + "\n")
     except Exception as e:
         print('No Interop Test Cases Executed')
 
     print('------------------------------------------------------------------\n\n\n\n')
+
 
 @pytest.fixture(scope="function")
 def setup_perfectoMobile_android(request):
@@ -730,29 +379,31 @@ def setup_perfectoMobile_android(request):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     capabilities = {
-            'platformName': request.config.getini("platformName-android"),
-            'model': request.config.getini("model-android"),
-            'browserName': 'mobileOS',
-            #'automationName' : 'Appium',
-            'securityToken' : request.config.getini("securityToken"),
-            'useAppiumForWeb' : 'false',
-            'useAppiumForHybrid' : 'false',
-            #'bundleId' : request.config.getini("appPackage-android"),
+        'platformName': request.config.getini("platformName-android"),
+        'model': request.config.getini("model-android"),
+        'browserName': 'mobileOS',
+        # 'automationName' : 'Appium',
+        'securityToken': request.config.getini("securityToken"),
+        'useAppiumForWeb': 'false',
+        'useAppiumForHybrid': 'false',
+        # 'bundleId' : request.config.getini("appPackage-android"),
     }
 
-    driver = webdriver.Remote('https://'+request.config.getini("perfectoURL")+'.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
+    driver = webdriver.Remote(
+        'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
+        capabilities)
     driver.implicitly_wait(35)
 
     TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
     nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
     try:
-        #TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
+        # TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
         TestCaseName = nCurrentTestMethodNameSplit.replace('test_', '')
-        print ("\n\nExecuting TestCase: " + TestCaseName)
+        print("\n\nExecuting TestCase: " + TestCaseName)
     except Exception as e:
         TestCaseName = nCurrentTestMethodNameSplit
         print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
-        #print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
+        # print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
 
     projectname = request.config.getini("projectName")
     projectversion = request.config.getini("projectVersion")
@@ -761,8 +412,9 @@ def setup_perfectoMobile_android(request):
     tags = request.config.getini("reportTags")
     testCaseName = TestCaseName
 
-    #print("\nSetting Perfecto ReportClient....")
-    perfecto_execution_context = PerfectoExecutionContext(driver, tags, Job(jobname, jobnumber),Project(projectname, projectversion))
+    # print("\nSetting Perfecto ReportClient....")
+    perfecto_execution_context = PerfectoExecutionContext(driver, tags, Job(jobname, jobnumber),
+                                                          Project(projectname, projectversion))
     reporting_client = PerfectoReportiumClient(perfecto_execution_context)
     reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
     reportClient(reporting_client)
@@ -776,27 +428,29 @@ def setup_perfectoMobile_android(request):
         except Exception as e:
             print(" -- Exception While Tear Down --")
             driver.close()
-            print (e)
+            print(e)
         finally:
             try:
                 driver.quit()
             except Exception as e:
                 print(" -- Exception Not Able To Quit --")
-                print (e)
+                print(e)
 
     request.addfinalizer(teardown)
 
     if driver is None:
         yield -1
     else:
-        yield driver,reporting_client
+        yield driver, reporting_client
+
 
 def reportClient(value):
-    global reporting_client   # declare a to be a global
+    global reporting_client  # declare a to be a global
     reporting_client = value  # this sets the global value of a
 
+
 def reportPerfecto(testCaseName, testCaseStatus, testErrorMsg, reportURL):
-    global testCaseNameList   # declare a to be a global
+    global testCaseNameList  # declare a to be a global
     global testCaseStatusList
     global testCaseErrorMsg
     global testCaseReportURL
@@ -805,6 +459,7 @@ def reportPerfecto(testCaseName, testCaseStatus, testErrorMsg, reportURL):
     testCaseStatusList.append(testCaseStatus)
     testCaseErrorMsg.append(str(testErrorMsg))
     testCaseReportURL.append(reportURL)
+
 
 @pytest.fixture(scope="class")
 def setup_perfectoMobileWeb(request):
@@ -816,13 +471,15 @@ def setup_perfectoMobileWeb(request):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     capabilities = {
-            'platformName': request.config.getini("platformName-iOS"),
-            'model': request.config.getini("model-iOS"),
-            'browserName': request.config.getini("browserType-iOS"),
-            'securityToken' : request.config.getini("securityToken"),
+        'platformName': request.config.getini("platformName-iOS"),
+        'model': request.config.getini("model-iOS"),
+        'browserName': request.config.getini("browserType-iOS"),
+        'securityToken': request.config.getini("securityToken"),
     }
 
-    rdriver = webdriver.Remote('https://'+request.config.getini("perfectoURL")+'.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
+    rdriver = webdriver.Remote(
+        'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
+        capabilities)
     rdriver.implicitly_wait(35)
 
     projectname = request.config.getini("projectName")
@@ -833,7 +490,8 @@ def setup_perfectoMobileWeb(request):
     testCaseName = request.config.getini("jobName")
 
     print("Setting Perfecto ReportClient....")
-    perfecto_execution_context = PerfectoExecutionContext(rdriver, tags, Job(jobname, jobnumber),Project(projectname, projectversion))
+    perfecto_execution_context = PerfectoExecutionContext(rdriver, tags, Job(jobname, jobnumber),
+                                                          Project(projectname, projectversion))
     reporting_client = PerfectoReportiumClient(perfecto_execution_context)
     reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
 
@@ -845,20 +503,21 @@ def setup_perfectoMobileWeb(request):
             rdriver.close()
         except Exception as e:
             print(" -- Exception Not Able To close --")
-            print (e.message)
+            print(e.message)
         finally:
             try:
                 rdriver.quit()
             except Exception as e:
                 print(" -- Exception Not Able To Quit --")
-                print (e.message)
+                print(e.message)
 
     request.addfinalizer(teardown)
 
     if rdriver is None:
         yield -1
     else:
-        yield rdriver,reporting_client
+        yield rdriver, reporting_client
+
 
 @pytest.fixture(scope="function")
 def setup_perfectoMobile_iOS(request):
@@ -870,30 +529,32 @@ def setup_perfectoMobile_iOS(request):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     capabilities = {
-            'platformName': request.config.getini("platformName-iOS"),
-            'model': request.config.getini("model-iOS"),
-            'browserName': 'safari',
-            #'automationName' : 'Appium',
-            'securityToken' : request.config.getini("securityToken"),
-            'useAppiumForWeb' : 'false',
-            'autoAcceptAlerts' : 'true',
-            #'bundleId' : request.config.getini("bundleId-iOS"),
-            'useAppiumForHybrid' : 'false',
+        'platformName': request.config.getini("platformName-iOS"),
+        'model': request.config.getini("model-iOS"),
+        'browserName': 'safari',
+        # 'automationName' : 'Appium',
+        'securityToken': request.config.getini("securityToken"),
+        'useAppiumForWeb': 'false',
+        'autoAcceptAlerts': 'true',
+        # 'bundleId' : request.config.getini("bundleId-iOS"),
+        'useAppiumForHybrid': 'false',
     }
 
-    driver = webdriver.Remote('https://'+request.config.getini("perfectoURL")+'.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
+    driver = webdriver.Remote(
+        'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
+        capabilities)
     driver.implicitly_wait(35)
 
     TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
     nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
     try:
-        #TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
+        # TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
         TestCaseName = nCurrentTestMethodNameSplit.replace('test_', '')
-        print ("\n\nExecuting TestCase: " + TestCaseName)
+        print("\n\nExecuting TestCase: " + TestCaseName)
     except Exception as e:
         TestCaseName = nCurrentTestMethodNameSplit
         print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
-        #print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
+        # print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
 
     projectname = request.config.getini("projectName")
     projectversion = request.config.getini("projectVersion")
@@ -903,7 +564,8 @@ def setup_perfectoMobile_iOS(request):
     testCaseName = TestCaseName
 
     print("\nSetting Perfecto ReportClient....")
-    perfecto_execution_context = PerfectoExecutionContext(driver, tags, Job(jobname, jobnumber),Project(projectname, projectversion))
+    perfecto_execution_context = PerfectoExecutionContext(driver, tags, Job(jobname, jobnumber),
+                                                          Project(projectname, projectversion))
     reporting_client = PerfectoReportiumClient(perfecto_execution_context)
     reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
     reportClient(reporting_client)
@@ -917,18 +579,17 @@ def setup_perfectoMobile_iOS(request):
         except Exception as e:
             print(" -- Exception While Tear Down --")
             driver.close()
-            print (e)
+            print(e)
         finally:
             try:
                 driver.quit()
             except Exception as e:
                 print(" -- Exception Not Able To Quit --")
-                print (e)
+                print(e)
 
     request.addfinalizer(teardown)
 
     if driver is None:
         yield -1
     else:
-        yield driver,reporting_client
-
+        yield driver, reporting_client
