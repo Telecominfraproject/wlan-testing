@@ -10,8 +10,7 @@ import allure
 import pytest
 
 pytestmark = [pytest.mark.performance, pytest.mark.dual_band_test, pytest.mark.nat,
-              pytest.mark.single_station_dual_band_throughput, pytest.mark.usefixtures("setup_test_run")]
-
+              pytest.mark.single_station_dual_band_throughput]
 setup_params_general = {
     "mode": "NAT",
     "ssid_modes": {
