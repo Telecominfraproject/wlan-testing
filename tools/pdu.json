@@ -1,0 +1,14 @@
+{
+  "basic-01":
+  {
+    "host": "192.168.200.49",
+    "username": "admin",
+    "password": "Lanforge12345!"
+  },
+    "basic-02":
+  {
+    "host": "192.168.200.49",
+    "username": "admin",
+    "password": "Lanforge12345!"
+  }
+}
