@@ -288,34 +288,37 @@ class Fixtures_2x:
         time.sleep(10)
         ap_logs = ap_ssh.logread()
         allure.attach(body=ap_logs, name="AP Logs: ")
-        ssid_info_sdk = instantiate_profile_obj.get_ssid_info()
-        ap_wifi_data = ap_ssh.get_iwinfo()
+        try:
+            ssid_info_sdk = instantiate_profile_obj.get_ssid_info()
+            ap_wifi_data = ap_ssh.get_iwinfo()
 
-        for p in ap_wifi_data:
-            for q in ssid_info_sdk:
-                if ap_wifi_data[p][0] == q[0] and ap_wifi_data[p][2] == q[3]:
-                    q.append(ap_wifi_data[p][1])
+            for p in ap_wifi_data:
+                for q in ssid_info_sdk:
+                    if ap_wifi_data[p][0] == q[0] and ap_wifi_data[p][2] == q[3]:
+                        q.append(ap_wifi_data[p][1])
 
-        ssid_data = []
-        idx_mapping = {}
-        for interface in range(len(ssid_info_sdk)):
-
-            ssid = ["ssid_idx=" + str(interface) +
-                    " ssid=" + ssid_info_sdk[interface][0] +
-                    " security=" + ssid_info_sdk[interface][1].upper() +
-                    " password=" + ssid_info_sdk[interface][2] +
-                    " bssid=" + ssid_info_sdk[interface][4].lower()
-                    ]
-            idx_mapping[str(interface)] = [ssid_info_sdk[interface][0],
-                                           ssid_info_sdk[interface][2],
-                                           ssid_info_sdk[interface][1],
-                                           ssid_info_sdk[interface][3],
-                                           ssid_info_sdk[interface][4].lower()
-                                           ]
-            ssid_data.append(ssid)
-            lf_tools.ssid_list.append(ssid_info_sdk[interface][0])
-        lf_tools.dut_idx_mapping = idx_mapping
-        lf_tools.update_ssid(ssid_data=ssid_data)
+            ssid_data = []
+            idx_mapping = {}
+            for interface in range(len(ssid_info_sdk)):
+                ssid = ["ssid_idx=" + str(interface) +
+                        " ssid=" + ssid_info_sdk[interface][0] +
+                        " security=" + ssid_info_sdk[interface][1].upper() +
+                        " password=" + ssid_info_sdk[interface][2] +
+                        " bssid=" + ssid_info_sdk[interface][4].lower()
+                        ]
+                idx_mapping[str(interface)] = [ssid_info_sdk[interface][0],
+                                               ssid_info_sdk[interface][2],
+                                               ssid_info_sdk[interface][1],
+                                               ssid_info_sdk[interface][3],
+                                               ssid_info_sdk[interface][4].lower()
+                                               ]
+                ssid_data.append(ssid)
+                lf_tools.ssid_list.append(ssid_info_sdk[interface][0])
+            lf_tools.dut_idx_mapping = idx_mapping
+            lf_tools.update_ssid(ssid_data=ssid_data)
+        except Exception as e:
+            print(e)
+            pass
 
         def teardown_session():
             ap_logs = ap_ssh.logread()
