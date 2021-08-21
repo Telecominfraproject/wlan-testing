@@ -72,7 +72,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
     @pytest.mark.fiveg
     def test_wpa_enterprise_5g(self, station_names_fiveg, setup_profiles, get_lanforge_data, lf_test, update_report,
                                test_cases, radius_info, exit_on_fail):
-        """ wpa enterprise 2g
+        """ wpa enterprise 5g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa_enterprise and fiveg"
         """
         profile_data = setup_params_enterprise["ssid_modes"]["wpa_enterprise"][1]
@@ -80,7 +80,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         security = "wpa"
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
-        band = "twog"
+        band = "fiveg"
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
@@ -274,7 +274,7 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
         security = "wpa"
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
-        band = "twog"
+        band = "fiveg"
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
