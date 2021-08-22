@@ -61,7 +61,6 @@ class TestOpenRoamingBridgeMode(object):
         scope="function"
     )
     @pytest.mark.usefixtures("push_ap_profile")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3015", name="JIRA LINK")
     def test_OpenRoaming_2g_WPA2_EAP(self, passpoint_profile_info, push_ap_profile, request, get_APToMobileDevice_data, setup_perfectoMobile_android):
         """
             EAP Passpoint BRIDGE Mode
@@ -137,7 +136,6 @@ class TestOpenRoamingBridgeMode(object):
         scope="function"
     )
     @pytest.mark.usefixtures("push_ap_profile")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3015", name="JIRA LINK")
     def test_OpenRoaming_5g_WPA2_EAP(self, passpoint_profile_info, push_ap_profile, request, get_APToMobileDevice_data, setup_perfectoMobile_android):
         """
             EAP Passpoint BRIDGE Mode
@@ -209,7 +207,6 @@ class TestOpenRoamingBridgeMode(object):
         scope="function"
     )
     @pytest.mark.usefixtures("push_ap_profile")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3015", name="JIRA LINK")
     def test_OpenRoaming_wpa2_only_eap_2g(self, passpoint_profile_info, push_ap_profile, request, get_APToMobileDevice_data, setup_perfectoMobile_android):
         """
              EAP Passpoint BRIDGE Mode
@@ -282,7 +279,6 @@ class TestOpenRoamingBridgeMode(object):
         scope="function"
     )
     @pytest.mark.usefixtures("push_ap_profile")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3015", name="JIRA LINK")
     def test_OpenRoaming_wpa2_only_eap_5g(self, passpoint_profile_info, push_ap_profile, request, get_APToMobileDevice_data, setup_perfectoMobile_android):
         """
              EAP Passpoint BRIDGE Mode
