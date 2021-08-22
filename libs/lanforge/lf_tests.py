@@ -214,7 +214,7 @@ class RunTest:
         return self.eap_connect.passes()
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
-                      instance_name="wct_instance", download_rate="1Gbps",
+                      instance_name="wct_instance", download_rate="1Gbps", influx_tags=[],
                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000"):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         if mode == "BRIDGE":
@@ -254,10 +254,12 @@ class RunTest:
 
         wificapacity_obj.setup()
         wificapacity_obj.run()
+        for tag in influx_tags:
+            self.influx_params["influx_tag"].append(tag)
         report_name = wificapacity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        # influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
-        #                      target_csv=self.local_report_path + report_name + "/kpi.csv")
-        # influx.post_to_influx()
+        influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
+                             target_csv=self.local_report_path + report_name + "/kpi.csv")
+        influx.post_to_influx()
         return wificapacity_obj
 
     def Client_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog",

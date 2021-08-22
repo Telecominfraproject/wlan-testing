@@ -433,7 +433,8 @@ class APNOS:
 
     def get_iwinfo(self):
         try:
-
+            # [['ssid_wpa2_2g', 'wpa', 'something', '2G'], ['ssid_wpa2_2g', 'wpa', 'something', '5G']]
+            # {'wlan0': ['"ssid_wpa3_p_5g"', '12:34:56:78:90:12', '5G'], 'wlan1': ['"ssid_wpa3_p_2g"','00:03:7F:12:34:56', '5G']}
             client = self.ssh_cli_connect()
             cmd = "iwinfo"
             if self.mode:
@@ -449,7 +450,7 @@ class APNOS:
                         band = "2G"
                     else:
                         band = "5G"
-                    iwinfo_bssid_data[o[i - 1]] = [o[i + 4], band]
+                    iwinfo_bssid_data[o[i - 1]] = [o[i+1].replace('"', ''), o[i + 4], band]
             client.close()
         except Exception as e:
             iwinfo_bssid_data = False
@@ -536,5 +537,5 @@ if __name__ == '__main__':
         'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
     }
     var = APNOS(credentials=obj, sdk="2.x")
-    x = var.get_ap_version_ucentral()
-    print(x.split("\n")[1])
+    x = var.get_iwinfo()
+    print(x)
