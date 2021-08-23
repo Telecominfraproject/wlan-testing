@@ -265,8 +265,6 @@ class TestBridgeModeConnectivitySuiteTwo(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
 
-        if not result:
-            pytest.xfail("")
         assert result
 
     @pytest.mark.wpa3_personal
