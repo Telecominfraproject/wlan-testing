@@ -255,7 +255,7 @@ jobs:
       run: |
         mkdir -p allure-report/results
         cp -r allure-results-dataplane_throughput_test allure-report/results
-        cp -r allure-results-single_station_dual_band_throughput/results
+        cp -r allure-results-single_station_dual_band_throughput allure-report/results
         cp -r allure-results-wifi_capacity_test allure-report/results
     - name: copy new report
       run: |
