@@ -1,3 +1,4 @@
+import json
 import os
 
 from cloudshell.api.cloudshell_api import UpdateTopologyGlobalInputsRequest, UpdateTopologyRequirementsInputsRequest
@@ -13,14 +14,13 @@ def main():
         reservationName=f'sanity-{run_id}',
         owner=session.username,
         durationInMinutes=60,
-        topologyFullPath='Basic Lab',
+        topologyFullPath='PyTest Attributes Testing',
         globalInputs=[
             UpdateTopologyGlobalInputsRequest('Cloud Controller Version', '1.1.0-RC1'),
         ],
-        requirementsInputs=[
-            UpdateTopologyRequirementsInputsRequest('Access Point', 'Ap.Wifi type', 'Wifi5', 'Attributes'),
-            UpdateTopologyRequirementsInputsRequest('Access Point', 'Ap.AP Model', 'ECW5410', 'Attributes')
-        ]
+        #requirementsInputs=[
+        #    UpdateTopologyRequirementsInputsRequest('Access Point', 'Ap.OS Version', 'latest', 'Attributes'),
+        #]
     ).Reservation
 
     print(reservation.Id)

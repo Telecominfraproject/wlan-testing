@@ -23,6 +23,9 @@ jobs:
       - name: Start reservation
         id: start
         run: echo ::set-output name=res_id::$(python .quali/start_reservation.py)
+
+      - name: Get test configuration
+        run: python .quali/get_configuration.py ${{ steps.start.outputs.res_id }}
   
       - name: Run tests
         run: |
