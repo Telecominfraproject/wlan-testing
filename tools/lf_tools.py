@@ -1,11 +1,9 @@
 #!/usr/bin/python3.9
 """
-
     lf_tools : Tools for LANforge
                 reboot, run_cmd, etc
     ./lf_tools --host 10.28.3.8 --port 22 --username root --password lanforge --action reboot
     ./lf_tools --host 10.28.3.8 --port 22 --username root --password lanforge --action run_cmd --cmd ls
-
 """
 import argparse
 import paramiko
