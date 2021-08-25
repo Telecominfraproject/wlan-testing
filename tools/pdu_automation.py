@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+Date: 12-08-2021
+By: Amrit Raj @ Candela Technologies Pvt. ltd.
 Note: Please ensure that PDU is powered on.
     Command line to be used as
     python pdu_automation.py --host 192.168.200.90 --user admin --password 1234 --action on/off/cycle --port all/specific_port_name
