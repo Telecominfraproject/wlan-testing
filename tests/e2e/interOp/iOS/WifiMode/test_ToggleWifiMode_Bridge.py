@@ -16,14 +16,14 @@ import allure
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.interop_and, pytest.mark.android,
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
               pytest.mark.ToggleWifiMode]
 
-from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_WifiMode_android, Toggle_AirplaneMode_android, \
-    ForgetWifiConnection, openApp
+from iOS_lib import closeApp, openApp, Toggle_AirplaneMode_iOS, ForgetWifiConnection, set_APconnMobileDevice_iOS, \
+    verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
 
 setup_params_general = {
-    "mode": "NAT",
+    "mode": "BRIDGE",
     "ssid_modes": {
         "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"]},
                  {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
@@ -39,7 +39,7 @@ setup_params_general = {
 }
 
 
-@allure.feature("NAT MODE CLIENT CONNECTIVITY")
+@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -47,12 +47,12 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestToggleWifiMode(object):
+class TestToggleWifiModeBridgeMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ToogleWifiMode_5g_WPA2_Personal(self, request, get_vif_state, get_ToggleWifiMode_data,
-                                             setup_perfectoMobile_android):
+    def test_ToogleWifiMode_5g_WPA2_Personal_BRIDGE(self, request, get_vif_state, get_ToggleWifiMode_data,
+                                             setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
@@ -64,23 +64,27 @@ class TestToggleWifiMode(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobile_android[1]
-        driver = setup_perfectoMobile_android[0]
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
         connData = get_ToggleWifiMode_data
 
         # Set Wifi/AP Mode
-        set_APconnMobileDevice_android(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
-        # Toggle Wifi Mode
-        Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
+        # Toggle WifiMode
+        Toggle_WifiMode_iOS(request, setup_perfectoMobile_iOS, connData)
+
+        # Verify AP After AirplaneMode
+        value = verify_APconnMobileDevice_iOS(request, ssidName, setup_perfectoMobile_iOS, connData)
+        assert value
 
         # ForgetWifi
-        ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ToogleWifiMode_2g_WPA2_Personal(self, request, get_vif_state, get_ToggleWifiMode_data,
-                                             setup_perfectoMobile_android):
+    def test_ToogleWifiMode_2g_WPA2_Personal_BRIDGE(self, request, get_vif_state, get_ToggleWifiMode_data,
+                                             setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -92,22 +96,26 @@ class TestToggleWifiMode(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobile_android[1]
-        driver = setup_perfectoMobile_android[0]
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
         connData = get_ToggleWifiMode_data
 
         # Set Wifi/AP Mode
-        set_APconnMobileDevice_android(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
-        # Toggle Wifi Mode
-        assert Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
+        # Toggle WifiMode.
+        Toggle_WifiMode_iOS(request, setup_perfectoMobile_iOS, connData)
 
-        # ForgetWifi
-        ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
+        # Verify AP After AirplaneMode.
+        value = verify_APconnMobileDevice_iOS(request, ssidName, setup_perfectoMobile_iOS, connData)
+        assert value
+
+        # ForgetWifi.
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ToogleWifiMode_5g_WPA(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_android):
+    def test_ToogleWifiMode_5g_WPA_BRIDGE(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
@@ -119,22 +127,26 @@ class TestToggleWifiMode(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobile_android[1]
-        driver = setup_perfectoMobile_android[0]
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
         connData = get_ToggleWifiMode_data
 
         # Set Wifi/AP Mode
-        set_APconnMobileDevice_android(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
-        # Toggle Wifi Mode
-        assert Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
+        # Toggle WifiMode
+        Toggle_WifiMode_iOS(request, setup_perfectoMobile_iOS, connData)
+
+        # Verify AP After AirplaneMode
+        value = verify_APconnMobileDevice_iOS(request, ssidName, setup_perfectoMobile_iOS, connData)
+        assert value
 
         # ForgetWifi
-        ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_ToogleWifiMode_2g_WPA(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_android):
+    def test_ToogleWifiMode_2g_WPA_BRIDGE(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
@@ -146,23 +158,26 @@ class TestToggleWifiMode(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobile_android[1]
-        driver = setup_perfectoMobile_android[0]
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
         connData = get_ToggleWifiMode_data
 
         # Set Wifi/AP Mode
-        set_APconnMobileDevice_android(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
-        # Toggle Wifi Mode
-        assert Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
+        # Toggle WifiMode
+        Toggle_WifiMode_iOS(request, setup_perfectoMobile_iOS, connData)
+
+        # Verify AP After AirplaneMode
+        value = verify_APconnMobileDevice_iOS(request, ssidName, setup_perfectoMobile_iOS, connData)
+        assert value
 
         # ForgetWifi
-        ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
-    @pytest.mark.open
     @pytest.mark.fiveg
-    def test_ToogleWifiMode_5g_OPEN(self, request, get_vif_state, get_ToggleWifiMode_data,
-                                        setup_perfectoMobile_android):
+    @pytest.mark.open
+    def test_ToogleWifiMode_5g_OPEN_BRIDGE(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["open"][1]
         ssidName = profile_data["ssid_name"]
@@ -174,23 +189,26 @@ class TestToggleWifiMode(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobile_android[1]
-        driver = setup_perfectoMobile_android[0]
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
         connData = get_ToggleWifiMode_data
 
         # Set Wifi/AP Mode
-        set_APconnMobileDevice_android(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
-        # Toggle Wifi Mode
-        assert Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
+        # Toggle WifiMode
+        Toggle_WifiMode_iOS(request, setup_perfectoMobile_iOS, connData)
+
+        # Verify AP After AirplaneMode
+        value = verify_APconnMobileDevice_iOS(request, ssidName, setup_perfectoMobile_iOS, connData)
+        assert value
 
         # ForgetWifi
-        ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
-    @pytest.mark.open
     @pytest.mark.twog
-    def test_ToogleWifiMode_2g_OPEN(self, request, get_vif_state, get_ToggleWifiMode_data,
-                                        setup_perfectoMobile_android):
+    @pytest.mark.open
+    def test_ToogleWifiMode_2g_OPEN_BRIDGE(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssidName = profile_data["ssid_name"]
@@ -202,15 +220,19 @@ class TestToggleWifiMode(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobile_android[1]
-        driver = setup_perfectoMobile_android[0]
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
         connData = get_ToggleWifiMode_data
 
         # Set Wifi/AP Mode
-        set_APconnMobileDevice_android(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+        set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
-        # Toggle Wifi Mode
-        assert Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
+        # Toggle WifiMode
+        Toggle_WifiMode_iOS(request, setup_perfectoMobile_iOS, connData)
+
+        # Verify AP After AirplaneMode
+        value = verify_APconnMobileDevice_iOS(request, ssidName, setup_perfectoMobile_iOS, connData)
+        assert value
 
         # ForgetWifi
-        ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
+        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)

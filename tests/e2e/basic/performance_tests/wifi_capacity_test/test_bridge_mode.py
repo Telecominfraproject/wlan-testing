@@ -50,6 +50,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa2_personal and twog"
         """
+        lf_tools.reset_scenario()
         profile_data = setup_params_general_dual_band["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -60,10 +61,12 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
+        influx_tags = ["tcp", "download", "2.4G-5G Combined"]
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_dl", mode=mode, vlan_id=vlan,
-                                        download_rate="1Gbps",
+                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
+                                        influx_tags=influx_tags,
                                         upload_rate="0", protocol="TCP-IPv4", duration="60000")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -79,6 +82,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa2_personal and twog"
         """
+        lf_tools.reset_scenario()
         profile_data = setup_params_general_dual_band["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -89,10 +93,12 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
+        influx_tags = ["udp", "download", "2.4G-5G Combined"]
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_dl", mode=mode, vlan_id=vlan,
-                                        download_rate="1Gbps",
+                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
+                                        influx_tags=influx_tags,
                                         upload_rate="0", protocol="UDP-IPv4", duration="60000")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -108,6 +114,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa2_personal and twog"
         """
+        lf_tools.reset_scenario()
         profile_data = setup_params_general_dual_band["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -117,10 +124,12 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
+        influx_tags = ["tcp", "bidirectional", "2.4G-5G Combined"]
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_bi", mode=mode, vlan_id=vlan,
-                                        download_rate="1Gbps",
+                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
+                                        influx_tags=influx_tags,
                                         upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -136,6 +145,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa2_personal and twog"
         """
+        lf_tools.reset_scenario()
         profile_data = setup_params_general_dual_band["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -145,10 +155,12 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
+        influx_tags = ["udp", "bidirectional", "2.4G-5G Combined"]
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_bi", mode=mode, vlan_id=vlan,
-                                        download_rate="1Gbps",
+                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
+                                        influx_tags=influx_tags,
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
