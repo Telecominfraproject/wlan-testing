@@ -116,7 +116,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "performance and ${{ github.event.inputs.marker_expression }}" -s -vvv --testbed="${{ github.event.inputs.testbed }}" --skip-testrail --alluredir=/tmp/allure-results "${{ github.event.inputs.additional_args }}"
+                    pytest -m "${{ github.event.inputs.marker_expression }}" -s -vvv --testbed="${{ github.event.inputs.testbed }}" --skip-testrail --alluredir=/tmp/allure-results "${{ github.event.inputs.additional_args }}"
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
