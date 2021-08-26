@@ -13,10 +13,10 @@ def main():
     reservation = session.CreateImmediateTopologyReservation(
         reservationName=f'sanity-{run_id}',
         owner=session.username,
-        durationInMinutes=60,
-        topologyFullPath='PyTest Attributes Testing',
+        durationInMinutes=180,
+        topologyFullPath='Basic Lab - Version 2',
         globalInputs=[
-            UpdateTopologyGlobalInputsRequest('Cloud Controller Version', '1.1.0-RC1'),
+            UpdateTopologyGlobalInputsRequest('Cloud Controller Version', '1.0.0'),
         ],
         #requirementsInputs=[
         #    UpdateTopologyRequirementsInputsRequest('Access Point', 'Ap.OS Version', 'latest', 'Attributes'),
