@@ -22,6 +22,7 @@ import allure
 from apnos.apnos import APNOS
 from controller.controller_1x.controller import Controller
 from controller.controller_1x.controller import ProfileUtility
+from controller.controller_2x.controller import UProfileUtility
 from controller.controller_1x.controller import FirmwareUtility
 import pytest
 import logging
@@ -134,17 +135,12 @@ def get_lanforge_data(testbed):
 
 
 @pytest.fixture(scope="session")
-def instantiate_profile():
-    yield ProfileUtility
+def instantiate_profile(request):
+    if request.config.getoption("1.x"):
+        yield ProfileUtility
+    else:
+        yield UProfileUtility
 
-
-@pytest.fixture(scope="session")
-def get_equipment_id(setup_controller, testbed, get_configuration):
-    equipment_id_list = []
-    for i in get_configuration['access_point']:
-        equipment_id_list.append(setup_controller.get_equipment_id(
-            serial_number=i['serial']))
-    yield equipment_id_list
 
 
 @pytest.fixture(scope="session")
@@ -261,12 +257,14 @@ def failure_tracking_fixture(request):
 
 
 @pytest.fixture(scope="class")
-def get_vif_state(get_apnos, get_configuration):
-    ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
-    vif_state = list(ap_ssh.get_vif_state_ssids())
-    vif_state.sort()
-    allure.attach(name="vif_state", body=str(vif_state))
-    yield vif_state
+def get_vif_state(get_apnos, get_configuration, request, lf_tools):
+    if request.config.getoption("1.x"):
+        ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
+        vif_state = list(ap_ssh.get_vif_state_ssids())
+        vif_state.sort()
+        yield vif_state
+    else:
+        yield lf_tools.ssid_list
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)

@@ -647,8 +647,11 @@ def add_env_properties(get_configuration, get_apnos, fixtures_ver, add_allure_en
 
 @pytest.fixture(scope="session")
 def fixtures_ver(request, get_configuration):
+    print("heelo shivam", request.config.getoption("1.x"))
     if request.config.getoption("1.x") is False:
+        print("2.x")
         obj = Fixtures_2x(configuration=get_configuration)
     if request.config.getoption("1.x"):
+        print("1.x")
         obj = Fixtures_1x(configuration=get_configuration)
     yield obj
