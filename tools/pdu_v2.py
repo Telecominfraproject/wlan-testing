@@ -4,9 +4,9 @@ Date: 20-08-2021
 By: Amrit Raj @ Candela Technologies Pvt. ltd.
 Note: Please ensure that PDU is powered on.
     Command line to be used as
-    python pdu_automation.py --testbed basic-01 --action on/off/cycle --port all/specific_port_name
-    Eg 1: python pdu_automation.py --testbed basic-01 --action off --port 'Outlet 1'
-    Eg 2: python pdu_automation.py --testbed basic-01 --action cycle --port all
+    python pdu_v2.py --testbed basic-01 --action on/off/cycle --port all/specific_port_name
+    Eg 1: python pdu_v2.py --testbed basic-01 --action off --port 'Outlet 1'
+    Eg 2: python pdu_v2.py --testbed basic-01 --action cycle --port all
 """
 import os
 import json
