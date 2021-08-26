@@ -692,32 +692,35 @@ def pytest_runtest_makereport(item, call):
 
 
 def pytest_sessionfinish(session, exitstatus):
-
-    print()
-    skipped_amount = 0
-    #print('Perfecto TestCase Execution Status:', exitstatus)
-    passed_amount = sum(1 for result in session.results.values() if result.passed)
-    failed_amount = sum(1 for result in session.results.values() if result.failed)
-    skipped_amount = sum(1 for result in session.results.values() if result.skipped)
-    #  print(f'There are {passed_amount} passed and {failed_amount} failed tests')
-    TotalExecutedCount = failed_amount + passed_amount + skipped_amount
-
-    print('\n------------------------------------')
-    print('Interop Perfecto TestCase Execution Summary')
-    print('------------------------------------')
-    print('Total TestCase Executed: ' + str(TotalExecutedCount))
-    print('Total Passed: ' + str(passed_amount))
-    print('Total Failed: ' + str(failed_amount))
-    print('Total Skipped: ' + str(skipped_amount) + "\n")
-
     try:
-        for index in range(len(testCaseNameList)):
-            print(str(index+1) + ") " + str(testCaseNameList[index]) + " : " + str(testCaseStatusList[index]))
-            print("     ReportURL: " + str(testCaseReportURL[index]))
-            print("     FailureMsg: " + str(testCaseErrorMsg[index]) + "\n")
-    except Exception as e:
-        print('No Interop Test Cases Executed')
+        if reporting_client is not None:
+            print()
+            skipped_amount = 0
+            # print('Perfecto TestCase Execution Status:', exitstatus)
+            passed_amount = sum(1 for result in session.results.values() if result.passed)
+            failed_amount = sum(1 for result in session.results.values() if result.failed)
+            skipped_amount = sum(1 for result in session.results.values() if result.skipped)
+            #  print(f'There are {passed_amount} passed and {failed_amount} failed tests')
+            TotalExecutedCount = failed_amount + passed_amount + skipped_amount
 
+            print('\n------------------------------------')
+            print('TestCase Execution Summary')
+            print('------------------------------------')
+            print('Total TestCase Executed: ' + str(TotalExecutedCount))
+            print('Total Passed: ' + str(passed_amount))
+            print('Total Failed: ' + str(failed_amount))
+            print('Total Skipped: ' + str(skipped_amount) + "\n")
+            try:
+                for index in range(len(testCaseNameList)):
+                    print(str(index + 1) + ") " + str(testCaseNameList[index]) + " : " + str(testCaseStatusList[index]))
+                    print("     ReportURL: " + str(testCaseReportURL[index]))
+                    print("     FailureMsg: " + str(testCaseErrorMsg[index]) + "\n")
+            except Exception as e:
+                print('No Interop Test Cases Executed')
+        else:
+            pass
+    except Exception as e:
+        pass
     print('------------------------------------------------------------------\n\n\n\n')
 
 @pytest.fixture(scope="function")

@@ -159,7 +159,7 @@ class ChamberView:
 
         if band == "ax":
             if num_stations != "max":
-                if num_stations > 64:
+                if num_stations > 1:
                     num_stations = int(num_stations / len(self.ax_radios))
                     for radio in self.ax_radios:
                         station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
@@ -172,7 +172,7 @@ class ChamberView:
                     self.raw_line.append(station_data)
             if num_stations == "max":
                 for radio in self.ax_radios:
-                    num_stations = 64
+                    num_stations = 1
                     station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
                                     str(int(idx) + 1) + "'" + " NA " + radio]
                     self.raw_line.append(station_data)
