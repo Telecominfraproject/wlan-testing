@@ -8,7 +8,7 @@ import allure
 import pytest
 
 pytestmark = [pytest.mark.client_connectivity, pytest.mark.bridge, pytest.mark.enterprise, pytest.mark.ttls,
-              pytest.mark.ucentral, pytest.mark.sanity]#, pytest.mark.usefixtures("setup_test_run")]
+              pytest.mark.ucentral, pytest.mark.sanity]  # , pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_enterprise = {
     "mode": "BRIDGE",
@@ -28,6 +28,8 @@ setup_params_enterprise = {
 }
 
 
+@allure.suite(suite_name="sanity")
+@allure.sub_suite(sub_suite_name="Bridge Mode EAP Client Connectivity : Suite-A")
 @pytest.mark.suiteA
 @pytest.mark.parametrize(
     'setup_profiles',
@@ -220,6 +222,8 @@ setup_params_enterprise_two = {
 }
 
 
+@allure.suite(suite_name="sanity")
+@allure.sub_suite(sub_suite_name="Bridge Mode EAP Client Connectivity : Suite-B")
 @pytest.mark.suiteB
 @pytest.mark.parametrize(
     'setup_profiles',

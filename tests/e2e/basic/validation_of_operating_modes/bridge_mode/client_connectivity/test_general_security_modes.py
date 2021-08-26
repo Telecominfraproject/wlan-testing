@@ -29,6 +29,8 @@ setup_params_general = {
 }
 
 
+@allure.suite(suite_name="sanity")
+@allure.sub_suite(sub_suite_name="Bridge Mode Client Connectivity : Suite-A")
 @pytest.mark.suiteA
 @pytest.mark.sudo
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
@@ -46,7 +48,7 @@ class TestBridgeModeConnectivitySuiteA(object):
 
     @pytest.mark.open
     @pytest.mark.twog
-    @allure.story('open 2.4 GHZ Band')
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
     def test_open_ssid_2g(self, get_vif_state, setup_profiles, get_lanforge_data, lf_test, update_report,
                           station_names_twog,
                           test_cases):
@@ -72,7 +74,7 @@ class TestBridgeModeConnectivitySuiteA(object):
 
     @pytest.mark.open
     @pytest.mark.fiveg
-    @allure.story('open 5 GHZ Band')
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
     def test_open_ssid_5g(self, get_vif_state, get_lanforge_data, lf_test, test_cases, station_names_fiveg,
                           update_report):
         """Client Connectivity open ssid 5G
@@ -99,6 +101,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @pytest.mark.wpa
     @pytest.mark.twog
     @allure.story('wpa 2.4 GHZ Band')
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
     def test_wpa_ssid_2g(self, get_vif_state, get_lanforge_data, update_report,
                          lf_test, test_cases, station_names_twog):
         """Client Connectivity wpa ssid 2.4G
@@ -222,6 +225,8 @@ setup_params_general_two = {
 }
 
 
+@allure.suite(suite_name="sanity")
+@allure.sub_suite(sub_suite_name="Bridge Mode Client Connectivity : Suite-B")
 @pytest.mark.suiteB
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
@@ -260,8 +265,6 @@ class TestBridgeModeConnectivitySuiteTwo(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
 
-        if not result:
-            pytest.xfail("")
         assert result
 
     @pytest.mark.wpa3_personal
