@@ -296,7 +296,6 @@ class Fixtures_2x:
                 for q in ssid_info_sdk:
                     if ap_wifi_data[p][0] == q[0] and ap_wifi_data[p][2] == q[3]:
                         q.append(ap_wifi_data[p][1])
-
             ssid_data = []
             idx_mapping = {}
             for interface in range(len(ssid_info_sdk)):
@@ -319,11 +318,9 @@ class Fixtures_2x:
         except Exception as e:
             print(e)
             pass
-
         def teardown_session():
             ap_logs = ap_ssh.logread()
             allure.attach(body=ap_logs, name="AP Logs after test completion")
             print("\nTeardown")
-
         request.addfinalizer(teardown_session)
         return test_cases
