@@ -805,3 +805,210 @@ def verify_APconnMobileDevice_Android(request, profileNameSSID, setup_perfectoMo
         assert False
 
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
+
+    # Cache_clear Function
+def cache_clear_android(request, setup_perfectoMobile, connData):
+    print("\n-------------------------------------")
+    print("Select Cache Clear")
+    print("-------------------------------------")
+    report = setup_perfectoMobile[1]
+    driver = setup_perfectoMobile[0]
+
+    report.step_start("Switching Driver Context")
+    print("Switching Context to Native")
+    contexts = driver.contexts
+    driver.switch_to.context(contexts[0])
+
+    # Open Settings Application
+    openApp(connData["appPackage-android"], setup_perfectoMobile)
+
+    deviceModelName = getDeviceModelName(setup_perfectoMobile)
+    print("Selected Device Model: " + deviceModelName)
+
+    if deviceModelName != ("Pixel 4" and "Galaxy S9"):
+        try:
+            print("Clicking Search button")
+            report.step_start("Click Search")
+            conn_ele = driver.find_element_by_xpath("//*[@content-desc='Search']")
+            conn_ele.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Search")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Entering Chrome in Search")
+            report.step_start("Entering text Chrome")
+            search_ele = driver.find_element_by_xpath("//*[@resource-id='com.android.settings.intelligence:id/search_src_text']")
+            search_ele.send_keys("chrome")
+        except Exception as e:
+            print("Exception: Entering chrome failed")
+            print(e)
+
+        try:
+            driver.implicitly_wait(40)
+            print("Clicking Chrome App Info")
+            report.step_start("Click Chrome App Info")
+            chrome_ele = driver.find_element_by_xpath("//*[@text='Chrome']")
+            chrome_ele.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Chrome")
+
+        # Scroll Down
+        scrollDown(setup_perfectoMobile)
+
+        try:
+            driver.implicitly_wait(30)
+            print("Clicking Storage")
+            report.step_start("Click Storage")
+            store_ele = driver.find_element_by_xpath("//*[@text='Storage']")
+            store_ele.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Storage")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Clicking Clear Cache")
+            report.step_start("Click Clear Cache")
+            clear_ele = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/button2']")
+            clear_ele.click()
+            print("Cleared Cache")
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Clearcache")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Checking if cache cleared or not with 0B")
+            report.step_start("Checking if cache cleared or not with 0B")
+            check_ele = driver.find_element_by_xpath("//*[@text='0 B']")
+            if check_ele is not None:
+                return True
+            else:
+                return False
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Checking cache clear")
+
+    elif deviceModelName == ("Pixel 4"):
+        # Pixel cache clear code
+        try:
+            print("Clicking Search button")
+            report.step_start("Click Search")
+            conn_ele = driver.find_element_by_xpath("//*[@class='android.widget.ImageButton']")
+            conn_ele.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Search")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Entering Chrome in Search")
+            report.step_start("Entering text Chrome")
+            search_ele = driver.find_element_by_xpath("//*[@resource-id='android:id/search_src_text']")
+            search_ele.send_keys("chrome")
+        except Exception as e:
+            print("Exception: Entering chrome failed")
+            print(e)
+
+        try:
+            driver.implicitly_wait(35)
+            print("Clicking Chrome App Info")
+            report.step_start("Click Chrome App Info")
+            chrom_ele = driver.find_element_by_xpath("//*[@text='Chrome']")
+            chrom_ele.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Chrome")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Clicking Storage & cache")
+            report.step_start("Click Storage & cache")
+            store_ele = driver.find_element_by_xpath("//*[@text='Storage & cache']")
+            store_ele.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Storage & cache")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Clicking Clear Cache")
+            report.step_start("Click Clear Cache")
+            clear_ele = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/button2']")
+            clear_ele.click()
+            print("Cleared cache")
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Clearcache")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Checking if cache cleared or not with 0B")
+            report.step_start("Checking if cache cleared or not with 0B")
+            store_ele = driver.find_element_by_xpath("//*[@text='0 B']")
+            if store_ele is not None:
+                return True
+            else:
+                return False
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Checking cache clear")
+
+    else:
+        try:
+            print("Clicking Search button")
+            report.step_start("Click Search")
+            conn_ele = driver.find_element_by_xpath("//*[@content-desc='Search settings']")
+            conn_ele.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Search")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Entering Chrome in Search")
+            report.step_start("Entering text Chrome")
+            search_ele = driver.find_element_by_xpath(
+                "//*[@resource-id='com.android.settings.intelligence:id/search_src_text']")
+            search_ele.send_keys("chrome")
+        except Exception as e:
+            print("Exception: Entering chrome failed")
+            print(e)
+
+        try:
+            driver.implicitly_wait(40)
+            print("Clicking Chrome App Info")
+            report.step_start("Click Chrome App Info")
+            chrome_ele = driver.find_element_by_xpath("//*[@text='Chrome']")
+            chrome_ele.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Chrome")
+
+        # Scroll Down
+        scrollDown(setup_perfectoMobile)
+
+        try:
+            driver.implicitly_wait(30)
+            print("Clicking Storage")
+            report.step_start("Click Storage")
+            store_ele = driver.find_element_by_xpath("//*[@text='Storage']")
+            store_ele.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Storage")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Clicking Clear Cache")
+            report.step_start("Click Clear Cache")
+            clear_ele = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/button2']")
+            clear_ele.click()
+            print("Cleared Cache")
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Clearcache")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Checking if cache cleared or not with 0B")
+            report.step_start("Checking if cache cleared or not with 0B")
+            check_ele = driver.find_element_by_xpath("//*[@text='0 B']")
+            if check_ele is not None:
+                return True
+            else:
+                return False
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Checking cache clear")
+
+
+    closeApp(connData["appPackage-android"], setup_perfectoMobile)
