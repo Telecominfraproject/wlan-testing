@@ -167,6 +167,10 @@ kafka:
     limits:
       cpu: 200m
       memory: 1Gi
+  readinessProbe:
+    initialDelaySeconds: 45
+  livenessProbe:
+    initialDelaySeconds: 60
   zookeeper:
     heapSize: 256
     resources:
@@ -176,7 +180,3 @@ kafka:
       limits:
         cpu: 200m
         memory: 384Mi
-    readinessProbe:
-      initialDelaySeconds: 45
-    livenessProbe:
-      initialDelaySeconds: 60
