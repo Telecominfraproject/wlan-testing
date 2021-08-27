@@ -29,7 +29,7 @@ env:
     {
       "namespace": "qa01",
       "deploy_method": "git",
-      "chart_version": "2.1.0-RC1",
+      "chart_version": "v2.1.0-RC1",
       "ucentralgw_version": "v2.1.0-RC1",
       "ucentralsec_version": "v2.1.0-RC1",
       "ucentralfms_version": "v2.1.0-RC1",
