@@ -51,7 +51,7 @@ setup_params_eap = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestOpenRoamingBridgeMode(object):
-  
+
     @pytest.mark.wpa2_eap
     @pytest.mark.twog
     @pytest.mark.parametrize(
@@ -66,11 +66,14 @@ class TestOpenRoamingBridgeMode(object):
             EAP Passpoint BRIDGE Mode
             pytest -m "interop_iOS and eap_passpoint and bridge and wpa2_eap and twog"
         """
+
         result = push_ap_profile['ssid_wpa2_eap_passpoint_2g']['vif_config']
+        print(result)
         if result:
             allure.attach(name="Config push to AP for ssid_wpa2_eap_passpoint_2g successful ", body="")
         else:
             allure.attach(name="Config push to AP for ssid_wpa2_eap_passpoint_2g failed", body="")
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         assert result
         result = push_ap_profile['ssid_wpa2_eap_passpoint_2g']['vif_state']
         if result:
@@ -143,6 +146,7 @@ class TestOpenRoamingBridgeMode(object):
             allure.attach(name="Config push to AP for ssid_wpa2_eap_passpoint_5g successful ", body="")
         else:
             allure.attach(name="Config push to AP for ssid_wpa2_eap_passpoint_5g failed", body="")
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         assert result
         result = push_ap_profile['ssid_wpa2_eap_passpoint_5g']['vif_state']
         if result:
@@ -213,6 +217,7 @@ class TestOpenRoamingBridgeMode(object):
             allure.attach(name="Config push to AP for ssid_wpa2_only_eap_passpoint_2g successful ", body="")
         else:
             allure.attach(name="Config push to AP for ssid_wpa2_only_eap_passpoint_2g failed", body="")
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         assert result
         result = push_ap_profile['ssid_wpa2_only_eap_passpoint_2g']['vif_state']
         if result:
@@ -284,6 +289,7 @@ class TestOpenRoamingBridgeMode(object):
             allure.attach(name="Config push to AP for ssid_wpa2_only_eap_passpoint_5g successful ", body="")
         else:
             allure.attach(name="Config push to AP for ssid_wpa2_only_eap_passpoint_5g failed", body="")
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         assert result
         result = push_ap_profile['ssid_wpa2_only_eap_passpoint_5g']['vif_state']
         if result:

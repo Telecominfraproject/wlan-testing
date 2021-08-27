@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+Date: 12-08-2021
+By: Amrit Raj @ Candela Technologies Pvt. ltd.
 Note: Please ensure that PDU is powered on.
     Command line to be used as
     python pdu_automation.py --host 192.168.200.90 --user admin --password 1234 --action on/off/cycle --port all/specific_port_name
@@ -72,13 +74,16 @@ class print_status(setup):
 
 def main(argv: Optional[Sequence[str]] = None):
     parser = argparse.ArgumentParser()
-    parser.add_argument('--host', help='Please provide host name eg: 192.168.200.65')
-    parser.add_argument('--username', help='Please provide username eg: admin')
-    parser.add_argument('--password', help='Please provide password eg: 1234')
-    parser.add_argument('--action', help='Switches all Outlets in ON Mode eg: --on or --off\n')
+    parser.add_argument('--testbed', help='Input the pdu name eg: basic-01 or basic-02\n')
+    parser.add_argument('--action', help='Switches all Outlets in ON Mode eg: on or off\n')
     parser.add_argument('--port', help='Please provide port name eg: --port lanforge')
     args = parser.parse_args(argv)
-    dic = vars(args)
+    argument1 = vars(args)
+    testbed = argument1['testbed']
+    f = open('pdu.json')
+    y = json.load(f)
+    argument2 = y[testbed]
+    dic = {**argument1, **argument2}  # Dictionay Merging
     # print(dic)
     if dic['action'] == 'on':
         set = setup(dic['host'], dic['username'], dic['password'])

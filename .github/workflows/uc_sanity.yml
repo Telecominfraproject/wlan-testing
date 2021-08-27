@@ -1,4 +1,4 @@
-name: uCentral sanity testing
+name: 2.x sanity testing
 env:
   # thirdparties
   DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
