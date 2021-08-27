@@ -176,3 +176,7 @@ kafka:
       limits:
         cpu: 200m
         memory: 384Mi
+    readinessProbe:
+      initialDelaySeconds: 45
+    livenessProbe:
+      initialDelaySeconds: 60
