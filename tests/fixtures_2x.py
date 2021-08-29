@@ -286,8 +286,20 @@ class Fixtures_2x:
             print("AP is Not Broadcasting Applied Config")
             allure.attach(name="Failed to Apply Config : Active Config in AP : ", body=str(ap_config_active))
         time.sleep(10)
+        try:
+            iwinfo = ap_ssh.iwinfo()
+            allure.attach(name="iwinfo: ", body=str(iwinfo))
+
+            tx_power, name = ap_ssh.gettxpower()
+            allure.attach(name="interface name: ", body=str(name))
+            allure.attach(name="tx power: ", body=str(tx_power))
+        except:
+            pass
         ap_logs = ap_ssh.logread()
         allure.attach(body=ap_logs, name="AP Logs: ")
+
+
+
         try:
             ssid_info_sdk = instantiate_profile_obj.get_ssid_info()
             ap_wifi_data = ap_ssh.get_iwinfo()
@@ -321,6 +333,13 @@ class Fixtures_2x:
             pass
 
         def teardown_session():
+            iwinfo = ap_ssh.iwinfo()
+            allure.attach(name="iwinfo: ", body=str(iwinfo))
+
+            tx_power, name = ap_ssh.gettxpower()
+            allure.attach(name="interface name: ", body=str(name))
+            allure.attach(name="tx power: ", body=str(tx_power))
+
             ap_logs = ap_ssh.logread()
             allure.attach(body=ap_logs, name="AP Logs after test completion")
             print("\nTeardown")
