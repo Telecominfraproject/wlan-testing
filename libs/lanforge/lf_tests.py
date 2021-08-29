@@ -472,128 +472,124 @@ class RunTest:
         return self.rvr_obj
 
     def multipsk(self, ssid="[BLANK]", security=None, mode="BRIDGE", key1=None, vlan_id=None, key2=None, band="twog",
-                 station_name=None):
-        global result1
+                 station_name=None, n_vlan="1", key3=None):
+        global result1, sta_name
         if mode == "BRIDGE":
             self.upstream_port = self.upstream_port
         elif mode == "NAT":
             self.upstream_port = self.upstream_port
-
         if band == "twog":
             radio = self.twog_radios[0]
         elif band == "fiveg":
             radio = self.fiveg_radios[0]
+        print("vlan id", vlan_id)
 
-        input_data = [{
-            "password": key1,
-            "upstream": str(self.upstream_port) + "." + str(vlan_id),
-            "mac": "",
-            "num_station": 1,
-            "radio": str(radio)
-        },
-            {
-                "password": key2,
-                "upstream": str(self.upstream_port),
+        if n_vlan == "1":
+            input_data = [{
+                "password": key1,
+                "upstream": str(self.upstream_port) + "." + str(vlan_id[0]),
                 "mac": "",
                 "num_station": 1,
                 "radio": str(radio)
             },
-        ]
-        # print(input_data)
+                {
+                    "password": key2,
+                    "upstream": str(self.upstream_port),
+                    "mac": "",
+                    "num_station": 1,
+                    "radio": str(radio)
+                },
+            ]
+        else:
+            input_data = [{
+                "password": key1,
+                "upstream": str(self.upstream_port) + "." + str(vlan_id[0]),
+                "mac": "",
+                "num_station": 1,
+                "radio": str(radio)
+            },
+                {
+                    "password": key2,
+                    "upstream": str(self.upstream_port) + "." + str(vlan_id[1]),
+                    "mac": "",
+                    "num_station": 1,
+                    "radio": str(radio)
+                },
+                {
+                    "password": key3,
+                    "upstream": str(self.upstream_port),
+                    "mac": "",
+                    "num_station": 1,
+                    "radio": str(radio)
+                },
+            ]
+        print("station name",station_name)
+
         self.multi_obj = MultiPsk(host=self.lanforge_ip,
                                   port=self.lanforge_port,
                                   ssid=ssid,
                                   input=input_data,
-                                  security=security)
-        # self.multi_obj.station_name = station_name
+                                  security=security,)
         self.sta_url_map = None
         self.multi_obj.build()
         self.multi_obj.start()
         time.sleep(60)
+        self.multi_obj.monitor_vlan_ip()
+        if n_vlan == "1":
+            self.multi_obj.get_sta_ip()
+        else:
+            self.multi_obj.get_sta_ip_for_more_vlan()
+
+        result = self.multi_obj.compare_ip()
+        print("checking for vlan ips")
+        if result == "Pass":
+            print("Test pass")
+        else:
+            print("Test Fail")
+        print("now checking ip for non vlan port")
+        self.multi_obj.monitor_non_vlan_ip()
+        self.multi_obj.get_non_vlan_sta_ip()
         if mode == "BRIDGE":
-            self.multi_obj.monitor_vlan_ip()
-            self.multi_obj.get_sta_ip()
-            result = self.multi_obj.compare_ip()
-            print("checking for vlan ips")
-            if result == "Pass":
-                print("Test pass")
-            else:
-                print("Test Fail")
-            print("now checking ip for non vlan port")
-            upstream_ip = self.multi_obj.monitor_non_vlan_ip()
-            non_vlan_sta_ip = self.multi_obj.get_non_vlan_sta_ip()
+            result1 = self.multi_obj.compare_nonvlan_ip_bridge()
+        else:
+            result1 = self.self.multi_obj.compare_nonvlan_ip_nat()
+        # station_name =  ['sta100', 'sta200', 'sta00']
+        for sta_name_ in station_name:
+            if sta_name_ is None:
+                raise ValueError("get_station_url wants a station name")
+            if self.sta_url_map is None:
+                self.sta_url_map = {}
+                for sta_name in station_name:
+                    self.sta_url_map[sta_name] = "port/1/%s/%s" % (str(1), sta_name)
+                    print(self.sta_url_map)
+        print("hi",self.sta_url_map)
 
-            for i, j in zip(upstream_ip, non_vlan_sta_ip):
-                # print(i)
-                if i == j:
-                    x = upstream_ip[i].split('.')
-                    y = non_vlan_sta_ip[j].split('.')
-                    if x[0] == y[0] and x[1] == y[1]:
-                        print("station got ip from upstream")
-                        result1 = "Pass"
-                else:
-                    print("station did not got ip from upstream")
-                    result1 = "Fail"
-            for sta_name_ in station_name:
-                if sta_name_ is None:
-                    raise ValueError("get_station_url wants a station name")
-                if self.sta_url_map is None:
-                    self.sta_url_map = {}
-                    for sta_name in station_name:
-                        self.sta_url_map[sta_name] = "port/1/%s/%s" % (str(1), sta_name)
-                        print(self.sta_url_map[sta_name_])
-
-                try:
-                    station_data_str = ""
-                    # sta_url = self.staConnect.get_station_url(sta_name)
-                    station_info = self.multi_obj.local_realm.json_get(self.sta_url_map[sta_name_])
-                    print("station info", station_info)
-                    for i in station_info["interface"]:
-                        try:
-                            station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
-                        except Exception as e:
-                            print(e)
-                    allure.attach(name=str(sta_name), body=str(station_data_str))
-                except Exception as e:
-                    print(e)
-
-            if result1 == "Pass":
-                print("Test passed for non vlan ip ")
-            else:
-                print("Test failed for non vlan ip")
-
-            print("all result gathered")
-            print("clean up")
-            self.multi_obj.postcleanup()
-            if result == result1:
-                return True
-            else:
-                return False
-        elif mode == "NAT":
-            self.multi_obj.monitor_vlan_ip()
-            self.multi_obj.get_sta_ip()
-            result = self.multi_obj.compare_ip()
-            print("checking for vlan ips")
-            if result == "Pass":
-                print("Test pass")
-            else:
-                print("Test Fail")
-            print("now checking ip for non vlan port")
-            self.multi_obj.monitor_non_vlan_ip()
-            self.multi_obj.get_non_vlan_sta_ip()
-            result1 = self.multi_obj.compare_nonvlan_ip()
-            if result1 == "Pass":
-                print("Test passed for non vlan ip ")
-            else:
-                print("Test failed for non vlan ip")
-            print("all result gathered")
-            print("clean up")
-            self.multi_obj.postcleanup()
-            if result == result1:
-                return True
-            else:
-                return False
-
+        for sta_name in station_name:
+            try:
+                station_data_str = ""
+                # sta_url = self.staConnect.get_station_url(sta_name)
+                station_info = self.multi_obj.local_realm.json_get(self.sta_url_map[sta_name])
+                print("station info", station_info)
+                for i in station_info["interface"]:
+                    try:
+                        station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
+                    except Exception as e:
+                        print(e)
+                print("sta name", sta_name)
+                allure.attach(name=str(sta_name), body=str(station_data_str))
+            except Exception as e:
+                print(e)
+        if result1 == "Pass":
+            print("Test passed for non vlan ip ")
+        else:
+            print("Test failed for non vlan ip")
+        print("all result gathered")
+        print("clean up")
+        self.multi_obj.postcleanup()
+        if result == result1:
+            return True
+        else:
+            return False
 
 if __name__ == '__main__':
     lanforge_data = {
