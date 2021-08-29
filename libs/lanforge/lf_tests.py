@@ -471,7 +471,7 @@ class RunTest:
         influx.post_to_influx()
         return self.rvr_obj
 
-    def multipsk(self, ssid="[BLANK]", security=None, mode="BRIDGE", key1=None, vlan_id=None, key2=None, band="twog",
+    def multipsk(self, ssid="[BLANK]", security=None, mode=None, key1=None, vlan_id=None, key2=None, band="twog",
                  station_name=None, n_vlan="1", key3=None):
         global result1, sta_name
         if mode == "BRIDGE":
@@ -549,10 +549,11 @@ class RunTest:
         print("now checking ip for non vlan port")
         self.multi_obj.monitor_non_vlan_ip()
         self.multi_obj.get_non_vlan_sta_ip()
+        print("mode", mode)
         if mode == "BRIDGE":
             result1 = self.multi_obj.compare_nonvlan_ip_bridge()
-        else:
-            result1 = self.self.multi_obj.compare_nonvlan_ip_nat()
+        elif mode == "NAT":
+            result1 = self.multi_obj.compare_nonvlan_ip_nat()
         # station_name =  ['sta100', 'sta200', 'sta00']
         for sta_name_ in station_name:
             if sta_name_ is None:
