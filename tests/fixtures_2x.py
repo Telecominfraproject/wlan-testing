@@ -290,9 +290,9 @@ class Fixtures_2x:
             iwinfo = ap_ssh.iwinfo()
             allure.attach(name="iwinfo: ", body=str(iwinfo))
 
-            tx_power, name = ap_ssh.gettxpower()
-            allure.attach(name="interface name: ", body=str(name))
-            allure.attach(name="tx power: ", body=str(tx_power))
+            # tx_power, name = ap_ssh.gettxpower()
+            # allure.attach(name="interface name: ", body=str(name))
+            # allure.attach(name="tx power: ", body=str(tx_power))
         except:
             pass
         ap_logs = ap_ssh.logread()
@@ -336,9 +336,9 @@ class Fixtures_2x:
             iwinfo = ap_ssh.iwinfo()
             allure.attach(name="iwinfo: ", body=str(iwinfo))
 
-            tx_power, name = ap_ssh.gettxpower()
-            allure.attach(name="interface name: ", body=str(name))
-            allure.attach(name="tx power: ", body=str(tx_power))
+            # tx_power, name = ap_ssh.gettxpower()
+            # allure.attach(name="interface name: ", body=str(name))
+            # allure.attach(name="tx power: ", body=str(tx_power))
 
             ap_logs = ap_ssh.logread()
             allure.attach(body=ap_logs, name="AP Logs after test completion")
