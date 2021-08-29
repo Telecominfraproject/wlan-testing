@@ -25,15 +25,14 @@ pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.m
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"]},
-                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
-
-        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"]},
+                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"]}],
+        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
                  "security_key": "something"}],
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"],
              "security_key": "something"}]},
     "rf": {},
     "radius": False
@@ -60,9 +59,9 @@ class TestToggleAirplaneModeBridgeMode(object):
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
 
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssidName not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
@@ -92,9 +91,9 @@ class TestToggleAirplaneModeBridgeMode(object):
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
 
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssidName not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
@@ -125,9 +124,9 @@ class TestToggleAirplaneModeBridgeMode(object):
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
 
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssidName not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
@@ -155,9 +154,9 @@ class TestToggleAirplaneModeBridgeMode(object):
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
 
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssidName not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
@@ -184,9 +183,9 @@ class TestToggleAirplaneModeBridgeMode(object):
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
 
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssidName not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
@@ -216,9 +215,9 @@ class TestToggleAirplaneModeBridgeMode(object):
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
 
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssidName not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]

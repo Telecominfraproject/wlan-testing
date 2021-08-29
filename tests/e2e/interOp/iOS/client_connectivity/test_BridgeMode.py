@@ -59,9 +59,9 @@ class TestBridgeMode(object):
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
 
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssidName not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
@@ -86,9 +86,9 @@ class TestBridgeMode(object):
         ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssidName not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
@@ -113,9 +113,9 @@ class TestBridgeMode(object):
         ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssidName not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
@@ -140,9 +140,9 @@ class TestBridgeMode(object):
         ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssidName not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
@@ -167,9 +167,9 @@ class TestBridgeMode(object):
         ssidPassword = "[BLANK]"
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssidName not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
@@ -194,9 +194,9 @@ class TestBridgeMode(object):
         ssidPassword = "[BLANK]"
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssidName not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
