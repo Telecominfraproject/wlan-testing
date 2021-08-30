@@ -38,7 +38,7 @@ from lf_dataplane_test import DataplaneTest
 from lf_ap_auto_test import ApAutoTest
 from csv_to_influx import CSVtoInflux
 from influx2 import RecordInflux
-from lf_multipsk import MultiPsk
+#from lf_multipsk import MultiPsk
 
 
 class RunTest:
@@ -215,7 +215,7 @@ class RunTest:
         return self.eap_connect.passes()
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
-                      instance_name="wct_instance", download_rate="1Gbps",
+                      instance_name="wct_instance", download_rate="1Gbps", influx_tags=[],
                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000"):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         if mode == "BRIDGE":
@@ -255,10 +255,12 @@ class RunTest:
 
         wificapacity_obj.setup()
         wificapacity_obj.run()
+        for tag in influx_tags:
+            self.influx_params["influx_tag"].append(tag)
         report_name = wificapacity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        # influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
-        #                      target_csv=self.local_report_path + report_name + "/kpi.csv")
-        # influx.post_to_influx()
+        influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
+                             target_csv=self.local_report_path + report_name + "/kpi.csv")
+        influx.post_to_influx()
         return wificapacity_obj
 
     def Client_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog",
@@ -426,7 +428,7 @@ class RunTest:
                                            ['Stability', '1'],
                                            ['Band-Steering', '0'], ['Multi-Station Throughput vs Pkt Size', '0'],
                                            ['Long-Term', '0']],
-                                     raw_lines=[['reset_dur:300'], ['reset_batch_size:2']]
+                                     raw_lines=[['reset_dur:300'],['reset_batch_size:2']]
                                      )
         self.apstab_obj.setup()
         self.apstab_obj.run()
@@ -437,6 +439,7 @@ class RunTest:
         # influx.post_to_influx()
         return self.apstab_obj
 
+    
     def ratevsrange(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
                     upload_rate="0", duration="1m", instance_name="test_demo", raw_lines=None):
         if mode == "BRIDGE":
