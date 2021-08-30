@@ -34,7 +34,7 @@ class ConfigureController:
         self.access_token = ""
         # self.session = requests.Session()
         self.login_resp = self.login()
-        self.gw_host = self.get_endpoint()
+        self.gw_host = self.get_gw_endpoint()
 
     def build_uri_sec(self, path):
         new_uri = 'https://%s:%d/api/v1/%s' % (self.host.hostname, self.host.port, path)
@@ -46,6 +46,31 @@ class ConfigureController:
         new_uri = 'https://%s:%d/api/v1/%s' % (self.gw_host.hostname, self.gw_host.port, path)
         print(new_uri)
         return new_uri
+
+    def request(self, service, command, method, params, payload):
+        if service == "sec":
+            uri = self.build_uri_sec(command)
+        elif service == "gw":
+            uri = self.build_uri(command)
+        elif service == "fms":
+            uri = self.build_url_fms(command)
+        else:
+            raise NameError("Invalid service code for request.")
+
+        print(uri)
+        params = params
+        if method == "GET":
+            resp = requests.get(uri, headers=self.make_headers(), params=params, verify=False, timeout=100)
+        elif method == "POST":
+            resp = requests.post(uri, data=payload, verify=False, timeout=100)
+        elif method == "PUT":
+            resp = requests.put(uri, data=payload, verify=False, timeout=100)
+        elif method == "DELETE":
+            resp = requests.delete(uri, headers=self.make_headers(), params=params, verify=False, timeout=100)
+
+        self.check_response(method, resp, self.make_headers(), payload, uri)
+        print(resp)
+        return resp
 
     def login(self):
         uri = self.build_uri_sec("oauth2")
@@ -60,15 +85,15 @@ class ConfigureController:
         # self.session.headers.update({'Authorization': self.access_token})
         return resp
 
-    def get_endpoint(self):
+    def get_gw_endpoint(self):
         uri = self.build_uri_sec("systemEndpoints")
         print(uri)
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         print(resp)
         self.check_response("GET", resp, self.make_headers(), "", uri)
-        devices = resp.json()
-        print(devices["endpoints"][0]["uri"])
-        gw_host = urlparse(devices["endpoints"][0]["uri"])
+        services = resp.json()
+        print(services["endpoints"][0]["uri"])
+        gw_host = urlparse(services["endpoints"][0]["uri"])
         return gw_host
 
     def logout(self):
@@ -134,7 +159,7 @@ class UProfileUtility:
 
     def __init__(self, sdk_client=None, controller_data=None):
         if sdk_client is None:
-            self.sdk_client = UController(controller_data=controller_data)
+            self.sdk_client = Controller(controller_data=controller_data)
         self.sdk_client = sdk_client
         self.base_profile_config = {
             "uuid": 1,
@@ -142,7 +167,7 @@ class UProfileUtility:
             "interfaces": [{
                 "name": "WAN",
                 "role": "upstream",
-                "services": ["lldp", "dhcp-snooping"],
+                "services": ["ssh", "lldp", "dhcp-snooping"],
                 "ethernet": [
                     {
                         "select-ports": [
@@ -228,6 +253,42 @@ class UProfileUtility:
         }
         self.mode = None
 
+    def encryption_lookup(self, encryption="psk"):
+        encryption_mapping = {
+            "none": "open",
+            "psk": "wpa",
+            "psk2": "wpa2",
+            "sae": "wpa3",
+            "psk-mixed": "wpa|wpa2",
+            "sae-mixed": "wpa3",
+            "wpa": 'wap',
+            "wpa2": "eap",
+            "wpa3": "eap",
+            "wpa-mixed": "eap",
+            "wpa3-mixed": "sae"
+        }
+        if encryption in encryption_mapping.keys():
+            return encryption_mapping[encryption]
+        else:
+            return False
+
+    def get_ssid_info(self):
+        ssid_info = []
+        for interfaces in self.base_profile_config["interfaces"]:
+            if "ssids" in interfaces.keys():
+                for ssid_data in interfaces["ssids"]:
+                    for band in ssid_data["wifi-bands"]:
+                        temp = [ssid_data["name"]]
+                        if ssid_data["encryption"]["proto"] == "none" or "radius" in ssid_data.keys():
+                            temp.append(self.encryption_lookup(encryption=ssid_data["encryption"]["proto"]))
+                            temp.append('[BLANK]')
+                        else:
+                            temp.append(self.encryption_lookup(encryption=ssid_data["encryption"]["proto"]))
+                            temp.append(ssid_data["encryption"]["key"])
+                        temp.append(band)
+                        ssid_info.append(temp)
+        return ssid_info
+
     def set_radio_config(self, radio_config=None):
         self.base_profile_config["radios"].append({
             "band": "2G",
@@ -251,9 +312,7 @@ class UProfileUtility:
         self.mode = mode
         if mode == "NAT":
             self.base_profile_config['interfaces'][1]['ssids'] = []
-
         elif mode == "BRIDGE":
-            del self.base_profile_config['interfaces'][1]
             self.base_profile_config['interfaces'][0]['ssids'] = []
         elif mode == "VLAN":
             del self.base_profile_config['interfaces'][1]
@@ -262,7 +321,7 @@ class UProfileUtility:
             wan_section_vlan = {
                 "name": "WAN",
                 "role": "upstream",
-                "services": ["lldp"],
+                "services": ["lldp", "ssh", "dhcp-snooping"],
                 "ethernet": [
                     {
                         "select-ports": [
@@ -358,6 +417,7 @@ class UProfileUtility:
 
         uri = self.sdk_client.build_uri("device/" + serial_number + "/configure")
         basic_cfg_str = json.dumps(payload)
+        print(self.base_profile_config)
         allure.attach(name="ucentral_config: ", body=str(self.base_profile_config))
         print(self.base_profile_config)
         resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
@@ -378,27 +438,10 @@ if __name__ == '__main__':
     profile = UProfileUtility(sdk_client=obj)
     profile.set_mode(mode="BRIDGE")
     profile.set_radio_config()
-    # ssid = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security": "psk", "security_key": "something",
-    #        "vlan": 100, "rate-limit": {"ingress-rate": 50, "egress-rate": 50}}
-    # profile.add_ssid(ssid_data=ssid)
-    # profile.push_config(serial_number="903cb39d6918")
+    ssid = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G", "5G"], "security": "psk", "security_key": "something",
+            "vlan": 100}
+    profile.add_ssid(ssid_data=ssid, radius=False)
+    profile.push_config(serial_number="903cb39d6918")
+    print(profile.get_ssid_info())
     # print(obj.get_devices())
-    # ssid = {"ssid_name": "ssid_wpa2_2g_br",
-    #  "appliedRadios": ["2G"],
-    #  "security" : "psk2",
-    #  "security_key": "something",
-    #  "multi-psk": [
-    #      {
-    #          "key": "aaaaaaaa",
-    #          "vlan-id": 100
-    #      },
-    #      {
-    #          "key": "bbbbbbbb"
-    #      }
-    #  ]
-    #
-    #  }
-    # profile.add_ssid(ssid_data=ssid)
-    # profile.push_config(serial_number="903cb39d6918")
-    # print("hola",obj.get_devices())
     obj.logout()
