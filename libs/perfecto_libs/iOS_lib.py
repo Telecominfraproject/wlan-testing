@@ -53,6 +53,7 @@ def rebootPhone(setup_perfectoMobile):
     params = {}
     setup_perfectoMobile[0].execute_script('mobile:handset:reboot', params)
 
+
 def set_APconnMobileDevice_iOS(request, WifiNameSSID, WifiPass, setup_perfectoMobile, connData):
     consoleOutput = ""
 

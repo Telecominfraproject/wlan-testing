@@ -58,6 +58,14 @@ def getDeviceID(setup_perfectoMobile):
     print("DeviceID: " + deviceID)  
     return deviceID
 
+def rebootPhone(setup_perfectoMobile, get_APToMobileDevice_data):
+    #connData = get_APToMobileDevice_data
+
+    setup_perfectoMobile[1].step_start("Rebooting Phone...")  
+    params = {}
+    setup_perfectoMobile[0].execute_script('mobile:handset:reboot', params)
+
+
 def getDeviceModelName(setup_perfectoMobile):
     report = setup_perfectoMobile[1]    
     driver = setup_perfectoMobile[0]
