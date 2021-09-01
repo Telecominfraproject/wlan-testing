@@ -19,7 +19,7 @@ if 'perfecto_libs' not in sys.path:
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.ClientConnectivity]
 
 from android_lib import closeApp, set_APconnMobileDevice_android, verifyUploadDownloadSpeed_android,\
-    Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, get_WifiIPAddress_and
+    Toggle_AirplaneMode_android, ForgetWifiConnection, openApp
 
 setup_params_general = {
     "mode": "NAT",
@@ -209,7 +209,6 @@ class TestNatMode(object):
 
     @pytest.mark.twog
     @pytest.mark.open
-    @pytest.mark.test_ClientConnect_2g_OPEN_and
     def test_ClientConnect_5g_OPEN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["open"][0]
@@ -218,24 +217,19 @@ class TestNatMode(object):
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
 
-        # if ssidName not in get_vif_state:
-        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_android[1]
         driver = setup_perfectoMobile_android[0]
         connData = get_APToMobileDevice_data
 
-        # ip = False
+        # Set Wifi/AP Mode
         set_APconnMobileDevice_android(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
-        # print("ip", ip)
 
-        # # # Set Wifi/AP Mode
-        # get_ip_and(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
-        #
-        # # Toggle AirplaneMode
-        # Toggle_AirplaneMode_android(request, setup_perfectoMobile_android, connData)
+        # Toggle AirplaneMode
+        assert verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
 
-        # get_ip_and
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)

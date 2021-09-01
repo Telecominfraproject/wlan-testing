@@ -43,7 +43,6 @@ setup_params_general = {
     indirect=True,
     scope="class"
 )
- 
 @pytest.mark.usefixtures("setup_profiles")
 class TestNatMode(object):
 
@@ -184,6 +183,7 @@ class TestNatMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.open
+    @pytest.mark.test_ClientConnectivity_5g_OPEN_ios
     def test_ClientConnectivity_5g_OPEN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["open"][1]
@@ -191,6 +191,7 @@ class TestNatMode(object):
         ssidPassword = "[BLANK]"
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
+
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -206,4 +207,4 @@ class TestNatMode(object):
         verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
 
         # ForgetWifi
-        ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
+        # ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
