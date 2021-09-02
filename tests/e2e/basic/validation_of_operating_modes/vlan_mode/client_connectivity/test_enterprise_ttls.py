@@ -153,7 +153,7 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                     mode=mode, band=band,
+                                     mode=mode, band=band, ieee80211w=2,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_twog, vlan_id=vlan)
 
@@ -177,7 +177,7 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                     mode=mode, band=band,
+                                     mode=mode, band=band, ieee80211w=2,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_fiveg, vlan_id=vlan)
 
