@@ -34,10 +34,15 @@ class ConfigureController:
         self.access_token = ""
         # self.session = requests.Session()
         self.login_resp = self.login()
-        self.gw_host = self.get_gw_endpoint()
+        self.gw_host, self.fms_host = self.get_gw_endpoint()
 
     def build_uri_sec(self, path):
         new_uri = 'https://%s:%d/api/v1/%s' % (self.host.hostname, self.host.port, path)
+        print(new_uri)
+        return new_uri
+
+    def build_url_fms(self, path):
+        new_uri = 'https://%s:%d/api/v1/%s' % (self.fms_host.hostname, self.fms_host.port, path)
         print(new_uri)
         return new_uri
 
@@ -92,9 +97,11 @@ class ConfigureController:
         print(resp)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         services = resp.json()
-        print(services["endpoints"][0]["uri"])
+        print("REST ENDPOINT: ", services["endpoints"][0]["uri"])
+        print("FMS ENDPOINT: ", services["endpoints"][1]["uri"])
         gw_host = urlparse(services["endpoints"][0]["uri"])
-        return gw_host
+        fms_host = urlparse(services["endpoints"][1]["uri"])
+        return gw_host, fms_host
 
     def logout(self):
         uri = self.build_uri_sec('oauth2/%s' % self.access_token)
@@ -153,6 +160,73 @@ class Controller(ConfigureController):
     def get_device_uuid(self, serial_number):
         device_info = self.get_device_by_serial_number(serial_number=serial_number)
         return device_info["UUID"]
+
+
+class FMSUtils:
+
+    def __init__(self, sdk_client=None, controller_data=None):
+        if sdk_client is None:
+            self.sdk_client = Controller(controller_data=controller_data)
+        self.sdk_client = sdk_client
+
+    def upgrade_firmware(self, serial="", url=""):
+        response = self.sdk_client.request(service="gw", command="device/" + serial + "upgrade/",
+                                           method="POST", params="revisionSet=true",
+                                           payload="{ \"serialNumber\" : " + serial + " , \"uri\" : " + url + " }")
+        print(response)
+        pass
+
+    def ap_model_lookup(self, model=""):
+        devices = self.get_device_set()
+        model_name = ""
+        for device in devices['deviceTypes']:
+            if str(device).__contains__(model):
+                model_name = device
+        return model_name
+
+    def get_revisions(self):
+        response = self.sdk_client.request(service="fms", command="firmwares/", method="GET", params="revisionSet=true",
+                                           payload="")
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return {}
+
+    def get_latest_fw(self, model=""):
+
+        device_type = self.ap_model_lookup(model=model)
+
+        response = self.sdk_client.request(service="fms", command="firmwares/", method="GET",
+                                           params="latestOnly=true&deviceType=" + device_type,
+                                           payload="")
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return {}
+
+    def get_device_set(self):
+        response = self.sdk_client.request(service="fms", command="firmwares/", method="GET", params="deviceSet=true",
+                                           payload="")
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return {}
+
+    def get_firmwares(self, limit="", deviceType="", latestonly=""):
+
+        params = "limit=" + limit + "&deviceType=" + deviceType + "&latestonly=" + latestonly
+
+        response = self.sdk_client.request(service="fms", command="firmwares/", method="GET", params=params, payload="")
+        print(response)
+        if response.status_code == 200:
+            data = response.json()
+            print(data)
+
+        # resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        # self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
+        # devices = resp.json()
+        # # resp.close()()
+        return "devices"
 
 
 class UProfileUtility:
@@ -344,7 +418,7 @@ class UProfileUtility:
         for options in ssid_data:
             if options == "multi-psk":
                 ssid_info[options] = ssid_data[options]
-                print("hi",ssid_info)
+                print("hi", ssid_info)
             if options == "rate-limit":
                 ssid_info[options] = ssid_data[options]
         for i in ssid_data["appliedRadios"]:
@@ -435,13 +509,17 @@ if __name__ == '__main__':
         'password': 'openwifi',
     }
     obj = Controller(controller_data=controller)
-    profile = UProfileUtility(sdk_client=obj)
-    profile.set_mode(mode="BRIDGE")
-    profile.set_radio_config()
-    ssid = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G", "5G"], "security": "psk", "security_key": "something",
-            "vlan": 100}
-    profile.add_ssid(ssid_data=ssid, radius=False)
-    profile.push_config(serial_number="903cb39d6918")
-    print(profile.get_ssid_info())
-    # print(obj.get_devices())
+    fms = FMSUtils(sdk_client=obj)
+    # fms.get_device_set()
+    model = fms.get_latest_fw(model="eap102")
+    print(model)
+    # profile = UProfileUtility(sdk_client=obj)
+    # profile.set_mode(mode="BRIDGE")
+    # profile.set_radio_config()
+    # ssid = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G", "5G"], "security": "psk", "security_key": "something",
+    #         "vlan": 100}
+    # profile.add_ssid(ssid_data=ssid, radius=False)
+    # profile.push_config(serial_number="903cb39d6918")
+    # print(profile.get_ssid_info())
+    # # print(obj.get_devices())
     obj.logout()

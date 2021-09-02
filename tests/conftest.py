@@ -654,3 +654,9 @@ def fixtures_ver(request, get_configuration):
         print("1.x")
         obj = Fixtures_1x(configuration=get_configuration)
     yield obj
+
+
+@pytest.fixture(scope="session")
+def firmware_upgrade(fixtures_ver, get_apnos, get_configuration):
+    fixtures_ver.setup_firmware(get_apnos, get_configuration)
+    yield True

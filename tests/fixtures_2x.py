@@ -29,6 +29,7 @@ if 'py-json' not in sys.path:
     sys.path.append('../py-scripts')
 from apnos.apnos import APNOS
 from controller.controller_2x.controller import Controller
+from controller.controller_2x.controller import FMSUtils
 from configuration import CONFIGURATION
 from configuration import RADIUS_SERVER_DATA
 from configuration import RADIUS_ACCOUNTING_DATA
@@ -42,6 +43,7 @@ class Fixtures_2x:
         print("2.X")
         try:
             self.controller_obj = Controller(controller_data=self.lab_info["controller"])
+            self.fw_client = FMSUtils(sdk_client=self.controller_obj)
         except Exception as e:
             print(e)
             allure.attach(body=str(e), name="Controller Instantiation Failed: ")
@@ -51,7 +53,35 @@ class Fixtures_2x:
     def disconnect(self):
         self.controller_obj.logout()
 
-    def setup_firmware(self):
+    def setup_firmware(self, get_apnos, get_configuration):
+        # Query AP Firmware
+        for ap in get_configuration['access_point']:
+            firmware_url = ""
+            ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
+            ap_version = ap_ssh.get_ap_version_ucentral()
+            if ap['version'] == "latest":
+                response = self.fw_client.get_latest_fw(model=ap["model"])
+                if 'revision' in list(response.keys()):
+                    version_latest = response['revision']
+                    print(ap_version, version_latest)
+                    print(str(ap_version).replace(" ", ""), str(version_latest).replace(" ", ""),
+                          str(version_latest).replace(" ", "") == 'OpenWrt21.02-SNAPSHOTr16011+75-6fd65c6573/TIP-v2.1.0-rc2-d0a0715')
+                    if str(ap_version).replace(" ", "") == str(version_latest).replace(" ", ""):
+                        continue
+                    else:
+                        if 'uri' in list(response.keys()):
+                            firmware_url = response['uri']
+
+                        else:
+                            continue
+                        pass
+                else:
+                    continue
+
+
+
+        # Compare with the specified one
+        # if 'latest'
         pass
 
     def get_ap_version(self, get_apnos, get_configuration):

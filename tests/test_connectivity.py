@@ -9,6 +9,26 @@ pytestmark = [pytest.mark.test_resources, pytest.mark.sanity,
               pytest.mark.sanity_55]
 
 
+
+
+@pytest.mark.fw
+def test_firmware(firmware_upgrade):
+    assert True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @allure.testcase(name="Test Resources", url="")
 class TestResources(object):
     """Test Case Class: Test cases to cover resource Connectivity"""
