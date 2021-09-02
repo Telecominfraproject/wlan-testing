@@ -211,6 +211,25 @@ class Fixtures_2x:
                         except Exception as e:
                             print(e)
                             test_cases["wpa2_personal"] = False
+            if mode == "wpa3_enterprise":
+                for j in profile_data["ssid"][mode]:
+                    if mode in get_markers.keys() and get_markers[mode]:
+                        try:
+                            if j["appliedRadios"].__contains__("2G"):
+                                lf_dut_data.append(j)
+                            if j["appliedRadios"].__contains__("5G"):
+                                lf_dut_data.append(j)
+                            j["appliedRadios"] = list(set(j["appliedRadios"]))
+                            j['security'] = 'wpa3'
+                            RADIUS_SERVER_DATA = radius_info
+                            RADIUS_ACCOUNTING_DATA = radius_accounting_info
+                            creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j, radius=True,
+                                                                               radius_auth_data=RADIUS_SERVER_DATA,
+                                                                               radius_accounting_data=RADIUS_ACCOUNTING_DATA)
+                            test_cases["wpa_2g"] = True
+                        except Exception as e:
+                            print(e)
+                            test_cases["wpa2_personal"] = False
         ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="2.x")
         connected, latest, active = ap_ssh.get_ucentral_status()
         if connected == False:
