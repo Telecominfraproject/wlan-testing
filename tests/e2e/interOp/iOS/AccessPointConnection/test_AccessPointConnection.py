@@ -24,13 +24,15 @@ pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.m
 setup_params_general = {
     "mode": "NAT",
     "ssid_modes": {
-        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],"security_key": "something"}],
-        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"]},
-                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
+        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"]},
+                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"]}],
+        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
+                 "security_key": "something"}],
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],"security_key": "something"}]},
+            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"],
+             "security_key": "something"}]},
     "rf": {},
     "radius": False
 }

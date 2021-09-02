@@ -255,12 +255,14 @@ class Fixtures_2x:
         if x < 19:
             print("Config properly applied into AP", config)
 
+
         time_2 = time.time()
         time_interval = time_2 - time_1
         allure.attach(name="Time Took to apply Config: " + str(time_interval), body="")
 
         ap_config_latest = ap_ssh.get_uc_latest_config()
         ap_config_latest["uuid"] = 0
+
 
         ap_config_active = ap_ssh.get_uc_active_config()
         ap_config_active["uuid"] = 0
@@ -304,10 +306,12 @@ class Fixtures_2x:
             ssid_info_sdk = instantiate_profile_obj.get_ssid_info()
             ap_wifi_data = ap_ssh.get_iwinfo()
 
+
             for p in ap_wifi_data:
                 for q in ssid_info_sdk:
                     if ap_wifi_data[p][0] == q[0] and ap_wifi_data[p][2] == q[3]:
                         q.append(ap_wifi_data[p][1])
+
 
             ssid_data = []
             idx_mapping = {}

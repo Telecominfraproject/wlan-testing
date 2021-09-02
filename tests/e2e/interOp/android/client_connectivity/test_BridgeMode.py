@@ -25,14 +25,14 @@ from android_lib import closeApp, set_APconnMobileDevice_android, verifyUploadDo
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
                  "security_key": "something"}],
-        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["is2dot4GHz"]},
-                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"]}],
+        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"]},
+                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"]}],
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"],
              "security_key": "something"}]},
     "rf": {},
     "radius": False
@@ -52,7 +52,7 @@ class TestBridgeMode(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_ClientConnectivity_5g_WPA2_Personal_Bridge(self, request, get_vif_state, get_APToMobileDevice_data,
-                                                 setup_perfectoMobile_android):
+                                                        setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
@@ -70,8 +70,8 @@ class TestBridgeMode(object):
         # Set Wifi/AP Mode
         set_APconnMobileDevice_android(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
 
-        # Verify Upload download Speed from device Selection
-        assert verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
+        # Toggle AirplaneMode
+        assert Toggle_AirplaneMode_android(request, setup_perfectoMobile_android, connData)
 
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
@@ -79,7 +79,7 @@ class TestBridgeMode(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_ClientConnectivity_2g_WPA2_Personal_Bridge(self, request, get_vif_state, get_APToMobileDevice_data,
-                                                 setup_perfectoMobile_android):
+                                                        setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
@@ -106,7 +106,7 @@ class TestBridgeMode(object):
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_ClientConnectivity_2g_WPA_Bridge(self, request, get_vif_state, get_APToMobileDevice_data,
-                                       setup_perfectoMobile_android):
+                                              setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
@@ -133,7 +133,7 @@ class TestBridgeMode(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_ClientConnectivity_5g_WPA_Bridge(self, request, get_vif_state, get_APToMobileDevice_data,
-                                       setup_perfectoMobile_android):
+                                              setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
@@ -160,7 +160,7 @@ class TestBridgeMode(object):
     @pytest.mark.twog
     @pytest.mark.open
     def test_ClientConnectivity_2g_OPEN_Bridge(self, request, get_vif_state, get_APToMobileDevice_data,
-                                        setup_perfectoMobile_android):
+                                               setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssidName = profile_data["ssid_name"]
@@ -187,7 +187,7 @@ class TestBridgeMode(object):
     @pytest.mark.fiveg
     @pytest.mark.open
     def test_ClientConnectivity_5g_OPEN_Bridge(self, request, get_vif_state, get_APToMobileDevice_data,
-                                        setup_perfectoMobile_android):
+                                               setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["open"][1]
         ssidName = profile_data["ssid_name"]
@@ -211,4 +211,3 @@ class TestBridgeMode(object):
 
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
-
