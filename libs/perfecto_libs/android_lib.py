@@ -1302,10 +1302,10 @@ def cache_clear_android(request, setup_perfectoMobile, connData):
 #     return ip_address_element_text
 
 def check_if_no_internet_popup(driver):
-    time.sleep(1)
+    time.sleep(4)
     driver.implicitly_wait(2)
     try:
-        driver.implicitly_wait(5)
+
         popup = driver.find_element_by_xpath("//*[@resource-id='android:id/alertTitle']")
         popup_text = popup.text
 
@@ -1472,32 +1472,34 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     except NoSuchElementException:
                         print("Connect Button Not Enabled...Verify if Password is set properly  ")
                     check_if_no_internet_popup(driver)
-
+                    # time.sleep(5)
                     try:
                         report.step_start("Verify if Wifi is Connected")
-                        WifiInternetErrMsg = driver.find_element_by_xpath(
-                            "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")
+                        WifiInternetErrMsg = WebDriverWait(driver, 35).until(
+                            EC.presence_of_element_located((MobileBy.XPATH,
+                            "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                         ssid_with_internet = True
                         print("Wifi Successfully Connected")
-                        time.sleep(5)
+                        # time.sleep(5)
                         check_if_no_internet_popup(driver)
 
                     except:
                         try:
                             check_if_no_internet_popup(driver)
-                            WifiInternetErrMsg = driver.find_element_by_xpath(
-                                "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='" + WifiName + "']")
+                            WifiInternetErrMsg = WebDriverWait(driver, 35).until(
+                                EC.presence_of_element_located((MobileBy.XPATH,
+                                "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='"
+                                                                + WifiName + "']")))
                             print("Wifi Successfully Connected without internet")
                             check_if_no_internet_popup(driver)
 
                         except:
                             try:
-                                check_if_no_internet_popup(driver)
-                                WifiInternetErrMsg = driver.find_element_by_xpath(
-                                    "//*[@resource-id='com.android.settings:id/summary' and @text='Checking the quality of your Internet connection…']/parent::*/android.widget.TextView[@text='" + WifiName + "']")
-                                print("Wifi Successfully Connected without internet")
-
-                                check_if_no_internet_popup(driver)
+                                report.step_start("Verify if Wifi is Connected")
+                                WifiInternetErrMsg = WebDriverWait(driver, 60).until(EC.presence_of_element_located((
+                                    MobileBy.XPATH,
+                                    "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                                print("Wifi Successfully Connected")
                             except NoSuchElementException:
                                 print("Wifi Connection Error: " + WifiName)
                                 closeApp(connData["appPackage-android"], setup_perfectoMobile)
@@ -1565,7 +1567,3 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
     return ip_address_element_text, ssid_with_internet
-
-
-
-"//*[@text='On']/parent::*/android.widget.LinearLayout[@resource-id='android:id/title']"
