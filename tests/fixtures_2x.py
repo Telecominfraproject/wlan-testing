@@ -211,6 +211,25 @@ class Fixtures_2x:
                         except Exception as e:
                             print(e)
                             test_cases["wpa2_personal"] = False
+            if mode == "wpa3_enterprise":
+                for j in profile_data["ssid"][mode]:
+                    if mode in get_markers.keys() and get_markers[mode]:
+                        try:
+                            if j["appliedRadios"].__contains__("2G"):
+                                lf_dut_data.append(j)
+                            if j["appliedRadios"].__contains__("5G"):
+                                lf_dut_data.append(j)
+                            j["appliedRadios"] = list(set(j["appliedRadios"]))
+                            j['security'] = 'wpa3'
+                            RADIUS_SERVER_DATA = radius_info
+                            RADIUS_ACCOUNTING_DATA = radius_accounting_info
+                            creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j, radius=True,
+                                                                               radius_auth_data=RADIUS_SERVER_DATA,
+                                                                               radius_accounting_data=RADIUS_ACCOUNTING_DATA)
+                            test_cases["wpa_2g"] = True
+                        except Exception as e:
+                            print(e)
+                            test_cases["wpa2_personal"] = False
         ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="2.x")
         connected, latest, active = ap_ssh.get_ucentral_status()
         if connected == False:
@@ -255,12 +274,14 @@ class Fixtures_2x:
         if x < 19:
             print("Config properly applied into AP", config)
 
+
         time_2 = time.time()
         time_interval = time_2 - time_1
         allure.attach(name="Time Took to apply Config: " + str(time_interval), body="")
 
         ap_config_latest = ap_ssh.get_uc_latest_config()
         ap_config_latest["uuid"] = 0
+
 
         ap_config_active = ap_ssh.get_uc_active_config()
         ap_config_active["uuid"] = 0
@@ -286,16 +307,30 @@ class Fixtures_2x:
             print("AP is Not Broadcasting Applied Config")
             allure.attach(name="Failed to Apply Config : Active Config in AP : ", body=str(ap_config_active))
         time.sleep(10)
+        try:
+            iwinfo = ap_ssh.iwinfo()
+            allure.attach(name="iwinfo: ", body=str(iwinfo))
+
+            # tx_power, name = ap_ssh.gettxpower()
+            # allure.attach(name="interface name: ", body=str(name))
+            # allure.attach(name="tx power: ", body=str(tx_power))
+        except:
+            pass
         ap_logs = ap_ssh.logread()
         allure.attach(body=ap_logs, name="AP Logs: ")
+
+
+
         try:
             ssid_info_sdk = instantiate_profile_obj.get_ssid_info()
             ap_wifi_data = ap_ssh.get_iwinfo()
+
 
             for p in ap_wifi_data:
                 for q in ssid_info_sdk:
                     if ap_wifi_data[p][0] == q[0] and ap_wifi_data[p][2] == q[3]:
                         q.append(ap_wifi_data[p][1])
+
 
             ssid_data = []
             idx_mapping = {}
@@ -321,6 +356,13 @@ class Fixtures_2x:
             pass
 
         def teardown_session():
+            iwinfo = ap_ssh.iwinfo()
+            allure.attach(name="iwinfo: ", body=str(iwinfo))
+
+            # tx_power, name = ap_ssh.gettxpower()
+            # allure.attach(name="interface name: ", body=str(name))
+            # allure.attach(name="tx power: ", body=str(tx_power))
+
             ap_logs = ap_ssh.logread()
             allure.attach(body=ap_logs, name="AP Logs after test completion")
             print("\nTeardown")

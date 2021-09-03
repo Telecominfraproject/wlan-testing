@@ -342,6 +342,9 @@ class UProfileUtility:
         print("ssid data : ", ssid_data)
         ssid_info = {'name': ssid_data["ssid_name"], "bss-mode": "ap", "wifi-bands": [], "services": ["wifi-frames"]}
         for options in ssid_data:
+            if options == "multi-psk":
+                ssid_info[options] = ssid_data[options]
+                print("hi",ssid_info)
             if options == "rate-limit":
                 ssid_info[options] = ssid_data[options]
         for i in ssid_data["appliedRadios"]:

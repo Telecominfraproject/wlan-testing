@@ -508,7 +508,7 @@ def test_access_point(request, testbed, get_apnos, get_configuration):
                 status = ap_ssh.get_manager_state()
             mgr_status.append(status)
     else:
-        # for access_point_info in get_configuration['access_point']:
+        # forgit access_point_info in get_configuration['access_point']:
         #     ap_ssh = get_apnos(access_point_info)
         #     status = ap_ssh.get_manager_state()
         #     if "ACTIVE" not in status:
@@ -648,7 +648,9 @@ def add_env_properties(get_configuration, get_apnos, fixtures_ver, add_allure_en
 @pytest.fixture(scope="session")
 def fixtures_ver(request, get_configuration):
     if request.config.getoption("1.x") is False:
+        print("2.x")
         obj = Fixtures_2x(configuration=get_configuration)
     if request.config.getoption("1.x"):
+        print("1.x")
         obj = Fixtures_1x(configuration=get_configuration)
     yield obj
