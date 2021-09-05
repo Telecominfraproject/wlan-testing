@@ -307,11 +307,13 @@ class APNOS:
             output = stdout.read()
             print(output, stderr.read())
             status = output.decode('utf-8').splitlines()
+            error = stderr
+            stdin = stdin
             client.close()
         except Exception as e:
             print(e)
-            status = "Error"
-        return status
+            stdin, status, error = "Error", "Error", "Error"
+        return stdin, status, error
 
     def get_ucentral_status(self):
         try:
@@ -571,7 +573,7 @@ if __name__ == '__main__':
         'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
     }
     var = APNOS(credentials=obj, sdk="2.x")
-    tx_power, name = var.gettxpower()
+    tx_power, name = var.iwinfo()
     allure.attach(name="interface name: ", body=str(name))
     allure.attach(name="tx power: ", body=str(tx_power))
     print(tx_power, name)
