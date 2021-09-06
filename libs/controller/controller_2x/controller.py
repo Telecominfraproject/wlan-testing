@@ -35,6 +35,14 @@ class ConfigureController:
         # self.session = requests.Session()
         self.login_resp = self.login()
         self.gw_host, self.fms_host = self.get_gw_endpoint()
+        if self.gw_host == "" or self.fms_host == "":
+            time.sleep(60)
+            self.gw_host, self.fms_host = self.get_gw_endpoint()
+            if self.gw_host == "" or self.fms_host == "":
+                self.logout()
+                print(self.gw_host, self.fms_host)
+                pytest.exit("All Endpoints not available in Controller Service")
+                sys.exit()
 
     def build_uri_sec(self, path):
         new_uri = 'https://%s:%d/api/v1/%s' % (self.host.hostname, self.host.port, path)
@@ -97,10 +105,14 @@ class ConfigureController:
         print(resp)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         services = resp.json()
-        print("REST ENDPOINT: ", services["endpoints"][0]["uri"])
-        print("FMS ENDPOINT: ", services["endpoints"][1]["uri"])
-        gw_host = urlparse(services["endpoints"][0]["uri"])
-        fms_host = urlparse(services["endpoints"][1]["uri"])
+        print(services)
+        gw_host = ""
+        fms_host = ""
+        for service in services['endpoints']:
+            if service['type'] == "ucentralgw":
+                gw_host = urlparse(service["uri"])
+            if service['type'] == "ucentralfms":
+                fms_host = urlparse(service["uri"])
         return gw_host, fms_host
 
     def logout(self):
@@ -511,8 +523,8 @@ if __name__ == '__main__':
     obj = Controller(controller_data=controller)
     fms = FMSUtils(sdk_client=obj)
     # fms.get_device_set()
-    model = fms.get_latest_fw(model="eap102")
-    print(model)
+    # model = fms.get_latest_fw(model="eap102")
+    # print(model)
     # profile = UProfileUtility(sdk_client=obj)
     # profile.set_mode(mode="BRIDGE")
     # profile.set_radio_config()
