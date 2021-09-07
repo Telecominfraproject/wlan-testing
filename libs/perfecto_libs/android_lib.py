@@ -1309,14 +1309,15 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                             forget_ssid.click()
                             print("Forgetting ssid")
 
-                            try:
-                                print("clicking on wifi swich")
-                                get_switch_element = driver.find_element_by_xpath(
-                                    "//*[@resource-id='com.android.settings:id/switch_widget']")
-                                driver.implicitly_wait(2)
-                                get_switch_element.click()
-                            except:
-                                print("couldn't click on wifi swich")
+                            #------------------------------- Wifi Switch ----------------
+                            # try:
+                            #     print("clicking on wifi swich")
+                            #     get_switch_element = driver.find_element_by_xpath(
+                            #         "//*[@resource-id='com.android.settings:id/switch_widget']")
+                            #     driver.implicitly_wait(2)
+                            #     get_switch_element.click()
+                            # except:
+                            #     print("couldn't click on wifi swich")
                         except:
                             print("Couldn't forget ssid")
                             closeApp(connData["appPackage-android"], setup_perfectoMobile)
