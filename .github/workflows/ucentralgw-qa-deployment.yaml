@@ -29,8 +29,8 @@ env:
     {
       "namespace": "qa01",
       "deploy_method": "git",
-      "chart_version": "v2.1.0-RC2",
-      "ucentralgw_version": "v2.1.0-RC2",
+      "chart_version": "v2.1.0-RC3",
+      "ucentralgw_version": "v2.1.0-RC3",
       "ucentralsec_version": "v2.1.0-RC1",
       "ucentralfms_version": "v2.1.0-RC1",
       "ucentralgwui_version": "v2.1.0-RC1"
