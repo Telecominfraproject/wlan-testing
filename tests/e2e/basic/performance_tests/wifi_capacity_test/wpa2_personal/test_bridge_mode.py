@@ -334,7 +334,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
     """ Wifi Capacity Test BRIDGE mode
            pytest -m "wifi_capacity_test and BRIDGE"
     """
-    @pytest.mark.hari
+
     @pytest.mark.tcp_download
     def test_client_wpa2_BRIDGE_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
