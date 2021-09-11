@@ -34,11 +34,11 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestDataplaneThroughputNAT(object):
     """Dataplane THroughput nat Mode
-       pytest -m "dataplane_throughput_test and nat"
+       pytest -m "dataplane_throughput_test and nat and wpa"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3675", name="WIFI-3675")
-    @pytest.mark.wpa
+    @pytest.mark.wpa_personal
     @pytest.mark.twog
     def test_tcp_upd_wpa_personal_nat_2g_band(self, get_vif_state, lf_tools,
                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -72,12 +72,12 @@ class TestDataplaneThroughputNAT(object):
         else:
             assert False
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3676", name="WIFI-3676")
-    @pytest.mark.wpa
+    @pytest.mark.wpa_personal
     @pytest.mark.fiveg
     def test_tcp_upd_wpa_personal_nat_5g_band(self, get_vif_state, lf_tools,
                              lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
         """Dataplane THroughput nat Mode
-           pytest -m "dataplane_throughput_test and nat and wpa and fiveg"
+           pytest -m "dataplane_throughput_test and nat and wpa_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
