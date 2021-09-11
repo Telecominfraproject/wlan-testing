@@ -973,9 +973,8 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                 pass
 
         if not ssid_found:
-            print("could not found" + WifiName + " in device")
+            print("could not found " + WifiName + " in device")
             closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-            pytest.xfail("SSID NOT AVAILABLE IN DEVICE")
             return ip_address_element_text, is_internet
     except:
         pass
@@ -988,7 +987,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
         wifiSelectionElement.click()
         print("Selecting SSID")
     except Exception as e:
-        print("couldn't connect to" + WifiName)
+        print("couldn't connect to " + WifiName)
         request.config.cache.set(key="SelectingWifiFailed", value=str(e))
         closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
         return ip_address_element_text, is_internet
@@ -1024,6 +1023,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------Additional INFO-------------------------------
     try:
+        print("Selecting SSID: ",WifiName)
         report.step_start("Selecting SSID")
         additional_details_element =  WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((MobileBy.XPATH,
@@ -1112,6 +1112,8 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 def get_all_available_ssids(driver):
     active_ssid_list = []
     try:
+        time.sleep(5)
+        driver.implicitly_wait(10)
         elements = driver.find_elements_by_xpath("(//*[@label='More Info']/parent::*/XCUIElementTypeStaticText)")
         print(len(elements))
         for i in range(len(elements)):
