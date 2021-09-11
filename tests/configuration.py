@@ -207,7 +207,7 @@ CONFIGURATION = {
                 'password': "pumpkin77",
                 'port': 22,
                 'jumphost_tty': '/dev/ttyAP1',
-                'version': "trunk-d6c5e1f"
+                'version': "next-latest"
             }
         ],
         "traffic_generator": {
@@ -284,7 +284,7 @@ CONFIGURATION = {
                 'port': 22,  # 22
                 'jumphost_tty': '/dev/ttyAP3',
                 'version': "latest-next",
-                'version_branch': "trunk-d6c5e1f"
+                'version_branch': "https://ucentral-ap-firmware.s3.amazonaws.com/20210908-cig_wf188-v2.1.0-rc3-bcd07e4-upgrade.bin"
             }
         ],
         "traffic_generator": {

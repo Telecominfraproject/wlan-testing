@@ -4,6 +4,7 @@
 
 import allure
 import pytest
+import requests
 
 pytestmark = [pytest.mark.test_resources, pytest.mark.sanity,
               pytest.mark.sanity_55]
@@ -11,6 +12,7 @@ pytestmark = [pytest.mark.test_resources, pytest.mark.sanity,
 
 @pytest.mark.fw
 def test_firmware(firmware_upgrade):
+
     assert True
 
 
