@@ -36,10 +36,10 @@ class TestDataplaneThroughputNAT(object):
     """Dataplane THroughput nat Mode
        pytest -m "dataplane_throughput_test and nat"
     """
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3913", name="WIFI-3913")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    def test_tcp_upd_2g_band(self, get_vif_state, lf_tools,
+    def test_tcp_upd_wpa2_personal_nat_2g_band(self, get_vif_state, lf_tools,
                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                              get_configuration):
         """Dataplane THroughput nat Mode
@@ -71,9 +71,10 @@ class TestDataplaneThroughputNAT(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3914", name="WIFI-3914")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    def test_tcp_upd_5g_band(self, get_vif_state, lf_tools,
+    def test_tcp_upd_wpa2_personal_nat_5g_band(self, get_vif_state, lf_tools,
                              lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
         """Dataplane THroughput nat Mode
            pytest -m "dataplane_throughput_test and nat and wpa2_personal and fiveg"
