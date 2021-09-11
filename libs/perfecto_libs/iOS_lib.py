@@ -845,6 +845,8 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     print("-------------------------------------")
 
     reportFlag = True
+    is_internet = False
+    ip_address_element_text = False
 
     print("Verifying Wifi/AP Connection Details....")
     report = setup_perfectoMobile[1]
@@ -852,8 +854,6 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     report.step_start("Switching Driver Context")
     print("Switching Context to Native")
-    # contexts = driver.contexts
-    # print(contexts)
     driver.switch_to.context('NATIVE_APP')
     # driver.switch_to.context(contexts[0])
 
@@ -875,10 +875,8 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
         time.sleep(2)
         driver.implicitly_wait(2)
-        print("855")
         # --------------------To Turn on WIFi Switch if already OFF--------------------------------
         try:
-            print("858")
             get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
             get_wifi_switch_element_text = get_wifi_switch_element.text
             try:
@@ -896,7 +894,6 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                             print("switch is OFF")
 
                         if get_wifi_switch_element_text == "1" or get_wifi_switch_element_text == 1:
-                            print("i",i)
                             print("WIFI Switch is ON")
                             break
                         else:
@@ -908,13 +905,13 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     if(get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0):
                         print("switch is still OFF")
                         closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                        return ip_address_element_text
+                        return ip_address_element_text, is_internet
                 else:
                     print("Switch is Still OFF")
                     closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                    return ip_address_element_text
+                    return ip_address_element_text, is_internet
             except:
-                print("916")
+                print("No switch element found")
         except:
             print("get_wifi_switch_element is ON")
         # --------------------To Turn on WIFi Switch if already OFF--------------------------------
@@ -922,40 +919,31 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     except:
         print("Cannot find WIFI element")
         closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-        return ip_address_element_text
+        return ip_address_element_text, is_internet
 
     # ---------------------This is to Forget current connected SSID-------------------------------
 
     try:
-        print("930")
+        print("getting in to Additional details")
         additional_details_element = driver.find_element_by_xpath(
             "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")
         additional_details_element.click()
-        print("953")
         try:
-            print("936")
+            print("Forget Connected Network")
             forget_ssid = driver.find_element_by_xpath("//*[@label='Forget This Network']")
             forget_ssid.click()
             print("Forget old ssid")
-            # time.sleep(3)
-            # driver.implicitly_wait(3)
             try:
-                print("948")
                 report.step_start("Forget SSID popup1")
                 forget_ssid_popup = driver.find_element_by_xpath("//*[@label='Forget']")
                 forget_ssid_popup.click()
-                report.step_start("Forget SSID popup 2")
-                print("953")
+
+                print("**alert** Forget SSID popup killed **alert**")
             except:
-                print("950")
-                raise "forget SSID popup not found"
+                print("Forget SSID popup not found")
         except:
-            print("953")
-            raise "couldn't find forget ssid element"
-            closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-            return ip_address_element_text
+            print("couldn't find forget ssid element")
     except:
-        print("958")
         print("No connected SSID")
 
 
@@ -982,17 +970,15 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     # allure.attach(name= body=str(WifiName + " : Found in Device"))
                     break
             except:
-                print("1538")
                 pass
 
         if not ssid_found:
             print("could not found" + WifiName + " in device")
-            # allure.attach(name= body=str("could not found" + WifiName + " in device"))
             closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-            return ip_address_element_text
+            pytest.xfail("SSID NOT AVAILABLE IN DEVICE")
+            return ip_address_element_text, is_internet
     except:
-        closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-        return ip_address_element_text
+        pass
     # ---------------------To get all available SSID-------------------------------
 
     # ---------------------This is to Select SSID-------------------------------
@@ -1002,10 +988,10 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
         wifiSelectionElement.click()
         print("Selecting SSID")
     except Exception as e:
-        raise "couldn't connect to" + WifiName
+        print("couldn't connect to" + WifiName)
         request.config.cache.set(key="SelectingWifiFailed", value=str(e))
         closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-        return ip_address_element_text
+        return ip_address_element_text, is_internet
     # ---------------------This is to Select SSID-------------------------------
 
     # ---------------------Set Password-------------------------------
@@ -1029,7 +1015,6 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
         WifiInternetErrMsg2 = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
         # = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
-        print("992")
     except Exception as e:
         is_internet = True
         print("No Wifi-AP Error Internet Error: " + WifiName)
@@ -1039,24 +1024,22 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------Additional INFO-------------------------------
     try:
-        print("1013")
         report.step_start("Selecting SSID")
         additional_details_element =  WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((MobileBy.XPATH,
             "//*[@label='"+ WifiName+"']")))
         # //*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']
-        print("1022")
         additional_details_element.click()
 
-        print("1023")
         try:
-            print("1025")
-            ip_address_element_text = driver.find_element_by_xpath("(//*[@label='Router']/parent::*/XCUIElementTypeStaticText)[2]").text
-            print(ip_address_element_text)
-            print("1006")
+            print("Checking IP address")
+            # (//*[@label="IP Address"]/parent::*/XCUIElementTypeStaticText)[2]
+            ip_address_element_text = driver.find_element_by_xpath("(//*[@label='IP Address']/parent::*/XCUIElementTypeStaticText)[2]").text
+            print("ip_address_element_text: ", ip_address_element_text)
         except Exception as e:
-            print("1007")
-            request.config.cache.set(key="select IP Failed", value=str(e))
+            print("IP Address not Found")
+            request.config.cache.set(key="select IP failed", value=str(e))
+
 
         try:
             time.sleep(2)
@@ -1067,14 +1050,10 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             print("Forget old ssid")
             # time.sleep(2)
             # driver.implicitly_wait(3)
-            print("1017")
             try:
-                print("1038")
                 report.step_start("Forget Network popup")
                 forget_ssid_popup = driver.find_element_by_xpath("//*[@label='Forget']")
                 forget_ssid_popup.click()
-                report.step_start("Forget Network popup killed")
-                print("1043")
             except:
                 print("in popup exception")
 
@@ -1083,7 +1062,6 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
             # --------------------To Turn on WIFi Switch if already OFF--------------------------------
         try:
-            print("858")
             get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
             get_wifi_switch_element_text = get_wifi_switch_element.text
             print("switch state is : ", get_wifi_switch_element_text)
@@ -1115,23 +1093,19 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
                 else:
                     print("Switch is Still OFF")
-                    closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                    return ip_address_element_text
             except:
-                print("916")
+                pass
         except:
             print("get_wifi_switch_element is ON")
         # --------------------To Turn on WIFi Switch if already OFF--------------------------------
 
-
     except Exception as e:
-        print("1027")
         request.config.cache.set(key="select additional info failed", value=str(e))
     # ---------------------Additional INFO-------------------------------
-    print("1030")
+
     # --------------------- close app-------------------------------
     closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-    return ip_address_element_text
+    return ip_address_element_text, is_internet
     # ---------------------close app-------------------------------
 
 #//XCUIElementTypeOther[2]/XCUIElementTypeOther[1]/XCUIElementTypeStaticText
