@@ -44,6 +44,15 @@ class APTools:
         elif action == "run_cmd":
             [input, output, error] = self.apnos.run_generic_command(cmd=cmd)
             print(input, output, error)
+        elif action == "verify":
+            [input, output, error] = self.apnos.run_generic_command("cat /tmp/sysinfo/model;"
+                                                                    "cat /etc/banner")
+            print(output)
+            print(error)
+        elif action == "upgrade":
+            [input, output, error] = self.apnos.run_generic_command("cd /tmp ; curl -L \'{self.comm}\' --output upgrade ; "
+                                                                    "sysupgrade -n upgrade")
+            print(input, output, error)
         elif action == "get_redirector":
             redirector = self.apnos.get_redirector()
             print(redirector)
