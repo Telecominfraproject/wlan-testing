@@ -1,15 +1,14 @@
 """
 
     Performance Test: Dataplane Throughput Test: VLAN Mode
-    pytest -m "dataplane_throughput_test and VLAN"
+    pytest -m "dataplane_throughput_test and vlan"
 
 """
 import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance,
-              pytest.mark.vlan]
+pytestmark = [pytest.mark.performance, pytest.mark.dataplane_throughput_test, pytest.mark.vlan]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -31,25 +30,18 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-@pytest.mark.parametrize(
-    'create_vlan',
-    [setup_params_general],
-    indirect=True,
-    scope="class"
-)
-@pytest.mark.usefixtures("create_vlan")
 class TestDataplaneThroughputVLAN(object):
     """Dataplane THroughput VLAN Mode
-       pytest -m "dataplane_throughput_test and VLAN"
+       pytest -m "dataplane_throughput_test and vlan"
     """
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3913", name="WIFI-3913")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    def test_tcp_upd_2g_band(self, get_vif_state, lf_tools,
+    def test_tcp_upd_wpa2_personal_vlan_2g_band(self, get_vif_state, lf_tools,
                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                              get_configuration):
         """Dataplane THroughput VLAN Mode
-           pytest -m "dataplane_throughput_test and VLAN and wpa2_personal and twog"
+           pytest -m "dataplane_throughput_test and vlan and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -77,12 +69,13 @@ class TestDataplaneThroughputVLAN(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3914", name="WIFI-3914")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    def test_tcp_upd_5g_band(self, get_vif_state, lf_tools,
+    def test_tcp_upd_wpa2_personal_vlan_5g_band(self, get_vif_state, lf_tools,
                              lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
         """Dataplane THroughput VLAN Mode
-           pytest -m "dataplane_throughput_test and VLAN and wpa2_personal and fiveg"
+           pytest -m "dataplane_throughput_test and vlan and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
