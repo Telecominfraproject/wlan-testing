@@ -1,7 +1,7 @@
 """
 
     Performance Test: Dataplane Throughput Test: VLAN Mode
-    pytest -m "dataplane_throughput_test and vlan"
+    pytest -m "dataplane_throughput_test and vlan and wpa"
 
 """
 import os
@@ -32,17 +32,17 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestDataplaneThroughputVLAN(object):
     """Dataplane THroughput VLAN Mode
-       pytest -m "dataplane_throughput_test and wpa and VLAN"
+       pytest -m "dataplane_throughput_test and wpa_personal and VLAN"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3675", name="WIFI-3675")
-    @pytest.mark.wpa
+    @pytest.mark.wpa_personal
     @pytest.mark.twog
     def test_tcp_upd_wpa_personal_vlan_2g_band(self, get_vif_state, lf_tools,
                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                              get_configuration):
         """Dataplane THroughput VLAN Mode
-           pytest -m "dataplane_throughput_test and vlan and wpa and twog"
+           pytest -m "dataplane_throughput_test and vlan and wpa_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
@@ -70,12 +70,12 @@ class TestDataplaneThroughputVLAN(object):
         else:
             assert False
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3676", name="WIFI-3676")
-    @pytest.mark.wpa
+    @pytest.mark.wpa_personal
     @pytest.mark.fiveg
     def test_tcp_upd_wpa_personal_vlan_5g_band(self, get_vif_state, lf_tools,
                              lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
         """Dataplane THroughput VLAN Mode
-           pytest -m "dataplane_throughput_test and vlan and wpa and fiveg"
+           pytest -m "dataplane_throughput_test and vlan and wpa_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
