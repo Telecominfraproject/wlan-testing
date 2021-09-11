@@ -41,7 +41,7 @@ class TestDataplaneThroughputNAT(object):
                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                              get_configuration):
         """Dataplane THroughput nat Mode
-           pytest -m "dataplane_throughput_test and nat and wpa3_personalz and twog"
+           pytest -m "dataplane_throughput_test and nat and wpa3_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
