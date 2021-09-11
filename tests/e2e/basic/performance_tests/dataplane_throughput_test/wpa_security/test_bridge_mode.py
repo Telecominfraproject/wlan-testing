@@ -9,7 +9,7 @@ import pytest
 import allure
 
 pytestmark = [pytest.mark.performance, pytest.mark.dataplane_throughput_test,
-              pytest.mark.bridge]  # , pytest.mark.usefixtures("setup_test_run")]
+              pytest.mark.bridge]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -38,7 +38,7 @@ class TestDataplaneThroughputBRIDGE(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3675", name="WIFI-3675")
     @pytest.mark.wpa
     @pytest.mark.twog
-    def test_tcp_upd_wpa_bridge_2g_band(self, get_vif_state, lf_tools,
+    def test_tcp_upd_wpa_personal_bridge_2g_band(self, get_vif_state, lf_tools,
                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                              get_configuration):
         """Dataplane THroughput BRIDGE Mode
@@ -73,7 +73,7 @@ class TestDataplaneThroughputBRIDGE(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3676", name="WIFI-3676")
     @pytest.mark.wpa
     @pytest.mark.fiveg
-    def test_tcp_upd_wpa_bridge_5g_band(self, get_vif_state, lf_tools,
+    def test_tcp_upd_wpa_personal_bridge_5g_band(self, get_vif_state, lf_tools,
                              lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
         """Dataplane THroughput BRIDGE Mode
            pytest -m "dataplane_throughput_test and bridge and wpa and fiveg"
