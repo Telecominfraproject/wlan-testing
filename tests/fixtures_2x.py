@@ -59,26 +59,88 @@ class Fixtures_2x:
             firmware_url = ""
             ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
             ap_version = ap_ssh.get_ap_version_ucentral()
-            if ap['version'] == "latest":
-                response = self.fw_client.get_latest_fw(model=ap["model"])
+            response = self.fw_client.get_latest_fw(model=ap["model"])
+            # if the target version specified is latest
+            if ap['version'].split('-')[1] == "latest":
+                # get the latest branch
                 if 'revision' in list(response.keys()):
                     version_latest = response['revision']
-                    print(ap_version, version_latest)
-                    print(str(ap_version).replace(" ", ""), str(version_latest).replace(" ", ""),
-                          str(version_latest).replace(" ", "") == 'OpenWrt21.02-SNAPSHOTr16011+75-6fd65c6573/TIP-v2.1.0-rc2-d0a0715')
-                    if str(ap_version).replace(" ", "") == str(version_latest).replace(" ", ""):
+                    ap_v = ""
+                    latest_v = ""
+                    try:
+                        ap_v = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                        latest_v = str(version_latest).split("/")[1].replace(" ", "")
+                        print(ap_v,
+                              latest_v)
+                    except Exception as e:
+                        pass
+                    print(ap_v == latest_v)
+                    if ap_v == latest_v:
                         continue
                     else:
                         if 'uri' in list(response.keys()):
                             firmware_url = response['uri']
-
+                            self.fw_client.upgrade_firmware(serial=ap['serial'], url=str(firmware_url))
+                            time.sleep(300)
+                            ap_version = ap_ssh.get_ap_version_ucentral()
+                            ap_v = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                            latest_v = str(version_latest).split("/")[1].replace(" ", "")
+                            if ap_v == latest_v:
+                                print("firmware upgraded to latest: ", latest_v)
+                                continue
+                            # firmware upgrade request
                         else:
+                            # firmware uri is not available
                             continue
                         pass
+            else:
+
+                firmware_list = self.fw_client.get_firmwares(model=ap['model'], branch="", commit_id='')
+                fw_list = []
+                for firmware in firmware_list:
+                    if firmware['revision'].split("/")[1].replace(" ", "").split('-')[-1] == ap['version'].split('-')[1]:
+                        fw_list.append(firmware)
+
+                if len(fw_list) == 1:
+                    url = fw_list[0]['uri']
+                    current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                    target_revision = fw_list[0]['revision'].split("/")[1].replace(" ", "")
+                    if current_version == target_revision:
+                        continue
+                    else:
+                        self.fw_client.upgrade_firmware(serial=ap['serial'], url=str(url))
+                        time.sleep(300)
+                        ap_version = ap_ssh.get_ap_version_ucentral()
+                        print(ap_version)
+                        current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                        print(current_version, target_revision)
+                        if current_version  == target_revision:
+                            print("firmware upgraded successfully: ", target_revision)
                 else:
-                    continue
+                    pass
+                    version_fms = firmware['uri'].split('-')[-3] + "-" + firmware['uri'].split('-')[-2]
 
-
+                    if version_fms == ap['version']:
+                        print(firmware)
+                # for version in firmware_list:
+                #     if ap['version'] in version['revision']:
+                #         print(version)
+                #         firmware_url = version['uri']
+                #         self.fw_client.upgrade_firmware(serial=ap['serial'], url=str(firmware_url))
+                #         time.sleep(300)
+                #         ap_version = ap_ssh.get_ap_version_ucentral()
+                #         ap_v = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                #         if ap_v in version['revision']:
+                #             print("firmware upgraded successfully: ", version['revision'])
+                # for revision_fms in revisions['revisions']:
+                #     print(ap['version'] in revision_fms)
+                # # print(self.fw_client.get_revisions())
+                # upgrade to a specified version
+                # if ap['version'] in response['revision']:
+                # print("shivam", response['revision'], ap['version'])
+                # print("shivam", response['revision'], ap['version'])
+                # "TIP-v2.1.0-rc3-bcd07e4" in response['revision'])
+                continue
 
         # Compare with the specified one
         # if 'latest'
@@ -285,14 +347,12 @@ class Fixtures_2x:
         if x < 19:
             print("Config properly applied into AP", config)
 
-
         time_2 = time.time()
         time_interval = time_2 - time_1
         allure.attach(name="Time Took to apply Config: " + str(time_interval), body="")
 
         ap_config_latest = ap_ssh.get_uc_latest_config()
         ap_config_latest["uuid"] = 0
-
 
         ap_config_active = ap_ssh.get_uc_active_config()
         ap_config_active["uuid"] = 0
@@ -330,18 +390,14 @@ class Fixtures_2x:
         ap_logs = ap_ssh.logread()
         allure.attach(body=ap_logs, name="AP Logs: ")
 
-
-
         try:
             ssid_info_sdk = instantiate_profile_obj.get_ssid_info()
             ap_wifi_data = ap_ssh.get_iwinfo()
-
 
             for p in ap_wifi_data:
                 for q in ssid_info_sdk:
                     if ap_wifi_data[p][0] == q[0] and ap_wifi_data[p][2] == q[3]:
                         q.append(ap_wifi_data[p][1])
-
 
             ssid_data = []
             idx_mapping = {}

@@ -9,24 +9,9 @@ pytestmark = [pytest.mark.test_resources, pytest.mark.sanity,
               pytest.mark.sanity_55]
 
 
-
-
 @pytest.mark.fw
 def test_firmware(firmware_upgrade):
     assert True
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 @allure.testcase(name="Test Resources", url="")
@@ -71,4 +56,3 @@ class TestResources(object):
             pytest.exit("LANforgeGUI-5.4.3 is not available")
 
         assert traffic_generator_connectivity
-
