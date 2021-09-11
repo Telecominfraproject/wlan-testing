@@ -517,8 +517,10 @@ class UProfileUtility:
         print(self.base_profile_config)
         resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
                              verify=False, timeout=100)
+        print(resp.json())
+        print(resp.status_code)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
-        print(resp.url)
+        # print(resp.url)
         resp.close()
         print(resp)
 
@@ -539,7 +541,7 @@ if __name__ == '__main__':
     profile.set_radio_config()
     ssid = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G", "5G"], "security": "psk", "security_key": "something"}
     profile.add_ssid(ssid_data=ssid, radius=False)
-    profile.push_config(serial_number="903cb39d6918")
+    profile.push_config(serial_number="0000c1018812")
     # print(profile.get_ssid_info())
     # # print(obj.get_devices())
     obj.logout()

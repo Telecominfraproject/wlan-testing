@@ -207,7 +207,7 @@ CONFIGURATION = {
                 'password': "pumpkin77",
                 'port': 22,
                 'jumphost_tty': '/dev/ttyAP1',
-                'version': "next-latest"
+                'version': "release-latest"
             }
         ],
         "traffic_generator": {
@@ -618,7 +618,7 @@ CONFIGURATION = {
 
 
 RADIUS_SERVER_DATA = {
-    "ip": "10.10.10.72",
+    "ip": "10.10.10.180",
     "port": 1812,
     "secret": "testing123",
     "user": "user",
@@ -627,8 +627,8 @@ RADIUS_SERVER_DATA = {
 }
 
 RADIUS_ACCOUNTING_DATA = {
-    "ip": "10.10.10.72",
-    "port": 1812,
+    "ip": "10.10.10.180",
+    "port": 1813,
     "secret": "testing123",
     "user": "user",
     "password": "password",
