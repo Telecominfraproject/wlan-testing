@@ -33,7 +33,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestDataplaneThroughputBRIDGE(object):
     """Dataplane THroughput BRIDGE Mode
-       pytest -m "dataplane_throughput_test and wpa3 BRIDGE"
+       pytest -m "dataplane_throughput_test and wpa3_personal bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3677", name="WIFI-3677")
     @pytest.mark.wpa3_personal
@@ -42,7 +42,7 @@ class TestDataplaneThroughputBRIDGE(object):
                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                              get_configuration):
         """Dataplane THroughput BRIDGE Mode
-           pytest -m "dataplane_throughput_test and bridge and wpa3 and twog"
+           pytest -m "dataplane_throughput_test and bridge and wpa3_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -73,11 +73,10 @@ class TestDataplaneThroughputBRIDGE(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3678", name="WIFI-3678")
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
-    @pytest.mark.sg12
     def test_tcp_upd_wpa3_personal_bridge_5g_band(self, get_vif_state, lf_tools,
                              lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
         """Dataplane THroughput BRIDGE Mode
-           pytest -m "dataplane_throughput_test and bridge and wpa3 and fiveg"
+           pytest -m "dataplane_throughput_test and bridge and wpa3_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
