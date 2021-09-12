@@ -3,12 +3,15 @@
     Performance Test: Dataplane Throughput Test: VLAN Mode
     pytest -m "dataplane_throughput_test and vlan"
 
+
 """
 import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.dataplane_throughput_test, pytest.mark.vlan]
+pytestmark = [pytest.mark.performance,
+              pytest.mark.vlan]
+
 
 setup_params_general = {
     "mode": "VLAN",
@@ -30,6 +33,7 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
+
 class TestDataplaneThroughputVLAN(object):
     """Dataplane THroughput VLAN Mode
        pytest -m "dataplane_throughput_test and vlan"

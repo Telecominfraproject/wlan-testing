@@ -36,6 +36,7 @@ class TestDataplaneThroughputNAT(object):
     """Dataplane THroughput nat Mode
        pytest -m "dataplane_throughput_test and nat"
     """
+    
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3913", name="WIFI-3913")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
