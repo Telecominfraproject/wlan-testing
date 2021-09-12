@@ -126,10 +126,10 @@ CONFIGURATION = {
                 'mode': 'wifi5',
                 'serial': '001122090801',
                 'jumphost': True,
-                'ip': "127.0.0.1",
+                'ip': "10.28.3.100",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 8833,
+                'port': 22,
                 'jumphost_tty': '/dev/ttyAP3',
                 'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/tplink_ec420/20210728-tplink_ec420-uCentral-trunk-12ad0d5-upgrade.bin"
             }
@@ -202,10 +202,10 @@ CONFIGURATION = {
                 'mode': 'wifi6',
                 'serial': '0000c1018812',
                 'jumphost': True,
-                'ip': "localhost",
+                'ip': "10.28.3.103",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 8999,
+                'port': 22,
                 'jumphost_tty': '/dev/ttyAP1',
                 'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf188/20210729-cig_wf188-v2.0.0-rc2-ec3662e-upgrade.bin"
             }
@@ -213,9 +213,9 @@ CONFIGURATION = {
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "localhost",
-                "port": 8998,
-                "ssh_port": 8990,
+                "ip": "10.28.3.28",
+                "port": 8080,
+                "ssh_port": 22,
                 "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
                 "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
                 "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
@@ -552,7 +552,7 @@ CONFIGURATION = {
 
 
 RADIUS_SERVER_DATA = {
-    "ip": "10.10.10.72",
+    "ip": "10.10.10.180",
     "port": 1812,
     "secret": "testing123",
     "user": "user",
@@ -561,7 +561,7 @@ RADIUS_SERVER_DATA = {
 }
 
 RADIUS_ACCOUNTING_DATA = {
-    "ip": "10.10.10.72",
+    "ip": "10.10.10.180",
     "port": 1813,
     "secret": "testing123",
     "user": "user",
