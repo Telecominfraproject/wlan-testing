@@ -63,9 +63,9 @@ jobs:
       run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
     - name: build docker image
       working-directory: wlan-testing
-      run: docker build -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_number }} -f docker/Dockerfile .
+      run: docker build -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }} -f docker/Dockerfile .
     - name: push docker image
-      run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_number }}
+      run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
 
 #  cloudsdk:
 #    runs-on: ubuntu-latest
@@ -180,14 +180,14 @@ jobs:
             spec:
               containers:
               - name: tests
-                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:pytest-${{ github.run_number }}
+                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
                 command:
                   - /bin/bash
                   - -x
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression || 'sanity and not interop' }}" -s -vvv --testbed="${{ matrix.testbed }}" --skip-testrail --alluredir=/tmp/allure-results -o build=${{ github.event.inputs.ap_firmware_url || 'null'}}
+                    pytest -m "${{ github.event.inputs.marker_expression || 'sanity and not interop' }}" -s -vvv --testbed="${{ matrix.testbed }}" --skip-testrail --alluredir=/tmp/allure-results -o build=${{ github.event.inputs.ap_firmware_url || 'null'}} --1.x
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -340,3 +340,11 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: gh-pages
         directory: reports
+
+  cleanup:
+    needs: [ test ]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+    - name: cleanup Docker image
+      run: curl -u${{ env.DOCKER_USER_NAME }}:${{ env.DOCKER_USER_PASSWORD }} -X DELETE "https://tip.jfrog.io/artifactory/tip-wlan-cloud-docker-repo/cloud-sdk-nightly/${{ github.run_id }}"

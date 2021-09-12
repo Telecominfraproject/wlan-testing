@@ -1,3 +1,6 @@
+import re
+
+import allure
 from create_chamberview import CreateChamberview
 from create_chamberview_dut import DUT
 import time
@@ -5,6 +8,7 @@ from LANforge.lfcli_base import LFCliBase
 import json
 import os
 import pandas as pd
+
 
 class ChamberView:
 
@@ -28,7 +32,8 @@ class ChamberView:
         self.scenario_name = "TIP-" + self.testbed
         self.debug = debug
         self.exit_on_error = False
-
+        self.dut_idx_mapping = {}
+        self.ssid_list = []
         self.raw_line = [
             ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " + self.upstream_port.split(".")
             [2] + ",AUTO -1 NA"],
@@ -57,6 +62,23 @@ class ChamberView:
                                  )
             self.CreateDut.ssid = []
 
+    def reset_scenario(self):
+        self.raw_line = [
+            ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " + self.upstream_port.split(".")
+            [2] + ",AUTO -1 NA"],
+            ["profile_link " + self.uplink_resources + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
+             + "' NA " + self.uplink_port.split(".")[2] + "," + self.upstream_port.split(".")[2] + " -1 NA"]
+        ]
+        self.Chamber_View()
+
+    def reset_dut(self):
+        temp = []
+        for i in range(0, 8):
+            temp.append(['ssid_idx=' + str(i) + ' ssid=-'])
+        print(temp)
+        self.CreateDut.ssid = temp
+        self.CreateDut.add_ssids()
+
     def Chamber_View(self):
         if self.delete_old_scenario:
             self.CreateChamberview.clean_cv_scenario(type="Network-Connectivity", scenario_name=self.scenario_name)
@@ -69,6 +91,91 @@ class ChamberView:
         self.CreateChamberview.show_text_blob(None, None, True)  # Show changes on GUI
         self.CreateChamberview.sync_cv()
         return self.CreateChamberview, self.scenario_name
+
+    def add_vlan(self, vlan_ids=[]):
+        for vlans in vlan_ids:
+            self.raw_line.append(["profile_link 1.1 " + "vlan-100 1 " + self.upstream_port
+                                  + " NA " + self.upstream_port.split(".")[2] + ",AUTO -1 " + str(vlans)])
+        self.Chamber_View()
+
+    def add_stations(self, band="2G", num_stations="max", dut="NA", ssid_name=[]):
+        idx = 0
+        print(self.dut_idx_mapping)
+        for i in self.dut_idx_mapping:
+            if self.dut_idx_mapping[i][0] == ssid_name and self.dut_idx_mapping[i][3] == band:
+                idx = i
+        max_stations = 0
+        print(idx)
+        if band == "2G":
+            if num_stations != "max":
+                if num_stations > 64:
+                    num_stations = int(num_stations / len(self.twog_radios))
+                    for radio in self.twog_radios:
+                        station_data = ["profile_link " + radio.split(".")[0] + "." + radio.split(".")[1] +
+                                        " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                        str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
+                        self.raw_line.append(station_data)
+                else:
+                    num_stations = num_stations
+                    station_data = ["profile_link " + self.fiveg_radios[0].split(".")[0] + "." +
+                                    self.fiveg_radios[0].split(".")[1] +
+                                    " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                    str(int(idx) + 1) + "'" + " NA " + self.twog_radios[0].split(".")[2]]
+                    self.raw_line.append(station_data)
+            if num_stations == "max":
+                for radio in self.twog_radios:
+                    num_stations = 64
+                    station_data = ["profile_link " + radio.split(".")[0] + "." + radio.split(".")[1] +
+                                    " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                    str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
+                    self.raw_line.append(station_data)
+
+        if band == "5G":
+            if num_stations != "max":
+                if num_stations > 64:
+                    num_stations = int(num_stations / len(self.fiveg_radios))
+                    for radio in self.fiveg_radios:
+                        station_data = ["profile_link " + radio.split(".")[0] + "." + radio.split(".")[1] +
+                                        " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                        str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
+                        print(station_data)
+                        self.raw_line.append(station_data)
+                else:
+                    num_stations = num_stations
+                    station_data = ["profile_link " + self.fiveg_radios[0].split(".")[0] + "." +
+                                    self.fiveg_radios[0].split(".")[1] +
+                                    " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                    str(int(idx) + 1) + "'" + " NA " + self.fiveg_radios[0].split(".")[2]]
+                    print(station_data)
+                    self.raw_line.append(station_data)
+            if num_stations == "max":
+                for radio in self.fiveg_radios:
+                    num_stations = 64
+                    station_data = ["profile_link " + radio.split(".")[0] + "." + radio.split(".")[1] +
+                                    " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                    str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
+                    print(station_data)
+                    self.raw_line.append(station_data)
+
+        if band == "ax":
+            if num_stations != "max":
+                if num_stations > 1:
+                    num_stations = int(num_stations / len(self.ax_radios))
+                    for radio in self.ax_radios:
+                        station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                        str(int(idx) + 1) + "'" + " NA " + radio]
+                        self.raw_line.append(station_data)
+                else:
+                    num_stations = num_stations
+                    station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                    str(int(idx) + 1) + "'" + " NA " + self.ax_radios[0]]
+                    self.raw_line.append(station_data)
+            if num_stations == "max":
+                for radio in self.ax_radios:
+                    num_stations = 1
+                    station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
+                                    str(int(idx) + 1) + "'" + " NA " + radio]
+                    self.raw_line.append(station_data)
 
     def Create_Dut(self):
         self.CreateDut.setup()
@@ -106,7 +213,7 @@ class ChamberView:
         cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port, )
         return cli_base.json_post(req_url, data)
 
-    def read_kpi_file(self, column_name, dir_name ):
+    def read_kpi_file(self, column_name, dir_name):
         if column_name == None:
             df = pd.read_csv("../reports/" + str(dir_name) + "/kpi.csv", sep=r'\t', engine='python')
             if df.empty == True:
@@ -114,14 +221,35 @@ class ChamberView:
             else:
                 return df
         else:
-            df = pd.read_csv("../reports/" + str(dir_name) + "/kpi.csv", sep=r'\t', usecols=column_name, engine='python')
+            df = pd.read_csv("../reports/" + str(dir_name) + "/kpi.csv", sep=r'\t', usecols=column_name,
+                             engine='python')
             if df.empty == True:
                 return "empty"
             else:
                 return df
 
+    def attach_report_graphs(self, report_name=None, pdf_name="WIFI Capacity Test PDF Report"):
+        relevant_path = "../reports/" + report_name + "/"
+        entries = os.listdir("../reports/" + report_name + '/')
+        pdf = False
+        for i in entries:
+            if ".pdf" in i:
+                pdf = i
+        if pdf:
+            allure.attach.file(source=relevant_path + pdf,
+                               name=pdf_name)
 
+        included_extensions = ['png']
+        file_names = [fn for fn in os.listdir(relevant_path)
+                      if any(fn.endswith(ext) for ext in included_extensions)]
 
+        a = [item for item in file_names if 'print' not in item]
+        a = [item for item in a if 'logo' not in item]
+        a = [item for item in a if 'Logo' not in item]
+        a = [item for item in a if 'candela' not in item]
 
-
-
+        a.sort()
+        for i in a:
+            allure.attach.file(source=relevant_path + i,
+                               name=i,
+                               attachment_type="image/png", extension=None)

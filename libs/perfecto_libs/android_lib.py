@@ -8,6 +8,7 @@ import sys
 import os
 import time
 import warnings
+from _pytest.outcomes import xfail
 import urllib3
 from perfecto.model.model import Job, Project
 from perfecto import (PerfectoExecutionContext, PerfectoReportiumClient,TestContext, TestResultFactory)
@@ -66,96 +67,6 @@ def getDeviceModelName(setup_perfectoMobile):
     deviceModel = driver.execute_script('mobile:handset:info', params)
     print("ModelName: " + deviceModel)  
     return deviceModel
-
-@pytest.fixture(scope="function")
-def setup_perfectoMobile_android(request):
-    from appium import webdriver
-    driver = None
-    reporting_client = None
-    
-    warnings.simplefilter("ignore", ResourceWarning)
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-   
-    capabilities = {
-            'platformName': request.config.getini("platformName-android"),
-            'model': request.config.getini("model-android"),
-            'browserName': 'mobileOS',
-            #'automationName' : 'Appium',
-            'securityToken' : request.config.getini("securityToken"),  
-            'useAppiumForWeb' : 'false',
-            'useAppiumForHybrid' : 'false',
-            #'bundleId' : request.config.getini("appPackage-android"),
-    }
-
-    driver = webdriver.Remote('https://'+request.config.getini("perfectoURL")+'.perfectomobile.com/nexperience/perfectomobile/wd/hub', capabilities)
-    driver.implicitly_wait(35)
-   
-    TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
-    nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
-    try:
-        TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
-        print ("\nTestCaseName: " + TestCaseName)
-    except Exception as e:
-        TestCaseName = nCurrentTestMethodNameSplit
-        print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
-        print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
-        
-    projectname = request.config.getini("projectName")
-    projectversion = request.config.getini("projectVersion")
-    jobname = request.config.getini("jobName")
-    jobnumber = request.config.getini("jobNumber")
-    tags = request.config.getini("reportTags")
-    testCaseName = TestCaseName
-
-    print("\nSetting Perfecto ReportClient....")
-    perfecto_execution_context = PerfectoExecutionContext(driver, tags, Job(jobname, jobnumber),Project(projectname, projectversion))
-    reporting_client = PerfectoReportiumClient(perfecto_execution_context)
-    reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
-
-    def teardown():
-        try:
-            print("\n\n---------- Tear Down ----------")
-            testFailed = request.session.testsfailed
-            if testFailed>0:
-                print ("Test Case Failure, please check report link: " + testCaseName)
-                exceptionFailure = request.config.cache.get("SelectingWifiFailed", None)
-                reporting_client.test_stop(TestResultFactory.create_failure(exceptionFailure))
-                #seen = {None}
-                #session = request.node
-                #print(session)
-            elif testFailed<=0:
-                reporting_client.test_stop(TestResultFactory.create_success())
-                
-            #amount = len(request.session.items)
-            #print("Test Session Items: ")
-            #print(amount)
-
-            #tests_count = request.session.testscollected
-            #print("Test Collected: ")
-            #print(tests_count)
-
-            print('Report-Url: ' + reporting_client.report_url())
-            print("----------------------------------------------------------")
-            driver.close()
-        except Exception as e:
-            print(" -- Exception While Tear Down --")    
-            reporting_client.test_stop(TestResultFactory.create_failure(e))
-            print('Report-Url-Failure: ' + reporting_client.report_url() + '\n')
-            driver.close()
-            print (e)
-        finally:
-            try:
-                driver.quit()
-            except Exception as e:
-                print(" -- Exception Not Able To Quit --")    
-                print (e)
-
-    request.addfinalizer(teardown)
-
-    if driver is None:
-        yield -1
-    else:
-        yield driver,reporting_client 
 
 def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
@@ -266,7 +177,7 @@ def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMo
 
             try:
                 report.step_start("Verify if Wifi is Connected") 
-                WifiInternetErrMsg = WebDriverWait(driver, 35).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                WifiInternetErrMsg = WebDriverWait(driver, 60).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                 print("Wifi Successfully Connected")
                 
             except NoSuchElementException:
@@ -416,9 +327,11 @@ def ForgetWifiConnection(request, setup_perfectoMobile, WifiName, connData):
             print("Verify if wifi is disconnected from: " + WifiName)
             try:
                 report.step_start("Verify if wifi is disconnected from: " + WifiName) 
-                WifiForget= driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")     
+                WifiDisconnect = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")     
                 print("Wifi Not disconnected, check xpath for: " + WifiName)
-            except NoSuchElementException and Exception:
+                assert False
+            except Exception as e:
+                assert True
                 print("Wifi Disconnected Successfully: " + WifiName)
             
         else:
@@ -445,10 +358,9 @@ def ForgetWifiConnection(request, setup_perfectoMobile, WifiName, connData):
                 #WifiForget= driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")     
                 print("Wifi Not disconnected, check xpath for: " + WifiName)
                 WifiForget = WebDriverWait(driver, 20).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))          
-            except NoSuchElementException and TimeoutException and Exception:
+            except Exception as e:
                 assert True
                 print("Wifi Disconnected Successfully: " + WifiName)
-
 
     else:
         #print("Pixel Custom Code")
@@ -493,7 +405,7 @@ def ForgetWifiConnection(request, setup_perfectoMobile, WifiName, connData):
             report.step_start("Verify if Wifi is Connected") 
             WifiInternetErrMsg = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")     
             print("Forgot Wifi Error, check xpath") 
-        except NoSuchElementException:
+        except Exception as e:
             print("Wifi Disconnected Successfully: " + WifiName)
 
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
@@ -891,5 +803,212 @@ def verify_APconnMobileDevice_Android(request, profileNameSSID, setup_perfectoMo
         print ("Pixel Device Not supported: " + deviceModelName)
         report.step_start("Pixel Device Not supported: ")
         assert False
+
+    closeApp(connData["appPackage-android"], setup_perfectoMobile)
+
+    # Cache_clear Function
+def cache_clear_android(request, setup_perfectoMobile, connData):
+    print("\n-------------------------------------")
+    print("Select Cache Clear")
+    print("-------------------------------------")
+    report = setup_perfectoMobile[1]
+    driver = setup_perfectoMobile[0]
+
+    report.step_start("Switching Driver Context")
+    print("Switching Context to Native")
+    contexts = driver.contexts
+    driver.switch_to.context(contexts[0])
+
+    # Open Settings Application
+    openApp(connData["appPackage-android"], setup_perfectoMobile)
+
+    deviceModelName = getDeviceModelName(setup_perfectoMobile)
+    print("Selected Device Model: " + deviceModelName)
+
+    if deviceModelName != ("Pixel 4" and "Galaxy S9"):
+        try:
+            print("Clicking Search button")
+            report.step_start("Click Search")
+            conn_ele = driver.find_element_by_xpath("//*[@content-desc='Search']")
+            conn_ele.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Search")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Entering Chrome in Search")
+            report.step_start("Entering text Chrome")
+            search_ele = driver.find_element_by_xpath("//*[@resource-id='com.android.settings.intelligence:id/search_src_text']")
+            search_ele.send_keys("chrome")
+        except Exception as e:
+            print("Exception: Entering chrome failed")
+            print(e)
+
+        try:
+            driver.implicitly_wait(40)
+            print("Clicking Chrome App Info")
+            report.step_start("Click Chrome App Info")
+            chrome_ele = driver.find_element_by_xpath("//*[@text='Chrome']")
+            chrome_ele.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Chrome")
+
+        # Scroll Down
+        scrollDown(setup_perfectoMobile)
+
+        try:
+            driver.implicitly_wait(30)
+            print("Clicking Storage")
+            report.step_start("Click Storage")
+            store_ele = driver.find_element_by_xpath("//*[@text='Storage']")
+            store_ele.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Storage")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Clicking Clear Cache")
+            report.step_start("Click Clear Cache")
+            clear_ele = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/button2']")
+            clear_ele.click()
+            print("Cleared Cache")
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Clearcache")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Checking if cache cleared or not with 0B")
+            report.step_start("Checking if cache cleared or not with 0B")
+            check_ele = driver.find_element_by_xpath("//*[@text='0 B']")
+            if check_ele is not None:
+                return True
+            else:
+                return False
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Checking cache clear")
+
+    elif deviceModelName == ("Pixel 4"):
+        # Pixel cache clear code
+        try:
+            print("Clicking Search button")
+            report.step_start("Click Search")
+            conn_ele = driver.find_element_by_xpath("//*[@class='android.widget.ImageButton']")
+            conn_ele.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Search")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Entering Chrome in Search")
+            report.step_start("Entering text Chrome")
+            search_ele = driver.find_element_by_xpath("//*[@resource-id='android:id/search_src_text']")
+            search_ele.send_keys("chrome")
+        except Exception as e:
+            print("Exception: Entering chrome failed")
+            print(e)
+
+        try:
+            driver.implicitly_wait(35)
+            print("Clicking Chrome App Info")
+            report.step_start("Click Chrome App Info")
+            chrom_ele = driver.find_element_by_xpath("//*[@text='Chrome']")
+            chrom_ele.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Chrome")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Clicking Storage & cache")
+            report.step_start("Click Storage & cache")
+            store_ele = driver.find_element_by_xpath("//*[@text='Storage & cache']")
+            store_ele.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Storage & cache")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Clicking Clear Cache")
+            report.step_start("Click Clear Cache")
+            clear_ele = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/button2']")
+            clear_ele.click()
+            print("Cleared cache")
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Clearcache")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Checking if cache cleared or not with 0B")
+            report.step_start("Checking if cache cleared or not with 0B")
+            store_ele = driver.find_element_by_xpath("//*[@text='0 B']")
+            if store_ele is not None:
+                return True
+            else:
+                return False
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Checking cache clear")
+
+    else:
+        try:
+            print("Clicking Search button")
+            report.step_start("Click Search")
+            conn_ele = driver.find_element_by_xpath("//*[@content-desc='Search settings']")
+            conn_ele.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Search")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Entering Chrome in Search")
+            report.step_start("Entering text Chrome")
+            search_ele = driver.find_element_by_xpath(
+                "//*[@resource-id='com.android.settings.intelligence:id/search_src_text']")
+            search_ele.send_keys("chrome")
+        except Exception as e:
+            print("Exception: Entering chrome failed")
+            print(e)
+
+        try:
+            driver.implicitly_wait(40)
+            print("Clicking Chrome App Info")
+            report.step_start("Click Chrome App Info")
+            chrome_ele = driver.find_element_by_xpath("//*[@text='Chrome']")
+            chrome_ele.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Chrome")
+
+        # Scroll Down
+        scrollDown(setup_perfectoMobile)
+
+        try:
+            driver.implicitly_wait(30)
+            print("Clicking Storage")
+            report.step_start("Click Storage")
+            store_ele = driver.find_element_by_xpath("//*[@text='Storage']")
+            store_ele.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Storage")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Clicking Clear Cache")
+            report.step_start("Click Clear Cache")
+            clear_ele = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/button2']")
+            clear_ele.click()
+            print("Cleared Cache")
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Click Clearcache")
+
+        try:
+            driver.implicitly_wait(30)
+            print("Checking if cache cleared or not with 0B")
+            report.step_start("Checking if cache cleared or not with 0B")
+            check_ele = driver.find_element_by_xpath("//*[@text='0 B']")
+            if check_ele is not None:
+                return True
+            else:
+                return False
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - Update/check Xpath for Checking cache clear")
+
 
     closeApp(connData["appPackage-android"], setup_perfectoMobile)

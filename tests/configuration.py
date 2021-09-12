@@ -1,61 +1,40 @@
 """
-    1.X Testbed Access using ssh tunnel
-    ssh -C -L 8801:lab-ctlr:22 -L 8802:lf1:8080 -L 8803:lf1:22 -L 8804:lf2:8080 -L 8805:lf2:22 -L 3389:lf1:3389 -L 3390:lf2:3389 ubuntu@orch
+ec420	basic-03
+ecw5410	basic-04
+ecw5211		not available in basic
+wf188n	config
+eap102	basic-06
+eap101	basic-02
+wf194c	baisc-08-02
 
-    2.X Testbed Access using ssh tunnel
+ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 -L 8803:lab-ctlr:22 \	    # basic-01
+-L 8720:lf2:4002 -L 8721:lf2:5901 -L 8722:lf2:8080 -L 8723:lab-ctlr:22 \			# basic-02
+-L 8830:lf3:4002 -L 8831:lf3:5901 -L 8832:lf3:8080 -L 8833:lab-ctlr:22 \			# basic-03
+-L 8810:lf4:4002 -L 8811:lf4:5901 -L 8812:lf4:8080 -L 8813:lab-ctlr:22 \			# basic-04
+-L 8850:lf12:4002 -L 8851:lf12:5901 -L 8852:lf12:8080 -L 8853:lab-ctlr4:22 \		# config
+-L 8860:lf13:4002 -L 8861:lf13:5901 -L 8862:lf13:8080 -L 8863:lab-ctlr4:22 \		# basic-06
+-L 8870:lf14:4002 -L 8871:lf14:5901 -L 8872:lf14:8080 -L 8873:lab-ctlr4:22 \		# basic-07
+-L 8880:lf15:4002 -L 8881:lf15:5901 -L 8882:lf15:8080 -L 8883:lab-ctlr4:22 \		# basic-08
+ubuntu@3.130.51.163
+
+
+
+ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 -L 8803:lab-ctlr:22 \
+-L 8720:lf2:4002 -L 8721:lf2:5901 -L 8722:lf2:8080 -L 8723:lab-ctlr:22 \
+-L 8830:lf3:4002 -L 8831:lf3:5901 -L 8832:lf3:8080 -L 8833:lab-ctlr:22 \
+-L 8810:lf4:4002 -L 8811:lf4:5901 -L 8812:lf4:8080 -L 8813:lab-ctlr:22 \
+-L 8850:lf12:4002 -L 8851:lf12:5901 -L 8852:lf12:8080 -L 8853:lab-ctlr4:22 \
+-L 8860:lf13:4002 -L 8861:lf13:5901 -L 8862:lf13:8080 -L 8863:lab-ctlr4:22 \
+-L 8870:lf14:4002 -L 8871:lf14:5901 -L 8872:lf14:8080 -L 8873:lab-ctlr4:22 \
+-L 8880:lf15:4002 -L 8881:lf15:5901 -L 8882:lf15:8080 -L 8883:lab-ctlr4:22 \
+ubuntu@3.130.51.163
 
 """
+
+Customer = ""
+server = ""
 CONFIGURATION = {
-    "advanced-02": {
-        "controller": {
-            'url': "https://wlan-portal-svc-nola-01.cicd.lab.wlan.tip.build",  # API base url for the controller
-            'username': 'support@example.com',  # cloud controller Login
-            'password': 'support',  # Cloud Controller Login Password
-            'version': '1.1.0-SNAPSHOT',  # Controller version
-            'commit_date': "2021-04-27"  # Controller version sdk, commit date
-        },
-        'access_point': [
-            {
-                'model': 'eap102',  # AP Model, can be found in ap console using "node" command
-                'mode': 'wifi6',  # wifi5/wifi6   can be found on AP Hardware page on Confluence
-                'serial': '903cb39d6959',  # "node" command has serial_number information
-                'jumphost': True,
-                # True, if you have AP On serial console and not ssh access, False, if you have AP ssh access from the machine
-                'ip': "localhost",
-                # IP Address of System, which has AP Connected to serial cable (if jumphost is True), else -  AP IP Address
-                'username': "lanforge",  # ssh username of system (lab-ctlr/ap)
-                'password': "pumpkin77",  # ssh password for system (lab-ctlr/ap)
-                'port': 8803,  # 22,        # ssh port for system (lab-ctlr/ap)
-                'jumphost_tty': '/dev/ttyAP3',  # if jumphost is True, enter the serial console device name
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/dev/eap102-2021-06-25-pending-b6743c3.tar.gz"
-                # Enter the Target AP Version URL for Testing
-            }
-        ],
-        # Traffic generator
-        "traffic_generator": {
-            "name": "lanforge",  # ( lanforge/ perfecto)
-            # Details for LANforge system
-            "details": {
-                "ip": "localhost",  # localhost,
-                "port": 8802,  # 8802,
-                "ssh_port": 8804,
-                "2.4G-Radio": ["wiphy2", "wiphy4"],
-                "5G-Radio": ["wiphy5", "wiphy3"],
-                "AX-Radio": [],
-                "upstream": "1.1.eth1",
-                "upstream_subnet": "10.28.2.1/24",
-                "uplink": "1.1.eth3",
-                "2.4G-Station-Name": "wlan0",
-                "5G-Station-Name": "wlan0",
-                "AX-Station-Name": "ax"
-            }
-        }
-
-    },
-
-
-
-"basic-01": {
+    "basic-01": {
         "controller": {
             'url': "https://wlan-portal-svc-nola-02.cicd.lab.wlan.tip.build",  # API base url for the controller
             'username': 'support@example.com',
@@ -69,32 +48,32 @@ CONFIGURATION = {
                 'mode': 'wifi5',
                 'serial': '3c2c99f44e77',
                 'jumphost': True,
-                'ip': "localhost",  # localhost
+                'ip': "10.28.3.100",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 8801,  # 22,
+                'port': 22,
                 'jumphost_tty': '/dev/ttyAP1',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/dev/ecw5410-2021-06-16-pending-e8418c0.tar.gz"
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.2.0-rc2.tar.gz"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "localhost",  # localhost,
-                "port": 8802,  # 8802,
-                "ssh_port": 8803,
-                "2.4G-Radio": ["wiphy0", "wiphy4"],
-                "5G-Radio": ["wiphy0", "wiphy5"],
-                "AX-Radio": ["wiphy0", "wiphy1", "wiphy2", "wiphy3"],
+                "ip": "10.28.3.6",
+                "port": 8080,
+                "ssh_port": 22,
+                "2.4G-Radio": ["1.1.wiphy4"],
+                "5G-Radio": ["1.1.wiphy5"],
+                "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
                 "upstream": "1.1.eth2",
                 "upstream_subnet": "10.28.2.1/24",
                 "uplink": "1.1.eth3",
-                "2.4G-Station-Name": "twog0",
-                "5G-Station-Name": "fiveg0",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan1",
                 "AX-Station-Name": "ax"
             }
         }
-    },  # 1.X wifi-5 basic-01
+    },  # checked   deployed
     "basic-02": {
         "controller": {
             'url': "https://wlan-portal-svc-nola-02.cicd.lab.wlan.tip.build",  # API base url for the controller
@@ -109,35 +88,264 @@ CONFIGURATION = {
                 'mode': 'wifi6',
                 'serial': '34efb6af48db',
                 'jumphost': True,
-                'ip': "localhost",
+                'ip': "10.28.3.100",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 8801,
+                'port': 22,
                 'jumphost_tty': '/dev/ttyAP2',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/eap101/dev/eap101-2021-06-15-pending-39bd8f3.tar.gz"
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/eap101/trunk/eap101-1.2.0-rc2.tar.gz"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "localhost",
-                "port": 8804,
-                "ssh_port": 8805,
-                "2.4G-Radio": ["wiphy0", "wiphy4"],
-                "5G-Radio": ["wiphy0", "wiphy5"],
+                "ip": "10.28.3.8",
+                "port": 8080,
+                "ssh_port": 22,
+                "2.4G-Radio": ["1.1.wiphy4"],
+                "5G-Radio": ["1.1.wiphy5"],
+                "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            }
+        }
+    },  # checked   deployed
+    "basic-03": {
+        "controller": {
+            'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'openwifi',
+        },
+        'access_point': [
+            {
+                'model': 'ec420',
+                'mode': 'wifi5',
+                'serial': '001122090801',
+                'jumphost': True,
+                'ip': "127.0.0.1",
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 8833,
+                'jumphost_tty': '/dev/ttyAP3',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/tplink_ec420/20210728-tplink_ec420-uCentral-trunk-12ad0d5-upgrade.bin"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "10.28.3.10",
+                "port": 8080,
+                "ssh_port": 22,
+                "2.4G-Radio": ["1.1.wiphy4"],
+                "5G-Radio": ["1.1.wiphy5"],
+                "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "sta00",
+                "5G-Station-Name": "sta10",
+                "AX-Station-Name": "ax"
+            }
+        }
+    },
+    "basic-04": {
+        "controller": {
+            'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'openwifi',
+        },
+        'access_point': [
+            {
+                'model': 'ecw5211',
+                'mode': 'wifi5',
+                'serial': '68215fda456d',
+                'jumphost': True,
+                'ip': "10.28.3.100",
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22,
+                'jumphost_tty': "/dev/ttyAP5",
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "10.28.3.12",
+                "port": 8080,
+                "ssh_port": 22,
+                "2.4G-Radio": ["1.1.wiphy4"],
+                "5G-Radio": [ "1.1.wiphy5"],
+                "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            }
+        }
+    },  # checked   uci
+    "basic-05": {
+        "controller": {
+            'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'openwifi',
+        },
+        'access_point': [
+            {
+                'model': 'wf188n',
+                'mode': 'wifi6',
+                'serial': '0000c1018812',
+                'jumphost': True,
+                'ip': "10.28.3.103",
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22,
+                'jumphost_tty': '/dev/ttyAP1',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf188/20210729-cig_wf188-v2.0.0-rc2-ec3662e-upgrade.bin"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "10.28.3.28",
+                "port": 8080,
+                "ssh_port": 22,
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
+                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
+                "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth1",
+                "2.4G-Station-Name": "sta00",
+                "5G-Station-Name": "sta10",
+                "AX-Station-Name": "ax"
+            }
+        }
+    },  # checked   uci
+    "basic-06": {
+        "controller": {
+            'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'openwifi',
+        },
+        'access_point': [
+            {
+                'model': 'eap102',
+                'mode': 'wifi6',
+                'serial': '903cb39d6918',
+                'jumphost': True,
+                'ip': "10.28.3.103",  # 10.28.3.103
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22,  # 22
+                'jumphost_tty': '/dev/ttyAP2',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "10.28.3.30",  # 10.28.3.30
+                "port": 8080,  # 8080
+                "ssh_port": 22,
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
+                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
+                "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            }
+        }
+    },
+    "basic-07": {
+        "controller": {
+            'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'openwifi',
+        },
+        'access_point': [
+            {
+                'model': 'eap101',
+                'mode': 'wifi6',
+                'serial': '903cb36ae223',
+                'jumphost': True,
+                'ip': "10.28.3.103",  # 10.28.3.103
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22,  # 22
+                'jumphost_tty': '/dev/ttyAP3',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap101/20210729-edgecore_eap101-v2.0.0-rc2-02244b8-upgrade.bin"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "10.28.3.32",  # 10.28.3.32
+                "port": 8080,  # 8080
+                "ssh_port": 22,
+                "2.4G-Radio": ["wiphy4"],
+                "5G-Radio": ["wiphy5"],
                 "AX-Radio": ["wiphy0", "wiphy1", "wiphy2", "wiphy3"],
                 "upstream": "1.1.eth2",
                 "upstream_subnet": "10.28.2.1/24",
                 "uplink": "1.1.eth3",
-                "2.4G-Station-Name": "sta0",
-                "5G-Station-Name": "sta1",
+                "2.4G-Station-Name": "sta10",
+                "5G-Station-Name": "sta00",
                 "AX-Station-Name": "ax"
             }
         }
-    },  # 1.x wifi-6 basic-02
-    "ext-03-01": {
+    },  # checked   uci
+    "basic-08": {
         "controller": {
-            'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
+            'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'openwifi',
+        },
+        'access_point': [
+            {
+                'model': 'wf194c',
+                'mode': 'wifi6',
+                'serial': '089b4bb2f10c',
+                'jumphost': True,
+                'ip': "10.28.3.103",  # 10.28.3.103
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22,  # 22
+                'jumphost_tty': '/dev/ttyAP5',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf194c/20210729-cig_wf194c-v2.0.0-rc2-02244b8-upgrade.bin"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "10.28.3.34",  # 10.28.3.34
+                "port": 8080,  # 8080
+                "ssh_port": 22,
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
+                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
+                "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            }
+        }
+    },  # checked
+
+    "mesh": {
+        "controller": {
+            'url': "http://wlan-portal-svc-digicert.cicd.lab.wlan.tip.build",  # API base url for the controller
             'username': 'support@example.com',
             'password': 'support',
             'version': '1.1.0-SNAPSHOT',
@@ -145,192 +353,168 @@ CONFIGURATION = {
         },
         'access_point': [
             {
-                'model': 'ecw5410',
-                'mode': 'wifi5',
-                'serial': '903cb3944857',
+                'model': 'eap101',
+                'mode': 'wifi6',
+                'serial': '34efb6af4a7a',
                 'jumphost': True,
-                'ip': "192.168.200.80",  # localhost
+                'ip': "10.28.3.101",  # 10.28.3.103
                 'username': "lanforge",
-                'password': "lanforge",
-                'port': 22,  # 22,
-                'jumphost_tty': '/dev/ttyAP1',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.1.0.tar.gz"
+                'password': "pumpkin77",
+                'port': 22,  # 22
+                'jumphost_tty': '/dev/ttyAP2',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/eap101/trunk/eap101-1.1.0.tar.gz"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "192.168.200.80",  # localhost,
-                "port": 8080,  # 8802,
+                "ip": "10.28.3.14",  # 10.28.3.34
+                "port": 8080,  # 8080
                 "ssh_port": 22,
-                "2.4G-Radio": ["wiphy0"],
-                "5G-Radio": ["wiphy5"],
-                "AX-Radio": [],
-                "upstream": "1.1.eth1",
-                "upstream_subnet": "192.168.200.1/24",
-                "uplink": "1.1.eth2",
-                "2.4G-Station-Name": "twog0",
-                "5G-Station-Name": "fiveg0",
-                "AX-Station-Name": "ax0"
+                "2.4G-Radio": ["wiphy0", "wiphy2"],
+                "5G-Radio": ["wiphy1", "wiphy3"],
+                "AX-Radio": ["wiphy4", "wiphy5", "wiphy6", "wiphy7"],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
             }
         }
-    },  # Anjali    192.168.200.80
-    "ext-03-02": {
+    },  # checked
+    "interop-01": {
         "controller": {
-            'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
+            'url': "https://wlan-portal-svc-nola-02.cicd.lab.wlan.tip.build",  # API base url for the controller
             'username': 'support@example.com',
             'password': 'support',
-            'version': '1.1.0-SNAPSHOT',
-            'commit_date': "2021-06-01"
+            'version': '19.07-SNAPSHOT',
+            'commit_date': '2021-06-01'
         },
         'access_point': [
             {
                 'model': 'ecw5410',
                 'mode': 'wifi5',
-                'serial': '903cb394486f',
+                'serial': '68215fd2f78c',
                 'jumphost': True,
-                'ip': "192.168.200.81",  # localhost
+                'ip': "10.28.3.102",
                 'username': "lanforge",
-                'password': "lanforge",
-                'port': 22,  # 22,
+                'password': "pumpkin77",
+                'port': 22,
                 'jumphost_tty': '/dev/ttyAP1',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.1.0.tar.gz"
+                'version': "https://tip-tip-wlan-cloud-docker-repo.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/dev/ecw5410-2021-07-28-pending-0ec23e8.tar.gz"
             }
         ],
         "traffic_generator": {
-            "name": "lanforge",
-            "details": {
-                "ip": "192.168.200.81",  # localhost,
-                "port": 8080,  # 8802,
-                "ssh_port": 22,
-                "2.4G-Radio": ["wiphy0"],
-                "5G-Radio": ["wiphy5"],
-                "AX-Radio": [],
-                "upstream": "1.1.eth1",
-                "upstream_subnet": "192.168.200.1/24",
-                "uplink": "1.1.eth2",
-                "2.4G-Station-Name": "twog0",
-                "5G-Station-Name": "fiveg0",
-                "AX-Station-Name": "ax0"
-            }
-        }
-    },
-    "interop":  {
-            "controller": {
-                'url': "https://wlan-portal-svc-nola-02.cicd.lab.wlan.tip.build",  # API base url for the controller
-                'username': 'support@example.com',
-                'password': 'support',
-                'version': '1.1.0-SNAPSHOT',
-                'commit_date': '2021-06-01'
-            },
-            'access_point': [
-                {
-                    'model': 'ecw5410',
-                    'mode': 'wifi5',
-                    'serial': '3c2c99f44e53',
-                    'jumphost': True,
-                    'ip': "localhost",
-                    'username': "lanforge",
-                    'password': "pumpkin77",
-                    'port': 8803,
-                    'jumphost_tty': '/dev/ttyAP4',
-                    'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.1.0-rc3.tar.gz"
-                }
-            ],
-            "traffic_generator":  {
-                "name": "Perfecto",
+                "name": "lanforge",
                 "details": {
+                    "ip": "10.28.3.22",
+                    "port": 8080,  # 8080
+                    "ssh_port": 22,
+                    "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
+                    "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
+                    "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
+                    "upstream": "1.1.eth1",
+                    "upstream_subnet": "10.28.2.1/24",
+                    "uplink": "1.1.eth3",
+                    "2.4G-Station-Name": "wlan0",
+                    "5G-Station-Name": "wlan1",
+                    "AX-Station-Name": "ax",
                     "securityToken": "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJqdGkiOiJjYjRjYjQzYi05Y2FiLTQxNzQtOTYxYi04MDEwNTZkNDM2MzgiLCJleHAiOjAsIm5iZiI6MCwiaWF0IjoxNjExNTk0NzcxLCJpc3MiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwiYXVkIjoiaHR0cHM6Ly9hdXRoMi5wZXJmZWN0b21vYmlsZS5jb20vYXV0aC9yZWFsbXMvdGlwLXBlcmZlY3RvbW9iaWxlLWNvbSIsInN1YiI6IjdiNTMwYWUwLTg4MTgtNDdiOS04M2YzLTdmYTBmYjBkZGI0ZSIsInR5cCI6Ik9mZmxpbmUiLCJhenAiOiJvZmZsaW5lLXRva2VuLWdlbmVyYXRvciIsIm5vbmNlIjoiZTRmOTY4NjYtZTE3NS00YzM2LWEyODMtZTQwMmI3M2U5NzhlIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYWNkNTQ3MTctNzJhZC00MGU3LWI0ZDctZjlkMTAyNDRkNWZlIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJyZXBvcnRpdW0iOnsicm9sZXMiOlsiYWRtaW5pc3RyYXRvciJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.SOL-wlZiQ4BoLLfaeIW8QoxJ6xzrgxBjwSiSzkLBPYw",
                     "perfectoURL": "tip"
                 }
-    },  # Nikita    192.168.200.81
-    "ext-03-03": {
+        }
+    },
+
+    "interop-02": {
         "controller": {
-            'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
-            'username': 'support@example.com',
-            'password': 'support',
-            'version': '1.1.0-SNAPSHOT',
-            'commit_date': "2021-06-01"
+            'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'openwifi',
         },
         'access_point': [
             {
-                'model': 'ecw5410',
+                'model': 'eap101',
                 'mode': 'wifi5',
-                'serial': '903cb3944817',
+                'serial': '903cb36ae4a3',
                 'jumphost': True,
-                'ip': "192.168.200.82",  # localhost
+                'ip': "10.28.3.102",
                 'username': "lanforge",
-                'password': "lanforge",
-                'port': 22,  # 22,
-                'jumphost_tty': '/dev/ttyAP1',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.1.0.tar.gz"
+                'password': "pumpkin77",
+                'port': 22,
+                'jumphost_tty': '/dev/ttyAP4',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap101/20210729-edgecore_eap101-v2.0.0-rc2-02244b8-upgrade.bin"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "192.168.200.82",  # localhost,
-                "port": 8080,  # 8802,
+                "ip": "10.28.3.22",
+                "port": 8080,  # 8080
                 "ssh_port": 22,
-                "2.4G-Radio": ["wiphy0"],
-                "5G-Radio": ["wiphy5"],
-                "AX-Radio": [],
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
+                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
+                "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
                 "upstream": "1.1.eth1",
-                "upstream_subnet": "192.168.200.1/24",
-                "uplink": "1.1.eth2",
-                "2.4G-Station-Name": "twog0",
-                "5G-Station-Name": "fiveg0",
-                "AX-Station-Name": "ax0"
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan1",
+                "AX-Station-Name": "ax",
+                "securityToken": "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJqdGkiOiJjYjRjYjQzYi05Y2FiLTQxNzQtOTYxYi04MDEwNTZkNDM2MzgiLCJleHAiOjAsIm5iZiI6MCwiaWF0IjoxNjExNTk0NzcxLCJpc3MiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwiYXVkIjoiaHR0cHM6Ly9hdXRoMi5wZXJmZWN0b21vYmlsZS5jb20vYXV0aC9yZWFsbXMvdGlwLXBlcmZlY3RvbW9iaWxlLWNvbSIsInN1YiI6IjdiNTMwYWUwLTg4MTgtNDdiOS04M2YzLTdmYTBmYjBkZGI0ZSIsInR5cCI6Ik9mZmxpbmUiLCJhenAiOiJvZmZsaW5lLXRva2VuLWdlbmVyYXRvciIsIm5vbmNlIjoiZTRmOTY4NjYtZTE3NS00YzM2LWEyODMtZTQwMmI3M2U5NzhlIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYWNkNTQ3MTctNzJhZC00MGU3LWI0ZDctZjlkMTAyNDRkNWZlIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJyZXBvcnRpdW0iOnsicm9sZXMiOlsiYWRtaW5pc3RyYXRvciJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.SOL-wlZiQ4BoLLfaeIW8QoxJ6xzrgxBjwSiSzkLBPYw",
+                "perfectoURL": "tip"
             }
         }
-    },  # Mahesh    192.168.200.82
-    "ext-03-04": {
+    },
+
+    "interop-03": {
         "controller": {
-            'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
-            'username': 'support@example.com',
-            'password': 'support',
-            'version': '1.1.0-SNAPSHOT',
-            'commit_date': "2021-06-01"
+            'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'openwifi',
         },
         'access_point': [
             {
-                'model': 'ecw5410',
+                'model': 'eap101',
                 'mode': 'wifi5',
-                'serial': '903cb3944873',
+                'serial': '903cb36ae255',
                 'jumphost': True,
-                'ip': "192.168.200.52",  # localhost
+                'ip': "10.28.3.102",
                 'username': "lanforge",
-                'password': "lanforge",
-                'port': 22,  # 22,
-                'jumphost_tty': '/dev/ttyAP1',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.1.0.tar.gz"
+                'password': "pumpkin77",
+                'port': 22,
+                'jumphost_tty': '/dev/ttyAP5',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap101/20210729-edgecore_eap101-v2.0.0-rc2-02244b8-upgrade.bin"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "192.168.52.100",  # localhost,
-                "port": 8080,  # 8802,
+                "ip": "10.28.3.22",
+                "port": 8080,
                 "ssh_port": 22,
-                "2.4G-Radio": ["wiphy0"],
-                "5G-Radio": ["wiphy5"],
-                "AX-Radio": [],
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
+                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
+                "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
                 "upstream": "1.1.eth1",
-                "upstream_subnet": "192.168.52.1/24",
-                "uplink": "1.1.eth2",
-                "2.4G-Station-Name": "twog0",
-                "5G-Station-Name": "fiveg0",
-                "AX-Station-Name": "ax0"
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan1",
+                "AX-Station-Name": "ax",
+                "securityToken": "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJqdGkiOiJjYjRjYjQzYi05Y2FiLTQxNzQtOTYxYi04MDEwNTZkNDM2MzgiLCJleHAiOjAsIm5iZiI6MCwiaWF0IjoxNjExNTk0NzcxLCJpc3MiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwiYXVkIjoiaHR0cHM6Ly9hdXRoMi5wZXJmZWN0b21vYmlsZS5jb20vYXV0aC9yZWFsbXMvdGlwLXBlcmZlY3RvbW9iaWxlLWNvbSIsInN1YiI6IjdiNTMwYWUwLTg4MTgtNDdiOS04M2YzLTdmYTBmYjBkZGI0ZSIsInR5cCI6Ik9mZmxpbmUiLCJhenAiOiJvZmZsaW5lLXRva2VuLWdlbmVyYXRvciIsIm5vbmNlIjoiZTRmOTY4NjYtZTE3NS00YzM2LWEyODMtZTQwMmI3M2U5NzhlIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYWNkNTQ3MTctNzJhZC00MGU3LWI0ZDctZjlkMTAyNDRkNWZlIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJyZXBvcnRpdW0iOnsicm9sZXMiOlsiYWRtaW5pc3RyYXRvciJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.SOL-wlZiQ4BoLLfaeIW8QoxJ6xzrgxBjwSiSzkLBPYw",
+                "perfectoURL": "tip"
             }
         }
-    },  # Shivam    192.168.52.100
-    "ext-03-05": {
+    },
+
+    "basic-ext-03-03": {
         "controller": {
             'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
             'username': 'support@example.com',
             'password': 'support',
-            'version': '1.1.0-SNAPSHOT',
-            'commit_date': "2021-06-01"
+            'version': "1.1.0-SNAPSHOT",
+            'commit_date': "2021-04-27"
         },
         'access_point': [
             {
@@ -338,10 +522,10 @@ CONFIGURATION = {
                 'mode': 'wifi5',
                 'serial': '903cb3944857',
                 'jumphost': True,
-                'ip': "192.168.200.80",  # localhost
+                'ip': "192.168.200.80",
                 'username': "lanforge",
                 'password': "lanforge",
-                'port': 22,  # 22,
+                'port': 22,
                 'jumphost_tty': '/dev/ttyAP1',
                 'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.1.0.tar.gz"
             }
@@ -349,32 +533,39 @@ CONFIGURATION = {
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "192.168.200.80",  # localhost,
-                "port": 8080,  # 8802,
+                "ip": "192.168.200.80",
+                "port": 8080,
                 "ssh_port": 22,
                 "2.4G-Radio": ["wiphy0"],
-                "5G-Radio": ["wiphy5"],
-                "AX-Radio": [],
+                "5G-Radio": ["wiphy1"],
+                "AX-Radio": ["wiphy2"],
                 "upstream": "1.1.eth1",
                 "upstream_subnet": "192.168.200.1/24",
                 "uplink": "1.1.eth2",
-                "2.4G-Station-Name": "twog0",
-                "5G-Station-Name": "fiveg0",
-                "AX-Station-Name": "ax0"
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
             }
         }
-    },  # Sushant   192.168.51.___
-
-}
+    }
 }
 
 
 RADIUS_SERVER_DATA = {
-    "ip": "192.168.200.75",
+    "ip": "10.10.10.72",
     "port": 1812,
     "secret": "testing123",
-    "user": "nolaradius",
-    "password": "nolastart",
+    "user": "user",
+    "password": "password",
+    "pk_password": "whatever"
+}
+
+RADIUS_ACCOUNTING_DATA = {
+    "ip": "10.10.10.72",
+    "port": 1813,
+    "secret": "testing123",
+    "user": "user",
+    "password": "password",
     "pk_password": "whatever"
 }
 
@@ -451,6 +642,9 @@ PASSPOINT_PROFILE_INFO = {
         "Disable DGAF": False
     }
 }
+
+
+
 
 TEST_CASES = {
     "ap_upgrade": 2233,
