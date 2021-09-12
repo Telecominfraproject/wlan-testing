@@ -67,7 +67,7 @@ class TestBridgeModeConnectSuiteOne(object):
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
-
+        get_vif_state.append(ssidName)
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
@@ -99,13 +99,13 @@ class TestBridgeModeConnectSuiteOne(object):
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
-
+        get_vif_state.append(ssidName)
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobile_android[1]
-        driver = setup_perfectoMobile_android[0]
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
         connData = get_ToggleAirplaneMode_data
 
         # Set Wifi/AP Mode
@@ -132,13 +132,13 @@ class TestBridgeModeConnectSuiteOne(object):
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
-
+        get_vif_state.append(ssidName)
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobile_android[1]
-        driver = setup_perfectoMobile_android[0]
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
         connData = get_ToggleAirplaneMode_data
 
         # Set Wifi/AP Mode
@@ -165,14 +165,14 @@ class TestBridgeModeConnectSuiteOne(object):
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
-
+        get_vif_state.append(ssidName)
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobile_android[1]
-        driver = setup_perfectoMobile_android[0]
-        connData = get_ToggleAirplaneMode_data
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
+        connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
         ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
@@ -198,17 +198,17 @@ class TestBridgeModeConnectSuiteOne(object):
         ssidPassword = "[BLANK]"
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
-
+        get_vif_state.append(ssidName)
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobile_android[1]
-        driver = setup_perfectoMobile_android[0]
-        connData = get_ToggleAirplaneMode_data
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
+        connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
-        ip, is_internet =  get_ip_address_and(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+        ip, is_internet =  get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         if ip:
             if is_internet:
@@ -223,10 +223,10 @@ class TestBridgeModeConnectSuiteOne(object):
             assert False
 
         #Toggle AirplaneMode
-        # assert Toggle_AirplaneMode_android(request, setup_perfectoMobile_android, connData)
+        # assert Toggle_AirplaneMode_android(request, setup_perfectoMobile_iOS, connData)
 
         #ForgetWifi
-        # ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
+        # ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
     @pytest.mark.twog
     @pytest.mark.open
@@ -237,14 +237,14 @@ class TestBridgeModeConnectSuiteOne(object):
         ssidPassword = "[BLANK]"
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
-
+        get_vif_state.append(ssidName)
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobile_android[1]
-        driver = setup_perfectoMobile_android[0]
-        connData = get_ToggleAirplaneMode_data
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
+        connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
         ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
@@ -316,9 +316,9 @@ class TestBridgeModeConnectSuiteTwo(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobile_android[1]
-        driver = setup_perfectoMobile_android[0]
-        connData = get_ToggleAirplaneMode_data
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
+        connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
         ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
@@ -349,9 +349,9 @@ class TestBridgeModeConnectSuiteTwo(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobile_android[1]
-        driver = setup_perfectoMobile_android[0]
-        connData = get_ToggleAirplaneMode_data
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
+        connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
         ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
@@ -382,9 +382,9 @@ class TestBridgeModeConnectSuiteTwo(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobile_android[1]
-        driver = setup_perfectoMobile_android[0]
-        connData = get_ToggleAirplaneMode_data
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
+        connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
         ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
@@ -415,9 +415,9 @@ class TestBridgeModeConnectSuiteTwo(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobile_android[1]
-        driver = setup_perfectoMobile_android[0]
-        connData = get_ToggleAirplaneMode_data
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
+        connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
         ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
@@ -448,12 +448,12 @@ class TestBridgeModeConnectSuiteTwo(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobile_android[1]
-        driver = setup_perfectoMobile_android[0]
-        connData = get_ToggleAirplaneMode_data
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
+        connData = get_APToMobileDevice_data
 
         #Set Wifi/AP Mode
-        ip, is_internet =  get_ip_address_and(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+        ip, is_internet =  get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         if ip:
             if is_internet:
@@ -482,9 +482,9 @@ class TestBridgeModeConnectSuiteTwo(object):
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
-        report = setup_perfectoMobile_android[1]
-        driver = setup_perfectoMobile_android[0]
-        connData = get_ToggleAirplaneMode_data
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
+        connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
         ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
