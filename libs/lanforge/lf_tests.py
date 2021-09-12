@@ -35,6 +35,7 @@ from create_station import CreateStation
 import lf_ap_auto_test
 import lf_dataplane_test
 from lf_dataplane_test import DataplaneTest
+from lf_rx_sensitivity_test import RxSensitivityTest
 from lf_ap_auto_test import ApAutoTest
 from csv_to_influx import CSVtoInflux
 from influx2 import RecordInflux
@@ -57,6 +58,7 @@ class RunTest:
         self.lf_ssh_port = lanforge_data["ssh_port"]
         self.staConnect = None
         self.dataplane_obj = None
+        self.rx_sensitivity_obj = None
         self.dualbandptest_obj = None
         self.influx_params = influx_params
         self.influxdb = RecordInflux(_influx_host=influx_params["influx_host"],
@@ -263,6 +265,7 @@ class RunTest:
         influx.post_to_influx()
         return wificapacity_obj
 
+
     def Client_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog",
                        vlan_id=100,
                        station_name=[]):
@@ -394,7 +397,7 @@ class RunTest:
         #                      target_csv=self.local_report_path + report_name + "/kpi.csv")
         # influx.post_to_influx()
         return self.dualbandptest_obj
-
+      
     def apstabilitytest(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
                         instance_name="test_demo", dut_5g="", dut_2g=""):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
@@ -473,6 +476,47 @@ class RunTest:
                              target_csv=self.local_report_path + report_name + "/kpi.csv")
         influx.post_to_influx()
         return self.rvr_obj
+
+    def rx_sensitivity(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="100%", dut_name="TIP",
+                       upload_rate="0kbps", duration="30s", instance_name="test_demo", raw_lines=None):
+        if mode == "BRIDGE":
+            self.client_connect.upstream_port = self.upstream_port
+        elif mode == "NAT":
+            self.client_connect.upstream_port = self.upstream_port
+        else:
+            self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
+        if raw_lines is None:
+            raw_lines = [['txo_preamble: VHT'],
+                         ['txo_mcs: 4 OFDM, HT, VHT;5 OFDM, HT, VHT;6 OFDM, HT, VHT;7 OFDM, HT, VHT'],
+                         ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
+                         ['txo_retries: No Retry'], ["show_3s: 1"], ['txo_txpower: 17'],
+                         ["show_ll_graphs: 1"], ["show_log: 1"]]
+
+        self.rx_sensitivity_obj = RxSensitivityTest(lf_host=self.lanforge_ip,
+                                                    lf_port=self.lanforge_port,
+                                                    ssh_port=self.lf_ssh_port,
+                                                    local_path=self.local_report_path,
+                                                    lf_user="lanforge",
+                                                    lf_password="lanforge",
+                                                    instance_name=instance_name,
+                                                    config_name="rx_sen_config",
+                                                    upstream="1.1." + self.upstream_port,
+                                                    pull_report=True,
+                                                    load_old_cfg=False,
+                                                    download_speed=download_rate,
+                                                    upload_speed=upload_rate,
+                                                    duration=duration,
+                                                    dut=dut_name,
+                                                    station="1.1." + station_name[0],
+                                                    raw_lines=raw_lines)
+        self.rx_sensitivity_obj.setup()
+        self.rx_sensitivity_obj.run()
+        report_name = self.rx_sensitivity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        influx = CSVtoInflux(influxdb=self.influxdb,
+                             _influx_tag=self.influx_params["influx_tag"],
+                             target_csv=self.local_report_path + report_name + "/kpi.csv")
+        influx.post_to_influx()
+        return self.rx_sensitivity_obj
 
     def multipsk(self, ssid="[BLANK]", security=None, mode=None, key1=None, vlan_id=None, key2=None, band="twog",
                  station_name=None, n_vlan="1", key3=None):
@@ -566,7 +610,6 @@ class RunTest:
                 for sta_name in station_name:
                     self.sta_url_map[sta_name] = "port/1/%s/%s" % (str(1), sta_name)
                     print(self.sta_url_map)
-        print("hi",self.sta_url_map)
 
         for sta_name in station_name:
             try:
