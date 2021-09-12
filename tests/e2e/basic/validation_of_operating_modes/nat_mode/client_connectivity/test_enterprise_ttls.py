@@ -133,6 +133,7 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
+    @pytest.mark.uc_sanity
     def test_wpa3_enterprise_2g(self, get_vif_state,station_names_twog, setup_profiles, get_lanforge_data, lf_test, update_report,
                                 test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][0]
@@ -156,6 +157,7 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
+    @pytest.mark.uc_sanity
     def test_wpa3_enterprise_5g(self, get_vif_state,station_names_fiveg, setup_profiles, get_lanforge_data, lf_test, update_report,
                                 test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][1]
