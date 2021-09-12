@@ -1,6 +1,24 @@
 import re
+import sys
+import os
 
+sys.path.append(
+    os.path.dirname(
+        os.path.realpath(__file__)
+    )
+)
+if "libs" not in sys.path:
+    sys.path.append(f'../libs')
+for folder in 'py-json', 'py-scripts':
+    if folder not in sys.path:
+        sys.path.append(f'../../lanforge/lanforge-scripts/{folder}')
+
+sys.path.append(f"../lanforge/lanforge-scripts/py-scripts/tip-cicd-sanity")
+
+sys.path.append(f'../libs')
+sys.path.append(f'../libs/lanforge/')
 import allure
+
 from create_chamberview import CreateChamberview
 from create_chamberview_dut import DUT
 import time
@@ -13,28 +31,35 @@ import pandas as pd
 class ChamberView:
 
     def __init__(self, lanforge_data=None, access_point_data=None, debug=True, testbed=None):
-        self.lanforge_ip = lanforge_data["ip"]
-        self.lanforge_port = lanforge_data["port"]
-        self.twog_radios = lanforge_data["2.4G-Radio"]
-        self.fiveg_radios = lanforge_data["5G-Radio"]
-        self.ax_radios = lanforge_data["AX-Radio"]
-        self.upstream_port = lanforge_data["upstream"]
-        self.twog_prefix = lanforge_data["2.4G-Station-Name"]
-        self.fiveg_prefix = lanforge_data["5G-Station-Name"]
-        self.ax_prefix = lanforge_data["AX-Station-Name"]
-        self.uplink_port = lanforge_data["uplink"]  # eth2
-        self.upstream_subnet = lanforge_data["upstream_subnet"]
-        self.testbed = testbed
-        self.upstream_resources = self.upstream_port.split(".")[0] + "." + self.upstream_port.split(".")[1]
-        self.uplink_resources = self.uplink_port.split(".")[0] + "." + self.uplink_port.split(".")[1]
-        self.delete_old_scenario = True
-        # For chamber view
-        self.scenario_name = "TIP-" + self.testbed
-        self.debug = debug
-        self.exit_on_error = False
-        self.dut_idx_mapping = {}
-        self.ssid_list = []
-        self.raw_line = [
+        print("lanforge data",lanforge_data)
+        print("access point data", access_point_data)
+        print("testbed", testbed)
+        if "type" in lanforge_data.keys():
+            if lanforge_data["type"] == "mesh":
+                pass
+        else:
+            self.lanforge_ip = lanforge_data["ip"]
+            self.lanforge_port = lanforge_data["port"]
+            self.twog_radios = lanforge_data["2.4G-Radio"]
+            self.fiveg_radios = lanforge_data["5G-Radio"]
+            self.ax_radios = lanforge_data["AX-Radio"]
+            self.upstream_port = lanforge_data["upstream"]
+            self.twog_prefix = lanforge_data["2.4G-Station-Name"]
+            self.fiveg_prefix = lanforge_data["5G-Station-Name"]
+            self.ax_prefix = lanforge_data["AX-Station-Name"]
+            self.uplink_port = lanforge_data["uplink"]  # eth2
+            self.upstream_subnet = lanforge_data["upstream_subnet"]
+            self.testbed = testbed
+            self.upstream_resources = self.upstream_port.split(".")[0] + "." + self.upstream_port.split(".")[1]
+            self.uplink_resources = self.uplink_port.split(".")[0] + "." + self.uplink_port.split(".")[1]
+            self.delete_old_scenario = True
+            # For chamber view
+            self.scenario_name = "TIP-" + self.testbed
+            self.debug = debug
+            self.exit_on_error = False
+            self.dut_idx_mapping = {}
+            self.ssid_list = []
+            self.raw_line = [
             ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " + self.upstream_port.split(".")
             [2] + ",AUTO -1 NA"],
             ["profile_link " + self.uplink_resources + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
@@ -69,6 +94,7 @@ class ChamberView:
             ["profile_link " + self.uplink_resources + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
              + "' NA " + self.uplink_port.split(".")[2] + "," + self.upstream_port.split(".")[2] + " -1 NA"]
         ]
+        print(self.raw_line)
         self.Chamber_View()
 
     def reset_dut(self):
@@ -253,3 +279,88 @@ class ChamberView:
             allure.attach.file(source=relevant_path + i,
                                name=i,
                                attachment_type="image/png", extension=None)
+
+    def create_mesh(self):
+        pass
+
+
+def main():
+    # lanforge_data = {'ip': 'localhost', 'port': 8802, 'ssh_port': 8804, '2.4G-Radio': ['1.1.wiphy0', '1.1.wiphy2'], '5G-Radio': ['1.1.wiphy1', '1.1.wiphy3'], 'AX-Radio': ['1.1.wiphy4', '1.1.wiphy5', '1.1.wiphy6', '1.1.wiphy7'], 'upstream': '1.1.eth2', 'upstream_subnet': '10.28.2.1/24', 'uplink': '1.1.eth1', '2.4G-Station-Name': 'sta00', '5G-Station-Name': 'sta10', 'AX-Station-Name': 'ax'}
+    lanforge_data = {
+                "type": "mesh",
+                "ip": "localhost",  # 10.28.3.14
+                "port": 8802,  # 8080
+                "ssh_port": 8804,
+                "2.4G-Radio-mobile-sta": ["1.1.wiphy0", "1.1.wiphy2"],
+                "5G-Radio-mobile-sta": ["1.1.wiphy1", "1.1.wiphy3"],
+                "AX-Radio-mobile-sta": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
+                "upstream-mobile-sta": "1.1.eth2",
+                "upstream_subnet-mobile-sta": "10.28.2.1/24",
+                "uplink-mobile-sta": "1.1.eth3",
+                "2.4G-Radio-root": ["1.2.wiphy0"],
+                "5G-Radio-root": ["1.2.wiphy1"],
+                "AX-Radio-root": [],
+                "upstream-root": "1.2.eth2",
+                "upstream_subnet-root": "10.28.2.1/24",
+                "uplink-root": "1.2.eth3",
+                "2.4G-Radio-node-1": ["1.3.wiphy0"],
+                "5G-Radio-node-1": ["1.3.wiphy1"],
+                "AX-Radio-node-1": [],
+                "upstream-node-1": "1.3.eth2",
+                "upstream_subnet-node-1": "10.28.2.1/24",
+                "uplink--node-1": "1.3.eth3",
+                "2.4G-Radio-node-2": ["1.4.wiphy0"],
+                "5G-Radio-node-2": ["1.4.wiphy1"],
+                "AX-Radio-node-2": [],
+                "upstream-node-2": "1.4.eth2",
+                "upstream_subnet-node-2": "10.28.2.1/24",
+                "uplink--node-2": "1.4.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            }
+    # ap_data = [{'model': 'wf188n', 'mode': 'wifi6', 'serial': '0000c1018812', 'jumphost': True, 'ip': 'localhost', 'username': 'lanforge', 'password': 'pumpkin77', 'port': 8803, 'jumphost_tty': '/dev/ttyAP1', 'version': 'https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf188/20210729-cig_wf188-v2.0.0-rc2-ec3662e-upgrade.bin'}]
+    ap_data = [
+            {
+                'model': 'eap101',
+                'mode': 'wifi6',
+                'serial': '34efb6af4a7a',
+                'jumphost': True,
+                'ip': "localhost",  # 10\.28\.3\.101
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 8803,  # 22
+                'jumphost_tty': '/dev/ttyAP2',
+                'version': "latest"
+            },
+            {
+                'model': 'eap101',
+                'mode': 'wifi6',
+                'serial': '34efb6af4903',
+                'jumphost': True,
+                'ip': "localhost", #10\.28\.3\.101
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 8803,  # 22
+                'jumphost_tty': '/dev/ttyAP3',
+                'version': "latest"
+            },
+            {
+                'model': 'eap102',
+                'mode': 'wifi6',
+                'serial': '34efb6af4a7a',
+                'jumphost': True,
+                'ip': "localhost",  # 10\.28\.3\.101
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 8803,  # 22
+                'jumphost_tty': '/dev/ttyAP4',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/eap101/trunk/eap101-1.1.0.tar.gz"
+            }
+        ]
+    testbed = "mesh"
+    obj = ChamberView(lanforge_data=lanforge_data, access_point_data=ap_data, testbed="mesh")
+    obj.reset_scenario()
+
+if __name__ == '__main__':
+    main()
