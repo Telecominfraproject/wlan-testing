@@ -8,7 +8,7 @@
 
 """
 import sys
-
+import time
 if "libs" not in sys.path:
     sys.path.append("../libs/apnos/")
 
@@ -50,9 +50,10 @@ class APTools:
             print(output)
             print(error)
         elif action == "upgrade":
-            [input, output, error] = self.apnos.run_generic_command("cd /tmp ; curl -L \'{self.comm}\' --output upgrade ; "
+            [input, output, error] = self.apnos.run_generic_command(f"cd /tmp ; curl -L {cmd} --output upgrade ; "
                                                                     "sysupgrade -n upgrade")
             print(input, output, error)
+            time.sleep(300)
         elif action == "get_redirector":
             redirector = self.apnos.get_redirector()
             print(redirector)
