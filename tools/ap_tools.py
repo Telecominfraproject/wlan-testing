@@ -45,7 +45,7 @@ class APTools:
             [input, output, error] = self.apnos.run_generic_command(cmd=cmd)
             print(input, output, error)
         elif action == "verify":
-            [input, output, error] = self.apnos.run_generic_command("ubus call ucentral status; cat /tmp/sysinfo/model;"
+            [input, output, error] = self.apnos.run_generic_command("cat /tmp/sysinfo/model;"
                                                                     "cat /etc/banner")
             print(output)
             #print(error)
