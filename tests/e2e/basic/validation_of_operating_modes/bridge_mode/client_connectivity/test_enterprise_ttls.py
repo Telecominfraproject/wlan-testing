@@ -151,7 +151,8 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         assert passes
-
+    
+    @pytest.mark.uc_sanity
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     def test_wpa3_enterprise_2g(self, get_vif_state,
@@ -178,7 +179,8 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
                                      station_name=station_names_twog, vlan_id=vlan)
 
         assert passes
-
+    
+    @pytest.mark.uc_sanity
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
     def test_wpa3_enterprise_5g(self, get_vif_state,
