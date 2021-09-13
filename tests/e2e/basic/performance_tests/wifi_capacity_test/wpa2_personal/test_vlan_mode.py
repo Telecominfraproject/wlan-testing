@@ -40,7 +40,7 @@ class TestWifiCapacityVLANModeDualBand(object):
     """ Wifi Capacity Test VLAN mode
            pytest -m "wifi_capacity_test and VLAN"
     """
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3926", name="WIFI-3926")
     @pytest.mark.tcp_download
     def test_client_wpa2_VLAN_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -68,6 +68,7 @@ class TestWifiCapacityVLANModeDualBand(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3927", name="WIFI-3927")
     @pytest.mark.udp_download
     def test_client_wpa2_VLAN_udp_dl(self, get_vif_state, lf_tools,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -95,6 +96,7 @@ class TestWifiCapacityVLANModeDualBand(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3932", name="WIFI-3932")
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_VLAN_tcp_bidirectional(self, get_vif_state, lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -122,6 +124,7 @@ class TestWifiCapacityVLANModeDualBand(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3933", name="WIFI-3933")
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_VLAN_udp_bidirectional(self, get_vif_state, lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -177,7 +180,7 @@ class TestWifiCapacityVLANMode2G(object):
     """ Wifi Capacity Test VLAN mode
            pytest -m "wifi_capacity_test and VLAN"
     """
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3928", name="WIFI-3928")
     @pytest.mark.tcp_download
     def test_client_wpa2_VLAN_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -204,6 +207,7 @@ class TestWifiCapacityVLANMode2G(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3930", name="WIFI-3930")
     @pytest.mark.udp_download
     def test_client_wpa2_VLAN_udp_dl(self, get_vif_state, lf_tools,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -230,6 +234,7 @@ class TestWifiCapacityVLANMode2G(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3934", name="WIFI-3934")
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_VLAN_tcp_bidirectional(self, get_vif_state, lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -256,6 +261,7 @@ class TestWifiCapacityVLANMode2G(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3935", name="WIFI-3935")
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_VLAN_udp_bidirectional(self, get_vif_state, lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -310,7 +316,7 @@ class TestWifiCapacityVLANMode5G(object):
     """ Wifi Capacity Test VLAN mode
            pytest -m "wifi_capacity_test and VLAN"
     """
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3929", name="WIFI-3929")
     @pytest.mark.tcp_download
     def test_client_wpa2_VLAN_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -337,6 +343,7 @@ class TestWifiCapacityVLANMode5G(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3931", name="WIFI-3931")
     @pytest.mark.udp_download
     def test_client_wpa2_VLAN_udp_dl(self, get_vif_state, lf_tools,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -363,6 +370,7 @@ class TestWifiCapacityVLANMode5G(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3936", name="WIFI-3936")
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_VLAN_tcp_bidirectional(self, get_vif_state, lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -389,6 +397,7 @@ class TestWifiCapacityVLANMode5G(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3937", name="WIFI-3937")
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_VLAN_udp_bidirectional(self, get_vif_state, lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
