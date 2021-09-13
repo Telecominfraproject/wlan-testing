@@ -19,10 +19,10 @@ if 'perfecto_libs' not in sys.path:
 
 from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnection, ping_deftapps_iOS, \
     Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown,\
-    verifyUploadDownloadSpeediOS, get_ip_address_ios
+    verifyUploadDownloadSpeediOS, get_ip_address_ios, wifi_connect, wifi_disconnect_and_forget
 
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
-              pytest.mark.client_connect, pytest.mark.interop_uc_sanity, pytest.mark.nat]
+              pytest.mark.client_connectivity, pytest.mark.interop_uc_sanity, pytest.mark.nat]
 
 setup_params_general = {
     "mode": "NAT",
@@ -78,16 +78,19 @@ class TestNatModeConnectSuiteOne(object):
 
         # Set Wifi/AP Mode
         ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-        if ip:
-            if is_internet:
+        if is_internet:
+            if ip:
                 text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
             else:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "without internet")
+                text_body = ("connected to " + ssidName + "with Internet, couldn't get IP address")
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
-            assert True
+
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+            assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         else:
-            allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
+            allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
     @pytest.mark.twog
@@ -110,17 +113,19 @@ class TestNatModeConnectSuiteOne(object):
 
         # Set Wifi/AP Mode
         ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-
-        if ip:
-            if is_internet:
+        if is_internet:
+            if ip:
                 text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
             else:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "without internet")
+                text_body = ("connected to " + ssidName + "with Internet, couldn't get IP address")
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
-            assert True
+
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+            assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         else:
-            allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
+            allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
     @pytest.mark.fiveg
@@ -143,17 +148,19 @@ class TestNatModeConnectSuiteOne(object):
 
         # Set Wifi/AP Mode
         ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-
-        if ip:
-            if is_internet:
+        if is_internet:
+            if ip:
                 text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
             else:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "without internet")
+                text_body = ("connected to " + ssidName + "with Internet, couldn't get IP address")
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
-            assert True
+
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+            assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         else:
-            allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
+            allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
     @pytest.mark.twog
@@ -176,17 +183,19 @@ class TestNatModeConnectSuiteOne(object):
 
         # Set Wifi/AP Mode
         ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-
-        if ip:
-            if is_internet:
+        if is_internet:
+            if ip:
                 text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
             else:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "without internet")
+                text_body = ("connected to " + ssidName + "with Internet, couldn't get IP address")
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
-            assert True
+
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+            assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         else:
-            allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
+            allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
     @pytest.mark.fiveg
@@ -209,24 +218,20 @@ class TestNatModeConnectSuiteOne(object):
 
         #Set Wifi/AP Mode
         ip, is_internet =  get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-
-        if ip:
-            if is_internet:
+        if is_internet:
+            if ip:
                 text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
             else:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "without internet")
+                text_body = ("connected to " + ssidName + "with Internet, couldn't get IP address")
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
-            assert True
+
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+            assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         else:
-            allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
+            allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
-
-        #Toggle AirplaneMode
-        # assert Toggle_AirplaneMode_android(request, setup_perfectoMobile_iOS, connData)
-
-        #ForgetWifi
-        # ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
     @pytest.mark.twog
     @pytest.mark.open
@@ -248,17 +253,19 @@ class TestNatModeConnectSuiteOne(object):
 
         # Set Wifi/AP Mode
         ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-
-        if ip:
-            if is_internet:
+        if is_internet:
+            if ip:
                 text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
             else:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "without internet")
+                text_body = ("connected to " + ssidName + "with Internet, couldn't get IP address")
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
-            assert True
+
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+            assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         else:
-            allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
+            allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
 
@@ -298,7 +305,7 @@ setup_params_general_two = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestNatModeConnectSuiteTwo(object):
-    """ Client Connect SuiteB
+    """ Client Connect SuiteA
         pytest -m "client_connect and nat and InteropsuiteB"
     """
 
@@ -501,51 +508,3 @@ class TestNatModeConnectSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-
-# @allure.feature("NAT MODE CLIENT CONNECTIVITY")
-# @pytest.mark.parametrize(
-#     'setup_profiles',
-#     [setup_params_general],
-#     indirect=True,
-#     scope="class"
-# )
-# @pytest.mark.usefixtures("setup_profiles")
-# class TestAccessPointConnectivetyNat(object):
-#
-#     @pytest.mark.fiveg
-#     @pytest.mark.open
-#     @pytest.mark.sushant
-#     def test_AccessPointConnection_5g_OPEN_Nat(self, request, get_vif_state, get_APToMobileDevice_data,
-#                                           setup_perfectoMobile_iOS):
-#         profile_data = setup_params_general["ssid_modes"]["open"][1]
-#         ssidName = profile_data["ssid_name"]
-#         ssidPassword = "[BLANK]"
-#         print("SSID_NAME: " + ssidName)
-#         # print ("SSID_PASS: " + ssidPassword)
-#
-#         # if ssidName not in get_vif_state:
-#         #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-#         #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-#
-#         report = setup_perfectoMobile_iOS[1]
-#         driver = setup_perfectoMobile_iOS[0]
-#         connData = get_APToMobileDevice_data
-#
-#         # Set Wifi/AP Mode
-#         # set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-#
-#         # Need An ip To ping
-#         # wifi_ip = get_WifiIPAddress_iOS(request, setup_perfectoMobile_iOS, connData, ssidName)
-#         wifi_ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-#         print(wifi_ip)
-#         print(is_internet)
-#         assert wifi_ip
-#         # assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
-#
-#         # # Open Ping Application
-#         # openApp(connData["bundleId-iOS-Ping"], setup_perfectoMobile_iOS)
-#         #
-#         # ping_deftapps_iOS(setup_perfectoMobile_iOS, wifi_ip)
-#
-#         # ForgetWifi
-#         # ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)

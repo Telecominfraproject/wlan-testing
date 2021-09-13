@@ -1143,14 +1143,14 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                             if get_switch_text == "Off":
                                 print("Switch is Still OFF")
                                 closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                                return ip_address_element_text
+                                return ip_address_element_text, ssid_with_internet
                         else:
                             print("Switch is already On")
                             check_if_no_internet_popup(driver)
                     except:
                         print("Couldn't turn on WIFI switch")
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                        return ip_address_element_text
+                        return ip_address_element_text, ssid_with_internet
 
                     #---------------------This is to Forget current connected SSID-------------------------------
                     try: #To deal with already connected SSID
@@ -1172,7 +1172,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                             except:
                                 print("Couldn't forget ssid")
                                 closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                                return ip_address_element_text
+                                return ip_address_element_text, ssid_with_internet
                         except:
                             print("Couldn't get into additional details")
                     except:
@@ -1190,6 +1190,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         for k in range(3):
                             available_ssids = get_all_available_ssids(driver)
                             print("active_ssid_list: ", available_ssids)
+                            allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
                             try:
                                 if WifiName not in available_ssids:
                                     scrollDown(setup_perfectoMobile)
@@ -1312,7 +1313,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                 ip_address_element_text = ip_address_element.text
                                 print("Device IP address is :", ip_address_element_text)
                             except:
-                                raise "IP address element not found"
+                                print("IP address element not found")
                                #allure.attach(name= body=str("IP address element not found"))
 
                             # closeApp(connData["appPackage-android"], setup_perfectoMobile)
@@ -1348,24 +1349,24 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                 driver.implicitly_wait(2)
                                 get_switch_element.click()
                             except:
-                                print("couldn't click on wifi swich")
+                                print("couldn't click on wifi switch")
                                #allure.attach(name= body=str("couldn't click on wifi switch"))
                         except:
                             print("Couldn't forget ssid")
-                            closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                            return ip_address_element_text, ssid_with_internet
+                            # closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                            # return ip_address_element_text, ssid_with_internet
                     except:
                         print("Couldn't get into Additional settings")
                     # -------------------------------------------------------
-                except NoSuchElementException:
+                except:
                     print("No Switch element found")
                 # ---------------------To Turn on WIFi Switch if already OFF-------------------------------
 
-            except NoSuchElementException:
+            except:
                 print("Couldn't find wifi Button")
             # ------------------Open WIFI page----------------------------------
 
-        except NoSuchElementException:
+        except:
             print("Exception: Verify Xpath - Update/check Xpath for Click Connections")
         # -----------------To Open Connections page---------------------------
 
@@ -1510,10 +1511,10 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                             print("could not found" + WifiName + " in device")
                            #allure.attach(name= body=str("could not found" + WifiName + " in device"))
                             closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                            return ip_address_element_text, ssid_with_internet
+                            return ssid_with_internet
                     except:
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                        return ip_address_element_text, ssid_with_internet
+                        return ssid_with_internet
                     # -------------------------------------------------------
 
 

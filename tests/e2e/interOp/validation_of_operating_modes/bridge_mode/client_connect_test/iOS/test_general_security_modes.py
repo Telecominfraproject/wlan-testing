@@ -106,7 +106,7 @@ class TestBridgeModeConnectSuiteOne(object):
 
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
-        connData = get_ToggleAirplaneMode_data
+        connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
         ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
@@ -139,7 +139,7 @@ class TestBridgeModeConnectSuiteOne(object):
 
         report = setup_perfectoMobile_iOS[1]
         driver = setup_perfectoMobile_iOS[0]
-        connData = get_ToggleAirplaneMode_data
+        connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
         ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
