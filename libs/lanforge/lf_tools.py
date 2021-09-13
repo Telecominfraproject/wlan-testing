@@ -33,6 +33,7 @@ class ChamberView:
     def __init__(self, lanforge_data=None, access_point_data=None, debug=True, testbed=None):
         print("lanforge data",lanforge_data)
         print("access point data", access_point_data)
+        self.access_point_data = access_point_data
         print("testbed", testbed)
         if "type" in lanforge_data.keys():
             if lanforge_data["type"] == "mesh":
@@ -51,27 +52,40 @@ class ChamberView:
                 self.upstream_resource_2 = self.upstream_port_2.split(".")[0] + "." + self.upstream_port_2.split(".")[1]
                 self.upstream_resource_3 = self.upstream_port_3.split(".")[0] + "." + self.upstream_port_3.split(".")[1]
                 self.upstream_resource_4 = self.upstream_port_4.split(".")[0] + "." + self.upstream_port_4.split(".")[1]
-
                 self.uplink_resource_1 = self.uplink_port_1.split(".")[0] + "." + self.uplink_port_1.split(".")[1]
                 self.uplink_resource_2 = self.uplink_port_2.split(".")[0] + "." + self.uplink_port_2.split(".")[1]
                 self.uplink_resource_3 = self.uplink_port_3.split(".")[0] + "." + self.uplink_port_3.split(".")[1]
                 self.uplink_resource_4 = self.uplink_port_4.split(".")[0] + "." + self.uplink_port_4.split(".")[1]
-                # print(self.uplink_resource_1)
                 self.upstream_subnet = lanforge_data["upstream_subnet-mobile-sta"]
                 self.delete_old_scenario = True
                 self.debug = debug
                 self.testbed = "mesh"
                 self.scenario_name = "TIP-" + self.testbed
-
                 self.raw_line = [
-                    ["profile_link " + self.upstream_resource_1 + " upstream-dhcp 1 NA NA " +
-                     self.upstream_port_1.split(".")
-                     [2] + ",AUTO -1 NA"],
-                    [
-                        "profile_link " + self.uplink_resource_1 + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
-                        + "' NA " + self.uplink_port_1.split(".")[2] + "," + self.upstream_port_1.split(".")[2] + " -1 NA"]
+                    ["profile_link " + self.upstream_resource_1 + " upstream-dhcp 1 NA NA " + self.upstream_port_1.split(".")[2] + ",AUTO -1 NA"],
+                    ["profile_link " + self.uplink_resource_1 + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet + "' NA " + self.uplink_port_1.split(".")[2] + "," + self.upstream_port_1.split(".")[2] + " -1 NA"]
                     ]
-                # print(self.raw_line)
+                self.CreateChamberview = CreateChamberview(self.lanforge_ip, self.lanforge_port)
+
+                # if access_point_data:
+                #     # for DUT
+                #     self.dut_name = testbed
+                #     self.ap_model = access_point_data[0]["model"]
+                #     self.version = access_point_data[0]["version"].split("/")[-1]
+                #     self.serial_1 = access_point_data[0]["serial"]
+                #     # self.serial = access_point_data[1]["serial"]
+                #
+                #
+                #     self.CreateDut = DUT(lfmgr=self.lanforge_ip,
+                #                          port=self.lanforge_port,
+                #                          dut_name=self.testbed,
+                #                          sw_version=self.version,
+                #                          hw_version=self.ap_model,
+                #                          model_num=self.ap_model,
+                #                          serial_num=self.serial
+                #                          )
+                #     self.CreateDut.ssid = []
+
         else:
             self.lanforge_ip = lanforge_data["ip"]
             self.lanforge_port = lanforge_data["port"]
@@ -99,28 +113,28 @@ class ChamberView:
             [2] + ",AUTO -1 NA"],
             ["profile_link " + self.uplink_resources + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
              + "' NA " + self.uplink_port.split(".")[2] + "," + self.upstream_port.split(".")[2] + " -1 NA"]
-        ]
+            ]
 
-        # This is for rawline input | see create_chamberview_dut.py for more details
+            # This is for rawline input | see create_chamberview_dut.py for more details
 
-        self.CreateChamberview = CreateChamberview(self.lanforge_ip, self.lanforge_port)
+            self.CreateChamberview = CreateChamberview(self.lanforge_ip, self.lanforge_port)
 
-        if access_point_data:
-            # for DUT
-            self.dut_name = testbed
-            self.ap_model = access_point_data[0]["model"]
-            self.version = access_point_data[0]["version"].split("/")[-1]
-            self.serial = access_point_data[0]["serial"]
+            if access_point_data:
+                # for DUT
+                self.dut_name = testbed
+                self.ap_model = access_point_data[0]["model"]
+                self.version = access_point_data[0]["version"].split("/")[-1]
+                self.serial = access_point_data[0]["serial"]
 
-            self.CreateDut = DUT(lfmgr=self.lanforge_ip,
-                                 port=self.lanforge_port,
-                                 dut_name=self.testbed,
-                                 sw_version=self.version,
-                                 hw_version=self.ap_model,
-                                 model_num=self.ap_model,
-                                 serial_num=self.serial
-                                 )
-            self.CreateDut.ssid = []
+                self.CreateDut = DUT(lfmgr=self.lanforge_ip,
+                                     port=self.lanforge_port,
+                                     dut_name=self.testbed,
+                                     sw_version=self.version,
+                                     hw_version=self.ap_model,
+                                     model_num=self.ap_model,
+                                     serial_num=self.serial
+                                     )
+                self.CreateDut.ssid = []
 
     def reset_scenario(self):
         self.raw_line = [
@@ -325,8 +339,28 @@ class ChamberView:
             ["profile_link " + self.uplink_resource_4 + " uplink-nat 1 'DUT: upstream3 LAN " + self.upstream_subnet + "' NA " + self.uplink_port_4.split(".")[2] + "," + self.upstream_port_4.split(".")[2] + " -1 NA"]
         ]
         print(self.raw_line)
-        self.Chamber_View()
+        mesh = self.Chamber_View()
+        return mesh
 
+    def create_mesh_dut(self):
+            for i in range(0,len(self.access_point_data)):
+                if i == 0 :
+                    self.dut_name = "tip-root"
+                if i == 1:
+                    self.dut_name = "tip-node-1"
+                if i == 2:
+                    self.dut_name = "tip-node-2"
+                self.ap_model = self.access_point_data[i]["model"]
+                self.version = self.access_point_data[i]["version"].split("/")[-1]
+                self.serial = self.access_point_data[i]["serial"]
+                self.CreateDut = DUT(lfmgr=self.lanforge_ip,
+                                     port=self.lanforge_port,
+                                     dut_name=self.dut_name,
+                                     hw_version=self.ap_model,
+                                     model_num=self.ap_model,
+                                     serial_num=self.serial
+                                     )
+                self.Create_Dut()
 
 def main():
     # lanforge_data = {'ip': 'localhost', 'port': 8802, 'ssh_port': 8804, '2.4G-Radio': ['1.1.wiphy0', '1.1.wiphy2'], '5G-Radio': ['1.1.wiphy1', '1.1.wiphy3'], 'AX-Radio': ['1.1.wiphy4', '1.1.wiphy5', '1.1.wiphy6', '1.1.wiphy7'], 'upstream': '1.1.eth2', 'upstream_subnet': '10.28.2.1/24', 'uplink': '1.1.eth1', '2.4G-Station-Name': 'sta00', '5G-Station-Name': 'sta10', 'AX-Station-Name': 'ax'}
@@ -404,7 +438,7 @@ def main():
         ]
     testbed = "mesh"
     obj = ChamberView(lanforge_data=lanforge_data, access_point_data=ap_data, testbed="mesh")
-    obj.create_mesh()
+    obj.create_mesh_dut()
 
 if __name__ == '__main__':
     main()
