@@ -36,7 +36,42 @@ class ChamberView:
         print("testbed", testbed)
         if "type" in lanforge_data.keys():
             if lanforge_data["type"] == "mesh":
-                pass
+                self.lanforge_ip = lanforge_data["ip"]
+                self.lanforge_port = lanforge_data["port"]
+                self.ssh_port = lanforge_data["ssh_port"]
+                self.upstream_port_1 = lanforge_data["upstream-mobile-sta"]
+                self.upstream_port_2 = lanforge_data["upstream-root"]
+                self.upstream_port_3 = lanforge_data["upstream-node-1"]
+                self.upstream_port_4 = lanforge_data["upstream-node-2"]
+                self.uplink_port_1 = lanforge_data["uplink-mobile-sta"]
+                self.uplink_port_2 = lanforge_data["uplink-root"]
+                self.uplink_port_3 = lanforge_data["uplink--node-1"]
+                self.uplink_port_4 = lanforge_data["uplink--node-2"]
+                self.upstream_resource_1 = self.upstream_port_1.split(".")[0] + "." + self.upstream_port_1.split(".")[1]
+                self.upstream_resource_2 = self.upstream_port_2.split(".")[0] + "." + self.upstream_port_2.split(".")[1]
+                self.upstream_resource_3 = self.upstream_port_3.split(".")[0] + "." + self.upstream_port_3.split(".")[1]
+                self.upstream_resource_4 = self.upstream_port_4.split(".")[0] + "." + self.upstream_port_4.split(".")[1]
+
+                self.uplink_resource_1 = self.uplink_port_1.split(".")[0] + "." + self.uplink_port_1.split(".")[1]
+                self.uplink_resource_2 = self.uplink_port_2.split(".")[0] + "." + self.uplink_port_2.split(".")[1]
+                self.uplink_resource_3 = self.uplink_port_3.split(".")[0] + "." + self.uplink_port_3.split(".")[1]
+                self.uplink_resource_4 = self.uplink_port_4.split(".")[0] + "." + self.uplink_port_4.split(".")[1]
+                # print(self.uplink_resource_1)
+                self.upstream_subnet = lanforge_data["upstream_subnet-mobile-sta"]
+                self.delete_old_scenario = True
+                self.debug = debug
+                self.testbed = "mesh"
+                self.scenario_name = "TIP-" + self.testbed
+
+                self.raw_line = [
+                    ["profile_link " + self.upstream_resource_1 + " upstream-dhcp 1 NA NA " +
+                     self.upstream_port_1.split(".")
+                     [2] + ",AUTO -1 NA"],
+                    [
+                        "profile_link " + self.uplink_resource_1 + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
+                        + "' NA " + self.uplink_port_1.split(".")[2] + "," + self.upstream_port_1.split(".")[2] + " -1 NA"]
+                    ]
+                # print(self.raw_line)
         else:
             self.lanforge_ip = lanforge_data["ip"]
             self.lanforge_port = lanforge_data["port"]
@@ -281,7 +316,16 @@ class ChamberView:
                                attachment_type="image/png", extension=None)
 
     def create_mesh(self):
-        pass
+        self.raw_line = [
+            ["profile_link " + self.upstream_resource_2 + " upstream-dhcp 1 NA NA " + self.upstream_port_2.split(".")[2] + ",AUTO -1 NA"],
+            ["profile_link " + self.uplink_resource_2 + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet + "' NA " + self.uplink_port_2.split(".")[2] + "," + self.upstream_port_2.split(".")[2] + " -1 NA"],
+            ["profile_link " + self.upstream_resource_3 + " upstream-dhcp 1 NA NA " + self.upstream_port_3.split(".")[2] + ",AUTO -1 NA"],
+            ["profile_link " + self.uplink_resource_3 + " uplink-nat 1 'DUT: upstream2 LAN " + self.upstream_subnet + "' NA " + self.uplink_port_3.split(".")[2] + "," + self.upstream_port_3.split(".")[2] + " -1 NA"],
+            ["profile_link " + self.upstream_resource_4 + " upstream-dhcp 1 NA NA " + self.upstream_port_4.split(".")[2] + ",AUTO -1 NA"],
+            ["profile_link " + self.uplink_resource_4 + " uplink-nat 1 'DUT: upstream3 LAN " + self.upstream_subnet + "' NA " + self.uplink_port_4.split(".")[2] + "," + self.upstream_port_4.split(".")[2] + " -1 NA"]
+        ]
+        print(self.raw_line)
+        self.Chamber_View()
 
 
 def main():
@@ -360,7 +404,7 @@ def main():
         ]
     testbed = "mesh"
     obj = ChamberView(lanforge_data=lanforge_data, access_point_data=ap_data, testbed="mesh")
-    obj.reset_scenario()
+    obj.create_mesh()
 
 if __name__ == '__main__':
     main()
