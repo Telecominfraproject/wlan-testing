@@ -574,22 +574,24 @@ class APNOS:
 
 if __name__ == '__main__':
     obj = {
-        'model': 'ec420',
-        'mode': 'wifi5',
-        'serial': '001122090801',
-        'jumphost': True,
-        'ip': "10.28.3.100",
-        'username': "lanforge",
-        'password': "pumpkin77",
-        'port': 22,
-        'jumphost_tty': '/dev/ttyAP3',
-        'version': "latest"
-    }
+                'model': 'wf188n',
+                'mode': 'wifi6',
+                'serial': '0000c1018812',
+                'jumphost': True,
+                'ip': "10.28.3.103",
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22,
+                'jumphost_tty': '/dev/ttyAP1',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf188/20210729-cig_wf188-v2.0.0-rc2-ec3662e-upgrade.bin"
+            }
     var = APNOS(credentials=obj, sdk="2.x")
-    S = 9
-    instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
-    var.run_generic_command(cmd="logger start testcase: " + instance_name)
-    time.sleep(60)
-    var.run_generic_command(cmd="logger stop testcase: " + instance_name)
-    var.get_logread(start_ref="start testcase: " + instance_name,
-                    stop_ref="stop testcase: " + instance_name)
+    a = var.run_generic_command(cmd="wifi status")
+    print("".join(a))
+    # S = 9
+    # instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
+    # var.run_generic_command(cmd="logger start testcase: " + instance_name)
+    # time.sleep(60)
+    # var.run_generic_command(cmd="logger stop testcase: " + instance_name)
+    # var.get_logread(start_ref="start testcase: " + instance_name,
+    #                 stop_ref="stop testcase: " + instance_name)
