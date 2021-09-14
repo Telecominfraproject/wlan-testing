@@ -664,7 +664,7 @@ Logs related Fixtures
 
 
 @pytest.fixture(scope="function")
-def get_ap_logs(request, get_apnos):
+def get_ap_logs(request, get_apnos, get_configuration):
     S = 9
     instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
     for ap in get_configuration['access_point']:

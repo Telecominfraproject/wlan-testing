@@ -70,11 +70,9 @@ class Fixtures_2x:
                        get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
 
         instantiate_profile_obj = instantiate_profile(sdk_client=setup_controller)
-        print("garbage")
         print(1, instantiate_profile_obj.sdk_client)
         vlan_id, mode = 0, 0
         parameter = dict(param)
-        print("hola", parameter)
         test_cases = {}
         profile_data = {}
 
