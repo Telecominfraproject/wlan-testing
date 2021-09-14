@@ -327,7 +327,7 @@ class Fixtures_2x:
             time.sleep(5)
 
         else:
-            print("FAILED :: AP FAILED to apply config after 420 sec, current active config  is :: ",
+            print("FAILED :: AP FAILED to apply config after 420 sec, current active config  is  :: ",
                   str(ap_config_active))
             allure.attach(name="FAILED :: AP FAILED to apply config after 420 sec, current active config  is :: ",
                           body=str(ap_config_active))
