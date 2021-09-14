@@ -1115,7 +1115,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 def get_all_available_ssids(driver):
     active_ssid_list = []
     try:
-        time.sleep(5)
+        time.sleep(8)
         driver.implicitly_wait(10)
         elements = driver.find_elements_by_xpath("(//*[@label='More Info']/parent::*/XCUIElementTypeStaticText)")
         print(len(elements))

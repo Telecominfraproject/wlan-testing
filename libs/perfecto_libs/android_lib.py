@@ -1764,6 +1764,8 @@ def wifi_disconnect_and_forget(request, WifiName, WifiPass, setup_perfectoMobile
 def get_all_available_ssids(driver):
     active_ssid_list = []
     try:
+        time.sleep(8)
+        driver.implicitly_wait(10)
         elements = driver.find_elements_by_xpath("//*[@resource-id='com.android.settings:id/title']")
         # print("elements: ", elements)
         print(len(elements))
