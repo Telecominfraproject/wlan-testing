@@ -318,6 +318,7 @@ class TestBridgeModeConnectSuiteTwo(object):
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
+        get_vif_state.append(ssidName)
 
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -351,6 +352,7 @@ class TestBridgeModeConnectSuiteTwo(object):
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
+        get_vif_state.append(ssidName)
 
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -384,6 +386,7 @@ class TestBridgeModeConnectSuiteTwo(object):
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
+        get_vif_state.append(ssidName)
 
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -417,6 +420,7 @@ class TestBridgeModeConnectSuiteTwo(object):
         ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
+        get_vif_state.append(ssidName)
 
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -451,6 +455,7 @@ class TestBridgeModeConnectSuiteTwo(object):
 
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
+        get_vif_state.append(ssidName)
 
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -486,6 +491,7 @@ class TestBridgeModeConnectSuiteTwo(object):
         # ssidPassword = "[BLANK]"
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
+        get_vif_state.append(ssidName)
 
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
