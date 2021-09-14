@@ -13,7 +13,8 @@ from selenium.common.exceptions import NoSuchElementException
 import sys
 import allure
 
-pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.interop_and, pytest.mark.android, pytest.mark.AccessPointConnection]
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.interop_and, pytest.mark.android,
+              pytest.mark.AccessPointConnection, pytest.mark.bridge]
 
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
