@@ -324,7 +324,7 @@ class TestNatModeConnectivitySuiteTwo(object):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][0]
         ssidName = profile_data["ssid_name"]
-        ssidPassword = "[BLANK]"
+        ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
 
@@ -362,7 +362,7 @@ class TestNatModeConnectivitySuiteTwo(object):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][1]
         ssidName = profile_data["ssid_name"]
-        ssidPassword = "[BLANK]"
+        ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
 
@@ -400,7 +400,7 @@ class TestNatModeConnectivitySuiteTwo(object):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][0]
         ssidName = profile_data["ssid_name"]
-        ssidPassword = "[BLANK]"
+        ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
 
@@ -438,7 +438,7 @@ class TestNatModeConnectivitySuiteTwo(object):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][1]
         ssidName = profile_data["ssid_name"]
-        ssidPassword = "[BLANK]"
+        ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
 
@@ -476,7 +476,7 @@ class TestNatModeConnectivitySuiteTwo(object):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
         ssidName = profile_data["ssid_name"]
-        ssidPassword = "[BLANK]"
+        ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
 
@@ -514,7 +514,7 @@ class TestNatModeConnectivitySuiteTwo(object):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
         ssidName = profile_data["ssid_name"]
-        ssidPassword = "[BLANK]"
+        ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
 
