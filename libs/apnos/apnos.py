@@ -586,8 +586,9 @@ if __name__ == '__main__':
                 'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf188/20210729-cig_wf188-v2.0.0-rc2-ec3662e-upgrade.bin"
             }
     var = APNOS(credentials=obj, sdk="2.x")
-    a = var.run_generic_command(cmd="wifi status")
-    print("".join(a))
+    a = var.get_wifi_status()
+
+
     # S = 9
     # instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
     # var.run_generic_command(cmd="logger start testcase: " + instance_name)

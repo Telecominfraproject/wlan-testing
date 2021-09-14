@@ -325,8 +325,8 @@ class Fixtures_2x:
                         stop_ref="stop testcase: " + instance_name)
         allure.attach(body=ap_logs, name="AP Log: ")
 
-
-
+        wifi_status = ap_ssh.get_wifi_status()
+        allure.attach(name="wifi status", body=str(wifi_status))
         try:
             ssid_info_sdk = instantiate_profile_obj.get_ssid_info()
             ap_wifi_data = ap_ssh.get_iwinfo()
@@ -362,7 +362,8 @@ class Fixtures_2x:
             pass
 
         def teardown_session():
-
+            wifi_status = ap_ssh.get_wifi_status()
+            allure.attach(name="wifi status", body=str(wifi_status))
             print("\nTeardown")
 
         request.addfinalizer(teardown_session)
