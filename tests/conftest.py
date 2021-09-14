@@ -2,6 +2,8 @@
     Pytest fixtures: High level Resource Management and base setup fixtures
 """
 import datetime
+import random
+import string
 import sys
 import os
 import time
@@ -257,7 +259,7 @@ def instantiate_access_point(testbed, get_apnos, get_configuration):
                 pass
     else:
         get_apnos(access_point_info, pwd="../libs/apnos/")
-            # Write a code to verify Access Point Connectivity
+        # Write a code to verify Access Point Connectivity
     yield True
 
 
@@ -660,3 +662,28 @@ def fixtures_ver(request, get_configuration):
 def firmware_upgrade(fixtures_ver, get_apnos, get_configuration):
     fixtures_ver.setup_firmware(get_apnos, get_configuration)
     yield True
+
+
+"""
+Logs related Fixtures
+"""
+
+
+@pytest.fixture(scope="function")
+def get_ap_logs(request, get_apnos, get_configuration):
+    S = 9
+    instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
+    for ap in get_configuration['access_point']:
+        ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
+        ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
+
+    def collect_logs():
+        for ap in get_configuration['access_point']:
+            ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
+            ap_ssh.run_generic_command(cmd="logger stop testcase: " + instance_name)
+            ap_logs = ap_ssh.get_logread(start_ref="start testcase: " + instance_name,
+                                         stop_ref="stop testcase: " + instance_name)
+            allure.attach(name='logread', body=str(ap_logs))
+        pass
+
+    request.addfinalizer(collect_logs)

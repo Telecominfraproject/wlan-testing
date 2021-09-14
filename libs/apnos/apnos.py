@@ -10,6 +10,9 @@ Currently Having Methods:
 
 """
 import json
+import string
+import time
+import random
 
 import paramiko
 from scp import SCPClient
@@ -51,7 +54,7 @@ class APNOS:
             client = self.ssh_cli_connect()
             cmd = '[ -f ~/cicd-git/ ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
-            output = str(stdout.read())            
+            output = str(stdout.read())
             print(output)
             if output.__contains__("False"):
                 cmd = 'mkdir ~/cicd-git/'
@@ -136,7 +139,6 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
-
 
         return output
 
@@ -305,7 +307,6 @@ class APNOS:
                       f"cmd --value \"{cmd}\" "
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
-            print(output, stderr.read())
             status = output.decode('utf-8').splitlines()
             client.close()
         except Exception as e:
@@ -450,7 +451,7 @@ class APNOS:
                         band = "2G"
                     else:
                         band = "5G"
-                    iwinfo_bssid_data[o[i - 1]] = [o[i+1].replace('"', ''), o[i + 4], band]
+                    iwinfo_bssid_data[o[i - 1]] = [o[i + 1].replace('"', ''), o[i + 4], band]
             client.close()
         except Exception as e:
             iwinfo_bssid_data = False
@@ -490,6 +491,20 @@ class APNOS:
         name.pop(-1)
         return tx_power, name
 
+    def get_logread(self, start_ref="", stop_ref=""):
+        data = self.logread()
+        log_data = []
+        data = data.split("\n")
+        flag = 0
+        for logs in data:
+            if logs.__contains__(start_ref):
+                flag = 1
+            if flag == 1:
+                log_data.append(logs)
+            if logs.__contains__(stop_ref):
+                flag = 0
+        ap_logs = "\n".join(log_data)
+        return ap_logs
 
     def logread(self):
         try:
@@ -559,19 +574,24 @@ class APNOS:
 
 if __name__ == '__main__':
     obj = {
-        'model': 'ecw5211',
-        'mode': 'wifi5',
-        'serial': '001122090801',
-        'jumphost': True,
-        'ip': "10.28.3.100",
-        'username': "lanforge",
-        'password': "pumpkin77",
-        'port': 22,
-        'jumphost_tty': '/dev/ttyAP3',
-        'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
-    }
+                'model': 'wf188n',
+                'mode': 'wifi6',
+                'serial': '0000c1018812',
+                'jumphost': True,
+                'ip': "10.28.3.103",
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22,
+                'jumphost_tty': '/dev/ttyAP1',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf188/20210729-cig_wf188-v2.0.0-rc2-ec3662e-upgrade.bin"
+            }
     var = APNOS(credentials=obj, sdk="2.x")
-    tx_power, name = var.gettxpower()
-    allure.attach(name="interface name: ", body=str(name))
-    allure.attach(name="tx power: ", body=str(tx_power))
-    print(tx_power, name)
+    a = var.run_generic_command(cmd="wifi status")
+    print("".join(a))
+    # S = 9
+    # instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
+    # var.run_generic_command(cmd="logger start testcase: " + instance_name)
+    # time.sleep(60)
+    # var.run_generic_command(cmd="logger stop testcase: " + instance_name)
+    # var.get_logread(start_ref="start testcase: " + instance_name,
+    #                 stop_ref="stop testcase: " + instance_name)

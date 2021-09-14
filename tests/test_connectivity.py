@@ -51,7 +51,7 @@ class TestResources(object):
     @allure.testcase(name="test_traffic_generator_connectivity", url="")
     def test_traffic_generator_connectivity(self, traffic_generator_connectivity, update_report, test_cases):
         """Test case to verify Traffic Generator Connectivity"""
-        if traffic_generator_connectivity == "5.4.3":
+        if traffic_generator_connectivity == "5.4.4":
             allure.attach(name="LANforge-", body=str(traffic_generator_connectivity))
 
         else:
