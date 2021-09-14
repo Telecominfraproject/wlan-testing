@@ -996,6 +996,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------Set Password-------------------------------
     try:
+        driver.implicitly_wait(5)
         wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
         wifiPassword.send_keys(WifiPass)
     except NoSuchElementException:
@@ -1004,6 +1005,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------Click on join-------------------------------
     try:
+        driver.implicitly_wait(5)
         joinBTN = driver.find_element_by_xpath("//*[@label='Join']")
         joinBTN.click()
     except Exception as e:

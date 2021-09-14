@@ -241,6 +241,7 @@ class Fixtures_2x:
             allure.attach(body=ap_logs, name="FAILURE: AP LOgs: ")
             pytest.fail("AP is disconnected from UC Gateway")
         instantiate_profile_obj.push_config(serial_number=get_equipment_id[0])
+        time.sleep(30)
         time_1 = time.time()
         config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"'))
         config["uuid"] = 0
@@ -334,6 +335,7 @@ class Fixtures_2x:
 
             ssid_data = []
             idx_mapping = {}
+            print(ssid_info_sdk)
             for interface in range(len(ssid_info_sdk)):
                 ssid = ["ssid_idx=" + str(interface) +
                         " ssid=" + ssid_info_sdk[interface][0] +
