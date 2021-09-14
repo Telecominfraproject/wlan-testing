@@ -644,7 +644,7 @@ def add_env_properties(get_configuration, get_apnos, fixtures_ver, add_allure_en
     add_allure_environment_property('Access-Point-Firmware-Version',
                                     fixtures_ver.get_ap_version(get_apnos, get_configuration)[0].split("\n")[1])
     add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
-    add_allure_environment_property('AP-Serial-Number', get_configuration["access_point"][0]["serial"])
+    add_allure_environment_property('AP-Serial-Number', get_configuration["access_point"][0]["serial"] + "\n")
 
 
 @pytest.fixture(scope="session")
