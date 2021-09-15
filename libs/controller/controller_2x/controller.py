@@ -232,10 +232,10 @@ class FMSUtils:
         else:
             return {}
 
-    def get_firmwares(self, limit="", model="cig_wf188", latestonly="", branch="", commit_id=""):
+    # 2c3becf
+    def get_firmwares(self, limit="", model="", latestonly="", branch="", commit_id=""):
 
         deviceType = self.ap_model_lookup(model=model)
-
         params = "limit=" + limit + "&deviceType=" + deviceType + "&latestonly=" + latestonly
 
         response = self.sdk_client.request(service="fms", command="firmwares/", method="GET", params=params, payload="")
@@ -243,6 +243,13 @@ class FMSUtils:
         if response.status_code == 200:
             data = response.json()
             newlist = sorted(data['firmwares'], key=itemgetter('created'))
+            print("finding a bug", len(newlist))
+            for i in newlist:
+                print(i['uri'])
+                print(i['revision'])
+            # print(newlist)
+            self.sdk_client.logout()
+            pytest.exit("hey")
 
             return newlist
             # print(data)
@@ -532,16 +539,17 @@ if __name__ == '__main__':
         'password': 'openwifi',
     }
     obj = Controller(controller_data=controller)
-    # fms = FMSUtils(sdk_client=obj)
+    fms = FMSUtils(sdk_client=obj)
+    fms.get_firmwares()
     # fms.get_device_set()
     # model = fms.get_latest_fw(model="eap102")
     # print(model)
-    profile = UProfileUtility(sdk_client=obj)
-    profile.set_mode(mode="BRIDGE")
-    profile.set_radio_config()
-    ssid = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G", "5G"], "security": "psk", "security_key": "something"}
-    profile.add_ssid(ssid_data=ssid, radius=False)
-    profile.push_config(serial_number="0000c1018812")
+    # profile = UProfileUtility(sdk_client=obj)
+    # profile.set_mode(mode="BRIDGE")
+    # profile.set_radio_config()
+    # ssid = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G", "5G"], "security": "psk", "security_key": "something"}
+    # profile.add_ssid(ssid_data=ssid, radius=False)
+    # profile.push_config(serial_number="0000c1018812")
     # print(profile.get_ssid_info())
     # # print(obj.get_devices())
     obj.logout()

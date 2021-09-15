@@ -130,12 +130,12 @@ class Fixtures_2x:
                             # wait for 300 seconds after firmware upgrade
                             items = list(range(0, 300))
                             l = len(items)
-                            self.printProgressBar(0, l, prefix='Progress:', suffix='Complete', length=50)
-                            for i, item in enumerate(items):
-                                # Do stuff...
-                                time.sleep(0.8)
-                                # Update Progress Bar
-                                self.printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=50)
+                            # self.printProgressBar(0, l, prefix='Progress:', suffix='Complete', length=50)
+                            # for i, item in enumerate(items):
+                            #     # Do stuff...
+                            #     time.sleep(0.8)
+                            #     # Update Progress Bar
+                            #     self.printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=50)
 
                             # check the current AP Revision again
                             ap_version = ap_ssh.get_ap_version_ucentral()
@@ -503,7 +503,7 @@ class Fixtures_2x:
         S = 9
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
-        instantiate_profile_obj.push_config(serial_number=get_equipment_id[0])
+        instantiate_profile_obj.push_config(serial_number=get_equipment_ref[0])
         time_1 = time.time()
         config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"'))
         config["uuid"] = 0

@@ -234,7 +234,7 @@ def get_apnos():
 
 
 @pytest.fixture(scope="session")
-def get_equipment_id(request, setup_controller, testbed, get_configuration):
+def get_equipment_ref(request, setup_controller, testbed, get_configuration):
     """"""
     if request.config.getoption("1.x"):
         equipment_id_list = []
@@ -246,21 +246,6 @@ def get_equipment_id(request, setup_controller, testbed, get_configuration):
         for i in get_configuration['access_point']:
             equipment_id_list.append(i['serial'])
     yield equipment_id_list
-
-
-@pytest.fixture(scope="session")
-def instantiate_access_point(testbed, get_apnos, get_configuration):
-    """setup the access point connectivity"""
-    if request.config.getoption("1.x"):
-        for access_point_info in get_configuration['access_point']:
-            if access_point_info["jumphost"]:
-                get_apnos(access_point_info, pwd="../libs/apnos/", sdk="1.x")
-            else:
-                pass
-    else:
-        get_apnos(access_point_info, pwd="../libs/apnos/")
-        # Write a code to verify Access Point Connectivity
-    yield True
 
 
 # Controller Fixture
