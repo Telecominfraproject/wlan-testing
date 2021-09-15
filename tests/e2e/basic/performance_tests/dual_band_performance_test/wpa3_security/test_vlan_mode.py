@@ -39,6 +39,7 @@ class TestDualbandPerformanceVlan(object):
          pytest -m "performance and dual_band_test and vlan and wpa3_personal and twog  and fiveg"
     """
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3728", name="WIFI-3728")
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
