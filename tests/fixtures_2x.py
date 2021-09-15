@@ -245,7 +245,7 @@ class Fixtures_2x:
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
         instantiate_profile_obj.push_config(serial_number=get_equipment_id[0])
-        time.sleep(60)
+        time.sleep(90)
         time_1 = time.time()
         config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"'))
         config["uuid"] = 0
