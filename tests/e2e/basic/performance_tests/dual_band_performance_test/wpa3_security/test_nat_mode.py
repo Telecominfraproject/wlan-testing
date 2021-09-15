@@ -1,6 +1,6 @@
 """
-       Dual Band Performance Test : VLAN Mode
-       pytest -m "performance and dual_band_test and vlan"
+       Dual Band Performance Test : NAT Mode
+       pytest -m "performance and dual_band_test and nat"
 
 
 """
@@ -9,12 +9,12 @@ import os
 import allure
 import pytest
 
-pytestmark = [pytest.mark.performance, pytest.mark.vlan, pytest.mark.dual_band_test]#,
+pytestmark = [pytest.mark.performance, pytest.mark.nat, pytest.mark.dual_band_test]#,
 #              pytest.mark.usefixtures("setup_test_run")]
 
 
 setup_params_general = {
-    "mode": "VLAN",
+    "mode": "NAT",
     "ssid_modes": {
         "wpa3_personal": [
             {"ssid_name": "ssid_wpa3_personal_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something", "vlan": 100}
@@ -36,13 +36,13 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestDualbandPerformanceNat(object):
     """
-         pytest -m "performance and dual_band_test and vlan and wpa3_personal and twog  and fiveg"
+         pytest -m "performance and dual_band_test and nat and wpa3_personal and twog  and fiveg"
     """
 
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
-    def test_client_wpa3_personal_wpa3_vlan(self, get_vif_state, lf_tools,
+    def test_client_wpa3_personal_nat(self, get_vif_state, lf_tools,
                                   create_lanforge_chamberview_dut, lf_test, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -65,8 +65,8 @@ class TestDualbandPerformanceNat(object):
             pytest.xfail("SSID's NOT AVAILABLE IN VIF STATE")
 
         dbpt_obj = lf_test.dualbandperformancetest(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                                   instance_name="dbp_instance_wpa3p_VLAN_p",
+                                                   instance_name="dbp_instance_wpa3p_NAT_p",
                                                    vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
         report_name = dbpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dual Band Performance Wpa3 Vlan Test")
+        lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dual Band Performance Wpa3 NAT Test")
         assert True
