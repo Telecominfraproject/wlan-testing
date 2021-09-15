@@ -1107,7 +1107,9 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             try:
                 report.step_start("Clicking Wi-Fi")
                 print("Clicking WIFI")
-                wifiElement = driver.find_element_by_xpath("//*[@text='Wi-Fi']")
+                time.sleep(3)
+                wifiElement = WebDriverWait(driver, 10).until(
+                            EC.presence_of_element_located((MobileBy.XPATH,"//*[@text='Wi-Fi']")))
                 wifiElement.click()
 
 
