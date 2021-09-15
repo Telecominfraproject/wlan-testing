@@ -36,7 +36,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestDualbandPerformanceNat(object):
     """
-         pytest -m "performance and dual_band_test and nat and wpa3_personal and twog  and fiveg"
+         pytest -m "performance and dual_band_test and nat and wpa3_personal and twog  and fiveg."
     """
 
     @pytest.mark.wpa3_personal
