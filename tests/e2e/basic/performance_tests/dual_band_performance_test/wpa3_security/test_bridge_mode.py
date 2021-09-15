@@ -41,7 +41,7 @@ class TestDualbandPerformanceBridge(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
-    def test_client_wpa3_personal_wpa3_vlan(self, get_vif_state, lf_tools,
+    def test_client_wpa3_personal_bridge(self, get_vif_state, lf_tools,
                                   create_lanforge_chamberview_dut, lf_test, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
