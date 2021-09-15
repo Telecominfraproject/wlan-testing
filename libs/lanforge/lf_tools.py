@@ -327,7 +327,7 @@ class ChamberView:
             ["profile_link " + self.upstream_resource_3 + " upstream-dhcp 1 NA NA " + self.upstream_port_3.split(".")[2] + ",AUTO -1 NA"],
             ["profile_link " + self.uplink_resource_3 + " uplink-nat 1 'DUT: " + str(upstream_list[1]) +  " LAN " + self.upstream_subnet + "' NA " + self.uplink_port_3.split(".")[2] + "," + self.upstream_port_3.split(".")[2] + " -1 NA"],
             ["profile_link " + self.upstream_resource_4 + " upstream-dhcp 1 NA NA " + self.upstream_port_4.split(".")[2] + ",AUTO -1 NA"],
-            ["profile_link " + self.uplink_resource_4 + " uplink-nat 1 'DUT: " + str(upstream_list[0]) +  " LAN " + self.upstream_subnet + "' NA " + self.uplink_port_4.split(".")[2] + "," + self.upstream_port_4.split(".")[2] + " -1 NA"]
+            ["profile_link " + self.uplink_resource_4 + " uplink-nat 1 'DUT: " + str(upstream_list[2]) +  " LAN " + self.upstream_subnet + "' NA " + self.uplink_port_4.split(".")[2] + "," + self.upstream_port_4.split(".")[2] + " -1 NA"]
         ]
         print(self.raw_line)
         mesh = self.Chamber_View()
@@ -429,7 +429,7 @@ def main():
         ]
     testbed = "mesh"
     obj = ChamberView(lanforge_data=lanforge_data, access_point_data=ap_data, testbed="mesh")
-    # obj.create_mesh_dut()
+    obj.create_mesh_dut()
     obj.create_mesh()
 
 if __name__ == '__main__':
