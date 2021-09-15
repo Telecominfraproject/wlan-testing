@@ -342,7 +342,6 @@ CONFIGURATION = {
             }
         }
     },  # checked
-
     "mesh": {
         "controller": {
             'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
@@ -351,6 +350,7 @@ CONFIGURATION = {
         },
         'access_point': [
             {
+                'type' : 'root',
                 'model': 'eap101',
                 'mode': 'wifi6',
                 'serial': '34efb6af4a7a',
@@ -363,6 +363,7 @@ CONFIGURATION = {
                 'version': "latest"
             },
             {
+                'type': 'node-1',
                 'model': 'eap101',
                 'mode': 'wifi6',
                 'serial': '34efb6af4903',
@@ -375,16 +376,17 @@ CONFIGURATION = {
                 'version': "latest"
             },
             {
+                'type': 'node-2',
                 'model': 'eap102',
                 'mode': 'wifi6',
-                'serial': '34efb6af4a7a',
+                'serial': '903cb39d692c',
                 'jumphost': True,
                 'ip': "localhost",  # 10\.28\.3\.101
                 'username': "lanforge",
                 'password': "pumpkin77",
                 'port': 8803,  # 22
                 'jumphost_tty': '/dev/ttyAP4',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/eap101/trunk/eap101-1.1.0.tar.gz"
+                'version': "latest"
             }
         ],
         "traffic_generator": {
