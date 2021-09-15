@@ -315,6 +315,7 @@ class APNOS:
         return status
 
     def get_ucentral_status(self):
+        connected, latest, active = "Error", "Error", "Error"
         try:
             client = self.ssh_cli_connect()
             cmd = "ubus call ucentral status"
@@ -322,36 +323,36 @@ class APNOS:
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                       f"cmd --value \"{cmd}\" "
             stdin, stdout, stderr = client.exec_command(cmd)
-            output = stdout.read()
-            # print(output, stderr.read())
-            connected = False
-            if "connected" in output.decode('utf-8').splitlines()[2]:
+            output = stdout.read().decode("utf-8")
+            output_formatted = ''.join(output.split())
+            json_output = json.loads(output_formatted)
+            if 'connected' in json_output.keys():
                 connected = True
-            # connected = output.decode('utf-8').splitlines()[2]
-            latest = output.decode('utf-8').splitlines()[3].split(":")[1].replace(" ", "").replace(",", "")
-            active = output.decode('utf-8').splitlines()[4].split(":")[1].replace(" ", "").replace(",", "")
+            if 'latest' in json_output.keys():
+                latest = str(json_output['latest'])
+            if 'active' in json_output.keys():
+                active = str(json_output['active'])
             client.close()
         except Exception as e:
+            print("Exception in get_ucentral_status :: ")
             print(e)
-            connected, latest, active = "Error", "Error", "Error"
         return connected, latest, active
 
     def get_uc_latest_config(self):
         try:
             connected, latest, active = self.get_ucentral_status()
-            print()
+            print("Getting latest")
             client = self.ssh_cli_connect()
-            cmd = "cat /etc/ucentral/ucentral.cfg." + latest
+            cmd = "cat /etc/ucentral/ucentral.cfg." + str(latest)
             if self.mode:
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                       f"cmd --value \"{cmd}\" "
             stdin, stdout, stderr = client.exec_command(cmd)
-            output = stdout.read().decode('utf-8').splitlines()[1]
-            print(output)
+            output = stdout.read().decode('utf-8')
             json_output = json.loads(output)  # , sort_keys=True)
-            print(type(json_output))
             client.close()
         except Exception as e:
+            print("expt get latest")
             json_output = {}
             print(e)
         return json_output
@@ -360,12 +361,12 @@ class APNOS:
         try:
             connected, latest, active = self.get_ucentral_status()
             client = self.ssh_cli_connect()
-            cmd = "cat /etc/ucentral/ucentral.cfg." + active
+            cmd = "cat /etc/ucentral/ucentral.cfg." + str(active)
             if self.mode:
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                       f"cmd --value \"{cmd}\" "
             stdin, stdout, stderr = client.exec_command(cmd)
-            output = stdout.read().decode('utf-8').splitlines()[1]
+            output = stdout.read().decode('utf-8')
             json_output = json.loads(output)  # , sort_keys=True)
             print(json_output)
             client.close()
