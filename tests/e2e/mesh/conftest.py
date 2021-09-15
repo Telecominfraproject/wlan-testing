@@ -44,7 +44,7 @@ def create_lanforge_chamberview(lf_tools):
 @pytest.fixture(scope="session")
 def create_lanforge_chamberview_dut(lf_tools):
     dut_object, dut_name = lf_tools.Create_Dut()
-    return dut_name
+    yield dut_name
 
 @pytest.fixture(scope="session")
 def setup_mesh(lf_tools):
@@ -56,6 +56,11 @@ def setup_mesh(lf_tools):
 def create_mesh_dut(lf_tools):
     mesh_dut = lf_tools.create_mesh_dut()
     yield True
+
+@pytest.fixture(scope="class")
+def setup_mesh_profile_fix(fixtures_ver, get_apnos, get_configuration):
+    ret_var = fixtures_ver.setup_mesh_profile(get_apnos, get_configuration)
+    yield ret_var
 
 
 @pytest.fixture(scope="class")
