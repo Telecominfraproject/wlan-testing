@@ -257,23 +257,30 @@ class Fixtures_2x:
             print(e)
             pass
         x = 1
+
         old_config = latest
+        print("Initial old_config :: ", old_config)
         connected, latest, active = ap_ssh.get_ucentral_status()
+        print("active: ", active)
+        print("latest: ", latest)
+
         while old_config == latest:
             time.sleep(5)
             x += 1
             print("old config: ", old_config)
             print("latest: ", latest)
             connected, latest, active = ap_ssh.get_ucentral_status()
-            if x == 80:
+            if x == 40:
                 break
 
-        if x < 80:
-            print("SUCCESS :: Latest Config UPDATED into AP :: old_config == latest", config)
+        if x < 40:
+            print("SUCCESS :: Latest Config UPDATED into AP :: old_config == latest ", config)
         else:
-            print("FAILED :: Latest Config NOT updated into AP :: old_config != latest", config)
+            print("FAILED :: Latest Config NOT updated into AP :: old_config != latest ", config)
 
         connected, latest, active = ap_ssh.get_ucentral_status()
+        print("active: ", active)
+        print("latest: ", latest)
         x = 1
         while active != latest:
             connected, latest, active = ap_ssh.get_ucentral_status()
@@ -281,9 +288,10 @@ class Fixtures_2x:
             x += 1
             print("active: ", active)
             print("latest: ", latest)
-            if x == 40:
+            if x == 20:
                 break
-        if x < 40:
+
+        if x < 20:
             print("SUCCESS :: Latest Config properly APPLIED into AP :: active == latest", config)
         else:
             print("FAILED :: Latest Config NOT applied into AP :: active != latest", config)
@@ -341,9 +349,9 @@ class Fixtures_2x:
             allure.attach(name="FAILED :: AP FAILED to apply config after 420 sec, current active config  is :: ",
                           body=str(ap_config_active))
 
-        print("Waiting 120 sec for iwinfo to come up...")
+        print("Waiting 60 sec for iwinfo to come up...")
         allure.attach(name="Waiting 120 sec for iwinfo to come up...", body='')
-        time.sleep(120)
+        time.sleep(60)
 
         try:
             iwinfo = ap_ssh.iwinfo()

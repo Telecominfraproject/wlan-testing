@@ -329,9 +329,9 @@ class APNOS:
             if 'connected' in json_output.keys():
                 connected = True
             if 'latest' in json_output.keys():
-                latest = str(json_output['latest'])
+                latest = json_output['latest']
             if 'active' in json_output.keys():
-                active = str(json_output['active'])
+                active = json_output['active']
             client.close()
         except Exception as e:
             print("Exception in get_ucentral_status :: ")
