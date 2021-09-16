@@ -368,6 +368,7 @@ class RunTest:
                                             lf_port=self.lanforge_port,
                                             lf_user="lanforge",
                                             lf_password="lanforge",
+                                            ssh_port=self.lf_ssh_port,
                                             instance_name=instance_name,
                                             config_name="dbp_config",
                                             upstream="1.1." + self.upstream_port,
