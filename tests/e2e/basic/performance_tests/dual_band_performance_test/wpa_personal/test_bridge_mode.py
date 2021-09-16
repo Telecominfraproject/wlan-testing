@@ -15,7 +15,7 @@ pytestmark = [pytest.mark.performance, pytest.mark.dual_band_test, pytest.mark.b
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa_personal": [
+        "wpa": [
             {"ssid_name": "ssid_wpa_personal_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something"}
             ]},
     "rf": {},
@@ -39,12 +39,13 @@ class TestDualbandPerformanceBRIDGE(object):
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3726", name="WIFI-3726")
-    @pytest.mark.wpa_personal
+    @pytest.mark.sg1
+    @pytest.mark.wpa
     @pytest.mark.twog
     @pytest.mark.fiveg
     def test_client_wpa_personal_bridge(self, get_vif_state, lf_tools,
                                   create_lanforge_chamberview_dut, lf_test, get_configuration):
-        profile_data = setup_params_general["ssid_modes"]["wpa_personal"]
+        profile_data = setup_params_general["ssid_modes"]["wpa"]
         ssid_2G = profile_data[0]["ssid_name"]
         ssid_5G = profile_data[0]["ssid_name"]
         dut_name = create_lanforge_chamberview_dut
