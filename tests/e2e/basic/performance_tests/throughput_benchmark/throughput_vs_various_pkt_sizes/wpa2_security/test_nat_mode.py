@@ -35,7 +35,7 @@ class TestWifiCapacityNatMode(object):
     """ Wifi Capacity Test Nat Mode
            pytest -m "wifi_capacity_test and nat"
     """
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2547", name="WIFI-2547")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     def test_client_wpa2_nat_2g(self, get_vif_state,
@@ -99,7 +99,7 @@ class TestWifiCapacityNatMode5g(object):
     """ Wifi Capacity Test Nat mode
            pytest -m "wifi_capacity_test and Nat"
     """
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2547", name="WIFI-2547")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     def test_client_wpa2_nat_5gg(self, get_vif_state,
