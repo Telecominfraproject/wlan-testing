@@ -164,10 +164,10 @@ CONFIGURATION = {
                 'mode': 'wifi5',
                 'serial': '68215fda456d',
                 'jumphost': True,
-                'ip': "localhost",
+                'ip': "10.28.3.100",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 8999,
+                'port': 22,
                 'jumphost_tty': "/dev/ttyAP5",
                 'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
             }
@@ -175,9 +175,9 @@ CONFIGURATION = {
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "localhost",
-                "port": 8998,
-                "ssh_port": 8990,
+                "ip": "10.28.3.12",
+                "port": 8080,
+                "ssh_port": 22,
                 "2.4G-Radio": ["1.1.wiphy4"],
                 "5G-Radio": [ "1.1.wiphy5"],
                 "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
