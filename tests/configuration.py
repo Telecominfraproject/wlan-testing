@@ -126,10 +126,10 @@ CONFIGURATION = {
                 'mode': 'wifi5',
                 'serial': '001122090801',
                 'jumphost': True,
-                'ip': "127.0.0.1",
+                'ip': "10.28.3.100",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 8833,
+                'port': 22,
                 'jumphost_tty': '/dev/ttyAP3',
                 'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/tplink_ec420/20210728-tplink_ec420-uCentral-trunk-12ad0d5-upgrade.bin"
             }
@@ -598,7 +598,7 @@ CONFIGURATION = {
 
 
 RADIUS_SERVER_DATA = {
-    "ip": "10.10.10.72",
+    "ip": "10.10.10.180",
     "port": 1812,
     "secret": "testing123",
     "user": "user",
@@ -607,7 +607,7 @@ RADIUS_SERVER_DATA = {
 }
 
 RADIUS_ACCOUNTING_DATA = {
-    "ip": "10.10.10.72",
+    "ip": "10.10.10.180",
     "port": 1813,
     "secret": "testing123",
     "user": "user",
