@@ -39,7 +39,6 @@ class TestDualbandPerformanceBRIDGE(object):
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3726", name="WIFI-3726")
-    @pytest.mark.sg1
     @pytest.mark.wpa
     @pytest.mark.twog
     @pytest.mark.fiveg
