@@ -2,6 +2,8 @@
     Pytest fixtures: High level Resource Management and base setup fixtures
 """
 import datetime
+import random
+import string
 import sys
 import os
 import time
@@ -257,7 +259,7 @@ def instantiate_access_point(testbed, get_apnos, get_configuration):
                 pass
     else:
         get_apnos(access_point_info, pwd="../libs/apnos/")
-            # Write a code to verify Access Point Connectivity
+        # Write a code to verify Access Point Connectivity
     yield True
 
 
@@ -572,11 +574,9 @@ def traffic_generator_connectivity(testbed, get_configuration):
 
 
 @pytest.fixture(scope="session")
-def create_lanforge_chamberview_dut(get_configuration, testbed):
-    """ Create a DUT on LANforge"""
-    ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
-                testbed=testbed, access_point_data=get_configuration["access_point"])
-    yield True
+def create_lanforge_chamberview_dut(lf_tools):
+    dut_object, dut_name = lf_tools.Create_Dut()
+    return dut_name
 
 
 @pytest.fixture(scope="session")
@@ -642,7 +642,7 @@ def add_env_properties(get_configuration, get_apnos, fixtures_ver, add_allure_en
     add_allure_environment_property('Access-Point-Firmware-Version',
                                     fixtures_ver.get_ap_version(get_apnos, get_configuration)[0].split("\n")[1])
     add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
-    add_allure_environment_property('AP-Serial-Number', get_configuration["access_point"][0]["serial"])
+    add_allure_environment_property('AP-Serial-Number', get_configuration["access_point"][0]["serial"] + "\n")
 
 
 @pytest.fixture(scope="session")
@@ -654,3 +654,27 @@ def fixtures_ver(request, get_configuration):
         print("1.x")
         obj = Fixtures_1x(configuration=get_configuration)
     yield obj
+
+
+"""
+Logs related Fixtures
+"""
+
+
+@pytest.fixture(scope="function")
+def get_ap_logs(request, get_apnos, get_configuration):
+    S = 9
+    instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
+    for ap in get_configuration['access_point']:
+        ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
+        ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
+
+    def collect_logs():
+        for ap in get_configuration['access_point']:
+            ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
+            ap_ssh.run_generic_command(cmd="logger stop testcase: " + instance_name)
+            ap_logs = ap_ssh.get_logread(start_ref="start testcase: " + instance_name,
+                                         stop_ref="stop testcase: " + instance_name)
+            allure.attach(name='logread', body=str(ap_logs))
+        pass
+    request.addfinalizer(collect_logs)

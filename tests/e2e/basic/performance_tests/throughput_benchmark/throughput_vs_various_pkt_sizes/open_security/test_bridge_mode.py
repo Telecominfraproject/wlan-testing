@@ -33,6 +33,7 @@ class TestThroughputVsPktBridge2G(object):
     """Throughput vs Various Pkt Size Test Bridge mode
        pytest -m "throughput_vs_pkt and Bridge"
     """
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-2546")
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.pkt60
@@ -79,6 +80,7 @@ class TestThroughputVsPktBridge2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-2546")
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.pkt142
@@ -126,6 +128,7 @@ class TestThroughputVsPktBridge2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-2546")
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.pkt256
@@ -173,6 +176,7 @@ class TestThroughputVsPktBridge2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-2546")
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.pkt512
@@ -220,6 +224,7 @@ class TestThroughputVsPktBridge2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-2546")
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.pkt1024
@@ -267,6 +272,7 @@ class TestThroughputVsPktBridge2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-2546")
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.pktMTU
@@ -337,7 +343,7 @@ class TestThroughputVsPktBridge5G(object):
     """Throughput vs Various Pkt Size Test Bridge mode
        pytest -m "throughput_vs_pkt and Bridge"
     """
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-2546")
     @pytest.mark.open
     @pytest.mark.fiveg
     @pytest.mark.pkt60
@@ -385,6 +391,7 @@ class TestThroughputVsPktBridge5G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-2546")
     @pytest.mark.open
     @pytest.mark.fiveg
     @pytest.mark.pkt142
@@ -432,6 +439,7 @@ class TestThroughputVsPktBridge5G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-2546")
     @pytest.mark.open
     @pytest.mark.fiveg
     @pytest.mark.pkt256
@@ -479,6 +487,7 @@ class TestThroughputVsPktBridge5G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-2546")
     @pytest.mark.open
     @pytest.mark.fiveg
     @pytest.mark.pkt512
@@ -526,6 +535,7 @@ class TestThroughputVsPktBridge5G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-2546")
     @pytest.mark.open
     @pytest.mark.fiveg
     @pytest.mark.pkt1024
@@ -573,6 +583,7 @@ class TestThroughputVsPktBridge5G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-2546")
     @pytest.mark.open
     @pytest.mark.fiveg
     @pytest.mark.pktMTU
