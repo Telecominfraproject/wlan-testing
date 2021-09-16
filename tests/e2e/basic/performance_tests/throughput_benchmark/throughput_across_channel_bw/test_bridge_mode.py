@@ -43,7 +43,7 @@ class TestThroughputAcrossBw20MhzBRIDGE(object):
     """Throughput Across Bw Bridge Mode
        pytest -m "throughput_across_bw_test and Bridge"
     """
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2556", name="WIFI-2556")
     @pytest.mark.bw20Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -87,6 +87,7 @@ class TestThroughputAcrossBw20MhzBRIDGE(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2556", name="WIFI-2556")
     @pytest.mark.bw20Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -157,7 +158,7 @@ class TestThroughputAcrossBw40MhzBRIDGE(object):
     """Throughput Across Bw Bridge Mode
        pytest -m "throughput_across_bw_test and Bridge"
     """
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2557", name="WIFI-2557")
     @pytest.mark.bw40Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -201,6 +202,7 @@ class TestThroughputAcrossBw40MhzBRIDGE(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2557", name="WIFI-2557")
     @pytest.mark.bw40Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -270,7 +272,7 @@ class TestThroughputAcrossBw80MhzBRIDGE(object):
     """Throughput Across Bw Bridge Mode
        pytest -m "throughput_across_bw_test and Bridge"
     """
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2558", name="WIFI-2558")
     @pytest.mark.bw80Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -314,6 +316,7 @@ class TestThroughputAcrossBw80MhzBRIDGE(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2558", name="WIFI-2558")
     @pytest.mark.bw80Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -384,7 +387,7 @@ class TestThroughputAcrossBw160MhzBRIDGE(object):
     """Throughput Across Bw Bridge Mode
        pytest -m "throughput_across_bw_test and Bridge"
     """
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2559", name="WIFI-2559")
     @pytest.mark.bw160Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -428,6 +431,7 @@ class TestThroughputAcrossBw160MhzBRIDGE(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2559", name="WIFI-2559")
     @pytest.mark.bw160Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
