@@ -36,6 +36,7 @@ class TestThroughputVsPktVlanWpa32G(object):
     """Throughput vs Various Pkt Size Test vlan mode
        pytest -m "throughput_vs_pkt and vlan"
     """
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2549", name="WIFI-2549")
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.pkt60
@@ -83,6 +84,7 @@ class TestThroughputVsPktVlanWpa32G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2549", name="WIFI-2549")
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.pkt142
@@ -130,6 +132,7 @@ class TestThroughputVsPktVlanWpa32G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2549", name="WIFI-2549")
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.pkt256
@@ -177,6 +180,7 @@ class TestThroughputVsPktVlanWpa32G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2549", name="WIFI-2549")
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.pkt512
@@ -224,6 +228,7 @@ class TestThroughputVsPktVlanWpa32G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2549", name="WIFI-2549")
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.pkt1024
@@ -271,6 +276,7 @@ class TestThroughputVsPktVlanWpa32G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2549", name="WIFI-2549")
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.pktMTU
@@ -342,6 +348,7 @@ class TestThroughputVsPktVlanWpa35G(object):
     """Throughput vs Various Pkt Size Test vlan mode
        pytest -m "throughput_vs_pkt and vlan"
     """
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2549", name="WIFI-2549")
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt60
@@ -389,6 +396,7 @@ class TestThroughputVsPktVlanWpa35G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2549", name="WIFI-2549")
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt142
@@ -436,6 +444,7 @@ class TestThroughputVsPktVlanWpa35G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2549", name="WIFI-2549")
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt256
@@ -483,6 +492,7 @@ class TestThroughputVsPktVlanWpa35G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2549", name="WIFI-2549")
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt512
@@ -530,6 +540,7 @@ class TestThroughputVsPktVlanWpa35G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2549", name="WIFI-2549")
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt1024
@@ -577,6 +588,7 @@ class TestThroughputVsPktVlanWpa35G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2549", name="WIFI-2549")
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @pytest.mark.pktMTU
