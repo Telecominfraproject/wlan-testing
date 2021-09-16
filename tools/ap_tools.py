@@ -13,7 +13,6 @@ if "libs" not in sys.path:
     sys.path.append("../libs/apnos/")
 
 import argparse
-import paramiko
 from apnos import APNOS
 
 

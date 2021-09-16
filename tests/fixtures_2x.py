@@ -1,4 +1,7 @@
 """ Python Inbuilt Libraries """
+import random
+import string
+
 import allure
 import pytest
 import sys
@@ -67,11 +70,9 @@ class Fixtures_2x:
                        get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
 
         instantiate_profile_obj = instantiate_profile(sdk_client=setup_controller)
-        print("garbage")
         print(1, instantiate_profile_obj.sdk_client)
         vlan_id, mode = 0, 0
         parameter = dict(param)
-        print("hola", parameter)
         test_cases = {}
         profile_data = {}
 
@@ -240,6 +241,9 @@ class Fixtures_2x:
             ap_logs = ap_ssh.logread()
             allure.attach(body=ap_logs, name="FAILURE: AP LOgs: ")
             pytest.fail("AP is disconnected from UC Gateway")
+        S = 9
+        instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
+        ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
         instantiate_profile_obj.push_config(serial_number=get_equipment_id[0])
         time_1 = time.time()
         config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"'))
@@ -316,11 +320,13 @@ class Fixtures_2x:
             # allure.attach(name="tx power: ", body=str(tx_power))
         except:
             pass
-        ap_logs = ap_ssh.logread()
-        allure.attach(body=ap_logs, name="AP Logs: ")
+        ap_ssh.run_generic_command(cmd="logger stop testcase: " + instance_name)
+        ap_logs = ap_ssh.get_logread(start_ref="start testcase: " + instance_name,
+                        stop_ref="stop testcase: " + instance_name)
+        allure.attach(body=ap_logs, name="AP Log: ")
 
-
-
+        wifi_status = ap_ssh.get_wifi_status()
+        allure.attach(name="wifi status", body=str(wifi_status))
         try:
             ssid_info_sdk = instantiate_profile_obj.get_ssid_info()
             ap_wifi_data = ap_ssh.get_iwinfo()
@@ -356,15 +362,8 @@ class Fixtures_2x:
             pass
 
         def teardown_session():
-            iwinfo = ap_ssh.iwinfo()
-            allure.attach(name="iwinfo: ", body=str(iwinfo))
-
-            # tx_power, name = ap_ssh.gettxpower()
-            # allure.attach(name="interface name: ", body=str(name))
-            # allure.attach(name="tx power: ", body=str(tx_power))
-
-            ap_logs = ap_ssh.logread()
-            allure.attach(body=ap_logs, name="AP Logs after test completion")
+            wifi_status = ap_ssh.get_wifi_status()
+            allure.attach(name="wifi status", body=str(wifi_status))
             print("\nTeardown")
 
         request.addfinalizer(teardown_session)
