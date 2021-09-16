@@ -17,7 +17,7 @@ setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something", "vlan": 100}
+            {"ssid_name": "ssid_wpa2_personal_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something", "vlan": 100}
             ]},
     "rf": {},
     "radius": False
@@ -38,11 +38,11 @@ class TestDualbandPerformanceVLAN(object):
     """
          pytest -m "performance and dual_band_test and VLAN and wpa2_personal and twog  and fiveg"
     """
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3918", name="WIFI-3918")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
-    def test_client_wpa2_personal(self, get_vif_state, lf_tools,
+    def test_client_wpa2_personal_vlan(self, get_vif_state, lf_tools,
                                   create_lanforge_chamberview_dut, lf_test, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -68,5 +68,5 @@ class TestDualbandPerformanceVLAN(object):
                                                    instance_name="dbp_instance_wpa2p_VLAN_p",
                                                    vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
         report_name = dbpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dual Band Performance Test")
+        lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dual Band Performance Test Wpa2 Vlan")
         assert True
