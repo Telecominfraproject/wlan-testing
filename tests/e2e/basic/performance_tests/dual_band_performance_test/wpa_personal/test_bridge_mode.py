@@ -38,6 +38,7 @@ class TestDualbandPerformanceBRIDGE(object):
          pytest -m "performance and dual_band_test and bridge and wpa_personal and twog  and fiveg"
     """
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3726", name="WIFI-3726")
     @pytest.mark.wpa_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
