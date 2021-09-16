@@ -38,7 +38,6 @@ class TestDualbandPerformanceNat(object):
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3726", name="WIFI-3726")
-    @pytest.mark.sg12
     @pytest.mark.wpa_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
