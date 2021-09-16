@@ -1,6 +1,6 @@
 """
        Dual Band Performance Test : VLAN Mode
-       pytest -m "performance and dual_band_test and VLAN"
+       pytest -m "performance and dual_band_test and vlan"
 
 
 """
@@ -9,14 +9,15 @@ import os
 import allure
 import pytest
 
-pytestmark = [pytest.mark.performance, pytest.mark.dual_band_test, pytest.mark.vlan, pytest.mark.performance_release]#,
+pytestmark = [pytest.mark.performance, pytest.mark.vlan, pytest.mark.dual_band_test]#,
 #              pytest.mark.usefixtures("setup_test_run")]
+
 
 setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
-        "open": [
-            {"ssid_name": "ssid_openp_2g", "appliedRadios": ["2G", "5G"], "security_key": "something"}
+        "wpa": [
+            {"ssid_name": "ssid_wpa_personal_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something", "vlan": 100}
             ]},
     "rf": {},
     "radius": False
@@ -35,15 +36,16 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestDualbandPerformanceVLAN(object):
     """
-         pytest -m "performance and dual_band_test and vlan and open and twog  and fiveg"
+         pytest -m "performance and dual_band_test and vlan and wpa_personal and twog  and fiveg"
     """
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3724", name="WIFI-3724")
-    @pytest.mark.open
+
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3726", name="WIFI-3726")
+    @pytest.mark.wpa
     @pytest.mark.twog
     @pytest.mark.fiveg
-    def test_client_open_vlan(self, get_vif_state, lf_tools,
+    def test_client_wpa_personal_vlan(self, get_vif_state, lf_tools,
                                   create_lanforge_chamberview_dut, lf_test, get_configuration):
-        profile_data = setup_params_general["ssid_modes"]["open"]
+        profile_data = setup_params_general["ssid_modes"]["wpa"]
         ssid_2G = profile_data[0]["ssid_name"]
         ssid_5G = profile_data[0]["ssid_name"]
         dut_name = create_lanforge_chamberview_dut
@@ -64,8 +66,8 @@ class TestDualbandPerformanceVLAN(object):
             pytest.xfail("SSID's NOT AVAILABLE IN VIF STATE")
 
         dbpt_obj = lf_test.dualbandperformancetest(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                                   instance_name="dbp_instance_openp_VLAN_p",
+                                                   instance_name="dbp_instance_wpap_VLAN_p",
                                                    vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
         report_name = dbpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dual Band Performance Test Open Security Vlan Mode")
+        lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dual Band Performance Test Wpa Vlan")
         assert True
