@@ -17,7 +17,6 @@ import random
 import paramiko
 from scp import SCPClient
 import os
-import allure
 
 
 class APNOS:
