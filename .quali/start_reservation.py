@@ -17,7 +17,7 @@ def main():
         topologyFullPath='Basic Lab',
         globalInputs=[
             UpdateTopologyGlobalInputsRequest('Chart Version', 'main'),
-            UpdateTopologyGlobalInputsRequest('ucentralgw Version', 'main'),
+            UpdateTopologyGlobalInputsRequest('ucentralgw Version', 'master'),
             UpdateTopologyGlobalInputsRequest('ucentralsec Version', 'main'),
             UpdateTopologyGlobalInputsRequest('ucentralfms Version', 'main'),
             UpdateTopologyGlobalInputsRequest('ucentralgwui Version', 'main'),
