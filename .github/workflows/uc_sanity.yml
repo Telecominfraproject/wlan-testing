@@ -28,7 +28,7 @@ on:
         description: 'Markers expression that will be passed to the pytest command.'
         required: false
   schedule:
-  - cron: '15 0 * * *'
+  - cron: '30 20 * * *'
 
 defaults:
   run:
