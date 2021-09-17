@@ -14,13 +14,16 @@ def main():
         reservationName=f'sanity-{run_id}',
         owner=session.username,
         durationInMinutes=180,
-        topologyFullPath='Basic Lab - Version 2',
+        topologyFullPath='Basic Lab',
         globalInputs=[
-            UpdateTopologyGlobalInputsRequest('Cloud Controller Version', '1.0.0'),
-        ],
-        #requirementsInputs=[
-        #    UpdateTopologyRequirementsInputsRequest('Access Point', 'Ap.OS Version', 'latest', 'Attributes'),
-        #]
+            UpdateTopologyGlobalInputsRequest('Chart Version', 'main'),
+            UpdateTopologyGlobalInputsRequest('ucentralgw Version', 'main'),
+            UpdateTopologyGlobalInputsRequest('ucentralsec Version', 'main'),
+            UpdateTopologyGlobalInputsRequest('ucentralfms Version', 'main'),
+            UpdateTopologyGlobalInputsRequest('ucentralgwui Version', 'main'),
+            UpdateTopologyGlobalInputsRequest('AP Model', 'EC420'),
+            UpdateTopologyGlobalInputsRequest('Wifi type', 'Wifi5'),
+        ]
     ).Reservation
 
     print(reservation.Id)
