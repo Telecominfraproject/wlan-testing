@@ -42,6 +42,7 @@ class APNOS:
             cmd = "pgrep 'minicom' -a"
             stdin, stdout, stderr = client.exec_command(cmd)
             a = str(stdout.read()).split("\\n")
+            client.close()
             for i in a:
                 if i.__contains__("minicom ap" + self.tty[-1]):
                     temp = i.split("minicom")
@@ -55,6 +56,7 @@ class APNOS:
             stdin, stdout, stderr = client.exec_command(cmd)
             output = str(stdout.read())
             print(output)
+            client.close()
             if output.__contains__("False"):
                 cmd = 'mkdir ~/cicd-git/'
                 stdin, stdout, stderr = client.exec_command(cmd)
@@ -108,6 +110,7 @@ class APNOS:
         client.close()
         data = str(data).replace(" ", "").split("\\r\\n")
         band_info = []
+        client.close()
         for i in data:
             tmp = []
             if i.__contains__("AccessPoint"):
@@ -466,6 +469,7 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read().replace(b":~# iwinfo", b"").decode('utf-8')
         o = output
+        client.close()
         return o
 
     def gettxpower(self):
@@ -488,6 +492,7 @@ class APNOS:
         name = output.replace("\t", "").splitlines()
         name.remove('')
         name.pop(-1)
+        client.close()
         return tx_power, name
 
     def get_logread(self, start_ref="", stop_ref=""):
