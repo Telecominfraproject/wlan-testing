@@ -40,6 +40,7 @@ setup_params_general = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestRxSensitivityBRIDGE2G(object):
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2446", name="WIFI-2446")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs0
@@ -92,6 +93,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2447", name="WIFI-2447")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs1
@@ -144,6 +146,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2448", name="WIFI-2448")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs2
@@ -196,6 +199,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2449", name="WIFI-2449")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs3
@@ -247,6 +251,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2450", name="WIFI-2450")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs4
@@ -299,6 +304,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2451", name="WIFI-2451")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs5
@@ -350,6 +356,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2452", name="WIFI-2452")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs6
@@ -402,6 +409,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2453", name="WIFI-2453")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs7
@@ -453,6 +461,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2454", name="WIFI-2454")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs8
@@ -505,6 +514,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2455", name="WIFI-2455")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs9
@@ -558,6 +568,7 @@ class TestRxSensitivityBRIDGE2G(object):
 
     # Test case for mcs0-9,Nss 2, bw 20MHz
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2458", name="WIFI-2458")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs0
@@ -610,6 +621,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2459", name="WIFI-2459")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs1
@@ -662,6 +674,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2460", name="WIFI-2460")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs2
@@ -714,6 +727,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2461", name="WIFI-2461")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs3
@@ -766,6 +780,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2462", name="WIFI-2462")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs4
@@ -818,6 +833,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2463", name="WIFI-2463")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs5
@@ -870,6 +886,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2464", name="WIFI-2464")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs6
@@ -922,6 +939,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2465", name="WIFI-2465")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs7
@@ -974,6 +992,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2466", name="WIFI-2466")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs8
@@ -1026,6 +1045,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2467", name="WIFI-2467")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs9
@@ -1080,6 +1100,7 @@ class TestRxSensitivityBRIDGE2G(object):
 
     # Test case for mcs0-9,Nss 3, bw 20MHz
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2470", name="WIFI-2470")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs0
@@ -1132,6 +1153,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2471", name="WIFI-2471")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs1
@@ -1184,6 +1206,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2472", name="WIFI-2472")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs2
@@ -1236,6 +1259,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2473", name="WIFI-2473")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs3
@@ -1288,6 +1312,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2474", name="WIFI-2474")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs4
@@ -1340,6 +1365,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2475", name="WIFI-2475")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs5
@@ -1392,6 +1418,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2476", name="WIFI-2476")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs6
@@ -1444,6 +1471,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2477", name="WIFI-2477")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs7
@@ -1496,6 +1524,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2478", name="WIFI-2478")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs8
@@ -1548,6 +1577,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2479", name="WIFI-2479")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs9
@@ -1601,7 +1631,7 @@ class TestRxSensitivityBRIDGE2G(object):
             assert False
 
     # Test case for mcs0-9,Nss 4, bw 20MHz
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2482", name="WIFI-2482")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs0
@@ -1654,6 +1684,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2483", name="WIFI-2483")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs1
@@ -1706,6 +1737,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2484", name="WIFI-2484")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs2
@@ -1758,6 +1790,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2485", name="WIFI-2485")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs3
@@ -1810,6 +1843,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2486", name="WIFI-2486")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs4
@@ -1862,6 +1896,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2487", name="WIFI-2487")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs5
@@ -1914,6 +1949,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2488", name="WIFI-2488")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs6
@@ -1966,6 +2002,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2489", name="WIFI-2489")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs7
@@ -2018,6 +2055,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2490", name="WIFI-2490")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs8
@@ -2070,6 +2108,7 @@ class TestRxSensitivityBRIDGE2G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2491", name="WIFI-2491")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs9
