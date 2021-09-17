@@ -42,7 +42,6 @@ class APNOS:
             cmd = "pgrep 'minicom' -a"
             stdin, stdout, stderr = client.exec_command(cmd)
             a = str(stdout.read()).split("\\n")
-            client.close()
             for i in a:
                 if i.__contains__("minicom ap" + self.tty[-1]):
                     temp = i.split("minicom")
@@ -51,12 +50,13 @@ class APNOS:
                     print(cmd)
                     stdin, stdout, stderr = client.exec_command(cmd)
                     print(stdout)
+            client.close()
             client = self.ssh_cli_connect()
             cmd = '[ -f ~/cicd-git/ ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
             output = str(stdout.read())
             print(output)
-            client.close()
+            
             if output.__contains__("False"):
                 cmd = 'mkdir ~/cicd-git/'
                 stdin, stdout, stderr = client.exec_command(cmd)
@@ -70,6 +70,7 @@ class APNOS:
             cmd = '[ -f ~/cicd-git/openwrt_ctl.py ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
             var = str(stdout.read())
+            client.close()
             if var.__contains__("True"):
                 print("APNOS Serial Setup OK")
             else:
