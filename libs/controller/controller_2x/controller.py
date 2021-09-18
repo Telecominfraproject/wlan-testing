@@ -504,7 +504,9 @@ class UProfileUtility:
         uri = self.sdk_client.build_uri("device/" + serial_number + "/configure")
         basic_cfg_str = json.dumps(payload)
         print(self.base_profile_config)
-        allure.attach(name="ucentral_config: ", body=str(self.base_profile_config))
+        allure.attach(name="ucentral_config: ",
+                      body=str(self.base_profile_config).replace("'", '"'),
+                      attachment_type=allure.attachment_type.JSON)
         print(self.base_profile_config)
         resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
                              verify=False, timeout=100)
