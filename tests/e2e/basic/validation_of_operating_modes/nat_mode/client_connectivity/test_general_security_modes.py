@@ -130,8 +130,7 @@ class TestNATModeConnectivitySuiteA(object):
     @pytest.mark.fiveg
     @allure.story('wpa 5 GHZ Band')
     def test_wpa_ssid_5g(self, get_vif_state, get_ap_logs,
-                         lf_test, update_report, test_cases, station_names_fiveg,
-                         get_lanforge_data):
+                         lf_test, update_report, test_cases, station_names_fiveg):
         """Client Connectivity wpa ssid 5G
            pytest -m "client_connectivity and NAT and general and wpa and fiveg"
         """
