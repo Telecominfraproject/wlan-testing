@@ -19,15 +19,15 @@ ubuntu@3.130.51.163
 
 
 
-ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 -L 8803:lab-ctlr:22 \
--L 8720:lf2:4002 -L 8721:lf2:5901 -L 8722:lf2:8080 -L 8723:lab-ctlr:22 \
--L 8830:lf3:4002 -L 8831:lf3:5901 -L 8832:lf3:8080 -L 8833:lab-ctlr:22 \
--L 8810:lf4:4002 -L 8811:lf4:5901 -L 8812:lf4:8080 -L 8813:lab-ctlr:22 \
--L 8850:lf12:4002 -L 8851:lf12:5901 -L 8852:lf12:8080 -L 8853:lab-ctlr4:22 \
--L 8860:lf13:4002 -L 8861:lf13:5901 -L 8862:lf13:8080 -L 8863:lab-ctlr4:22 \
--L 8870:lf14:4002 -L 8871:lf14:5901 -L 8872:lf14:8080 -L 8873:lab-ctlr4:22 \
--L 8880:lf15:4002 -L 8881:lf15:5901 -L 8882:lf15:8080 -L 8883:lab-ctlr4:22 \
-ubuntu@3.130.51.163
+ssh -C -L 8700:lf1:4002 -L 8701:lf1:5901 -L 8702:lf1:8080 -L 8703:lab-ctlr:22 -L 8704:lf1:22\
+ -L 8710:lf2:4002 -L 8711:lf2:5901 -L 8712:lf2:8080 -L 8713:lab-ctlr:22 -L 8714:lf2:22\
+ -L 8720:lf3:4002 -L 8721:lf3:5901 -L 8722:lf3:8080 -L 8723:lab-ctlr:22 -L 8724:lf3:22\
+ -L 8730:lf4:4002 -L 8731:lf4:5901 -L 8732:lf4:8080 -L 8733:lab-ctlr:22 -L 8734:lf4:22\
+ -L 8740:lf12:4002 -L 8741:lf12:5901 -L 8742:lf12:8080 -L 8743:lab-ctlr4:22 -L 8744:lf12:22\
+ -L 8750:lf13:4002 -L 8751:lf13:5901 -L 8752:lf13:8080 -L 8753:lab-ctlr4:22 -L 8754:lf13:22\
+ -L 8760:lf14:4002 -L 8761:lf14:5901 -L 8762:lf14:8080 -L 8763:lab-ctlr4:22 -L 8764:lf14:22\
+ -L 8770:lf15:4002 -L 8771:lf15:5901 -L 8772:lf15:8080 -L 8773:lab-ctlr4:22 -L 8774:lf15:22\
+ ubuntu@3.130.51.163
 
 """
 
@@ -126,20 +126,20 @@ CONFIGURATION = {
                 'mode': 'wifi5',
                 'serial': '001122090801',
                 'jumphost': True,
-                'ip': "10.28.3.100",
+                'ip': "localhost",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 22,
+                'port': 8723,
                 'jumphost_tty': '/dev/ttyAP3',
-                'version': "latest"
+                'version': "next-latest"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "10.28.3.10",
-                "port": 8080,
-                "ssh_port": 22,
+                "ip": "localhost",
+                "port": 8722,
+                "ssh_port": 8724,
                 "2.4G-Radio": ["1.1.wiphy4"],
                 "5G-Radio": ["1.1.wiphy5"],
                 "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
@@ -164,20 +164,20 @@ CONFIGURATION = {
                 'mode': 'wifi5',
                 'serial': '68215fda456d',
                 'jumphost': True,
-                'ip': "10.28.3.100",
+                'ip': "localhost",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 22,
+                'port': 8733,
                 'jumphost_tty': "/dev/ttyAP5",
-                'version': "latest"
+                'version': "release-latest"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "10.28.3.12",
-                "port": 8080,
-                "ssh_port": 22,
+                "ip": "localhost",
+                "port": 8732,
+                "ssh_port": 8734,
                 "2.4G-Radio": ["1.1.wiphy4"],
                 "5G-Radio": [ "1.1.wiphy5"],
                 "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
@@ -574,19 +574,17 @@ CONFIGURATION = {
         }
     },
 
-    "basic-ext-03-03": {
+    "ext-01": {
         "controller": {
-            'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
-            'username': 'support@example.com',
-            'password': 'support',
-            'version': "1.1.0-SNAPSHOT",
-            'commit_date': "2021-04-27"
+            'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'openwifi',
         },
         'access_point': [
             {
-                'model': 'ecw5410',
-                'mode': 'wifi5',
-                'serial': '903cb3944857',
+                'model': 'eap102',
+                'mode': 'wifi6',
+                'serial': '903cb30bcf12',
                 'jumphost': True,
                 'ip': "192.168.200.80",
                 'username': "lanforge",
@@ -604,7 +602,7 @@ CONFIGURATION = {
                 "ssh_port": 22,
                 "2.4G-Radio": ["wiphy0"],
                 "5G-Radio": ["wiphy1"],
-                "AX-Radio": ["wiphy2"],
+                "AX-Radio": [],
                 "upstream": "1.1.eth1",
                 "upstream_subnet": "192.168.200.1/24",
                 "uplink": "1.1.eth2",

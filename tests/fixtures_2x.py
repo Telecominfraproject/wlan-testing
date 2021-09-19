@@ -318,7 +318,7 @@ class Fixtures_2x:
             version_list.append(version)
         return version_list
 
-    def setup_profiles(self, request, param, setup_controller, testbed, get_equipment_id,
+    def setup_profiles(self, request, param, setup_controller, testbed, get_equipment_ref,
                        instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                        get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
 

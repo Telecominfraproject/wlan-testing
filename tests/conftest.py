@@ -134,9 +134,9 @@ def pytest_addoption(parser):
         help="AP Model which is needed to test"
     )
     parser.addoption(
-        "--skip-testrail",
-        action="store_true",
-        default=False,
+        "--use-testrail",
+        action="store_false",
+        default=True,
         help="Stop using Testrails"
     )
 
@@ -432,12 +432,12 @@ Instantiate Reporting
 @pytest.fixture(scope="session")
 def update_report(request, testbed, get_configuration):
     """used to update the test report on testrail/allure"""
-    if request.config.getoption("--skip-testrail"):
+    if request.config.getoption("--use-testrail"):
         tr_client = Reporting()
     else:
         tr_client = APIClient(request.config.getini("tr_url"), request.config.getini("tr_user"),
                               request.config.getini("tr_pass"), request.config.getini("tr_project_id"))
-    if request.config.getoption("--skip-testrail"):
+    if request.config.getoption("--use-testrail"):
         tr_client.rid = "skip testrails"
     else:
         projId = tr_client.get_project_id(project_name=request.config.getini("tr_project_id"))
