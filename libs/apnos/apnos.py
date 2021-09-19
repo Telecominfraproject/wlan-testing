@@ -17,7 +17,6 @@ import random
 import paramiko
 from scp import SCPClient
 import os
-import allure
 
 
 class APNOS:
@@ -50,12 +49,10 @@ class APNOS:
                     cmd = "kill " + str(a).replace("b'", "")
                     print(cmd)
                     stdin, stdout, stderr = client.exec_command(cmd)
-                    print(stdout)
-            client = self.ssh_cli_connect()
             cmd = '[ -f ~/cicd-git/ ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
             output = str(stdout.read())
-            print(output)
+
             if output.__contains__("False"):
                 cmd = 'mkdir ~/cicd-git/'
                 stdin, stdout, stderr = client.exec_command(cmd)
@@ -69,6 +66,7 @@ class APNOS:
             cmd = '[ -f ~/cicd-git/openwrt_ctl.py ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
             var = str(stdout.read())
+            client.close()
             if var.__contains__("True"):
                 print("APNOS Serial Setup OK")
             else:
@@ -109,6 +107,7 @@ class APNOS:
         client.close()
         data = str(data).replace(" ", "").split("\\r\\n")
         band_info = []
+        client.close()
         for i in data:
             tmp = []
             if i.__contains__("AccessPoint"):
@@ -323,13 +322,18 @@ class APNOS:
                       f"cmd --value \"{cmd}\" "
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
-            # print(output, stderr.read())
-            connected = False
-            if "connected" in output.decode('utf-8').splitlines()[2]:
-                connected = True
-            # connected = output.decode('utf-8').splitlines()[2]
-            latest = output.decode('utf-8').splitlines()[3].split(":")[1].replace(" ", "").replace(",", "")
-            active = output.decode('utf-8').splitlines()[4].split(":")[1].replace(" ", "").replace(",", "")
+            print(output)
+            if 'latest' not in str(output):
+                print("ubus call ucentral status: command has invalid output", str(output))
+                connected, latest, active = "Error", "Error1", "Error2"
+                return connected, latest, active
+            else:
+                connected = False
+                if "connected" in output.decode('utf-8').splitlines()[2]:
+                    connected = True
+                # connected = output.decode('utf-8').splitlines()[2]
+                latest = output.decode('utf-8').splitlines()[3].split(":")[1].replace(" ", "").replace(",", "")
+                active = output.decode('utf-8').splitlines()[4].split(":")[1].replace(" ", "").replace(",", "")
             client.close()
         except Exception as e:
             print(e)
@@ -467,6 +471,7 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read().replace(b":~# iwinfo", b"").decode('utf-8')
         o = output
+        client.close()
         return o
 
     def gettxpower(self):
@@ -489,6 +494,7 @@ class APNOS:
         name = output.replace("\t", "").splitlines()
         name.remove('')
         name.pop(-1)
+        client.close()
         return tx_power, name
 
     def get_logread(self, start_ref="", stop_ref=""):
@@ -574,20 +580,21 @@ class APNOS:
 
 if __name__ == '__main__':
     obj = {
-                'model': 'wf188n',
-                'mode': 'wifi6',
-                'serial': '0000c1018812',
-                'jumphost': True,
-                'ip': "10.28.3.103",
-                'username': "lanforge",
-                'password': "pumpkin77",
-                'port': 22,
-                'jumphost_tty': '/dev/ttyAP1',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf188/20210729-cig_wf188-v2.0.0-rc2-ec3662e-upgrade.bin"
-            }
+        'model': 'ecw5211',
+        'mode': 'wifi5',
+        'serial': '68215fda456d',
+        'jumphost': True,
+        'ip': "localhost",
+        'username': "lanforge",
+        'password': "pumpkin77",
+        'port': 8733,
+        'jumphost_tty': "/dev/ttyAP5",
+        'version': "release-latest"
+    }
     var = APNOS(credentials=obj, sdk="2.x")
-    a = var.run_generic_command(cmd="wifi status")
-    print("".join(a))
+    a, b, c = var.get_ucentral_status()
+    print(a, b, c)
+
     # S = 9
     # instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
     # var.run_generic_command(cmd="logger start testcase: " + instance_name)

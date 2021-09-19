@@ -7,11 +7,12 @@ import pytest
 import json
 import allure
 
+@pytest.mark.uc_sanityw
 @allure.feature("SDK REST API")
-
 class TestUcentralGatewayService(object):
     """
     """
+
     @pytest.mark.sdk_restapi
     def test_gwservice_listdevices(self, setup_controller):
         """
@@ -24,7 +25,7 @@ class TestUcentralGatewayService(object):
         if resp.status_code != 200:
             assert False
         devices = json.loads(resp.text)
-        print (devices)
+        print(devices)
 
     @pytest.mark.sdk_restapi
     def test_gwservice_createdevice(self, setup_controller):
@@ -48,7 +49,7 @@ class TestUcentralGatewayService(object):
         if resp.status_code != 200:
             assert False
         devices = json.loads(resp.text)
-        print (devices)
+        print(devices)
 
         resp = setup_controller.request("gw", "device/DEADBEEF0011", "GET", None, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
@@ -83,7 +84,7 @@ class TestUcentralGatewayService(object):
         if resp.status_code != 200:
             assert False
         devices = json.loads(resp.text)
-        print (devices)
+        print(devices)
 
         payload = {'serialNumber': 'DEADBEEF0011',
                    'owner': 'pytest'}
@@ -100,8 +101,7 @@ class TestUcentralGatewayService(object):
             assert False
 
         device = json.loads(resp.text)
-        print (device)
-
+        print(device)
 
         resp = setup_controller.request("gw", "device/DEADBEEF0011", "DELETE", None, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
@@ -130,12 +130,10 @@ class TestUcentralGatewayService(object):
             if resp.status_code != 200:
                 assert False
             devices = json.loads(resp.text)
-            print (devices)
-
+            print(devices)
 
             resp = setup_controller.request("gw", "device/DEADBEEF0011", "DELETE", None, None)
             body = resp.url + "," + str(resp.status_code) + ',' + resp.text
             allure.attach(name="gw get device", body=body)
             if resp.status_code != 200:
                 assert False
-

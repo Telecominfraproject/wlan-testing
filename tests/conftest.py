@@ -83,7 +83,7 @@ def pytest_addoption(parser):
     parser.addini("influx_token", "Influx Token", default="TCkdATXAbHmNbn4QyNaj43WpGBYxFrzV")
     parser.addini("influx_bucket", "influx bucket", default="tip-cicd")
     parser.addini("influx_org", "influx organization", default="tip")
-    parser.addini("build", "AP Firmware build URL", default="0")
+    parser.addini(name="firmware", type='string', help="AP Firmware build URL", default="0")
     parser.addini("cloud_ctlr", "AP Firmware build URL", default="0")
 
     parser.addini("num_stations", "Number of Stations/Clients for testing")
@@ -224,6 +224,11 @@ def get_configuration(testbed, request):
     """yields the selected testbed information from lab info file (configuration.py)"""
     if request.config.getini("cloud_ctlr") != "0":
         CONFIGURATION[testbed]["controller"]["url"] = request.config.getini("cloud_ctlr")
+    if request.config.getini("firmware") != "0":
+        version = request.config.getini("firmware")
+        version_list = version.split(",")
+        for i in range(len(CONFIGURATION[testbed]["access_point"])):
+            CONFIGURATION[testbed]["access_point"][i]["version"] = version_list[i]
     yield CONFIGURATION[testbed]
 
 
@@ -258,8 +263,9 @@ def setup_controller(request, get_configuration, test_access_point, add_env_prop
 
 
 @pytest.fixture(scope="session")
-def setup_firmware(fixtures_ver):
+def setup_firmware(setup_controller):
     """ Fixture to Setup Firmware with the selected sdk """
+    setup_controller.instantiate_firmware()
     yield True
 
 
@@ -480,53 +486,23 @@ def get_markers(request, get_security_flags):
     yield security_dict
 
 
-# Will be availabe as a test case
 @pytest.fixture(scope="session")
-def test_access_point(request, testbed, get_apnos, get_configuration):
+def test_access_point(fixtures_ver, request, get_configuration, get_apnos):
     """used to check the manager status of AP, should be used as a setup to verify if ap can reach cloud"""
-    mgr_status = []
-    if request.config.getoption("1.x"):
-        for access_point_info in get_configuration['access_point']:
-            ap_ssh = get_apnos(access_point_info, sdk="1.x")
-            status = ap_ssh.get_manager_state()
-            if "ACTIVE" not in status:
-                time.sleep(30)
-                ap_ssh = APNOS(access_point_info)
-                status = ap_ssh.get_manager_state()
-            mgr_status.append(status)
-    else:
-        # forgit access_point_info in get_configuration['access_point']:
-        #     ap_ssh = get_apnos(access_point_info)
-        #     status = ap_ssh.get_manager_state()
-        #     if "ACTIVE" not in status:
-        #         time.sleep(30)
-        #         ap_ssh = APNOS(access_point_info)
-        #         status = ap_ssh.get_manager_state()
-        #     mgr_status.append(status)
-        pass
-    yield mgr_status
+    status = fixtures_ver.get_ap_cloud_connectivity_status(get_configuration, get_apnos)
 
+    def teardown_session():
+        data = []
+        data.append(False)
+        for s in status:
+            data.append(s[0])
+        print(data)
+        if False not in data:
+            pytest.exit("AP is Not connected to ucentral gw")
+        allure.attach(name=str(status), body="")
 
-# Not used anymore, needs to depreciate it
-@pytest.fixture(scope="session")
-def get_lanforge_data(get_configuration):
-    """depreciate it"""
-    lanforge_data = {}
-    if get_configuration['traffic_generator']['name'] == 'lanforge':
-        lanforge_data = {
-            "lanforge_ip": get_configuration['traffic_generator']['details']['ip'],
-            "lanforge-port-number": get_configuration['traffic_generator']['details']['port'],
-            "lanforge_2dot4g": get_configuration['traffic_generator']['details']['2.4G-Radio'][0],
-            "lanforge_5g": get_configuration['traffic_generator']['details']['5G-Radio'][0],
-            "lanforge_2dot4g_prefix": get_configuration['traffic_generator']['details']['2.4G-Station-Name'],
-            "lanforge_5g_prefix": get_configuration['traffic_generator']['details']['5G-Station-Name'],
-            "lanforge_2dot4g_station": get_configuration['traffic_generator']['details']['2.4G-Station-Name'],
-            "lanforge_5g_station": get_configuration['traffic_generator']['details']['5G-Station-Name'],
-            "lanforge_bridge_port": get_configuration['traffic_generator']['details']['upstream'],
-            "lanforge_vlan_port": get_configuration['traffic_generator']['details']['upstream'] + ".100",
-            "vlan": 100
-        }
-    yield lanforge_data
+    request.addfinalizer(teardown_session)
+    yield status
 
 
 @pytest.fixture(scope="session")
@@ -572,14 +548,6 @@ def lf_tools(get_configuration, testbed):
     obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
                       testbed=testbed, access_point_data=get_configuration["access_point"])
 
-    yield obj
-
-
-@pytest.fixture(scope="session")
-def lf_tools(get_configuration, testbed):
-    """ Create a DUT on LANforge"""
-    obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
-                      testbed=testbed, access_point_data=get_configuration["access_point"])
     yield obj
 
 
@@ -645,8 +613,8 @@ def fixtures_ver(request, get_configuration):
 
 @pytest.fixture(scope="session")
 def firmware_upgrade(fixtures_ver, get_apnos, get_configuration):
-    fixtures_ver.setup_firmware(get_apnos, get_configuration)
-    yield True
+    upgrade_status = fixtures_ver.setup_firmware(get_apnos, get_configuration)
+    yield upgrade_status
 
 
 """

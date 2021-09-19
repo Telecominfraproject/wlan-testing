@@ -233,28 +233,30 @@ class FMSUtils:
             return {}
 
     # 2c3becf
-    def get_firmwares(self, limit="", model="", latestonly="", branch="", commit_id=""):
+    def get_firmwares(self, limit="10000", model="", latestonly="", branch="", commit_id="", offset="3000"):
 
         deviceType = self.ap_model_lookup(model=model)
-        params = "limit=" + limit + "&deviceType=" + deviceType + "&latestonly=" + latestonly
-
-        response = self.sdk_client.request(service="fms", command="firmwares/", method="GET", params=params, payload="")
-
+        params = "limit=" + limit + \
+                 "&deviceType=" + deviceType + \
+                 "&latestonly=" + latestonly + \
+                 "offset=" + offset
+        command = "firmwares/"
+        response = self.sdk_client.request(service="fms", command=command, method="GET", params=params, payload="")
+        allure.attach(name=command + params,
+                      body=str(response.status_code) + "\n" + str(response.json()),
+                      attachment_type=allure.attachment_type.JSON)
         if response.status_code == 200:
             data = response.json()
             newlist = sorted(data['firmwares'], key=itemgetter('created'))
-            print("finding a bug", len(newlist))
-            for i in newlist:
-                print(i['uri'])
-                print(i['revision'])
+            # for i in newlist:
+            #     print(i['uri'])
+            #     print(i['revision'])
             # print(newlist)
-            self.sdk_client.logout()
-            pytest.exit("hey")
 
             return newlist
             # print(data)
 
-        return "devices"
+        return "error"
 
 
 class UProfileUtility:
@@ -540,7 +542,8 @@ if __name__ == '__main__':
     }
     obj = Controller(controller_data=controller)
     fms = FMSUtils(sdk_client=obj)
-    fms.get_firmwares()
+    new = fms.get_firmwares(model='cig_wf194c', offset='3')
+    print(len(new))
     # fms.get_device_set()
     # model = fms.get_latest_fw(model="eap102")
     # print(model)

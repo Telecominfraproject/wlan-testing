@@ -60,8 +60,10 @@ class Fixtures_2x:
 
     def setup_firmware(self, get_apnos, get_configuration, request=""):
         # Query AP Firmware
-
+        upgrade_status = []
         for ap in get_configuration['access_point']:
+
+            ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
             # If specified as URL
             try:
                 response = requests.get(ap['version'])
@@ -78,24 +80,19 @@ class Fixtures_2x:
 
                 items = list(range(0, 300))
                 l = len(items)
-                self.printProgressBar(0, l, prefix='Progress:', suffix='Complete', length=50)
-                for i, item in enumerate(items):
-                    # Do stuff...
-                    time.sleep(0.8)
-                    # Update Progress Bar
-                    self.printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=50)
-
                 ap_version = ap_ssh.get_ap_version_ucentral()
                 current_version_commit = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
                 if target_revision_commit in current_version_commit:
+                    upgrade_status.append([ap['serial'], target_revision_commit, current_version_commit])
                     print("Firmware Upgraded to :", ap_version)
+                else:
+                    print("firmware upgraded failed: ", target_revision)
+                    upgrade_status.append([ap['serial'],target_revision_commit, current_version_commit])
+                break
             except Exception as e:
                 print("URL does not exist on Internet")
-
-
             # else Specified as "branch-commit_id" / "branch-latest"
             firmware_url = ""
-            ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
             ap_version = ap_ssh.get_ap_version_ucentral()
             response = self.fw_client.get_latest_fw(model=ap["model"])
             # if the target version specified is "branch-latest"
@@ -122,20 +119,16 @@ class Fixtures_2x:
 
                             # if AP is already in target Version then skip upgrade unless force upgrade is specified
                             if current_version == target_revision:
+                                upgrade_status.append([ap['serial'], target_revision, current_version, 'skip'])
                                 print("Skipping Upgrade! AP is already in target version")
-                                allure.attach(name="Skipping Upgrade because AP is already in the target Version", body="")
+                                allure.attach(name="Skipping Upgrade because AP is already in the target Version",
+                                              body="")
                                 break
 
                             self.fw_client.upgrade_firmware(serial=ap['serial'], url=str(firmware['uri']))
                             # wait for 300 seconds after firmware upgrade
-                            items = list(range(0, 300))
-                            l = len(items)
-                            # self.printProgressBar(0, l, prefix='Progress:', suffix='Complete', length=50)
-                            # for i, item in enumerate(items):
-                            #     # Do stuff...
-                            #     time.sleep(0.8)
-                            #     # Update Progress Bar
-                            #     self.printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=50)
+                            print("waiting for 300 Sec for Firmware Upgrade")
+                            time.sleep(300)
 
                             # check the current AP Revision again
                             ap_version = ap_ssh.get_ap_version_ucentral()
@@ -145,8 +138,10 @@ class Fixtures_2x:
                                           body="current revision: " + current_version + "\ntarget revision: " + target_revision)
                             print("current revision: ", current_version, "\ntarget revision: ", target_revision)
                             if current_version == target_revision:
+                                upgrade_status.append([ap['serial'], target_revision, current_version])
                                 print("firmware upgraded successfully: ", target_revision)
                             else:
+                                upgrade_status.append([ap['serial'], target_revision, current_version])
                                 print("firmware upgraded failed: ", target_revision)
                             break
                     if firmware['image'].split("-")[-2] == ap['version'].split('-')[0]:
@@ -166,20 +161,15 @@ class Fixtures_2x:
 
                         # if AP is already in target Version then skip upgrade unless force upgrade is specified
                         if current_version == target_revision:
+                            upgrade_status.append([ap['serial'], target_revision, current_version, 'skip'])
                             print("Skipping Upgrade! AP is already in target version")
                             allure.attach(name="Skipping Upgrade because AP is already in the target Version", body="")
                             break
 
                         self.fw_client.upgrade_firmware(serial=ap['serial'], url=str(firmware['uri']))
                         # wait for 300 seconds after firmware upgrade
-                        items = list(range(0, 300))
-                        l = len(items)
-                        self.printProgressBar(0, l, prefix='Progress:', suffix='Complete', length=50)
-                        for i, item in enumerate(items):
-                            # Do stuff...
-                            time.sleep(0.8)
-                            # Update Progress Bar
-                            self.printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=50)
+                        print("waiting for 300 Sec for Firmware Upgrade")
+                        time.sleep(300)
 
                         # check the current AP Revision again
                         ap_version = ap_ssh.get_ap_version_ucentral()
@@ -189,19 +179,20 @@ class Fixtures_2x:
                                       body="current revision: " + current_version + "\ntarget revision: " + target_revision)
                         print("current revision: ", current_version, "\ntarget revision: ", target_revision)
                         if current_version == target_revision:
+                            upgrade_status.append([ap['serial'], target_revision, current_version])
                             print("firmware upgraded successfully: ", target_revision)
                         else:
+                            upgrade_status.append([ap['serial'], target_revision, current_version])
                             print("firmware upgraded failed: ", target_revision)
                         break
-
-
             # if branch-commit is specified
             else:
                 firmware_list = self.fw_client.get_firmwares(model=ap['model'], branch="", commit_id='')
                 fw_list = []
                 # getting the list of firmwares in fw_list that has the commit id specified as an input
                 for firmware in firmware_list:
-                    if firmware['revision'].split("/")[1].replace(" ", "").split('-')[-1] == ap['version'].split('-')[1]:
+                    if firmware['revision'].split("/")[1].replace(" ", "").split('-')[-1] == ap['version'].split('-')[
+                        1]:
                         fw_list.append(firmware)
 
                 # If there is only 1 commit ID in fw_list
@@ -224,6 +215,7 @@ class Fixtures_2x:
 
                     # if AP is already in target Version then skip upgrade unless force upgrade is specified
                     if current_version == target_revision:
+                        upgrade_status.append([ap['serial'], target_revision, current_version, 'skip'])
                         print("Skipping Upgrade! AP is already in target version")
                         allure.attach(name="Skipping Upgrade because AP is already in the target Version", body="")
                         break
@@ -233,14 +225,8 @@ class Fixtures_2x:
                         self.fw_client.upgrade_firmware(serial=ap['serial'], url=str(url))
 
                         # wait for 300 seconds after firmware upgrade
-                        items = list(range(0, 300))
-                        l = len(items)
-                        self.printProgressBar(0, l, prefix='Progress:', suffix='Complete', length=50)
-                        for i, item in enumerate(items):
-                            # Do stuff...
-                            time.sleep(0.8)
-                            # Update Progress Bar
-                            self.printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=50)
+                        print("waiting for 300 Sec for Firmware Upgrade")
+                        time.sleep(300)
 
                         # check the current AP Revision again
                         ap_version = ap_ssh.get_ap_version_ucentral()
@@ -250,8 +236,10 @@ class Fixtures_2x:
                                       body="current revision: " + current_version + "\ntarget revision: " + target_revision)
                         print("current revision: ", current_version, "\ntarget revision: ", target_revision)
                         if current_version == target_revision:
+                            upgrade_status.append([ap['serial'], target_revision, current_version])
                             print("firmware upgraded successfully: ", target_revision)
                         else:
+                            upgrade_status.append([ap['serial'], target_revision, current_version])
                             print("firmware upgraded failed: ", target_revision)
                         break
 
@@ -283,6 +271,7 @@ class Fixtures_2x:
 
                     # if AP is already in target Version then skip upgrade unless force upgrade is specified
                     if current_version == target_revision:
+                        upgrade_status.append([ap['serial'], target_revision, current_version, 'skip'])
                         print("Skipping Upgrade! AP is already in target version")
                         allure.attach(name="Skipping Upgrade because AP is already in the target Version", body="")
                         break
@@ -290,15 +279,8 @@ class Fixtures_2x:
                     self.fw_client.upgrade_firmware(serial=ap['serial'], url=str(firmware['uri']))
                     # wait for 300 seconds after firmware upgrade
 
-                    # Initial call to print 0% progress
-                    items = list(range(0, 300))
-                    l = len(items)
-                    self.printProgressBar(0, l, prefix='Progress:', suffix='Complete', length=50)
-                    for i, item in enumerate(items):
-                        # Do stuff...
-                        time.sleep(0.8)
-                        # Update Progress Bar
-                        self.printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=50)
+                    print("waiting for 300 Sec for Firmware Upgrade")
+                    time.sleep(300)
 
                     # check the current AP Revision again
                     ap_version = ap_ssh.get_ap_version_ucentral()
@@ -308,13 +290,25 @@ class Fixtures_2x:
                                   body="current revision: " + current_version + "\ntarget revision: " + target_revision)
                     print("current revision: ", current_version, "\ntarget revision: ", target_revision)
                     if current_version == target_revision:
+                        upgrade_status.append([target_revision, current_version])
                         print("firmware upgraded successfully: ", target_revision)
                     else:
+                        upgrade_status.append([target_revision, current_version])
                         print("firmware upgraded failed: ", target_revision)
                     break
+        return upgrade_status
 
-
-
+    def get_ap_cloud_connectivity_status(self, get_configuration, get_apnos):
+        status_data = []
+        self.ubus_connection = []
+        for access_point_info in get_configuration['access_point']:
+            ap_ssh = get_apnos(access_point_info, sdk="2.x")
+            status = ap_ssh.get_ucentral_status()
+            print(status)
+            status_data.append(status)
+            connectivity_data = ap_ssh.run_generic_command(cmd="ubus call ucentral status")
+            self.ubus_connection.append(['Serial Number: ' + access_point_info['serial'], connectivity_data])
+        return status_data
 
     def get_ap_version(self, get_apnos, get_configuration):
         version_list = []
@@ -579,7 +573,7 @@ class Fixtures_2x:
             pass
         ap_ssh.run_generic_command(cmd="logger stop testcase: " + instance_name)
         ap_logs = ap_ssh.get_logread(start_ref="start testcase: " + instance_name,
-                        stop_ref="stop testcase: " + instance_name)
+                                     stop_ref="stop testcase: " + instance_name)
         allure.attach(body=ap_logs, name="AP Log: ")
 
         try:
@@ -620,25 +614,3 @@ class Fixtures_2x:
 
         request.addfinalizer(teardown_session)
         return test_cases
-
-    # Print iterations progress
-    def printProgressBar(self, iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█', printEnd="\r"):
-        """
-        Call in a loop to create terminal progress bar
-        @params:
-            iteration   - Required  : current iteration (Int)
-            total       - Required  : total iterations (Int)
-            prefix      - Optional  : prefix string (Str)
-            suffix      - Optional  : suffix string (Str)
-            decimals    - Optional  : positive number of decimals in percent complete (Int)
-            length      - Optional  : character length of bar (Int)
-            fill        - Optional  : bar fill character (Str)
-            printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
-        """
-        percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
-        filledLength = int(length * iteration // total)
-        bar = fill * filledLength + '-' * (length - filledLength)
-        print(f'\r{prefix} |{bar}| {percent}% {suffix}', end=printEnd)
-        # Print New Line on Complete
-        if iteration == total:
-            print()
