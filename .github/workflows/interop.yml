@@ -97,9 +97,9 @@ jobs:
       id: marker
       run: |
         if [ "${{ matrix.test_type }}" = "android" ]; then
-          MARKER_EXPRESSION="interop_and"
+          MARKER_EXPRESSION="interop_and and interop_uc_sanity"
         else
-          MARKER_EXPRESSION="interop_ios"
+          MARKER_EXPRESSION="interop_ios and interop_uc_sanity"
         fi
 
         ADDITIONAL_MARKERS="${{ github.event.inputs.additional_markers || '' }}"

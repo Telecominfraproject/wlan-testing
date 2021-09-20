@@ -541,11 +541,9 @@ def traffic_generator_connectivity(testbed, get_configuration):
 
 
 @pytest.fixture(scope="session")
-def create_lanforge_chamberview_dut(get_configuration, testbed):
-    """ Create a DUT on LANforge"""
-    ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
-                testbed=testbed, access_point_data=get_configuration["access_point"])
-    yield True
+def create_lanforge_chamberview_dut(lf_tools):
+    dut_object, dut_name = lf_tools.Create_Dut()
+    return dut_name
 
 
 @pytest.fixture(scope="session")

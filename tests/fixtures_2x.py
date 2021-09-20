@@ -503,8 +503,10 @@ class Fixtures_2x:
         ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
         instantiate_profile_obj.push_config(serial_number=get_equipment_ref[0])
         time_1 = time.time()
+        time.sleep(90)
         config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"'))
         config["uuid"] = 0
+        
         ap_config_latest = ap_ssh.get_uc_latest_config()
         try:
             ap_config_latest["uuid"] = 0
@@ -580,6 +582,9 @@ class Fixtures_2x:
                                      stop_ref="stop testcase: " + instance_name)
         allure.attach(body=ap_logs, name="AP Log: ")
 
+        wifi_status = ap_ssh.get_wifi_status()
+        allure.attach(name="wifi status", body=str(wifi_status))
+
         try:
             ssid_info_sdk = instantiate_profile_obj.get_ssid_info()
             ap_wifi_data = ap_ssh.get_iwinfo()
@@ -591,6 +596,7 @@ class Fixtures_2x:
 
             ssid_data = []
             idx_mapping = {}
+            print(ssid_info_sdk)
             for interface in range(len(ssid_info_sdk)):
                 ssid = ["ssid_idx=" + str(interface) +
                         " ssid=" + ssid_info_sdk[interface][0] +
@@ -613,7 +619,8 @@ class Fixtures_2x:
             pass
 
         def teardown_session():
-
+            wifi_status = ap_ssh.get_wifi_status()
+            allure.attach(name="wifi status", body=str(wifi_status))
             print("\nTeardown")
 
         request.addfinalizer(teardown_session)

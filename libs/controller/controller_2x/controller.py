@@ -203,6 +203,10 @@ class FMSUtils:
                       body=str(response.status_code) + "\n" +
                            str(response.json()) + "\n"
                       )
+        response = self.sdk_client.request(service="gw", command="device/" + serial + "upgrade/",
+                                           method="POST", params="revisionSet=true",
+                                           payload="{ \"serialNumber\" : " + serial + " , \"uri\" : " + url + " }")
+        print(response)
 
     def ap_model_lookup(self, model=""):
         devices = self.get_device_set()
@@ -223,7 +227,7 @@ class FMSUtils:
     def get_latest_fw(self, model=""):
 
         device_type = self.ap_model_lookup(model=model)
-        print("shivam", device_type)
+
         response = self.sdk_client.request(service="fms", command="firmwares/", method="GET",
                                            params="latestOnly=true&deviceType=" + device_type,
                                            payload="")
@@ -240,7 +244,7 @@ class FMSUtils:
         else:
             return {}
 
-    # 2c3becf
+
     def get_firmwares(self, limit="10000", model="", latestonly="", branch="", commit_id="", offset="3000"):
 
         deviceType = self.ap_model_lookup(model=model)
@@ -265,6 +269,8 @@ class FMSUtils:
             # print(data)
 
         return "error"
+
+    
 
 
 class UProfileUtility:
@@ -530,7 +536,9 @@ class UProfileUtility:
         uri = self.sdk_client.build_uri("device/" + serial_number + "/configure")
         basic_cfg_str = json.dumps(payload)
         print(self.base_profile_config)
-        allure.attach(name="ucentral_config: ", body=str(self.base_profile_config))
+        allure.attach(name="ucentral_config: ",
+                      body=str(self.base_profile_config).replace("'", '"'),
+                      attachment_type=allure.attachment_type.JSON)
         print(self.base_profile_config)
         resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
                              verify=False, timeout=100)
@@ -556,15 +564,7 @@ if __name__ == '__main__':
     #     print(i)
     # print(len(new))
 
-    # fms.get_device_set()
-    # model = fms.get_latest_fw(model="eap102")
-    # print(model)
-    # profile = UProfileUtility(sdk_client=obj)
-    # profile.set_mode(mode="BRIDGE")
-    # profile.set_radio_config()
-    # ssid = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G", "5G"], "security": "psk", "security_key": "something"}
-    # profile.add_ssid(ssid_data=ssid, radius=False)
-    # profile.push_config(serial_number="0000c1018812")
+
     # print(profile.get_ssid_info())
     # # print(obj.get_devices())
     obj.logout()

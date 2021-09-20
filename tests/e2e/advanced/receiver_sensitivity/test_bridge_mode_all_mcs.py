@@ -40,6 +40,7 @@ setup_params_general = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestRxSensitivityBRIDGEAllMcs5G(object):
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2445", name="WIFI-2445")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.all_mcs
@@ -92,6 +93,7 @@ class TestRxSensitivityBRIDGEAllMcs5G(object):
         else:
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2445", name="WIFI-2445")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.all_mcs
