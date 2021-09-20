@@ -41,8 +41,8 @@ class APTools:
             output, error = self.apnos.reboot()
             print(output, error)
         elif action == "run_cmd":
-            [input, output, error] = self.apnos.run_generic_command(cmd=cmd)
-            print(input, output, error)
+            output = self.apnos.run_generic_command(cmd=cmd)
+            print(output)
         elif action == "verify":
             [input, output, error] = self.apnos.run_generic_command("cat /tmp/sysinfo/model;"
                                                                     "cat /etc/banner")
