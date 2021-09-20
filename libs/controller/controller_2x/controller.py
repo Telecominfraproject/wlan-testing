@@ -172,6 +172,14 @@ class Controller(ConfigureController):
         # resp.close()()
         return device
 
+    def get_sdk_version(self):
+        uri = self.build_uri("system/?command=version")
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        version = resp.json()
+        # resp.close()()
+        return version['value']
+
     def get_device_uuid(self, serial_number):
         device_info = self.get_device_by_serial_number(serial_number=serial_number)
         return device_info["UUID"]
@@ -541,9 +549,13 @@ if __name__ == '__main__':
         'password': 'openwifi',
     }
     obj = Controller(controller_data=controller)
-    fms = FMSUtils(sdk_client=obj)
-    new = fms.get_firmwares(model='cig_wf194c', offset='3')
-    print(len(new))
+    print(obj.get_sdk_version())
+    # fms = FMSUtils(sdk_client=obj)
+    # new = fms.get_firmwares(model='ecw5410')
+    # for i in new:
+    #     print(i)
+    # print(len(new))
+
     # fms.get_device_set()
     # model = fms.get_latest_fw(model="eap102")
     # print(model)

@@ -60,6 +60,10 @@ class Fixtures_1x:
     def setup_firmware(self):
         pass
 
+    def get_sdk_version(self):
+        version = self.controller_obj.get_sdk_version()
+        return version
+
     def get_ap_cloud_connectivity_status(self, get_configuration, get_apnos):
         mgr_status = []
         for access_point_info in get_configuration['access_point']:

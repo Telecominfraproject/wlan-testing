@@ -7,7 +7,8 @@ import pytest
 import json
 import allure
 
-@pytest.mark.uc_sanityw
+
+@pytest.mark.uc_sanity
 @allure.feature("SDK REST API")
 class TestUcentralGatewayService(object):
     """

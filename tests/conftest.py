@@ -253,6 +253,12 @@ def get_equipment_ref(request, setup_controller, testbed, get_configuration):
     yield equipment_id_list
 
 
+@pytest.fixture(scope="session")
+def get_sdk_version(fixtures_ver):
+    version = fixtures_ver.get_sdk_version()
+    yield version
+
+
 # Controller Fixture
 @pytest.fixture(scope="session")
 def setup_controller(request, get_configuration, test_access_point, add_env_properties, fixtures_ver):
@@ -592,8 +598,10 @@ def add_allure_environment_property(request: SubRequest) -> Optional[Callable]:
 
 
 @fixture(scope='session')
-def add_env_properties(get_configuration, get_apnos, fixtures_ver, add_allure_environment_property: Callable) -> None:
+def add_env_properties(get_configuration, get_sdk_version, get_apnos, fixtures_ver,
+                       add_allure_environment_property: Callable) -> None:
     add_allure_environment_property('Access-Point-Model', get_configuration["access_point"][0]["model"])
+    add_allure_environment_property('SDK-Version', get_sdk_version)
     add_allure_environment_property('Access-Point-Firmware-Version',
                                     fixtures_ver.get_ap_version(get_apnos, get_configuration)[0].split("\n")[1])
     add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
