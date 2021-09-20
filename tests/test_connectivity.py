@@ -134,6 +134,8 @@ class TestFMS(object):
 
     @pytest.mark.firmware_upgrade
     def test_firmware_upgrade_request(self, firmware_upgrade):
+        for update in firmware_upgrade:
+            allure.attach(name='serial: ' + update[0], body="")
         assert True
 
     @pytest.mark.test_firmware_ap
