@@ -665,7 +665,7 @@ class RunTest:
 
         if len(self.twog_radios) == 1:
             self.twog_radios = [[self.twog_radios[0]]]
-        else:
+        elif len(self.twog_radios) > 1:
             twog_radio = []
             for i in range(0,len(self.twog_radios)):
                 twog_radio.append([self.twog_radios[i]])
@@ -674,7 +674,7 @@ class RunTest:
         if len(self.fiveg_radios) == 1:
             self.fiveg_radios = [[self.fiveg_radios[0]]]
 
-        else:
+        elif len(self.fiveg_radios) > 1:
             fiveg_radio = []
             for i in range(0,len(self.fiveg_radios)):
                 fiveg_radio.append([self.fiveg_radios[i]])
