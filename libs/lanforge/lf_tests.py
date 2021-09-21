@@ -663,6 +663,23 @@ class RunTest:
                 ['Band-Steering', '0'], ['Multi-Station Throughput vs Pkt Size', '1'],
                 ['Long-Term', '0']]
 
+        if len(self.twog_radios) == 1:
+            self.twog_radios = [[self.twog_radios[0]]]
+        else:
+            twog_radio = []
+            for i in range(0,len(self.twog_radios)):
+                twog_radio.append([self.twog_radios[i]])
+            self.twog_radios = twog_radio
+
+        if len(self.fiveg_radios) == 1:
+            self.fiveg_radios = [[self.fiveg_radios[0]]]
+
+        else:
+            fiveg_radio = []
+            for i in range(0,len(self.fiveg_radios)):
+                fiveg_radio.append([self.fiveg_radios[i]])
+            self.fiveg_radios = fiveg_radio
+
         self.msthpt_obj = ApAutoTest(lf_host=self.lanforge_ip,
                                      lf_port=self.lanforge_port,
                                      ssh_port=self.lf_ssh_port,
@@ -676,8 +693,8 @@ class RunTest:
                                      dut2_0=dut_2g,
                                      load_old_cfg=False,
                                      local_lf_report_dir=self.local_report_path,
-                                     radio2=[["1.1.wiphy0"]],
-                                     radio5=[["1.1.wiphy1"]],
+                                     radio2=self.twog_radios,
+                                     radio5=self.fiveg_radios,
                                      sets=sets,
                                      raw_lines=raw_line
                                      )
