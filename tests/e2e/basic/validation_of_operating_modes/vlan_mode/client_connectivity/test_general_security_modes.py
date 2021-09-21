@@ -47,7 +47,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
     def test_open_ssid_2g(self, get_vif_state, get_ap_logs,
-                          setup_profiles, get_lanforge_data, lf_test, update_report,
+                          setup_profiles,  lf_test, update_report,
                           station_names_twog,
                           test_cases):
         """Client Connectivity open ssid 2.4G
@@ -73,7 +73,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
     def test_open_ssid_5g(self, get_vif_state, get_ap_logs,
-                          get_lanforge_data, lf_test, test_cases, station_names_fiveg,
+                           lf_test, test_cases, station_names_fiveg,
                           update_report):
         """Client Connectivity open ssid 5G
            pytest -m "client_connectivity and vlan and general and open and fiveg"
@@ -100,7 +100,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.twog
     @allure.story('wpa 2.4 GHZ Band')
     def test_wpa_ssid_2g(self, get_vif_state, get_ap_logs,
-                         get_lanforge_data, update_report,
+                          update_report,
                          lf_test, test_cases, station_names_twog):
         """Client Connectivity wpa ssid 2.4G
            pytest -m "client_connectivity and vlan and general and wpa and twog"
@@ -127,8 +127,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.fiveg
     @allure.story('wpa 5 GHZ Band')
     def test_wpa_ssid_5g(self, get_vif_state, get_ap_logs,
-                         lf_test, update_report, test_cases, station_names_fiveg,
-                         get_lanforge_data):
+                         lf_test, update_report, test_cases, station_names_fiveg):
         """Client Connectivity wpa ssid 5G
            pytest -m "client_connectivity and vlan and general and wpa and fiveg"
         """
@@ -154,7 +153,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.twog
     @allure.story('wpa2_personal 2.4 GHZ Band')
     def test_wpa2_personal_ssid_2g(self, get_vif_state, get_ap_logs,
-                                   get_lanforge_data, lf_test, update_report, test_cases,
+                                    lf_test, update_report, test_cases,
                                    station_names_twog):
         """Client Connectivity wpa2_personal ssid 2.4G
            pytest -m "client_connectivity and vlan and general and wpa2_personal and twog"
@@ -181,7 +180,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.fiveg
     @allure.story('wpa2_personal 5 GHZ Band')
     def test_wpa2_personal_ssid_5g(self, get_vif_state, get_ap_logs,
-                                   get_lanforge_data, update_report, test_cases,
+                                    update_report, test_cases,
                                    station_names_fiveg,
                                    lf_test):
         """Client Connectivity wpa2_personal ssid 5G
@@ -245,7 +244,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
     def test_wpa3_personal_ssid_2g(self, get_vif_state, get_ap_logs,
-                                   station_names_twog, setup_profiles, get_lanforge_data, lf_test,
+                                   station_names_twog, setup_profiles,  lf_test,
                                    update_report,
                                    test_cases):
         """Client Connectivity open ssid 2.4G
@@ -273,7 +272,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
     def test_wpa3_personal_ssid_5g(self, get_vif_state, get_ap_logs,
-                                   station_names_fiveg, get_lanforge_data, lf_test, test_cases,
+                                   station_names_fiveg,  lf_test, test_cases,
                                    update_report):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and vlan and general and wpa3_personal and fiveg"
@@ -299,7 +298,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
     def test_wpa3_personal_mixed_ssid_2g(self, get_vif_state, get_ap_logs,
-                                         station_names_twog, setup_profiles, get_lanforge_data,
+                                         station_names_twog, setup_profiles, 
                                          lf_test,
                                          update_report,
                                          test_cases):
@@ -327,7 +326,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
     def test_wpa3_personal_mixed_ssid_5g(self, get_vif_state, get_ap_logs,
-                                         station_names_fiveg, get_lanforge_data, lf_test,
+                                         station_names_fiveg,  lf_test,
                                          test_cases,
                                          update_report):
         """Client Connectivity open ssid 2.4G
@@ -354,7 +353,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.twog
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
     def test_wpa_wpa2_personal_ssid_2g(self, get_vif_state, get_ap_logs,
-                                       station_names_twog, setup_profiles, get_lanforge_data,
+                                       station_names_twog, setup_profiles, 
                                        lf_test,
                                        update_report,
                                        test_cases):
@@ -383,7 +382,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.fiveg
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
     def test_wpa_wpa2_personal_ssid_5g(self, get_vif_state, get_ap_logs,
-                                       station_names_fiveg, get_lanforge_data, lf_test, test_cases,
+                                       station_names_fiveg,  lf_test, test_cases,
                                        update_report):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and vlan and general and wpa_wpa2_personal_mixed and fiveg"
@@ -432,7 +431,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
 #
 #     @pytest.mark.wep
 #     @pytest.mark.twog
-#     def test_wep_2g(self, get_vif_state,station_names_twog, setup_profiles, get_lanforge_data, lf_test, update_report,
+#     def test_wep_2g(self, get_vif_state,station_names_twog, setup_profiles,  lf_test, update_report,
 #                                test_cases, radius_info):
 #         profile_data = setup_params_wep["ssid_modes"]["wep"][0]
 #         ssid_name = profile_data["ssid_name"]
@@ -460,7 +459,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
 #
 #     @pytest.mark.wep
 #     @pytest.mark.fiveg
-#     def test_wep_5g(self, get_vif_state,station_names_fiveg, setup_profiles, get_lanforge_data, lf_test, update_report,
+#     def test_wep_5g(self, get_vif_state,station_names_fiveg, setup_profiles,  lf_test, update_report,
 #                                test_cases, radius_info):
 #         profile_data = setup_params_wep["ssid_modes"]["wep"][1]
 #         ssid_name = profile_data["ssid_name"]

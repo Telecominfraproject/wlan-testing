@@ -97,9 +97,9 @@ jobs:
       id: marker
       run: |
         if [ "${{ matrix.test_type }}" = "android" ]; then
-          MARKER_EXPRESSION="interop_and"
+          MARKER_EXPRESSION="interop_and and interop_uc_sanity"
         else
-          MARKER_EXPRESSION="interop_ios"
+          MARKER_EXPRESSION="interop_ios and interop_uc_sanity"
         fi
 
         ADDITIONAL_MARKERS="${{ github.event.inputs.additional_markers || '' }}"
@@ -129,7 +129,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ steps.marker.outputs.expression }}" -s -vvv --testbed=interop-03 -o 'jobName=Github-Interop-${{ matrix.test_type }}' -o 'jobNumber=${{ github.run_number }}' --skip-testrail --alluredir=/tmp/allure-results
+                    pytest -m "${{ steps.marker.outputs.expression }}" -s -vvv --testbed=interop-03 -o 'jobName=Github-Interop-${{ matrix.test_type }}' -o 'jobNumber=${{ github.run_number }}' --alluredir=/tmp/allure-results
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60

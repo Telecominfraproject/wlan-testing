@@ -28,7 +28,6 @@ from cv_test_manager import cv_test
 from configuration import CONFIGURATION
 from configuration import RADIUS_SERVER_DATA
 from configuration import RADIUS_ACCOUNTING_DATA
-from configuration import TEST_CASES
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
 from lf_tools import ChamberView
@@ -59,6 +58,22 @@ class Fixtures_1x:
 
     def setup_firmware(self):
         pass
+
+    def get_sdk_version(self):
+        version = self.controller_obj.get_sdk_version()
+        return version
+
+    def get_ap_cloud_connectivity_status(self, get_configuration, get_apnos):
+        mgr_status = []
+        for access_point_info in get_configuration['access_point']:
+            ap_ssh = get_apnos(access_point_info, sdk="1.x")
+            status = ap_ssh.get_manager_state()
+            if "ACTIVE" not in status:
+                time.sleep(30)
+                ap_ssh = APNOS(access_point_info)
+                status = ap_ssh.get_manager_state()
+            mgr_status.append(status)
+        return mgr_status
 
     def get_ap_version(self, get_apnos, get_configuration):
 #         version_list = []

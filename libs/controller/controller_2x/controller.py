@@ -11,6 +11,7 @@ from urllib.parse import urlparse
 import pytest
 import allure
 import requests
+from operator import itemgetter
 from pathlib import Path
 
 from requests.adapters import HTTPAdapter
@@ -75,9 +76,11 @@ class ConfigureController:
         if method == "GET":
             resp = requests.get(uri, headers=self.make_headers(), params=params, verify=False, timeout=100)
         elif method == "POST":
-            resp = requests.post(uri, data=payload, verify=False, timeout=100)
+            print(uri, payload, params)
+            resp = requests.post(uri, params=params, data=payload, headers=self.make_headers(), verify=False,
+                                 timeout=100)
         elif method == "PUT":
-            resp = requests.put(uri, data=payload, verify=False, timeout=100)
+            resp = requests.put(uri, params=params, data=payload, verify=False, timeout=100)
         elif method == "DELETE":
             resp = requests.delete(uri, headers=self.make_headers(), params=params, verify=False, timeout=100)
 
@@ -169,6 +172,14 @@ class Controller(ConfigureController):
         # resp.close()()
         return device
 
+    def get_sdk_version(self):
+        uri = self.build_uri("system/?command=version")
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        version = resp.json()
+        # resp.close()()
+        return version['value']
+
     def get_device_uuid(self, serial_number):
         device_info = self.get_device_by_serial_number(serial_number=serial_number)
         return device_info["UUID"]
@@ -182,11 +193,20 @@ class FMSUtils:
         self.sdk_client = sdk_client
 
     def upgrade_firmware(self, serial="", url=""):
+        response = self.sdk_client.request(service="gw", command="device/" + serial + "/upgrade",
+                                           method="POST", params="serialNumber=" + serial,
+                                           payload="{ \"serialNumber\" : " + "\"" + serial + "\"" +
+                                                   " , \"uri\" : " + "\"" + url + "\"" +
+                                                   ", \"when\" : 0" + " }")
+        print(response.json())
+        allure.attach(name="REST - firmware upgrade response: ",
+                      body=str(response.status_code) + "\n" +
+                           str(response.json()) + "\n"
+                      )
         response = self.sdk_client.request(service="gw", command="device/" + serial + "upgrade/",
                                            method="POST", params="revisionSet=true",
                                            payload="{ \"serialNumber\" : " + serial + " , \"uri\" : " + url + " }")
         print(response)
-        pass
 
     def ap_model_lookup(self, model=""):
         devices = self.get_device_set()
@@ -224,21 +244,33 @@ class FMSUtils:
         else:
             return {}
 
-    def get_firmwares(self, limit="", deviceType="", latestonly=""):
 
-        params = "limit=" + limit + "&deviceType=" + deviceType + "&latestonly=" + latestonly
+    def get_firmwares(self, limit="10000", model="", latestonly="", branch="", commit_id="", offset="3000"):
 
-        response = self.sdk_client.request(service="fms", command="firmwares/", method="GET", params=params, payload="")
-        print(response)
+        deviceType = self.ap_model_lookup(model=model)
+        params = "limit=" + limit + \
+                 "&deviceType=" + deviceType + \
+                 "&latestonly=" + latestonly + \
+                 "offset=" + offset
+        command = "firmwares/"
+        response = self.sdk_client.request(service="fms", command=command, method="GET", params=params, payload="")
+        allure.attach(name=command + params,
+                      body=str(response.status_code) + "\n" + str(response.json()),
+                      attachment_type=allure.attachment_type.JSON)
         if response.status_code == 200:
             data = response.json()
-            print(data)
+            newlist = sorted(data['firmwares'], key=itemgetter('created'))
+            # for i in newlist:
+            #     print(i['uri'])
+            #     print(i['revision'])
+            # print(newlist)
 
-        # resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
-        # self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
-        # devices = resp.json()
-        # # resp.close()()
-        return "devices"
+            return newlist
+            # print(data)
+
+        return "error"
+
+    
 
 
 class UProfileUtility:
@@ -504,12 +536,16 @@ class UProfileUtility:
         uri = self.sdk_client.build_uri("device/" + serial_number + "/configure")
         basic_cfg_str = json.dumps(payload)
         print(self.base_profile_config)
-        allure.attach(name="ucentral_config: ", body=str(self.base_profile_config))
+        allure.attach(name="ucentral_config: ",
+                      body=str(self.base_profile_config).replace("'", '"'),
+                      attachment_type=allure.attachment_type.JSON)
         print(self.base_profile_config)
         resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
                              verify=False, timeout=100)
+        print(resp.json())
+        print(resp.status_code)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
-        print(resp.url)
+        # print(resp.url)
         resp.close()
         print(resp)
 
@@ -521,17 +557,14 @@ if __name__ == '__main__':
         'password': 'openwifi',
     }
     obj = Controller(controller_data=controller)
-    fms = FMSUtils(sdk_client=obj)
-    # fms.get_device_set()
-    # model = fms.get_latest_fw(model="eap102")
-    # print(model)
-    # profile = UProfileUtility(sdk_client=obj)
-    # profile.set_mode(mode="BRIDGE")
-    # profile.set_radio_config()
-    # ssid = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G", "5G"], "security": "psk", "security_key": "something",
-    #         "vlan": 100}
-    # profile.add_ssid(ssid_data=ssid, radius=False)
-    # profile.push_config(serial_number="903cb39d6918")
+    print(obj.get_sdk_version())
+    # fms = FMSUtils(sdk_client=obj)
+    # new = fms.get_firmwares(model='ecw5410')
+    # for i in new:
+    #     print(i)
+    # print(len(new))
+
+
     # print(profile.get_ssid_info())
     # # print(obj.get_devices())
     obj.logout()

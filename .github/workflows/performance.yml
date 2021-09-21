@@ -134,7 +134,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "performance and ${{ matrix.marker }}" -s -vvv --testbed="${{ steps.testbed.outputs.name }}" --skip-testrail --alluredir=/tmp/allure-results
+                    pytest -m "performance and ${{ matrix.marker }}" -s -vvv --testbed="${{ steps.testbed.outputs.name }}" --alluredir=/tmp/allure-results
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60

@@ -28,7 +28,7 @@ on:
         description: 'Markers expression that will be passed to the pytest command.'
         required: false
   schedule:
-  - cron: '15 0 * * *'
+  - cron: '30 20 * * *'
 
 defaults:
   run:
@@ -267,7 +267,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression || 'uc_sanity' }}" -s -vvv --testbed="${{ matrix.testbed }}" --skip-testrail --alluredir=/tmp/allure-results
+                    pytest -m "${{ github.event.inputs.marker_expression || 'uc_sanity' }}" -s -vvv --testbed="${{ matrix.testbed }}" --alluredir=/tmp/allure-results
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
