@@ -1,7 +1,7 @@
 """
 
     Multi Station throughput vs Packet Size test: Bridge Mode
-    pytest -m "Multi_Sta_Thpt and bridge"
+    pytest -m "Multi_Sta_Thpt and wpa2_personal and bridge and fiveg"
 
 """
 
@@ -9,7 +9,7 @@ import os
 import allure
 import pytest
 
-pytestmark = [pytest.mark.Multi_Sta_Thpt, pytest.mark.bridge, pytest.mark.wpa2_personal, pytest.mark.fiveg]
+pytestmark = [pytest.mark.Multi_Sta_Thpt,pytest.mark.wpa2_personal, pytest.mark.bridge, pytest.mark.fiveg]
 
 setup_params_general = {
     "mode": "BRIDGE",
