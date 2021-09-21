@@ -23,6 +23,10 @@ on:
         default: 'basic-01'
         description: 'testbed to execute tests against'
         required: false
+      firmware:
+        default: 'next-latest'
+        description: 'Target firmware version to be specified <branch>-<commit | latest>'
+        required: false
       marker_expression:
         default: ''
         description: "marker expression that will be passed to pytest's -m"
@@ -116,7 +120,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression }}" -s -vvv --testbed="${{ github.event.inputs.testbed }}" --skip-testrail --alluredir=/tmp/allure-results "${{ github.event.inputs.additional_args }}"
+                    pytest -m "${{ github.event.inputs.marker_expression }}" -s -vvv --testbed="${{ github.event.inputs.testbed }}" -o firmware="${{ github.event.inputs.firmware }}" --alluredir=/tmp/allure-results "${{ github.event.inputs.additional_args }}"
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
