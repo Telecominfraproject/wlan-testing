@@ -9,7 +9,7 @@ import os
 import allure
 import pytest
 
-pytestmark = [pytest.mark.Multi_Sta_Thpt, pytest.mark.bridge,pytest.mark.wpa2_personal,pytest.mark.fiveg]
+pytestmark = [pytest.mark.Multi_Sta_Thpt, pytest.mark.bridge, pytest.mark.wpa2_personal, pytest.mark.fiveg]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -34,13 +34,12 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestMultiStaThptbridge(object):
 
-
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_udp_dl_5g_1",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3632")
     def test_mstathpt_wpa2p_bridge_udp_dl_5g_1(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -70,8 +69,8 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:1'], ['tput_multi_ul:0']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                          instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
-                                          vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
@@ -82,7 +81,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_tcp_dl_5g_2",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3634")
     def test_mstathpt_wpa2p_bridge_tcp_dl_5g_2(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal  and fiveg"
 
@@ -127,7 +126,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_udp_ul_5g_3",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3636")
     def test_mstathpt_wpa2p_bridge_udp_ul_5g_3(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -169,7 +168,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_tcp_ul_5g_4",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3638")
     def test_mstathpt_wpa2p_bridge_tcp_ul_5g_4(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -211,7 +210,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_udp_dl_5g_5",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3640")
     def test_mstathpt_wpa2p_bridge_udp_dl_5g_5(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -253,7 +252,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_tcp_dl_5g_6",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3642")
     def test_mstathpt_wpa2p_bridge_tcp_dl_5g_6(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -295,7 +294,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_udp_ul_5g_7",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3644")
     def test_mstathpt_wpa2p_bridge_udp_ul_5g_7(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -337,7 +336,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_tcp_ul_5g_8",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3646")
     def test_mstathpt_wpa2p_bridge_tcp_ul_5g_8(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -380,7 +379,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_udp_dl_5g_9",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3782")
     def test_mstathpt_wpa2p_bridge_udp_dl_5g_9(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog  and fiveg"
 
@@ -422,7 +421,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_tcp_dl_5g_10",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3784")
     def test_mstathpt_wpa2p_bridge_tcp_dl_5g_10(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -464,7 +463,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_udp_ul_5g_11",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3787")
     def test_mstathpt_wpa2p_bridge_udp_ul_5g_11(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -506,7 +505,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_udp_ul_5g_12",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3789")
     def test_mstathpt_wpa2p_bridge_tcp_ul_5g_12(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -548,7 +547,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_udp_dl_5g_13",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3792")
     def test_mstathpt_wpa2p_bridge_udp_dl_5g_13(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -590,7 +589,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_tcp_dl_5g_14",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3794")
     def test_mstathpt_wpa2p_bridge_tcp_dl_5g_14(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -632,7 +631,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_udp_ul_5g_15",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3799")
     def test_mstathpt_wpa2p_bridge_udp_ul_5g_15(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -674,7 +673,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_tcp_ul_5g_16",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3801")
     def test_mstathpt_wpa2p_bridge_tcp_ul_5g_16(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -716,7 +715,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_udp_dl_5g_17",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3803")
     def test_mstathpt_wpa2p_bridge_udp_ul_5g_17(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -758,7 +757,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_tcp_dl_5g_18",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3805")
     def test_mstathpt_wpa2p_bridge_tcp_dl_5g_18(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -800,7 +799,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_udp_ul_5g_19",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3807")
     def test_mstathpt_wpa2p_bridge_udp_ul_5g_19(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -842,7 +841,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_tcp_ul_5g_20",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3811")
     def test_mstathpt_wpa2p_bridge_tcp_ul_5g_20(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -884,7 +883,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_udp_dl_5g_21",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3813")
     def test_mstathpt_wpa2p_bridge_udp_dl_5g_21(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -926,7 +925,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_tcp_dl_5g_22",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3816")
     def test_mstathpt_wpa2p_bridge_tcp_dl_5g_22(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -968,7 +967,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_udp_ul_5g_23",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3818")
     def test_mstathpt_wpa2p_bridge_udp_ul_5g_23(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -1010,7 +1009,7 @@ class TestMultiStaThptbridge(object):
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_tcp_ul_5g_24",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3820")
     def test_mstathpt_wpa2p_bridge_tcp_ul_5g_24(self, get_vif_state, lf_tools,
-                                create_lanforge_chamberview_dut, lf_test, get_configuration):
+                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
@@ -1046,4 +1045,3 @@ class TestMultiStaThptbridge(object):
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
-
