@@ -53,7 +53,7 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.valid_client_ip_twog_wpa
     @allure.testcase(name="test_station_ip_wpa_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2168")
-    def test_station_ip_wpa_ssid_2g(self, get_lanforge_data, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_station_ip_wpa_ssid_2g(self, setup_profiles, create_vlan, lf_test, lf_tools,
                                     get_vlan_list, update_report, station_names_twog,
                                     test_cases, get_configuration):
         """
@@ -108,7 +108,7 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.valid_client_ip_twog_wpa2  # wifi-2156
     @allure.testcase(name="test_station_ip_wpa2_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2156")
-    def test_station_ip_wpa2_ssid_2g(self, get_lanforge_data, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_station_ip_wpa2_ssid_2g(self, setup_profiles, create_vlan, lf_test, lf_tools,
                                      update_report, station_names_twog,
                                      test_cases, get_configuration):
         """
@@ -156,7 +156,7 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.disable_vlan_twog  # wifi-2158
     @allure.testcase(name="test_disable_vlan_wpa2_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2158")
-    def test_disable_vlan_wpa2_ssid_2g(self, get_lanforge_data, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_disable_vlan_wpa2_ssid_2g(self, setup_profiles, create_vlan, lf_test, lf_tools,
                                        update_report, station_names_twog,
                                        test_cases, get_configuration):
         """
@@ -207,7 +207,7 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.valid_client_ip_twog_open
     @allure.testcase(name="test_station_ip_open_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2160")
-    def test_station_ip_open_ssid_2g(self, get_lanforge_data, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_station_ip_open_ssid_2g(self, setup_profiles, create_vlan, lf_test, lf_tools,
                                      get_vlan_list, update_report, station_names_twog,
                                      test_cases, get_configuration):
         """
@@ -262,7 +262,7 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.test_station_ip_twog_wpa_wpa2
     @allure.testcase(name="test_station_ip_wpa_wpa2_personal_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2166")
-    def test_station_ip_wpa_wpa2_personal_ssid_2g(self, get_lanforge_data, setup_profiles, create_vlan, lf_test,
+    def test_station_ip_wpa_wpa2_personal_ssid_2g(self, setup_profiles, create_vlan, lf_test,
                                                   lf_tools, get_vlan_list, update_report, station_names_twog,
                                                   test_cases, get_configuration):
         """
@@ -318,7 +318,7 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.valid_client_ip_twog_wpa2  # wifi-2172
     @allure.testcase(name="test_station_ip_wpa2_personal_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2172")
-    def test_station_ip_wpa2_personal_ssid_2g(self, get_lanforge_data, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_station_ip_wpa2_personal_ssid_2g(self, setup_profiles, create_vlan, lf_test, lf_tools,
                                               get_vlan_list, update_report, station_names_twog,
                                               test_cases, get_configuration):
         """
