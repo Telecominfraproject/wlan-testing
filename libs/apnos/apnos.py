@@ -315,8 +315,8 @@ class APNOS:
 
     def get_ucentral_status(self):
         connected, latest, active = "Error", "Error", "Error"
+        client = self.ssh_cli_connect()
         try:
-            client = self.ssh_cli_connect()
             cmd = "ubus call ucentral status"
             if self.mode:
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
@@ -331,10 +331,11 @@ class APNOS:
                 latest = json_output['latest']
             if 'active' in json_output.keys():
                 active = json_output['active']
-            client.close()
         except Exception as e:
             print("Exception in get_ucentral_status :: ")
             print(e)
+        finally:
+            client.close()
         return connected, latest, active
 
     def get_uc_latest_config(self):

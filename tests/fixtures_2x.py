@@ -233,7 +233,10 @@ class Fixtures_2x:
                             test_cases["wpa2_personal"] = False
         ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="2.x")
         connected, latest, active = ap_ssh.get_ucentral_status()
-        print("Ucentral status before push :: connected = %s, latest = %s, active = %s" % (connected, latest, active))
+        msg = "uCentral status before push :: connected = " + str(connected) + ", latest = " + str(latest) + \
+              ", active = " + str(active)
+        print(msg)
+        allure.attach(name=str(msg), body="")
 
         if connected == False:
             pytest.exit("AP is disconnected from UC Gateway")
@@ -247,7 +250,6 @@ class Fixtures_2x:
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
         instantiate_profile_obj.push_config(serial_number=get_equipment_id[0])
-        time.sleep(90)
         time_1 = time.time()
         config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"'))
         config["uuid"] = 0
@@ -277,7 +279,7 @@ class Fixtures_2x:
         if x < 40:
             print("SUCCESS :: Latest Config UPDATED into AP :: old_config == latest ", config)
         else:
-            print("FAILED :: Latest Config NOT updated into AP :: old_config != latest ", config)
+            print("FAILED :: Latest Config NOT updated into AP after 200 sec : old_config != latest ", config)
 
         connected, latest, active = ap_ssh.get_ucentral_status()
         print("active: ", active)
@@ -295,13 +297,13 @@ class Fixtures_2x:
         if x < 20:
             print("SUCCESS :: Latest Config properly APPLIED into AP :: active == latest", config)
         else:
-            print("FAILED :: Latest Config NOT applied into AP :: active != latest", config)
+            print("FAILED :: Latest Config NOT applied into AP after 200 sec :: active != latest", config)
 
         time_2 = time.time()
         time_interval = time_2 - time_1
         msg = "Time Took to apply Config :: " + str(time_interval)
         print(msg)
-        allure.attach(name=msg, body="")
+        allure.attach(name=str(msg), body="")
 
         ap_config_latest = ap_ssh.get_uc_latest_config()
         ap_config_latest["uuid"] = 0
@@ -315,33 +317,33 @@ class Fixtures_2x:
             ap_config_latest = ap_ssh.get_uc_latest_config()
             msg = "Latest_Config ::   " + str(ap_config_latest)
             print(msg)
-            allure.attach(name=msg, body=str(ap_config_latest))
+            allure.attach(name=str(msg), body=str(ap_config_latest))
             ap_config_latest["uuid"] = 0
 
             ap_config_active = ap_ssh.get_uc_active_config()
-            msg = "Active Config in AP :: " + str(ap_config_active)
+            msg = "Active_Config in AP :: " + str(ap_config_active)
             print(msg)
-            allure.attach(name=msg, body=str(ap_config_active))
+            allure.attach(name=str(msg), body=str(ap_config_active))
             ap_config_active["uuid"] = 0
 
             if ap_config_latest == {'uuid': 0} and ap_config_active == {'uuid': 0}:
                 msg = "RETRY :: ap_config_latest and ap_config_active contains only {'uuid': 0} , waiting for 5 sec.."
                 print(msg)
-                allure.attach(name=msg, body=str(ap_config_active))
+                allure.attach(name=str(msg), body=str(ap_config_active))
                 time.sleep(5)
                 continue
 
             if ap_config_active == ap_config_latest:
                 msg = "SUCCESS :: AP is Broadcasting Applied Config"
                 print(msg)
-                allure.attach(name=msg, body=str(ap_config_active))
+                allure.attach(name=str(msg), body=str(ap_config_active))
                 msg = "Time taken to reflect latest config in AP :: ", + (time.time() - start_time)
                 print(msg)
-                allure.attach(name=msg, body='')
+                allure.attach(name=str(msg), body='')
                 break
             msg = "Config still not applied, waiting for 5 sec..."
             print(msg)
-            allure.attach(name=msg, body='')
+            allure.attach(name=str(msg), body='')
             time.sleep(5)
 
         else:
@@ -350,9 +352,10 @@ class Fixtures_2x:
             allure.attach(name="FAILED :: AP FAILED to apply config after 420 sec, current active config  is :: ",
                           body=str(ap_config_active))
 
-        print("Waiting 60 sec for iwinfo to come up...")
-        allure.attach(name="Waiting 120 sec for iwinfo to come up...", body='')
-        time.sleep(60)
+        msg = "Waiting 30 sec for iwinfo to come up..."
+        print(msg)
+        allure.attach(name=str(msg), body='')
+        time.sleep(30)
 
         try:
             iwinfo = ap_ssh.iwinfo()
@@ -384,7 +387,6 @@ class Fixtures_2x:
 
             ssid_data = []
             idx_mapping = {}
-            print(ssid_info_sdk)
             for interface in range(len(ssid_info_sdk)):
                 ssid = ["ssid_idx=" + str(interface) +
                         " ssid=" + ssid_info_sdk[interface][0] +
