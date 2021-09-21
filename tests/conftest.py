@@ -239,7 +239,7 @@ def get_apnos():
 
 
 @pytest.fixture(scope="session")
-def get_equipment_ref(request, setup_controller, testbed, get_configuration):
+def get_equipment_id(request, setup_controller, testbed, get_configuration):
     """"""
     if request.config.getoption("1.x"):
         equipment_id_list = []
