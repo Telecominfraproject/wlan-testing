@@ -9,7 +9,7 @@ import os
 import allure
 import pytest
 
-pytestmark = [pytest.mark.Multi_Sta_Thpt,pytest.mark.wpa2_personal,pytest.mark.bridge,pytest.mark.twog]
+pytestmark = [pytest.mark.performance,pytest.mark.Multi_Sta_Thpt,pytest.mark.wpa2_personal,pytest.mark.bridge,pytest.mark.twog]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -202,6 +202,7 @@ class TestMultiStaThptbridge(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_udp_dl_2g_5",
@@ -243,6 +244,7 @@ class TestMultiStaThptbridge(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_tcp_dl_2g_6",
@@ -284,6 +286,7 @@ class TestMultiStaThptbridge(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_udp_ul_2g_7",
@@ -325,6 +328,7 @@ class TestMultiStaThptbridge(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_tcp_ul_2g_8",
