@@ -615,22 +615,22 @@ class RunTest:
                 ['Long-Term', '0']]
 
         if len(self.twog_radios) == 1:
-            self.twog_radios = [[self.twog_radios[0]]]
+            twog_radios = [[self.twog_radios[0]]]
 
         elif len(self.twog_radios) > 1:
             twog_radio = []
             for i in range(0, len(self.twog_radios)):
                 twog_radio.append([self.twog_radios[i]])
-            self.twog_radios = twog_radio
+            twog_radios = twog_radio
 
         if len(self.fiveg_radios) == 1:
-            self.fiveg_radios = [[self.fiveg_radios[0]]]
+            fiveg_radios = [[self.fiveg_radios[0]]]
 
         elif len(self.fiveg_radios) > 1:
             fiveg_radio = []
             for i in range(0, len(self.fiveg_radios)):
                 fiveg_radio.append([self.fiveg_radios[i]])
-            self.fiveg_radios = fiveg_radio
+            fiveg_radios = fiveg_radio
 
         self.msthpt_obj = ApAutoTest(lf_host=self.lanforge_ip,
                                      lf_port=self.lanforge_port,
@@ -645,8 +645,8 @@ class RunTest:
                                      dut2_0=dut_2g,
                                      load_old_cfg=False,
                                      local_lf_report_dir=self.local_report_path,
-                                     radio2=self.twog_radios,
-                                     radio5=self.fiveg_radios,
+                                     radio2=twog_radios,
+                                     radio5=fiveg_radios,
                                      sets=sets,
                                      raw_lines=raw_line
                                      )
