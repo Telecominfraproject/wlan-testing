@@ -10,11 +10,13 @@ Currently Having Methods:
 
 """
 import json
+import string
+import time
+import random
 
 import paramiko
 from scp import SCPClient
 import os
-import allure
 
 
 class APNOS:
@@ -47,12 +49,10 @@ class APNOS:
                     cmd = "kill " + str(a).replace("b'", "")
                     print(cmd)
                     stdin, stdout, stderr = client.exec_command(cmd)
-                    print(stdout)
-            client = self.ssh_cli_connect()
             cmd = '[ -f ~/cicd-git/ ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
-            output = str(stdout.read())            
-            print(output)
+            output = str(stdout.read())
+            
             if output.__contains__("False"):
                 cmd = 'mkdir ~/cicd-git/'
                 stdin, stdout, stderr = client.exec_command(cmd)
@@ -66,6 +66,7 @@ class APNOS:
             cmd = '[ -f ~/cicd-git/openwrt_ctl.py ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
             var = str(stdout.read())
+            client.close()
             if var.__contains__("True"):
                 print("APNOS Serial Setup OK")
             else:
@@ -106,6 +107,7 @@ class APNOS:
         client.close()
         data = str(data).replace(" ", "").split("\\r\\n")
         band_info = []
+        client.close()
         for i in data:
             tmp = []
             if i.__contains__("AccessPoint"):
@@ -136,7 +138,6 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
         client.close()
-
 
         return output
 
@@ -305,15 +306,12 @@ class APNOS:
                       f"cmd --value \"{cmd}\" "
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
-            print(output, stderr.read())
             status = output.decode('utf-8').splitlines()
-            error = stderr
-            stdin = stdin
             client.close()
         except Exception as e:
             print(e)
-            stdin, status, error = "Error", "Error", "Error"
-        return stdin, status, error
+            status = "Error"
+        return status
 
     def get_ucentral_status(self):
         try:
@@ -324,13 +322,18 @@ class APNOS:
                       f"cmd --value \"{cmd}\" "
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
-            # print(output, stderr.read())
-            connected = False
-            if "connected" in output.decode('utf-8').splitlines()[2]:
-                connected = True
-            # connected = output.decode('utf-8').splitlines()[2]
-            latest = output.decode('utf-8').splitlines()[3].split(":")[1].replace(" ", "").replace(",", "")
-            active = output.decode('utf-8').splitlines()[4].split(":")[1].replace(" ", "").replace(",", "")
+            print(output)
+            if 'latest' not in str(output):
+                print("ubus call ucentral status: command has invalid output", str(output))
+                connected, latest, active = "Error", "Error1", "Error2"
+                return connected, latest, active
+            else:
+                connected = False
+                if "connected" in output.decode('utf-8').splitlines()[2]:
+                    connected = True
+                # connected = output.decode('utf-8').splitlines()[2]
+                latest = output.decode('utf-8').splitlines()[3].split(":")[1].replace(" ", "").replace(",", "")
+                active = output.decode('utf-8').splitlines()[4].split(":")[1].replace(" ", "").replace(",", "")
             client.close()
         except Exception as e:
             print(e)
@@ -452,7 +455,7 @@ class APNOS:
                         band = "2G"
                     else:
                         band = "5G"
-                    iwinfo_bssid_data[o[i - 1]] = [o[i+1].replace('"', ''), o[i + 4], band]
+                    iwinfo_bssid_data[o[i - 1]] = [o[i + 1].replace('"', ''), o[i + 4], band]
             client.close()
         except Exception as e:
             iwinfo_bssid_data = False
@@ -468,6 +471,7 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read().replace(b":~# iwinfo", b"").decode('utf-8')
         o = output
+        client.close()
         return o
 
     def gettxpower(self):
@@ -490,8 +494,23 @@ class APNOS:
         name = output.replace("\t", "").splitlines()
         name.remove('')
         name.pop(-1)
+        client.close()
         return tx_power, name
 
+    def get_logread(self, start_ref="", stop_ref=""):
+        data = self.logread()
+        log_data = []
+        data = data.split("\n")
+        flag = 0
+        for logs in data:
+            if logs.__contains__(start_ref):
+                flag = 1
+            if flag == 1:
+                log_data.append(logs)
+            if logs.__contains__(stop_ref):
+                flag = 0
+        ap_logs = "\n".join(log_data)
+        return ap_logs
 
     def logread(self):
         try:
@@ -563,17 +582,23 @@ if __name__ == '__main__':
     obj = {
         'model': 'ecw5211',
         'mode': 'wifi5',
-        'serial': '001122090801',
+        'serial': '68215fda456d',
         'jumphost': True,
-        'ip': "10.28.3.100",
+        'ip': "localhost",
         'username': "lanforge",
         'password': "pumpkin77",
-        'port': 22,
-        'jumphost_tty': '/dev/ttyAP3',
-        'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
+        'port': 8733,
+        'jumphost_tty': "/dev/ttyAP5",
+        'version': "release-latest"
     }
     var = APNOS(credentials=obj, sdk="2.x")
-    tx_power, name = var.iwinfo()
-    allure.attach(name="interface name: ", body=str(name))
-    allure.attach(name="tx power: ", body=str(tx_power))
-    print(tx_power, name)
+    a, b, c = var.get_ucentral_status()
+    print(a, b, c)
+
+    # S = 9
+    # instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
+    # var.run_generic_command(cmd="logger start testcase: " + instance_name)
+    # time.sleep(60)
+    # var.run_generic_command(cmd="logger stop testcase: " + instance_name)
+    # var.get_logread(start_ref="start testcase: " + instance_name,
+    #                 stop_ref="stop testcase: " + instance_name)

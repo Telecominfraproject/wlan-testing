@@ -1,10 +1,15 @@
 """ Python Inbuilt Libraries """
+import random
+import string
+
 import allure
 import pytest
 import sys
 import os
 import json
 import time
+
+import requests
 
 """ Environment Paths """
 if "libs" not in sys.path:
@@ -29,6 +34,7 @@ if 'py-json' not in sys.path:
     sys.path.append('../py-scripts')
 from apnos.apnos import APNOS
 from controller.controller_2x.controller import Controller
+from controller.controller_2x.controller import FMSUtils
 from configuration import CONFIGURATION
 from configuration import RADIUS_SERVER_DATA
 from configuration import RADIUS_ACCOUNTING_DATA
@@ -42,6 +48,7 @@ class Fixtures_2x:
         print("2.X")
         try:
             self.controller_obj = Controller(controller_data=self.lab_info["controller"])
+            self.fw_client = FMSUtils(sdk_client=self.controller_obj)
         except Exception as e:
             print(e)
             allure.attach(body=str(e), name="Controller Instantiation Failed: ")
@@ -51,8 +58,257 @@ class Fixtures_2x:
     def disconnect(self):
         self.controller_obj.logout()
 
-    def setup_firmware(self):
-        pass
+    def setup_firmware(self, get_apnos, get_configuration, request=""):
+        # Query AP Firmware
+        upgrade_status = []
+        for ap in get_configuration['access_point']:
+
+            ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
+            # If specified as URL
+            try:
+                response = requests.get(ap['version'])
+                print("URL is valid and exists on the internet")
+                allure.attach(name="firmware url: ", body=str(ap['version']))
+                target_revision_commit = ap['version'].split("-")[-2]
+                ap_version = ap_ssh.get_ap_version_ucentral()
+                current_version_commit = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+
+                # if AP is already in target Version then skip upgrade unless force upgrade is specified
+                if target_revision_commit in current_version_commit:
+                    continue
+                self.fw_client.upgrade_firmware(serial=ap['serial'], url=str(ap['version']))
+
+                items = list(range(0, 300))
+                l = len(items)
+                ap_version = ap_ssh.get_ap_version_ucentral()
+                current_version_commit = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                if target_revision_commit in current_version_commit:
+                    upgrade_status.append([ap['serial'], target_revision_commit, current_version_commit])
+                    print("Firmware Upgraded to :", ap_version)
+                else:
+                    print("firmware upgraded failed: ", target_revision)
+                    upgrade_status.append([ap['serial'],target_revision_commit, current_version_commit])
+                break
+            except Exception as e:
+                print("URL does not exist on Internet")
+            # else Specified as "branch-commit_id" / "branch-latest"
+            firmware_url = ""
+            ap_version = ap_ssh.get_ap_version_ucentral()
+            response = self.fw_client.get_latest_fw(model=ap["model"])
+            # if the target version specified is "branch-latest"
+            if ap['version'].split('-')[1] == "latest":
+                # get the latest branch
+                firmware_list = self.fw_client.get_firmwares(model=ap['model'], branch="", commit_id='')
+                firmware_list.reverse()
+
+                for firmware in firmware_list:
+                    if ap['version'].split('-')[0] == 'release':
+                        if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1].__contains__('v2.'):
+                            print("Target Firmware: \n", firmware)
+                            allure.attach(name="Target firmware : ", body=str(firmware))
+                            target_revision = firmware['revision'].split("/")[1].replace(" ", "")
+
+                            # check the current AP Revision before upgrade
+                            ap_version = ap_ssh.get_ap_version_ucentral()
+                            current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+
+                            # print and report the firmware versions before upgrade
+                            allure.attach(name="Before Firmware Upgrade Request: ",
+                                          body="current revision: " + current_version + "\ntarget revision: " + target_revision)
+                            print("current revision: ", current_version, "\ntarget revision: ", target_revision)
+
+                            # if AP is already in target Version then skip upgrade unless force upgrade is specified
+                            if current_version == target_revision:
+                                upgrade_status.append([ap['serial'], target_revision, current_version, 'skip'])
+                                print("Skipping Upgrade! AP is already in target version")
+                                allure.attach(name="Skipping Upgrade because AP is already in the target Version",
+                                              body="")
+                                break
+
+                            self.fw_client.upgrade_firmware(serial=ap['serial'], url=str(firmware['uri']))
+                            # wait for 300 seconds after firmware upgrade
+                            print("waiting for 300 Sec for Firmware Upgrade")
+                            time.sleep(300)
+
+                            # check the current AP Revision again
+                            ap_version = ap_ssh.get_ap_version_ucentral()
+                            current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                            # print and report the Firmware versions after upgrade
+                            allure.attach(name="After Firmware Upgrade Request: ",
+                                          body="current revision: " + current_version + "\ntarget revision: " + target_revision)
+                            print("current revision: ", current_version, "\ntarget revision: ", target_revision)
+                            if current_version == target_revision:
+                                upgrade_status.append([ap['serial'], target_revision, current_version])
+                                print("firmware upgraded successfully: ", target_revision)
+                            else:
+                                upgrade_status.append([ap['serial'], target_revision, current_version])
+                                print("firmware upgraded failed: ", target_revision)
+                            break
+                    if firmware['image'].split("-")[-2] == ap['version'].split('-')[0]:
+                        print("Target Firmware: \n", firmware)
+                        allure.attach(name="Target firmware : ", body=str(firmware))
+
+                        target_revision = firmware['revision'].split("/")[1].replace(" ", "")
+
+                        # check the current AP Revision before upgrade
+                        ap_version = ap_ssh.get_ap_version_ucentral()
+                        current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+
+                        # print and report the firmware versions before upgrade
+                        allure.attach(name="Before Firmware Upgrade Request: ",
+                                      body="current revision: " + current_version + "\ntarget revision: " + target_revision)
+                        print("current revision: ", current_version, "\ntarget revision: ", target_revision)
+
+                        # if AP is already in target Version then skip upgrade unless force upgrade is specified
+                        if current_version == target_revision:
+                            upgrade_status.append([ap['serial'], target_revision, current_version, 'skip'])
+                            print("Skipping Upgrade! AP is already in target version")
+                            allure.attach(name="Skipping Upgrade because AP is already in the target Version", body="")
+                            break
+
+                        self.fw_client.upgrade_firmware(serial=ap['serial'], url=str(firmware['uri']))
+                        # wait for 300 seconds after firmware upgrade
+                        print("waiting for 300 Sec for Firmware Upgrade")
+                        time.sleep(300)
+
+                        # check the current AP Revision again
+                        ap_version = ap_ssh.get_ap_version_ucentral()
+                        current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                        # print and report the Firmware versions after upgrade
+                        allure.attach(name="After Firmware Upgrade Request: ",
+                                      body="current revision: " + current_version + "\ntarget revision: " + target_revision)
+                        print("current revision: ", current_version, "\ntarget revision: ", target_revision)
+                        if current_version == target_revision:
+                            upgrade_status.append([ap['serial'], target_revision, current_version])
+                            print("firmware upgraded successfully: ", target_revision)
+                        else:
+                            upgrade_status.append([ap['serial'], target_revision, current_version])
+                            print("firmware upgraded failed: ", target_revision)
+                        break
+            # if branch-commit is specified
+            else:
+                firmware_list = self.fw_client.get_firmwares(model=ap['model'], branch="", commit_id='')
+                fw_list = []
+                # getting the list of firmwares in fw_list that has the commit id specified as an input
+                for firmware in firmware_list:
+                    if firmware['revision'].split("/")[1].replace(" ", "").split('-')[-1] == ap['version'].split('-')[
+                        1]:
+                        fw_list.append(firmware)
+
+                # If there is only 1 commit ID in fw_list
+                if len(fw_list) == 1:
+
+                    print("Target Firmware: \n", fw_list[0])
+                    allure.attach(name="Target firmware : ", body=str(fw_list[0]))
+
+                    url = fw_list[0]['uri']
+                    target_revision = fw_list[0]['revision'].split("/")[1].replace(" ", "")
+
+                    # check the current AP Revision before upgrade
+                    ap_version = ap_ssh.get_ap_version_ucentral()
+                    current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+
+                    # print and report the firmware versions before upgrade
+                    allure.attach(name="Before Firmware Upgrade Request: ",
+                                  body="current revision: " + current_version + "\ntarget revision: " + target_revision)
+                    print("current revision: ", current_version, "\ntarget revision: ", target_revision)
+
+                    # if AP is already in target Version then skip upgrade unless force upgrade is specified
+                    if current_version == target_revision:
+                        upgrade_status.append([ap['serial'], target_revision, current_version, 'skip'])
+                        print("Skipping Upgrade! AP is already in target version")
+                        allure.attach(name="Skipping Upgrade because AP is already in the target Version", body="")
+                        break
+
+                    # upgrade the firmware in another condition
+                    else:
+                        self.fw_client.upgrade_firmware(serial=ap['serial'], url=str(url))
+
+                        # wait for 300 seconds after firmware upgrade
+                        print("waiting for 300 Sec for Firmware Upgrade")
+                        time.sleep(300)
+
+                        # check the current AP Revision again
+                        ap_version = ap_ssh.get_ap_version_ucentral()
+                        current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                        # print and report the Firmware versions after upgrade
+                        allure.attach(name="After Firmware Upgrade Request: ",
+                                      body="current revision: " + current_version + "\ntarget revision: " + target_revision)
+                        print("current revision: ", current_version, "\ntarget revision: ", target_revision)
+                        if current_version == target_revision:
+                            upgrade_status.append([ap['serial'], target_revision, current_version])
+                            print("firmware upgraded successfully: ", target_revision)
+                        else:
+                            upgrade_status.append([ap['serial'], target_revision, current_version])
+                            print("firmware upgraded failed: ", target_revision)
+                        break
+
+                # if there are 1+ firmware images in fw_list then check for branch
+                else:
+                    target_fw = ""
+                    for firmware in fw_list:
+                        if ap['version'].split('-')[0] == 'release':
+                            if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1].__contains__('v2.'):
+                                target_fw = firmware
+                                break
+                        if firmware['image'].split("-")[-2] == ap['version'].split('-')[0]:
+                            target_fw = firmware
+                            break
+                    firmware = target_fw
+                    print("Target Firmware: \n", firmware)
+                    allure.attach(name="Target firmware : ", body=str(firmware))
+
+                    target_revision = firmware['revision'].split("/")[1].replace(" ", "")
+
+                    # check the current AP Revision before upgrade
+                    ap_version = ap_ssh.get_ap_version_ucentral()
+                    current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+
+                    # print and report the firmware versions before upgrade
+                    allure.attach(name="Before Firmware Upgrade Request: ",
+                                  body="current revision: " + current_version + "\ntarget revision: " + target_revision)
+                    print("current revision: ", current_version, "\ntarget revision: ", target_revision)
+
+                    # if AP is already in target Version then skip upgrade unless force upgrade is specified
+                    if current_version == target_revision:
+                        upgrade_status.append([ap['serial'], target_revision, current_version, 'skip'])
+                        print("Skipping Upgrade! AP is already in target version")
+                        allure.attach(name="Skipping Upgrade because AP is already in the target Version", body="")
+                        break
+
+                    self.fw_client.upgrade_firmware(serial=ap['serial'], url=str(firmware['uri']))
+                    # wait for 300 seconds after firmware upgrade
+
+                    print("waiting for 300 Sec for Firmware Upgrade")
+                    time.sleep(300)
+
+                    # check the current AP Revision again
+                    ap_version = ap_ssh.get_ap_version_ucentral()
+                    current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                    # print and report the Firmware versions after upgrade
+                    allure.attach(name="After Firmware Upgrade Request: ",
+                                  body="current revision: " + current_version + "\ntarget revision: " + target_revision)
+                    print("current revision: ", current_version, "\ntarget revision: ", target_revision)
+                    if current_version == target_revision:
+                        upgrade_status.append([target_revision, current_version])
+                        print("firmware upgraded successfully: ", target_revision)
+                    else:
+                        upgrade_status.append([target_revision, current_version])
+                        print("firmware upgraded failed: ", target_revision)
+                    break
+        return upgrade_status
+
+    def get_ap_cloud_connectivity_status(self, get_configuration, get_apnos):
+        status_data = []
+        self.ubus_connection = []
+        for access_point_info in get_configuration['access_point']:
+            ap_ssh = get_apnos(access_point_info, sdk="2.x")
+            status = ap_ssh.get_ucentral_status()
+            print(status)
+            status_data.append(status)
+            connectivity_data = ap_ssh.run_generic_command(cmd="ubus call ucentral status")
+            self.ubus_connection.append(['Serial Number: ' + access_point_info['serial'], connectivity_data])
+        return status_data
 
     def get_ap_version(self, get_apnos, get_configuration):
         version_list = []
@@ -62,16 +318,18 @@ class Fixtures_2x:
             version_list.append(version)
         return version_list
 
-    def setup_profiles(self, request, param, setup_controller, testbed, get_equipment_id,
+    def get_sdk_version(self):
+        version = self.controller_obj.get_sdk_version()
+        return version
+
+    def setup_profiles(self, request, param, setup_controller, testbed, get_equipment_ref,
                        instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                        get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
 
         instantiate_profile_obj = instantiate_profile(sdk_client=setup_controller)
-        print("garbage")
         print(1, instantiate_profile_obj.sdk_client)
         vlan_id, mode = 0, 0
         parameter = dict(param)
-        print("hola", parameter)
         test_cases = {}
         profile_data = {}
 
@@ -226,10 +484,10 @@ class Fixtures_2x:
                             creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j, radius=True,
                                                                                radius_auth_data=RADIUS_SERVER_DATA,
                                                                                radius_accounting_data=RADIUS_ACCOUNTING_DATA)
-                            test_cases["wpa_2g"] = True
+                            test_cases["wpa3_eap"] = True
                         except Exception as e:
                             print(e)
-                            test_cases["wpa2_personal"] = False
+                            test_cases["wpa3_eap"] = False
         ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="2.x")
         connected, latest, active = ap_ssh.get_ucentral_status()
         if connected == False:
@@ -240,10 +498,15 @@ class Fixtures_2x:
             ap_logs = ap_ssh.logread()
             allure.attach(body=ap_logs, name="FAILURE: AP LOgs: ")
             pytest.fail("AP is disconnected from UC Gateway")
-        instantiate_profile_obj.push_config(serial_number=get_equipment_id[0])
+        S = 9
+        instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
+        ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
+        instantiate_profile_obj.push_config(serial_number=get_equipment_ref[0])
         time_1 = time.time()
+        time.sleep(90)
         config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"'))
         config["uuid"] = 0
+        
         ap_config_latest = ap_ssh.get_uc_latest_config()
         try:
             ap_config_latest["uuid"] = 0
@@ -274,14 +537,12 @@ class Fixtures_2x:
         if x < 19:
             print("Config properly applied into AP", config)
 
-
         time_2 = time.time()
         time_interval = time_2 - time_1
         allure.attach(name="Time Took to apply Config: " + str(time_interval), body="")
 
         ap_config_latest = ap_ssh.get_uc_latest_config()
         ap_config_latest["uuid"] = 0
-
 
         ap_config_active = ap_ssh.get_uc_active_config()
         ap_config_active["uuid"] = 0
@@ -316,24 +577,26 @@ class Fixtures_2x:
             # allure.attach(name="tx power: ", body=str(tx_power))
         except:
             pass
-        ap_logs = ap_ssh.logread()
-        allure.attach(body=ap_logs, name="AP Logs: ")
+        ap_ssh.run_generic_command(cmd="logger stop testcase: " + instance_name)
+        ap_logs = ap_ssh.get_logread(start_ref="start testcase: " + instance_name,
+                                     stop_ref="stop testcase: " + instance_name)
+        allure.attach(body=ap_logs, name="AP Log: ")
 
-
+        wifi_status = ap_ssh.get_wifi_status()
+        allure.attach(name="wifi status", body=str(wifi_status))
 
         try:
             ssid_info_sdk = instantiate_profile_obj.get_ssid_info()
             ap_wifi_data = ap_ssh.get_iwinfo()
-
 
             for p in ap_wifi_data:
                 for q in ssid_info_sdk:
                     if ap_wifi_data[p][0] == q[0] and ap_wifi_data[p][2] == q[3]:
                         q.append(ap_wifi_data[p][1])
 
-
             ssid_data = []
             idx_mapping = {}
+            print(ssid_info_sdk)
             for interface in range(len(ssid_info_sdk)):
                 ssid = ["ssid_idx=" + str(interface) +
                         " ssid=" + ssid_info_sdk[interface][0] +
@@ -356,15 +619,8 @@ class Fixtures_2x:
             pass
 
         def teardown_session():
-            iwinfo = ap_ssh.iwinfo()
-            allure.attach(name="iwinfo: ", body=str(iwinfo))
-
-            # tx_power, name = ap_ssh.gettxpower()
-            # allure.attach(name="interface name: ", body=str(name))
-            # allure.attach(name="tx power: ", body=str(tx_power))
-
-            ap_logs = ap_ssh.logread()
-            allure.attach(body=ap_logs, name="AP Logs after test completion")
+            wifi_status = ap_ssh.get_wifi_status()
+            allure.attach(name="wifi status", body=str(wifi_status))
             print("\nTeardown")
 
         request.addfinalizer(teardown_session)

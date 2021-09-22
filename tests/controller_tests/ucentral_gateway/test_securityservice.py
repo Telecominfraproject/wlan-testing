@@ -7,13 +7,14 @@ import pytest
 import json
 import allure
 
-@allure.feature("SDK REST API")
 
+@allure.feature("SDK REST API")
 class TestUcentralSecService(object):
     """
         Test the oauth endpoint
         WIFI-3447
     """
+
     @pytest.mark.sdk_restapi
     def test_secservice_oauth(self, setup_controller):
         """
@@ -49,7 +50,7 @@ class TestUcentralSecService(object):
         if resp.status_code != 200:
             assert False
         services = json.loads(resp.text)
-        print (services)
+        print(services)
 
         if 'endpoints' not in services:
             assert False
@@ -88,7 +89,7 @@ class TestUcentralSecService(object):
         if resp.status_code != 200:
             assert False
         system = json.loads(resp.text)
-        print (system)
+        print(system)
         if 'tag' not in system:
             assert False
         if system['tag'] != 'version':
@@ -110,7 +111,7 @@ class TestUcentralSecService(object):
         if resp.status_code != 200:
             assert False
         system = json.loads(resp.text)
-        print (system)
+        print(system)
         if 'times' not in system:
             assert False
 
@@ -124,6 +125,3 @@ class TestUcentralSecService(object):
                 valid_entities += 1
 
         assert (valid_entities == 4)
-
-
-

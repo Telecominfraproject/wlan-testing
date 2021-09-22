@@ -11,6 +11,7 @@ from urllib.parse import urlparse
 import pytest
 import allure
 import requests
+from operator import itemgetter
 from pathlib import Path
 
 from requests.adapters import HTTPAdapter
@@ -34,10 +35,23 @@ class ConfigureController:
         self.access_token = ""
         # self.session = requests.Session()
         self.login_resp = self.login()
-        self.gw_host = self.get_gw_endpoint()
+        self.gw_host, self.fms_host = self.get_gw_endpoint()
+        if self.gw_host == "" or self.fms_host == "":
+            time.sleep(60)
+            self.gw_host, self.fms_host = self.get_gw_endpoint()
+            if self.gw_host == "" or self.fms_host == "":
+                self.logout()
+                print(self.gw_host, self.fms_host)
+                pytest.exit("All Endpoints not available in Controller Service")
+                sys.exit()
 
     def build_uri_sec(self, path):
         new_uri = 'https://%s:%d/api/v1/%s' % (self.host.hostname, self.host.port, path)
+        print(new_uri)
+        return new_uri
+
+    def build_url_fms(self, path):
+        new_uri = 'https://%s:%d/api/v1/%s' % (self.fms_host.hostname, self.fms_host.port, path)
         print(new_uri)
         return new_uri
 
@@ -62,9 +76,11 @@ class ConfigureController:
         if method == "GET":
             resp = requests.get(uri, headers=self.make_headers(), params=params, verify=False, timeout=100)
         elif method == "POST":
-            resp = requests.post(uri, data=payload, verify=False, timeout=100)
+            print(uri, payload, params)
+            resp = requests.post(uri, params=params, data=payload, headers=self.make_headers(), verify=False,
+                                 timeout=100)
         elif method == "PUT":
-            resp = requests.put(uri, data=payload, verify=False, timeout=100)
+            resp = requests.put(uri, params=params, data=payload, verify=False, timeout=100)
         elif method == "DELETE":
             resp = requests.delete(uri, headers=self.make_headers(), params=params, verify=False, timeout=100)
 
@@ -92,9 +108,15 @@ class ConfigureController:
         print(resp)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         services = resp.json()
-        print(services["endpoints"][0]["uri"])
-        gw_host = urlparse(services["endpoints"][0]["uri"])
-        return gw_host
+        print(services)
+        gw_host = ""
+        fms_host = ""
+        for service in services['endpoints']:
+            if service['type'] == "ucentralgw":
+                gw_host = urlparse(service["uri"])
+            if service['type'] == "ucentralfms":
+                fms_host = urlparse(service["uri"])
+        return gw_host, fms_host
 
     def logout(self):
         uri = self.build_uri_sec('oauth2/%s' % self.access_token)
@@ -150,9 +172,105 @@ class Controller(ConfigureController):
         # resp.close()()
         return device
 
+    def get_sdk_version(self):
+        uri = self.build_uri("system/?command=version")
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        version = resp.json()
+        # resp.close()()
+        return version['value']
+
     def get_device_uuid(self, serial_number):
         device_info = self.get_device_by_serial_number(serial_number=serial_number)
         return device_info["UUID"]
+
+
+class FMSUtils:
+
+    def __init__(self, sdk_client=None, controller_data=None):
+        if sdk_client is None:
+            self.sdk_client = Controller(controller_data=controller_data)
+        self.sdk_client = sdk_client
+
+    def upgrade_firmware(self, serial="", url=""):
+        response = self.sdk_client.request(service="gw", command="device/" + serial + "/upgrade",
+                                           method="POST", params="serialNumber=" + serial,
+                                           payload="{ \"serialNumber\" : " + "\"" + serial + "\"" +
+                                                   " , \"uri\" : " + "\"" + url + "\"" +
+                                                   ", \"when\" : 0" + " }")
+        print(response.json())
+        allure.attach(name="REST - firmware upgrade response: ",
+                      body=str(response.status_code) + "\n" +
+                           str(response.json()) + "\n"
+                      )
+        response = self.sdk_client.request(service="gw", command="device/" + serial + "upgrade/",
+                                           method="POST", params="revisionSet=true",
+                                           payload="{ \"serialNumber\" : " + serial + " , \"uri\" : " + url + " }")
+        print(response)
+
+    def ap_model_lookup(self, model=""):
+        devices = self.get_device_set()
+        model_name = ""
+        for device in devices['deviceTypes']:
+            if str(device).__contains__(model):
+                model_name = device
+        return model_name
+
+    def get_revisions(self):
+        response = self.sdk_client.request(service="fms", command="firmwares/", method="GET", params="revisionSet=true",
+                                           payload="")
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return {}
+
+    def get_latest_fw(self, model=""):
+
+        device_type = self.ap_model_lookup(model=model)
+
+        response = self.sdk_client.request(service="fms", command="firmwares/", method="GET",
+                                           params="latestOnly=true&deviceType=" + device_type,
+                                           payload="")
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return {}
+
+    def get_device_set(self):
+        response = self.sdk_client.request(service="fms", command="firmwares/", method="GET", params="deviceSet=true",
+                                           payload="")
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return {}
+
+
+    def get_firmwares(self, limit="10000", model="", latestonly="", branch="", commit_id="", offset="3000"):
+
+        deviceType = self.ap_model_lookup(model=model)
+        params = "limit=" + limit + \
+                 "&deviceType=" + deviceType + \
+                 "&latestonly=" + latestonly + \
+                 "offset=" + offset
+        command = "firmwares/"
+        response = self.sdk_client.request(service="fms", command=command, method="GET", params=params, payload="")
+        allure.attach(name=command + params,
+                      body=str(response.status_code) + "\n" + str(response.json()),
+                      attachment_type=allure.attachment_type.JSON)
+        if response.status_code == 200:
+            data = response.json()
+            newlist = sorted(data['firmwares'], key=itemgetter('created'))
+            # for i in newlist:
+            #     print(i['uri'])
+            #     print(i['revision'])
+            # print(newlist)
+
+            return newlist
+            # print(data)
+
+        return "error"
+
+    
 
 
 class UProfileUtility:
@@ -344,7 +462,7 @@ class UProfileUtility:
         for options in ssid_data:
             if options == "multi-psk":
                 ssid_info[options] = ssid_data[options]
-                print("hi",ssid_info)
+                print("hi", ssid_info)
             if options == "rate-limit":
                 ssid_info[options] = ssid_data[options]
         for i in ssid_data["appliedRadios"]:
@@ -418,12 +536,16 @@ class UProfileUtility:
         uri = self.sdk_client.build_uri("device/" + serial_number + "/configure")
         basic_cfg_str = json.dumps(payload)
         print(self.base_profile_config)
-        allure.attach(name="ucentral_config: ", body=str(self.base_profile_config))
+        allure.attach(name="ucentral_config: ",
+                      body=str(self.base_profile_config).replace("'", '"'),
+                      attachment_type=allure.attachment_type.JSON)
         print(self.base_profile_config)
         resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
                              verify=False, timeout=100)
+        print(resp.json())
+        print(resp.status_code)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
-        print(resp.url)
+        # print(resp.url)
         resp.close()
         print(resp)
 
@@ -435,13 +557,14 @@ if __name__ == '__main__':
         'password': 'openwifi',
     }
     obj = Controller(controller_data=controller)
-    profile = UProfileUtility(sdk_client=obj)
-    profile.set_mode(mode="BRIDGE")
-    profile.set_radio_config()
-    ssid = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G", "5G"], "security": "psk", "security_key": "something",
-            "vlan": 100}
-    profile.add_ssid(ssid_data=ssid, radius=False)
-    profile.push_config(serial_number="903cb39d6918")
-    print(profile.get_ssid_info())
-    # print(obj.get_devices())
+    print(obj.get_sdk_version())
+    # fms = FMSUtils(sdk_client=obj)
+    # new = fms.get_firmwares(model='ecw5410')
+    # for i in new:
+    #     print(i)
+    # print(len(new))
+
+
+    # print(profile.get_ssid_info())
+    # # print(obj.get_devices())
     obj.logout()

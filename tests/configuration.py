@@ -19,15 +19,15 @@ ubuntu@3.130.51.163
 
 
 
-ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 -L 8803:lab-ctlr:22 \
--L 8720:lf2:4002 -L 8721:lf2:5901 -L 8722:lf2:8080 -L 8723:lab-ctlr:22 \
--L 8830:lf3:4002 -L 8831:lf3:5901 -L 8832:lf3:8080 -L 8833:lab-ctlr:22 \
--L 8810:lf4:4002 -L 8811:lf4:5901 -L 8812:lf4:8080 -L 8813:lab-ctlr:22 \
--L 8850:lf12:4002 -L 8851:lf12:5901 -L 8852:lf12:8080 -L 8853:lab-ctlr4:22 \
--L 8860:lf13:4002 -L 8861:lf13:5901 -L 8862:lf13:8080 -L 8863:lab-ctlr4:22 \
--L 8870:lf14:4002 -L 8871:lf14:5901 -L 8872:lf14:8080 -L 8873:lab-ctlr4:22 \
--L 8880:lf15:4002 -L 8881:lf15:5901 -L 8882:lf15:8080 -L 8883:lab-ctlr4:22 \
-ubuntu@3.130.51.163
+ssh -C -L 8700:lf1:4002 -L 8701:lf1:5901 -L 8702:lf1:8080 -L 8703:lab-ctlr:22 -L 8704:lf1:22\
+ -L 8710:lf2:4002 -L 8711:lf2:5901 -L 8712:lf2:8080 -L 8713:lab-ctlr:22 -L 8714:lf2:22\
+ -L 8720:lf3:4002 -L 8721:lf3:5901 -L 8722:lf3:8080 -L 8723:lab-ctlr:22 -L 8724:lf3:22\
+ -L 8730:lf4:4002 -L 8731:lf4:5901 -L 8732:lf4:8080 -L 8733:lab-ctlr:22 -L 8734:lf4:22\
+ -L 8740:lf12:4002 -L 8741:lf12:5901 -L 8742:lf12:8080 -L 8743:lab-ctlr4:22 -L 8744:lf12:22\
+ -L 8750:lf13:4002 -L 8751:lf13:5901 -L 8752:lf13:8080 -L 8753:lab-ctlr4:22 -L 8754:lf13:22\
+ -L 8760:lf14:4002 -L 8761:lf14:5901 -L 8762:lf14:8080 -L 8763:lab-ctlr4:22 -L 8764:lf14:22\
+ -L 8770:lf15:4002 -L 8771:lf15:5901 -L 8772:lf15:8080 -L 8773:lab-ctlr4:22 -L 8774:lf15:22\
+ ubuntu@3.130.51.163
 
 """
 
@@ -126,20 +126,20 @@ CONFIGURATION = {
                 'mode': 'wifi5',
                 'serial': '001122090801',
                 'jumphost': True,
-                'ip': "127.0.0.1",
+                'ip': "localhost",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 8833,
+                'port': 8723,
                 'jumphost_tty': '/dev/ttyAP3',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/tplink_ec420/20210728-tplink_ec420-uCentral-trunk-12ad0d5-upgrade.bin"
+                'version': "next-latest"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "10.28.3.10",
-                "port": 8080,
-                "ssh_port": 22,
+                "ip": "localhost",
+                "port": 8722,
+                "ssh_port": 8724,
                 "2.4G-Radio": ["1.1.wiphy4"],
                 "5G-Radio": ["1.1.wiphy5"],
                 "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
@@ -164,20 +164,20 @@ CONFIGURATION = {
                 'mode': 'wifi5',
                 'serial': '68215fda456d',
                 'jumphost': True,
-                'ip': "10.28.3.100",
+                'ip': "localhost",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 22,
+                'port': 8733,
                 'jumphost_tty': "/dev/ttyAP5",
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
+                'version': "release-latest"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "10.28.3.12",
-                "port": 8080,
-                "ssh_port": 22,
+                "ip": "localhost",
+                "port": 8732,
+                "ssh_port": 8734,
                 "2.4G-Radio": ["1.1.wiphy4"],
                 "5G-Radio": [ "1.1.wiphy5"],
                 "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
@@ -198,7 +198,7 @@ CONFIGURATION = {
         },
         'access_point': [
             {
-                'model': 'wf188n',
+                'model': 'cig_wf188',
                 'mode': 'wifi6',
                 'serial': '0000c1018812',
                 'jumphost': True,
@@ -207,7 +207,7 @@ CONFIGURATION = {
                 'password': "pumpkin77",
                 'port': 22,
                 'jumphost_tty': '/dev/ttyAP1',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf188/20210729-cig_wf188-v2.0.0-rc2-ec3662e-upgrade.bin"
+                'version': "release-latest"
             }
         ],
         "traffic_generator": {
@@ -245,7 +245,7 @@ CONFIGURATION = {
                 'password': "pumpkin77",
                 'port': 22,  # 22
                 'jumphost_tty': '/dev/ttyAP2',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap102/20210625-edgecore_eap102-uCentral-trunk-4225122-upgrade.bin"
+                'version': "latest"
             }
         ],
         "traffic_generator": {
@@ -283,7 +283,8 @@ CONFIGURATION = {
                 'password': "pumpkin77",
                 'port': 22,  # 22
                 'jumphost_tty': '/dev/ttyAP3',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/edgecore_eap101/20210729-edgecore_eap101-v2.0.0-rc2-02244b8-upgrade.bin"
+                'version': "latest-next",
+                'version_branch': "https://ucentral-ap-firmware.s3.amazonaws.com/20210908-cig_wf188-v2.1.0-rc3-bcd07e4-upgrade.bin"
             }
         ],
         "traffic_generator": {
@@ -345,11 +346,9 @@ CONFIGURATION = {
 
     "mesh": {
         "controller": {
-            'url': "http://wlan-portal-svc-digicert.cicd.lab.wlan.tip.build",  # API base url for the controller
-            'username': 'support@example.com',
-            'password': 'support',
-            'version': '1.1.0-SNAPSHOT',
-            'commit_date': "2021-06-01"
+            'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'openwifi',
         },
         'access_point': [
             {
@@ -362,16 +361,82 @@ CONFIGURATION = {
                 'password': "pumpkin77",
                 'port': 22,  # 22
                 'jumphost_tty': '/dev/ttyAP2',
+                'version': "latest"
+            },
+{
+                'model': 'eap101',
+                'mode': 'wifi6',
+                'serial': '34efb6af4903',
+                'jumphost': True,
+                'ip': "10.28.3.101",  # 10.28.3.103
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22,  # 22
+                'jumphost_tty': '/dev/ttyAP3',
+                'version': "latest"
+            },
+{
+                'model': 'eap101',
+                'mode': 'wifi6',
+                'serial': '34efb6af4a7a',
+                'jumphost': True,
+                'ip': "10.28.3.101",  # 10.28.3.103
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22,  # 22
+                'jumphost_tty': '/dev/ttyAP4',
                 'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/eap101/trunk/eap101-1.1.0.tar.gz"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
-            "details": {
+            "details-mobile-sta": {
                 "ip": "10.28.3.14",  # 10.28.3.34
                 "port": 8080,  # 8080
                 "ssh_port": 22,
-                "2.4G-Radio": ["wiphy0", "wiphy2"],
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
+                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
+                "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            },
+            "details-root": {
+                "ip": "10.28.3.14",  # 10.28.3.34
+                "port": 8080,  # 8080
+                "ssh_port": 22,
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
+                "5G-Radio": ["wiphy1", "wiphy3"],
+                "AX-Radio": ["wiphy4", "wiphy5", "wiphy6", "wiphy7"],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            },
+            "details-node-1": {
+                "ip": "10.28.3.14",  # 10.28.3.34
+                "port": 8080,  # 8080
+                "ssh_port": 22,
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
+                "5G-Radio": ["wiphy1", "wiphy3"],
+                "AX-Radio": ["wiphy4", "wiphy5", "wiphy6", "wiphy7"],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            },
+            "details-node-2": {
+                "ip": "10.28.3.14",  # 10.28.3.34
+                "port": 8080,  # 8080
+                "ssh_port": 22,
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
                 "5G-Radio": ["wiphy1", "wiphy3"],
                 "AX-Radio": ["wiphy4", "wiphy5", "wiphy6", "wiphy7"],
                 "upstream": "1.1.eth2",
@@ -381,6 +446,7 @@ CONFIGURATION = {
                 "5G-Station-Name": "wlan0",
                 "AX-Station-Name": "ax"
             }
+
         }
     },  # checked
     "interop-01": {
@@ -508,19 +574,17 @@ CONFIGURATION = {
         }
     },
 
-    "basic-ext-03-03": {
+    "ext-01": {
         "controller": {
-            'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
-            'username': 'support@example.com',
-            'password': 'support',
-            'version': "1.1.0-SNAPSHOT",
-            'commit_date': "2021-04-27"
+            'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'openwifi',
         },
         'access_point': [
             {
-                'model': 'ecw5410',
-                'mode': 'wifi5',
-                'serial': '903cb3944857',
+                'model': 'eap102',
+                'mode': 'wifi6',
+                'serial': '903cb30bcf12',
                 'jumphost': True,
                 'ip': "192.168.200.80",
                 'username': "lanforge",
@@ -538,7 +602,7 @@ CONFIGURATION = {
                 "ssh_port": 22,
                 "2.4G-Radio": ["wiphy0"],
                 "5G-Radio": ["wiphy1"],
-                "AX-Radio": ["wiphy2"],
+                "AX-Radio": [],
                 "upstream": "1.1.eth1",
                 "upstream_subnet": "192.168.200.1/24",
                 "uplink": "1.1.eth2",
@@ -552,7 +616,7 @@ CONFIGURATION = {
 
 
 RADIUS_SERVER_DATA = {
-    "ip": "10.10.10.72",
+    "ip": "10.10.10.180",
     "port": 1812,
     "secret": "testing123",
     "user": "user",
@@ -561,7 +625,7 @@ RADIUS_SERVER_DATA = {
 }
 
 RADIUS_ACCOUNTING_DATA = {
-    "ip": "10.10.10.72",
+    "ip": "10.10.10.180",
     "port": 1813,
     "secret": "testing123",
     "user": "user",
@@ -643,194 +707,3 @@ PASSPOINT_PROFILE_INFO = {
     }
 }
 
-
-
-
-TEST_CASES = {
-    "ap_upgrade": 2233,
-    "5g_wpa2_bridge": 2236,
-    "2g_wpa2_bridge": 2237,
-    "5g_wpa_bridge": 2419,
-    "2g_wpa_bridge": 2420,
-    "2g_wpa_nat": 4323,
-    "5g_wpa_nat": 4324,
-    "2g_wpa2_nat": 4325,
-    "5g_wpa2_nat": 4326,
-    "2g_wpa2_eap_ttls_bridge": 5214,
-    "5g_wpa2_eap_ttls_bridge": 5215,
-    "2g_wpa2_eap_ttls_nat": 5216,
-    "5g_wpa2_eap_ttls_nat": 5217,
-    "cloud_connection": 5222,
-    "cloud_fw": 5247,
-    "5g_wpa2_vlan": 5248,
-    "5g_wpa_vlan": 5249,
-    "5g_wpa2_eap_ttls_vlan": 5250,
-    "2g_wpa2_vlan": 5251,
-    "2g_wpa_vlan": 5252,
-    "2g_wpa2_eap_ttls_vlan": 5253,
-    "cloud_ver": 5540,
-    "bridge_vifc": 5541,
-    "nat_vifc": 5542,
-    "vlan_vifc": 5543,
-    "bridge_vifs": 5544,
-    "nat_vifs": 5545,
-    "vlan_vifs": 5546,
-    "upgrade_api": 5547,
-    "create_fw": 5548,
-    "ap_profile_bridge": 5641,
-    "ap_profile_nat": 5642,
-    "ap_profile_vlan": 5643,
-    "ssid_2g_wpa2_eap_bridge": 5644,
-    "ssid_2g_wpa2_bridge": 5645,
-    "ssid_2g_wpa_bridge": 5646,
-    "ssid_5g_wpa2_eap_bridge": 5647,
-    "ssid_5g_wpa2_bridge": 5648,
-    "ssid_5g_wpa_bridge": 5649,
-    "ssid_2g_wpa2_eap_nat": 5650,
-    "ssid_2g_wpa2_nat": 5651,
-    "ssid_2g_wpa_nat": 5652,
-    "ssid_5g_wpa2_eap_nat": 5653,
-    "ssid_5g_wpa2_nat": 5654,
-    "ssid_5g_wpa_nat": 5655,
-    "ssid_2g_wpa2_eap_vlan": 5656,
-    "ssid_2g_wpa2_vlan": 5657,
-    "ssid_2g_wpa_vlan": 5658,
-    "ssid_5g_wpa2_eap_vlan": 5659,
-    "ssid_5g_wpa2_vlan": 5660,
-    "ssid_5g_wpa_vlan": 5661,
-    "radius_profile": 5808,
-    "bridge_ssid_update": 8742,
-    "nat_ssid_update": 8743,
-    "vlan_ssid_update": 8744,
-    "2g_wpa3_bridge": 9740,
-    "5g_wpa3_bridge": 9741,
-    "ssid_2g_wpa3_bridge": 9742,
-    "ssid_5g_wpa3_bridge": 9743,
-    "ssid_2g_wpa3_nat": 9744,
-    "ssid_5g_wpa3_nat": 9745,
-    "ssid_2g_wpa3_vlan": 9746,
-    "ssid_5g_wpa3_vlan": 9747,
-    "2g_wpa3_nat": 9748,
-    "5g_wpa3_nat": 9749,
-    "2g_wpa3_vlan": 9750,
-    "5g_wpa3_vlan": 9751,
-    "ssid_2g_wpa3_eap_bridge": 9752,
-    "ssid_5g_wpa3_eap_bridge": 9753,
-    "2g_wpa3_eap_ttls_bridge": 9754,
-    "5g_wpa3_eap_ttls_bridge": 9755,
-    "ssid_2g_wpa3_eap_nat": 9756,
-    "ssid_5g_wpa3_eap_nat": 9757,
-    "ssid_2g_wpa3_eap_vlan": 9758,
-    "ssid_5g_wpa3_eap_vlan": 9759,
-    "2g_wpa3_eap_ttls_nat": 9760,
-    "5g_wpa3_eap_ttls_nat": 9761,
-    "2g_wpa3_eap_ttls_vlan": 9762,
-    "5g_wpa3_eap_ttls_vlan": 9763,
-    "ssid_2g_wpa3_mixed_bridge": 9764,
-    "ssid_5g_wpa3_mixed_bridge": 9765,
-    "2g_wpa3_mixed_eap_ttls_wpa3_bridge": 9766,
-    "2g_wpa3_mixed_wpa3_bridge": 9767,
-    "5g_wpa3_mixed_eap_ttls_wpa3_bridge": 9768,
-    "5g_wpa3_mixed_wpa3_bridge": 9769,
-    "ssid_2g_wpa3_mixed_nat": 9770,
-    "ssid_5g_wpa3_mixed_nat": 9771,
-    "ssid_2g_wpa3_mixed_vlan": 9772,
-    "ssid_5g_wpa3_mixed_vlan": 9773,
-    # "2g_wpa3_mixed_wpa2_nat": 9774,
-    "2g_wpa3_mixed_wpa3_nat": 9775,
-    # "5g_wpa3_mixed_wpa2_nat": 9776,
-    "5g_wpa3_mixed_wpa3_nat": 9777,
-    # "2g_wpa3_mixed_wpa2_vlan": 9778,
-    "2g_wpa3_mixed_wpa3_vlan": 9779,
-    # "5g_wpa3_mixed_wpa2_vlan": 9780,
-    "5g_wpa3_mixed_wpa3_vlan": 9781,
-    "ssid_2g_wpa3_enterprise_mixed_bridge": 9782,
-    "ssid_5g_wpa3_enterprise_mixed_bridge": 9783,
-    "2g_wpa2_mixed_eap_wpa2_bridge": 9784,
-    "2g_wpa3_mixed_eap_wpa3_bridge": 9785,
-    "5g_wpa3_mixed_eap_wpa2_bridge": 9786,
-    "5g_wpa3_mixed_eap_wpa3_bridge": 9787,
-    "ssid_2g_wpa3_enterprise_mixed_nat": 9788,
-    "ssid_5g_wpa3_enterprise_mixed_nat": 9789,
-    "2g_wpa3_mixed_eap_wpa2_nat": 9790,
-    "2g_wpa3_mixed_eap_ttls_wpa3_nat": 9791,
-    "5g_wpa3_mixed_eap_wpa2_nat": 9792,
-    "5g_wpa3_mixed_eap_ttls_wpa3_nat": 9793,
-    "ssid_2g_wpa3_enterprise_mixed_vlan": 9794,
-    "ssid_5g_wpa3_enterprise_mixed_vlan": 9795,
-    "2g_wpa3_mixed_eap_wpa2_vlan": 9796,
-    "2g_wpa3_mixed_eap_ttls_wpa3_vlan": 9797,
-    "5g_wpa3_mixed_eap_wpa2_vlan": 9798,
-    "5g_wpa3_mixed_eap_ttls_wpa3_vlan": 9799,
-    "ssid_2g_open_bridge": 9805,
-    "ssid_5g_open_bridge": 9806,
-    "ssid_2g_open_nat": 9807,
-    "ssid_5g_open_nat": 9808,
-    "ssid_2g_open_vlan": 9809,
-    "ssid_5g_open_vlan": 9810,
-    "ssid_2g_wpa2_mixed_bridge": 9811,
-    "ssid_5g_wpa2_mixed_bridge": 9812,
-    "ssid_2g_wpa2_mixed_nat": 9813,
-    "ssid_5g_wpa2_mixed_nat": 9814,
-    "ssid_2g_wpa2_mixed_vlan": 9815,
-    "ssid_5g_wpa2_mixed_vlan": 9817,
-    "ssid_2g_wpa_wpa2_enterprise_mixed_bridge": 9818,
-    "ssid_5g_wpa_wpa2_enterprise_mixed_bridge": 9819,
-    "ssid_2g_wpa_wpa2_enterprise_mixed_nat": 9820,
-    "ssid_5g_wpa_wpa2_enterprise_mixed_nat": 9821,
-    "ssid_2g_wpa_wpa2_enterprise_mixed_vlan": 9822,
-    "ssid_5g_wpa_wpa2_enterprise_mixed_vlan": 9823,
-    "ssid_2g_wpa_eap_bridge": 9824,
-    "ssid_5g_wpa_eap_bridge": 9825,
-    # "ssid_2g_wpa2_eap_bridge": 9824,
-    # "ssid_5g_wpa2_eap_bridge": 9825,
-    "ssid_2g_wpa_eap_nat": 9826,
-    "ssid_5g_wpa_eap_nat": 9827,
-    "ssid_2g_wpa_eap_vlan": 9828,
-    "ssid_5g_wpa_eap_vlan": 9829,
-    # "ap_update_bridge": 9856,
-    # "ap_update_nat": 9857,
-    # "ap_update_vlan": 9858,
-    # "bridge_vifc_update": 9859,
-    # "nat_vifc_update": 9860,
-    # "vlan_vifc_update": 9861,
-    # "bridge_vifs_update": 9862,
-    # "nat_vifs_update": 9863,
-    # "vlan_vifs_update": 9864,
-    "2g_wpa_eap_ttls_bridge": 9867,
-    "5g_wpa_eap_ttls_bridge": 9768,
-    "2g_wpa_eap_ttls_nat": 9869,
-    "5g_wpa_eap_ttls_nat": 9770,
-    "2g_wpa_eap_ttls_vlan": 9871,
-    "5g_wpa_eap_ttls_vlan": 9872,
-    # "2g_wpa2_mixed_eap_wpa_bridge": 9873,
-    "2g_wpa2_mixed_eap_ttls_wpa2_bridge": 9874,
-    # "5g_wpa2_mixed_eap_wpa_bridge": 9875,
-    "5g_wpa2_mixed_eap_ttls_wpa2_bridge": 9876,
-    # "2g_wpa2_mixed_eap_wpa_nat": 9877,
-    "2g_wpa2_mixed_eap_ttls_wpa2_nat": 9878,
-    # "5g_wpa2_mixed_eap_wpa_nat": 9879,
-    "5g_wpa2_mixed_eap_ttls_wpa2_nat": 9880,
-    # "2g_wpa2_mixed_eap_wpa_vlan": 9881,
-    "2g_wpa2_mixed_eap_ttls_wpa2_vlan": 9882,
-    # "5g_wpa2_mixed_eap_wpa_vlan": 9883,
-    "5g_wpa2_mixed_eap_ttls_wpa2_vlan": 9884,
-    # "2g_wpa2_mixed_wpa_bridge": 9885,
-    "2g_wpa2_mixed_wpa2_bridge": 9886,
-    # "5g_wpa2_mixed_wpa_bridge": 9887,
-    "5g_wpa2_mixed_wpa2_bridge": 9888,
-    # "2g_wpa2_mixed_wpa_nat": 9889,
-    "2g_wpa2_mixed_wpa2_nat": 9890,
-    # "5g_wpa2_mixed_wpa_nat": 9891,
-    "5g_wpa2_mixed_wpa2_nat": 9892,
-    # "2g_wpa2_mixed_wpa_vlan": 9893,
-    "2g_wpa2_mixed_wpa2_vlan": 9894,
-    # "5g_wpa2_mixed_wpa_vlan": 9895,
-    "5g_wpa2_mixed_wpa2_vlan": 9896,
-    "2g_open_bridge": 2234,
-    "5g_open_bridge": 2235,
-    "2g_open_nat": 4321,
-    "5g_open_nat": 4322,
-    "2g_open_vlan": 9897,
-    "5g_open_vlan": 9898
-}

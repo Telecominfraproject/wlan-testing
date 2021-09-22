@@ -2,6 +2,8 @@
     Pytest fixtures: High level Resource Management and base setup fixtures
 """
 import datetime
+import random
+import string
 import sys
 import os
 import time
@@ -47,7 +49,7 @@ from cv_test_manager import cv_test
 from configuration import CONFIGURATION
 from configuration import RADIUS_SERVER_DATA
 from configuration import RADIUS_ACCOUNTING_DATA
-from configuration import TEST_CASES
+
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
 from lf_tools import ChamberView
@@ -81,7 +83,7 @@ def pytest_addoption(parser):
     parser.addini("influx_token", "Influx Token", default="TCkdATXAbHmNbn4QyNaj43WpGBYxFrzV")
     parser.addini("influx_bucket", "influx bucket", default="tip-cicd")
     parser.addini("influx_org", "influx organization", default="tip")
-    parser.addini("build", "AP Firmware build URL", default="0")
+    parser.addini(name="firmware", type='string', help="AP Firmware build URL", default="0")
     parser.addini("cloud_ctlr", "AP Firmware build URL", default="0")
 
     parser.addini("num_stations", "Number of Stations/Clients for testing")
@@ -132,9 +134,9 @@ def pytest_addoption(parser):
         help="AP Model which is needed to test"
     )
     parser.addoption(
-        "--skip-testrail",
-        action="store_true",
-        default=False,
+        "--use-testrail",
+        action="store_false",
+        default=True,
         help="Stop using Testrails"
     )
 
@@ -222,6 +224,11 @@ def get_configuration(testbed, request):
     """yields the selected testbed information from lab info file (configuration.py)"""
     if request.config.getini("cloud_ctlr") != "0":
         CONFIGURATION[testbed]["controller"]["url"] = request.config.getini("cloud_ctlr")
+    if request.config.getini("firmware") != "0":
+        version = request.config.getini("firmware")
+        version_list = version.split(",")
+        for i in range(len(CONFIGURATION[testbed]["access_point"])):
+            CONFIGURATION[testbed]["access_point"][i]["version"] = version_list[i]
     yield CONFIGURATION[testbed]
 
 
@@ -232,7 +239,7 @@ def get_apnos():
 
 
 @pytest.fixture(scope="session")
-def get_equipment_id(request, setup_controller, testbed, get_configuration):
+def get_equipment_ref(request, setup_controller, testbed, get_configuration):
     """"""
     if request.config.getoption("1.x"):
         equipment_id_list = []
@@ -247,18 +254,9 @@ def get_equipment_id(request, setup_controller, testbed, get_configuration):
 
 
 @pytest.fixture(scope="session")
-def instantiate_access_point(testbed, get_apnos, get_configuration):
-    """setup the access point connectivity"""
-    if request.config.getoption("1.x"):
-        for access_point_info in get_configuration['access_point']:
-            if access_point_info["jumphost"]:
-                get_apnos(access_point_info, pwd="../libs/apnos/", sdk="1.x")
-            else:
-                pass
-    else:
-        get_apnos(access_point_info, pwd="../libs/apnos/")
-            # Write a code to verify Access Point Connectivity
-    yield True
+def get_sdk_version(fixtures_ver):
+    version = fixtures_ver.get_sdk_version()
+    yield version
 
 
 # Controller Fixture
@@ -271,8 +269,9 @@ def setup_controller(request, get_configuration, test_access_point, add_env_prop
 
 
 @pytest.fixture(scope="session")
-def setup_firmware(fixtures_ver):
+def setup_firmware(setup_controller):
     """ Fixture to Setup Firmware with the selected sdk """
+    setup_controller.instantiate_firmware()
     yield True
 
 
@@ -332,7 +331,7 @@ def upload_firmware(request, should_upload_firmware, instantiate_firmware):
 
 
 @pytest.fixture(scope="session")
-def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_firmware_cloud, get_latest_firmware,
+def upgrade_firmware(request, instantiate_firmware, get_equipment_ref, check_ap_firmware_cloud, get_latest_firmware,
                      should_upgrade_firmware, should_upload_firmware, get_apnos, get_configuration):
     """yields the status of upgrade of firmware. waits for 300 sec after each upgrade request"""
     print(should_upgrade_firmware, should_upload_firmware)
@@ -355,13 +354,13 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
             else:
 
                 for i in range(0, len(instantiate_firmware)):
-                    status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i], force_upload=True,
+                    status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_ref[i], force_upload=True,
                                                                 force_upgrade=should_upgrade_firmware)
                     status_list.append(status)
         else:
             if should_upgrade_firmware:
                 for i in range(0, len(instantiate_firmware)):
-                    status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i],
+                    status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_ref[i],
                                                                 force_upload=should_upload_firmware,
                                                                 force_upgrade=should_upgrade_firmware)
                     status_list.append(status)
@@ -375,11 +374,11 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
 
 
 @pytest.fixture(scope="session")
-def check_ap_firmware_cloud(request, setup_controller, get_equipment_id):
+def check_ap_firmware_cloud(request, setup_controller, get_equipment_ref):
     """yields the active version of firmware on cloud"""
     if request.config.getoption("--1.x"):
         ap_fw_list = []
-        for i in get_equipment_id:
+        for i in get_equipment_ref:
             ap_fw_list.append(setup_controller.get_ap_firmware_old_method(equipment_id=i))
         yield ap_fw_list
     else:
@@ -408,7 +407,7 @@ def check_ap_firmware_ssh(get_configuration, request):
 
 @pytest.fixture(scope="session")
 def setup_test_run(setup_controller, request, upgrade_firmware, get_configuration,
-                   get_equipment_id, get_latest_firmware,
+                   get_equipment_ref, get_latest_firmware,
                    get_apnos):
     """used to upgrade the firmware on AP and should be called on each test case on a module level"""
     if request.config.getoption("--1.x"):
@@ -439,12 +438,12 @@ Instantiate Reporting
 @pytest.fixture(scope="session")
 def update_report(request, testbed, get_configuration):
     """used to update the test report on testrail/allure"""
-    if request.config.getoption("--skip-testrail"):
+    if request.config.getoption("--use-testrail"):
         tr_client = Reporting()
     else:
         tr_client = APIClient(request.config.getini("tr_url"), request.config.getini("tr_user"),
                               request.config.getini("tr_pass"), request.config.getini("tr_project_id"))
-    if request.config.getoption("--skip-testrail"):
+    if request.config.getoption("--use-testrail"):
         tr_client.rid = "skip testrails"
     else:
         projId = tr_client.get_project_id(project_name=request.config.getini("tr_project_id"))
@@ -493,53 +492,23 @@ def get_markers(request, get_security_flags):
     yield security_dict
 
 
-# Will be availabe as a test case
 @pytest.fixture(scope="session")
-def test_access_point(request, testbed, get_apnos, get_configuration):
+def test_access_point(fixtures_ver, request, get_configuration, get_apnos):
     """used to check the manager status of AP, should be used as a setup to verify if ap can reach cloud"""
-    mgr_status = []
-    if request.config.getoption("1.x"):
-        for access_point_info in get_configuration['access_point']:
-            ap_ssh = get_apnos(access_point_info, sdk="1.x")
-            status = ap_ssh.get_manager_state()
-            if "ACTIVE" not in status:
-                time.sleep(30)
-                ap_ssh = APNOS(access_point_info)
-                status = ap_ssh.get_manager_state()
-            mgr_status.append(status)
-    else:
-        # forgit access_point_info in get_configuration['access_point']:
-        #     ap_ssh = get_apnos(access_point_info)
-        #     status = ap_ssh.get_manager_state()
-        #     if "ACTIVE" not in status:
-        #         time.sleep(30)
-        #         ap_ssh = APNOS(access_point_info)
-        #         status = ap_ssh.get_manager_state()
-        #     mgr_status.append(status)
-        pass
-    yield mgr_status
+    status = fixtures_ver.get_ap_cloud_connectivity_status(get_configuration, get_apnos)
 
+    def teardown_session():
+        data = []
+        data.append(False)
+        for s in status:
+            data.append(s[0])
+        print(data)
+        if False not in data:
+            pytest.exit("AP is Not connected to ucentral gw")
+        allure.attach(name=str(status), body="")
 
-# Not used anymore, needs to depreciate it
-@pytest.fixture(scope="session")
-def get_lanforge_data(get_configuration):
-    """depreciate it"""
-    lanforge_data = {}
-    if get_configuration['traffic_generator']['name'] == 'lanforge':
-        lanforge_data = {
-            "lanforge_ip": get_configuration['traffic_generator']['details']['ip'],
-            "lanforge-port-number": get_configuration['traffic_generator']['details']['port'],
-            "lanforge_2dot4g": get_configuration['traffic_generator']['details']['2.4G-Radio'][0],
-            "lanforge_5g": get_configuration['traffic_generator']['details']['5G-Radio'][0],
-            "lanforge_2dot4g_prefix": get_configuration['traffic_generator']['details']['2.4G-Station-Name'],
-            "lanforge_5g_prefix": get_configuration['traffic_generator']['details']['5G-Station-Name'],
-            "lanforge_2dot4g_station": get_configuration['traffic_generator']['details']['2.4G-Station-Name'],
-            "lanforge_5g_station": get_configuration['traffic_generator']['details']['5G-Station-Name'],
-            "lanforge_bridge_port": get_configuration['traffic_generator']['details']['upstream'],
-            "lanforge_vlan_port": get_configuration['traffic_generator']['details']['upstream'] + ".100",
-            "vlan": 100
-        }
-    yield lanforge_data
+    request.addfinalizer(teardown_session)
+    yield status
 
 
 @pytest.fixture(scope="session")
@@ -572,11 +541,9 @@ def traffic_generator_connectivity(testbed, get_configuration):
 
 
 @pytest.fixture(scope="session")
-def create_lanforge_chamberview_dut(get_configuration, testbed):
-    """ Create a DUT on LANforge"""
-    ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
-                testbed=testbed, access_point_data=get_configuration["access_point"])
-    yield True
+def create_lanforge_chamberview_dut(lf_tools):
+    dut_object, dut_name = lf_tools.Create_Dut()
+    return dut_name
 
 
 @pytest.fixture(scope="session")
@@ -585,14 +552,6 @@ def lf_tools(get_configuration, testbed):
     obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
                       testbed=testbed, access_point_data=get_configuration["access_point"])
 
-    yield obj
-
-
-@pytest.fixture(scope="session")
-def lf_tools(get_configuration, testbed):
-    """ Create a DUT on LANforge"""
-    obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
-                      testbed=testbed, access_point_data=get_configuration["access_point"])
     yield obj
 
 
@@ -637,12 +596,14 @@ def add_allure_environment_property(request: SubRequest) -> Optional[Callable]:
 
 
 @fixture(scope='session')
-def add_env_properties(get_configuration, get_apnos, fixtures_ver, add_allure_environment_property: Callable) -> None:
+def add_env_properties(get_configuration, get_sdk_version, get_apnos, fixtures_ver,
+                       add_allure_environment_property: Callable) -> None:
     add_allure_environment_property('Access-Point-Model', get_configuration["access_point"][0]["model"])
+    add_allure_environment_property('SDK-Version', get_sdk_version)
     add_allure_environment_property('Access-Point-Firmware-Version',
                                     fixtures_ver.get_ap_version(get_apnos, get_configuration)[0].split("\n")[1])
     add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
-    add_allure_environment_property('AP-Serial-Number', get_configuration["access_point"][0]["serial"])
+    add_allure_environment_property('AP-Serial-Number', get_configuration["access_point"][0]["serial"] + "\n")
 
 
 @pytest.fixture(scope="session")
@@ -654,3 +615,34 @@ def fixtures_ver(request, get_configuration):
         print("1.x")
         obj = Fixtures_1x(configuration=get_configuration)
     yield obj
+
+
+@pytest.fixture(scope="session")
+def firmware_upgrade(fixtures_ver, get_apnos, get_configuration):
+    upgrade_status = fixtures_ver.setup_firmware(get_apnos, get_configuration)
+    yield upgrade_status
+
+
+"""
+Logs related Fixtures
+"""
+
+
+@pytest.fixture(scope="function")
+def get_ap_logs(request, get_apnos, get_configuration):
+    S = 9
+    instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
+    for ap in get_configuration['access_point']:
+        ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
+        ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
+
+    def collect_logs():
+        for ap in get_configuration['access_point']:
+            ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
+            ap_ssh.run_generic_command(cmd="logger stop testcase: " + instance_name)
+            ap_logs = ap_ssh.get_logread(start_ref="start testcase: " + instance_name,
+                                         stop_ref="stop testcase: " + instance_name)
+            allure.attach(name='logread', body=str(ap_logs))
+        pass
+
+    request.addfinalizer(collect_logs)

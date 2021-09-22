@@ -51,7 +51,7 @@ def setup_vlan():
 
 @allure.feature("CLIENT CONNECTIVITY SETUP")
 @pytest.fixture(scope="class")
-def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment_id,
+def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment_ref,
                    instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                    get_security_flags, get_configuration, radius_info, get_apnos):
     instantiate_profile = instantiate_profile(sdk_client=setup_controller)
@@ -524,7 +524,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
 
     # Push the Equipment AP Profile to AP
     try:
-        for i in get_equipment_id:
+        for i in get_equipment_ref:
             instantiate_profile.push_profile_old_method(equipment_id=i)
     except Exception as e:
         print(e)
