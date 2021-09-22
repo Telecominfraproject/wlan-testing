@@ -129,8 +129,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @pytest.mark.wpa
     @pytest.mark.fiveg
     @allure.story('wpa 5 GHZ Band')
-    def test_wpa_ssid_5g(self, get_vif_state, get_ap_logs, lf_test, update_report, test_cases, station_names_fiveg,
-                         get_lanforge_data):
+    def test_wpa_ssid_5g(self, get_vif_state, get_ap_logs, lf_test, update_report, test_cases, station_names_fiveg):
         """Client Connectivity wpa ssid 5G
            pytest -m "client_connectivity and bridge and general and wpa and fiveg"
         """
