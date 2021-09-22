@@ -49,10 +49,12 @@ class APNOS:
                     cmd = "kill " + str(a).replace("b'", "")
                     print(cmd)
                     stdin, stdout, stderr = client.exec_command(cmd)
+                    print(stdout)
+            client = self.ssh_cli_connect()
             cmd = '[ -f ~/cicd-git/ ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
             output = str(stdout.read())
-            
+            print(output)
             if output.__contains__("False"):
                 cmd = 'mkdir ~/cicd-git/'
                 stdin, stdout, stderr = client.exec_command(cmd)
@@ -66,11 +68,12 @@ class APNOS:
             cmd = '[ -f ~/cicd-git/openwrt_ctl.py ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
             var = str(stdout.read())
-            client.close()
             if var.__contains__("True"):
                 print("APNOS Serial Setup OK")
             else:
                 print("APNOS Serial Setup Fail")
+            if client:
+                client.close()
 
     # Method to connect AP-CLI/ JUMPHOST-CLI
     def ssh_cli_connect(self):
@@ -91,7 +94,8 @@ class APNOS:
                   f"cmd --value \"{cmd}\" "
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
-        client.close()
+        if client:
+            client.close()
         return output
 
     # Method to get the iwinfo status of AP using AP-CLI/ JUMPHOST-CLI
@@ -104,10 +108,10 @@ class APNOS:
                   f"cmd --value \"{cmd}\" "
         stdin, stdout, stderr = client.exec_command(cmd)
         data = stdout.read()
-        client.close()
+        if client:
+            client.close()
         data = str(data).replace(" ", "").split("\\r\\n")
         band_info = []
-        client.close()
         for i in data:
             tmp = []
             if i.__contains__("AccessPoint"):
@@ -137,8 +141,8 @@ class APNOS:
                   f"cmd --value \"{cmd}\" "
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
-        client.close()
-
+        if client:
+            client.close()
         return output
 
     # Method to get the vif_state of AP using AP-CLI/ JUMPHOST-CLI
@@ -150,7 +154,8 @@ class APNOS:
                   f"cmd --value \"{cmd}\" "
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
-        client.close()
+        if client:
+            client.close()
         return output
 
     # Method to get the vif_config ssid's of AP using AP-CLI/ JUMPHOST-CLI
@@ -238,10 +243,12 @@ class APNOS:
             version_matrix = str(output.decode('utf-8').splitlines())
             version_matrix_split = version_matrix.partition('FW_IMAGE_ACTIVE","')[2]
             cli_active_fw = version_matrix_split.partition('"],[')[0]
-            client.close()
         except Exception as e:
             print(e)
             cli_active_fw = "Error"
+        finally:
+            if client:
+                client.close()
         return cli_active_fw
 
     # Method to get the manager state of AP using AP-CLI/ JUMPHOST-CLI
@@ -256,10 +263,12 @@ class APNOS:
             output = stdout.read()
             status = str(output.decode('utf-8').splitlines())
             # print(output, stderr.read())
-            client.close()
         except Exception as e:
             print(e)
             status = "Error"
+        finally:
+            if client:
+                client.close()
         return status
 
     def get_serial_number(self):
@@ -273,10 +282,12 @@ class APNOS:
             output = stdout.read()
             output = output.decode('utf-8').splitlines()
             serial = output[1].replace(" ", "").split("|")[1]
-            client.close()
         except Exception as e:
             print(e)
             serial = "Error"
+        finally:
+            if client:
+                client.close()
         return serial
 
     def get_redirector(self):
@@ -291,10 +302,12 @@ class APNOS:
             print(output, stderr.read())
             status = output.decode('utf-8').splitlines()
             redirector = status[1].replace(" ", "").split("|")[1]
-            client.close()
         except Exception as e:
             print(e)
             redirector = "Error"
+        finally:
+            if client:
+                client.close()
         return redirector
 
     def run_generic_command(self, cmd=""):
@@ -307,10 +320,12 @@ class APNOS:
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
             status = output.decode('utf-8').splitlines()
-            client.close()
         except Exception as e:
             print(e)
             status = "Error"
+        finally:
+            if client:
+                client.close()
         return status
 
     def get_ucentral_status(self):
@@ -332,10 +347,11 @@ class APNOS:
             if 'active' in json_output.keys():
                 active = json_output['active']
         except Exception as e:
-            print("Exception in get_ucentral_status :: ")
+            print("Exception in get_ucentral_status ")
             print(e)
         finally:
-            client.close()
+            if client:
+                client.close()
         return connected, latest, active
 
     def get_uc_latest_config(self):
@@ -350,11 +366,13 @@ class APNOS:
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read().decode('utf-8')
             json_output = json.loads(output)  # , sort_keys=True)
-            client.close()
         except Exception as e:
-            print("expt get latest")
+            print("Exception in get_uc_latest_config")
             json_output = {}
             print(e)
+        finally:
+            if client:
+                client.close()
         return json_output
 
     def get_uc_active_config(self):
@@ -369,10 +387,13 @@ class APNOS:
             output = stdout.read().decode('utf-8')
             json_output = json.loads(output)  # , sort_keys=True)
             print(json_output)
-            client.close()
         except Exception as e:
+            print("Exception in get_uc_active_config")
             json_output = {}
             print(e)
+        finally:
+            if client:
+                client.close()
         return json_output
 
     def get_interface_details(self):
@@ -427,10 +448,12 @@ class APNOS:
             data.pop(0)
             OUT = "".join(data)
             json_output = json.loads(OUT)
-            client.close()
         except Exception as e:
             json_output = False
             print(e)
+        finally:
+            if client:
+                client.close()
         return json_output
 
     def get_iwinfo(self):
@@ -453,10 +476,12 @@ class APNOS:
                     else:
                         band = "5G"
                     iwinfo_bssid_data[o[i - 1]] = [o[i + 1].replace('"', ''), o[i + 4], band]
-            client.close()
         except Exception as e:
             iwinfo_bssid_data = False
             print(e)
+        finally:
+            if client:
+                client.close()
         return iwinfo_bssid_data
 
     def iwinfo(self):
@@ -468,7 +493,8 @@ class APNOS:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read().replace(b":~# iwinfo", b"").decode('utf-8')
         o = output
-        client.close()
+        if client:
+            client.close()
         return o
 
     def gettxpower(self):
@@ -491,7 +517,8 @@ class APNOS:
         name = output.replace("\t", "").splitlines()
         name.remove('')
         name.pop(-1)
-        client.close()
+        if client:
+            client.close()
         return tx_power, name
 
     def get_logread(self, start_ref="", stop_ref=""):
@@ -523,10 +550,12 @@ class APNOS:
             logs = ""
             for i in logread:
                 logs = logs + i + "\n"
-            client.close()
         except Exception as e:
             print(e)
             logs = ""
+        finally:
+            if client:
+                client.close()
         return logs
 
     def get_ap_version_ucentral(self):
@@ -537,7 +566,8 @@ class APNOS:
                   f"cmd --value \"{cmd}\" "
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read().replace(b":~# cat /tmp/ucentral.version", b"").decode('utf-8')
-        client.close()
+        if client:
+            client.close()
         return output
 
     def get_vifc(self):
@@ -548,7 +578,8 @@ class APNOS:
                   f"cmd --value \"{cmd}\" "
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
-        client.close()
+        if client:
+            client.close()
         return output
 
     def get_vifs(self):
@@ -559,7 +590,8 @@ class APNOS:
                   f"cmd --value \"{cmd}\" "
         stdin, stdout, stderr = client.exec_command(cmd)
         output = stdout.read()
-        client.close()
+        if client:
+            client.close()
         return output
 
     def get_vlan(self):
@@ -577,20 +609,20 @@ class APNOS:
 
 if __name__ == '__main__':
     obj = {
-        'model': 'ecw5211',
-        'mode': 'wifi5',
-        'serial': '68215fda456d',
-        'jumphost': True,
-        'ip': "localhost",
-        'username': "lanforge",
-        'password': "pumpkin77",
-        'port': 8733,
-        'jumphost_tty': "/dev/ttyAP5",
-        'version': "release-latest"
-    }
+                'model': 'wf188n',
+                'mode': 'wifi6',
+                'serial': '0000c1018812',
+                'jumphost': True,
+                'ip': "10.28.3.103",
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22,
+                'jumphost_tty': '/dev/ttyAP1',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf188/20210729-cig_wf188-v2.0.0-rc2-ec3662e-upgrade.bin"
+            }
     var = APNOS(credentials=obj, sdk="2.x")
-    a, b, c = var.get_ucentral_status()
-    print(a, b, c)
+    a = var.get_wifi_status()
+
 
     # S = 9
     # instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
