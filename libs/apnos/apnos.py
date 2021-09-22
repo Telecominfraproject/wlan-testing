@@ -433,28 +433,20 @@ class APNOS:
 
     def get_wifi_status(self):
         try:
-
             client = self.ssh_cli_connect()
             cmd = "wifi status"
             if self.mode:
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                       f"cmd --value \"{cmd}\" "
             stdin, stdout, stderr = client.exec_command(cmd)
-
             output = stdout.read().decode('utf-8')
-            data = output.split()
-            data.pop(0)
-            data.pop(0)
-            data.pop(0)
-            OUT = "".join(data)
-            json_output = json.loads(OUT)
         except Exception as e:
-            json_output = False
+            output = False
             print(e)
         finally:
             if client:
                 client.close()
-        return json_output
+        return output
 
     def get_iwinfo(self):
         try:

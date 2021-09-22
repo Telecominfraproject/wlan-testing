@@ -596,7 +596,7 @@ class Fixtures_2x:
                 msg = "SUCCESS :: AP is Broadcasting Applied Config"
                 print(msg)
                 allure.attach(name=str(msg), body=str(ap_config_active))
-                msg = "Time taken to reflect latest config in AP :: ", + (time.time() - start_time)
+                msg = "Time taken to reflect latest config in AP :: " + str((time.time() - start_time))
                 print(msg)
                 allure.attach(name=str(msg), body='')
                 break
