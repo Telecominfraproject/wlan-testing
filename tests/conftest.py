@@ -239,7 +239,7 @@ def get_apnos():
 
 
 @pytest.fixture(scope="session")
-def get_equipment_id(request, setup_controller, testbed, get_configuration):
+def get_equipment_ref(request, setup_controller, testbed, get_configuration):
     """"""
     if request.config.getoption("1.x"):
         equipment_id_list = []
@@ -331,7 +331,7 @@ def upload_firmware(request, should_upload_firmware, instantiate_firmware):
 
 
 @pytest.fixture(scope="session")
-def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_firmware_cloud, get_latest_firmware,
+def upgrade_firmware(request, instantiate_firmware, get_equipment_ref, check_ap_firmware_cloud, get_latest_firmware,
                      should_upgrade_firmware, should_upload_firmware, get_apnos, get_configuration):
     """yields the status of upgrade of firmware. waits for 300 sec after each upgrade request"""
     print(should_upgrade_firmware, should_upload_firmware)
@@ -354,13 +354,13 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
             else:
 
                 for i in range(0, len(instantiate_firmware)):
-                    status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i], force_upload=True,
+                    status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_ref[i], force_upload=True,
                                                                 force_upgrade=should_upgrade_firmware)
                     status_list.append(status)
         else:
             if should_upgrade_firmware:
                 for i in range(0, len(instantiate_firmware)):
-                    status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_id[i],
+                    status = instantiate_firmware[i].upgrade_fw(equipment_id=get_equipment_ref[i],
                                                                 force_upload=should_upload_firmware,
                                                                 force_upgrade=should_upgrade_firmware)
                     status_list.append(status)
@@ -374,11 +374,11 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
 
 
 @pytest.fixture(scope="session")
-def check_ap_firmware_cloud(request, setup_controller, get_equipment_id):
+def check_ap_firmware_cloud(request, setup_controller, get_equipment_ref):
     """yields the active version of firmware on cloud"""
     if request.config.getoption("--1.x"):
         ap_fw_list = []
-        for i in get_equipment_id:
+        for i in get_equipment_ref:
             ap_fw_list.append(setup_controller.get_ap_firmware_old_method(equipment_id=i))
         yield ap_fw_list
     else:
@@ -407,7 +407,7 @@ def check_ap_firmware_ssh(get_configuration, request):
 
 @pytest.fixture(scope="session")
 def setup_test_run(setup_controller, request, upgrade_firmware, get_configuration,
-                   get_equipment_id, get_latest_firmware,
+                   get_equipment_ref, get_latest_firmware,
                    get_apnos):
     """used to upgrade the firmware on AP and should be called on each test case on a module level"""
     if request.config.getoption("--1.x"):

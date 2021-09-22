@@ -151,17 +151,17 @@ def upload_firmware(should_upload_firmware, instantiate_firmware, get_latest_fir
 
 
 @pytest.fixture(scope="session")
-def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_firmware_cloud, get_latest_firmware,
+def upgrade_firmware(request, instantiate_firmware, get_equipment_ref, check_ap_firmware_cloud, get_latest_firmware,
                      should_upgrade_firmware):
     if get_latest_firmware != check_ap_firmware_cloud:
         if request.config.getoption("--skip-upgrade"):
             status = "skip-upgrade"
         else:
-            status = instantiate_firmware.upgrade_fw(equipment_id=get_equipment_id, force_upload=False,
+            status = instantiate_firmware.upgrade_fw(equipment_id=get_equipment_ref, force_upload=False,
                                                      force_upgrade=should_upgrade_firmware)
     else:
         if should_upgrade_firmware:
-            status = instantiate_firmware.upgrade_fw(equipment_id=get_equipment_id, force_upload=False,
+            status = instantiate_firmware.upgrade_fw(equipment_id=get_equipment_ref, force_upload=False,
                                                      force_upgrade=should_upgrade_firmware)
         else:
             status = "skip-upgrade"
@@ -169,8 +169,8 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
 
 
 @pytest.fixture(scope="session")
-def check_ap_firmware_cloud(setup_controller, get_equipment_id):
-    yield setup_controller.get_ap_firmware_old_method(equipment_id=get_equipment_id)
+def check_ap_firmware_cloud(setup_controller, get_equipment_ref):
+    yield setup_controller.get_ap_firmware_old_method(equipment_id=get_equipment_ref)
 
 
 """
@@ -195,7 +195,7 @@ def setup_vlan():
 
 
 @pytest.fixture(scope="class")
-def setup_profiles(request, setup_controller, testbed, get_equipment_id, fixtures_ver,
+def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtures_ver,
                    instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                    get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
     lf_tools.reset_scenario()
@@ -223,7 +223,7 @@ def setup_profiles(request, setup_controller, testbed, get_equipment_id, fixture
         lf_tools.add_vlan(vlan_ids=vlan_list)
 
     # call this, if 1.x
-    return_var = fixtures_ver.setup_profiles(request, param, setup_controller, testbed, get_equipment_id,
+    return_var = fixtures_ver.setup_profiles(request, param, setup_controller, testbed, get_equipment_ref,
                                              instantiate_profile,
                                              get_markers, create_lanforge_chamberview_dut, lf_tools,
                                              get_security_flags, get_configuration, radius_info, get_apnos,

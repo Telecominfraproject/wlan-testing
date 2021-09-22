@@ -83,7 +83,7 @@ class Fixtures_1x:
 #             version_list.append(version)
         return ["-\n-"]
 
-    def setup_profiles(self, request, param, setup_controller, testbed, get_equipment_id, instantiate_profile,
+    def setup_profiles(self, request, param, setup_controller, testbed, get_equipment_ref, instantiate_profile,
                      get_markers, create_lanforge_chamberview_dut, lf_tools,
                      get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
 
@@ -546,7 +546,7 @@ class Fixtures_1x:
 
         # Push the Equipment AP Profile to AP
         try:
-            for i in get_equipment_id:
+            for i in get_equipment_ref:
                 instantiate_profile.push_profile_old_method(equipment_id=i)
         except Exception as e:
             print(e)
