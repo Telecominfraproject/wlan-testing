@@ -697,10 +697,10 @@ class RunTest:
         self.msthpt_obj.setup()
         self.msthpt_obj.run()
         report_name = self.msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        # influx = CSVtoInflux(influxdb=self.influxdb,
-        #                      _influx_tag=self.influx_params["influx_tag"],
-        #                      target_csv=self.local_report_path + report_name + "/kpi.csv")
-        # influx.post_to_influx()
+        influx = CSVtoInflux(influxdb=self.influxdb,
+                              _influx_tag=self.influx_params["influx_tag"],
+                              target_csv=self.local_report_path + report_name + "/kpi.csv")
+        influx.post_to_influx()
         return self.msthpt_obj
 
 
