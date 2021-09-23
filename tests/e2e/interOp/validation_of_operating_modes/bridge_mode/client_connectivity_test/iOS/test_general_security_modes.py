@@ -42,9 +42,9 @@ setup_params_general = {
 
 
 @allure.suite(suite_name="interop sanity")
-@allure.sub_suite(sub_suite_name="Bridge Mode Client Connect : Suite-A")
+@allure.sub_suite(sub_suite_name="Bridge Mode Client Connectivity : Suite-A")
 @pytest.mark.InteropsuiteA
-@allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -52,9 +52,9 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestBridgeModeConnectSuiteOne(object):
-    """ Client Connect SuiteA
-        pytest -m "client_connect and bridge and InteropsuiteA"
+class TestBridgeModeConnectivitySuiteOne(object):
+    """ Client Connectivity SuiteA
+        pytest -m "client_connectivity and bridge and InteropsuiteA"
     """
 
     @pytest.mark.fiveg
@@ -294,9 +294,9 @@ setup_params_general_two = {
 
 
 @allure.suite(suite_name="interop sanity")
-@allure.sub_suite(sub_suite_name="Bridge Mode Client Connect : Suite-B")
+@allure.sub_suite(sub_suite_name="Bridge Mode Client Connectivity : Suite-B")
 @pytest.mark.InteropsuiteB
-@allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general_two],
@@ -304,9 +304,9 @@ setup_params_general_two = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestBridgeModeConnectSuiteTwo(object):
-    """ Client Connect SuiteA
-        pytest -m "client_connect and bridge and InteropsuiteB"
+class TestBridgeModeConnectivitySuiteTwo(object):
+    """ Client Connectivity SuiteA
+        pytest -m "client_connectivity and bridge and InteropsuiteB"
     """
 
     @pytest.mark.fiveg
