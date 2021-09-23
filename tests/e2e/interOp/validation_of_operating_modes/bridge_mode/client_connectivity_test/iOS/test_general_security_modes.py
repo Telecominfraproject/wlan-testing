@@ -52,14 +52,14 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestBridgeModeConnectivitySuiteOne(object):
+class TestBridgeModeConnectivitySuiteOneBridge(object):
     """ Client Connectivity SuiteA
         pytest -m "client_connectivity and bridge and InteropsuiteA"
     """
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ClientConnectivity_5g_WPA2_Personal(self, request, get_vif_state, get_APToMobileDevice_data,
+    def test_ClientConnectivity_5g_WPA2_Personal_BRIDGE(self, request, get_vif_state, get_APToMobileDevice_data,
                                           setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -95,7 +95,7 @@ class TestBridgeModeConnectivitySuiteOne(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ClientConnectivity_2g_WPA2_Personal(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_2g_WPA2_Personal_BRIDGE(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -130,7 +130,7 @@ class TestBridgeModeConnectivitySuiteOne(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ClientConnectivity_5g_WPA(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_5g_WPA_BRIDGE(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
@@ -165,7 +165,7 @@ class TestBridgeModeConnectivitySuiteOne(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_ClientConnectivity_2g_WPA(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_2g_WPA_BRIDGE(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
@@ -200,7 +200,7 @@ class TestBridgeModeConnectivitySuiteOne(object):
 
     @pytest.mark.fiveg
     @pytest.mark.open
-    def test_ClientConnectivity_5g_Open(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_5g_Open_BRIDGE(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["open"][1]
         ssidName = profile_data["ssid_name"]
@@ -235,7 +235,7 @@ class TestBridgeModeConnectivitySuiteOne(object):
 
     @pytest.mark.twog
     @pytest.mark.open
-    def test_ClientConnectivity_2g_Open(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_2g_Open_BRIDGE(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssidName = profile_data["ssid_name"]
@@ -304,14 +304,14 @@ setup_params_general_two = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestBridgeModeConnectivitySuiteTwo(object):
+class TestBridgeModeConnectivitySuiteBridgeTwo(object):
     """ Client Connectivity SuiteA
         pytest -m "client_connectivity and bridge and InteropsuiteB"
     """
 
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal
-    def test_ClientConnectivity_5g_wpa3_personal(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_5g_wpa3_personal_BRIDGE(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][1]
         ssidName = profile_data["ssid_name"]
@@ -345,7 +345,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa3_personal
-    def test_ClientConnectivity_2g_wpa3_personal(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_2g_wpa3_personal_BRIDGE(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -379,7 +379,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal_mixed
-    def test_ClientConnectivity_5g_wpa3_personal_mixed(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_5g_wpa3_personal_mixed_BRIDGE(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][1]
         ssidName = profile_data["ssid_name"]
@@ -413,7 +413,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa3_personal_mixed
-    def test_ClientConnectivity_2g_wpa3_personal_mixed(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_2g_wpa3_personal_mixed_BRIDGE(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][0]
         ssidName = profile_data["ssid_name"]
@@ -447,7 +447,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa_wpa2_personal_mixed
-    def test_ClientConnectivity_5g_wpa_wpa2_personal_mixed(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_5g_wpa_wpa2_personal_mixed_BRIDGE(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
         ssidName = profile_data["ssid_name"]
@@ -483,7 +483,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa_wpa2_personal_mixed
-    def test_ClientConnectivity_2g_wpa_wpa2_personal_mixed(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_2g_wpa_wpa2_personal_mixed_BRIDGE(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
         ssidName = profile_data["ssid_name"]
