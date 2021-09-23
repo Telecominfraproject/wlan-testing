@@ -580,21 +580,20 @@ class APNOS:
 
 if __name__ == '__main__':
     obj = {
-        'model': 'ecw5211',
-        'mode': 'wifi5',
-        'serial': '68215fda456d',
-        'jumphost': True,
-        'ip': "localhost",
-        'username': "lanforge",
-        'password': "pumpkin77",
-        'port': 8733,
-        'jumphost_tty': "/dev/ttyAP5",
-        'version': "release-latest"
-    }
+                'model': 'eap102',
+                'mode': 'wifi6',
+                'serial': '903cb30bcf12',
+                'jumphost': True,
+                'ip': "192.168.200.80",
+                'username': "lanforge",
+                'password': "lanforge",
+                'port': 22,
+                'jumphost_tty': '/dev/ttyAP1',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.1.0.tar.gz"
+            }
     var = APNOS(credentials=obj, sdk="2.x")
-    a, b, c = var.get_ucentral_status()
-    print(a, b, c)
-
+    a = var.get_uc_latest_config()
+    print(a)
     # S = 9
     # instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
     # var.run_generic_command(cmd="logger start testcase: " + instance_name)
