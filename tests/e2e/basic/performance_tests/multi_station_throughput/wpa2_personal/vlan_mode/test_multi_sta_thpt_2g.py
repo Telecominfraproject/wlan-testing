@@ -9,7 +9,7 @@ import os
 import allure
 import pytest
 
-pytestmark = [pytest.mark.Multi_Sta_Thpt,pytest.mark.wpa2_personal, pytest.mark.vlan,pytest.mark.twog]
+pytestmark = [pytest.mark.performance,pytest.mark.Multi_Sta_Thpt,pytest.mark.wpa2_personal, pytest.mark.vlan,pytest.mark.twog]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -203,6 +203,7 @@ class TestMultiStaThptvlan(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.testcase(name="test_mstathpt_wpa2p_vlan_udp_dl_2g_5",
@@ -244,6 +245,7 @@ class TestMultiStaThptvlan(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.testcase(name="test_mstathpt_wpa2p_vlan_tcp_dl_2g_6",
@@ -285,6 +287,7 @@ class TestMultiStaThptvlan(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.testcase(name="test_mstathpt_wpa2p_vlan_udp_ul_2g_7",
@@ -326,6 +329,7 @@ class TestMultiStaThptvlan(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.testcase(name="test_mstathpt_wpa2p_vlan_tcp_ul_2g_8",
