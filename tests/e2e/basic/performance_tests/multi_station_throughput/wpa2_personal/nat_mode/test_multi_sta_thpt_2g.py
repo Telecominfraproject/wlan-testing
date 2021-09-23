@@ -9,7 +9,7 @@ import os
 import allure
 import pytest
 
-pytestmark = [pytest.mark.Multi_Sta_Thpt,pytest.mark.wpa2_personal, pytest.mark.nat,pytest.mark.twog]
+pytestmark = [pytest.mark.performance,pytest.mark.Multi_Sta_Thpt,pytest.mark.wpa2_personal, pytest.mark.nat,pytest.mark.twog]
 
 setup_params_general = {
     "mode": "NAT",
@@ -203,6 +203,7 @@ class TestMultiStaThptnat(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.testcase(name="test_mstathpt_wpa2p_nat_udp_dl_2g_5",
@@ -244,6 +245,7 @@ class TestMultiStaThptnat(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.testcase(name="test_mstathpt_wpa2p_nat_tcp_dl_2g_6",
@@ -274,7 +276,7 @@ class TestMultiStaThptnat(object):
             pytest.xfail("SSID's NOT AVAILABLE IN VIF STATE")
 
         raw_lines = [['skip_5:1'], ['skip_dual:1'], ['hunt_retries:1'], ['hunt_iter:10'], ['pkt_loss_thresh:500000'],
-                     ['frame_sizes:MTU'], ['capacities:MAX'], ['tput_multi_tcp:1'], ['tput_multi_dl:1'],
+                     ['frame_sizes:200,512,1024,MTU'], ['capacities:MAX'], ['tput_multi_tcp:1'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
@@ -285,6 +287,7 @@ class TestMultiStaThptnat(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.testcase(name="test_mstathpt_wpa2p_nat_udp_ul_2g_7",
@@ -326,6 +329,7 @@ class TestMultiStaThptnat(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.testcase(name="test_mstathpt_wpa2p_nat_tcp_ul_2g_8",

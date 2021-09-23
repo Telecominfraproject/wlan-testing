@@ -9,7 +9,7 @@ import os
 import allure
 import pytest
 
-pytestmark = [pytest.mark.Multi_Sta_Thpt,pytest.mark.wpa2_personal, pytest.mark.nat,pytest.mark.fiveg]
+pytestmark = [pytest.mark.performance,pytest.mark.Multi_Sta_Thpt,pytest.mark.wpa2_personal, pytest.mark.nat,pytest.mark.fiveg]
 
 setup_params_general = {
     "mode": "NAT",
@@ -163,6 +163,7 @@ class TestMultiStaThptnat(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @allure.testcase(name="test_mstathpt_wpa2p_nat_tcp_ul_5g_4",
@@ -205,6 +206,7 @@ class TestMultiStaThptnat(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @allure.testcase(name="test_mstathpt_wpa2p_nat_udp_dl_5g_5",
@@ -247,6 +249,7 @@ class TestMultiStaThptnat(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @allure.testcase(name="test_mstathpt_wpa2p_nat_tcp_dl_5g_6",
@@ -289,6 +292,7 @@ class TestMultiStaThptnat(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @allure.testcase(name="test_mstathpt_wpa2p_nat_udp_ul_5g_7",
@@ -331,6 +335,7 @@ class TestMultiStaThptnat(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @allure.testcase(name="test_mstathpt_wpa2p_nat_tcp_ul_5g_8",
