@@ -61,11 +61,11 @@ class RunTest:
         self.rx_sensitivity_obj = None
         self.dualbandptest_obj = None
         self.influx_params = influx_params
-        self.influxdb = RecordInflux(_influx_host=influx_params["influx_host"],
-                                     _influx_port=influx_params["influx_port"],
-                                     _influx_org=influx_params["influx_org"],
-                                     _influx_token=influx_params["influx_token"],
-                                     _influx_bucket=influx_params["influx_bucket"])
+        # self.influxdb = RecordInflux(_influx_host=influx_params["influx_host"],
+        #                              _influx_port=influx_params["influx_port"],
+        #                              _influx_org=influx_params["influx_org"],
+        #                              _influx_token=influx_params["influx_token"],
+        #                              _influx_bucket=influx_params["influx_bucket"])
         self.local_report_path = local_report_path
         if not os.path.exists(self.local_report_path):
             os.mkdir(self.local_report_path)
@@ -260,9 +260,14 @@ class RunTest:
         for tag in influx_tags:
             self.influx_params["influx_tag"].append(tag)
         report_name = wificapacity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
-                             target_csv=self.local_report_path + report_name + "/kpi.csv")
-        influx.post_to_influx()
+        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                             influx_port=self.influx_params["influx_port"],
+                             influx_org=self.influx_params["influx_org"],
+                             influx_token=self.influx_params["influx_token"],
+                             influx_bucket=self.influx_params["influx_bucket"],
+                             path=report_name)
+
+        influx.glob()
         return wificapacity_obj
 
 
@@ -347,9 +352,15 @@ class RunTest:
         self.dataplane_obj.setup()
         self.dataplane_obj.run()
         report_name = self.dataplane_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
-                             target_csv=self.local_report_path + report_name + "/kpi.csv")
-        influx.post_to_influx()
+
+        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                                     influx_port=self.influx_params["influx_port"],
+                                     influx_org=self.influx_params["influx_org"],
+                                     influx_token=self.influx_params["influx_token"],
+                                     influx_bucket=self.influx_params["influx_bucket"],
+                                     path=report_name)
+
+        influx.glob()
 
         return self.dataplane_obj
 
@@ -393,10 +404,14 @@ class RunTest:
         self.dualbandptest_obj.setup()
         self.dualbandptest_obj.run()
         report_name = self.dualbandptest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        # influx = CSVtoInflux(influxdb=self.influxdb,
-        #                      _influx_tag=self.influx_params["influx_tag"],
-        #                      target_csv=self.local_report_path + report_name + "/kpi.csv")
-        # influx.post_to_influx()
+        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                             influx_port=self.influx_params["influx_port"],
+                             influx_org=self.influx_params["influx_org"],
+                             influx_token=self.influx_params["influx_token"],
+                             influx_bucket=self.influx_params["influx_bucket"],
+                             path=report_name)
+
+        influx.glob()
         return self.dualbandptest_obj
       
     def apstabilitytest(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
@@ -437,10 +452,14 @@ class RunTest:
         self.apstab_obj.setup()
         self.apstab_obj.run()
         report_name = self.apstab_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        # influx = CSVtoInflux(influxdb=self.influxdb,
-        #                      _influx_tag=self.influx_params["influx_tag"],
-        #                      target_csv=self.local_report_path + report_name + "/kpi.csv")
-        # influx.post_to_influx()
+        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                             influx_port=self.influx_params["influx_port"],
+                             influx_org=self.influx_params["influx_org"],
+                             influx_token=self.influx_params["influx_token"],
+                             influx_bucket=self.influx_params["influx_bucket"],
+                             path=report_name)
+
+        influx.glob()
         return self.apstab_obj
 
     
@@ -473,9 +492,14 @@ class RunTest:
         self.rvr_obj.setup()
         self.rvr_obj.run()
         report_name = self.rvr_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        influx = CSVtoInflux(influxdb=self.influxdb, _influx_tag=self.influx_params["influx_tag"],
-                             target_csv=self.local_report_path + report_name + "/kpi.csv")
-        influx.post_to_influx()
+        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                             influx_port=self.influx_params["influx_port"],
+                             influx_org=self.influx_params["influx_org"],
+                             influx_token=self.influx_params["influx_token"],
+                             influx_bucket=self.influx_params["influx_bucket"],
+                             path=report_name)
+
+        influx.glob()
         return self.rvr_obj
 
     def rx_sensitivity(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="100%", dut_name="TIP",
@@ -513,10 +537,14 @@ class RunTest:
         self.rx_sensitivity_obj.setup()
         self.rx_sensitivity_obj.run()
         report_name = self.rx_sensitivity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        influx = CSVtoInflux(influxdb=self.influxdb,
-                             _influx_tag=self.influx_params["influx_tag"],
-                             target_csv=self.local_report_path + report_name + "/kpi.csv")
-        influx.post_to_influx()
+        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                             influx_port=self.influx_params["influx_port"],
+                             influx_org=self.influx_params["influx_org"],
+                             influx_token=self.influx_params["influx_token"],
+                             influx_bucket=self.influx_params["influx_bucket"],
+                             path=report_name)
+
+        influx.glob()
         return self.rx_sensitivity_obj
 
     def multipsk(self, ssid="[BLANK]", security=None, mode=None, key1=None, vlan_id=None, key2=None, band="twog",
@@ -640,19 +668,36 @@ class RunTest:
             return False
 
 if __name__ == '__main__':
-    lanforge_data = {
-        "ip": "localhost",
-        "port": 8801,
-        "ssh_port": 22,
-        "2.4G-Radio": ["wiphy0"],
-        "5G-Radio": ["wiphy1"],
-        "AX-Radio": ["wiphy2"],
-        "upstream": "1.1.eth1",
-        "2.4G-Station-Name": "wlan0",
-        "5G-Station-Name": "wlan0",
-        "AX-Station-Name": "ax",
+    influx_host = "influx.cicd.lab.wlan.tip.build"
+    influx_port = 80
+    influx_token = "TCkdATXAbHmNbn4QyNaj43WpGBYxFrzV"
+    influx_bucket = "tip-cicd"
+    influx_org = "tip"
+    influx_params = {
+        "influx_host": influx_host,
+        "influx_port": influx_port,
+        "influx_token": influx_token,
+        "influx_bucket": influx_bucket,
+        "influx_org": influx_org,
+        "influx_tag": ["basic-03", "ec420"],
     }
-    obj = RunTest(lanforge_data=lanforge_data, debug=False)
+    lanforge_data = {
+                "ip": "192.168.200.80",
+                "port": 8080,
+                "ssh_port": 22,
+                "2.4G-Radio": ["wiphy0"],
+                "5G-Radio": ["wiphy1"],
+                "AX-Radio": [],
+                "upstream": "1.1.eth1",
+                "upstream_subnet": "192.168.200.1/24",
+                "uplink": "1.1.eth2",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            }
+    obj = RunTest(lanforge_data=lanforge_data, debug=False, influx_params=influx_params)
+    obj.Client_Connect(ssid="ssid_wpa_5g_br", passkey="something", security="wpa", station_name=['sta0000'])
+    obj.dataplane(station_name=["sta0000"])
     # a = obj.staConnect.json_get("/events/since/")
     # print(a)
     # print(obj.eap_connect.json_get("port/1/1/sta0000?fields=ap,ip"))
