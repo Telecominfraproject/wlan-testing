@@ -581,14 +581,14 @@ def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMob
     driver.switch_to.context('WEBVIEW_1')
 
     try:
-        print("Launching Safari")
+        print("Launching Chrome")
         report.step_start("Google Home Page")
         driver.get(connData["webURL"])
         print("Enter Search Text")
         elementFindTxt = driver.find_element_by_xpath(connData["lblSearch"])
         elementFindTxt.send_keys("Internet Speed Test")
     except Exception as e:
-        print("Launching Safari Failed")
+        print("Launching Chrome Failed")
         print (e)
         # allure.attach(name="Speed Test logs: ", body=str("Launching Safari Failed"))
         # allure.attach(name="Speed Test logs: ", body=str("Error log: " + e))
@@ -646,7 +646,7 @@ def downloadInstallOpenRoamingProfile(request, profileDownloadURL, setup_perfect
 
     driver.switch_to.context('WEBVIEW_1')
 
-    print("Launching Safari with OpenRoaming Profile")
+    print("Launching Chrome with OpenRoaming Profile")
     report.step_start("Open Roaming Download Page")
     driver.get(profileDownloadURL)
 
