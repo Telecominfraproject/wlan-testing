@@ -70,7 +70,7 @@ jobs:
       run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     needs: [ build ]
 
     steps:
