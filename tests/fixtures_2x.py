@@ -566,11 +566,11 @@ class Fixtures_2x:
 
         while active != latest:
             connected, latest, active = ap_ssh.get_ucentral_status()
-            time.sleep(10)
+            time.sleep(20)
             x += 1
             print("active: ", active)
             print("latest: ", latest)
-            if x == 19:
+            if x == 10:
                 break
 
         connected, latest, active = ap_ssh.get_ucentral_status()
