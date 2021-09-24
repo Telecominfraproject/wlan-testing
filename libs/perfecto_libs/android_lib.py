@@ -1378,7 +1378,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
         # -----------------To Open Connections page-----------------------
         try:
             print("Verifying Connected Wifi Connection")
-            report.step_start("Click Network & internet")
+            report.step_start("Click Network & internet in pixel4")
             connElement = driver.find_element_by_xpath("//*[@text='Network & internet']")
             connElement.click()
 
@@ -1455,18 +1455,18 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                             additional_details_element = driver.find_element_by_xpath(
                                 "//*[@resource-id='com.android.settings:id/settings_button_no_background']")
                             additional_details_element.click()
-                            try:
-                                check_if_no_internet_popup(driver)
-                                forget_ssid = driver.find_element_by_xpath(
-                                    "//*[@resource-id='com.android.settings:id/button1']")
-                                forget_ssid.click()
-                                print("Forget old ssid")
-                            except:
-                                print("Couldn't forget ssid")
-                                closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                                return ip_address_element_text, ssid_with_internet
                         except:
                             print("Couldn't get into additional details")
+                        try:
+                            check_if_no_internet_popup(driver)
+                            forget_ssid = driver.find_element_by_xpath(
+                                "//*[@resource-id='com.android.settings:id/button1']")
+                            forget_ssid.click()
+                            print("Forget old ssid")
+                        except:
+                            print("Couldn't forget ssid")
+                            closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                            return ip_address_element_text, ssid_with_internet
                     except:
                         print("No Connected SSIDS")
                     # ----------------------This is to Forget current connected SSID--------------------------------
@@ -1524,8 +1524,9 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     try:
                         check_if_no_internet_popup(driver)
                         report.step_start("Set Wifi Password")
+                        print("Entering password")
                         wifiPasswordElement = driver.find_element_by_xpath(
-                            "//*[@resource-id='com.android.settings:id/edittext']")
+                            "//*[@resource-id='com.android.settings:id/password']")
                         wifiPasswordElement.send_keys(WifiPass)
                     except NoSuchElementException:
                         print("Password Page Not Loaded, password May be cached in the System")
@@ -1583,25 +1584,37 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     # -------------------------------------------------------
                     try:
                         print("Into additional details")
-                        time.sleep(2)
+                        time.sleep(5)
+                        report.step_start("Going for ip address")
                         additional_details_element = driver.find_element_by_xpath(
                             "//*[@resource-id='com.android.settings:id/settings_button_no_background']")
                         additional_details_element.click()
+                        print("Entered ssid")
                         try:
-                            time.sleep(2)
-                            advanced_element = driver.find_element_by_xpath(
-                                "//*[@text='Advanced']")
-                            advanced_element.text.click()
+                            time.sleep(10)
+                            print("clicking Advanced")
+                            report.step_start("clicking Advanced")
+                            advanced_element = driver.find_element_by_xpath("//*[@text='Advanced']")
+                            advanced_element.click()
+                            print("clicked Advanced")
                             #print("Device IP address is :", ip_address_element_text)
                         except:
                             try:
-                                time.sleep(2)
+                                time.sleep(5)
+                                print("clicking Advanced2")
                                 advanced_element = driver.find_element_by_xpath(
-                                    "//*[@resource-id='com.android.settings:id/recycler_view']/android.widget.LinearLayout[5]")
-                                advanced_element.text.click()
+                                    "//*[@resource-id='com.android.settings:id/recycler_view']/android.widget.FrameLayout[2]/android.widget.LinearLayout[1]/android.widget.RelativeLayout[1]")
+                                advanced_element.click()
                                 #print("Device IP address is :", ip_address_element_text)
                             except:
-                                print("No advanced options")
+                                try:
+                                    time.sleep(5)
+                                    print("clicking Advanced2")
+                                    advanced_element = driver.find_element_by_xpath(
+                                        "//*[@resource-id='com.android.settings:id/recycler_view']/android.widget.LinearLayout[5]/android.widget.LinearLayout[1]/android.widget.ImageView[1]")
+                                    advanced_element.click()
+                                except:
+                                    print("No advanced options")
                             # allure.attach(name= body=str("IP address element not found"))
 
                             # closeApp(connData["appPackage-android"], setup_perfectoMobile)
@@ -1902,7 +1915,7 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
         # -----------------To Open Connections page-----------------------
         try:
             print("Verifying Connected Wifi Connection")
-            report.step_start("Click Network & internet")
+            report.step_start("Click Network & internet in pixel4")
             connElement = driver.find_element_by_xpath("//*[@text='Network & internet']")
             connElement.click()
 
@@ -1979,18 +1992,18 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                             additional_details_element = driver.find_element_by_xpath(
                                 "//*[@resource-id='com.android.settings:id/settings_button_no_background']")
                             additional_details_element.click()
-                            try:
-                                check_if_no_internet_popup(driver)
-                                forget_ssid = driver.find_element_by_xpath(
-                                    "//*[@resource-id='com.android.settings:id/button1']")
-                                forget_ssid.click()
-                                print("Forget old ssid")
-                            except:
-                                print("Couldn't forget ssid")
-                                closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                                return ssid_with_internet
                         except:
                             print("Couldn't get into additional details")
+                        try:
+                            check_if_no_internet_popup(driver)
+                            forget_ssid = driver.find_element_by_xpath(
+                                "//*[@resource-id='com.android.settings:id/button1']")
+                            forget_ssid.click()
+                            print("Forget old ssid")
+                        except:
+                            print("Couldn't forget ssid")
+                            closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                            return ssid_with_internet
                     except:
                         print("No Connected SSIDS")
                     # ----------------------This is to Forget current connected SSID--------------------------------
@@ -2049,7 +2062,7 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                         check_if_no_internet_popup(driver)
                         report.step_start("Set Wifi Password")
                         wifiPasswordElement = driver.find_element_by_xpath(
-                            "//*[@resource-id='com.android.settings:id/edittext']")
+                            "//*[@resource-id='com.android.settings:id/password']")
                         wifiPasswordElement.send_keys(WifiPass)
                     except NoSuchElementException:
                         print("Password Page Not Loaded, password May be cached in the System")
@@ -2248,7 +2261,7 @@ def wifi_disconnect_and_forget(request, WifiName, WifiPass, setup_perfectoMobile
         except NoSuchElementException:
             print("Exception: Verify Xpath - Update/check Xpath for Click Connections")
         # -----------------To Open Connections page---------------------------
-    else:
+    else:#-----------------------Pixel4 code-------------------------
         report.step_start("Set Wifi Network to " + WifiName)
 
         # -----------------To Open Connections page-----------------------
