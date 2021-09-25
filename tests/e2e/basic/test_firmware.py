@@ -32,10 +32,10 @@ class TestFirmware(object):
         assert PASS
 
     @pytest.mark.check_active_firmware_cloud
-    def test_active_version_cloud(self, get_latest_firmware, get_equipment_id, setup_controller,
+    def test_active_version_cloud(self, get_latest_firmware, get_equipment_ref, setup_controller,
                                   update_report, test_cases):
         ap_fw_list = []
-        for i in get_equipment_id:
+        for i in get_equipment_ref:
             ap_fw_list.append(setup_controller.get_ap_firmware_old_method(equipment_id=i))
 
         assert get_latest_firmware == ap_fw_list

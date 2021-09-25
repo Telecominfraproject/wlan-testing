@@ -25,7 +25,7 @@ from controller.controller_1x.controller import ProfileUtility
 
 @allure.feature("PASSPOINT CONNECTIVITY SETUP")
 @pytest.fixture(scope="class")
-def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment_id,
+def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment_ref,
                    instantiate_profile, get_markers, passpoint_provider_info, passpoint_operator_info,
                    passpoint_venue_info, passpoint_profile_info,
                    get_configuration, passpoint_radius_server_info, passpoint_radius_accounting_server_info, get_apnos):
@@ -302,7 +302,7 @@ def setup_profiles(request, setup_controller, testbed, setup_vlan, get_equipment
 
 
 @pytest.fixture(scope="function")
-def push_ap_profile(request, setup_profiles, get_equipment_id, get_apnos, get_configuration):
+def push_ap_profile(request, setup_profiles, get_equipment_ref, get_apnos, get_configuration):
     parameter = dict(request.param)
     test_cases, instantiate_profile, profile_data = setup_profiles
     ssid_names = parameter["ssid_names"]
@@ -323,7 +323,7 @@ def push_ap_profile(request, setup_profiles, get_equipment_id, get_apnos, get_co
     allure.attach(body=str(ap_profile_info), name="Pushing profiles on AP  :: ")
     # Push the Equipment AP Profile to AP
     try:
-        for i in get_equipment_id:
+        for i in get_equipment_ref:
             instantiate_profile.push_profile_old_method(equipment_id=i)
     except Exception as e:
         print(e)

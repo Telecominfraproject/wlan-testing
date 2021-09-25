@@ -40,7 +40,6 @@ class TestWifiCapacityNATModeDualBand(object):
     """ Wifi Capacity Test NAT mode
            pytest -m "wifi_capacity_test and NAT"
     """
-    @pytest.mark.hari
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3687", name="WIFI-3687")
     @pytest.mark.wpa_personal
     @pytest.mark.tcp_download

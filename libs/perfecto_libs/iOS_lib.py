@@ -524,7 +524,8 @@ def verifyUploadDownloadSpeediOS(request, setup_perfectoMobile, get_APToMobileDe
 
     try:
         print("Click Search Button")
-        elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']/li[1]/div[1]")  
+        # elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']/li[1]/div[1]")
+        elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
         elelSearch.click()
     except NoSuchElementException:
         currentResult = False
@@ -537,6 +538,7 @@ def verifyUploadDownloadSpeediOS(request, setup_perfectoMobile, get_APToMobileDe
     except NoSuchElementException:
         currentResult = False
         print("Run Speed Test Button element not found")
+        return currentResult
 
     #Get upload/Download Speed
     try:
