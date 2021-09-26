@@ -210,9 +210,9 @@ class RunTest:
             #     print(e)
 
         self.eap_connect.stop()
-        if not self.staConnect.passes():
+        if not self.eap_connect.passes():
             if self.debug:
-                print("test result: " + self.staConnect.passes())
+                print("test result: " + self.eap_connect.passes())
                 pytest.exit("Test Failed: Debug True")
         endp_data = []
         for i in self.eap_connect.resulting_endpoints:
