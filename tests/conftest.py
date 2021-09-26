@@ -558,9 +558,9 @@ def lf_tools(get_configuration, testbed):
 
 @pytest.fixture(scope="session")
 def lf_test(get_configuration, setup_influx, request):
-    if request.config.getoption("exit-on-fail"):
+    if request.config.getoption("--exit-on-fail"):
         obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'], influx_params=setup_influx, debug=True)
-    if request.config.getoption("exit-on-fail") is False:
+    if request.config.getoption("--exit-on-fail") is False:
         obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'], influx_params=setup_influx, debug=False)
     yield obj
 
