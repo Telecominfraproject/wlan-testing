@@ -203,9 +203,7 @@ class FMSUtils:
                       body=str(response.status_code) + "\n" +
                            str(response.json()) + "\n"
                       )
-        response = self.sdk_client.request(service="gw", command="device/" + serial + "upgrade/",
-                                           method="POST", params="revisionSet=true",
-                                           payload="{ \"serialNumber\" : " + serial + " , \"uri\" : " + url + " }")
+        
         print(response)
 
     def ap_model_lookup(self, model=""):

@@ -25,7 +25,7 @@ on:
         description: 'Pass additional markers that will be and-combined with the interop marker, e.g. "twog or fiveg" -> "interop and twog or fiveg"'
         required: false
   schedule:
-  - cron: '15 0 * * *'
+  - cron: '30 20 * * *'
 
 defaults:
   run:
