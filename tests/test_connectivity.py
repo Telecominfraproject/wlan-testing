@@ -27,7 +27,6 @@ class TestResources(object):
                       attachment_type=allure.attachment_type.JSON)
         version = setup_controller.get_sdk_version()
         print(version)
-        pytest.exit("pumpkin77")
         assert response_code == 200
 
     @pytest.mark.test_access_points_connectivity
@@ -45,7 +44,6 @@ class TestResources(object):
     def test_traffic_generator_connectivity(self, traffic_generator_connectivity):
         """Test case to verify Traffic Generator Connectivity"""
         allure.attach(name="LANforge version", body=str(traffic_generator_connectivity))
-        pytest.exit("exit")
         assert traffic_generator_connectivity
 
 
