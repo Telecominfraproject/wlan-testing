@@ -604,10 +604,19 @@ def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMob
     try:
         print("Click Search Button")
         report.step_start("Click Search Button")
-        elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']/li[1]/div[1]")
+        time.sleep(2)
+        driver.implicitly_wait(2)
+        elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
         elelSearch.click()
-    except NoSuchElementException:
-        print("Search Drop Down not active...")
+    except:
+        try:
+            time.sleep(2)
+            driver.implicitly_wait(2)
+            elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
+            elelSearch.click()
+        except:
+            print("Search Drop Down not active...")
+            return False
 
     try:
         print("Click Run Speed Test Button...")
@@ -616,6 +625,7 @@ def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMob
     except NoSuchElementException:
         print("Error in speed test element ", NoSuchElementException)
         # allure.attach(name="Speed Test logs: ", body=str("Search Run Speed Test not active..." + NoSuchElementException))
+        return False
 
     #Get upload/Download Speed
     try:
