@@ -227,7 +227,7 @@ class TestVlanModeConnectSuiteOneVlan(object):
 
         #ForgetWifi
         # ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
-
+    @pytest.mark.sg345
     @pytest.mark.twog
     @pytest.mark.open
     def test_ClientConnect_2g_Open_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
