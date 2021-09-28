@@ -1,4 +1,4 @@
-name: Update DEV uCentral clusters
+name: Update DEV OpenWIFI Cloud SDK 2.x clusters
 
 defaults:
   run:
@@ -18,22 +18,22 @@ env:
 
   # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
   # Required object fiels per environment:
-  # - namespace - namespace suffix that will used added for the Kubernetes environment (i.e. if you pass 'test', kubernetes namespace will be named 'ucentral-test')
+  # - namespace - namespace suffix that will used added for the Kubernetes environment (i.e. if you pass 'test', kubernetes namespace will be named 'openwifi-test')
   # - deploy_method - deployment method for the chart deployment (supported methods - 'git' (will use helm-git from assembly chart) and 'bundle' (will use chart stored in the Artifactory0
   # - chart_version - version of chart to be deployed from assembly chart (for 'git' method git ref may be passed, for 'bundle' method version of chart may be passed)
-  # - ucentralgw_version - uCentralGW version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - ucentralsec_version - uCentralSec version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - ucentralfms_version - uCentralFMS version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - ucentralgwui_version - uCentralGW UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+  # - owgw_version - OpenWIFI Gateway version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+  # - owsec_version - OpenWIFI Security version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+  # - owfms_version - OpenWIFI Firmware version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+  # - owgwui_version - OpenWIFI Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
   testbeds: '[
     {
       "namespace": "dev01",
       "deploy_method": "git",
       "chart_version": "v2.1.0-RC3",
-      "ucentralgw_version": "v2.1.0-RC3",
-      "ucentralsec_version": "v2.1.0-RC1",
-      "ucentralfms_version": "v2.1.0-RC1",
-      "ucentralgwui_version": "v2.1.0-RC1"
+      "owgw_version": "v2.1.0-RC3",
+      "owsec_version": "v2.1.0-RC1",
+      "owfms_version": "v2.1.0-RC1",
+      "owgwui_version": "v2.1.0-RC1"
     }
   ]'
 
@@ -53,7 +53,7 @@ jobs:
         echo '::set-output name=matrix::{"include":${{ env.testbeds }}}'
 
   deploy:
-    name: Update uCentral instances
+    name: Update OpenWIFI Cloud SDK instances
     runs-on: ubuntu-latest
     needs: [ generate-matrix ]
     strategy:
@@ -76,22 +76,22 @@ jobs:
       run: |
         aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
-    - name: Deploy uCentralGW
+    - name: Deploy OpenWIFI Cloud SDK
       working-directory: wlan-testing/helm/ucentral
       run: |
         export NAMESPACE=${{ matrix.namespace }}
         export DEPLOY_METHOD=${{ matrix.deploy_method }}
         export CHART_VERSION=${{ matrix.chart_version }}
-        export UCENTRALGW_VERSION=${{ matrix.ucentralgw_version }}
-        export UCENTRALGWUI_VERSION=${{ matrix.ucentralgwui_version }}
-        export UCENTRALSEC_VERSION=${{ matrix.ucentralsec_version }}
-        export UCENTRALFMS_VERSION=${{ matrix.ucentralfms_version }}
+        export OWGW_VERSION=${{ matrix.owgw_version }}
+        export OWGWUI_VERSION=${{ matrix.owgwui_version }}
+        export OWSEC_VERSION=${{ matrix.owsec_version }}
+        export OWFMS_VERSION=${{ matrix.owfms_version }}
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
-        export UCENTRALGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
-        export UCENTRALGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
-        export UCENTRALFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
-        export UCENTRALFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
+        export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
+        export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
+        export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
+        export OWFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
         export CERT_LOCATION=cert.pem
         export KEY_LOCATION=key.pem
         ./deploy.sh
@@ -99,24 +99,24 @@ jobs:
     - name: Show resource state on deployment failure
       if: failure()
       run: |
-        kubectl get pods --namespace ucentral-${{ matrix.namespace }}
-        kubectl get services --namespace ucentral-${{ matrix.namespace }}
-        kubectl get persistentvolumeclaims --namespace ucentral-${{ matrix.namespace }}
+        kubectl get pods --namespace openwifi-${{ matrix.namespace }}
+        kubectl get services --namespace openwifi-${{ matrix.namespace }}
+        kubectl get persistentvolumeclaims --namespace openwifi-${{ matrix.namespace }}
     - name: Describe pods on deployment failure
       if: failure()
       run: |
-        kubectl describe pods --namespace ucentral-${{ matrix.namespace }}
+        kubectl describe pods --namespace openwifi-${{ matrix.namespace }}
     - name: Describe services on deployment failure
       if: failure()
       run: |
-        kubectl describe services --namespace ucentral-${{ matrix.namespace }}
+        kubectl describe services --namespace openwifi-${{ matrix.namespace }}
     - name: Describe persistentvolumeclaims on deployment failure
       if: failure()
       run: |
-        kubectl describe persistentvolumeclaims --namespace ucentral-${{ matrix.namespace }}
+        kubectl describe persistentvolumeclaims --namespace openwifi-${{ matrix.namespace }}
 
     - name: Rollback Cloud SDK
       if: failure()
       run: |
-        helm rollback tip-ucentral --namespace ucentral-${{ matrix.namespace }} --wait --timeout 20m
+        helm rollback tip-openwifi --namespace openwifi-${{ matrix.namespace }} --wait --timeout 20m
 
