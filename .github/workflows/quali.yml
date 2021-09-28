@@ -43,10 +43,10 @@ on:
         required: true
         default: 'ec420'
         description: 'the AP model to test'
-      ap_revision:
+      ap_version:
         required: true
         default: 'latest'
-        description: 'NOT IN USE! revision of firmware to flash on AP'
+        description: 'revision of firmware to flash on AP, <branch>-<commit> | latest'
 
 jobs:
   vars:
@@ -70,7 +70,7 @@ jobs:
           echo ::set-output name=fms::$(echo "${{ github.event.inputs.ucentral_fms_revision || 'main' }}")
           echo ::set-output name=ui::$(echo "${{ github.event.inputs.ucentral_ui_revision || 'main' }}")
           echo ::set-output name=ap_model::$(echo "${{ github.event.inputs.ap_model || 'ec420' }}")
-          echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_revision || 'latest' }}")
+          echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'latest' }}")
 
   start-reservation:
     needs: vars
@@ -476,7 +476,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "uc_sanity" -s -vvv --testbed="basic" --alluredir=/tmp/allure-results
+                    pytest -m "uc_sanity" -s -vvv --testbed="basic" --alluredir=/tmp/allure-results -o firmware="${{ needs.vars.outputs.ap_version }}"
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
