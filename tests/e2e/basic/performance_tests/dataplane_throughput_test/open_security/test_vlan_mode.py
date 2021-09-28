@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.vlan, pytest.mark.dataplane_throughput_test]
+pytestmark = [pytest.mark.vlan, pytest.mark.dataplane_throughput_test]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -30,13 +30,6 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-@pytest.mark.parametrize(
-    'create_vlan',
-    [setup_params_general],
-    indirect=True,
-    scope="class"
-)
-@pytest.mark.usefixtures("create_vlan")
 class TestDataplaneThroughputVLAN(object):
     """Dataplane THroughput VLAN Mode
        pytest -m "dataplane_throughput_test and open and VLAN"
