@@ -17,6 +17,10 @@ env:
   ALLURE_CLI_VERSION: 2.14.0
 
 on:
+  repository_dispatch:
+    types:
+    - new-ap-release
+    - new-cloud-release
   workflow_dispatch:
     inputs:
       testbeds:
