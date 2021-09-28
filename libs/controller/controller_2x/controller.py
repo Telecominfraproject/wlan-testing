@@ -112,9 +112,9 @@ class ConfigureController:
         gw_host = ""
         fms_host = ""
         for service in services['endpoints']:
-            if service['type'] == "ucentralgw":
+            if service['type'] == "owgw":
                 gw_host = urlparse(service["uri"])
-            if service['type'] == "ucentralfms":
+            if service['type'] == "owfms":
                 fms_host = urlparse(service["uri"])
         return gw_host, fms_host
 
@@ -177,6 +177,8 @@ class Controller(ConfigureController):
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         version = resp.json()
+        print(version)
+        pytest.exit("version")
         # resp.close()()
         return version['value']
 
