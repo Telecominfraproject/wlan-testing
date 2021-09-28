@@ -27,15 +27,15 @@ pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.m
 setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
-        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"]},
-                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"]}],
-        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
+        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"], "vlan": 100},
+                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"], "vlan": 100}],
+        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
                 {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
-                 "security_key": "something"}],
+                 "security_key": "something", "vlan": 100}],
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"],
-             "security_key": "something"}]},
+             "security_key": "something", "vlan": 100}]},
     "rf": {},
     "radius": False
 }
@@ -269,17 +269,17 @@ setup_params_general_two = {
     "mode": "VLAN",
     "ssid_modes": {
         "wpa3_personal": [
-            {"ssid_name": "ssid_wpa3_p_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa3_p_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
             {"ssid_name": "ssid_wpa3_p_5g", "appliedRadios": ["5G"],
-             "security_key": "something"}],
+             "security_key": "something", "vlan": 100}],
         "wpa3_personal_mixed": [
-            {"ssid_name": "ssid_wpa3_p_m_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa3_p_m_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
             {"ssid_name": "ssid_wpa3_p_m_5g", "appliedRadios": ["5G"],
-             "security_key": "something"}],
+             "security_key": "something", "vlan": 100}],
         "wpa_wpa2_personal_mixed": [
-            {"ssid_name": "ssid_wpa_wpa2_p_m_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa_wpa2_p_m_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
             {"ssid_name": "ssid_wpa_wpa2_p_m_5g", "appliedRadios": ["5G"],
-             "security_key": "something"}]
+             "security_key": "something", "vlan": 100}]
     },
     "rf": {},
     "radius": False
