@@ -173,14 +173,13 @@ class Controller(ConfigureController):
         return device
 
     def get_sdk_version(self):
-        uri = self.build_uri("system/?command=version")
+        uri = self.build_uri("system/?command=info")
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         version = resp.json()
         print(version)
-        pytest.exit("version")
         # resp.close()()
-        return version['value']
+        return version['version']
 
     def get_device_uuid(self, serial_number):
         device_info = self.get_device_by_serial_number(serial_number=serial_number)
