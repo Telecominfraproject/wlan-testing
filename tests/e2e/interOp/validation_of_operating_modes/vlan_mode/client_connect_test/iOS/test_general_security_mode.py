@@ -30,8 +30,7 @@ setup_params_general = {
         "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"], "vlan": 100},
                  {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"], "vlan": 100}],
         "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
-                 "security_key": "something", "vlan": 100}],
+                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 100}],
         "wpa2_personal": [
             {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"],
@@ -122,7 +121,7 @@ class TestVlanModeConnectSuiteOneVlan(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
+    @pytest.mark.sg123
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_ClientConnect_5g_WPA_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -155,7 +154,7 @@ class TestVlanModeConnectSuiteOneVlan(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
+    @pytest.mark.sg123
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_ClientConnect_2g_WPA_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -227,7 +226,7 @@ class TestVlanModeConnectSuiteOneVlan(object):
 
         #ForgetWifi
         # ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
-    @pytest.mark.sg345
+
     @pytest.mark.twog
     @pytest.mark.open
     def test_ClientConnect_2g_Open_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -260,298 +259,3 @@ class TestVlanModeConnectSuiteOneVlan(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
-
-
-
-
-setup_params_general_two = {
-    "mode": "VLAN",
-    "ssid_modes": {
-        "wpa3_personal": [
-            {"ssid_name": "ssid_wpa3_p_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
-            {"ssid_name": "ssid_wpa3_p_5g", "appliedRadios": ["5G"],
-             "security_key": "something", "vlan": 100}],
-        "wpa3_personal_mixed": [
-            {"ssid_name": "ssid_wpa3_p_m_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
-            {"ssid_name": "ssid_wpa3_p_m_5g", "appliedRadios": ["5G"],
-             "security_key": "something", "vlan": 100}],
-        "wpa_wpa2_personal_mixed": [
-            {"ssid_name": "ssid_wpa_wpa2_p_m_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
-            {"ssid_name": "ssid_wpa_wpa2_p_m_5g", "appliedRadios": ["5G"],
-             "security_key": "something", "vlan": 100}]
-    },
-    "rf": {},
-    "radius": False
-}
-
-
-@allure.suite(suite_name="interop sanity")
-@allure.sub_suite(sub_suite_name="Vlan Mode Client Connect : Suite-B")
-@pytest.mark.InteropsuiteB
-@allure.feature("VLAN MODE CLIENT CONNECT")
-@pytest.mark.parametrize(
-    'setup_profiles',
-    [setup_params_general_two],
-    indirect=True,
-    scope="class"
-)
-@pytest.mark.usefixtures("setup_profiles")
-class TestVlanModeConnectSuiteTwoVlan(object):
-    """ Client Connect SuiteA
-        pytest -m "client_connect and vlan and InteropsuiteB"
-    """
-
-    @pytest.mark.fiveg
-    @pytest.mark.wpa3_personal
-    def test_ClientConnect_5g_wpa3_personal_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
-
-        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][1]
-        ssidName = profile_data["ssid_name"]
-        ssidPassword = profile_data["security_key"]
-        print ("SSID_NAME: " + ssidName)
-        print ("SSID_PASS: " + ssidPassword)
-        get_vif_state.append(ssidName)
-
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-
-        report = setup_perfectoMobile_iOS[1]
-        driver = setup_perfectoMobile_iOS[0]
-        connData = get_APToMobileDevice_data
-
-        # Set Wifi/AP Mode
-        ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-
-        if ip:
-            if is_internet:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
-            else:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "without internet")
-            print(text_body)
-            allure.attach(name="Connection Status: ", body=str(text_body))
-            assert True
-        else:
-            allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
-            assert False
-
-    @pytest.mark.twog
-    @pytest.mark.wpa3_personal
-    def test_ClientConnect_2g_wpa3_personal_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
-
-        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][0]
-        ssidName = profile_data["ssid_name"]
-        ssidPassword = profile_data["security_key"]
-        print ("SSID_NAME: " + ssidName)
-        print ("SSID_PASS: " + ssidPassword)
-        get_vif_state.append(ssidName)
-
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-
-        report = setup_perfectoMobile_iOS[1]
-        driver = setup_perfectoMobile_iOS[0]
-        connData = get_APToMobileDevice_data
-
-        # Set Wifi/AP Mode
-        ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-
-        if ip:
-            if is_internet:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
-            else:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "without internet")
-            print(text_body)
-            allure.attach(name="Connection Status: ", body=str(text_body))
-            assert True
-        else:
-            allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
-            assert False
-
-    @pytest.mark.fiveg
-    @pytest.mark.wpa3_personal_mixed
-    def test_ClientConnect_5g_wpa3_personal_mixed_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
-
-        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][1]
-        ssidName = profile_data["ssid_name"]
-        ssidPassword = profile_data["security_key"]
-        print ("SSID_NAME: " + ssidName)
-        print ("SSID_PASS: " + ssidPassword)
-        get_vif_state.append(ssidName)
-
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-
-        report = setup_perfectoMobile_iOS[1]
-        driver = setup_perfectoMobile_iOS[0]
-        connData = get_APToMobileDevice_data
-
-        # Set Wifi/AP Mode
-        ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-
-        if ip:
-            if is_internet:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
-            else:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "without internet")
-            print(text_body)
-            allure.attach(name="Connection Status: ", body=str(text_body))
-            assert True
-        else:
-            allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
-            assert False
-
-    @pytest.mark.twog
-    @pytest.mark.wpa3_personal_mixed
-    def test_ClientConnect_2g_wpa3_personal_mixed_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
-
-        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][0]
-        ssidName = profile_data["ssid_name"]
-        ssidPassword = profile_data["security_key"]
-        print ("SSID_NAME: " + ssidName)
-        print ("SSID_PASS: " + ssidPassword)
-        get_vif_state.append(ssidName)
-
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-
-        report = setup_perfectoMobile_iOS[1]
-        driver = setup_perfectoMobile_iOS[0]
-        connData = get_APToMobileDevice_data
-
-        # Set Wifi/AP Mode
-        ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-
-        if ip:
-            if is_internet:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
-            else:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "without internet")
-            print(text_body)
-            allure.attach(name="Connection Status: ", body=str(text_body))
-            assert True
-        else:
-            allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
-            assert False
-
-    @pytest.mark.fiveg
-    @pytest.mark.wpa_wpa2_personal_mixed
-    def test_ClientConnect_5g_wpa_wpa2_personal_mixed_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
-
-        profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
-        ssidName = profile_data["ssid_name"]
-        ssidPassword = profile_data["security_key"]
-        print ("SSID_NAME: " + ssidName)
-        print ("SSID_PASS: " + ssidPassword)
-        get_vif_state.append(ssidName)
-
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-
-        report = setup_perfectoMobile_iOS[1]
-        driver = setup_perfectoMobile_iOS[0]
-        connData = get_APToMobileDevice_data
-
-        #Set Wifi/AP Mode
-        ip, is_internet =  get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-
-        if ip:
-            if is_internet:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
-            else:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "without internet")
-            print(text_body)
-            allure.attach(name="Connection Status: ", body=str(text_body))
-            assert True
-        else:
-            allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
-            assert False
-
-
-    @pytest.mark.twog
-    @pytest.mark.wpa_wpa2_personal_mixed
-    def test_ClientConnect_2g_wpa_wpa2_personal_mixed_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
-
-        profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
-        ssidName = profile_data["ssid_name"]
-        ssidPassword = profile_data["security_key"]
-        print ("SSID_NAME: " + ssidName)
-        print ("SSID_PASS: " + ssidPassword)
-        get_vif_state.append(ssidName)
-
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-
-        report = setup_perfectoMobile_iOS[1]
-        driver = setup_perfectoMobile_iOS[0]
-        connData = get_APToMobileDevice_data
-
-        # Set Wifi/AP Mode
-        ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-
-        if ip:
-            if is_internet:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
-            else:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "without internet")
-            print(text_body)
-            allure.attach(name="Connection Status: ", body=str(text_body))
-            assert True
-        else:
-            allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
-            assert False
-
-
-# @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
-# @pytest.mark.parametrize(
-#     'setup_profiles',
-#     [setup_params_general],
-#     indirect=True,
-#     scope="class"
-# )
-# @pytest.mark.usefixtures("setup_profiles")
-# class TestAccessPointConnectivetyBridge(object):
-#
-#     @pytest.mark.fiveg
-#     @pytest.mark.open
-#     @pytest.mark.sushant
-#     def test_AccessPointConnection_5g_OPEN_Bridge(self, request, get_vif_state, get_APToMobileDevice_data,
-#                                           setup_perfectoMobile_iOS):
-#         profile_data = setup_params_general["ssid_modes"]["open"][1]
-#         ssidName = profile_data["ssid_name"]
-#         ssidPassword = "[BLANK]"
-#         print("SSID_NAME: " + ssidName)
-#         # print ("SSID_PASS: " + ssidPassword)
-#
-#         # if ssidName not in get_vif_state:
-#         #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-#         #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-#
-#         report = setup_perfectoMobile_iOS[1]
-#         driver = setup_perfectoMobile_iOS[0]
-#         connData = get_APToMobileDevice_data
-#
-#         # Set Wifi/AP Mode
-#         # set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-#
-#         # Need An ip To ping
-#         # wifi_ip = get_WifiIPAddress_iOS(request, setup_perfectoMobile_iOS, connData, ssidName)
-#         wifi_ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-#         print(wifi_ip)
-#         print(is_internet)
-#         assert wifi_ip
-#         # assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
-#
-#         # # Open Ping Application
-#         # openApp(connData["bundleId-iOS-Ping"], setup_perfectoMobile_iOS)
-#         #
-#         # ping_deftapps_iOS(setup_perfectoMobile_iOS, wifi_ip)
-#
-#         # ForgetWifi
-#         # ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
