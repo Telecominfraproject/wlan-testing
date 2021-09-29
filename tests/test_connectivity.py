@@ -25,6 +25,8 @@ class TestResources(object):
         allure.attach(name="Login Response JSON",
                       body=str(login_response_json),
                       attachment_type=allure.attachment_type.JSON)
+        version = setup_controller.get_sdk_version()
+        print(version)
         assert response_code == 200
 
     @pytest.mark.test_access_points_connectivity
