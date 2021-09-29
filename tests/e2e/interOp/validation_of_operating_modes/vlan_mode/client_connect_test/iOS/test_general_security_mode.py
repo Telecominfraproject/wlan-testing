@@ -121,7 +121,7 @@ class TestVlanModeConnectSuiteOneVlan(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-    @pytest.mark.sg123
+
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_ClientConnect_5g_WPA_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -154,7 +154,7 @@ class TestVlanModeConnectSuiteOneVlan(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-    @pytest.mark.sg123
+
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_ClientConnect_2g_WPA_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
