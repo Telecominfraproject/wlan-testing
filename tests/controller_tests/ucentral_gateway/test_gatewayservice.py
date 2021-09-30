@@ -34,7 +34,7 @@ class TestUcentralGatewayService(object):
             Test the create device endpoint
             WIFI-3453
         """
-        pytest.xfail("need to fix test case")
+
         configuration = {'uuid': '1'}
         payload = {'serialNumber': 'DEADBEEF0011',
                    'UUID': '123456',
@@ -46,9 +46,11 @@ class TestUcentralGatewayService(object):
                    'owner': ''}
         print(json.dumps(payload))
         resp = setup_controller.request("gw", "device/DEADBEEF0011", "POST", None, json.dumps(payload))
+        allure.attach(name="response: ", body=str(resp.json()))
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="gw create devices", body=body)
         if resp.status_code != 200:
+            pytest.xfail("need to fix test case")
             assert False
         devices = json.loads(resp.text)
         print(devices)
@@ -71,7 +73,6 @@ class TestUcentralGatewayService(object):
             Test the update device endpoint
             WIFI-3454
         """
-        pytest.xfail("need to fix test case")
         configuration = {'uuid': '1'}
         payload = {'serialNumber': 'DEADBEEF0011',
                    'UUID': '123456',
@@ -82,9 +83,11 @@ class TestUcentralGatewayService(object):
                    'manufacturer': 'Testing',
                    'owner': ''}
         resp = setup_controller.request("gw", "device/DEADBEEF0011", "POST", None, json.dumps(payload))
+        allure.attach(name="response: ", body=str(resp.json()))
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="gw create devices", body=body)
         if resp.status_code != 200:
+            pytest.xfail("need to fix test case")
             assert False
         devices = json.loads(resp.text)
         print(devices)
@@ -95,12 +98,14 @@ class TestUcentralGatewayService(object):
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="gw get device", body=body)
         if resp.status_code != 200:
+            pytest.xfail("need to fix test case")
             assert False
 
         resp = setup_controller.request("gw", "device/DEADBEEF0011", "GET", None, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="gw create device verify", body=body)
         if resp.status_code != 200:
+            pytest.xfail("need to fix test case")
             assert False
 
         device = json.loads(resp.text)
@@ -110,6 +115,7 @@ class TestUcentralGatewayService(object):
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="gw get device", body=body)
         if resp.status_code != 200:
+            pytest.xfail("need to fix test case")
             assert False
 
         @pytest.mark.sdk_restapi
