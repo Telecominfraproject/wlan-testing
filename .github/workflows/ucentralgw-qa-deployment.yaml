@@ -30,7 +30,7 @@ env:
       "namespace": "qa01",
       "deploy_method": "git",
       "chart_version": "main",
-      "owgw_version: "master",
+      "owgw_version": "master",
       "owsec_version": "main",
       "owfms_version": "main",
       "owgwui_version": "main"
