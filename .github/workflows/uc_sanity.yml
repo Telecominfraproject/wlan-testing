@@ -107,11 +107,11 @@ jobs:
       run: |
         export NAMESPACE=${{ github.run_id }}
         export DEPLOY_METHOD=git
-        export CHART_VERSION=main
-        export OWGW_VERSION=master
-        export OWGWUI_VERSION=main
-        export OWSEC_VERSION=main
-        export OWFMS_VERSION=main
+        export CHART_VERSION=v2.2.0-RC1
+        export OWGW_VERSION=v2.2.0-RC1
+        export OWGWUI_VERSION=v2.2.0-RC1
+        export OWSEC_VERSION=v2.2.0-RC1
+        export OWFMS_VERSION=v2.2.0-RC1
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
