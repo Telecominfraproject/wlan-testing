@@ -49,6 +49,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeMode(object):
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4494", name="WIFI-4494")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_ClientConnectivity_5g_WPA2_Personal_Bridge(self, request, get_vif_state, get_APToMobileDevice_data,
@@ -76,6 +77,7 @@ class TestBridgeMode(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4494", name="WIFI-4494")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_ClientConnectivity_2g_WPA2_Personal_Bridge(self, request, get_vif_state, get_APToMobileDevice_data,
@@ -103,6 +105,7 @@ class TestBridgeMode(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4494", name="WIFI-4494")
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_ClientConnectivity_2g_WPA_Bridge(self, request, get_vif_state, get_APToMobileDevice_data,
@@ -130,6 +133,7 @@ class TestBridgeMode(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4494", name="WIFI-4494")
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_ClientConnectivity_5g_WPA_Bridge(self, request, get_vif_state, get_APToMobileDevice_data,
@@ -157,6 +161,7 @@ class TestBridgeMode(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4494", name="WIFI-4494")
     @pytest.mark.twog
     @pytest.mark.open
     def test_ClientConnectivity_2g_OPEN_Bridge(self, request, get_vif_state, get_APToMobileDevice_data,
@@ -184,6 +189,7 @@ class TestBridgeMode(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4494", name="WIFI-4494")
     @pytest.mark.fiveg
     @pytest.mark.open
     def test_ClientConnectivity_5g_OPEN_Bridge(self, request, get_vif_state, get_APToMobileDevice_data,

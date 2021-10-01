@@ -46,8 +46,9 @@ setup_params_general = {
 )
 
 @pytest.mark.usefixtures("setup_profiles")
-class TestAcessPointConnectionBridge(object):
+class TestAccessPointConnectionBridge(object):
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4493", name="WIFI-4493")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_AccessPointConnection_5g_WPA2_Personal_Bridge(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_android):
@@ -77,6 +78,7 @@ class TestAcessPointConnectionBridge(object):
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4493", name="WIFI-4493")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_AccessPointConnection_2g_WPA2_Personal_Bridge(self,request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
@@ -106,6 +108,7 @@ class TestAcessPointConnectionBridge(object):
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4493", name="WIFI-4493")
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_AccessPointConnection_5g_WPA_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
@@ -135,6 +138,7 @@ class TestAcessPointConnectionBridge(object):
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4493", name="WIFI-4493")
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_AccessPointConnection_2g_WPA_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
@@ -164,6 +168,7 @@ class TestAcessPointConnectionBridge(object):
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4493", name="WIFI-4493")
     @pytest.mark.twog
     @pytest.mark.open
     def test_AccessPointConnection_2g_OPEN_Bridge(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_android):
@@ -193,6 +198,7 @@ class TestAcessPointConnectionBridge(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4493", name="WIFI-4493")
     @pytest.mark.fiveg
     @pytest.mark.open
     def test_AccessPointConnection_5g_OPEN_Bridge(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_android):
