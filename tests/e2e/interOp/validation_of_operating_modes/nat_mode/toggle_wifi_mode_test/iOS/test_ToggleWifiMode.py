@@ -49,7 +49,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestToggleWifiMode(object):
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4476", name="WIFI-4476")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4485", name="WIFI-4485")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_ToogleWifiMode_5g_WPA2_Personal(self, request, get_vif_state, get_ToggleWifiMode_data,
@@ -82,7 +82,7 @@ class TestToggleWifiMode(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4476", name="WIFI-4476")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4485", name="WIFI-4485")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_ToogleWifiMode_2g_WPA2_Personal(self, request, get_vif_state, get_ToggleWifiMode_data,
@@ -115,7 +115,7 @@ class TestToggleWifiMode(object):
         # ForgetWifi.
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4476", name="WIFI-4476")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4485", name="WIFI-4485")
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_ToogleWifiMode_5g_WPA(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_iOS):
@@ -147,7 +147,7 @@ class TestToggleWifiMode(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4476", name="WIFI-4476")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4485", name="WIFI-4485")
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_ToogleWifiMode_2g_WPA(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_iOS):
@@ -179,7 +179,7 @@ class TestToggleWifiMode(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4476", name="WIFI-4476")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4485", name="WIFI-4485")
     @pytest.mark.fiveg
     @pytest.mark.open
     def test_ToogleWifiMode_5g_OPEN(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_iOS):
@@ -211,7 +211,7 @@ class TestToggleWifiMode(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4476", name="WIFI-4476")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4485", name="WIFI-4485")
     @pytest.mark.twog
     @pytest.mark.open
     def test_ToogleWifiMode_2g_OPEN(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_iOS):
