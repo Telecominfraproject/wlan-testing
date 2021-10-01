@@ -57,6 +57,7 @@ class TestBridgeModeConnectSuiteOne(object):
         pytest -m "client_connect and bridge and InteropsuiteA"
     """
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4487", name="WIFI-4487")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_ClientConnect_5g_WPA2_Personal(self, request, get_vif_state, get_APToMobileDevice_data,
