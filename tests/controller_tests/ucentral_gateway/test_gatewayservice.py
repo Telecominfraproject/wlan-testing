@@ -13,6 +13,103 @@ import allure
 class TestUcentralGatewayService(object):
     """
     """
+    configuration = {
+                        "uuid": 1,
+                          "radios": [
+                            {
+                              "band": "5G",
+                              "country": "CA",
+                              "channel-mode": "HE",
+                              "channel-width": 80
+                            }
+                          ],
+
+                          "interfaces": [
+                            {
+                              "name": "WAN",
+                              "role": "upstream",
+                              "services": [ "lldp" ],
+                              "ethernet": [
+                                {
+                                  "select-ports": [
+                                    "WAN*"
+                                  ]
+                                }
+                              ],
+                              "ipv4": {
+                                "addressing": "dynamic"
+                              },
+                              "ssids": [
+                                {
+                                  "name": "OpenWifi",
+                                  "wifi-bands": [
+                                    "5G"
+                                  ],
+                                  "bss-mode": "ap",
+                                  "encryption": {
+                                    "proto": "psk2",
+                                    "key": "OpenWifi",
+                                    "ieee80211w": "optional"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "name": "LAN",
+                              "role": "downstream",
+                              "services": [ "ssh", "lldp" ],
+                              "ethernet": [
+                                {
+                                  "select-ports": [
+                                    "LAN*"
+                                  ]
+                                }
+                              ],
+                              "ipv4": {
+                                "addressing": "static",
+                                "subnet": "192.168.1.1/24",
+                                "dhcp": {
+                                  "lease-first": 10,
+                                  "lease-count": 100,
+                                  "lease-time": "6h"
+                                }
+                              },
+                              "ssids": [
+                                {
+                                  "name": "OpenWifi",
+                                  "wifi-bands": [
+                                    "5G"
+                                  ],
+                                  "bss-mode": "ap",
+                                  "encryption": {
+                                    "proto": "psk2",
+                                    "key": "OpenWifi",
+                                    "ieee80211w": "optional"
+                                  }
+                                }
+                              ]
+
+                            }
+                          ],
+                          "metrics": {
+                            "statistics": {
+                              "interval": 120,
+                              "types": [ "ssids", "lldp", "clients" ]
+                            },
+                            "health": {
+                              "interval": 120
+                            }
+                          },
+                          "services": {
+                            "lldp": {
+                              "describe": "2.x",
+                              "location": "universe"
+                            },
+                            "ssh": {
+                              "port": 22
+                            }
+                          }
+                        }
 
     @pytest.mark.sdk_restapi
     def test_gwservice_listdevices(self, setup_controller):
@@ -35,87 +132,80 @@ class TestUcentralGatewayService(object):
             WIFI-3453
         """
 
-        configuration = {'uuid': '1'}
-        payload = {'serialNumber': 'DEADBEEF0011',
+        payload = {'serialNumber': 'deadbeef0011',
                    'UUID': '123456',
-                   'configuration': configuration,
+                   'configuration': self.configuration,
                    'deviceType': 'AP',
                    'location': '',
                    'macAddress': 'DE:AD:BE:EF:00:11',
                    'manufacturer': 'Testing',
                    'owner': ''}
         print(json.dumps(payload))
-        resp = setup_controller.request("gw", "device/DEADBEEF0011", "POST", None, json.dumps(payload))
+        resp = setup_controller.request("gw", "device/deadbeef0011", "POST", None, json.dumps(payload))
         allure.attach(name="response: ", body=str(resp.json()))
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="gw create devices", body=body)
         if resp.status_code != 200:
-            pytest.xfail("need to fix test case")
             assert False
         devices = json.loads(resp.text)
         print(devices)
 
-        resp = setup_controller.request("gw", "device/DEADBEEF0011", "GET", None, None)
+        resp = setup_controller.request("gw", "device/deadbeef0011", "GET", None, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="gw create device verify", body=body)
         if resp.status_code != 200:
             assert False
 
-        resp = setup_controller.request("gw", "device/DEADBEEF0011", "DELETE", None, None)
+        resp = setup_controller.request("gw", "device/deadbeef0011", "DELETE", None, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="gw create device delete", body=body)
         if resp.status_code != 200:
             assert False
-
+    '''
     @pytest.mark.sdk_restapi
     def test_gwservice_updatedevice(self, setup_controller):
         """
             Test the update device endpoint
             WIFI-3454
         """
-        configuration = {'uuid': '1'}
-        payload = {'serialNumber': 'DEADBEEF0011',
+        payload = {'serialNumber': 'deadbeef0011',
                    'UUID': '123456',
-                   'configuration': configuration,
+                   'configuration': self.configuration,
                    'deviceType': 'AP',
                    'location': '',
                    'macAddress': 'DE:AD:BE:EF:00:11',
                    'manufacturer': 'Testing',
                    'owner': ''}
-        resp = setup_controller.request("gw", "device/DEADBEEF0011", "POST", None, json.dumps(payload))
+        resp = setup_controller.request("gw", "device/deadbeef0011", "POST", None, json.dumps(payload))
         allure.attach(name="response: ", body=str(resp.json()))
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="gw create devices", body=body)
         if resp.status_code != 200:
-            pytest.xfail("need to fix test case")
             assert False
         devices = json.loads(resp.text)
         print(devices)
 
-        payload = {'serialNumber': 'DEADBEEF0011',
-                   'owner': 'pytest'}
-        resp = setup_controller.request("gw", "device/DEADBEEF0011", "PUT", None, json.dumps(payload))
+        payload = {'serialNumber': 'deadbeef0011',
+                   'notes': [{"note": "This is a test"}]}
+        resp = setup_controller.request("gw", "device/deadbeef0011", "PUT", None, json.dumps(payload))
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="gw get device", body=body)
         if resp.status_code != 200:
-            pytest.xfail("need to fix test case")
             assert False
 
-        resp = setup_controller.request("gw", "device/DEADBEEF0011", "GET", None, None)
+        resp = setup_controller.request("gw", "device/deadbeef0011", "GET", None, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="gw create device verify", body=body)
         if resp.status_code != 200:
-            pytest.xfail("need to fix test case")
             assert False
 
         device = json.loads(resp.text)
         print(device)
 
-        resp = setup_controller.request("gw", "device/DEADBEEF0011", "DELETE", None, None)
+        resp = setup_controller.request("gw", "device/deadbeef0011", "DELETE", None, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="gw get device", body=body)
         if resp.status_code != 200:
-            pytest.xfail("need to fix test case")
             assert False
 
         @pytest.mark.sdk_restapi
@@ -124,17 +214,15 @@ class TestUcentralGatewayService(object):
                 Test the delete device endpoint
                 WIFI-3455
             """
-            pytest.xfail("need to fix test case")
-            configuration = {'uuid': '1'}
-            payload = {'serialNumber': 'DEADBEEF0011',
+            payload = {'serialNumber': 'deadbeef0011',
                        'UUID': '123456',
-                       'configuration': configuration,
+                       'configuration': self.configuration,
                        'deviceType': 'AP',
-                       'location': '',
+                       'location': 'testing',
                        'macAddress': 'DE:AD:BE:EF:00:11',
                        'manufacturer': 'Testing',
                        'owner': ''}
-            resp = setup_controller.request("gw", "device/DEADBEEF0011", "POST", None, json.dumps(payload))
+            resp = setup_controller.request("gw", "device/deadbeef0011", "POST", None, json.dumps(payload))
             body = resp.url + "," + str(resp.status_code) + ',' + resp.text
             allure.attach(name="gw create devices", body=body)
             if resp.status_code != 200:
@@ -142,8 +230,9 @@ class TestUcentralGatewayService(object):
             devices = json.loads(resp.text)
             print(devices)
 
-            resp = setup_controller.request("gw", "device/DEADBEEF0011", "DELETE", None, None)
+            resp = setup_controller.request("gw", "device/deadbeef0011", "DELETE", None, None)
             body = resp.url + "," + str(resp.status_code) + ',' + resp.text
             allure.attach(name="gw get device", body=body)
             if resp.status_code != 200:
                 assert False
+    '''
