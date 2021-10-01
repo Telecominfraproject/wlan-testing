@@ -48,7 +48,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestAccessPointConnectivety(object):
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4476", name="WIFI-4476")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4481", name="WIFI-4481")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_AccessPointConnection_5g_WPA2_Personal(self, request, get_vif_state, get_AccessPointConn_data, setup_perfectoMobile_iOS):
@@ -80,7 +80,7 @@ class TestAccessPointConnectivety(object):
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4476", name="WIFI-4476")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4481", name="WIFI-4481")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_AccessPointConnection_2g_WPA2_Personal(self, request, get_vif_state, get_AccessPointConn_data, setup_perfectoMobile_iOS):
@@ -112,7 +112,7 @@ class TestAccessPointConnectivety(object):
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4476", name="WIFI-4476")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4481", name="WIFI-4481")
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_AccessPointConnection_5g_WPA(self, request, get_vif_state, get_AccessPointConn_data, setup_perfectoMobile_iOS):
@@ -145,7 +145,7 @@ class TestAccessPointConnectivety(object):
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4476", name="WIFI-4476")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4481", name="WIFI-4481")
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_AccessPointConnection_2g_WPA(self, request, get_vif_state, get_AccessPointConn_data, setup_perfectoMobile_iOS):
@@ -177,7 +177,7 @@ class TestAccessPointConnectivety(object):
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4476", name="WIFI-4476")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4481", name="WIFI-4481")
     @pytest.mark.fiveg
     @pytest.mark.open
     def test_AccessPointConnection_5g_OPEN(self, request, get_vif_state, get_AccessPointConn_data,
@@ -211,7 +211,7 @@ class TestAccessPointConnectivety(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4476", name="WIFI-4476")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4481", name="WIFI-4481")
     @pytest.mark.twog
     @pytest.mark.open
     def test_AccessPointConnection_2g_OPEN(self, request, get_vif_state, get_AccessPointConn_data,
