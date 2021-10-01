@@ -116,7 +116,7 @@ CONFIGURATION = {
     },  # checked   deployed
     "basic-03": {
         "controller": {
-            'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'url': 'https://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
             'username': "tip@ucentral.com",
             'password': 'openwifi',
         },
