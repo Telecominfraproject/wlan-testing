@@ -47,7 +47,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestAccessPointConnection(object):
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4463", name="WIFI-4463")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4464", name="WIFI-4464")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_AccessPointConnection_5g_WPA2_Personal(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_android):
@@ -77,7 +77,7 @@ class TestAccessPointConnection(object):
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4463", name="WIFI-4463")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4464", name="WIFI-4464")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_AccessPointConnection_2g_WPA2_Personal(self,request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):   
@@ -107,7 +107,7 @@ class TestAccessPointConnection(object):
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4463", name="WIFI-4463")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4464", name="WIFI-4464")
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_AccessPointConnection_5g_WPA(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):   
@@ -137,7 +137,7 @@ class TestAccessPointConnection(object):
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4463", name="WIFI-4463")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4464", name="WIFI-4464")
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_AccessPointConnection_2g_WPA(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
@@ -167,7 +167,7 @@ class TestAccessPointConnection(object):
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4463", name="WIFI-4463")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4464", name="WIFI-4464")
     @pytest.mark.twog
     @pytest.mark.open
     def test_AccessPointConnection_2g_OPEN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_android):
@@ -194,7 +194,7 @@ class TestAccessPointConnection(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4463", name="WIFI-4463")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4464", name="WIFI-4464")
     @pytest.mark.fiveg
     @pytest.mark.open
     def test_AccessPointConnection_5g_OPEN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_android):
