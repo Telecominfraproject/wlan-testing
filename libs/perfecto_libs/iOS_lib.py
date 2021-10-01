@@ -319,21 +319,25 @@ def ForgetWifiConnection(request, setup_perfectoMobile, wifiName, connData):
         print("Initial Wifi: " + wifiName) 
         element.click()
 
-        report.step_start("Click on More Info on Wifi")
-        WifiXpathMoreInfo = "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeStaticText[@label='"+ wifiName + "']/parent::*/XCUIElementTypeButton[@label='More Info']"
-        elementMoreInfo = driver.find_element_by_xpath(WifiXpathMoreInfo)
-        elementMoreInfo.click()
+        try:
+            report.step_start("Click on More Info on Wifi")
+            WifiXpathMoreInfo = "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeStaticText[@label='"+ wifiName + "']/parent::*/XCUIElementTypeButton[@label='More Info']"
+            elementMoreInfo = driver.find_element_by_xpath(WifiXpathMoreInfo)
+            elementMoreInfo.click()
+        
+            print("Forget Wifi Network " + wifiName)
+            report.step_start("Forget Wifi Network")
+            WifiXpathForgetWifi = "//*[@label='Forget This Network']"
+            elementforgetWifi = driver.find_element_by_xpath(WifiXpathForgetWifi)
+            elementforgetWifi.click()
 
-        print("Forget Wifi Network " + wifiName)
-        report.step_start("Forget Wifi Network")
-        WifiXpathForgetWifi = "//*[@label='Forget This Network']"
-        elementforgetWifi = driver.find_element_by_xpath(WifiXpathForgetWifi)
-        elementforgetWifi.click()
+            report.step_start("Confirm Forget Wifi Network")
+            WifiXpathForgetWifi = "//*[@label='Forget']"
+            elementforgetWifi = driver.find_element_by_xpath(WifiXpathForgetWifi)
+            elementforgetWifi.click()
 
-        report.step_start("Confirm Forget Wifi Network")
-        WifiXpathForgetWifi = "//*[@label='Forget']"
-        elementforgetWifi = driver.find_element_by_xpath(WifiXpathForgetWifi)
-        elementforgetWifi.click()
+        except NoSuchElementException:
+            print("Initial Wifi Not Selected: " + wifiName)
 
 def Toggle_WifiMode_iOS(request, setup_perfectoMobile, connData):
     print("\n-----------------------")
@@ -1316,6 +1320,93 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
     return is_internet
     # ---------------------close app-------------------------------
+
+def expressWifi(request,setup_perfectoMobile, connData):
+    print("\n-------------------------------------")
+    print("Express Wifi Verification")
+    print("-------------------------------------")
+    report = setup_perfectoMobile[1]
+    driver = setup_perfectoMobile[0]
+
+    try:
+        print("Express Wifi Home Page Verification")
+        report.step_start("Express Wifi Home Page Verification")  
+        driver.implicitly_wait(2)
+        ExpressWifiBytesLeft = driver.find_element_by_xpath("//*[@label='0KB left']")
+    except NoSuchElementException:
+        driver.implicitly_wait(25)
+        #Add function to Toggle Wifi if Express Wifi Home Page not Triggerd
+        print("Express Wifi Page Not Logged In - ") 
+
+    try:
+        print("ExpressWifi Click on Menu Circle")
+        report.step_start("ExpressWifi Click on Menu Circle")  
+        ExpressWifiMenu = driver.find_element_by_xpath("//*[@label='⚙️']")
+        ExpressWifiMenu.click()
+    except NoSuchElementException:
+        print("---- Exception ExpressWifi Click on Menu Circle") 
+
+    try:
+        print("ExpressWifi Click Run Tests!")
+        report.step_start("ExpressWifi Click Run Tests!")  
+        ExpressWifiRunTests = driver.find_element_by_xpath("//*[@label='Run Tests!']")  
+        ExpressWifiRunTests.click()
+        time.sleep(20)
+    except NoSuchElementException:
+        print("Exception ExceptionExpressWifi Click Run Tests!") 
+
+    try:
+        print("Verify Results: ")
+        report.step_start("Verify Results")  
+        ExpressWifiLogMsgCount = driver.find_element_by_xpath("//*[@label='running test ...']/parent::*/XCUIElementTypeStaticText")  
+        ExpressWifiLogMsg = []
+
+        for i in range(1,12):
+            expressWifiOutputMsg = "//*[@label='running test ...']/parent::*/XCUIElementTypeStaticText[" + str(i) + "]"
+            LogOut = driver.find_element_by_xpath(expressWifiOutputMsg)
+            ExpressWifiLogMsg.append(LogOut.text)
+            print("----" + LogOut.text + "\n")
+       # print("ExpressWifiLog: ", ExpressWifiLogMsg)
+    
+    except NoSuchElementException:
+        print("Exception Verify Results") 
+
+    try:
+        print("ExpressWifi Verify Test Complete Msg")
+        report.step_start("ExpressWifi Verify Test Complete Msg")  
+        ExpressWifiRunTests = driver.find_element_by_xpath("//*[contains (@label,'test completed successfully')]")  
+     
+    except Exception:
+        assert False
+        print(" !! ExpressWifi Failure Test Complete Msg") 
+
+
+
+        
+
+ # 2)Settings to Logout
+ # try:
+  #      print("Express Wifi Home Page Verification")
+  ##      report.step_start("Express Wifi Home Page Verification")  
+  #      WifiDissconnected = driver.find_element_by_xpath("//XCUIElementTypeImage[@label='settings']")
+     
+ #   except NoSuchElementException:
+  #      print("Exception Express Wifi Home Page Verification") 
+
+  #  3) 
+   # Logout button
+  #  //*[@label="Log Out"] 
+
+   # 4) Confirm Logout
+    #//*[@label="Log Out All Devices"]
+
+   
+
+
+
+
+ 
+
 
 
 #To disconnect and forget network
