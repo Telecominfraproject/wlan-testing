@@ -42,9 +42,9 @@ setup_params_general = {
 
 
 @allure.suite(suite_name="interop sanity")
-@allure.sub_suite(sub_suite_name="Nat Mode Client Connect : Suite-A")
+@allure.sub_suite(sub_suite_name="Nat Mode Client Connectivity : Suite-A")
 @pytest.mark.InteropsuiteA
-@allure.feature("NAT MODE CLIENT CONNECT")
+@allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -52,14 +52,14 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestNatModeConnectSuiteOne(object):
-    """ Client Connect SuiteA
-        pytest -m "client_connect and nat and InteropsuiteA"
+class TestNatModeConnectivitySuiteNatOne(object):
+    """ Client Connectivity SuiteA
+        pytest -m "client_connectivity and nat and InteropsuiteA"
     """
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ClientConnect_5g_WPA2_Personal(self, request, get_vif_state, get_APToMobileDevice_data,
+    def test_ClientConnectivity_5g_WPA2_Personal_NAT(self, request, get_vif_state, get_APToMobileDevice_data,
                                           setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -95,7 +95,7 @@ class TestNatModeConnectSuiteOne(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ClientConnect_2g_WPA2_Personal(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_2g_WPA2_Personal_NAT(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -130,7 +130,7 @@ class TestNatModeConnectSuiteOne(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ClientConnect_5g_WPA(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_5g_WPA_NAT(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
@@ -165,7 +165,7 @@ class TestNatModeConnectSuiteOne(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_ClientConnect_2g_WPA(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_2g_WPA_NAT(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
@@ -200,7 +200,7 @@ class TestNatModeConnectSuiteOne(object):
 
     @pytest.mark.fiveg
     @pytest.mark.open
-    def test_ClientConnect_5g_Open(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_5g_Open_NAT(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["open"][1]
         ssidName = profile_data["ssid_name"]
@@ -235,7 +235,7 @@ class TestNatModeConnectSuiteOne(object):
 
     @pytest.mark.twog
     @pytest.mark.open
-    def test_ClientConnect_2g_Open(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_2g_Open_NAT(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssidName = profile_data["ssid_name"]
@@ -294,9 +294,9 @@ setup_params_general_two = {
 
 
 @allure.suite(suite_name="interop sanity")
-@allure.sub_suite(sub_suite_name="Nat Mode Client Connect : Suite-B")
+@allure.sub_suite(sub_suite_name="Nat Mode Client Connectivity : Suite-B")
 @pytest.mark.InteropsuiteB
-@allure.feature("NAT MODE CLIENT CONNECT")
+@allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general_two],
@@ -304,14 +304,14 @@ setup_params_general_two = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestNatModeConnectSuiteTwo(object):
+class TestNatModeConnectivitySuiteNatTwo(object):
     """ Client Connect SuiteA
-        pytest -m "client_connect and nat and InteropsuiteB"
+        pytest -m "client_connectivity and nat and InteropsuiteB"
     """
 
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal
-    def test_ClientConnect_5g_wpa3_personal(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_5g_wpa3_personal_NAT(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][1]
         ssidName = profile_data["ssid_name"]
@@ -345,7 +345,7 @@ class TestNatModeConnectSuiteTwo(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa3_personal
-    def test_ClientConnect_2g_wpa3_personal(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_2g_wpa3_personal_NAT(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -379,7 +379,7 @@ class TestNatModeConnectSuiteTwo(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal_mixed
-    def test_ClientConnect_5g_wpa3_personal_mixed(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_5g_wpa3_personal_mixed_NAT(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][1]
         ssidName = profile_data["ssid_name"]
@@ -413,7 +413,7 @@ class TestNatModeConnectSuiteTwo(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa3_personal_mixed
-    def test_ClientConnect_2g_wpa3_personal_mixed(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_2g_wpa3_personal_mixed_NAT(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][0]
         ssidName = profile_data["ssid_name"]
@@ -447,7 +447,7 @@ class TestNatModeConnectSuiteTwo(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa_wpa2_personal_mixed
-    def test_ClientConnect_5g_wpa_wpa2_personal_mixed(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_5g_wpa_wpa2_personal_mixed_NAT(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
         ssidName = profile_data["ssid_name"]
@@ -482,7 +482,7 @@ class TestNatModeConnectSuiteTwo(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa_wpa2_personal_mixed
-    def test_ClientConnect_2g_wpa_wpa2_personal_mixed(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_2g_wpa_wpa2_personal_mixed_NAT(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
         ssidName = profile_data["ssid_name"]
