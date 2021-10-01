@@ -47,6 +47,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestToggleAirplaneModeAndroid(object):
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4463", name="WIFI-4463")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_ToogleAirplaneMode_5g_WPA2_Personal(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
@@ -74,6 +75,7 @@ class TestToggleAirplaneModeAndroid(object):
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4463", name="WIFI-4463")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_ToogleAirplaneMode_2g_WPA2_Personal(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
@@ -101,6 +103,7 @@ class TestToggleAirplaneModeAndroid(object):
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4463", name="WIFI-4463")
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_ToogleAirplaneMode_5g_WPA(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
@@ -128,6 +131,7 @@ class TestToggleAirplaneModeAndroid(object):
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4463", name="WIFI-4463")
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_ToogleAirplaneMode_2g_WPA(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
@@ -154,6 +158,8 @@ class TestToggleAirplaneModeAndroid(object):
 
         #ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
+
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4463", name="WIFI-4463")
     @pytest.mark.fiveg
     @pytest.mark.open
     def test_ToogleAirplaneMode_5g_Open(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
