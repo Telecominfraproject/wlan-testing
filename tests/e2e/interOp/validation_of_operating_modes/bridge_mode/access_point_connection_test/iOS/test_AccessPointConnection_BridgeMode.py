@@ -50,6 +50,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestAccessPointConnectivetyBridge(object):
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4488", name="WIFI-4488")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_AccessPointConnection_5g_WPA2_Personal_Bridge(self, request, get_vif_state, get_AccessPointConn_data,
@@ -82,6 +83,7 @@ class TestAccessPointConnectivetyBridge(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4488", name="WIFI-4488")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_AccessPointConnection_2g_WPA2_Personal_Bridge(self, request, get_vif_state, get_AccessPointConn_data,
@@ -114,6 +116,7 @@ class TestAccessPointConnectivetyBridge(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4488", name="WIFI-4488")
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_AccessPointConnection_5g_WPA_Bridge(self, request, get_vif_state, get_AccessPointConn_data,
@@ -147,6 +150,7 @@ class TestAccessPointConnectivetyBridge(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4488", name="WIFI-4488")
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_AccessPointConnection_2g_WPA_Bridge(self, request, get_vif_state, get_AccessPointConn_data,
@@ -179,6 +183,7 @@ class TestAccessPointConnectivetyBridge(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4488", name="WIFI-4488")
     @pytest.mark.fiveg
     @pytest.mark.open
     @pytest.mark.test_AccessPointConnection_5g_OPEN_Bridge_ios
@@ -213,6 +218,7 @@ class TestAccessPointConnectivetyBridge(object):
         # ForgetWifi
         ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4488", name="WIFI-4488")
     @pytest.mark.twog
     @pytest.mark.open
     @pytest.mark.test_AccessPointConnection_2g_OPEN_Bridge_ios
