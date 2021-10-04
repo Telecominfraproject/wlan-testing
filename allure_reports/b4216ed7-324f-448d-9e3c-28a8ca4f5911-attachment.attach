@@ -1,0 +1,762 @@
+:~# logread
+Fri Oct  1 14:19:25 2021 kern.warn kernel: [   23.316970] ath11k c000000.wifi1: Direct firmware load for ath11k/IPQ8074/hw2.0/qdss_trace_config.bin failed with error -2
+Fri Oct  1 14:19:25 2021 kern.warn kernel: [   23.317005] ath11k c000000.wifi1: Falling back to user helper
+Fri Oct  1 14:19:25 2021 kern.err kernel: [   23.590308] firmware ath11k!IPQ8074!hw2.0!qdss_trace_config.bin: firmware_loading_store: map pages failed
+Fri Oct  1 14:19:25 2021 kern.warn kernel: [   23.590478] ath11k c000000.wifi1: Direct firmware load for qdss_trace_config.bin failed with error -2
+Fri Oct  1 14:19:25 2021 kern.warn kernel: [   23.598929] ath11k c000000.wifi1: Falling back to user helper
+Fri Oct  1 14:19:25 2021 kern.err kernel: [   23.619479] firmware qdss_trace_config.bin: firmware_loading_store: map pages failed
+Fri Oct  1 14:19:25 2021 kern.warn kernel: [   23.619584] ath11k c000000.wifi1: qmi failed to load QDSS config: qdss_trace_config.bin
+Fri Oct  1 14:19:25 2021 kern.warn kernel: [   23.626315] ath11k c000000.wifi1: Failed to download QDSS config to FW: -11
+Fri Oct  1 14:19:25 2021 daemon.notice procd: /etc/init.d/openvswitch: Syntax: /etc/init.d/openvswitch [command]
+Fri Oct  1 14:19:25 2021 daemon.notice procd: /etc/init.d/openvswitch:
+Fri Oct  1 14:19:25 2021 daemon.notice procd: /etc/init.d/openvswitch: Available commands:
+Fri Oct  1 14:19:25 2021 daemon.notice procd: /etc/init.d/openvswitch: 	start           Start the service
+Fri Oct  1 14:19:25 2021 daemon.notice procd: /etc/init.d/openvswitch: 	stop            Stop the service
+Fri Oct  1 14:19:25 2021 daemon.notice procd: /etc/init.d/openvswitch: 	restart         Restart the service
+Fri Oct  1 14:19:25 2021 daemon.notice procd: /etc/init.d/openvswitch: 	reload          Reload configuration files (or restart if service does not implement reload)
+Fri Oct  1 14:19:25 2021 daemon.notice procd: /etc/init.d/openvswitch: 	enable          Enable service autostart
+Fri Oct  1 14:19:25 2021 daemon.notice procd: /etc/init.d/openvswitch: 	disable         Disable service autostart
+Fri Oct  1 14:19:25 2021 daemon.notice procd: /etc/init.d/openvswitch: 	enabled         Check if service is started on boot
+Fri Oct  1 14:19:25 2021 daemon.notice procd: /etc/init.d/openvswitch: 	status          Get status information
+Fri Oct  1 14:19:25 2021 daemon.notice procd: /etc/init.d/openvswitch:
+Fri Oct  1 14:19:25 2021 daemon.notice procd: /etc/rc.d/S16qca-ssdk:
+Fri Oct  1 14:19:25 2021 daemon.notice procd: /etc/rc.d/S16qca-ssdk: starting
+Fri Oct  1 14:19:26 2021 user.notice dnsmasq: DNS rebinding protection is active, will discard upstream RFC1918 responses!
+Fri Oct  1 14:19:26 2021 user.notice dnsmasq: Allowing 127.0.0.0/8 responses
+Fri Oct  1 14:19:26 2021 daemon.info dnsmasq[1464]: Connected to system UBus
+Fri Oct  1 14:19:26 2021 daemon.info dnsmasq[1464]: started, version 2.85 cachesize 150
+Fri Oct  1 14:19:26 2021 daemon.info dnsmasq[1464]: DNS service limited to local subnets
+Fri Oct  1 14:19:26 2021 daemon.info dnsmasq[1464]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack ipset auth cryptohash DNSSEC no-ID loop-detect inotify dumpfile
+Fri Oct  1 14:19:26 2021 daemon.info dnsmasq[1464]: UBus support enabled: connected to system bus
+Fri Oct  1 14:19:26 2021 daemon.info dnsmasq[1464]: using only locally-known addresses for domain test
+Fri Oct  1 14:19:26 2021 daemon.info dnsmasq[1464]: using only locally-known addresses for domain onion
+Fri Oct  1 14:19:26 2021 daemon.info dnsmasq[1464]: using only locally-known addresses for domain localhost
+Fri Oct  1 14:19:26 2021 daemon.info dnsmasq[1464]: using only locally-known addresses for domain local
+Fri Oct  1 14:19:26 2021 daemon.info dnsmasq[1464]: using only locally-known addresses for domain invalid
+Fri Oct  1 14:19:26 2021 daemon.info dnsmasq[1464]: using only locally-known addresses for domain bind
+Fri Oct  1 14:19:26 2021 daemon.info dnsmasq[1464]: using only locally-known addresses for domain lan
+Fri Oct  1 14:19:26 2021 daemon.warn dnsmasq[1464]: no servers found in /tmp/resolv.conf.d/resolv.conf.auto, will retry
+Fri Oct  1 14:19:26 2021 daemon.info dnsmasq[1464]: read /etc/hosts - 4 addresses
+Fri Oct  1 14:19:26 2021 daemon.info dnsmasq[1464]: read /tmp/hosts/dhcp.cfg01411c - 0 addresses
+Fri Oct  1 14:19:28 2021 authpriv.info dropbear[1530]: Not backgrounding
+Fri Oct  1 14:19:29 2021 user.notice : Added device handler type: bonding
+Fri Oct  1 14:19:29 2021 user.notice : Added device handler type: 8021ad
+Fri Oct  1 14:19:29 2021 user.notice : Added device handler type: 8021q
+Fri Oct  1 14:19:29 2021 user.notice : Added device handler type: macvlan
+Fri Oct  1 14:19:29 2021 user.notice : Added device handler type: veth
+Fri Oct  1 14:19:29 2021 user.notice : Added device handler type: bridge
+Fri Oct  1 14:19:29 2021 user.notice : Added device handler type: Network device
+Fri Oct  1 14:19:29 2021 user.notice : Added device handler type: tunnel
+Fri Oct  1 14:19:29 2021 daemon.notice wpa_supplicant[1629]: Successfully initialized wpa_supplicant
+Fri Oct  1 14:19:29 2021 kern.info kernel: [   29.368149] device eth0 entered promiscuous mode
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: Interface 'lan' is enabled
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: Interface 'lan' is setting up now
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: Interface 'lan' is now up
+Fri Oct  1 14:19:29 2021 kern.info kernel: [   29.388042] bridge: port 1(eth0) entered forwarding state
+Fri Oct  1 14:19:29 2021 kern.info kernel: [   29.388080] bridge: port 1(eth0) entered forwarding state
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: Interface 'wan' is enabled
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: Interface 'wan6' is enabled
+Fri Oct  1 14:19:29 2021 kern.info kernel: [   29.395593] device bridge entered promiscuous mode
+Fri Oct  1 14:19:29 2021 kern.info kernel: [   29.400756] device eth1 entered promiscuous mode
+Fri Oct  1 14:19:29 2021 kern.info kernel: [   29.402667] bridge: port 2(eth1) entered forwarding state
+Fri Oct  1 14:19:29 2021 kern.info kernel: [   29.407335] bridge: port 2(eth1) entered forwarding state
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: bridge 'bridge' link is up
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: VLAN 'bridge.1' link is up
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: Interface 'lan' has link connectivity
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: VLAN 'bridge.2' link is up
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: Interface 'wan' has link connectivity
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: Interface 'wan' is setting up now
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: Interface 'wan6' has link connectivity
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: Interface 'wan6' is setting up now
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: Interface 'loopback' is enabled
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: Interface 'loopback' is setting up now
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: Interface 'loopback' is now up
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: Network device 'lo' link is up
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: Interface 'loopback' has link connectivity
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: wan (1852): udhcpc: started, v1.33.1
+Fri Oct  1 14:19:29 2021 daemon.notice netifd: wan (1852): udhcpc: sending discover
+Fri Oct  1 14:19:29 2021 daemon.err odhcp6c[1851]: Failed to send RS (Address not available)
+Fri Oct  1 14:19:30 2021 user.notice firewall: Reloading firewall due to ifup of lan (bridge.1)
+Fri Oct  1 14:19:30 2021 daemon.err odhcp6c[1851]: Failed to send SOLICIT message to ff02::1:2 (Address not available)
+Fri Oct  1 14:19:30 2021 daemon.notice netifd: Network device 'eth0' link is up
+Fri Oct  1 14:19:30 2021 kern.info kernel: [   30.275077] nss-dp 3a001600.dp1 eth0: PHY Link up speed: 1000
+Fri Oct  1 14:19:30 2021 kern.info kernel: [   30.365081] bridge: port 2(eth1) entered disabled state
+Fri Oct  1 14:19:30 2021 daemon.info ip-collide: no collision detected
+Fri Oct  1 14:19:30 2021 daemon.info ip-collide: no collision detected
+Fri Oct  1 14:19:32 2021 daemon.notice netifd: wan (1852): udhcpc: sending discover
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq[1464]: exiting on receipt of SIGTERM
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq[2360]: Connected to system UBus
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq[2360]: started, version 2.85 cachesize 150
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq[2360]: DNS service limited to local subnets
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq[2360]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack ipset auth cryptohash DNSSEC no-ID loop-detect inotify dumpfile
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq[2360]: UBus support enabled: connected to system bus
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq-dhcp[2360]: DHCP, IP range 192.168.1.100 -- 192.168.1.249, lease time 12h
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq[2360]: using only locally-known addresses for domain test
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq[2360]: using only locally-known addresses for domain onion
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq[2360]: using only locally-known addresses for domain localhost
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq[2360]: using only locally-known addresses for domain local
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq[2360]: using only locally-known addresses for domain invalid
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq[2360]: using only locally-known addresses for domain bind
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq[2360]: using only locally-known addresses for domain lan
+Fri Oct  1 14:19:34 2021 daemon.warn dnsmasq[2360]: no servers found in /tmp/resolv.conf.d/resolv.conf.auto, will retry
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq[2360]: read /etc/hosts - 4 addresses
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq[2360]: read /tmp/hosts/dhcp.cfg01411c - 1 addresses
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq-dhcp[2360]: read /etc/ethers - 0 addresses
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq[2360]: read /etc/hosts - 4 addresses
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq[2360]: read /tmp/hosts/dhcp.cfg01411c - 1 addresses
+Fri Oct  1 14:19:34 2021 daemon.info dnsmasq-dhcp[2360]: read /etc/ethers - 0 addresses
+Fri Oct  1 14:19:35 2021 daemon.notice netifd: wan (1852): udhcpc: sending discover
+Fri Oct  1 14:19:37 2021 daemon.notice procd: /etc/rc.d/S30aq_phy:
+Fri Oct  1 14:19:37 2021 daemon.notice procd: /etc/rc.d/S30aq_phy:  SSDK Init OK!
+Fri Oct  1 14:19:37 2021 daemon.notice procd: /etc/rc.d/S30aq_phy: operation done.
+Fri Oct  1 14:19:37 2021 daemon.notice procd: /etc/rc.d/S30aq_phy:
+Fri Oct  1 14:19:37 2021 daemon.notice procd: /etc/rc.d/S50uhttpd: 4+0 records in
+Fri Oct  1 14:19:37 2021 daemon.notice procd: /etc/rc.d/S50uhttpd: 4+0 records out
+Fri Oct  1 14:19:37 2021 daemon.notice procd: /etc/rc.d/S50usteer: uci: Entry not found
+Fri Oct  1 14:19:37 2021 daemon.notice procd: /etc/rc.d/S80certificates: ubiattach: error!: cannot attach "/dev/mtd22"
+Fri Oct  1 14:19:37 2021 daemon.notice procd: /etc/rc.d/S80certificates:            error 22 (Invalid argument)
+Fri Oct  1 14:19:37 2021 kern.err kernel: [   37.237331] ubi: refuse attaching mtd22 - it is already emulated on top of UBI
+Fri Oct  1 14:19:37 2021 kern.notice kernel: [   37.284096] UBIFS (ubi0:2): background thread "ubifs_bgt0_2" started, PID 2809
+Fri Oct  1 14:19:37 2021 kern.notice kernel: [   37.308620] UBIFS (ubi0:2): recovery needed
+Fri Oct  1 14:19:37 2021 kern.notice kernel: [   37.374892] UBIFS (ubi0:2): recovery completed
+Fri Oct  1 14:19:37 2021 kern.notice kernel: [   37.374963] UBIFS (ubi0:2): UBIFS: mounted UBI device 0, volume 2, name "certificates"
+Fri Oct  1 14:19:37 2021 kern.notice kernel: [   37.378254] UBIFS (ubi0:2): LEB size: 126976 bytes (124 KiB), min./max. I/O unit sizes: 2048 bytes/2048 bytes
+Fri Oct  1 14:19:37 2021 kern.notice kernel: [   37.386229] UBIFS (ubi0:2): FS size: 1142784 bytes (1 MiB, 9 LEBs), journal size 888833 bytes (0 MiB, 5 LEBs)
+Fri Oct  1 14:19:37 2021 kern.notice kernel: [   37.396163] UBIFS (ubi0:2): reserved for root: 53976 bytes (52 KiB)
+Fri Oct  1 14:19:37 2021 kern.info kernel: [   37.406016] bridge: port 1(eth0) entered forwarding state
+Fri Oct  1 14:19:37 2021 kern.notice kernel: [   37.412220] UBIFS (ubi0:2): media format: w4/r0 (latest is w4/r0), UUID 80EFCA16-4DA0-4B79-B4B6-755D84470551, small LPT model
+Fri Oct  1 14:19:37 2021 daemon.notice procd: /etc/rc.d/S80certificates: mount: mounting ubi1:certificates on /certificates failed: No such device
+Fri Oct  1 14:19:37 2021 daemon.err radsecproxy[2766]: No clients configured, nothing to do, exiting
+Fri Oct  1 14:19:37 2021 daemon.notice dynamic-vlan: connected to ubus
+Fri Oct  1 14:19:37 2021 daemon.info ieee8021x: connected to ubus
+Fri Oct  1 14:19:37 2021 daemon.info ieee8021x: hostapd id -1207748742
+Fri Oct  1 14:19:37 2021 daemon.info ieee8021x: netifd id 2066920305
+Fri Oct  1 14:19:37 2021 daemon.notice ucentral-event: connected to ubus
+Fri Oct  1 14:19:38 2021 user.notice ucitrack: Setting up /etc/config/network reload dependency on /etc/config/dhcp
+Fri Oct  1 14:19:38 2021 user.notice ucitrack: Setting up /etc/config/wireless reload dependency on /etc/config/network
+Fri Oct  1 14:19:38 2021 user.notice ucitrack: Setting up /etc/config/firewall reload dependency on /etc/config/luci-splash
+Fri Oct  1 14:19:38 2021 user.notice ucitrack: Setting up /etc/config/firewall reload dependency on /etc/config/qos
+Fri Oct  1 14:19:38 2021 user.notice ucitrack: Setting up /etc/config/firewall reload dependency on /etc/config/miniupnpd
+Fri Oct  1 14:19:38 2021 user.notice ucitrack: Setting up /etc/config/dhcp reload dependency on /etc/config/odhcpd
+Fri Oct  1 14:19:38 2021 user.notice ucitrack: Setting up non-init /etc/config/fstab reload handler: /sbin/block mount
+Fri Oct  1 14:19:38 2021 user.notice ucitrack: Setting up /etc/config/system reload trigger for non-procd /etc/init.d/led
+Fri Oct  1 14:19:38 2021 user.notice ucitrack: Setting up /etc/config/system reload dependency on /etc/config/luci_statistics
+Fri Oct  1 14:19:38 2021 user.notice ucitrack: Setting up /etc/config/system reload dependency on /etc/config/dhcp
+Fri Oct  1 14:19:38 2021 daemon.debug dnsmasq[2360]: UBus subscription callback: 1 subscriber(s)
+Fri Oct  1 14:19:38 2021 daemon.notice procd: /etc/rc.d/S80umdns: uci: Entry not found
+Fri Oct  1 14:19:38 2021 daemon.warn procd: Seccomp support for umdns::instance1 not available
+Fri Oct  1 14:19:38 2021 daemon.notice procd: /etc/rc.d/S80umdns: uci: Entry not found
+Fri Oct  1 14:19:38 2021 daemon.notice procd: /etc/rc.d/S99firstcontact: rm: can't remove '/tmp/dnsmasq.conf': No such file or directory
+Fri Oct  1 14:19:39 2021 daemon.notice procd: /etc/rc.d/S99firstcontact: Command failed: Not found
+Fri Oct  1 14:19:39 2021 daemon.notice procd: /etc/rc.d/S99firstcontact: Command failed: Not found
+Fri Oct  1 14:19:39 2021 daemon.notice procd: /etc/rc.d/S99firstcontact: Command failed: Not found
+Fri Oct  1 14:19:39 2021 daemon.info dnsmasq[2360]: exiting on receipt of SIGTERM
+Fri Oct  1 14:19:39 2021 user.notice dnsmasq: DNS rebinding protection is active, will discard upstream RFC1918 responses!
+Fri Oct  1 14:19:39 2021 user.notice dnsmasq: Allowing 127.0.0.0/8 responses
+Fri Oct  1 14:19:39 2021 daemon.notice procd: /etc/rc.d/S99firstcontact: udhcpc: started, v1.33.1
+Fri Oct  1 14:19:39 2021 daemon.notice procd: /etc/rc.d/S99firstcontact: udhcpc: sending discover
+Fri Oct  1 14:19:40 2021 daemon.notice netifd: Network device 'eth1' link is up
+Fri Oct  1 14:19:40 2021 kern.err kernel: [   37.420911] UBIFS error (pid: 2810): cannot open "ubi1:certificates", error -19
+Fri Oct  1 14:19:40 2021 kern.info kernel: [   40.285436] nss-dp 3a007000.dp2 eth1: PHY Link up speed: 1000
+Fri Oct  1 14:19:40 2021 kern.info kernel: [   40.285606] bridge: port 2(eth1) entered forwarding state
+Fri Oct  1 14:19:40 2021 kern.info kernel: [   40.290366] bridge: port 2(eth1) entered forwarding state
+Fri Oct  1 14:19:42 2021 daemon.notice procd: /etc/rc.d/S99firstcontact: udhcpc: no lease, failing
+Fri Oct  1 14:19:42 2021 daemon.info dnsmasq[4251]: Connected to system UBus
+Fri Oct  1 14:19:42 2021 daemon.info dnsmasq[4251]: started, version 2.85 cachesize 150
+Fri Oct  1 14:19:42 2021 daemon.info dnsmasq[4251]: DNS service limited to local subnets
+Fri Oct  1 14:19:42 2021 daemon.info dnsmasq[4251]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack ipset auth cryptohash DNSSEC no-ID loop-detect inotify dumpfile
+Fri Oct  1 14:19:42 2021 daemon.info dnsmasq[4251]: UBus support enabled: connected to system bus
+Fri Oct  1 14:19:42 2021 daemon.info dnsmasq-dhcp[4251]: DHCP, IP range 192.168.1.100 -- 192.168.1.249, lease time 12h
+Fri Oct  1 14:19:42 2021 daemon.info dnsmasq[4251]: using only locally-known addresses for domain test
+Fri Oct  1 14:19:42 2021 daemon.info dnsmasq[4251]: using only locally-known addresses for domain onion
+Fri Oct  1 14:19:42 2021 daemon.info dnsmasq[4251]: using only locally-known addresses for domain localhost
+Fri Oct  1 14:19:42 2021 daemon.info dnsmasq[4251]: using only locally-known addresses for domain local
+Fri Oct  1 14:19:42 2021 daemon.info dnsmasq[4251]: using only locally-known addresses for domain invalid
+Fri Oct  1 14:19:42 2021 daemon.info dnsmasq[4251]: using only locally-known addresses for domain bind
+Fri Oct  1 14:19:42 2021 daemon.info dnsmasq[4251]: using only locally-known addresses for domain lan
+Fri Oct  1 14:19:42 2021 daemon.warn dnsmasq[4251]: no servers found in /tmp/resolv.conf.d/resolv.conf.auto, will retry
+Fri Oct  1 14:19:42 2021 daemon.info dnsmasq[4251]: read /etc/hosts - 4 addresses
+Fri Oct  1 14:19:42 2021 daemon.info dnsmasq[4251]: read /tmp/hosts/dhcp.cfg01411c - 1 addresses
+Fri Oct  1 14:19:42 2021 daemon.info dnsmasq-dhcp[4251]: read /etc/ethers - 0 addresses
+Fri Oct  1 14:19:42 2021 daemon.debug dnsmasq[4251]: UBus subscription callback: 1 subscriber(s)
+Fri Oct  1 14:19:42 2021 daemon.notice netifd: wan (1852): udhcpc: sending select for 172.16.0.140
+Fri Oct  1 14:19:43 2021 daemon.notice netifd: wan (1852): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Fri Oct  1 14:19:43 2021 daemon.notice netifd: Interface 'wan' is now up
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4251]: reading /tmp/resolv.conf.d/resolv.conf.auto
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4251]: using only locally-known addresses for domain test
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4251]: using only locally-known addresses for domain onion
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4251]: using only locally-known addresses for domain localhost
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4251]: using only locally-known addresses for domain local
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4251]: using only locally-known addresses for domain invalid
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4251]: using only locally-known addresses for domain bind
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4251]: using only locally-known addresses for domain lan
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4251]: using nameserver 8.8.8.8#53
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4251]: exiting on receipt of SIGTERM
+Fri Oct  1 14:19:43 2021 user.notice dnsmasq: DNS rebinding protection is active, will discard upstream RFC1918 responses!
+Fri Oct  1 14:19:43 2021 user.notice fbwifi: Reloading fbwifi due to ifup of wan (bridge.2)
+Fri Oct  1 14:19:43 2021 user.notice dnsmasq: Allowing 127.0.0.0/8 responses
+Fri Oct  1 14:19:43 2021 daemon.info ip-collide: no collision detected
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: Connected to system UBus
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: started, version 2.85 cachesize 150
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: DNS service limited to local subnets
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack ipset auth cryptohash DNSSEC no-ID loop-detect inotify dumpfile
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: UBus support enabled: connected to system bus
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: using only locally-known addresses for domain test
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: using only locally-known addresses for domain onion
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: using only locally-known addresses for domain localhost
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: using only locally-known addresses for domain local
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: using only locally-known addresses for domain invalid
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: using only locally-known addresses for domain bind
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: using only locally-known addresses for domain lan
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: reading /tmp/resolv.conf.d/resolv.conf.auto
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: using only locally-known addresses for domain test
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: using only locally-known addresses for domain onion
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: using only locally-known addresses for domain localhost
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: using only locally-known addresses for domain local
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: using only locally-known addresses for domain invalid
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: using only locally-known addresses for domain bind
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: using only locally-known addresses for domain lan
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: using nameserver 8.8.8.8#53
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: read /etc/hosts - 4 addresses
+Fri Oct  1 14:19:43 2021 daemon.info dnsmasq[4727]: read /tmp/hosts/dhcp.cfg01411c - 0 addresses
+Fri Oct  1 14:19:43 2021 daemon.debug dnsmasq[4727]: UBus subscription callback: 1 subscriber(s)
+Fri Oct  1 14:19:43 2021 daemon.info firstcontact: attempting first contact
+Fri Oct  1 14:19:43 2021 daemon.notice procd: /etc/rc.d/S99onlinecheck: uci: Invalid argument
+Fri Oct  1 14:19:43 2021 daemon.info procd: Instance onlinecheck::instance1 s in a crash loop 6 crashes, 0 seconds since last crash
+Fri Oct  1 14:19:43 2021 daemon.notice procd: /etc/rc.d/S99rtty: sh: 0: unknown operand
+Fri Oct  1 14:19:43 2021 daemon.notice procd: /etc/rc.d/S99rtty: host required
+Fri Oct  1 14:19:43 2021 daemon.info procd: - init complete -
+Fri Oct  1 14:19:43 2021 daemon.info urandom_seed[4999]: Seed saved (/etc/urandom.seed)
+Fri Oct  1 14:19:43 2021 daemon.info firstcontact: downloaded first contact data
+Fri Oct  1 14:19:44 2021 daemon.info ucentral: applying cfg:1
+Fri Oct  1 14:19:44 2021 daemon.info ucentral: config_init latest:1 active:1
+Fri Oct  1 14:19:44 2021 daemon.info ucentral: running apply task
+Fri Oct  1 14:19:44 2021 daemon.info dnsmasq[4727]: read /etc/hosts - 4 addresses
+Fri Oct  1 14:19:44 2021 daemon.info dnsmasq[4727]: read /tmp/hosts/dhcp.cfg01411c - 0 addresses
+Fri Oct  1 14:19:44 2021 daemon.info ucentral-event: enabling wifi events
+Fri Oct  1 14:19:44 2021 daemon.notice ucentral-event: connected to ubus
+Fri Oct  1 14:19:44 2021 kern.info kernel: [   44.130530] device eth0 left promiscuous mode
+Fri Oct  1 14:19:44 2021 kern.info kernel: [   44.130595] bridge: port 1(eth0) entered disabled state
+Fri Oct  1 14:19:44 2021 kern.info kernel: [   44.176814] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+Fri Oct  1 14:19:44 2021 kern.info kernel: [   44.177020] device eth1 left promiscuous mode
+Fri Oct  1 14:19:44 2021 kern.info kernel: [   44.181652] bridge: port 2(eth1) entered disabled state
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: Interface 'lan' is now down
+Fri Oct  1 14:19:44 2021 kern.info kernel: [   44.257092] IPv6: ADDRCONF(NETDEV_UP): eth1: link is not ready
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: Interface 'lan' is disabled
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: bridge 'bridge' link is down
+Fri Oct  1 14:19:44 2021 kern.info kernel: [   44.318947] device eth0 entered promiscuous mode
+Fri Oct  1 14:19:44 2021 kern.info kernel: [   44.320070] IPv6: ADDRCONF(NETDEV_UP): down: link is not ready
+Fri Oct  1 14:19:44 2021 kern.info kernel: [   44.323662] IPv6: ADDRCONF(NETDEV_UP): down2v0: link is not ready
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: Interface 'down2v0' is enabled
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: Interface 'down2v0' is setting up now
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: Interface 'down2v0' is now up
+Fri Oct  1 14:19:44 2021 daemon.warn dnsmasq[4727]: no servers found in /tmp/resolv.conf.d/resolv.conf.auto, will retry
+Fri Oct  1 14:19:44 2021 kern.info kernel: [   44.332977] device eth1 entered promiscuous mode
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: Interface 'up_none' is enabled
+Fri Oct  1 14:19:44 2021 kern.info kernel: [   44.335886] IPv6: ADDRCONF(NETDEV_UP): up: link is not ready
+Fri Oct  1 14:19:44 2021 kern.info kernel: [   44.340431] IPv6: ADDRCONF(NETDEV_UP): up0v0: link is not ready
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: Interface 'up0v0' is enabled
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: Interface 'lan' has link connectivity loss
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: wan (1852): udhcpc: received SIGTERM
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: wan (1852): udhcpc: unicasting a release of 172.16.0.140 to 172.16.0.1
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: wan (1852): udhcpc: sending release
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: wan (1852): udhcpc: entering released state
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: Network device 'eth0' link is down
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: Network device 'eth1' link is down
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: VLAN 'bridge.2' link is down
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: Interface 'wan' has link connectivity loss
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: Interface 'wan6' has link connectivity loss
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: wan (1852): Command failed: Permission denied
+Fri Oct  1 14:19:44 2021 daemon.notice netifd: Interface 'wan' is now down
+Fri Oct  1 14:19:44 2021 user.notice firewall: Reloading firewall due to ifup of down2v0 (down2v0)
+Fri Oct  1 14:19:45 2021 daemon.info dnsmasq[4727]: exiting on receipt of SIGTERM
+Fri Oct  1 14:19:45 2021 user.notice dnsmasq: DNS rebinding protection is active, will discard upstream RFC1918 responses!
+Fri Oct  1 14:19:45 2021 user.notice dnsmasq: Allowing 127.0.0.0/8 responses
+Fri Oct  1 14:19:45 2021 daemon.notice netifd: Interface 'wan6' is now down
+Fri Oct  1 14:19:45 2021 kern.info kernel: [   44.909536] device bridge left promiscuous mode
+Fri Oct  1 14:19:45 2021 daemon.notice netifd: Interface 'wan6' is disabled
+Fri Oct  1 14:19:45 2021 daemon.info ip-collide: no collision detected
+Fri Oct  1 14:19:46 2021 kern.info kernel: [   45.678917] IPv6: ADDRCONF(NETDEV_UP): wlan1: link is not ready
+Fri Oct  1 14:19:46 2021 daemon.notice netifd: radio1 (5774): sh: out of range
+Fri Oct  1 14:19:46 2021 daemon.notice netifd: Wireless device 'radio1' is now up
+Fri Oct  1 14:19:46 2021 daemon.notice netifd: Interface 'up1v0' is enabled
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq[6764]: Connected to system UBus
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq[6764]: started, version 2.85 cachesize 150
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq[6764]: DNS service limited to local subnets
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq[6764]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack ipset auth cryptohash DNSSEC no-ID loop-detect inotify dumpfile
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq[6764]: UBus support enabled: connected to system bus
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq-dhcp[6764]: DHCP, IP range 192.168.1.10 -- 192.168.1.109, lease time 6h
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq[6764]: using only locally-known addresses for domain test
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq[6764]: using only locally-known addresses for domain onion
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq[6764]: using only locally-known addresses for domain localhost
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq[6764]: using only locally-known addresses for domain local
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq[6764]: using only locally-known addresses for domain invalid
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq[6764]: using only locally-known addresses for domain bind
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq[6764]: using only locally-known addresses for domain lan
+Fri Oct  1 14:19:48 2021 daemon.warn dnsmasq[6764]: no servers found in /tmp/resolv.conf.d/resolv.conf.auto, will retry
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq[6764]: read /etc/hosts - 4 addresses
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq[6764]: read /tmp/hosts/dhcp.cfg01411c - 1 addresses
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq-dhcp[6764]: read /etc/ethers - 0 addresses
+Fri Oct  1 14:19:48 2021 daemon.debug dnsmasq[6764]: UBus subscription callback: 1 subscriber(s)
+Fri Oct  1 14:19:48 2021 daemon.notice netifd: Network device 'eth0' link is up
+Fri Oct  1 14:19:48 2021 kern.info kernel: [   48.295039] nss-dp 3a001600.dp1 eth0: PHY Link up speed: 1000
+Fri Oct  1 14:19:48 2021 kern.info kernel: [   48.295146] down: port 1(eth0) entered forwarding state
+Fri Oct  1 14:19:48 2021 kern.info kernel: [   48.299828] down: port 1(eth0) entered forwarding state
+Fri Oct  1 14:19:48 2021 daemon.notice netifd: bridge 'down' link is up
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq[6764]: read /etc/hosts - 4 addresses
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq[6764]: read /tmp/hosts/dhcp.cfg01411c - 1 addresses
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq-dhcp[6764]: read /etc/ethers - 0 addresses
+Fri Oct  1 14:19:48 2021 kern.info kernel: [   48.305274] IPv6: ADDRCONF(NETDEV_CHANGE): down: link becomes ready
+Fri Oct  1 14:19:48 2021 kern.info kernel: [   48.310544] IPv6: ADDRCONF(NETDEV_CHANGE): down2v0: link becomes ready
+Fri Oct  1 14:19:48 2021 daemon.notice netifd: 8021q 'down2v0' link is up
+Fri Oct  1 14:19:48 2021 daemon.notice netifd: Interface 'down2v0' has link connectivity
+Fri Oct  1 14:19:48 2021 daemon.info dnsmasq[6764]: exiting on receipt of SIGTERM
+Fri Oct  1 14:19:48 2021 user.notice dnsmasq: DNS rebinding protection is active, will discard upstream RFC1918 responses!
+Fri Oct  1 14:19:48 2021 user.notice dnsmasq: Allowing 127.0.0.0/8 responses
+Fri Oct  1 14:19:49 2021 daemon.notice netifd: Network device 'eth1' link is up
+Fri Oct  1 14:19:49 2021 kern.info kernel: [   49.324965] nss-dp 3a007000.dp2 eth1: PHY Link up speed: 1000
+Fri Oct  1 14:19:49 2021 kern.info kernel: [   49.325044] up: port 1(eth1) entered forwarding state
+Fri Oct  1 14:19:49 2021 kern.info kernel: [   49.329753] up: port 1(eth1) entered forwarding state
+Fri Oct  1 14:19:49 2021 daemon.notice netifd: bridge 'up' link is up
+Fri Oct  1 14:19:49 2021 daemon.notice netifd: Interface 'up_none' has link connectivity
+Fri Oct  1 14:19:49 2021 daemon.notice netifd: Interface 'up_none' is setting up now
+Fri Oct  1 14:19:49 2021 kern.info kernel: [   49.335180] IPv6: ADDRCONF(NETDEV_CHANGE): up: link becomes ready
+Fri Oct  1 14:19:49 2021 kern.info kernel: [   49.340051] IPv6: ADDRCONF(NETDEV_CHANGE): up0v0: link becomes ready
+Fri Oct  1 14:19:49 2021 daemon.notice netifd: Interface 'up_none' is now up
+Fri Oct  1 14:19:49 2021 daemon.notice netifd: 8021q 'up0v0' link is up
+Fri Oct  1 14:19:49 2021 daemon.notice netifd: Interface 'up0v0' has link connectivity
+Fri Oct  1 14:19:49 2021 daemon.notice netifd: Interface 'up0v0' is setting up now
+Fri Oct  1 14:19:49 2021 daemon.notice netifd: up0v0 (7426): udhcpc: started, v1.33.1
+Fri Oct  1 14:19:49 2021 daemon.notice netifd: up0v0 (7426): udhcpc: sending discover
+Fri Oct  1 14:19:49 2021 daemon.info ip-collide: no collision detected
+Fri Oct  1 14:19:49 2021 daemon.notice netifd: up0v0 (7426): udhcpc: sending select for 172.16.0.140
+Fri Oct  1 14:19:49 2021 daemon.notice netifd: up0v0 (7426): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Fri Oct  1 14:19:49 2021 daemon.notice netifd: Interface 'up0v0' is now up
+Fri Oct  1 14:19:49 2021 user.notice firewall: Reloading firewall due to ifup of up0v0 (up0v0)
+Sun Oct  3 20:59:46 2021 user.notice fbwifi: Reloading fbwifi due to ifup of up0v0 (up0v0)
+Sun Oct  3 20:59:46 2021 daemon.info ip-collide: no collision detected
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: Connected to system UBus
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: started, version 2.85 cachesize 150
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: DNS service limited to local subnets
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack ipset auth cryptohash DNSSEC no-ID loop-detect inotify dumpfile
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: UBus support enabled: connected to system bus
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq-dhcp[7697]: DHCP, IP range 192.168.1.10 -- 192.168.1.109, lease time 6h
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: using only locally-known addresses for domain test
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: using only locally-known addresses for domain onion
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: using only locally-known addresses for domain localhost
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: using only locally-known addresses for domain local
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: using only locally-known addresses for domain invalid
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: using only locally-known addresses for domain bind
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: using only locally-known addresses for domain lan
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: reading /tmp/resolv.conf.d/resolv.conf.auto
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: using only locally-known addresses for domain test
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: using only locally-known addresses for domain onion
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: using only locally-known addresses for domain localhost
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: using only locally-known addresses for domain local
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: using only locally-known addresses for domain invalid
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: using only locally-known addresses for domain bind
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: using only locally-known addresses for domain lan
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: using nameserver 8.8.8.8#53
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: read /etc/hosts - 4 addresses
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: read /tmp/hosts/dhcp.cfg01411c - 1 addresses
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq-dhcp[7697]: read /etc/ethers - 0 addresses
+Sun Oct  3 20:59:48 2021 daemon.debug dnsmasq[7697]: UBus subscription callback: 1 subscriber(s)
+Sun Oct  3 20:59:48 2021 daemon.info ucentral: applied cfg:1
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7697]: exiting on receipt of SIGTERM
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: Connected to system UBus
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: started, version 2.85 cachesize 150
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: DNS service limited to local subnets
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack ipset auth cryptohash DNSSEC no-ID loop-detect inotify dumpfile
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: UBus support enabled: connected to system bus
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq-dhcp[7835]: DHCP, IP range 192.168.1.10 -- 192.168.1.109, lease time 6h
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: using only locally-known addresses for domain test
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: using only locally-known addresses for domain onion
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: using only locally-known addresses for domain localhost
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: using only locally-known addresses for domain local
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: using only locally-known addresses for domain invalid
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: using only locally-known addresses for domain bind
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: using only locally-known addresses for domain lan
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: reading /tmp/resolv.conf.d/resolv.conf.auto
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: using only locally-known addresses for domain test
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: using only locally-known addresses for domain onion
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: using only locally-known addresses for domain localhost
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: using only locally-known addresses for domain local
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: using only locally-known addresses for domain invalid
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: using only locally-known addresses for domain bind
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: using only locally-known addresses for domain lan
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: using nameserver 8.8.8.8#53
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: read /etc/hosts - 4 addresses
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: read /tmp/hosts/dhcp.cfg01411c - 1 addresses
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq-dhcp[7835]: read /etc/ethers - 0 addresses
+Sun Oct  3 20:59:48 2021 daemon.debug dnsmasq[7835]: UBus subscription callback: 1 subscriber(s)
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: read /etc/hosts - 4 addresses
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq[7835]: read /tmp/hosts/dhcp.cfg01411c - 1 addresses
+Sun Oct  3 20:59:48 2021 daemon.info dnsmasq-dhcp[7835]: read /etc/ethers - 0 addresses
+Sun Oct  3 20:59:52 2021 kern.info kernel: [   56.324808] down: port 1(eth0) entered forwarding state
+Sun Oct  3 20:59:53 2021 kern.info kernel: [   57.344808] up: port 1(eth1) entered forwarding state
+Sun Oct  3 21:01:48 2021 daemon.info ucentral: running health task
+Sun Oct  3 21:01:51 2021 daemon.info dnsmasq-dhcp[7835]: DHCPDISCOVER(down2v0) 08:9b:4b:b2:f1:0d
+Sun Oct  3 21:01:51 2021 daemon.info dnsmasq-dhcp[7835]: DHCPOFFER(down2v0) 192.168.1.60 08:9b:4b:b2:f1:0d
+Sun Oct  3 21:01:56 2021 daemon.info dnsprobe: attempting to probe dns - telecominfraproject.com 192.168.1.1
+Sun Oct  3 21:02:02 2021 daemon.info dnsprobe: attempting to probe dns - telecominfraproject.com 8.8.8.8
+Sun Oct  3 21:02:02 2021 daemon.debug ucentral: TX: {"jsonrpc":"2.0","method":"healthcheck","params":{"serial":"089b4bb2f10d","uuid":1,"sanity":75,"data":{"unit":{"memory":57},"interfaces":{"up1v0":{"dhcp":false,"ssids":{"OpenWifi-onboarding":false},"location":"/interfaces/1"}}}}}
+Sun Oct  3 21:02:02 2021 daemon.err ucentral: trying to send data while not connected
+Sun Oct  3 21:04:39 2021 daemon.info maverick: triggering maverick check
+Sun Oct  3 21:04:39 2021 user.notice root: maverick: entering failsafe
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[7835]: exiting on receipt of SIGTERM
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: Connected to system UBus
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: started, version 2.85 cachesize 150
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: DNS service limited to local subnets
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack ipset auth cryptohash DNSSEC no-ID loop-detect inotify dumpfile
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: UBus support enabled: connected to system bus
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: using only locally-known addresses for domain test
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: using only locally-known addresses for domain onion
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: using only locally-known addresses for domain localhost
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: using only locally-known addresses for domain local
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: using only locally-known addresses for domain invalid
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: using only locally-known addresses for domain bind
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: using only locally-known addresses for domain lan
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: reading /tmp/resolv.conf.d/resolv.conf.auto
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: using only locally-known addresses for domain test
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: using only locally-known addresses for domain onion
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: using only locally-known addresses for domain localhost
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: using only locally-known addresses for domain local
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: using only locally-known addresses for domain invalid
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: using only locally-known addresses for domain bind
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: using only locally-known addresses for domain lan
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: using nameserver 8.8.8.8#53
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: read /etc/hosts - 4 addresses
+Sun Oct  3 21:04:41 2021 daemon.info dnsmasq[8297]: read /tmp/hosts/dhcp.cfg01411c - 0 addresses
+Sun Oct  3 21:04:41 2021 daemon.debug dnsmasq[8297]: UBus subscription callback: 1 subscriber(s)
+Sun Oct  3 21:04:41 2021 daemon.notice netifd: Interface 'up1v0' is disabled
+Sun Oct  3 21:04:41 2021 daemon.notice wpa_supplicant[1629]: nl80211: deinit ifname=wlan1 disabled_11b_rates=0
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  345.835631] device eth0 left promiscuous mode
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  345.835668] down: port 1(eth0) entered disabled state
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Interface 'down2v0' is now down
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  345.878484] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Interface 'down2v0' is disabled
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  346.020193] device eth0 entered promiscuous mode
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  346.021126] bridge: port 1(eth0) entered forwarding state
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  346.023925] bridge: port 1(eth0) entered forwarding state
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Interface 'lan' is enabled
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Interface 'lan' is setting up now
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Interface 'lan' is now up
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: bridge 'down' link is down
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  346.031356] device eth1 left promiscuous mode
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  346.034573] up: port 1(eth1) entered disabled state
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Interface 'up_none' is now down
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  346.088756] IPv6: ADDRCONF(NETDEV_UP): eth1: link is not ready
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  346.091753] device eth1 entered promiscuous mode
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  346.093607] bridge: port 2(eth1) entered forwarding state
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  346.098331] bridge: port 2(eth1) entered forwarding state
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: bridge 'up' link is down
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Interface 'up_none' has link connectivity loss
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Interface 'down2v0' has link connectivity loss
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  346.105358] device bridge entered promiscuous mode
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Interface 'wan' is enabled
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Interface 'wan6' is enabled
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Wireless device 'radio1' is now down
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Network device 'eth0' link is down
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: up0v0 (7426): udhcpc: received SIGTERM
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: up0v0 (7426): udhcpc: unicasting a release of 172.16.0.140 to 172.16.0.1
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: up0v0 (7426): udhcpc: sending release
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: up0v0 (7426): udhcpc: entering released state
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Network device 'eth1' link is down
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: bridge 'bridge' link is up
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: VLAN 'bridge.1' link is up
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Interface 'lan' has link connectivity
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: VLAN 'bridge.2' link is up
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Interface 'wan' has link connectivity
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Interface 'wan' is setting up now
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Interface 'wan6' has link connectivity
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Interface 'wan6' is setting up now
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: up0v0 (7426): Command failed: Permission denied
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Interface 'up0v0' is now down
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  346.316567] nss-dp 3a001600.dp1 eth0: PHY Link up speed: 1000
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Interface 'up0v0' is disabled
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Interface 'up0v0' has link connectivity loss
+Sun Oct  3 21:04:42 2021 daemon.warn dnsmasq[8297]: no servers found in /tmp/resolv.conf.d/resolv.conf.auto, will retry
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: Network device 'eth0' link is up
+Sun Oct  3 21:04:42 2021 daemon.err odhcp6c[8903]: Failed to send RS (Address not available)
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: wan (8902): udhcpc: started, v1.33.1
+Sun Oct  3 21:04:42 2021 user.notice firewall: Reloading firewall due to ifup of lan (bridge.1)
+Sun Oct  3 21:04:42 2021 daemon.notice netifd: wan (8902): udhcpc: sending discover
+Sun Oct  3 21:04:42 2021 daemon.notice hostapd: Configuration file: /var/run/hostapd-phy1.conf (phy wlan1) --> new PHY
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  346.544449] IPv6: ADDRCONF(NETDEV_UP): wlan1: link is not ready
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  346.545874] device wlan1 entered promiscuous mode
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  346.550571] bridge: port 3(wlan1) entered forwarding state
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  346.554094] bridge: port 3(wlan1) entered forwarding state
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  346.560126] bridge: port 2(eth1) entered disabled state
+Sun Oct  3 21:04:42 2021 kern.info kernel: [  346.565185] bridge: port 3(wlan1) entered disabled state
+Sun Oct  3 21:04:43 2021 daemon.notice ucentral-event: Subscribe to hostapd.wlan1 (102777947)
+Sun Oct  3 21:04:43 2021 daemon.notice dynamic-vlan: Subscribe to hostapd.wlan1 (102777947)
+Sun Oct  3 21:04:43 2021 kern.info kernel: [  346.645088] ath11k c000000.wifi1: bss color param 0x81000000 set on vdev 0
+Sun Oct  3 21:04:43 2021 kern.info kernel: [  346.645492] IPv6: ADDRCONF(NETDEV_CHANGE): wlan1: link becomes ready
+Sun Oct  3 21:04:43 2021 kern.info kernel: [  346.651228] bridge: port 3(wlan1) entered forwarding state
+Sun Oct  3 21:04:43 2021 kern.info kernel: [  346.657434] bridge: port 3(wlan1) entered forwarding state
+Sun Oct  3 21:04:43 2021 daemon.notice hostapd: wlan1: interface state UNINITIALIZED->ENABLED
+Sun Oct  3 21:04:43 2021 daemon.notice hostapd: wlan1: AP-ENABLED
+Sun Oct  3 21:04:43 2021 daemon.notice hostapd: Configuration file: /var/run/hostapd-phy0.conf (phy wlan0) --> new PHY
+Sun Oct  3 21:04:43 2021 kern.info kernel: [  346.685602] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
+Sun Oct  3 21:04:43 2021 kern.info kernel: [  346.687109] device wlan0 entered promiscuous mode
+Sun Oct  3 21:04:43 2021 kern.info kernel: [  346.690502] bridge: port 4(wlan0) entered forwarding state
+Sun Oct  3 21:04:43 2021 kern.info kernel: [  346.695257] bridge: port 4(wlan0) entered forwarding state
+Sun Oct  3 21:04:43 2021 daemon.notice hostapd: wlan0: interface state UNINITIALIZED->HT_SCAN
+Sun Oct  3 21:04:43 2021 daemon.info ip-collide: no collision detected
+Sun Oct  3 21:04:43 2021 daemon.err odhcp6c[8903]: Failed to send SOLICIT message to ff02::1:2 (Address not available)
+Sun Oct  3 21:04:43 2021 daemon.notice dynamic-vlan: Subscribe to hostapd.wlan0 (3500410924)
+Sun Oct  3 21:04:43 2021 daemon.notice ucentral-event: Subscribe to hostapd.wlan0 (3500410924)
+Sun Oct  3 21:04:43 2021 kern.info kernel: [  347.141243] ath11k c000000.wifi1: bss color param 0x81000000 set on vdev 1
+Sun Oct  3 21:04:43 2021 kern.info kernel: [  347.141690] IPv6: ADDRCONF(NETDEV_CHANGE): wlan0: link becomes ready
+Sun Oct  3 21:04:43 2021 daemon.notice hostapd: wlan0: interface state HT_SCAN->ENABLED
+Sun Oct  3 21:04:43 2021 daemon.notice hostapd: wlan0: AP-ENABLED
+Sun Oct  3 21:04:44 2021 daemon.notice netifd: Wireless device 'radio1' is now up
+Sun Oct  3 21:04:44 2021 daemon.notice netifd: Network device 'wlan1' link is up
+Sun Oct  3 21:04:44 2021 daemon.notice netifd: Wireless device 'radio0' is now up
+Sun Oct  3 21:04:44 2021 daemon.notice netifd: Network device 'wlan0' link is up
+Sun Oct  3 21:04:45 2021 daemon.notice netifd: wan (8902): udhcpc: sending discover
+Sun Oct  3 21:04:45 2021 daemon.info dnsmasq[8297]: exiting on receipt of SIGTERM
+Sun Oct  3 21:04:45 2021 daemon.err dnsmasq[9208]: Cannot initialize UBus: connection failed
+Sun Oct  3 21:04:45 2021 daemon.info dnsmasq[9208]: started, version 2.85 cachesize 150
+Sun Oct  3 21:04:45 2021 daemon.info dnsmasq[9208]: DNS service limited to local subnets
+Sun Oct  3 21:04:45 2021 daemon.info dnsmasq[9208]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack ipset auth cryptohash DNSSEC no-ID loop-detect inotify dumpfile
+Sun Oct  3 21:04:45 2021 daemon.info dnsmasq[9208]: UBus support enabled: bus connection pending
+Sun Oct  3 21:04:45 2021 daemon.info dnsmasq-dhcp[9208]: DHCP, IP range 192.168.1.100 -- 192.168.1.249, lease time 12h
+Sun Oct  3 21:04:45 2021 daemon.info dnsmasq[9208]: using only locally-known addresses for domain test
+Sun Oct  3 21:04:45 2021 daemon.info dnsmasq[9208]: using only locally-known addresses for domain onion
+Sun Oct  3 21:04:45 2021 daemon.info dnsmasq[9208]: using only locally-known addresses for domain localhost
+Sun Oct  3 21:04:45 2021 daemon.info dnsmasq[9208]: using only locally-known addresses for domain local
+Sun Oct  3 21:04:45 2021 daemon.info dnsmasq[9208]: using only locally-known addresses for domain invalid
+Sun Oct  3 21:04:45 2021 daemon.info dnsmasq[9208]: using only locally-known addresses for domain bind
+Sun Oct  3 21:04:45 2021 daemon.info dnsmasq[9208]: using only locally-known addresses for domain lan
+Sun Oct  3 21:04:45 2021 daemon.warn dnsmasq[9208]: no servers found in /tmp/resolv.conf.d/resolv.conf.auto, will retry
+Sun Oct  3 21:04:45 2021 daemon.info dnsmasq[9208]: read /etc/hosts - 4 addresses
+Sun Oct  3 21:04:45 2021 daemon.info dnsmasq[9208]: read /tmp/hosts/dhcp.cfg01411c - 1 addresses
+Sun Oct  3 21:04:45 2021 daemon.info dnsmasq-dhcp[9208]: read /etc/ethers - 0 addresses
+Sun Oct  3 21:04:45 2021 daemon.info dnsmasq[9208]: Connected to system UBus
+Sun Oct  3 21:04:45 2021 daemon.debug dnsmasq[9208]: UBus subscription callback: 1 subscriber(s)
+Sun Oct  3 21:04:46 2021 daemon.info dnsmasq[9208]: read /etc/hosts - 4 addresses
+Sun Oct  3 21:04:46 2021 daemon.info dnsmasq[9208]: read /tmp/hosts/dhcp.cfg01411c - 1 addresses
+Sun Oct  3 21:04:46 2021 daemon.info dnsmasq-dhcp[9208]: read /etc/ethers - 0 addresses
+Sun Oct  3 21:04:48 2021 daemon.notice netifd: wan (8902): udhcpc: sending discover
+Sun Oct  3 21:04:50 2021 kern.info kernel: [  354.046500] bridge: port 1(eth0) entered forwarding state
+Sun Oct  3 21:04:51 2021 kern.info kernel: [  354.686500] bridge: port 3(wlan1) entered forwarding state
+Sun Oct  3 21:04:51 2021 kern.info kernel: [  354.706497] bridge: port 4(wlan0) entered forwarding state
+Sun Oct  3 21:04:51 2021 daemon.notice netifd: Network device 'eth1' link is up
+Sun Oct  3 21:04:51 2021 kern.info kernel: [  355.276651] nss-dp 3a007000.dp2 eth1: PHY Link up speed: 1000
+Sun Oct  3 21:04:51 2021 kern.info kernel: [  355.276719] bridge: port 2(eth1) entered forwarding state
+Sun Oct  3 21:04:51 2021 kern.info kernel: [  355.281414] bridge: port 2(eth1) entered forwarding state
+Sun Oct  3 21:04:52 2021 daemon.notice netifd: wan (8902): udhcpc: sending select for 172.16.0.140
+Sun Oct  3 21:04:53 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 21:04:53 2021 daemon.notice netifd: Interface 'wan' is now up
+Sun Oct  3 21:04:53 2021 daemon.info dnsmasq[9208]: reading /tmp/resolv.conf.d/resolv.conf.auto
+Sun Oct  3 21:04:53 2021 daemon.info dnsmasq[9208]: using only locally-known addresses for domain test
+Sun Oct  3 21:04:53 2021 daemon.info dnsmasq[9208]: using only locally-known addresses for domain onion
+Sun Oct  3 21:04:53 2021 daemon.info dnsmasq[9208]: using only locally-known addresses for domain localhost
+Sun Oct  3 21:04:53 2021 daemon.info dnsmasq[9208]: using only locally-known addresses for domain local
+Sun Oct  3 21:04:53 2021 daemon.info dnsmasq[9208]: using only locally-known addresses for domain invalid
+Sun Oct  3 21:04:53 2021 daemon.info dnsmasq[9208]: using only locally-known addresses for domain bind
+Sun Oct  3 21:04:53 2021 daemon.info dnsmasq[9208]: using only locally-known addresses for domain lan
+Sun Oct  3 21:04:53 2021 daemon.info dnsmasq[9208]: using nameserver 8.8.8.8#53
+Sun Oct  3 21:04:53 2021 user.notice firewall: Reloading firewall due to ifup of wan (bridge.2)
+Sun Oct  3 21:04:53 2021 user.notice fbwifi: Reloading fbwifi due to ifup of wan (bridge.2)
+Sun Oct  3 21:04:53 2021 daemon.info ip-collide: no collision detected
+Sun Oct  3 21:04:59 2021 kern.info kernel: [  363.286558] bridge: port 2(eth1) entered forwarding state
+Sun Oct  3 21:09:53 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 21:09:53 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 21:14:53 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 21:14:53 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 21:19:53 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 21:19:53 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 21:24:53 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 21:24:53 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 21:29:53 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 21:29:53 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 21:34:53 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 21:34:53 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 21:39:53 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 21:39:53 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 21:44:53 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 21:44:53 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 21:49:54 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 21:49:54 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 21:54:54 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 21:54:54 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 21:59:54 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 21:59:54 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 22:04:54 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 22:04:54 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 22:09:54 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 22:09:54 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 22:14:54 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 22:14:54 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 22:19:54 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 22:19:54 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 22:24:54 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 22:24:54 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 22:29:54 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 22:29:54 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 22:34:55 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 22:34:55 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 22:39:55 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 22:39:55 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 22:44:30 2021 daemon.info dnsmasq-dhcp[9208]: DHCPREQUEST(bridge.1) 192.168.1.105 00:60:e0:84:cc:41
+Sun Oct  3 22:44:30 2021 daemon.info dnsmasq-dhcp[9208]: DHCPACK(bridge.1) 192.168.1.105 00:60:e0:84:cc:41
+Sun Oct  3 22:44:30 2021 daemon.err dnsmasq[9208]: Failed to send UBus event: Success
+Sun Oct  3 22:44:55 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 22:44:55 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 22:49:55 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 22:49:55 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 22:54:55 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 22:54:55 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 22:59:55 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 22:59:55 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 23:04:55 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 23:04:55 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 23:09:55 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 23:09:55 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 23:14:55 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 23:14:55 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 23:19:56 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 23:19:56 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 23:24:56 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 23:24:56 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 23:29:56 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 23:29:56 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 23:34:56 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 23:34:56 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 23:39:56 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 23:39:56 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 23:44:56 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 23:44:56 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 23:49:56 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 23:49:56 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 23:54:56 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 23:54:56 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Sun Oct  3 23:59:57 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Sun Oct  3 23:59:57 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 00:04:57 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 00:04:57 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 00:09:57 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 00:09:57 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 00:14:57 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 00:14:57 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 00:19:57 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 00:19:57 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 00:24:57 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 00:24:57 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 00:29:57 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 00:29:57 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 00:34:57 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 00:34:57 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 00:39:57 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 00:39:57 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 00:44:58 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 00:44:58 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 00:49:58 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 00:49:58 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 00:54:58 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 00:54:58 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 00:59:58 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 00:59:58 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 01:04:58 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 01:04:58 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 01:09:58 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 01:09:58 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 01:14:58 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 01:14:58 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 01:19:58 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 01:19:58 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 01:24:58 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 01:24:58 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 01:29:59 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 01:29:59 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 01:34:59 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 01:34:59 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 01:39:59 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 01:39:59 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 01:44:59 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 01:44:59 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 01:49:59 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 01:49:59 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 01:54:59 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 01:54:59 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 01:59:59 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 01:59:59 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 02:04:59 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 02:04:59 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 02:09:59 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 02:09:59 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 02:14:59 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 02:14:59 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 02:20:00 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 02:20:00 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 02:25:00 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 02:25:00 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 02:30:00 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 02:30:00 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 02:35:00 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 02:35:00 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 02:40:00 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 02:40:00 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 02:45:00 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 02:45:00 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 02:50:00 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 02:50:00 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 02:55:00 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 02:55:00 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 03:00:00 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 03:00:00 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 03:05:01 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 03:05:01 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 03:10:01 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 03:10:01 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 03:15:01 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 03:15:01 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 03:20:01 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 03:20:01 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 03:25:01 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 03:25:01 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 03:30:01 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 03:30:01 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 03:35:01 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 03:35:01 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 03:40:01 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 03:40:01 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 03:45:01 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 03:45:01 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 03:46:51 2021 daemon.info dnsmasq-dhcp[9208]: DHCPREQUEST(bridge.1) 192.168.1.105 00:60:e0:84:cc:41
+Mon Oct  4 03:46:51 2021 daemon.info dnsmasq-dhcp[9208]: DHCPACK(bridge.1) 192.168.1.105 00:60:e0:84:cc:41
+Mon Oct  4 03:46:51 2021 daemon.err dnsmasq[9208]: Failed to send UBus event: Success
+Mon Oct  4 03:50:02 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 03:50:02 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 03:55:02 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 03:55:02 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 04:00:02 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 04:00:02 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 04:05:02 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 04:05:02 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 04:10:02 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 04:10:02 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 04:15:02 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 04:15:02 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 04:20:02 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 04:20:02 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 04:25:02 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 04:25:02 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 04:30:02 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 04:30:02 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 04:35:03 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 04:35:03 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 04:40:03 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 04:40:03 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 04:45:03 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 04:45:03 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 04:50:03 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 04:50:03 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 04:55:03 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 04:55:03 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 05:00:03 2021 daemon.notice netifd: wan (8902): udhcpc: sending renew to 172.16.0.1
+Mon Oct  4 05:00:03 2021 daemon.notice netifd: wan (8902): udhcpc: lease of 172.16.0.140 obtained, lease time 600
+Mon Oct  4 05:00:41 2021 auth.info login[11022]: root login on 'ttyMSM0'
+
