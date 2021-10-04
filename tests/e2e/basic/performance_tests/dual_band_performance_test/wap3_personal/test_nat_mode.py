@@ -9,7 +9,7 @@ import os
 import allure
 import pytest
 
-pytestmark = [pytest.mark.performance, pytest.mark.nat, pytest.mark.dual_band_test]#,
+pytestmark = [pytest.mark.nat, pytest.mark.dual_band_test]#,
 #              pytest.mark.usefixtures("setup_test_run")]
 
 

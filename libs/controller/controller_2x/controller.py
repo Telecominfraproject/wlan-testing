@@ -112,9 +112,9 @@ class ConfigureController:
         gw_host = ""
         fms_host = ""
         for service in services['endpoints']:
-            if service['type'] == "ucentralgw":
+            if service['type'] == "owgw":
                 gw_host = urlparse(service["uri"])
-            if service['type'] == "ucentralfms":
+            if service['type'] == "owfms":
                 fms_host = urlparse(service["uri"])
         return gw_host, fms_host
 
@@ -173,12 +173,13 @@ class Controller(ConfigureController):
         return device
 
     def get_sdk_version(self):
-        uri = self.build_uri("system/?command=version")
+        uri = self.build_uri("system/?command=info")
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         version = resp.json()
+        print(version)
         # resp.close()()
-        return version['value']
+        return version['version']
 
     def get_device_uuid(self, serial_number):
         device_info = self.get_device_by_serial_number(serial_number=serial_number)
@@ -203,9 +204,7 @@ class FMSUtils:
                       body=str(response.status_code) + "\n" +
                            str(response.json()) + "\n"
                       )
-        response = self.sdk_client.request(service="gw", command="device/" + serial + "upgrade/",
-                                           method="POST", params="revisionSet=true",
-                                           payload="{ \"serialNumber\" : " + serial + " , \"uri\" : " + url + " }")
+        
         print(response)
 
     def ap_model_lookup(self, model=""):
@@ -544,6 +543,8 @@ class UProfileUtility:
                              verify=False, timeout=100)
         print(resp.json())
         print(resp.status_code)
+        allure.attach(name="/configure response: " + str(resp.status_code), body=str(resp.json()),
+                      attachment_type=allure.attachment_type.JSON)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
         # print(resp.url)
         resp.close()
