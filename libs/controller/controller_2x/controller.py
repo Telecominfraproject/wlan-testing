@@ -411,14 +411,14 @@ class UProfileUtility:
             "band": "2G",
             "country": "US",
             # "channel-mode": "HE",
-            "channel-width": 20,
+            "channel-width": 40,
             # "channel": 11
         })
         self.base_profile_config["radios"].append({
             "band": "5G",
             "country": "US",
             # "channel-mode": "HE",
-            "channel-width": 80,
+            "channel-width": 160,
             # "channel": "auto"
         })
 
