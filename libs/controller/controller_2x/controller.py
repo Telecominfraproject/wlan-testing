@@ -411,7 +411,7 @@ class UProfileUtility:
             "band": "2G",
             "country": "US",
             # "channel-mode": "HE",
-            "channel-width": 20,
+            "channel-width": 40,
             # "channel": 11
         })
         self.base_profile_config["radios"].append({
