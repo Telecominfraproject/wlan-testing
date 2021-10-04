@@ -9,7 +9,7 @@ import os
 import allure
 import pytest
 
-pytestmark = [pytest.mark.performance, pytest.mark.dual_band_test, pytest.mark.nat,
+pytestmark = [pytest.mark.dual_band_test, pytest.mark.nat,
               pytest.mark.single_station_dual_band_throughput]
 setup_params_general = {
     "mode": "NAT",

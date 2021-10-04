@@ -6,6 +6,7 @@ import sys
 import os
 
 import allure
+import pytest
 
 sys.path.append(
     os.path.dirname(
@@ -116,8 +117,13 @@ class RunTest:
             except Exception as e:
                 print(e)
         self.staConnect.stop()
-        self.staConnect.cleanup()
         run_results = self.staConnect.get_result_list()
+        if not self.staConnect.passes():
+            if self.debug:
+                for result in run_results:
+                    print("test result: " + result)
+                pytest.exit("Test Failed: Debug True")
+        self.staConnect.cleanup()
         for result in run_results:
             print("test result: " + result)
         result = True
@@ -204,6 +210,10 @@ class RunTest:
             #     print(e)
 
         self.eap_connect.stop()
+        if not self.eap_connect.passes():
+            if self.debug:
+                print("test result: " + self.eap_connect.passes())
+                pytest.exit("Test Failed: Debug True")
         endp_data = []
         for i in self.eap_connect.resulting_endpoints:
             endp_data.append(self.eap_connect.resulting_endpoints[i]["endpoint"])

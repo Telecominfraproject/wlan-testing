@@ -46,11 +46,11 @@ setup_params_general = {
 )
 
 @pytest.mark.usefixtures("setup_profiles")
-class TestAccessPointConnectivety(object):
+class TestAccessPointConnectivetyNatMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_AccessPointConnection_5g_WPA2_Personal(self, request, get_vif_state, get_AccessPointConn_data, setup_perfectoMobile_iOS):
+    def test_AccessPointConnection_5g_WPA2_Personal_NAT(self, request, get_vif_state, get_AccessPointConn_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
@@ -81,7 +81,7 @@ class TestAccessPointConnectivety(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_AccessPointConnection_2g_WPA2_Personal(self, request, get_vif_state, get_AccessPointConn_data, setup_perfectoMobile_iOS):
+    def test_AccessPointConnection_2g_WPA2_Personal_NAT(self, request, get_vif_state, get_AccessPointConn_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]  
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
@@ -112,7 +112,7 @@ class TestAccessPointConnectivety(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_AccessPointConnection_5g_WPA(self, request, get_vif_state, get_AccessPointConn_data, setup_perfectoMobile_iOS):
+    def test_AccessPointConnection_5g_WPA_NAT(self, request, get_vif_state, get_AccessPointConn_data, setup_perfectoMobile_iOS):
         
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
@@ -144,7 +144,7 @@ class TestAccessPointConnectivety(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_AccessPointConnection_2g_WPA(self, request, get_vif_state, get_AccessPointConn_data, setup_perfectoMobile_iOS):
+    def test_AccessPointConnection_2g_WPA_NAT(self, request, get_vif_state, get_AccessPointConn_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general["ssid_modes"]["wpa"][0] 
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
@@ -175,7 +175,7 @@ class TestAccessPointConnectivety(object):
 
     @pytest.mark.fiveg
     @pytest.mark.open
-    def test_AccessPointConnection_5g_OPEN(self, request, get_vif_state, get_AccessPointConn_data,
+    def test_AccessPointConnection_5g_OPEN_NAT(self, request, get_vif_state, get_AccessPointConn_data,
                                           setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["open"][1]
@@ -208,7 +208,7 @@ class TestAccessPointConnectivety(object):
 
     @pytest.mark.twog
     @pytest.mark.open
-    def test_AccessPointConnection_2g_OPEN(self, request, get_vif_state, get_AccessPointConn_data,
+    def test_AccessPointConnection_2g_OPEN_NAT(self, request, get_vif_state, get_AccessPointConn_data,
                                           setup_perfectoMobile_iOS):
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssidName = profile_data["ssid_name"]
