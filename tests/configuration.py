@@ -307,7 +307,7 @@ CONFIGURATION = {
     },  # checked   uci
     "basic-08": {
         "controller": {
-            'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'url': 'http://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
             'username': "tip@ucentral.com",
             'password': 'openwifi',
         },
@@ -315,12 +315,12 @@ CONFIGURATION = {
             {
                 'model': 'wf194c',
                 'mode': 'wifi6',
-                'serial': '089b4bb2f10c',
+                'serial': '089b4bb2f10d',
                 'jumphost': True,
-                'ip': "10.28.3.103",  # 10.28.3.103
+                'ip': "localhost",  # 10.28.3.103
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 22,  # 22
+                'port': 8803,  # 22
                 'jumphost_tty': '/dev/ttyAP5',
                 'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf194c/20210729-cig_wf194c-v2.0.0-rc2-02244b8-upgrade.bin"
             }
@@ -328,9 +328,9 @@ CONFIGURATION = {
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "10.28.3.34",  # 10.28.3.34
-                "port": 8080,  # 8080
-                "ssh_port": 22,
+                "ip": "localhost",  # 10.28.3.34
+                "port": 8802,  # 8080
+                "ssh_port": 8804,
                 "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
                 "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
                 "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
@@ -339,7 +339,7 @@ CONFIGURATION = {
                 "uplink": "1.1.eth3",
                 "2.4G-Station-Name": "wlan0",
                 "5G-Station-Name": "wlan0",
-                "AX-Station-Name": "ax"
+                "AX-Station-Name": "stax"
             }
         }
     },  # checked
