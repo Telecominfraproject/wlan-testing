@@ -56,6 +56,7 @@ class TestVlanModeConnectSuiteOneVlan(object):
         pytest -m "client_connect and vlan and InteropsuiteA"
     """
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4594", name="WIFI-4594")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_ClientConnect_5g_WPA2_Personal_VLAN(self, request, get_vif_state, get_APToMobileDevice_data,
@@ -88,7 +89,7 @@ class TestVlanModeConnectSuiteOneVlan(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4593", name="WIFI-4593")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_ClientConnect_2g_WPA2_Personal_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -121,7 +122,7 @@ class TestVlanModeConnectSuiteOneVlan(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4586", name="WIFI-4586")
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_ClientConnect_5g_WPA_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -154,7 +155,7 @@ class TestVlanModeConnectSuiteOneVlan(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4585", name="WIFI-4585")
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_ClientConnect_2g_WPA_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -187,7 +188,7 @@ class TestVlanModeConnectSuiteOneVlan(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4583", name="WIFI-4583")
     @pytest.mark.fiveg
     @pytest.mark.open
     def test_ClientConnect_5g_Open_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -226,7 +227,7 @@ class TestVlanModeConnectSuiteOneVlan(object):
 
         #ForgetWifi
         # ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4581", name="WIFI-4581")
     @pytest.mark.twog
     @pytest.mark.open
     def test_ClientConnect_2g_Open_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
