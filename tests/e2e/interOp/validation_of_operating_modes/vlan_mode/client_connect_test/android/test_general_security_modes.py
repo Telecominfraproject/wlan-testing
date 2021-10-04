@@ -24,14 +24,14 @@ from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_Airplan
 setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
-        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
+        "wpa": [{"ssid_name": "ssid_wpa_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
+                {"ssid_name": "ssid_wpa_5g_vlan", "appliedRadios": ["5G"],
                  "security_key": "something", "vlan": 100}],
-        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"], "vlan": 100},
-                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"], "vlan": 100}],
+        "open": [{"ssid_name": "ssid_open_2g_vlan", "appliedRadios": ["2G"], "vlan": 100},
+                 {"ssid_name": "ssid_open_5g_vlan", "appliedRadios": ["5G"], "vlan": 100}],
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"],
+            {"ssid_name": "ssid_wpa2_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
+            {"ssid_name": "ssid_wpa2_5g_vlan", "appliedRadios": ["5G"],
              "security_key": "something", "vlan": 100}]},
     "rf": {},
     "radius": False
@@ -53,6 +53,7 @@ class TestVlanModeConnectSuiteOne(object):
         pytest -m "client_connect and bridge and InteropsuiteA"
     """
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4613", name="WIFI-4613")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_ClientConnect_5g_WPA2_Personal_Vlan(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
@@ -86,6 +87,7 @@ class TestVlanModeConnectSuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4612", name="WIFI-4612")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_ClientConnect_2g_WPA2_Personal_Vlan(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
@@ -119,6 +121,7 @@ class TestVlanModeConnectSuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4611", name="WIFI-4611")
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_ClientConnect_5g_WPA_Vlan(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
@@ -153,6 +156,7 @@ class TestVlanModeConnectSuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4609", name="WIFI-4609")
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_ClientConnect_2g_WPA_Vlan(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
@@ -187,6 +191,7 @@ class TestVlanModeConnectSuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4607", name="WIFI-4607")
     @pytest.mark.fiveg
     @pytest.mark.open
     def test_ClientConnect_5g_Open_Vlan(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
@@ -227,6 +232,7 @@ class TestVlanModeConnectSuiteOne(object):
         #ForgetWifi
         # ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4606", name="WIFI-4606")
     @pytest.mark.twog
     @pytest.mark.open
     def test_ClientConnect_2g_Open_Vlan(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
