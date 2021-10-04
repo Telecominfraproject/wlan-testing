@@ -65,7 +65,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_up", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="1,2,5",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
 
@@ -97,7 +97,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_dw", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,2,5",
                                         upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000")
 
@@ -129,7 +129,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_up_dw", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,2,5",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
 
@@ -161,7 +161,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_up_dw_di", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,2,5",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
 
@@ -192,7 +192,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_up_dw_per_cl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,2,5",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", raw_lines=raw_lines)
 
@@ -223,7 +223,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_up_per_cl", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="1,2,5",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", raw_lines=raw_lines)
 
@@ -254,7 +254,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_dw_per_cl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,2,5",
                                         upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000", raw_lines=raw_lines)
 
@@ -286,7 +286,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_125", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="1,2,5",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
 
@@ -318,7 +318,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_dw_125", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,2,5",
                                         upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000")
 
@@ -350,7 +350,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_up_dw_125", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,2,5",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
 
@@ -382,7 +382,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=1, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_up_1", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="1",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
 
@@ -446,7 +446,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=1, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_up_dw_1", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
 
@@ -478,7 +478,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=1, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_up_1_5g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="1",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
 
@@ -510,7 +510,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=1, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_dw_1_5g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1",
                                         upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000")
 
@@ -542,7 +542,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=1, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_up_dw_5g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
 
@@ -574,7 +574,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_up_dw_di", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,2,5",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
 
@@ -605,7 +605,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_up_dw_per_cl_5g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,2,5",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", raw_lines=raw_lines)
 
@@ -636,7 +636,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_up_per_cl_5g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="1,2,5",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", raw_lines=raw_lines)
 
@@ -667,7 +667,7 @@ class TestRateLimitingNat(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_tcp_dl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_nat_dw_per_cl_5g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,2,5",
                                         upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000", raw_lines=raw_lines)
 
