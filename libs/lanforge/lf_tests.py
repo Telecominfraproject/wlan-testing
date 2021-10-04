@@ -40,7 +40,7 @@ from lf_rx_sensitivity_test import RxSensitivityTest
 from lf_ap_auto_test import ApAutoTest
 from csv_to_influx import CSVtoInflux
 from influx2 import RecordInflux
-#from lf_multipsk import MultiPsk
+from lf_multipsk import MultiPsk
 
 
 class RunTest:
@@ -239,6 +239,7 @@ class RunTest:
         '''SINGLE WIFI CAPACITY using lf_wifi_capacity.py'''
         wificapacity_obj = WiFiCapacityTest(lfclient_host=self.lanforge_ip,
                                             lf_port=self.lanforge_port,
+                                            ssh_port=self.lf_ssh_port,
                                             lf_user="lanforge",
                                             lf_password="lanforge",
                                             local_lf_report_dir=self.local_report_path,
