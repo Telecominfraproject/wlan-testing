@@ -192,7 +192,7 @@ class TestRateLimitingBridge(object):
             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_up_dw_per_cl", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_bridge_up_dw_per_cl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,2,5",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", raw_lines=raw_lines)
 
