@@ -29,11 +29,11 @@ env:
     {
       "namespace": "dev01",
       "deploy_method": "git",
-      "chart_version": "v2.1.0-RC3",
-      "owgw_version": "v2.1.0-RC3",
-      "owsec_version": "v2.1.0-RC1",
-      "owfms_version": "v2.1.0-RC1",
-      "owgwui_version": "v2.1.0-RC1"
+      "chart_version": "v2.2.0-RC1",
+      "owgw_version": "v2.2.0-RC1",
+      "owsec_version": "v2.2.0-RC1",
+      "owfms_version": "v2.2.0-RC1",
+      "owgwui_version": "v2.2.0-RC1"
     }
   ]'
 

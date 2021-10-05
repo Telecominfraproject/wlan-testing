@@ -107,11 +107,11 @@ jobs:
       run: |
         export NAMESPACE=${{ github.run_id }}
         export DEPLOY_METHOD=git
-        export CHART_VERSION=main
-        export OWGW_VERSION=master
-        export OWGWUI_VERSION=main
-        export OWSEC_VERSION=main
-        export OWFMS_VERSION=main
+        export CHART_VERSION=v2.2.0-RC1
+        export OWGW_VERSION=v2.2.0-RC1
+        export OWGWUI_VERSION=v2.2.0-RC1
+        export OWSEC_VERSION=v2.2.0-RC1
+        export OWFMS_VERSION=v2.2.0-RC1
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
@@ -271,7 +271,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression || 'uc_sanity' }}" -s -vvv --testbed="${{ matrix.testbed }}" --alluredir=/tmp/allure-results -o firmware=latest
+                    pytest -m "${{ github.event.inputs.marker_expression || 'uc_sanity' }}" -s -vvv --testbed="${{ matrix.testbed }}" --alluredir=/tmp/allure-results
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -476,7 +476,7 @@ jobs:
       run: |
         for id in $(echo -e 'from configuration import CONFIGURATION\nfor ap in CONFIGURATION["${{ matrix.testbed }}"]["access_point"]: print(ap["serial"])' | python3)
         do
-          ./wlan-pki-cert-scripts/digicert-change-ap-redirector.sh $id gw-ucentral-qa01.cicd.lab.wlan.tip.build
+          ./wlan-pki-cert-scripts/digicert-change-ap-redirector.sh $id gw-qa01.cicd.lab.wlan.tip.build
         done
 
     - name: factory reset APs

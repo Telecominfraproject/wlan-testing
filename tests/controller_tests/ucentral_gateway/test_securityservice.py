@@ -1,20 +1,20 @@
 """
 
-    UCentral Security Services Rest API Tests: Test Login, Logout API's
+    2.x Security Services Rest API Tests: Test Login, Logout API's
 
 """
 import pytest
 import json
 import allure
 
-
+@pytest.mark.uc_sanity
 @allure.feature("SDK REST API")
 class TestUcentralSecService(object):
     """
         Test the oauth endpoint
         WIFI-3447
     """
-
+    '''
     @pytest.mark.sdk_restapi
     def test_secservice_oauth(self, setup_controller):
         """
@@ -36,7 +36,7 @@ class TestUcentralSecService(object):
         allure.attach(name="oauth revoke", body=body)
         assert resp.status_code == 204
         setup_controller.login()
-
+    '''
     @pytest.mark.sdk_restapi
     def test_secservice_system_endpoints(self, setup_controller):
         """
@@ -59,13 +59,13 @@ class TestUcentralSecService(object):
         uri_present = 0
         authtype_present = 0
         for item in services['endpoints']:
-            if item['type'] == 'ucentralgw':
+            if item['type'] == 'owgw':
                 num_services += 1
                 if item['uri'] is not None:
                     uri_present += 1
                 if item['authenticationType'] is not None:
                     authtype_present += 1
-            elif item['type'] == 'ucentralfms':
+            elif item['type'] == 'owfms':
                 num_services += 1
                 if item['uri'] is not None:
                     uri_present += 1
@@ -81,7 +81,7 @@ class TestUcentralSecService(object):
             WIFI-3450
         """
 
-        params = {'command': 'version'}
+        params = {'command': 'info'}
         resp = setup_controller.request("sec", "system", "GET", params, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="security get version result", body=body)
@@ -90,11 +90,9 @@ class TestUcentralSecService(object):
             assert False
         system = json.loads(resp.text)
         print(system)
-        if 'tag' not in system:
+        if 'version' not in system:
             assert False
-        if system['tag'] != 'version':
-            assert False
-        if not system['value']:
+        if system['version'] == '':
             assert False
 
     @pytest.mark.sdk_restapi
@@ -104,7 +102,7 @@ class TestUcentralSecService(object):
             WIFI-3451
         """
 
-        params = {'command': 'times'}
+        params = {'command': 'info'}
         resp = setup_controller.request("sec", "system", "GET", params, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="security get uptime", body=body)
@@ -112,16 +110,14 @@ class TestUcentralSecService(object):
             assert False
         system = json.loads(resp.text)
         print(system)
-        if 'times' not in system:
+        if 'uptime' not in system:
             assert False
 
-        valid_entities = 0
-        for item in system['times']:
-            if item['tag'] == 'uptime':
-                valid_entities += 1
-            if item['tag'] == 'start':
-                valid_entities += 1
-            if item['value'] is not None:
-                valid_entities += 1
+        if 'start' not in system:
+            assert False
 
-        assert (valid_entities == 4)
+        if system['uptime'] == '':
+            assert False
+
+        if system['start'] == '':
+            assert False
