@@ -21,9 +21,9 @@ from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnecti
     Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown,\
     verifyUploadDownloadSpeediOS, get_ip_address_eap_ios
 
-pytestmark = [pytest.mark.client_connect, pytest.mark.bridge, pytest.mark.enterprise, pytest.mark.ttls,
-              pytest.mark.ucentral, pytest.mark.interop, pytest.mark.ios]
-    #ios and ucentral and interop and ttls and enterprise and bridge and client_connect
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.client_connect
+              ,pytest.mark.interop_uc_sanity, pytest.mark.bridge, pytest.mark.enterprise]
+
 setup_params_enterprise = {
     "mode": "BRIDGE",
     "ssid_modes": {
