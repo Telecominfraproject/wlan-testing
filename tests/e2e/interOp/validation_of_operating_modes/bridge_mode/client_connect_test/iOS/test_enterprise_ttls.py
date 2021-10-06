@@ -22,7 +22,7 @@ from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnecti
     verifyUploadDownloadSpeediOS, get_ip_address_eap_ios
 
 pytestmark = [pytest.mark.client_connectivity, pytest.mark.bridge, pytest.mark.enterprise, pytest.mark.ttls,
-              pytest.mark.ucentral, pytest.mark.interop]
+              pytest.mark.ucentral, pytest.mark.interop, pytest.mark.ios]
 
 setup_params_enterprise = {
     "mode": "BRIDGE",
@@ -56,7 +56,8 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
     """ SuiteA Enterprise Test Cases
         pytest -m "client_connect and bridge and enterprise and ttls and interop and suiteA"
     """
-    @pytest.mark.s123
+
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4691", name="WIFI-4691")
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     def test_ClientConnect_5g_WPA2_Eap(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS, radius_info):
@@ -94,7 +95,8 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-    @pytest.mark.s123
+
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4690", name="WIFI-4690")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_enterprise
     def test_ClientConnect_2g_WPA2_Eap(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS, radius_info):
@@ -130,7 +132,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @pytest.mark.sg123
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4695", name="WIFI-4695")
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     def test_ClientConnect_5g_WPA3_Eap(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS, radius_info):
@@ -169,7 +171,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @pytest.mark.sg123
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4694", name="WIFI-4694")
     @pytest.mark.fiveg
     @pytest.mark.wpa3_enterprise
     def test_ClientConnect_2g_WPA3_Eap(self, request, get_vif_state, get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS, radius_info):
