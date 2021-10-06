@@ -29,7 +29,7 @@ on:
         required: true
       owgw_version:
         default: 'master'
-        description: 'OpenWIFI Gateway version to be deployed (git tag or helm package version may be used, msater is default)'
+        description: 'OpenWIFI Gateway version to be deployed (git tag or helm package version may be used, master is default)'
         required: true
       owgwui_version:
         default: 'main'
@@ -42,6 +42,10 @@ on:
       owfms_version:
         default: 'main'
         description: 'OpenWIFI Firmware version to be deployed (git tag or helm package version may be used, main is default)'
+        required: true
+      owprov_version:
+        default: 'main'
+        description: 'OpenWIFI Provisioning version to be deployed (git tag or helm package version may be used, main is default)'
         required: true
 
 jobs:
@@ -75,6 +79,7 @@ jobs:
         export OWGWUI_VERSION=${{ github.event.inputs.owgwui_version }}
         export OWSEC_VERSION=${{ github.event.inputs.owsec_version }}
         export OWFMS_VERSION=${{ github.event.inputs.owfms_version }}
+        export OWPROV_VERSION=${{ github.event.inputs.owprov_version }}
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
