@@ -17,7 +17,7 @@ def main():
     parser.add_argument('--openwifi-fms-version', default='main')
     parser.add_argument('--openwifi-ui-version', default='main')
     parser.add_argument('--ap-model', default='EC420')
-    parser.add_argument('--wifi-type', default='Wifi5')
+    #parser.add_argument('--wifi-type', default='Wifi5')
     args = parser.parse_args()
 
     session = get_session()
@@ -34,7 +34,7 @@ def main():
             UpdateTopologyGlobalInputsRequest('owfms Version', args.openwifi_fms_version),
             UpdateTopologyGlobalInputsRequest('owgwui Version', args.openwifi_ui_version),
             UpdateTopologyGlobalInputsRequest('AP Model', args.ap_model),
-            UpdateTopologyGlobalInputsRequest('Wifi type', args.wifi_type),
+            #UpdateTopologyGlobalInputsRequest('Wifi type', args.wifi_type),
         ]
     ).Reservation
 
