@@ -59,7 +59,7 @@ class TestVlanModeConnectSuiteOneVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4610", name="WIFI-4610")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ClientConnectivity_5g_WPA2_Personal_VLAN(self, request, get_vif_state, get_APToMobileDevice_data,
+    def test_ClientConnectivity_5g_WPA2_Personal_VLAN(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
                                           setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -96,7 +96,7 @@ class TestVlanModeConnectSuiteOneVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4608", name="WIFI-4608")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ClientConnectivity_2g_WPA2_Personal_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_2g_WPA2_Personal_VLAN(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -131,7 +131,7 @@ class TestVlanModeConnectSuiteOneVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4604", name="WIFI-4604")
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ClientConnectivity_5g_WPA_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_5g_WPA_VLAN(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
@@ -167,7 +167,7 @@ class TestVlanModeConnectSuiteOneVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4603", name="WIFI-4603")
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_ClientConnectivity_2g_WPA_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_2g_WPA_VLAN(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
@@ -203,7 +203,7 @@ class TestVlanModeConnectSuiteOneVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4602", name="WIFI-4602")
     @pytest.mark.fiveg
     @pytest.mark.open
-    def test_ClientConnectivity_5g_Open_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_5g_Open_VLAN(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["open"][1]
         ssidName = profile_data["ssid_name"]
@@ -239,7 +239,7 @@ class TestVlanModeConnectSuiteOneVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4601", name="WIFI-4601")
     @pytest.mark.twog
     @pytest.mark.open
-    def test_ClientConnectivity_2g_Open_VLAN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnectivity_2g_Open_VLAN(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssidName = profile_data["ssid_name"]
