@@ -21,7 +21,7 @@ from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnecti
     Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown,\
     verifyUploadDownloadSpeediOS, get_ip_address_eap_ios, wifi_connect_eap, wifi_disconnect_and_forget
 
-pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.client_connect
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.client_connectivity
               ,pytest.mark.interop_uc_sanity, pytest.mark.bridge, pytest.mark.enterprise]
 
 setup_params_enterprise = {
