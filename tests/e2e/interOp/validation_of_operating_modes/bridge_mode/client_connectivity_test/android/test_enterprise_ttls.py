@@ -19,7 +19,8 @@ if 'perfecto_libs' not in sys.path:
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.client_connectivity
               ,pytest.mark.interop_uc_sanity, pytest.mark.bridge, pytest.mark.enterprise]
 
-from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, get_ip_address_eap_and
+from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, \
+    get_ip_address_eap_and, verifyUploadDownloadSpeed_android, wifi_connect_eap, wifi_disconnect_and_forget
 
 setup_params_enterprise = {
     "mode": "BRIDGE",
@@ -53,12 +54,12 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4665", name="WIFI-4665")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_enterprise
-    def test_ClientConnect_5g_WPA2_enterprise(self, request, get_vif_state, get_ToggleAirplaneMode_data
+    def test_ClientConnectivity_5g_WPA2_enterprise(self, request, get_vif_state, get_ToggleAirplaneMode_data
                                               , setup_perfectoMobile_android, radius_info, get_ap_logs):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][1]
         ssidName = profile_data["ssid_name"]
-        #ssidPassword = profile_data["security_key"]
+        ssidPassword = profile_data["security_key"]
         print ("SSID_NAME: " + ssidName)
         #print ("SSID_PASS: " + ssidPassword)
         ttls_passwd = radius_info["password"]
@@ -72,30 +73,33 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         driver = setup_perfectoMobile_android[0]
         connData = get_ToggleAirplaneMode_data
 
-        # Set Wifi/AP Mode
         ip, is_internet = get_ip_address_eap_and(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android, connData)
-
-        if ip:
-            if is_internet:
+        # Set Wifi/AP Mode
+        if is_internet:
+            if ip:
                 text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
             else:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "without internet")
+                text_body = ("connected to " + ssidName + "with Internet, couldn't get IP address")
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
-            assert True
+
+            wifi_connect_eap(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android, connData)
+            assert verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+
         else:
-            allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
+            allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4664", name="WIFI-4664")
     @pytest.mark.twog
     @pytest.mark.wpa2_enterprise
-    def test_ClientConnect_2g_WPA2_enterprise(self, request, get_vif_state, get_ToggleAirplaneMode_data,
-                                              setup_perfectoMobile_android, radius_info, get_ap_logs):
+    def test_ClientConnectivity_2g_WPA2_enterprise(self, request, get_vif_state, get_ToggleAirplaneMode_data
+                                                   , setup_perfectoMobile_android, radius_info, get_ap_logs):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][0]
         ssidName = profile_data["ssid_name"]
-        # ssidPassword = profile_data["security_key"]
+        ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
         ttls_passwd = radius_info["password"]
@@ -109,31 +113,34 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         driver = setup_perfectoMobile_android[0]
         connData = get_ToggleAirplaneMode_data
 
-        # Set Wifi/AP Mode
         ip, is_internet = get_ip_address_eap_and(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android,
                                                  connData)
-
-        if ip:
-            if is_internet:
+        # Set Wifi/AP Mode
+        if is_internet:
+            if ip:
                 text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
             else:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "without internet")
+                text_body = ("connected to " + ssidName + "with Internet, couldn't get IP address")
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
-            assert True
+
+            wifi_connect_eap(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android, connData)
+            assert verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+
         else:
-            allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
+            allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4667", name="WIFI-4667")
     @pytest.mark.fiveg
     @pytest.mark.wpa3_enterprise
-    def test_ClientConnect_5g_WPA3_enterprise(self, request, get_vif_state, get_ToggleAirplaneMode_data,
-                                              setup_perfectoMobile_android, radius_info, get_ap_logs):
+    def test_ClientConnectivity_5g_WPA3_enterprise(self, request, get_vif_state, get_ToggleAirplaneMode_data
+                                                   , setup_perfectoMobile_android, radius_info, get_ap_logs):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][1]
         ssidName = profile_data["ssid_name"]
-        # ssidPassword = profile_data["security_key"]
+        ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
         ttls_passwd = radius_info["password"]
@@ -147,31 +154,34 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         driver = setup_perfectoMobile_android[0]
         connData = get_ToggleAirplaneMode_data
 
-        # Set Wifi/AP Mode
         ip, is_internet = get_ip_address_eap_and(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android,
                                                  connData)
-
-        if ip:
-            if is_internet:
+        # Set Wifi/AP Mode
+        if is_internet:
+            if ip:
                 text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
             else:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "without internet")
+                text_body = ("connected to " + ssidName + "with Internet, couldn't get IP address")
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
-            assert True
+
+            wifi_connect_eap(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android, connData)
+            assert verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+
         else:
-            allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
+            allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4666", name="WIFI-4666")
     @pytest.mark.twog
     @pytest.mark.wpa3_enterprise
-    def test_ClientConnect_2g_WPA3_enterprise(self, request, get_vif_state, get_ToggleAirplaneMode_data,
-                                              setup_perfectoMobile_android, radius_info, get_ap_logs):
+    def test_ClientConnectivity_2g_WPA3_enterprise(self, request, get_vif_state, get_ToggleAirplaneMode_data
+                                                   , setup_perfectoMobile_android, radius_info, get_ap_logs):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][0]
         ssidName = profile_data["ssid_name"]
-        # ssidPassword = profile_data["security_key"]
+        ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
         ttls_passwd = radius_info["password"]
@@ -185,18 +195,21 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         driver = setup_perfectoMobile_android[0]
         connData = get_ToggleAirplaneMode_data
 
-        # Set Wifi/AP Mode
         ip, is_internet = get_ip_address_eap_and(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android,
                                                  connData)
-
-        if ip:
-            if is_internet:
+        # Set Wifi/AP Mode
+        if is_internet:
+            if ip:
                 text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
             else:
-                text_body = ("connected to " + ssidName + " (" + ip + ") " + "without internet")
+                text_body = ("connected to " + ssidName + "with Internet, couldn't get IP address")
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
-            assert True
+
+            wifi_connect_eap(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android, connData)
+            assert verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+
         else:
-            allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
+            allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
