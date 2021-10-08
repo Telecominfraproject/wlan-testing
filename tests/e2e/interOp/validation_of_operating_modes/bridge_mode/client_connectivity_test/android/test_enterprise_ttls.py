@@ -59,7 +59,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][1]
         ssidName = profile_data["ssid_name"]
-        ssidPassword = profile_data["security_key"]
+        ssidPassword = ["BLANK"]
         print ("SSID_NAME: " + ssidName)
         #print ("SSID_PASS: " + ssidPassword)
         ttls_passwd = radius_info["password"]
@@ -99,7 +99,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][0]
         ssidName = profile_data["ssid_name"]
-        ssidPassword = profile_data["security_key"]
+        ssidPassword = ["BLANK"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
         ttls_passwd = radius_info["password"]
@@ -140,7 +140,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][1]
         ssidName = profile_data["ssid_name"]
-        ssidPassword = profile_data["security_key"]
+        ssidPassword = ["BLANK"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
         ttls_passwd = radius_info["password"]
@@ -181,7 +181,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][0]
         ssidName = profile_data["ssid_name"]
-        ssidPassword = profile_data["security_key"]
+        ssidPassword = ["BLANK"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
         ttls_passwd = radius_info["password"]
