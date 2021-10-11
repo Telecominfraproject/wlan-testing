@@ -55,9 +55,10 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4711", name="WIFI-4711")
+    @pytest.mark.sg123
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
-    def test_ClientConnectivity_5g_WPA2_Eap(self, request, get_vif_state, get_ToggleAirplaneMode_data
+    def test_ClientConnectivity_5g_WPA2_Eap_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data
                                        , setup_perfectoMobile_iOS, radius_info, get_ap_logs):
         """ wpa2 enterprise 5g
             pytest -m "client_connect and bridge and enterprise and ttls and wpa_enterprise and fiveg"
@@ -100,7 +101,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4710", name="WIFI-4710")
     @pytest.mark.twog
     @pytest.mark.wpa2_enterprise
-    def test_ClientConnectivity_2g_WPA2_Eap(self, request, get_vif_state, get_ToggleAirplaneMode_data
+    def test_ClientConnectivity_2g_WPA2_Eap_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data
                                        , setup_perfectoMobile_iOS, radius_info, get_ap_logs):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][0]
@@ -140,7 +141,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4715", name="WIFI-4715")
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
-    def test_ClientConnectivity_5g_WPA3_Eap(self, request, get_vif_state, get_ToggleAirplaneMode_data
+    def test_ClientConnectivity_5g_WPA3_Eap_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data
                                        , setup_perfectoMobile_iOS, radius_info, get_ap_logs):
         """ wpa2 enterprise 5g
             pytest -m "client_connect and bridge and enterprise and ttls and wpa_enterprise and fiveg"
@@ -183,7 +184,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4714", name="WIFI-4714")
     @pytest.mark.twog
     @pytest.mark.wpa3_enterprise
-    def test_ClientConnectivity_2g_WPA3_Eap(self, request, get_vif_state, get_ToggleAirplaneMode_data
+    def test_ClientConnectivity_2g_WPA3_Eap_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data
                                        , setup_perfectoMobile_iOS, radius_info, get_ap_logs):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][0]
