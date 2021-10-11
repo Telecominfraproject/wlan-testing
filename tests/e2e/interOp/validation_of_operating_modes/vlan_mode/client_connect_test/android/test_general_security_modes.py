@@ -199,8 +199,8 @@ class TestVlanModeConnectSuiteOne(object):
         profile_data = setup_params_general["ssid_modes"]["open"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = "[BLANK]"
-        print ("SSID_NAME: " + ssidName)
-        print ("SSID_PASS: " + ssidPassword)
+        print("SSID_NAME: " + ssidName)
+        print("SSID_PASS: " + ssidPassword)
         get_vif_state.append(ssidName)
 
         if ssidName not in get_vif_state:
@@ -226,11 +226,6 @@ class TestVlanModeConnectSuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-        #Toggle AirplaneMode
-        # assert Toggle_AirplaneMode_android(request, setup_perfectoMobile_android, connData)
-
-        #ForgetWifi
-        # ForgetWifiConnection(request, setup_perfectoMobile_android, ssidName, connData)
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4606", name="WIFI-4606")
     @pytest.mark.twog
@@ -240,8 +235,8 @@ class TestVlanModeConnectSuiteOne(object):
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssidName = profile_data["ssid_name"]
         ssidPassword = "[BLANK]"
-        print ("SSID_NAME: " + ssidName)
-        print ("SSID_PASS: " + ssidPassword)
+        print("SSID_NAME: " + ssidName)
+        print("SSID_PASS: " + ssidPassword)
         get_vif_state.append(ssidName)
 
         if ssidName not in get_vif_state:
@@ -305,7 +300,6 @@ class TestVlanModeConnectSuiteTwo(object):
         pytest -m "client_connect and vlan and InteropsuiteB"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4617", name="WIFI-4617")
-    @pytest.mark.hari
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal
     def test_ClientConnect_5g_wpa3_personal_Vlan(self, request, get_vif_state, get_ap_logs, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
