@@ -36,7 +36,7 @@ setup_params_enterprise = {
 }
 
 @allure.suite(suite_name="interop sanity")
-@allure.sub_suite(sub_suite_name="Bridge Mode EAP Client Connectivity : Suite-A")
+@allure.sub_suite(sub_suite_name="Bridge Mode EAP Client Connect : Suite-A")
 @pytest.mark.suiteA
 @pytest.mark.parametrize(
     'setup_profiles',
