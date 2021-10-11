@@ -121,6 +121,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
+      max-parallel: 1
     env:
       CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
       CLOUDSHELL_USER: admin
