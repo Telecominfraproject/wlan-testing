@@ -514,16 +514,22 @@ def verifyUploadDownloadSpeediOS(request, setup_perfectoMobile, get_APToMobileDe
 
     driver.switch_to.context('WEBVIEW_1')
     
- 
-    print("Launching Safari")
-    report.step_start("Google Home Page") 
-    driver.get(connData["webURL"]) 
-    print("Enter Search Text")
-    elementFindTxt = driver.find_element_by_xpath(connData["lblSearch"])
-    elementFindTxt.send_keys("Internet Speed Test")
+    try:
+        print("Launching Safari")
+        report.step_start("Google Home Page")
+        driver.get(connData["webURL"])
+        print("Enter Search Text")
+        elementFindTxt = driver.find_element_by_xpath(connData["lblSearch"])
+        elementFindTxt.send_keys("Internet Speed Test")
+    except Exception as e:
+        print("Launching Safari Failed")
+        print(e)
 
     try:
         print("Click Search Button")
+        report.step_start("Click Search Button")
+        time.sleep(2)
+        driver.implicitly_wait(2)
         # elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']/li[1]/div[1]")
         elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
         elelSearch.click()
@@ -537,7 +543,7 @@ def verifyUploadDownloadSpeediOS(request, setup_perfectoMobile, get_APToMobileDe
         driver.find_element_by_xpath(connData["BtnRunSpeedTest"]).click()
     except NoSuchElementException:
         currentResult = False
-        print("Run Speed Test Button element not found")
+        print("Run Speed Test Button element not found",NoSuchElementException)
         return currentResult
 
     #Get upload/Download Speed
@@ -1665,7 +1671,7 @@ def get_ip_address_eap_ios(request, WifiName ,User, ttls_passwd, setup_perfectoM
         print("Password Page Not Loaded, password May be cached in the System")
     # ---------------------check if internet-------------------------------
     try:
-        WifiInternetErrMsg2 = WebDriverWait(driver, 30).until(
+        WifiInternetErrMsg2 = WebDriverWait(driver, 35).until(
             EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
         # = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
     except Exception as e:
@@ -1687,6 +1693,7 @@ def get_ip_address_eap_ios(request, WifiName ,User, ttls_passwd, setup_perfectoM
 
         try:
             print("Checking IP address")
+            time.sleep(4)
             # (//*[@label="IP Address"]/parent::*/XCUIElementTypeStaticText)[2]
             ip_address_element_text = driver.find_element_by_xpath("(//*[@label='IP Address']/parent::*/XCUIElementTypeStaticText)[2]").text
             print("ip_address_element_text: ", ip_address_element_text)
@@ -1762,7 +1769,7 @@ def get_ip_address_eap_ios(request, WifiName ,User, ttls_passwd, setup_perfectoM
     return ip_address_element_text, is_internet
     # ---------------------close app-------------------------------
 
-def wifi_connect_eap(request, WifiName, ttls_passwd, setup_perfectoMobile, connData):
+def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Select Wifi/AccessPoint Connection")
     print("-------------------------------------")
@@ -1914,14 +1921,25 @@ def wifi_connect_eap(request, WifiName, ttls_passwd, setup_perfectoMobile, connD
         closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
         return is_internet
     # ---------------------This is to Select SSID-------------------------------
-
-    # ---------------------Set Password-------------------------------
+    # -------------------------Set username---------------------------------
+    # -------------------------------------------------------
     try:
+        driver.implicitly_wait(5)
+        report.step_start("Set User name")
+        print("Set User name")
+        wifiUserElement = driver.find_element_by_xpath("//*[@label='Username']")
+        wifiUserElement.send_keys(User)
+    except NoSuchElementException:
+        print("Password Page Not Loaded, password May be cached in the System")
+        # -------------------------------------------------------
+
+        # ---------------------Set Password-------------------------------
+    try:
+        driver.implicitly_wait(5)
         wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
         wifiPassword.send_keys(ttls_passwd)
     except NoSuchElementException:
         print("Enter Password Page Not Loaded")
-    # ---------------------Set Password-------------------------------
 
     # ---------------------Click on join-------------------------------
     try:
@@ -1930,7 +1948,17 @@ def wifi_connect_eap(request, WifiName, ttls_passwd, setup_perfectoMobile, connD
     except Exception as e:
         print("Join Button Not Enabled...Password may not be needed")
     # ---------------------Click on join-------------------------------
-
+    #Selecting certificate
+    # -------------------------------------------------------
+    try:
+        driver.implicitly_wait(3)
+        print("Trust certificate")
+        report.step_start("Clicking Trust CA Cert")
+        certElement = driver.find_element_by_xpath("//*[@label='Trust']")
+        certElement.click()
+        print("Certificate selected")
+    except NoSuchElementException:
+        print("Password Page Not Loaded, password May be cached in the System")
     # ---------------------check if internet-------------------------------
     try:
         WifiInternetErrMsg2 = WebDriverWait(driver, 30).until(
