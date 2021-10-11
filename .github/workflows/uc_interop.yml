@@ -153,7 +153,7 @@ jobs:
 
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
 
-        kubectl wait "pod/$podname" --for condition=ready
+        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
 
         until [ -s test_everything.xml ]
         do
