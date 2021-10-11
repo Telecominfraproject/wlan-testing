@@ -39,8 +39,8 @@ setup_params_enterprise = {
 }
 
 
-@allure.suite(suite_name="interop")
-@allure.sub_suite(sub_suite_name="Bridge Mode EAP Client Connect : Suite-A")
+@allure.suite(suite_name="interop sanity")
+@allure.sub_suite(sub_suite_name="Bridge Mode EAP Client Connectivity : Suite-A")
 @pytest.mark.suiteA
 @pytest.mark.parametrize(
     'setup_profiles',
@@ -55,7 +55,6 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4711", name="WIFI-4711")
-    @pytest.mark.sg123
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     def test_ClientConnectivity_5g_WPA2_Eap_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data
@@ -65,7 +64,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         """
         profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][1]
         ssidName = profile_data["ssid_name"]
-        # ssidPassword = profile_data["security_key"]
+        ssidPassword = ["BLANK"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
         ttls_passwd = radius_info["password"]
@@ -80,8 +79,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         connData = get_ToggleAirplaneMode_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_address_eap_ios(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_iOS,
-                                                 connData)
+        ip, is_internet = get_ip_address_eap_ios(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_iOS, connData)
 
         if is_internet:
             if ip:
@@ -91,9 +89,9 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
-            wifi_connect_eap(request, ssidName, ttls_passwd, setup_perfectoMobile_iOS, connData)
+            wifi_connect_eap(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_iOS, connData)
             assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
-            wifi_disconnect_and_forget(request, ssidName, setup_perfectoMobile_iOS, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword,setup_perfectoMobile_iOS, connData)
         else:
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
@@ -106,6 +104,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][0]
         ssidName = profile_data["ssid_name"]
+        ssidPassword = ["BLANK"]
         # ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
@@ -131,9 +130,9 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
-            wifi_connect_eap(request, ssidName, ttls_passwd, setup_perfectoMobile_iOS, connData)
+            wifi_connect_eap(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_iOS, connData)
             assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
-            wifi_disconnect_and_forget(request, ssidName, setup_perfectoMobile_iOS, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         else:
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
@@ -148,6 +147,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         """
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][1]
         ssidName = profile_data["ssid_name"]
+        ssidPassword = ["BLANK"]
         # ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
@@ -174,9 +174,9 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
-            wifi_connect_eap(request, ssidName, ttls_passwd, setup_perfectoMobile_iOS, connData)
+            wifi_connect_eap(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_iOS, connData)
             assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
-            wifi_disconnect_and_forget(request, ssidName, setup_perfectoMobile_iOS, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         else:
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
@@ -189,6 +189,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][0]
         ssidName = profile_data["ssid_name"]
+        ssidPassword = ["BLANK"]
         # ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
@@ -214,9 +215,9 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
-            wifi_connect_eap(request, ssidName, ttls_passwd, setup_perfectoMobile_iOS, connData)
+            wifi_connect_eap(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_iOS, connData)
             assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
-            wifi_disconnect_and_forget(request, ssidName, setup_perfectoMobile_iOS, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         else:
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
