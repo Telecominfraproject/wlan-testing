@@ -295,7 +295,7 @@ setup_params_general_two = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestVlanModeConnectSuiteTwo(object):
     """ Client Connect SuiteB
-        pytest -m "client_connect and nat and InteropsuiteB"
+        pytest -m "client_connect and vlan and InteropsuiteB"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4596", name="WIFI-4596")
