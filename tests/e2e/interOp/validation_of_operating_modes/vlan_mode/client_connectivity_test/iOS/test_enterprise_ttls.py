@@ -138,7 +138,6 @@ class TestVlanModeEnterpriseTTLSSuiteA(object):
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4833", name="WIFI-4833")
-    @pytest.mark.sg123
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
     def test_ClientConnectivity_5g_WPA3_Eap_Vlan(self, request, get_vif_state, get_ToggleAirplaneMode_data
@@ -183,7 +182,6 @@ class TestVlanModeEnterpriseTTLSSuiteA(object):
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4832", name="WIFI-4832")
-    @pytest.mark.sg123
     @pytest.mark.twog
     @pytest.mark.wpa3_enterprise
     def test_ClientConnectivity_2g_WPA3_Eap_Vlan(self, request, get_vif_state, get_ToggleAirplaneMode_data
