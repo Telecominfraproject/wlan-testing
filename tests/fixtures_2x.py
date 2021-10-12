@@ -657,3 +657,26 @@ class Fixtures_2x:
 
         request.addfinalizer(teardown_session)
         return test_cases
+
+    # comment
+    def setup_mesh_profile(self, get_apnos, get_configuration):
+        # this will return configuration of your testbed from tests/conftest.py get_configuration fixtures
+        print("get configuration",get_configuration)
+        print(len(get_configuration['access_point']))
+        # print(get_configuration['access_point'])
+        for length in range(0,len(get_configuration['access_point'])):
+            ap_ssh = get_apnos(credentials=get_configuration['access_point'][length], pwd="../libs/apnos/", sdk="2.x")
+            connected, latest, active = ap_ssh.get_ucentral_status()
+            print("connected", connected)
+            print("latest",latest)
+            print("active", active)
+            if connected == False:
+                pytest.exit("AP is disconnected from UC Gateway")
+            if latest != active:
+                allure.attach(name="FAIL : ubus call ucentral status: ", body="connected: " + str(connected) + "\nlatest: " + str(latest) + "\nactive: " + str(active))
+                ap_logs = ap_ssh.logread()
+                allure.attach(body=ap_logs, name="FAILURE: AP LOgs: ")
+                pytest.fail("AP is disconnected from UC Gateway")
+
+
+
