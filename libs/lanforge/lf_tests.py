@@ -302,6 +302,8 @@ class RunTest:
             # self.client_connect.sta_prefix = self.twog_prefix
         if band == "fiveg":
             self.client_connect.radio = self.fiveg_radios[0]
+        if band == "ax":
+            self.client_connect.radio = self.ax_radios[0]
         self.client_connect.build()
         self.client_connect.wait_for_ip(station_name)
         print(self.client_connect.wait_for_ip(station_name))

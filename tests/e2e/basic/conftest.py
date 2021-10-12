@@ -101,6 +101,12 @@ def station_names_fiveg(request, get_configuration):
         station_names.append(get_configuration["traffic_generator"]["details"]["5G-Station-Name"] + "0" + str(i))
     yield station_names
 
+@pytest.fixture(scope="session")
+def station_names_ax(request, get_configuration):
+    station_names = []
+    for i in range(0, int(request.config.getini("num_stations"))):
+        station_names.append(get_configuration["traffic_generator"]["details"]["AX-Station-Name"] + "0" + str(i))
+    yield station_names
 
 @pytest.fixture(scope="session")
 def num_stations(request):
