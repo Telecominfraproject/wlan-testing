@@ -112,9 +112,9 @@ class ConfigureController:
         gw_host = ""
         fms_host = ""
         for service in services['endpoints']:
-            if service['type'] == "ucentralgw":
+            if service['type'] == "owgw":
                 gw_host = urlparse(service["uri"])
-            if service['type'] == "ucentralfms":
+            if service['type'] == "owfms":
                 fms_host = urlparse(service["uri"])
         return gw_host, fms_host
 
@@ -173,12 +173,13 @@ class Controller(ConfigureController):
         return device
 
     def get_sdk_version(self):
-        uri = self.build_uri("system/?command=version")
+        uri = self.build_uri("system/?command=info")
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         version = resp.json()
+        print(version)
         # resp.close()()
-        return version['value']
+        return version['version']
 
     def get_device_uuid(self, serial_number):
         device_info = self.get_device_by_serial_number(serial_number=serial_number)
@@ -410,7 +411,7 @@ class UProfileUtility:
             "band": "2G",
             "country": "US",
             # "channel-mode": "HE",
-            "channel-width": 20,
+            "channel-width": 40,
             # "channel": 11
         })
         self.base_profile_config["radios"].append({

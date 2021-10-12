@@ -107,11 +107,11 @@ jobs:
       run: |
         export NAMESPACE=${{ github.run_id }}
         export DEPLOY_METHOD=git
-        export CHART_VERSION=main
-        export OWGW_VERSION=master
-        export OWGWUI_VERSION=main
-        export OWSEC_VERSION=main
-        export OWFMS_VERSION=main
+        export CHART_VERSION=v2.2.0-RC1
+        export OWGW_VERSION=v2.2.0-RC1
+        export OWGWUI_VERSION=v2.2.0-RC1
+        export OWSEC_VERSION=v2.2.0-RC1
+        export OWFMS_VERSION=v2.2.0-RC1
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
@@ -271,7 +271,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression || 'uc_sanity' }}" -s -vvv --testbed="${{ matrix.testbed }}" --alluredir=/tmp/allure-results -o firmware=latest
+                    pytest -m "${{ github.event.inputs.marker_expression || 'uc_sanity' }}" -s -vvv --testbed="${{ matrix.testbed }}" --alluredir=/tmp/allure-results
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -293,7 +293,7 @@ jobs:
         # wait for pod to spawn
         sleep 1
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-        kubectl wait "pod/$podname" --for condition=ready
+        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
         #sleep 30 # wait for the pod to come up
         until [ -s test_everything.xml ]
         do
