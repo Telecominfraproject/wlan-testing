@@ -25,7 +25,7 @@ on:
         description: 'Pass additional markers that will be and-combined with the interop marker, e.g. "twog or fiveg" -> "interop and twog or fiveg"'
         required: false
   schedule:
-  - cron: '15 0 * * *'
+  - cron: '30 20 * * *'
 
 defaults:
   run:
@@ -97,9 +97,9 @@ jobs:
       id: marker
       run: |
         if [ "${{ matrix.test_type }}" = "android" ]; then
-          MARKER_EXPRESSION="interop_and and interop_uc_sanity"
+          MARKER_EXPRESSION="interop_and and interop_uc_sanity and client_connect"
         else
-          MARKER_EXPRESSION="interop_ios and interop_uc_sanity"
+          MARKER_EXPRESSION="interop_ios and interop_uc_sanity and client_connect"
         fi
 
         ADDITIONAL_MARKERS="${{ github.event.inputs.additional_markers || '' }}"
@@ -129,7 +129,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ steps.marker.outputs.expression }}" -s -vvv --testbed=interop-03 -o 'jobName=Github-Interop-${{ matrix.test_type }}' -o 'jobNumber=${{ github.run_number }}' --skip-testrail --alluredir=/tmp/allure-results
+                    pytest -m "${{ steps.marker.outputs.expression }}" -s -vvv --testbed=interop-03 -o 'jobName=Github-Interop-${{ matrix.test_type }}' -o 'jobNumber=${{ github.run_number }}' --alluredir=/tmp/allure-results
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -153,7 +153,7 @@ jobs:
 
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
 
-        kubectl wait "pod/$podname" --for condition=ready
+        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
 
         until [ -s test_everything.xml ]
         do

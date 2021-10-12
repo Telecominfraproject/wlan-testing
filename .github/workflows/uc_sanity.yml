@@ -17,10 +17,14 @@ env:
   ALLURE_CLI_VERSION: 2.14.0
 
 on:
+  repository_dispatch:
+    types:
+    - new-ap-release
+    - new-cloud-release
   workflow_dispatch:
     inputs:
       testbeds:
-        default: 'basic-03,basic-04,basic-05,basic-06,basic-07,basic-08'
+        default: 'basic-01,basic-02,basic-03,basic-04,basic-05,basic-06,basic-07,basic-08'
         description: 'Testbed(s) to test'
         required: false
       marker_expression:
@@ -64,7 +68,7 @@ jobs:
       run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
 
   deploy-controller:
-    name: deploy uCentral controller
+    name: Deploy OpenWIFI Cloud SDK
     runs-on: ubuntu-latest
     outputs:
       gateway_url: ${{ steps.gateway_url.outputs.value }}
@@ -88,32 +92,32 @@ jobs:
 
     - name: Set namespace output
       id: namespace
-      run: echo "::set-output name=value::ucentral-${{ github.run_id }}"
+      run: echo "::set-output name=value::openwifi-${{ github.run_id }}"
 
     - name: Set gateway URL output
       id: gateway_url
-      run: echo "::set-output name=value::gw-ucentral-${{ github.run_id }}.cicd.lab.wlan.tip.build"
+      run: echo "::set-output name=value::gw-${{ github.run_id }}.cicd.lab.wlan.tip.build"
 
     - name: Set sec service URL output
       id: sec_url
-      run: echo "::set-output name=value::sec-ucentral-${{ github.run_id }}.cicd.lab.wlan.tip.build"
+      run: echo "::set-output name=value::sec-${{ github.run_id }}.cicd.lab.wlan.tip.build"
 
-    - name: Deploy uCentralGW
+    - name: Deploy OpenWIFI Cloud SDK
       working-directory: wlan-testing/helm/ucentral
       run: |
         export NAMESPACE=${{ github.run_id }}
         export DEPLOY_METHOD=git
-        export CHART_VERSION=main
-        export UCENTRALGW_VERSION=master
-        export UCENTRALGWUI_VERSION=main
-        export UCENTRALSEC_VERSION=main
-        export UCENTRALFMS_VERSION=main
+        export CHART_VERSION=v2.2.0-RC1
+        export OWGW_VERSION=v2.2.0-RC1
+        export OWGWUI_VERSION=v2.2.0-RC1
+        export OWSEC_VERSION=v2.2.0-RC1
+        export OWFMS_VERSION=v2.2.0-RC1
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
-        export UCENTRALGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
-        export UCENTRALGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
-        export UCENTRALFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
-        export UCENTRALFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
+        export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
+        export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
+        export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
+        export OWFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
         export CERT_LOCATION=cert.pem
         export KEY_LOCATION=key.pem
         ./deploy.sh
@@ -121,21 +125,21 @@ jobs:
     - name: Show resource state on deployment failure
       if: failure()
       run: |
-        kubectl get pods --namespace ucentral-${{ matrix.namespace }}
-        kubectl get services --namespace ucentral-${{ matrix.namespace }}
-        kubectl get persistentvolumeclaims --namespace ucentral-${{ matrix.namespace }}
+        kubectl get pods --namespace openwifi-${{ github.run_id }}
+        kubectl get services --namespace openwifi-${{ github.run_id }}
+        kubectl get persistentvolumeclaims --namespace openwifi-${{ github.run_id }}
     - name: Describe pods on deployment failure
       if: failure()
       run: |
-        kubectl describe pods --namespace ucentral-${{ matrix.namespace }}
+        kubectl describe pods --namespace openwifi-${{ github.run_id }}
     - name: Describe services on deployment failure
       if: failure()
       run: |
-        kubectl describe services --namespace ucentral-${{ matrix.namespace }}
+        kubectl describe services --namespace openwifi-${{ github.run_id }}
     - name: Describe persistentvolumeclaims on deployment failure
       if: failure()
       run: |
-        kubectl describe persistentvolumeclaims --namespace ucentral-${{ matrix.namespace }}
+        kubectl describe persistentvolumeclaims --namespace openwifi-${{ github.run_id }}
 
     - name: wait for DNS to propagate
       run: sleep 300
@@ -149,7 +153,7 @@ jobs:
     - name: generate-matrix
       id: set-matrix
       run: |
-        TESTBEDS="${{ github.event.inputs.testbeds || 'basic-03,basic-04,basic-05,basic-06,basic-07,basic-08' }}"
+        TESTBEDS="${{ github.event.inputs.testbeds || 'basic-01,basic-02,basic-03,basic-04,basic-05,basic-06,basic-07,basic-08' }}"
         TESTBEDS=$(echo $TESTBEDS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
         TESTBEDS=$(echo "$TESTBEDS" | jq -c 'map({"testbed":.})')
         echo "::set-output name=matrix::{\"include\":${TESTBEDS}}"
@@ -267,7 +271,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression || 'uc_sanity' }}" -s -vvv --testbed="${{ matrix.testbed }}" --skip-testrail --alluredir=/tmp/allure-results
+                    pytest -m "${{ github.event.inputs.marker_expression || 'uc_sanity' }}" -s -vvv --testbed="${{ matrix.testbed }}" --alluredir=/tmp/allure-results
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -289,7 +293,7 @@ jobs:
         # wait for pod to spawn
         sleep 1
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-        kubectl wait "pod/$podname" --for condition=ready
+        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
         #sleep 30 # wait for the pod to come up
         until [ -s test_everything.xml ]
         do
@@ -433,7 +437,7 @@ jobs:
         aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
     - name: Delete namespace
-      run: kubectl delete ns --ignore-not-found=true "ucentral-${{ github.run_id }}"
+      run: kubectl delete ns --ignore-not-found=true "openwifi-${{ github.run_id }}"
 
   reset-redirector-url:
     needs: [ test, generate-matrix ]
@@ -472,7 +476,7 @@ jobs:
       run: |
         for id in $(echo -e 'from configuration import CONFIGURATION\nfor ap in CONFIGURATION["${{ matrix.testbed }}"]["access_point"]: print(ap["serial"])' | python3)
         do
-          ./wlan-pki-cert-scripts/digicert-change-ap-redirector.sh $id gw-ucentral-qa01.cicd.lab.wlan.tip.build
+          ./wlan-pki-cert-scripts/digicert-change-ap-redirector.sh $id gw-qa01.cicd.lab.wlan.tip.build
         done
 
     - name: factory reset APs
