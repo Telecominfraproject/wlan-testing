@@ -57,6 +57,7 @@ class TestNatModeConnectivitySuiteNatOne(object):
         pytest -m "client_connectivity and nat and InteropsuiteA"
     """
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4526", name="WIFI-4526")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_ClientConnectivity_5g_WPA2_Personal_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
@@ -93,6 +94,7 @@ class TestNatModeConnectivitySuiteNatOne(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4525", name="WIFI-4525")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_ClientConnectivity_2g_WPA2_Personal_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -128,6 +130,7 @@ class TestNatModeConnectivitySuiteNatOne(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4522", name="WIFI-4522")
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_ClientConnectivity_5g_WPA_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -163,6 +166,7 @@ class TestNatModeConnectivitySuiteNatOne(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4520", name="WIFI-4520")
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_ClientConnectivity_2g_WPA_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -198,6 +202,7 @@ class TestNatModeConnectivitySuiteNatOne(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4518", name="WIFI-4518")
     @pytest.mark.fiveg
     @pytest.mark.open
     def test_ClientConnectivity_5g_Open_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -233,6 +238,7 @@ class TestNatModeConnectivitySuiteNatOne(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4517", name="WIFI-4517")
     @pytest.mark.twog
     @pytest.mark.open
     def test_ClientConnectivity_2g_Open_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -309,6 +315,7 @@ class TestNatModeConnectivitySuiteNatTwo(object):
         pytest -m "client_connectivity and nat and InteropsuiteB"
     """
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4528", name="WIFI-4528")
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal
     def test_ClientConnectivity_5g_wpa3_personal_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -343,6 +350,7 @@ class TestNatModeConnectivitySuiteNatTwo(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4527", name="WIFI-4527")
     @pytest.mark.twog
     @pytest.mark.wpa3_personal
     def test_ClientConnectivity_2g_wpa3_personal_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -377,6 +385,7 @@ class TestNatModeConnectivitySuiteNatTwo(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4532", name="WIFI-4532")
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal_mixed
     def test_ClientConnectivity_5g_wpa3_personal_mixed_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -411,6 +420,7 @@ class TestNatModeConnectivitySuiteNatTwo(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4529", name="WIFI-4529")
     @pytest.mark.twog
     @pytest.mark.wpa3_personal_mixed
     def test_ClientConnectivity_2g_wpa3_personal_mixed_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -445,6 +455,7 @@ class TestNatModeConnectivitySuiteNatTwo(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4538", name="WIFI-4538")
     @pytest.mark.fiveg
     @pytest.mark.wpa_wpa2_personal_mixed
     def test_ClientConnectivity_5g_wpa_wpa2_personal_mixed_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -479,7 +490,7 @@ class TestNatModeConnectivitySuiteNatTwo(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4537", name="WIFI-4537")
     @pytest.mark.twog
     @pytest.mark.wpa_wpa2_personal_mixed
     def test_ClientConnectivity_2g_wpa_wpa2_personal_mixed_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
