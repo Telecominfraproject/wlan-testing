@@ -22,17 +22,17 @@ from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnecti
     verifyUploadDownloadSpeediOS, get_ip_address_eap_ios, wifi_connect_eap, wifi_disconnect_and_forget
 
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.client_connectivity
-              ,pytest.mark.interop_uc_sanity, pytest.mark.bridge, pytest.mark.enterprise]
+              ,pytest.mark.interop_uc_sanity, pytest.mark.vlan, pytest.mark.enterprise]
 
 setup_params_enterprise = {
-    "mode": "BRIDGE",
+    "mode": "VLAN",
     "ssid_modes": {
         "wpa2_enterprise": [
-            {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"]}],
+            {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"], "vlan": 100}],
         "wpa3_enterprise": [
-            {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"]}]},
+            {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "vlan": 100}]},
 
     "rf": {},
     "radius": True
@@ -40,7 +40,7 @@ setup_params_enterprise = {
 
 
 @allure.suite(suite_name="interop sanity")
-@allure.sub_suite(sub_suite_name="Bridge Mode EAP Client Connectivity : Suite-A")
+@allure.sub_suite(sub_suite_name="Vlan Mode EAP Client Connectivity : Suite-A")
 @pytest.mark.suiteA
 @pytest.mark.parametrize(
     'setup_profiles',
@@ -49,18 +49,18 @@ setup_params_enterprise = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestBridgeModeEnterpriseTTLSSuiteA(object):
+class TestVlanModeEnterpriseTTLSSuiteA(object):
     """ SuiteA Enterprise Test Cases
-        pytest -m "client_connect and bridge and enterprise and ttls and interop and suiteA"
+        pytest -m "client_connect and vlan and enterprise and ttls and interop and suiteA"
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4711", name="WIFI-4711")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4829", name="WIFI-4829")
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
-    def test_ClientConnectivity_5g_WPA2_Eap_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data
+    def test_ClientConnectivity_5g_WPA2_Eap_Vlan(self, request, get_vif_state, get_ToggleAirplaneMode_data
                                        , setup_perfectoMobile_iOS, radius_info, get_ap_logs):
         """ wpa2 enterprise 5g
-            pytest -m "client_connect and bridge and enterprise and ttls and wpa_enterprise and fiveg"
+            pytest -m "client_connect and vlan and enterprise and ttls and wpa_enterprise and fiveg"
         """
         profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][1]
         ssidName = profile_data["ssid_name"]
@@ -96,10 +96,10 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4710", name="WIFI-4710")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4828", name="WIFI-4828")
     @pytest.mark.twog
     @pytest.mark.wpa2_enterprise
-    def test_ClientConnectivity_2g_WPA2_Eap_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data
+    def test_ClientConnectivity_2g_WPA2_Eap_Vlan(self, request, get_vif_state, get_ToggleAirplaneMode_data
                                        , setup_perfectoMobile_iOS, radius_info, get_ap_logs):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][0]
@@ -137,13 +137,14 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4715", name="WIFI-4715")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4833", name="WIFI-4833")
+    @pytest.mark.sg123
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
-    def test_ClientConnectivity_5g_WPA3_Eap_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data
+    def test_ClientConnectivity_5g_WPA3_Eap_Vlan(self, request, get_vif_state, get_ToggleAirplaneMode_data
                                        , setup_perfectoMobile_iOS, radius_info, get_ap_logs):
         """ wpa2 enterprise 5g
-            pytest -m "client_connect and bridge and enterprise and ttls and wpa_enterprise and fiveg"
+            pytest -m "client_connect and vlan and enterprise and ttls and wpa_enterprise and fiveg"
         """
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][1]
         ssidName = profile_data["ssid_name"]
@@ -181,10 +182,11 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4714", name="WIFI-4714")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4832", name="WIFI-4832")
+    @pytest.mark.sg123
     @pytest.mark.twog
     @pytest.mark.wpa3_enterprise
-    def test_ClientConnectivity_2g_WPA3_Eap_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data
+    def test_ClientConnectivity_2g_WPA3_Eap_Vlan(self, request, get_vif_state, get_ToggleAirplaneMode_data
                                        , setup_perfectoMobile_iOS, radius_info, get_ap_logs):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][0]
