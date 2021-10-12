@@ -13,7 +13,6 @@ if "libs" not in sys.path:
 from controller.controller_1x.controller import ProfileUtility
 from controller.controller_2x.controller import UProfileUtility
 import time
-from lanforge.lf_tests import RunTest
 from lanforge.lf_tools import ChamberView
 import pytest
 import allure
@@ -85,10 +84,6 @@ def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtur
     yield return_var
 
 
-@pytest.fixture(scope="session")
-def lf_test(get_configuration, setup_influx):
-    obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'], influx_params=setup_influx)
-    yield obj
 
 
 @pytest.fixture(scope="session")
@@ -106,6 +101,12 @@ def station_names_fiveg(request, get_configuration):
         station_names.append(get_configuration["traffic_generator"]["details"]["5G-Station-Name"] + "0" + str(i))
     yield station_names
 
+@pytest.fixture(scope="session")
+def station_names_ax(request, get_configuration):
+    station_names = []
+    for i in range(0, int(request.config.getini("num_stations"))):
+        station_names.append(get_configuration["traffic_generator"]["details"]["AX-Station-Name"] + "0" + str(i))
+    yield station_names
 
 @pytest.fixture(scope="session")
 def num_stations(request):

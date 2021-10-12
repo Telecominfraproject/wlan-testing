@@ -70,12 +70,28 @@ jobs:
       run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     needs: [ build ]
 
     steps:
+    - name: install JRE
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y default-jre
+
+    - name: install aws CLI tool
+      run: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
+
     - name: get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: install Allure CLI tool
       run: |
@@ -101,7 +117,7 @@ jobs:
         EOF
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
 
-    - name: run perf tests
+    - name: run tests
       run: |
         cat <<EOF | kubectl apply -f -
         apiVersion: batch/v1
@@ -142,7 +158,8 @@ jobs:
         # wait for pod to spawn
         sleep 1
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-        kubectl wait "pod/$podname" --for condition=ready
+        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
+        kubectl logs -f $podname &
         #sleep 30 # wait for the pod to come up
         until [ -s test_everything.xml ]
         do
@@ -156,12 +173,6 @@ jobs:
         echo "waiting for pod to exit"
         kubectl logs -f $podname >/dev/null 2>&1
         exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
-
-    - name: print logs
-      if: always()
-      run: |
-        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-        kubectl logs $podname
 
     - name: upload Allure results as artifact
       if: always()
