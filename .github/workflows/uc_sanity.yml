@@ -113,6 +113,7 @@ jobs:
         export OWSEC_VERSION=v2.2.0-RC1
         export OWFMS_VERSION=v2.2.0-RC1
         export OWPROV_VERSION=main
+        export OWPROVUI_VERSION=main
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}

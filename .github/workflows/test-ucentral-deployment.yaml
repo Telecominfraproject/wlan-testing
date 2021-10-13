@@ -47,6 +47,10 @@ on:
         default: 'main'
         description: 'OpenWIFI Provisioning version to be deployed (git tag or helm package version may be used, main is default)'
         required: true
+      owprovui_version:
+        default: 'main'
+        description: 'OpenWIFI Provisioning Web UI version to be deployed (git tag or helm package version may be used, main is default)'
+        required: true
 
 jobs:
   deploy:
@@ -80,6 +84,7 @@ jobs:
         export OWSEC_VERSION=${{ github.event.inputs.owsec_version }}
         export OWFMS_VERSION=${{ github.event.inputs.owfms_version }}
         export OWPROV_VERSION=${{ github.event.inputs.owprov_version }}
+        export OWPROVUI_VERSION=${{ github.event.inputs.owprovui_version }}
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
