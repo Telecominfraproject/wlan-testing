@@ -1634,8 +1634,8 @@ def get_ip_address_eap_ios(request, WifiName ,User, ttls_passwd, setup_perfectoM
         # -------------------------------------------------------
     try:
         driver.implicitly_wait(5)
-        report.step_start("Set User name")
-        print("Set User name")
+        report.step_start("Entering User")
+        print("Entering User name")
         wifiUserElement = driver.find_element_by_xpath("//*[@label='Username']")
         wifiUserElement.send_keys(User)
     except NoSuchElementException:
@@ -1645,6 +1645,8 @@ def get_ip_address_eap_ios(request, WifiName ,User, ttls_passwd, setup_perfectoM
     # ---------------------Set Password-------------------------------
     try:
         driver.implicitly_wait(5)
+        report.step_start("Entering Password")
+        print("Entering password")
         wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
         wifiPassword.send_keys(ttls_passwd)
     except NoSuchElementException:
@@ -1655,6 +1657,8 @@ def get_ip_address_eap_ios(request, WifiName ,User, ttls_passwd, setup_perfectoM
     # ---------------------Click on join-------------------------------
     try:
         driver.implicitly_wait(5)
+        report.step_start("Clicking Join")
+        print("Clicking Join")
         joinBTN = driver.find_element_by_xpath("//*[@label='Join']")
         joinBTN.click()
     except Exception as e:
@@ -1665,12 +1669,14 @@ def get_ip_address_eap_ios(request, WifiName ,User, ttls_passwd, setup_perfectoM
     try:
         driver.implicitly_wait(3)
         report.step_start("Clicking Trust CA Cert")
+        print("Clicking Trust CA Cert")
         certElement = driver.find_element_by_xpath("//*[@label='Trust']")
         certElement.click()
     except NoSuchElementException:
         print("Password Page Not Loaded, password May be cached in the System")
     # ---------------------check if internet-------------------------------
     try:
+        report.step_start("Checking Internet connection")
         WifiInternetErrMsg2 = WebDriverWait(driver, 35).until(
             EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
         # = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
@@ -1683,6 +1689,7 @@ def get_ip_address_eap_ios(request, WifiName ,User, ttls_passwd, setup_perfectoM
 
     # ---------------------Additional INFO-------------------------------
     try:
+        driver.implicitly_wait(5)
         print("Selecting SSID: ",WifiName)
         report.step_start("Selecting SSID")
         additional_details_element =  WebDriverWait(driver, 35).until(
@@ -1692,7 +1699,9 @@ def get_ip_address_eap_ios(request, WifiName ,User, ttls_passwd, setup_perfectoM
         additional_details_element.click()
 
         try:
+            driver.implicitly_wait(5)
             print("Checking IP address")
+            report.step_start("Checking IP address")
             time.sleep(4)
             # (//*[@label="IP Address"]/parent::*/XCUIElementTypeStaticText)[2]
             ip_address_element_text = driver.find_element_by_xpath("(//*[@label='IP Address']/parent::*/XCUIElementTypeStaticText)[2]").text
@@ -1925,43 +1934,50 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
     # -------------------------------------------------------
     try:
         driver.implicitly_wait(5)
-        report.step_start("Set User name")
-        print("Set User name")
+        report.step_start("Entering User")
+        print("Entering User name")
         wifiUserElement = driver.find_element_by_xpath("//*[@label='Username']")
         wifiUserElement.send_keys(User)
     except NoSuchElementException:
         print("Password Page Not Loaded, password May be cached in the System")
         # -------------------------------------------------------
 
-        # ---------------------Set Password-------------------------------
+    # ---------------------Set Password-------------------------------
     try:
         driver.implicitly_wait(5)
+        report.step_start("Entering Password")
+        print("Entering password")
         wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
         wifiPassword.send_keys(ttls_passwd)
     except NoSuchElementException:
         print("Enter Password Page Not Loaded")
+    # ---------------------Set Password-------------------------------
+    # -------------------------------------------------------
 
     # ---------------------Click on join-------------------------------
     try:
+        driver.implicitly_wait(5)
+        report.step_start("Clicking Join")
+        print("Clicking Join")
         joinBTN = driver.find_element_by_xpath("//*[@label='Join']")
         joinBTN.click()
     except Exception as e:
         print("Join Button Not Enabled...Password may not be needed")
     # ---------------------Click on join-------------------------------
-    #Selecting certificate
+    # Selecting certificate
     # -------------------------------------------------------
     try:
         driver.implicitly_wait(3)
-        print("Trust certificate")
         report.step_start("Clicking Trust CA Cert")
+        print("Clicking Trust CA Cert")
         certElement = driver.find_element_by_xpath("//*[@label='Trust']")
         certElement.click()
-        print("Certificate selected")
     except NoSuchElementException:
         print("Password Page Not Loaded, password May be cached in the System")
     # ---------------------check if internet-------------------------------
     try:
-        WifiInternetErrMsg2 = WebDriverWait(driver, 30).until(
+        report.step_start("Checking Internet connection")
+        WifiInternetErrMsg2 = WebDriverWait(driver, 35).until(
             EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
         # = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
     except Exception as e:
