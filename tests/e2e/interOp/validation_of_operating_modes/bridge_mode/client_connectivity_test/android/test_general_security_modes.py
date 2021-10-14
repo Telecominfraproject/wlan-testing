@@ -53,7 +53,7 @@ class TestBridgeModeConnectivitySuiteOne(object):
     """ Client Connect SuiteA
         pytest -m "client_connectivity and bridge and InteropsuiteA"
     """
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4584", name="WIFI-4584")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_ClientConnectivity_5g_WPA2_Personal_Bridge(self, request, get_vif_state, get_ap_logs,
@@ -93,6 +93,7 @@ class TestBridgeModeConnectivitySuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4582", name="WIFI-4582")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_ClientConnectivity_2g_WPA2_Personal_Bridge(self, request, get_vif_state, get_ap_logs,
@@ -132,6 +133,7 @@ class TestBridgeModeConnectivitySuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4580", name="WIFI-4580")
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_ClientConnectivity_5g_WPA_Personal_Bridge(self, request, get_vif_state, get_ap_logs,
@@ -171,6 +173,7 @@ class TestBridgeModeConnectivitySuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4579", name="WIFI-4579")
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_ClientConnectivity_2g_WPA_Personal_Bridge(self, request, get_vif_state, get_ap_logs,
@@ -210,6 +213,7 @@ class TestBridgeModeConnectivitySuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4578", name="WIFI-4578")
     @pytest.mark.fiveg
     @pytest.mark.open
     def test_ClientConnectivity_5g_Open_Bridge(self, request, get_vif_state, get_ap_logs,
@@ -249,6 +253,7 @@ class TestBridgeModeConnectivitySuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4577", name="WIFI-4577")
     @pytest.mark.twog
     @pytest.mark.open
     @pytest.mark.test_ClientConnectivity_2g_Open_and
@@ -329,7 +334,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     """ Client Connect SuiteB
         pytest -m "client_connect and bridge and InteropsuiteB"
     """
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4587", name="WIFI-4587")
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
@@ -370,6 +375,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4588", name="WIFI-4588")
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
@@ -410,6 +416,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4589", name="WIFI-4589")
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
@@ -450,6 +457,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4590", name="WIFI-4590")
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
@@ -490,6 +498,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4591", name="WIFI-4591")
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
@@ -530,6 +539,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4592", name="WIFI-4592")
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
