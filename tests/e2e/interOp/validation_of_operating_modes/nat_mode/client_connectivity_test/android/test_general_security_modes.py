@@ -56,7 +56,8 @@ class TestNatModeConnectivitySuiteOne(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ClientConnectivity_5g_WPA2_Personal(self, request, get_vif_state, get_ap_logs, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_ClientConnectivity_5g_WPA2_Personal_Nat(self, request, get_vif_state, get_ap_logs,
+                                                     get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
@@ -94,7 +95,8 @@ class TestNatModeConnectivitySuiteOne(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ClientConnectivity_2g_WPA2_Personal(self, request, get_vif_state, get_ap_logs, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_ClientConnectivity_2g_WPA2_Personal_Nat(self, request, get_vif_state, get_ap_logs,
+                                                     get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -132,7 +134,8 @@ class TestNatModeConnectivitySuiteOne(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ClientConnectivity_5g_WPA(self, request, get_vif_state, get_ap_logs, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_ClientConnectivity_5g_WPA_Personal_Nat(self, request, get_vif_state, get_ap_logs,
+                                           get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
@@ -170,7 +173,8 @@ class TestNatModeConnectivitySuiteOne(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_ClientConnectivity_2g_WPA(self, request, get_vif_state, get_ap_logs, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_ClientConnectivity_2g_WPA_Personal_Nat(self, request, get_vif_state, get_ap_logs,
+                                           get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
@@ -208,7 +212,8 @@ class TestNatModeConnectivitySuiteOne(object):
 
     @pytest.mark.fiveg
     @pytest.mark.open
-    def test_ClientConnectivity_5g_Open(self, request, get_vif_state, get_ap_logs, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_ClientConnectivity_5g_Open_Nat(self, request, get_vif_state, get_ap_logs,
+                                            get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["open"][1]
         ssidName = profile_data["ssid_name"]
@@ -246,7 +251,8 @@ class TestNatModeConnectivitySuiteOne(object):
 
     @pytest.mark.twog
     @pytest.mark.open
-    def test_ClientConnectivity_2g_Open(self, request, get_vif_state, get_ap_logs, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_ClientConnectivity_2g_Open_Nat(self, request, get_vif_state, get_ap_logs,
+                                            get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssidName = profile_data["ssid_name"]
@@ -326,7 +332,8 @@ class TestNatModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    def test_wpa3_personal_ssid_2g(self, request, get_vif_state, get_ap_logs, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_wpa3_personal_2g_Nat(self, request, get_vif_state, get_ap_logs,
+                                   get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -365,7 +372,8 @@ class TestNatModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
-    def test_wpa3_personal_ssid_5g(self, request, get_vif_state, get_ap_logs, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_wpa3_personal_5g_Nat(self, request, get_vif_state, get_ap_logs,
+                                   get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][1]
         ssidName = profile_data["ssid_name"]
@@ -404,7 +412,8 @@ class TestNatModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    def test_wpa3_personal_mixed_ssid_2g(self, request, get_vif_state, get_ap_logs, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_wpa3_personal_mixed_2g_Nat(self, request, get_vif_state, get_ap_logs,
+                                        get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][0]
         ssidName = profile_data["ssid_name"]
@@ -443,7 +452,8 @@ class TestNatModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
-    def test_wpa3_personal_mixed_ssid_5g(self, request, get_vif_state, get_ap_logs, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_wpa3_personal_mixed_5g(self, request, get_vif_state, get_ap_logs,
+                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][1]
         ssidName = profile_data["ssid_name"]
@@ -482,7 +492,8 @@ class TestNatModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
-    def test_wpa_wpa2_personal_ssid_2g(self, request, get_vif_state, get_ap_logs, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_wpa_wpa2_personal_2g_Nat(self, request, get_vif_state, get_ap_logs,
+                                      get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
         ssidName = profile_data["ssid_name"]
@@ -521,7 +532,8 @@ class TestNatModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
-    def test_wpa_wpa2_personal_ssid_5g(self, request, get_vif_state, get_ap_logs, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_wpa_wpa2_personal_5g_Nat(self, request, get_vif_state, get_ap_logs,
+                                      get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
         ssidName = profile_data["ssid_name"]
