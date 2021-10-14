@@ -33,7 +33,7 @@ setup_params_enterprise = {
         "wpa3_enterprise": [
             {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"]},
             {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"]}],
-        "wpa3_enterprise": [
+        "wpa_enterprise": [
             {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["2G"]},
             {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["5G"]}]},
 
