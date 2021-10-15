@@ -488,6 +488,26 @@ class Fixtures_2x:
                         except Exception as e:
                             print(e)
                             test_cases["wpa3_eap"] = False
+            if mode == "wpa_enterprise":  # -------WPA Enterprise----------------
+                for j in profile_data["ssid"][mode]:
+                    if mode in get_markers.keys() and get_markers[mode]:
+                        try:
+                            if j["appliedRadios"].__contains__("2G"):
+                                lf_dut_data.append(j)
+                            if j["appliedRadios"].__contains__("5G"):
+                                lf_dut_data.append(j)
+                            j["appliedRadios"] = list(set(j["appliedRadios"]))
+                            j['security'] = 'wpa'
+                            RADIUS_SERVER_DATA = radius_info
+                            RADIUS_ACCOUNTING_DATA = radius_accounting_info
+                            creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j, radius=True,
+                                                                               radius_auth_data=RADIUS_SERVER_DATA,
+                                                                               radius_accounting_data=RADIUS_ACCOUNTING_DATA)
+                            test_cases["wpa_eap"] = True
+                        except Exception as e:
+                            print(e)
+                            test_cases["wpa_eap"] = False
+
         ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="2.x")
 
         # Get ucentral status
@@ -657,3 +677,26 @@ class Fixtures_2x:
 
         request.addfinalizer(teardown_session)
         return test_cases
+
+    # comment
+    def setup_mesh_profile(self, get_apnos, get_configuration):
+        # this will return configuration of your testbed from tests/conftest.py get_configuration fixtures
+        print("get configuration",get_configuration)
+        print(len(get_configuration['access_point']))
+        # print(get_configuration['access_point'])
+        for length in range(0,len(get_configuration['access_point'])):
+            ap_ssh = get_apnos(credentials=get_configuration['access_point'][length], pwd="../libs/apnos/", sdk="2.x")
+            connected, latest, active = ap_ssh.get_ucentral_status()
+            print("connected", connected)
+            print("latest",latest)
+            print("active", active)
+            if connected == False:
+                pytest.exit("AP is disconnected from UC Gateway")
+            if latest != active:
+                allure.attach(name="FAIL : ubus call ucentral status: ", body="connected: " + str(connected) + "\nlatest: " + str(latest) + "\nactive: " + str(active))
+                ap_logs = ap_ssh.logread()
+                allure.attach(body=ap_logs, name="FAILURE: AP LOgs: ")
+                pytest.fail("AP is disconnected from UC Gateway")
+
+
+

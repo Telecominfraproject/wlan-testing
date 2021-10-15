@@ -28,6 +28,7 @@ setup_params_enterprise = {
     indirect=True,
     scope="class"
 )
+@pytest.mark.uc_sanity
 @pytest.mark.usefixtures("setup_profiles")
 class TestVLANModeEnterpriseTTLSSuiteOne(object):
 
@@ -83,7 +84,6 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
 
         assert passes
 
-    @pytest.mark.uc_sanity
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
@@ -111,7 +111,6 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
 
         assert passes
 
-    @pytest.mark.uc_sanity
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
@@ -141,7 +140,6 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
-    @pytest.mark.uc_sanity
     def test_wpa3_enterprise_2g(self, get_vif_state, get_ap_logs,
                                 station_names_twog, setup_profiles,  lf_test,
                                 update_report,
@@ -167,7 +165,6 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
-    @pytest.mark.uc_sanity
     def test_wpa3_enterprise_5g(self, get_vif_state, get_ap_logs,
                                 station_names_fiveg, setup_profiles,  lf_test,
                                 update_report,
