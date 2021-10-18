@@ -144,7 +144,7 @@ jobs:
         kubectl describe persistentvolumeclaims --namespace openwifi-${{ github.run_id }}
 
     - name: wait for DNS to propagate
-      run: sleep 300
+      run: sleep 900
 
   generate-matrix:
     name: generate testbed matrix
