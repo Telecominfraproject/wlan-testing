@@ -107,11 +107,13 @@ jobs:
       run: |
         export NAMESPACE=${{ github.run_id }}
         export DEPLOY_METHOD=git
-        export CHART_VERSION=v2.2.0-RC1
-        export OWGW_VERSION=v2.2.0-RC1
-        export OWGWUI_VERSION=v2.2.0-RC1
-        export OWSEC_VERSION=v2.2.0-RC1
-        export OWFMS_VERSION=v2.2.0-RC1
+        export CHART_VERSION=main
+        export OWGW_VERSION=master
+        export OWGWUI_VERSION=main
+        export OWSEC_VERSION=main
+        export OWFMS_VERSION=main
+        export OWPROV_VERSION=main
+        export OWPROVUI_VERSION=main
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
@@ -142,7 +144,7 @@ jobs:
         kubectl describe persistentvolumeclaims --namespace openwifi-${{ github.run_id }}
 
     - name: wait for DNS to propagate
-      run: sleep 300
+      run: sleep 900
 
   generate-matrix:
     name: generate testbed matrix
@@ -294,11 +296,11 @@ jobs:
         sleep 1
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
         kubectl wait "pod/$podname" --for condition=ready --timeout=600s
+        kubectl logs -f $podname &
         #sleep 30 # wait for the pod to come up
         until [ -s test_everything.xml ]
         do
           sleep 10
-          echo "waiting for tests to complete..."
           kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
         done
         echo "tests completed"
