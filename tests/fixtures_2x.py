@@ -87,7 +87,7 @@ class Fixtures_2x:
                     print("Firmware Upgraded to :", ap_version)
                 else:
                     print("firmware upgraded failed: ", target_revision)
-                    upgrade_status.append([ap['serial'],target_revision_commit, current_version_commit])
+                    upgrade_status.append([ap['serial'], target_revision_commit, current_version_commit])
                 break
             except Exception as e:
                 print("URL does not exist on Internet")
@@ -488,25 +488,65 @@ class Fixtures_2x:
                         except Exception as e:
                             print(e)
                             test_cases["wpa3_eap"] = False
+            if mode == "wpa_enterprise":  # -------WPA Enterprise----------------
+                for j in profile_data["ssid"][mode]:
+                    if mode in get_markers.keys() and get_markers[mode]:
+                        try:
+                            if j["appliedRadios"].__contains__("2G"):
+                                lf_dut_data.append(j)
+                            if j["appliedRadios"].__contains__("5G"):
+                                lf_dut_data.append(j)
+                            j["appliedRadios"] = list(set(j["appliedRadios"]))
+                            j['security'] = 'wpa'
+                            RADIUS_SERVER_DATA = radius_info
+                            RADIUS_ACCOUNTING_DATA = radius_accounting_info
+                            creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j, radius=True,
+                                                                               radius_auth_data=RADIUS_SERVER_DATA,
+                                                                               radius_accounting_data=RADIUS_ACCOUNTING_DATA)
+                            test_cases["wpa_eap"] = True
+                        except Exception as e:
+                            print(e)
+                            test_cases["wpa_eap"] = False
+
         ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="2.x")
+
+        # Get ucentral status
         connected, latest, active = ap_ssh.get_ucentral_status()
+
         if connected == False:
+            output = ap_ssh.run_generic_command(cmd="ubus call ucentral status")
+            allure.attach(name="ubus call ucentral status: ", body=str(output))
             pytest.exit("AP is disconnected from UC Gateway")
+
+        connected, latest, active = ap_ssh.get_ucentral_status()
+        latest_old = latest
+
         if latest != active:
-            allure.attach(name="FAIL : ubus call ucentral status: ",
-                          body="connected: " + str(connected) + "\nlatest: " + str(latest) + "\nactive: " + str(active))
+            active_cfg = ap_ssh.run_generic_command(cmd="cat /etc/ucentral/ucentral.active")
+            allure.attach(name="Active Config: ", body=str(active_cfg))
+            active_cfg = ap_ssh.run_generic_command(cmd="cat /etc/ucentral/ucentral.cfg." + str(latest))
+            allure.attach(name="Latest Config: ", body=str(active_cfg))
             ap_logs = ap_ssh.logread()
-            allure.attach(body=ap_logs, name="FAILURE: AP LOgs: ")
-            pytest.fail("AP is disconnected from UC Gateway")
-        S = 9
+            allure.attach(body=ap_logs, name="FAILURE: AP Logs: ")
+            pytest.fail("AP latest and active are different")
+
+        S = 10
+
+        # Add logger command before config push
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
-        instantiate_profile_obj.push_config(serial_number=get_equipment_ref[0])
+
         time_1 = time.time()
-        time.sleep(90)
+
+        # Apply config
+        instantiate_profile_obj.push_config(serial_number=get_equipment_ref[0])
+
         config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"'))
         config["uuid"] = 0
-        
+
+        # Attach the config that is sent from API
+        allure.attach(name="Config Sent from API: ", body=str(config), attachment_type=allure.attachment_type.JSON)
+
         ap_config_latest = ap_ssh.get_uc_latest_config()
         try:
             ap_config_latest["uuid"] = 0
@@ -514,52 +554,59 @@ class Fixtures_2x:
             print(e)
             pass
         x = 1
-        old_config = latest
+
+        # Check if ucentral gw has pushed the config into latest
         connected, latest, active = ap_ssh.get_ucentral_status()
-        while old_config == latest:
+        while latest_old == latest:
             time.sleep(5)
             x += 1
-            print("old config: ", old_config)
+            print("old config: ", latest_old)
             print("latest: ", latest)
             connected, latest, active = ap_ssh.get_ucentral_status()
-            if x == 19:
+            if x == 5:
                 break
-        connected, latest, active = ap_ssh.get_ucentral_status()
+        onnected, latest, active = ap_ssh.get_ucentral_status()
+        if latest == latest_old:
+            latest_cfg = ap_ssh.run_generic_command(cmd="cat /etc/ucentral/ucentral.cfg." + str(latest))
+            allure.attach(name="Latest Config Received by AP: ",
+                          body=str(latest_cfg),
+                          attachment_type=allure.attachment_type.JSON)
+            ap_logs = ap_ssh.get_logread(start_ref="start testcase: " + instance_name,
+                                         stop_ref="stop testcase: " + instance_name)
+            allure.attach(body=ap_logs, name="AP Log: ")
+            print("Config from ucentral gw is not sent to AP")
+        else:
+            print("Config is sent to AP from ucentral gw")
+
         x = 1
+        latest_cfg = ap_ssh.run_generic_command(cmd="cat /etc/ucentral/ucentral.cfg." + str(latest))
+        allure.attach(name="Latest Config Received by AP: ",
+                      body=str(latest_cfg),
+                      attachment_type=allure.attachment_type.JSON)
+
         while active != latest:
             connected, latest, active = ap_ssh.get_ucentral_status()
-            time.sleep(10)
+            time.sleep(20)
             x += 1
             print("active: ", active)
             print("latest: ", latest)
-            if x == 19:
+            if x == 10:
                 break
-        if x < 19:
-            print("Config properly applied into AP", config)
+
+        connected, latest, active = ap_ssh.get_ucentral_status()
+        if latest == active:
+            print("Config properly Applied on AP")
+        else:
+            print("Config is not Applied on AP")
 
         time_2 = time.time()
         time_interval = time_2 - time_1
         allure.attach(name="Time Took to apply Config: " + str(time_interval), body="")
 
+        time.sleep(60)
+
         ap_config_latest = ap_ssh.get_uc_latest_config()
-        ap_config_latest["uuid"] = 0
-
         ap_config_active = ap_ssh.get_uc_active_config()
-        ap_config_active["uuid"] = 0
-        x = 1
-
-        while ap_config_active != ap_config_latest:
-            time.sleep(5)
-            x += 1
-            ap_config_latest = ap_ssh.get_uc_latest_config()
-            ap_config_latest["uuid"] = 0
-
-            ap_config_active = ap_ssh.get_uc_active_config()
-            print("latest config:   ", ap_config_latest)
-            print("Active config:  ", ap_config_active)
-            ap_config_active["uuid"] = 0
-            if x == 19:
-                break
         if x < 19:
             print("AP is Broadcasting Applied Config")
             allure.attach(name="Success : Active Config in AP: ", body=str(ap_config_active))
@@ -568,6 +615,7 @@ class Fixtures_2x:
             print("AP is Not Broadcasting Applied Config")
             allure.attach(name="Failed to Apply Config : Active Config in AP : ", body=str(ap_config_active))
         time.sleep(10)
+
         try:
             iwinfo = ap_ssh.iwinfo()
             allure.attach(name="iwinfo: ", body=str(iwinfo))
@@ -621,7 +669,34 @@ class Fixtures_2x:
         def teardown_session():
             wifi_status = ap_ssh.get_wifi_status()
             allure.attach(name="wifi status", body=str(wifi_status))
+
+            iwinfo = ap_ssh.iwinfo()
+            allure.attach(name="iwinfo: ", body=str(iwinfo))
+
             print("\nTeardown")
 
         request.addfinalizer(teardown_session)
         return test_cases
+
+    # comment
+    def setup_mesh_profile(self, get_apnos, get_configuration):
+        # this will return configuration of your testbed from tests/conftest.py get_configuration fixtures
+        print("get configuration",get_configuration)
+        print(len(get_configuration['access_point']))
+        # print(get_configuration['access_point'])
+        for length in range(0,len(get_configuration['access_point'])):
+            ap_ssh = get_apnos(credentials=get_configuration['access_point'][length], pwd="../libs/apnos/", sdk="2.x")
+            connected, latest, active = ap_ssh.get_ucentral_status()
+            print("connected", connected)
+            print("latest",latest)
+            print("active", active)
+            if connected == False:
+                pytest.exit("AP is disconnected from UC Gateway")
+            if latest != active:
+                allure.attach(name="FAIL : ubus call ucentral status: ", body="connected: " + str(connected) + "\nlatest: " + str(latest) + "\nactive: " + str(active))
+                ap_logs = ap_ssh.logread()
+                allure.attach(body=ap_logs, name="FAILURE: AP LOgs: ")
+                pytest.fail("AP is disconnected from UC Gateway")
+
+
+

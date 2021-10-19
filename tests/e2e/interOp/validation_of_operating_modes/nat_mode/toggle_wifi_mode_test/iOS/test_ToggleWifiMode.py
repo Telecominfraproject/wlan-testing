@@ -47,11 +47,11 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestToggleWifiMode(object):
+class TestToggleWifiModeNatMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ToogleWifiMode_5g_WPA2_Personal(self, request, get_vif_state, get_ToggleWifiMode_data,
+    def test_ToogleWifiMode_5g_WPA2_Personal_NAT(self, request, get_vif_state, get_ToggleWifiMode_data,
                                              setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -83,7 +83,7 @@ class TestToggleWifiMode(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ToogleWifiMode_2g_WPA2_Personal(self, request, get_vif_state, get_ToggleWifiMode_data,
+    def test_ToogleWifiMode_2g_WPA2_Personal_NAT(self, request, get_vif_state, get_ToggleWifiMode_data,
                                              setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -115,7 +115,7 @@ class TestToggleWifiMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ToogleWifiMode_5g_WPA(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_iOS):
+    def test_ToogleWifiMode_5g_WPA_NAT(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
@@ -146,7 +146,7 @@ class TestToggleWifiMode(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_ToogleWifiMode_2g_WPA(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_iOS):
+    def test_ToogleWifiMode_2g_WPA_NAT(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
@@ -177,7 +177,7 @@ class TestToggleWifiMode(object):
 
     @pytest.mark.fiveg
     @pytest.mark.open
-    def test_ToogleWifiMode_5g_OPEN(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_iOS):
+    def test_ToogleWifiMode_5g_OPEN_NAT(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["open"][1]
         ssidName = profile_data["ssid_name"]
@@ -208,7 +208,7 @@ class TestToggleWifiMode(object):
 
     @pytest.mark.twog
     @pytest.mark.open
-    def test_ToogleWifiMode_2g_OPEN(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_iOS):
+    def test_ToogleWifiMode_2g_OPEN_NAT(self, request, get_vif_state, get_ToggleWifiMode_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssidName = profile_data["ssid_name"]

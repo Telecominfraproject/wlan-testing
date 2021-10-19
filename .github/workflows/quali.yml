@@ -19,84 +19,74 @@ env:
 on:
   workflow_dispatch:
     inputs:
-      ucentral_revision:
+      openwifi_revision:
         required: true
         default: 'main'
-        description: 'revision of the uCentral Helm chart'
-      ucentral_gw_revision:
+        description: 'revision of the Open Wifi Helm chart'
+      openwifi_gw_revision:
         required: true
         default: 'master'
-        description: 'revision of the uCentral gateway service'
-      ucentral_sec_revision:
+        description: 'revision of the Open Wifi gateway service'
+      openwifi_sec_revision:
         required: true
         default: 'main'
-        description: 'revision of the uCentral security service'
-      ucentral_fms_revision:
+        description: 'revision of the Open Wifi security service'
+      openwifi_fms_revision:
         required: true
         default: 'main'
-        description: 'revision of the uCentral fms service'
-      ucentral_ui_revision:
+        description: 'revision of the Open Wifi fms service'
+      openwifi_ui_revision:
         required: true
         default: 'main'
-        description: 'revision of the uCentral UI'
-      ap_model:
+        description: 'revision of the Open Wifi UI'
+      ap_models:
         required: true
-        default: 'ec420'
-        description: 'the AP model to test'
-      ap_revision:
+        #default: 'EC420,EAP101,ECW5211,ECW5410'
+        default: 'EC420,ECW5211'
+        description: 'the AP models to test'
+      ap_version:
         required: true
         default: 'latest'
-        description: 'NOT IN USE! revision of firmware to flash on AP'
+        description: 'revision of firmware to flash on AP, <branch>-<commit> | latest'
 
 jobs:
   vars:
     runs-on: ubuntu-latest
     outputs:
-      ucentral_revision: ${{ steps.vars.outputs.ucentral}}
-      ucentral_gw_revision: ${{ steps.vars.outputs.gw}}
-      ucentral_sec_revision: ${{ steps.vars.outputs.sec}}
-      ucentral_fms_revision: ${{ steps.vars.outputs.fms}}
-      ucentral_ui_revision: ${{ steps.vars.outputs.ui}}
-      ap_model: ${{ steps.vars.outputs.ap_model}}
+      openwifi_revision: ${{ steps.vars.outputs.openwifi}}
+      openwifi_gw_revision: ${{ steps.vars.outputs.gw}}
+      openwifi_sec_revision: ${{ steps.vars.outputs.sec}}
+      openwifi_fms_revision: ${{ steps.vars.outputs.fms}}
+      openwifi_ui_revision: ${{ steps.vars.outputs.ui}}
+      ap_models: ${{ steps.vars.outputs.ap_models}}
       ap_version: ${{ steps.vars.outputs.ap_version}}
 
     steps:
       - name: set variables
         id: vars
         run: |
-          echo ::set-output name=ucentral::$(echo "${{ github.event.inputs.ucentral_revision || 'main' }}")
-          echo ::set-output name=gw::$(echo "${{ github.event.inputs.ucentral_gw_revision || 'master' }}")
-          echo ::set-output name=sec::$(echo "${{ github.event.inputs.ucentral_sec_revision || 'main' }}")
-          echo ::set-output name=fms::$(echo "${{ github.event.inputs.ucentral_fms_revision || 'main' }}")
-          echo ::set-output name=ui::$(echo "${{ github.event.inputs.ucentral_ui_revision || 'main' }}")
-          echo ::set-output name=ap_model::$(echo "${{ github.event.inputs.ap_model || 'ec420' }}")
-          echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_revision || 'latest' }}")
+          echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'main' }}")
+          echo ::set-output name=gw::$(echo "${{ github.event.inputs.openwifi_gw_revision || 'master' }}")
+          echo ::set-output name=sec::$(echo "${{ github.event.inputs.openwifi_sec_revision || 'main' }}")
+          echo ::set-output name=fms::$(echo "${{ github.event.inputs.openwifi_fms_revision || 'main' }}")
+          echo ::set-output name=ui::$(echo "${{ github.event.inputs.openwifi_ui_revision || 'main' }}")
+          echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'EC420,EAP101,ECW5211,ECW5410' }}")
+          echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'latest' }}")
 
-  start-reservation:
-    needs: vars
+  generate-matrix:
+    name: generate AP model matrix
     runs-on: ubuntu-latest
+    needs: vars
     outputs:
-      reservation_id: ${{ steps.start.outputs.res_id }}
-    env:
-      CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-      CLOUDSHELL_USER: admin
-      CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.8'
-
-    - name: install dependencies
-      run: pip install -r .quali/requirements.txt
-
-    - name: start reservation
-      id: start
-      run: echo ::set-output name=res_id::$(python .quali/start_reservation.py --ucentral-version "${{ needs.vars.outputs.ucentral_revision }}" --ucentral-gw-version "${{ needs.vars.outputs.ucentral_gw_revision }}" --ucentral-sec-version "${{ needs.vars.outputs.ucentral_sec_revision }}" --ucentral-fms-version "${{ needs.vars.outputs.ucentral_fms_revision }}" --ucentral-ui-version "${{ needs.vars.outputs.ucentral_ui_revision }}")
-
-    - name: wait for DNS to propagate
-      run: sleep 300
+    - name: generate-matrix
+      id: set-matrix
+      run: |
+        AP_MODELS="${{ needs.vars.outputs.ap_models }}"
+        AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
+        AP_MODELS=$(echo "$AP_MODELS" | jq -c 'map({"ap_model":.})')
+        echo "::set-output name=matrix::{\"include\":${AP_MODELS}}"
 
   build:
     runs-on: ubuntu-latest
@@ -127,15 +117,18 @@ jobs:
       run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
 
   test:
-    needs: ['start-reservation', 'build']
+    needs: ['generate-matrix', 'build', 'vars']
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
     env:
       CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
       CLOUDSHELL_USER: admin
       CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
+
     steps:
     - uses: actions/checkout@v2
-
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -143,6 +136,13 @@ jobs:
 
     - name: install dependencies
       run: pip install -r .quali/requirements.txt
+
+    - name: start reservation
+      id: start
+      run: echo ::set-output name=res_id::$(python .quali/start_reservation.py --openwifi-version "${{ needs.vars.outputs.openwifi_revision }}" --openwifi-gw-version "${{ needs.vars.outputs.openwifi_gw_revision }}" --openwifi-sec-version "${{ needs.vars.outputs.openwifi_sec_revision }}" --openwifi-fms-version "${{ needs.vars.outputs.openwifi_fms_revision }}" --openwifi-ui-version "${{ needs.vars.outputs.openwifi_ui_revision }}" --ap-model "${{ matrix.ap_model }}")
+
+    - name: wait for DNS to propagate
+      run: sleep 300
 
     - name: get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -159,7 +159,7 @@ jobs:
     - name: prepare namespace
       id: namespace
       run: |
-        NAMESPACE="testing-${{ github.run_id }}-basic"
+        NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ matrix.ap_model }} | tr '[:upper:]' '[:lower:]')"
         kubectl create ns $NAMESPACE
         kubectl config set-context --current --namespace=$NAMESPACE
         echo "::set-output name=name::${NAMESPACE}"
@@ -170,7 +170,7 @@ jobs:
         Customer = ""
         server = ""
         CONFIGURATION = {
-          "basic": $(python .quali/get_configuration.py ${{ needs.start-reservation.outputs.reservation_id }})
+          "basic": $(python .quali/get_configuration.py ${{ steps.start.outputs.res_id }})
         }
 
         RADIUS_SERVER_DATA = {
@@ -476,7 +476,8 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "uc_sanity" -s -vvv --testbed="basic" --alluredir=/tmp/allure-results
+                    #pytest -m "uc_sanity" -s -vvv --testbed="basic" --alluredir=/tmp/allure-results -o firmware="${{ needs.vars.outputs.ap_version }}"
+                    pytest -m "sdk_restapi" -s -vvv --testbed="basic" --alluredir=/tmp/allure-results -o firmware="${{ needs.vars.outputs.ap_version }}"
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -498,7 +499,7 @@ jobs:
         # wait for pod to spawn
         sleep 1
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-        kubectl wait "pod/$podname" --for condition=ready
+        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
         kubectl logs -f $podname &
         #sleep 30 # wait for the pod to come up
         until [ -s test_everything.xml ]
@@ -513,11 +514,7 @@ jobs:
         echo "waiting for pod to exit"
         kubectl logs -f $podname >/dev/null 2>&1
         exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
-    #- name: print logs
-    #  if: always()
-    #  run: |
-    #    podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-    #    kubectl logs $podname
+
     - name: upload Allure results as artifact
       if: always()
       uses: actions/upload-artifact@v2
@@ -530,26 +527,9 @@ jobs:
       run: |
         kubectl delete ns "${{ steps.namespace.outputs.name }}" --wait=true
 
-  stop-reservation:
-    needs: ['start-reservation', test]
-    if: always()
-    runs-on: ubuntu-latest
-    env:
-      CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-      CLOUDSHELL_USER: admin
-      CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.8'
-
-    - name: install dependencies
-      run: pip install -r .quali/requirements.txt
-
     - name: stop reservation
-      run: python .quali/stop_reservation.py ${{ needs.start-reservation.outputs.reservation_id }}
+      if: always()
+      run: python .quali/stop_reservation.py ${{ steps.start.outputs.res_id }}
 
   cleanup:
     needs: [ test ]
