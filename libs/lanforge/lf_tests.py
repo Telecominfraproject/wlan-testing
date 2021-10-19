@@ -61,6 +61,7 @@ class RunTest:
         self.dataplane_obj = None
         self.rx_sensitivity_obj = None
         self.dualbandptest_obj = None
+        self.msthpt_obj = None
         self.influx_params = influx_params
         # self.influxdb = RecordInflux(_influx_host=influx_params["influx_host"],
         #                              _influx_port=influx_params["influx_port"],
@@ -71,6 +72,8 @@ class RunTest:
         if not os.path.exists(self.local_report_path):
             os.mkdir(self.local_report_path)
         # self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
+
+
 
     def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[],
                             station_name=[], mode="BRIDGE", vlan_id=1, band="twog"):
