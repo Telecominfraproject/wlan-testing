@@ -13,6 +13,8 @@ usage () {
   echo "- OWGWUI_VERSION - OpenWIFI Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)";
   echo "- OWSEC_VERSION - OpenWIFI Security version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)";
   echo "- OWFMS_VERSION - OpenWIFI Firmware version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)";
+  echo "- OWPROV_VERSION - OpenWIFI Provisioning version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)";
+  echo "- OWPROVUI_VERSION - OpenWIFI Provisioning Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)";
   echo;
   echo "- DEPLOY_METHOD - deployment method for the chart deployment (supported methods - 'git' (will use helm-git from assembly chart) and 'bundle' (will use chart stored in the Artifactory0";
   echo "- CHART_VERSION - version of chart to be deployed from assembly chart (for 'git' method git ref may be passed, for 'bundle' method version of chart may be passed)";
@@ -34,6 +36,8 @@ usage () {
 [ -z ${OWGWUI_VERSION+x} ] && echo "OWGWUI_VERSION is unset" && usage && exit 1
 [ -z ${OWSEC_VERSION+x} ] && echo "OWSEC_VERSION is unset" && usage && exit 1
 [ -z ${OWFMS_VERSION+x} ] && echo "OWFMS_VERSION is unset" && usage && exit 1
+[ -z ${OWPROV_VERSION+x} ] && echo "OWPROV_VERSION is unset" && usage && exit 1
+[ -z ${OWPROVUI_VERSION+x} ] && echo "OWPROVUI_VERSION is unset" && usage && exit 1
 ## Deployment specifics
 [ -z ${DEPLOY_METHOD+x} ] && echo "DEPLOY_METHOD is unset" && usage && exit 1
 [ -z ${CHART_VERSION+x} ] && echo "CHART_VERSION is unset" && usage && exit 1
@@ -52,6 +56,8 @@ export OWGW_VERSION_TAG=$(echo ${OWGW_VERSION} | tr '/' '-')
 export OWGWUI_VERSION_TAG=$(echo ${OWGWUI_VERSION} | tr '/' '-')
 export OWSEC_VERSION_TAG=$(echo ${OWSEC_VERSION} | tr '/' '-')
 export OWFMS_VERSION_TAG=$(echo ${OWFMS_VERSION} | tr '/' '-')
+export OWPROV_VERSION_TAG=$(echo ${OWPROV_VERSION} | tr '/' '-')
+export OWPROVUI_VERSION_TAG=$(echo ${OWPROVUI_VERSION} | tr '/' '-')
 
 # Check deployment method that's required for this environment
 helm plugin install https://github.com/databus23/helm-diff || true
@@ -66,6 +72,8 @@ if [[ "$DEPLOY_METHOD" == "git" ]]; then
   sed -i '/wlan-cloud-ucentralgw-ui@/s/ref=.*/ref='${OWGWUI_VERSION}'\"/g' Chart.yaml
   sed -i '/wlan-cloud-ucentralsec@/s/ref=.*/ref='${OWSEC_VERSION}'\"/g' Chart.yaml
   sed -i '/wlan-cloud-ucentralfms@/s/ref=.*/ref='${OWFMS_VERSION}'\"/g' Chart.yaml
+  sed -i '/wlan-cloud-owprov@/s/ref=.*/ref='${OWPROV_VERSION}'\"/g' Chart.yaml
+  sed -i '/wlan-cloud-owprov-ui@/s/ref=.*/ref='${OWPROVUI_VERSION}'\"/g' Chart.yaml
   helm repo add bitnami https://charts.bitnami.com/bitnami
   helm repo update
   helm dependency update
@@ -109,6 +117,13 @@ helm upgrade --install --create-namespace --wait --timeout 20m \
   --set owfms.configProperties."openwifi\.system\.uri\.public"=https://fms-${NAMESPACE}.cicd.lab.wlan.tip.build:16004 \
   --set owfms.configProperties."openwifi\.system\.uri\.private"=https://fms-${NAMESPACE}.cicd.lab.wlan.tip.build:17004 \
   --set owfms.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owprov.services.owprov.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=prov-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owprov.configProperties."openwifi\.system\.uri\.public"=https://prov-${NAMESPACE}.cicd.lab.wlan.tip.build:16005 \
+  --set owprov.configProperties."openwifi\.system\.uri\.private"=https://prov-${NAMESPACE}.cicd.lab.wlan.tip.build:17005 \
+  --set owprov.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owprovui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=provui-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owprovui.ingresses.default.hosts={provui-${NAMESPACE}.cicd.lab.wlan.tip.build} \
+  --set owprovui.public_env_variables.DEFAULT_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set-file owgw.certs."restapi-cert\.pem"=$CERT_LOCATION \
   --set-file owgw.certs."restapi-key\.pem"=$KEY_LOCATION \
   --set-file owgw.certs."websocket-cert\.pem"=$CERT_LOCATION \
@@ -119,8 +134,12 @@ helm upgrade --install --create-namespace --wait --timeout 20m \
   --set-file owsec.certs."restapi-key\.pem"=$KEY_LOCATION \
   --set-file owfms.certs."restapi-cert\.pem"=$CERT_LOCATION \
   --set-file owfms.certs."restapi-key\.pem"=$KEY_LOCATION \
+  --set-file owprov.certs."restapi-cert\.pem"=$CERT_LOCATION \
+  --set-file owprov.certs."restapi-key\.pem"=$KEY_LOCATION \
   --set owgw.images.owgw.tag=$OWGW_VERSION_TAG \
   --set owgwui.images.owgwui.tag=$OWGWUI_VERSION_TAG \
   --set owsec.images.owsec.tag=$OWSEC_VERSION_TAG \
   --set owfms.images.owfms.tag=$OWFMS_VERSION_TAG \
+  --set owprov.images.owprov.tag=$OWPROV_VERSION_TAG \
+  --set owprovui.images.owprov.tag=$OWPROVUI_VERSION_TAG \
   tip-openwifi $DEPLOY_SOURCE

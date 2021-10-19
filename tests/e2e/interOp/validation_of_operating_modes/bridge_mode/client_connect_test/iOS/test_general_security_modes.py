@@ -57,9 +57,10 @@ class TestBridgeModeConnectSuiteOne(object):
         pytest -m "client_connect and bridge and InteropsuiteA"
     """
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4545", name="WIFI-4545")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_ClientConnect_5g_WPA2_Personal(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
+    def test_ClientConnect_5g_WPA2_Personal_Bridge(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
                                           setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -90,9 +91,10 @@ class TestBridgeModeConnectSuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4490", name="WIFI-4490")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ClientConnect_2g_WPA2_Personal(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnect_2g_WPA2_Personal_Bridge(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -123,9 +125,10 @@ class TestBridgeModeConnectSuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4489", name="WIFI-4489")
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_ClientConnect_5g_WPA(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnect_5g_WPA_Bridge(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssidName = profile_data["ssid_name"]
@@ -156,9 +159,10 @@ class TestBridgeModeConnectSuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4488", name="WIFI-4488")
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_ClientConnect_2g_WPA(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnect_2g_WPA_Bridge(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssidName = profile_data["ssid_name"]
@@ -189,9 +193,10 @@ class TestBridgeModeConnectSuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4487", name="WIFI-4487")
     @pytest.mark.fiveg
     @pytest.mark.open
-    def test_ClientConnect_5g_Open(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnect_5g_Open_Bridge(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["open"][1]
         ssidName = profile_data["ssid_name"]
@@ -228,9 +233,10 @@ class TestBridgeModeConnectSuiteOne(object):
         #ForgetWifi
         # ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4486", name="WIFI-4486")
     @pytest.mark.twog
     @pytest.mark.open
-    def test_ClientConnect_2g_Open(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnect_2g_Open_Bridge(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssidName = profile_data["ssid_name"]
@@ -302,9 +308,10 @@ class TestBridgeModeConnectSuiteTwo(object):
         pytest -m "client_connect and bridge and InteropsuiteB"
     """
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4547", name="WIFI-4547")
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal
-    def test_ClientConnect_5g_wpa3_personal(self, request, get_vif_state, get_ap_logs,  get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnect_5g_wpa3_personal_Bridge(self, request, get_vif_state, get_ap_logs,  get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][1]
         ssidName = profile_data["ssid_name"]
@@ -336,9 +343,10 @@ class TestBridgeModeConnectSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4546", name="WIFI-4546")
     @pytest.mark.twog
     @pytest.mark.wpa3_personal
-    def test_ClientConnect_2g_wpa3_personal(self, request, get_vif_state, get_ap_logs,  get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnect_2g_wpa3_personal_Bridge(self, request, get_vif_state, get_ap_logs,  get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -370,9 +378,10 @@ class TestBridgeModeConnectSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4549", name="WIFI-4549")
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal_mixed
-    def test_ClientConnect_5g_wpa3_personal_mixed(self, request, get_vif_state, get_ap_logs,  get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnect_5g_wpa3_personal_mixed_Bridge(self, request, get_vif_state, get_ap_logs,  get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][1]
         ssidName = profile_data["ssid_name"]
@@ -404,9 +413,10 @@ class TestBridgeModeConnectSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4548", name="WIFI-4548")
     @pytest.mark.twog
     @pytest.mark.wpa3_personal_mixed
-    def test_ClientConnect_2g_wpa3_personal_mixed(self, request, get_vif_state, get_ap_logs,  get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnect_2g_wpa3_personal_mixed_Bridge(self, request, get_vif_state, get_ap_logs,  get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][0]
         ssidName = profile_data["ssid_name"]
@@ -438,9 +448,10 @@ class TestBridgeModeConnectSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4551", name="WIFI-4551")
     @pytest.mark.fiveg
     @pytest.mark.wpa_wpa2_personal_mixed
-    def test_ClientConnect_5g_wpa_wpa2_personal_mixed(self, request, get_vif_state, get_ap_logs,  get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnect_5g_wpa_wpa2_personal_mixed_Bridge(self, request, get_vif_state, get_ap_logs,  get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
         ssidName = profile_data["ssid_name"]
@@ -472,10 +483,10 @@ class TestBridgeModeConnectSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4550", name="WIFI-4550")
     @pytest.mark.twog
     @pytest.mark.wpa_wpa2_personal_mixed
-    def test_ClientConnect_2g_wpa_wpa2_personal_mixed(self, request, get_vif_state, get_ap_logs,  get_APToMobileDevice_data, setup_perfectoMobile_iOS):
+    def test_ClientConnect_2g_wpa_wpa2_personal_mixed_Bridge(self, request, get_vif_state, get_ap_logs,  get_APToMobileDevice_data, setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
         ssidName = profile_data["ssid_name"]
@@ -506,52 +517,3 @@ class TestBridgeModeConnectSuiteTwo(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
-
-# @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
-# @pytest.mark.parametrize(
-#     'setup_profiles',
-#     [setup_params_general],
-#     indirect=True,
-#     scope="class"
-# )
-# @pytest.mark.usefixtures("setup_profiles")
-# class TestAccessPointConnectivetyBridge(object):
-#
-#     @pytest.mark.fiveg
-#     @pytest.mark.open
-#     @pytest.mark.sushant
-#     def test_AccessPointConnection_5g_OPEN_Bridge(self, request, get_vif_state, get_APToMobileDevice_data,
-#                                           setup_perfectoMobile_iOS):
-#         profile_data = setup_params_general["ssid_modes"]["open"][1]
-#         ssidName = profile_data["ssid_name"]
-#         ssidPassword = "[BLANK]"
-#         print("SSID_NAME: " + ssidName)
-#         # print ("SSID_PASS: " + ssidPassword)
-#
-#         # if ssidName not in get_vif_state:
-#         #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-#         #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-#
-#         report = setup_perfectoMobile_iOS[1]
-#         driver = setup_perfectoMobile_iOS[0]
-#         connData = get_APToMobileDevice_data
-#
-#         # Set Wifi/AP Mode
-#         # set_APconnMobileDevice_iOS(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-#
-#         # Need An ip To ping
-#         # wifi_ip = get_WifiIPAddress_iOS(request, setup_perfectoMobile_iOS, connData, ssidName)
-#         wifi_ip, is_internet = get_ip_address_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-#         print(wifi_ip)
-#         print(is_internet)
-#         assert wifi_ip
-#         # assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
-#
-#         # # Open Ping Application
-#         # openApp(connData["bundleId-iOS-Ping"], setup_perfectoMobile_iOS)
-#         #
-#         # ping_deftapps_iOS(setup_perfectoMobile_iOS, wifi_ip)
-#
-#         # ForgetWifi
-#         # ForgetWifiConnection(request, setup_perfectoMobile_iOS, ssidName, connData)
