@@ -1,4 +1,4 @@
-name: Test uCentral chart deployment
+name: Test OpenWIFI Cloud SDK 2.x chart deployment
 
 defaults:
   run:
@@ -27,26 +27,34 @@ on:
         default: 'main'
         description: 'Chart version to deploy (git tag or helm package version may be used, main is default)'
         required: true
-      ucentralgw_version:
+      owgw_version:
         default: 'master'
-        description: 'uCentralGW version to be deployed (git tag or helm package version may be used, msater is default)'
+        description: 'OpenWIFI Gateway version to be deployed (git tag or helm package version may be used, master is default)'
         required: true
-      ucentralgwui_version:
+      owgwui_version:
         default: 'main'
-        description: 'uCentralGW UI version to be deployed (git tag or helm package version may be used, main is default)'
+        description: 'OpenWIFI Web UI version to be deployed (git tag or helm package version may be used, main is default)'
         required: true
-      ucentralsec_version:
+      owsec_version:
         default: 'main'
-        description: 'uCentralSec version to be deployed (git tag or helm package version may be used, main is default)'
+        description: 'OpenWIFI Security version to be deployed (git tag or helm package version may be used, main is default)'
         required: true
-      ucentralfms_version:
+      owfms_version:
         default: 'main'
-        description: 'uCentralFMS version to be deployed (git tag or helm package version may be used, main is default)'
+        description: 'OpenWIFI Firmware version to be deployed (git tag or helm package version may be used, main is default)'
+        required: true
+      owprov_version:
+        default: 'main'
+        description: 'OpenWIFI Provisioning version to be deployed (git tag or helm package version may be used, main is default)'
+        required: true
+      owprovui_version:
+        default: 'main'
+        description: 'OpenWIFI Provisioning Web UI version to be deployed (git tag or helm package version may be used, main is default)'
         required: true
 
 jobs:
   deploy:
-    name: Deploy test uCentral instance
+    name: Deploy test OpenWIFI Cloud SDK 2.x instance
     runs-on: ubuntu-latest
     steps:
 
@@ -65,24 +73,24 @@ jobs:
       run: |
         aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
-    - name: Deploy uCentralGW
+    - name: Deploy OpenWIFI Cloud SDK
       working-directory: wlan-testing/helm/ucentral
-      env:
-        TOFILL: YES
       run: |
-        export NAMESPACE=ucentral-$GITHUB_RUN_ID
+        export NAMESPACE=deployment-$GITHUB_RUN_ID
         export DEPLOY_METHOD=${{ github.event.inputs.deploy_method }}
         export CHART_VERSION=${{ github.event.inputs.chart_version }}
-        export UCENTRALGW_VERSION=${{ github.event.inputs.ucentralgw_version }}
-        export UCENTRALGWUI_VERSION=${{ github.event.inputs.ucentralgwui_version }}
-        export UCENTRALSEC_VERSION=${{ github.event.inputs.ucentralsec_version }}
-        export UCENTRALFMS_VERSION=${{ github.event.inputs.ucentralfms_version }}
+        export OWGW_VERSION=${{ github.event.inputs.owgw_version }}
+        export OWGWUI_VERSION=${{ github.event.inputs.owgwui_version }}
+        export OWSEC_VERSION=${{ github.event.inputs.owsec_version }}
+        export OWFMS_VERSION=${{ github.event.inputs.owfms_version }}
+        export OWPROV_VERSION=${{ github.event.inputs.owprov_version }}
+        export OWPROVUI_VERSION=${{ github.event.inputs.owprovui_version }}
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
-        export UCENTRALGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
-        export UCENTRALGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
-        export UCENTRALFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
-        export UCENTRALFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
+        export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
+        export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
+        export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
+        export OWFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
         export CERT_LOCATION=cert.pem
         export KEY_LOCATION=key.pem
         ./deploy.sh
@@ -90,23 +98,23 @@ jobs:
     - name: Show resource state on deployment failure
       if: failure()
       run: |
-        kubectl get pods --namespace ucentral-$GITHUB_RUN_ID
-        kubectl get services --namespace ucentral-$GITHUB_RUN_ID
-        kubectl get persistentvolumeclaims --namespace ucentral-$GITHUB_RUN_ID
+        kubectl get pods --namespace openwifi-deployment-$GITHUB_RUN_ID
+        kubectl get services --namespace openwifi-deployment-$GITHUB_RUN_ID
+        kubectl get persistentvolumeclaims --namespace openwifi-deployment-$GITHUB_RUN_ID
     - name: Describe pods on deployment failure
       if: failure()
       run: |
-        kubectl describe pods --namespace ucentral-$GITHUB_RUN_ID
+        kubectl describe pods --namespace openwifi-deployment-$GITHUB_RUN_ID
     - name: Describe services on deployment failure
       if: failure()
       run: |
-        kubectl describe services --namespace ucentral-$GITHUB_RUN_ID
+        kubectl describe services --namespace openwifi-deployment-$GITHUB_RUN_ID
     - name: Describe persistentvolumeclaims on deployment failure
       if: failure()
       run: |
-        kubectl describe persistentvolumeclaims --namespace ucentral-$GITHUB_RUN_ID
+        kubectl describe persistentvolumeclaims --namespace openwifi-deployment-$GITHUB_RUN_ID
 
     - name: Delete Cloud SDK
       if: always()
       run: |
-        kubectl delete namespace ucentral-$GITHUB_RUN_ID
+        kubectl delete namespace openwifi-deployment-$GITHUB_RUN_ID
