@@ -508,6 +508,12 @@ class Fixtures_2x:
                             print(e)
                             test_cases["wpa_eap"] = False
 
+        try:
+            if parameter['express-wifi']:
+                instantiate_profile_obj.set_express_wifi()
+        except:
+            pass
+
         ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="2.x")
 
         # Get ucentral status
