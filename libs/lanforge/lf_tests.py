@@ -40,7 +40,7 @@ from lf_rx_sensitivity_test import RxSensitivityTest
 from lf_ap_auto_test import ApAutoTest
 from csv_to_influx import CSVtoInflux
 from influx2 import RecordInflux
-#from lf_multipsk import MultiPsk
+from lf_multipsk import MultiPsk
 
 
 class RunTest:
@@ -231,7 +231,7 @@ class RunTest:
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
                       instance_name="wct_instance", download_rate="1Gbps", influx_tags=[],
-                      upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000"):
+                      upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", raw_lines=[]):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         if mode == "BRIDGE":
             upstream_port = self.upstream_port
@@ -242,6 +242,7 @@ class RunTest:
         '''SINGLE WIFI CAPACITY using lf_wifi_capacity.py'''
         wificapacity_obj = WiFiCapacityTest(lfclient_host=self.lanforge_ip,
                                             lf_port=self.lanforge_port,
+                                            ssh_port=self.lf_ssh_port,
                                             lf_user="lanforge",
                                             lf_password="lanforge",
                                             local_lf_report_dir=self.local_report_path,
@@ -264,7 +265,7 @@ class RunTest:
                                             ssid=None,
                                             enables=[],
                                             disables=[],
-                                            raw_lines=[],
+                                            raw_lines=raw_lines,
                                             raw_lines_file="",
                                             sets=[])
 
