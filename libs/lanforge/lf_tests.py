@@ -61,6 +61,7 @@ class RunTest:
         self.dataplane_obj = None
         self.rx_sensitivity_obj = None
         self.dualbandptest_obj = None
+        self.msthpt_obj = None
         self.influx_params = influx_params
         # self.influxdb = RecordInflux(_influx_host=influx_params["influx_host"],
         #                              _influx_port=influx_params["influx_port"],
@@ -71,6 +72,8 @@ class RunTest:
         if not os.path.exists(self.local_report_path):
             os.mkdir(self.local_report_path)
         # self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
+
+
 
     def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[],
                             station_name=[], mode="BRIDGE", vlan_id=1, band="twog"):
@@ -678,6 +681,71 @@ class RunTest:
             return True
         else:
             return False
+
+    def Multi_Sta_Thpt(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
+                       raw_line=[], instance_name="test_demo", dut_5g="", dut_2g=""):
+
+        inst_name = instance_name.split('_')[0]
+        instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
+
+        if mode == "BRIDGE":
+            self.upstream_port = self.upstream_port
+        elif mode == "NAT":
+            self.upstream_port = self.upstream_port
+        else:
+            self.upstream_port = self.upstream_port + "." + str(vlan_id)
+
+        sets = [['Basic Client Connectivity', '0'], ['Multi Band Performance', '0'],
+                ['Throughput vs Pkt Size', '0'], ['Capacity', '0'],
+                ['Stability', '0'],
+                ['Band-Steering', '0'], ['Multi-Station Throughput vs Pkt Size', '1'],
+                ['Long-Term', '0']]
+
+        if len(self.twog_radios) == 1:
+            twog_radios = [[self.twog_radios[0]]]
+
+        elif len(self.twog_radios) > 1:
+            twog_radio = []
+            for i in range(0, len(self.twog_radios)):
+                twog_radio.append([self.twog_radios[i]])
+            twog_radios = twog_radio
+
+        if len(self.fiveg_radios) == 1:
+            fiveg_radios = [[self.fiveg_radios[0]]]
+
+        elif len(self.fiveg_radios) > 1:
+            fiveg_radio = []
+            for i in range(0, len(self.fiveg_radios)):
+                fiveg_radio.append([self.fiveg_radios[i]])
+            fiveg_radios = fiveg_radio
+
+        self.msthpt_obj = ApAutoTest(lf_host=self.lanforge_ip,
+                                     lf_port=self.lanforge_port,
+                                     ssh_port=self.lf_ssh_port,
+                                     lf_user="lanforge",
+                                     lf_password="lanforge",
+                                     instance_name=instance_name,
+                                     config_name="dbp_config",
+                                     upstream="1.1." + self.upstream_port,
+                                     pull_report=True,
+                                     dut5_0=dut_5g,
+                                     dut2_0=dut_2g,
+                                     load_old_cfg=False,
+                                     local_lf_report_dir=self.local_report_path,
+                                     radio2=twog_radios,
+                                     radio5=fiveg_radios,
+                                     sets=sets,
+                                     raw_lines=raw_line
+                                     )
+        self.msthpt_obj.setup()
+        self.msthpt_obj.run()
+        report_name = self.msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        influx = CSVtoInflux(influxdb=self.influxdb,
+                              _influx_tag=self.influx_params["influx_tag"],
+                              target_csv=self.local_report_path + report_name + "/kpi.csv")
+        influx.post_to_influx()
+        return self.msthpt_obj
+
 
 if __name__ == '__main__':
     influx_host = "influx.cicd.lab.wlan.tip.build"
