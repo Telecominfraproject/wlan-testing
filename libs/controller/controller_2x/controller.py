@@ -97,7 +97,10 @@ class ConfigureController:
         token = resp.json()
         self.access_token = token["access_token"]
         print(token)
-
+        if resp.status_code != 200:
+            print(resp.status_code)
+            print(resp.json())
+            pytest.exit(str(resp.json()))
         # self.session.headers.update({'Authorization': self.access_token})
         return resp
 
