@@ -114,6 +114,8 @@ def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMo
         except NoSuchElementException:
             print("Exception: Verify Xpath - Update/check Xpath for Click Connections")
 
+
+
         try:
             print("Get Connected Wifi Name if any")
             report.step_start("Get Connected Wifi Name if any")
@@ -143,6 +145,7 @@ def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMo
         report.step_start("Clicking Wi-Fi")
         wifiElement = driver.find_element_by_xpath("//*[@text='Wi-Fi']")
         wifiElement.click()
+        Wifi_AP_Name=""
 
         if Wifi_AP_Name.__eq__(WifiName):
             print("Wifi Name Matches - Already Connected To: " + Wifi_AP_Name)
@@ -2682,3 +2685,63 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
 def close_driver(driver):
     driver.close()
     driver.quit()
+
+
+def expressWifi(request,setup_perfectoMobile, connData):
+    print("\n-------------------------------------")
+    print("Express Wifi Verification")
+    print("-------------------------------------")
+    report = setup_perfectoMobile[1]
+    driver = setup_perfectoMobile[0]
+
+    try:
+        print("Express Wifi Home Page Verification")
+        report.step_start("Express Wifi Home Page Verification")
+        driver.implicitly_wait(2)
+        ExpressWifiBytesLeft = driver.find_element_by_xpath("//*[@label='0KB left']")
+    except NoSuchElementException:
+        driver.implicitly_wait(25)
+        #Add function to Toggle Wifi if Express Wifi Home Page not Triggerd
+        print("Express Wifi Page Not Logged In - ")
+
+    try:
+        print("ExpressWifi Click on Menu Circle")
+        report.step_start("ExpressWifi Click on Menu Circle")
+        ExpressWifiMenu = driver.find_element_by_xpath("//*[@label='⚙️']")
+        ExpressWifiMenu.click()
+    except NoSuchElementException:
+        print("---- Exception ExpressWifi Click on Menu Circle")
+
+    try:
+        print("ExpressWifi Click Run Tests!")
+        report.step_start("ExpressWifi Click Run Tests!")
+        ExpressWifiRunTests = driver.find_element_by_xpath("//*[@resource-id='run_tests']")
+        ExpressWifiRunTests.click()
+        time.sleep(20)
+    except NoSuchElementException:
+        print("Exception ExceptionExpressWifi Click Run Tests!")
+
+    try:
+        print("Verify Results: ")
+        report.step_start("Verify Results")
+       # ExpressWifiLogMsgCount = driver.find_element_by_xpath("//*[@label='running test ...']/parent::*/XCUIElementTypeStaticText")
+       # ExpressWifiLogMsg = []
+
+       # for i in range(1,12):
+        expressWifiOutputMsg = "//*[@resource-id='test_result']"
+        LogOut = driver.find_element_by_xpath(expressWifiOutputMsg)
+       # ExpressWifiLogMsg.append(LogOut.text)
+        print("----" + LogOut.text + "\n")
+       # print("ExpressWifiLog: ", ExpressWifiLogMsg)
+
+    except NoSuchElementException:
+        print("Exception Verify Results")
+
+    try:
+        print("ExpressWifi Verify Test Complete Msg")
+        report.step_start("ExpressWifi Verify Test Complete Msg")
+        ExpressWifiRunTests = driver.find_element_by_xpath("//*[contains (@label,'test completed successfully')]")
+
+    except Exception as e:
+        assert False
+        print(" !! ExpressWifi Failure Test Complete Msg")

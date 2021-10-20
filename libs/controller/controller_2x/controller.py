@@ -13,6 +13,7 @@ import allure
 import requests
 from operator import itemgetter
 from pathlib import Path
+from configuration import EXPRESS_WIFI
 
 from requests.adapters import HTTPAdapter
 import logging
@@ -219,7 +220,7 @@ class FMSUtils:
                       body=str(response.status_code) + "\n" +
                            str(response.json()) + "\n"
                       )
-        
+
         print(response)
 
     def ap_model_lookup(self, model=""):
@@ -284,7 +285,7 @@ class FMSUtils:
 
         return "error"
 
-    
+
 
 
 class UProfileUtility:
@@ -384,6 +385,18 @@ class UProfileUtility:
             }
         }
         self.mode = None
+
+    def set_express_wifi(self):
+        if self.mode == "NAT":
+            self.base_profile_config["interfaces"][0]["services"] = ["lldp", "ssh"]
+            self.base_profile_config["interfaces"][1]["services"] = ["ssh", "lldp", "open-flow"]
+            self.base_profile_config["interfaces"][1]["ipv4"]["subnet"] = "192.168.97.1/24"
+            self.base_profile_config["interfaces"][1]["ipv4"]["dhcp"]["lease-count"] = 100
+            self.base_profile_config['services'] = EXPRESS_WIFI["services"]
+            self.base_profile_config['metrics']['wifi-frames'] = EXPRESS_WIFI["wifi_frames"]
+            self.base_profile_config['metrics']['dhcp-snooping'] = EXPRESS_WIFI["dhcp_snooping"]
+
+
 
     def encryption_lookup(self, encryption="psk"):
         encryption_mapping = {
