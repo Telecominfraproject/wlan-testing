@@ -20,12 +20,31 @@ pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pyte
 
 from android_lib import set_APconnMobileDevice_android, ForgetWifiConnection, expressWifi
 
+setup_params_general = {
+    "mode": "NAT",
+    "ssid_modes": {
+        "open": [{"ssid_name": "XWF-OWF_DSx", "appliedRadios": ["2G"]}]
+    },
+    "rf": {},
+    "radius": False,
+    "express-wifi": True
+}
 
+
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
 class TestExpressWifiAndroid(object):
 
+    @pytest.mark.twog
+    @pytest.mark.open
     def test_ExpressWifi_Android(self, request, get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
-
-        ssidName = "XWF-OWF_DSx"
+        profile_data = setup_params_general["ssid_modes"]["open"][0]
+        ssidName = profile_data["ssid_name"]
         ssidPassword = ""
         print ("SSID_NAME: " + ssidName)
         print ("SSID_PASS: " + ssidPassword)
