@@ -1575,7 +1575,7 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                         print("Connect Button Not Enabled...Verify if Password is set properly  ")
                     check_if_no_internet_popup(driver)
                     # -------------------------------------------------------
-
+                    # //*[@resource-id='com.android.settings:id/summary' and @text="Sign in to the network."]/parent::*/android.widget.TextView[@text='XWF-OWF_DSx']
                     #Verify if WiFi is connected
                     # -------------------------------------------------------
                     try:
@@ -1607,11 +1607,16 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                                 ssid_with_internet = True
                                 print("Wifi Successfully Connected")
                                #allure.attach(name=body=str("Wifi Successfully Connected"))
-                            except NoSuchElementException:
-                                print("Wifi Connection Error: " + WifiName)
-                               #allure.attach(name=body=str("Wifi Connection Error: " + WifiName))
-                                closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                                return ssid_with_internet
+                            except:
+                                try:
+                                    report.step_start("Unknown WIFI status found")
+                                    ssid_with_internet = False
+                                    print("Unknown WIFI status found")
+                                except NoSuchElementException:
+                                    print("Wifi Connection Error: " + WifiName)
+                                   #allure.attach(name=body=str("Wifi Connection Error: " + WifiName))
+                                    closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                                    return ssid_with_internet
 
 
                 except NoSuchElementException:
@@ -2659,7 +2664,7 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                                #allure.attach(name=body=str("Wifi Successfully Connected"))
                             except NoSuchElementException:
                                 print("Wifi Connection Error: " + WifiName)
-                               #allure.attach(name=body=str("Wifi Connection Error: " + WifiName))
+                                #allure.attach(name=body=str("Wifi Connection Error: " + WifiName))
                                 closeApp(connData["appPackage-android"], setup_perfectoMobile)
                                 return ssid_with_internet
 
@@ -2687,12 +2692,21 @@ def close_driver(driver):
     driver.quit()
 
 
-def expressWifi(request,setup_perfectoMobile, connData):
+def expressWifi(request, WifiName, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Express Wifi Verification")
     print("-------------------------------------")
     report = setup_perfectoMobile[1]
     driver = setup_perfectoMobile[0]
+
+    try:
+        click_on_ssid = WebDriverWait(driver, 60).until(EC.presence_of_element_located((
+            MobileBy.XPATH,
+            "//*[@resource-id='com.android.settings:id/summary' and @text='Sign in to the network.']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+        click_on_ssid.click()
+        print("click on expresswifi SSID to open login page")
+    except:
+        print("Could not found expresswifi SSID")
 
     try:
         print("Express Wifi Home Page Verification")
@@ -2707,7 +2721,7 @@ def expressWifi(request,setup_perfectoMobile, connData):
     try:
         print("ExpressWifi Click on Menu Circle")
         report.step_start("ExpressWifi Click on Menu Circle")
-        ExpressWifiMenu = driver.find_element_by_xpath("//*[@label='⚙️']")
+        ExpressWifiMenu = driver.find_element_by_xpath("//*[@resource-id='dogfood-menu']")
         ExpressWifiMenu.click()
     except NoSuchElementException:
         print("---- Exception ExpressWifi Click on Menu Circle")
@@ -2724,24 +2738,15 @@ def expressWifi(request,setup_perfectoMobile, connData):
     try:
         print("Verify Results: ")
         report.step_start("Verify Results")
-       # ExpressWifiLogMsgCount = driver.find_element_by_xpath("//*[@label='running test ...']/parent::*/XCUIElementTypeStaticText")
-       # ExpressWifiLogMsg = []
 
-       # for i in range(1,12):
         expressWifiOutputMsg = "//*[@resource-id='test_result']"
         LogOut = driver.find_element_by_xpath(expressWifiOutputMsg)
-       # ExpressWifiLogMsg.append(LogOut.text)
         print("----" + LogOut.text + "\n")
-       # print("ExpressWifiLog: ", ExpressWifiLogMsg)
-
+        if 'test completed successfully' in LogOut.text:
+            assert True
+        else:
+            assert False
     except NoSuchElementException:
         print("Exception Verify Results")
+    closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-    try:
-        print("ExpressWifi Verify Test Complete Msg")
-        report.step_start("ExpressWifi Verify Test Complete Msg")
-        ExpressWifiRunTests = driver.find_element_by_xpath("//*[contains (@label,'test completed successfully')]")
-
-    except Exception as e:
-        assert False
-        print(" !! ExpressWifi Failure Test Complete Msg")
