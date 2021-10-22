@@ -165,7 +165,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
     - name: checkout testing repo
       uses: actions/checkout@v2
@@ -447,7 +447,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
     - name: checkout testing repo
       uses: actions/checkout@v2
