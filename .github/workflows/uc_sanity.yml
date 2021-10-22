@@ -219,7 +219,7 @@ jobs:
         done
 
     - name: wait for APs to come up again
-      run: sleep 60
+      run: sleep 300
 
   test:
     runs-on: ubuntu-latest
@@ -497,3 +497,6 @@ jobs:
           python3 ap_tools.py --host $HOST --jumphost $JUMPHOST --tty $TTY --port $PORT --username $USERNAME --password $PASSWORD --cmd "jffs2reset -y -r"
           cd ../..
         done
+        
+    - name: wait for APs to come up again
+      run: sleep 300    
