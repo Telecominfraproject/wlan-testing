@@ -97,7 +97,10 @@ class ConfigureController:
         token = resp.json()
         self.access_token = token["access_token"]
         print(token)
-
+        if resp.status_code != 200:
+            print(resp.status_code)
+            print(resp.json())
+            pytest.exit(str(resp.json()))
         # self.session.headers.update({'Authorization': self.access_token})
         return resp
 
@@ -180,6 +183,18 @@ class Controller(ConfigureController):
         print(version)
         # resp.close()()
         return version['version']
+
+    def get_system_gw(self):
+        uri = self.build_uri("system/?command=info")
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_system_fms(self):
+        uri = self.build_url_fms("system/?command=info")
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
 
     def get_device_uuid(self, serial_number):
         device_info = self.get_device_by_serial_number(serial_number=serial_number)
@@ -553,12 +568,13 @@ class UProfileUtility:
 
 if __name__ == '__main__':
     controller = {
-        'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+        'url': 'https://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
         'username': "tip@ucentral.com",
         'password': 'openwifi',
     }
     obj = Controller(controller_data=controller)
-    print(obj.get_sdk_version())
+    print(obj.get_system_fms())
+
     # fms = FMSUtils(sdk_client=obj)
     # new = fms.get_firmwares(model='ecw5410')
     # for i in new:

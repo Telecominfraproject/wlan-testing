@@ -107,11 +107,11 @@ jobs:
       run: |
         export NAMESPACE=${{ github.run_id }}
         export DEPLOY_METHOD=git
-        export CHART_VERSION=main
-        export OWGW_VERSION=master
-        export OWGWUI_VERSION=main
-        export OWSEC_VERSION=main
-        export OWFMS_VERSION=main
+        export CHART_VERSION=v2.2.0-RC1
+        export OWGW_VERSION=v2.2.0-RC1
+        export OWGWUI_VERSION=v2.2.0-RC1
+        export OWSEC_VERSION=v2.2.0-RC1
+        export OWFMS_VERSION=v2.2.0-RC1
         export OWPROV_VERSION=main
         export OWPROVUI_VERSION=main
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
@@ -219,7 +219,7 @@ jobs:
         done
 
     - name: wait for APs to come up again
-      run: sleep 60
+      run: sleep 300
 
   test:
     runs-on: ubuntu-latest
@@ -497,3 +497,6 @@ jobs:
           python3 ap_tools.py --host $HOST --jumphost $JUMPHOST --tty $TTY --port $PORT --username $USERNAME --password $PASSWORD --cmd "jffs2reset -y -r"
           cd ../..
         done
+        
+    - name: wait for APs to come up again
+      run: sleep 300    
