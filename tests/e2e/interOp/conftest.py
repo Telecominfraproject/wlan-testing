@@ -195,39 +195,39 @@ def setup_vlan():
 
 
 @pytest.fixture(scope="class")
-def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtures_ver,
+def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtures_ver, skip_lf,
                    instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                    get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
     lf_tools.reset_scenario()
     param = dict(request.param)
-
+    if skip_lf:
     # VLAN Setup
-    if request.param["mode"] == "VLAN":
+        if request.param["mode"] == "VLAN":
 
-        vlan_list = list()
-        refactored_vlan_list = list()
-        ssid_modes = request.param["ssid_modes"].keys()
-        for mode in ssid_modes:
-            for ssid in range(len(request.param["ssid_modes"][mode])):
-                if "vlan" in request.param["ssid_modes"][mode][ssid]:
-                    vlan_list.append(request.param["ssid_modes"][mode][ssid]["vlan"])
-                else:
-                    pass
-        if vlan_list:
-            [refactored_vlan_list.append(x) for x in vlan_list if x not in refactored_vlan_list]
-            vlan_list = refactored_vlan_list
-            for i in range(len(vlan_list)):
-                if vlan_list[i] > 4095 or vlan_list[i] < 1:
-                    vlan_list.pop(i)
-    if request.param["mode"] == "VLAN":
-        lf_tools.add_vlan(vlan_ids=vlan_list)
+            vlan_list = list()
+            refactored_vlan_list = list()
+            ssid_modes = request.param["ssid_modes"].keys()
+            for mode in ssid_modes:
+                for ssid in range(len(request.param["ssid_modes"][mode])):
+                    if "vlan" in request.param["ssid_modes"][mode][ssid]:
+                        vlan_list.append(request.param["ssid_modes"][mode][ssid]["vlan"])
+                    else:
+                        pass
+            if vlan_list:
+                [refactored_vlan_list.append(x) for x in vlan_list if x not in refactored_vlan_list]
+                vlan_list = refactored_vlan_list
+                for i in range(len(vlan_list)):
+                    if vlan_list[i] > 4095 or vlan_list[i] < 1:
+                        vlan_list.pop(i)
+        if request.param["mode"] == "VLAN":
+            lf_tools.add_vlan(vlan_ids=vlan_list)
 
     # call this, if 1.x
     return_var = fixtures_ver.setup_profiles(request, param, setup_controller, testbed, get_equipment_ref,
                                              instantiate_profile,
                                              get_markers, create_lanforge_chamberview_dut, lf_tools,
                                              get_security_flags, get_configuration, radius_info, get_apnos,
-                                             radius_accounting_info)
+                                             radius_accounting_info, skip_lf=skip_lf)
     yield return_var
 
 

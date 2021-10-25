@@ -324,7 +324,8 @@ class Fixtures_2x:
 
     def setup_profiles(self, request, param, setup_controller, testbed, get_equipment_ref,
                        instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
-                       get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
+                       get_security_flags, get_configuration, radius_info, get_apnos,
+                       radius_accounting_info, skip_lf=False):
 
         instantiate_profile_obj = instantiate_profile(sdk_client=setup_controller)
         print(1, instantiate_profile_obj.sdk_client)
@@ -660,8 +661,9 @@ class Fixtures_2x:
                                                ]
                 ssid_data.append(ssid)
                 lf_tools.ssid_list.append(ssid_info_sdk[interface][0])
-            lf_tools.dut_idx_mapping = idx_mapping
-            lf_tools.update_ssid(ssid_data=ssid_data)
+            if skip_lf:
+                lf_tools.dut_idx_mapping = idx_mapping
+                lf_tools.update_ssid(ssid_data=ssid_data)
         except Exception as e:
             print(e)
             pass

@@ -97,6 +97,13 @@ def pytest_addoption(parser):
         help="skip updating firmware on the AP (useful for local testing)"
     )
 
+    parser.addoption(
+        "--skip-lanforge",
+        action="store_true",
+        default=False,
+        help="skip to do any interactions on lanforge (to be used in case of interop)"
+    )
+
     # change behaviour
     parser.addoption(
         "--exit-on-fail",
@@ -258,6 +265,11 @@ def get_equipment_ref(request, setup_controller, testbed, get_configuration):
 def get_sdk_version(fixtures_ver):
     version = fixtures_ver.get_sdk_version()
     yield version
+
+
+@pytest.fixture(scope="session")
+def skip_lf(request):
+    yield request.config.getoption("skip-lanforge")
 
 
 # Controller Fixture
@@ -542,26 +554,32 @@ def traffic_generator_connectivity(testbed, get_configuration):
 
 
 @pytest.fixture(scope="session")
-def create_lanforge_chamberview_dut(lf_tools):
-    dut_object, dut_name = lf_tools.Create_Dut()
+def create_lanforge_chamberview_dut(lf_tools, skip_lf):
+    if not skip_lf:
+        dut_object, dut_name = lf_tools.Create_Dut()
     return dut_name
 
 
 @pytest.fixture(scope="session")
-def lf_tools(get_configuration, testbed):
+def lf_tools(get_configuration, testbed, skip_lf):
     """ Create a DUT on LANforge"""
-    obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
-                      testbed=testbed, access_point_data=get_configuration["access_point"])
-
+    if not skip_lf:
+        obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
+                          testbed=testbed, access_point_data=get_configuration["access_point"])
+    else:
+        obj = False
     yield obj
 
 
 @pytest.fixture(scope="session")
-def lf_test(get_configuration, setup_influx, request):
-    if request.config.getoption("--exit-on-fail"):
-        obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'], influx_params=setup_influx, debug=True)
-    if request.config.getoption("--exit-on-fail") is False:
-        obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'], influx_params=setup_influx, debug=False)
+def lf_test(get_configuration, setup_influx, request, skip_lf):
+    if not skip_lf:
+        if request.config.getoption("--exit-on-fail"):
+            obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'], influx_params=setup_influx,
+                          debug=True)
+        if request.config.getoption("--exit-on-fail") is False:
+            obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'], influx_params=setup_influx,
+                          debug=False)
     yield obj
 
 
