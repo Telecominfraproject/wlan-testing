@@ -269,7 +269,7 @@ def get_sdk_version(fixtures_ver):
 
 @pytest.fixture(scope="session")
 def skip_lf(request):
-    yield request.config.getoption("skip-lanforge")
+    yield request.config.getoption("--skip-lanforge")
 
 
 # Controller Fixture
@@ -555,6 +555,7 @@ def traffic_generator_connectivity(testbed, get_configuration):
 
 @pytest.fixture(scope="session")
 def create_lanforge_chamberview_dut(lf_tools, skip_lf):
+    dut_name = ""
     if not skip_lf:
         dut_object, dut_name = lf_tools.Create_Dut()
     return dut_name

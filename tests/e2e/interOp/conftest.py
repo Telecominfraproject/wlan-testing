@@ -198,9 +198,10 @@ def setup_vlan():
 def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtures_ver, skip_lf,
                    instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                    get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
-    lf_tools.reset_scenario()
+
     param = dict(request.param)
-    if skip_lf:
+    if not skip_lf:
+        lf_tools.reset_scenario()
     # VLAN Setup
         if request.param["mode"] == "VLAN":
 
