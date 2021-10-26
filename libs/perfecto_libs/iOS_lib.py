@@ -1369,7 +1369,7 @@ def expressWifi(request, setup_perfectoMobile, connData):
         driver.implicitly_wait(2)
         ExpressWifiBytesLeft = driver.find_element_by_xpath("//*[@label='0KB left']")
     except NoSuchElementException:
-        driver.implicitly_wait(25)
+        # driver.implicitly_wait(25)
         # Add function to Toggle Wifi if Express Wifi Home Page not Triggerd
         print("Express Wifi Page Not Logged In - ")
 
@@ -1411,10 +1411,13 @@ def expressWifi(request, setup_perfectoMobile, connData):
         print("ExpressWifi Verify Test Complete Msg")
         report.step_start("ExpressWifi Verify Test Complete Msg")
         ExpressWifiRunTests = driver.find_element_by_xpath("//*[contains (@label,'test completed successfully')]")
+        # closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+        return True
 
     except Exception:
-        assert False
+        # closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
         print(" !! ExpressWifi Failure Test Complete Msg")
+        return False
 
         # 2)Settings to Logout
 

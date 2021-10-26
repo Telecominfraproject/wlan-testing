@@ -13,7 +13,7 @@ import allure
 import requests
 from operator import itemgetter
 from pathlib import Path
-from configuration import EXPRESS_WIFI
+from configuration import open_flow
 
 from requests.adapters import HTTPAdapter
 import logging
@@ -392,9 +392,9 @@ class UProfileUtility:
             self.base_profile_config["interfaces"][1]["services"] = ["ssh", "lldp", "open-flow"]
             self.base_profile_config["interfaces"][1]["ipv4"]["subnet"] = "192.168.97.1/24"
             self.base_profile_config["interfaces"][1]["ipv4"]["dhcp"]["lease-count"] = 100
-            self.base_profile_config['services'] = EXPRESS_WIFI["services"]
-            self.base_profile_config['metrics']['wifi-frames'] = EXPRESS_WIFI["wifi_frames"]
-            self.base_profile_config['metrics']['dhcp-snooping'] = EXPRESS_WIFI["dhcp_snooping"]
+            self.base_profile_config['services']["open-flow"] = open_flow
+            self.base_profile_config['services']['lldp']['describe'] = "OpenWiFi - expressWiFi"
+            self.base_profile_config['services']['lldp']['location'] = "Hotspot"
 
 
 

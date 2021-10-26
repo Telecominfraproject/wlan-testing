@@ -57,8 +57,10 @@ class TestExpressWifiAndroid(object):
         wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
 
         #Express Wifi
-        expressWifi(request, ssidName, setup_perfectoMobile_android, connData)
-
+        if expressWifi(request, ssidName, setup_perfectoMobile_android, connData):
+            assert True
+        else:
+            assert False
         #ForgetWifi
         wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
 

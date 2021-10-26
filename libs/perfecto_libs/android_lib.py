@@ -59,9 +59,9 @@ def scrollDown(setup_perfectoMobile):
     params2["start"] = "50%,90%"
     params2["end"] = "50%,20%"
     params2["duration"] = "4"
-    time.sleep(5)
+    time.sleep(2)
     setup_perfectoMobile[0].execute_script('mobile:touch:swipe', params2)
-    time.sleep(5)
+    time.sleep(1)
 
 
 def getDeviceID(setup_perfectoMobile):
@@ -1063,7 +1063,7 @@ def check_if_no_internet_popup(driver):#To check and kill if any popups related 
                 print("**alert** popup **alert**")
 
                 try:
-                    driver.implicitly_wait(3)
+                    driver.implicitly_wait(2)
                     time.sleep(2)
                     kill_popup = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/keep_btn']")
                     kill_popup.click()
@@ -1784,8 +1784,8 @@ def wifi_disconnect_and_forget(request, WifiName, WifiPass, setup_perfectoMobile
 def get_all_available_ssids(driver):
     active_ssid_list = []
     try:
-        time.sleep(8)
-        driver.implicitly_wait(10)
+        time.sleep(5)
+        driver.implicitly_wait(5)
         elements = driver.find_elements_by_xpath("//*[@resource-id='com.android.settings:id/title']")
         # print("elements: ", elements)
         print(len(elements))
@@ -2700,7 +2700,7 @@ def expressWifi(request, WifiName, setup_perfectoMobile, connData):
     driver = setup_perfectoMobile[0]
 
     try:
-        click_on_ssid = WebDriverWait(driver, 60).until(EC.presence_of_element_located((
+        click_on_ssid = WebDriverWait(driver, 10).until(EC.presence_of_element_located((
             MobileBy.XPATH,
             "//*[@resource-id='com.android.settings:id/summary' and @text='Sign in to the network.']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
         click_on_ssid.click()
@@ -2714,7 +2714,7 @@ def expressWifi(request, WifiName, setup_perfectoMobile, connData):
         driver.implicitly_wait(2)
         ExpressWifiBytesLeft = driver.find_element_by_xpath("//*[@label='0KB left']")
     except NoSuchElementException:
-        driver.implicitly_wait(25)
+        # driver.implicitly_wait(25)
         #Add function to Toggle Wifi if Express Wifi Home Page not Triggerd
         print("Express Wifi Page Not Logged In - ")
 
@@ -2743,9 +2743,11 @@ def expressWifi(request, WifiName, setup_perfectoMobile, connData):
         LogOut = driver.find_element_by_xpath(expressWifiOutputMsg)
         print("----" + LogOut.text + "\n")
         if 'test completed successfully' in LogOut.text:
-            assert True
+            closeApp(connData["appPackage-android"], setup_perfectoMobile)
+            return True
         else:
-            assert False
+            closeApp(connData["appPackage-android"], setup_perfectoMobile)
+            return False
     except NoSuchElementException:
         print("Exception Verify Results")
     closeApp(connData["appPackage-android"], setup_perfectoMobile)

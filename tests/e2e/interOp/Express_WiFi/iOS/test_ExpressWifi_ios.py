@@ -59,8 +59,10 @@ class TestExpressWifi(object):
         wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
 
         # Express Wifi
-        expressWifi(request, setup_perfectoMobile_iOS, connData)
+        if expressWifi(request, setup_perfectoMobile_iOS, connData):
+            assert True
+        else:
+            assert False
 
         # ForgetWifi
         wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-
