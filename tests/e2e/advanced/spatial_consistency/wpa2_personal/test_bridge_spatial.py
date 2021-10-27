@@ -40,28 +40,25 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
         print("station", station)
-        # val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-        #        ['bandw_options: Auto'], ['spatial_streams: 1'], ['attenuator: 1.1.3034'], ['attenuator: 1.1.3059'],
-        #        ['attenuations: 0..+100..100'],['attenuations2: 0..+100..100']]
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
                ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: 1.1.3034'],['attenuator2: 1.1.3059'],
                ['attenuations: 0..+0..0'],['attenuations2: 0..+100..100'],['chamber: 1'], ['tt_deg: 0..+0..0']]
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
-                                        instance_name="BRIDGE_EXAMPLE",
+                                        instance_name="BRIDGE_rvr_EXAMPLE",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
-        #     report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        #     print("report name ", report_name)
-        #     entries = os.listdir("../reports/" + report_name + '/')
-        #     print("entries", entries)
-        #     pdf = False
-        #     for i in entries:
-        #         if ".pdf" in i:
-        #             pdf = i
-        #     if pdf:
-        #         allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-        #                            name=get_configuration["access_point"][0]["model"] + "ratevsrange")
-        #
-        #     print("Test Completed... Cleaning up Stations")
-        #     lf_test.Client_disconnect(station_name=station_names_twog)
+            report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            print("report name ", report_name)
+            entries = os.listdir("../reports/" + report_name + '/')
+            print("entries", entries)
+            pdf = False
+            for i in entries:
+                if ".pdf" in i:
+                    pdf = i
+            if pdf:
+                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
+                                   name=get_configuration["access_point"][0]["model"] + "ratevsrange")
+
+            print("Test Completed... Cleaning up Stations")
+            lf_test.Client_disconnect(station_name=station_names_twog)
