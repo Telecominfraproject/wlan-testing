@@ -1,0 +1,11 @@
+name: 2.x sanity testing on Docker Compose deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Run echo
+        run: echo "This is a dummy workflow."
