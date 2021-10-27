@@ -246,3 +246,6 @@ kafka:
       limits:
         cpu: 200m
         memory: 384Mi
+
+clustersysteminfo:
+  enabled: true
