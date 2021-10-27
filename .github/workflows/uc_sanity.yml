@@ -112,6 +112,8 @@ jobs:
         export OWGWUI_VERSION=v2.2.0-RC1
         export OWSEC_VERSION=v2.2.0-RC1
         export OWFMS_VERSION=v2.2.0-RC1
+        export OWPROV_VERSION=main
+        export OWPROVUI_VERSION=main
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
@@ -142,7 +144,7 @@ jobs:
         kubectl describe persistentvolumeclaims --namespace openwifi-${{ github.run_id }}
 
     - name: wait for DNS to propagate
-      run: sleep 300
+      run: sleep 900
 
   generate-matrix:
     name: generate testbed matrix
@@ -217,7 +219,7 @@ jobs:
         done
 
     - name: wait for APs to come up again
-      run: sleep 60
+      run: sleep 300
 
   test:
     runs-on: ubuntu-latest
@@ -294,11 +296,11 @@ jobs:
         sleep 1
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
         kubectl wait "pod/$podname" --for condition=ready --timeout=600s
+        kubectl logs -f $podname &
         #sleep 30 # wait for the pod to come up
         until [ -s test_everything.xml ]
         do
           sleep 10
-          echo "waiting for tests to complete..."
           kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
         done
         echo "tests completed"
@@ -495,3 +497,6 @@ jobs:
           python3 ap_tools.py --host $HOST --jumphost $JUMPHOST --tty $TTY --port $PORT --username $USERNAME --password $PASSWORD --cmd "jffs2reset -y -r"
           cd ../..
         done
+        
+    - name: wait for APs to come up again
+      run: sleep 300    

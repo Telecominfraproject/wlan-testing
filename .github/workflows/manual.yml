@@ -136,7 +136,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression }}" -s -vvv --testbed="${{ github.event.inputs.testbed }}" -o firmware="${{ github.event.inputs.firmware }}" --alluredir=/tmp/allure-results "${{ github.event.inputs.additional_args }}"
+                    pytest -m "${{ github.event.inputs.marker_expression }}" -s -vvv --testbed="${{ github.event.inputs.testbed }}" -o firmware="${{ github.event.inputs.firmware }}" --alluredir=/tmp/allure-results ${{ github.event.inputs.additional_args }}
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -160,11 +160,9 @@ jobs:
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
         kubectl wait "pod/$podname" --for condition=ready --timeout=600s
         kubectl logs -f $podname &
-        #sleep 30 # wait for the pod to come up
         until [ -s test_everything.xml ]
         do
           sleep 10
-          echo "waiting for tests to complete..."
           kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
         done
         echo "tests completed"

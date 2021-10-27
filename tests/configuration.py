@@ -202,10 +202,10 @@ CONFIGURATION = {
                 'mode': 'wifi6',
                 'serial': '0000c1018812',
                 'jumphost': True,
-                'ip': "10.28.3.103",
+                'ip': "localhost",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 22,
+                'port': 8803,
                 'jumphost_tty': '/dev/ttyAP1',
                 'version': "release-latest"
             }
@@ -213,9 +213,9 @@ CONFIGURATION = {
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "10.28.3.28",
-                "port": 8080,
-                "ssh_port": 22,
+                "ip": "localhost",
+                "port": 8802,
+                "ssh_port": 8804,
                 "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
                 "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
                 "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
@@ -343,7 +343,45 @@ CONFIGURATION = {
             }
         }
     },  # checked
+    "advanced-02": {
+        "controller": {
+            'url':'https://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'openwifi',
+        },
+        'access_point': [
+            {
+                'model': 'eap102',
+                'mode': 'wifi6',
+                'serial': '903cb39d6958',
+                'jumphost': True,
+                'ip': "10.28.3.102",  # 10.28.3.103
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22,  # 22
+                'jumphost_tty': '/dev/ttyAP3',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf194c/20210729-cig_wf194c-v2.0.0-rc2-02244b8-upgrade.bin"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "10.28.3.26",
+                "port": 8080,  # 8080
+                "ssh_port": 22,
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2","1.1.wiphy4"],
+                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3", "1.1.wiphy5"],
+                "AX-Radio": [],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            }
+        }
 
+    },
     "mesh": {
         "controller": {
             'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
@@ -352,102 +390,85 @@ CONFIGURATION = {
         },
         'access_point': [
             {
+                'type' : 'root',
                 'model': 'eap101',
                 'mode': 'wifi6',
                 'serial': '34efb6af4a7a',
                 'jumphost': True,
-                'ip': "10.28.3.101",  # 10.28.3.103
+                'ip': "localhost",  # 10\.28\.3\.101
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 22,  # 22
+                'port': 8803,  # 22
                 'jumphost_tty': '/dev/ttyAP2',
                 'version': "latest"
             },
-{
+            {
+                'type': 'node-1',
                 'model': 'eap101',
                 'mode': 'wifi6',
                 'serial': '34efb6af4903',
                 'jumphost': True,
-                'ip': "10.28.3.101",  # 10.28.3.103
+                'ip': "localhost", #10\.28\.3\.101
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 22,  # 22
+                'port': 8803,  # 22
                 'jumphost_tty': '/dev/ttyAP3',
                 'version': "latest"
             },
-{
-                'model': 'eap101',
+            {
+                'type': 'node-2',
+                'model': 'eap102',
                 'mode': 'wifi6',
-                'serial': '34efb6af4a7a',
+                'serial': '903cb39d692c',
                 'jumphost': True,
-                'ip': "10.28.3.101",  # 10.28.3.103
+                'ip': "localhost",  # 10\.28\.3\.101
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 22,  # 22
+                'port': 8803,  # 22
                 'jumphost_tty': '/dev/ttyAP4',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/eap101/trunk/eap101-1.1.0.tar.gz"
+                'version': "latest"
             }
         ],
         "traffic_generator": {
-            "name": "lanforge",
-            "details-mobile-sta": {
-                "ip": "10.28.3.14",  # 10.28.3.34
-                "port": 8080,  # 8080
-                "ssh_port": 22,
-                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
-                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
-                "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
-                "upstream": "1.1.eth2",
-                "upstream_subnet": "10.28.2.1/24",
-                "uplink": "1.1.eth3",
+            "name": "lanforge-mesh",
+            "details": {
+                "type": "mesh",
+                "ip": "localhost",  # 10.28.3.14
+                "port": 8802,  # 8080
+                "ssh_port": 8804,
+                "2.4G-Radio-mobile-sta": ["1.1.wiphy0", "1.1.wiphy2"],
+                "5G-Radio-mobile-sta": ["1.1.wiphy1", "1.1.wiphy3"],
+                "AX-Radio-mobile-sta": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
+                "upstream-mobile-sta": "1.1.eth2",
+                "upstream_subnet-mobile-sta": "10.28.2.1/24",
+                "uplink-mobile-sta": "1.1.eth3",
+                "2.4G-Radio-root": ["1.2.wiphy0"],
+                "5G-Radio-root": ["1.2.wiphy1"],
+                "AX-Radio-root": [],
+                "upstream-root": "1.2.eth2",
+                "upstream_subnet-root": "10.28.2.1/24",
+                "uplink-root": "1.2.eth3",
+                "2.4G-Radio-node-1": ["1.3.wiphy0"],
+                "5G-Radio-node-1": ["1.3.wiphy1"],
+                "AX-Radio-node-1": [],
+                "upstream-node-1": "1.3.eth2",
+                "upstream_subnet-node-1": "10.28.2.1/24",
+                "uplink--node-1": "1.3.eth3",
+                "2.4G-Radio-node-2": ["1.4.wiphy0"],
+                "5G-Radio-node-2": ["1.4.wiphy1"],
+                "AX-Radio-node-2": [],
+                "upstream-node-2": "1.4.eth2",
+                "upstream_subnet-node-2": "10.28.2.1/24",
+                "uplink--node-2": "1.4.eth3",
                 "2.4G-Station-Name": "wlan0",
                 "5G-Station-Name": "wlan0",
                 "AX-Station-Name": "ax"
             },
-            "details-root": {
-                "ip": "10.28.3.14",  # 10.28.3.34
-                "port": 8080,  # 8080
-                "ssh_port": 22,
-                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
-                "5G-Radio": ["wiphy1", "wiphy3"],
-                "AX-Radio": ["wiphy4", "wiphy5", "wiphy6", "wiphy7"],
-                "upstream": "1.1.eth2",
-                "upstream_subnet": "10.28.2.1/24",
-                "uplink": "1.1.eth3",
-                "2.4G-Station-Name": "wlan0",
-                "5G-Station-Name": "wlan0",
-                "AX-Station-Name": "ax"
-            },
-            "details-node-1": {
-                "ip": "10.28.3.14",  # 10.28.3.34
-                "port": 8080,  # 8080
-                "ssh_port": 22,
-                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
-                "5G-Radio": ["wiphy1", "wiphy3"],
-                "AX-Radio": ["wiphy4", "wiphy5", "wiphy6", "wiphy7"],
-                "upstream": "1.1.eth2",
-                "upstream_subnet": "10.28.2.1/24",
-                "uplink": "1.1.eth3",
-                "2.4G-Station-Name": "wlan0",
-                "5G-Station-Name": "wlan0",
-                "AX-Station-Name": "ax"
-            },
-            "details-node-2": {
-                "ip": "10.28.3.14",  # 10.28.3.34
-                "port": 8080,  # 8080
-                "ssh_port": 22,
-                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
-                "5G-Radio": ["wiphy1", "wiphy3"],
-                "AX-Radio": ["wiphy4", "wiphy5", "wiphy6", "wiphy7"],
-                "upstream": "1.1.eth2",
-                "upstream_subnet": "10.28.2.1/24",
-                "uplink": "1.1.eth3",
-                "2.4G-Station-Name": "wlan0",
-                "5G-Station-Name": "wlan0",
-                "AX-Station-Name": "ax"
-            }
 
         }
+
+
+
     },  # checked
     "interop-01": {
         "controller": {
