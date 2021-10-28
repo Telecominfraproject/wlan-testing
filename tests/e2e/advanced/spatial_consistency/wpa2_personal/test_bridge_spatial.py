@@ -44,11 +44,11 @@ class Test_SpatialConsistency_Bridge(object):
         print("station", station)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
                ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: 1.1.3034'],['attenuator2: 1.1.3059'],
-               ['attenuations: 0..+0..0'],['attenuations2: 0..+100..100'],['chamber: 1'], ['tt_deg: 0..+0..0']]
+               ['attenuations: 100'],['attenuations2: 100'],['chamber: DUT-Chamber'], ['tt_deg: 0']]
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
-                                        instance_name="SPATIAL_NSS1_RVR",
+                                        instance_name="SPATIAL_NSS1_RVR1",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             print("report name ", report_name)
@@ -77,6 +77,7 @@ class Test_SpatialConsistency_Bridge(object):
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
                 else :
+                    allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert False
         else:
             assert False
