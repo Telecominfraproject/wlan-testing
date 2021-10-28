@@ -394,7 +394,7 @@ CONFIGURATION = {
                 'mode': 'wifi6',
                 'serial': '903cb39d6958',
                 'jumphost': True,
-                'ip': "localhost",  # 10.28.3.103
+                'ip': "10.28.3.102",  # 10.28.3.102
                 'username': "lanforge",
                 'password': "pumpkin77",
                 'port': 8803,  # 22
@@ -405,7 +405,7 @@ CONFIGURATION = {
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "localhost",  # 10.28.3.34
+                "ip": "10.28.3.26",  # 10.28.3.26
                 "port": 8802,  # 8080
                 "ssh_port": 8804,
                 "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2","1.1.wiphy4"],
