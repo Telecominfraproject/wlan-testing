@@ -446,8 +446,8 @@ jobs:
           kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
         done
         echo "tests completed"
-#        echo "downloading allure results..."
-#        kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
+        echo "downloading allure results..."
+        kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
         echo "waiting for pod to exit"
         kubectl logs -f $podname >/dev/null 2>&1
         exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
