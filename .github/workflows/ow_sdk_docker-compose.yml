@@ -1,4 +1,4 @@
-name: 2.x sanity testing on Docker Compose deployment
+name: 2.x SDK testing with Docker Compose deployment
 
 on:
   workflow_dispatch:
