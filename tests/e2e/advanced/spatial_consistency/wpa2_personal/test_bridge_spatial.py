@@ -73,7 +73,7 @@ class Test_SpatialConsistency_Bridge(object):
             print(str(kpi_val))
             val = kpi_val.split(" ")
             print(val)
-            print(type(val))
+            #print(type(val))
             print(val[5])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
@@ -85,11 +85,11 @@ class Test_SpatialConsistency_Bridge(object):
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
                 else :
-                    print("hi")
+                    print(" valueTest faled due to lesser")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert False
         else:
-            print("bye")
+            print("test failed due to no station ip")
             assert False
 
     # @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5070", name="WIFI-5070")
