@@ -108,7 +108,6 @@ All code must be written in python 3 and conform to PEP 8 style guide. The test 
       ├── mdu
       |── mesh
       |── scale
-    |── README.md         -/* Pytest spatial_consist and testcases information */
 ```
 
 ### Setup Instructions
