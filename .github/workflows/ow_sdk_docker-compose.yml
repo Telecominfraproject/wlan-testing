@@ -307,7 +307,7 @@ jobs:
             - name: OWPROV_SYSTEM_URI_PRIVATE
               value: "https://owprov.wlan.local:17005"
             - name: OWPROV_SYSTEM_URI_PUBLIC
-              value: "https://openwifi-docker-compose-$ {{ github.run_id }}.cicd.lab.wlan.tip.build:16005"
+              value: "https://openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16005"
             - name: WEBSOCKET_CERT
               value: "/tip-cicd-wildcard-certs/websocket-cert.pem"
             - name: WEBSOCKET_KEY
@@ -335,9 +335,6 @@ jobs:
       if: failure()
       run: |
         kubectl describe services --namespace openwifi-${{ github.run_id }}
-
-    - name: wait for DNS to propagate
-      run: sleep 300
 
     - name: Check if deployment is ready using clustersysteminfo image
       env:
