@@ -41,6 +41,7 @@ from lf_ap_auto_test import ApAutoTest
 from csv_to_influx import CSVtoInflux
 from influx2 import RecordInflux
 from lf_multipsk import MultiPsk
+from lf_rvr_test import RvrTest
 
 
 class RunTest:
@@ -478,7 +479,7 @@ class RunTest:
         influx.glob()
         return self.apstab_obj
 
-    
+
     def ratevsrange(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
                     upload_rate="0", duration="1m", instance_name="test_demo", raw_lines=None):
         if mode == "BRIDGE":
