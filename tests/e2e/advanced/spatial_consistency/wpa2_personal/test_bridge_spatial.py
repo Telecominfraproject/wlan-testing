@@ -55,15 +55,15 @@ class Test_SpatialConsistency_Bridge(object):
             print("report name ", report_name)
             entries = os.listdir("../reports/" + report_name + '/')
             print("entries", entries)
-            pdf = False
+            lf_tools.attach_report_graphs(report_name=report_name,
+                                              pdf_name="Rate vs Range Test - UDP 2.4G")
+            kpi = False
             for i in entries:
                 if "kpi.csv" in i:
                     kpi = i
             if kpi:
                 allure.attach.file(source="../reports/" + report_name + "/" + kpi,
-                                   name="kpi1.csv")
-            lf_tools.attach_report_graphs(report_name=report_name,
-                                              pdf_name="Rate vs Range Test - UDP 2.4G")
+                                   name="kpi.csv")
 
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_twog)
@@ -71,6 +71,11 @@ class Test_SpatialConsistency_Bridge(object):
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
             print(str(kpi_val))
+            val = kpi_val.split(" ")
+            print(val)
+            print(type(val))
+            print(val[4])
+
 
 
             # if str(kpi_val) == "empty":
