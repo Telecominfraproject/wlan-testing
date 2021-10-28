@@ -198,6 +198,7 @@ jobs:
         for id in $(echo -e 'from configuration import CONFIGURATION\nfor ap in CONFIGURATION["${{ matrix.testbed }}"]["access_point"]: print(ap["serial"])' | python3)
         do
           ./wlan-pki-cert-scripts/digicert-change-ap-redirector.sh $id "${{ needs.deploy-controller.outputs.gateway_url }}"
+          echo "Exit code - $?"
         done
 
     - name: factory reset APs
@@ -479,6 +480,7 @@ jobs:
         for id in $(echo -e 'from configuration import CONFIGURATION\nfor ap in CONFIGURATION["${{ matrix.testbed }}"]["access_point"]: print(ap["serial"])' | python3)
         do
           ./wlan-pki-cert-scripts/digicert-change-ap-redirector.sh $id gw-qa01.cicd.lab.wlan.tip.build
+          echo "Exit code - $?"
         done
 
     - name: factory reset APs
