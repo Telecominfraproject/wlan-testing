@@ -339,29 +339,13 @@ jobs:
     - name: wait for DNS to propagate
       run: sleep 300
 
-    - name: Check and wait until deployment is ready using systeminfo API calls
+    - name: Check if deployment is ready using clustersysteminfo image
       env:
         OWSEC: "openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16001"
+        OWSEC_USERNAME: ${{ secrets.UCENTRALGW_AUTH_USERNAME }}
+        OWSEC_PASSWORD: ${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
       run: |
-        wget -O owgw_cli https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralgw/master/test_scripts/curl/cli && chmod +x owgw_cli
-        wget -O owsec_cli https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralsec/main/test_scripts/curl/cli && chmod +x owsec_cli
-        wget -O owfms_cli https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralfms/main/test_scripts/curl/cli && chmod +x owfms_cli
-        wget -O owprov_cli https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-owprov/main/test_scripts/curl/cli && chmod +x owprov_cli
-        n=0
-        until [ "$n" -ge 30 ]
-        do
-          ./owgw_cli systeminfo && \
-          ./owsec_cli systeminfo && \
-          ./owfms_cli systeminfo && \
-          ./owprov_cli systeminfo && break
-          n=$((n+1))
-          if [ "$n" -eq 30]; then
-            echo "Deployment is not ready"
-            exit 1
-          else
-            sleep 10
-          fi
-        done
+        docker run --rm -e OWSEC="$OWSEC" -e OWSEC_USERNAME="$OWSEC_USERNAME" -e OWSEC_PASSWORD="$OWSEC_PASSWORD" tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo:main
 
   test:
     runs-on: ubuntu-latest
