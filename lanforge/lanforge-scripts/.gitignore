@@ -1,7 +1,0 @@
-*.bash.txt
-*.sh.txt
-*.pl.txt
-*~
-*.iml
-**/*.iml
-.idea
