@@ -80,14 +80,16 @@ class Test_SpatialConsistency_Bridge(object):
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if str(val[5]) > "60":
+                if float(val[5]) > float(60):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
                 else :
+                    print("hi")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert False
         else:
+            print("bye")
             assert False
 
     # @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5070", name="WIFI-5070")
