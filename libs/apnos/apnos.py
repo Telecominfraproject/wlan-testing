@@ -337,8 +337,11 @@ class APNOS:
                 active = output.decode('utf-8').splitlines()[4].split(":")[1].replace(" ", "").replace(",", "")
             client.close()
         except Exception as e:
-            pytest.exit("ubus call ucentral status: error" + output)
-            print(e)
+            if output.__contains__('"connected":'):
+                pass
+            else:
+                pytest.exit("ubus call ucentral status: error" + str(output))
+                print(e)
             connected, latest, active = "Error", "Error", "Error"
         return connected, latest, active
 
