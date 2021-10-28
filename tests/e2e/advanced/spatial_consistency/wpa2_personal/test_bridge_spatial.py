@@ -2,6 +2,7 @@ import pytest
 import allure
 import os
 import time
+import pandas as pd
 
 pytestmark = [pytest.mark.spatialconsistency, pytest.mark.bridge]
 
@@ -56,11 +57,13 @@ class Test_SpatialConsistency_Bridge(object):
             print("entries", entries)
             pdf = False
             for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "ratevsrange")
+                if "kpi.csv" in i:
+                    kpi = i
+            if kpi:
+                allure.attach.file(source="../reports/" + report_name + "/" + kpi,
+                                   name="kpi1.csv")
+            lf_tools.attach_report_graphs(report_name=report_name,
+                                              pdf_name="Rate vs Range Test - UDP 2.4G")
 
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_twog)
@@ -68,6 +71,7 @@ class Test_SpatialConsistency_Bridge(object):
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
             print(str(kpi_val))
+
 
             # if str(kpi_val) == "empty":
             #     print("kpi is empty, station did not got ip, Test failed")
