@@ -16,9 +16,6 @@ owgw:
     # rtty
     rtty.enabled: "true"
 
-  public_env_variables:
-    READINESS_METHOD: systeminfo
-
   certs:
     restapi-ca.pem: |
       -----BEGIN CERTIFICATE-----
@@ -55,9 +52,6 @@ owsec:
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285"
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16001,17001"
-
-  public_env_variables:
-    READINESS_METHOD: systeminfo
 
   certs:
     restapi-ca.pem: |
@@ -133,9 +127,6 @@ owfms:
         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285"
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16004,17004"
 
-  public_env_variables:
-    READINESS_METHOD: systeminfo
-
   certs:
     restapi-ca.pem: |
       -----BEGIN CERTIFICATE-----
@@ -172,9 +163,6 @@ owprov:
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285"
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16005,17005"
-
-  public_env_variables:
-    READINESS_METHOD: systeminfo
 
   certs:
     restapi-ca.pem: |
