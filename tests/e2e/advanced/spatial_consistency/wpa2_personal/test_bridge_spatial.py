@@ -65,7 +65,7 @@ class Test_SpatialConsistency_Bridge(object):
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_twog)
 
-            kpi_val = lf_tools.read_kpi_file(column_name="numeric-score", dir_name=report_name)
+            kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(str(kpi_val))
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
