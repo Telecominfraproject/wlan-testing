@@ -764,7 +764,7 @@ if __name__ == '__main__':
         "influx_tag": ["basic-03", "ec420"],
     }
     lanforge_data = {
-                "ip": "192.168.200.80",
+                "ip": "192.168.200.10",
                 "port": 8080,
                 "ssh_port": 22,
                 "2.4G-Radio": ["wiphy0"],
@@ -778,8 +778,20 @@ if __name__ == '__main__':
                 "AX-Station-Name": "ax"
             }
     obj = RunTest(lanforge_data=lanforge_data, debug=False, influx_params=influx_params)
-    obj.Client_Connect(ssid="ssid_wpa_5g_br", passkey="something", security="wpa", station_name=['sta0000'])
-    obj.dataplane(station_name=["sta0000"])
+    upstream = lanforge_data['upstream']
+    data = obj.staConnect.json_get("/port/all")
+    for i in data["interfaces"]:
+        if list(i.keys())[0] == "1.1.eth1.10":
+            print(i)
+    # print(dict(list(data['interfaces'])).keys())
+    # print(obj.staConnect.json_get("/port/" + upstream.split(".")[0] +
+    #                         "/" + upstream.split(".")[1] +
+    #                         "/" + upstream.split(".")[2] + "/" + "10"))
+    # print("/port/" + upstream.split(".")[0] +
+    #                         "/" + upstream.split(".")[1] +
+    #                         "/" + upstream.split(".")[2] + "/" + "100")
+    # obj.Client_Connect(ssid="ssid_wpa_5g_br", passkey="something", security="wpa", station_name=['sta0000'])
+    # obj.dataplane(station_name=["sta0000"])
     # a = obj.staConnect.json_get("/events/since/")
     # print(a)
     # print(obj.eap_connect.json_get("port/1/1/sta0000?fields=ap,ip"))
