@@ -52,7 +52,7 @@ class TestResources(object):
 class TestFMS(object):
 
     @pytest.mark.get_firmware_list
-    def test_fms_version_list(self, fixtures_ver, get_configuration):
+    def test_fms_version_list(self, fixtures_ver, get_configuration, get_ap_logs):
         PASS = []
         for ap in get_configuration['access_point']:
             # get the latest branch
@@ -135,18 +135,18 @@ class TestFMS(object):
         assert False not in PASS
 
     @pytest.mark.firmware_upgrade
-    def test_firmware_upgrade_request(self, firmware_upgrade):
+    def test_firmware_upgrade_request(self, firmware_upgrade, get_ap_logs):
         for update in firmware_upgrade:
             allure.attach(name='serial: ' + update[0], body="")
         assert True
 
     @pytest.mark.test_firmware_ap
-    def test_firmware_upgrade_status_AP(self, firmware_upgrade):
+    def test_firmware_upgrade_status_AP(self, firmware_upgrade, get_ap_logs):
         allure.attach(name="firmware Upgrade Status:", body="")
         assert True
 
     @pytest.mark.test_firmware_gw
-    def test_firmware_upgrade_status_gateway(self, get_apnos, get_configuration, setup_controller):
+    def test_firmware_upgrade_status_gateway(self, get_apnos, get_configuration, setup_controller, get_ap_logs):
         status = []
         for ap in get_configuration['access_point']:
             ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
