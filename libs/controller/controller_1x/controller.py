@@ -66,7 +66,7 @@ class ConfigureController:
 
 class Controller(ConfigureController):
     """
-    constructor for cloud_controller_tests library : can be used from pytest framework
+    constructor for cloud_controller_tests library : can be used from pytest spatial_consist
     """
 
     def __init__(self, controller_data=None, customer_id=None):
@@ -275,7 +275,7 @@ class Controller(ConfigureController):
 
 class ProfileUtility:
     """
-       constructor for Access Point Utility library : can be used from pytest framework
+       constructor for Access Point Utility library : can be used from pytest spatial_consist
                                                       to control Access Points
     """
 

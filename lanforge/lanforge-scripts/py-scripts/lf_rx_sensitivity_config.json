@@ -1,0 +1,19 @@
+{
+	"mgr":"192.168.0.101",
+	"port":"8080",
+	"lf_user":"lanforge",
+	"lf_password":"lanforge",
+	"instance_name":"rx-sensitivity-instance",
+	"config_name":"test_con",
+	"upstream":"1.1.eth1",
+	"dut":"asus_5g",
+	"duration":"15s",
+	"station":"1.1.eth2",
+	"download_speed":"85%",
+	"upload_speed":"0",
+	"pull_report": true,
+	"raw_line":  ["txo_preamble: VHT", "txo_mcs: 4 OFDM, HT, VHT;5 OFDM, HT, VHT;6 OFDM, HT, VHT;7 OFDM, HT, VHT", "spatial_streams: 3", "bandw_options: 80", "txo_sgi: ON", "txo_retries: No Retry", "txo_txpower: 17"]
+}
+
+
+

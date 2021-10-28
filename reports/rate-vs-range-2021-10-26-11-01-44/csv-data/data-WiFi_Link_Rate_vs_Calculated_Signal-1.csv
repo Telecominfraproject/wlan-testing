@@ -1,0 +1,3 @@
+"WiFi Link Rate vs Calculated Signal",
+"Signal","ch1-TCP-DUT-TX-1NSS-40Mhz-MTU-tx/WiFi Link Rate","Signal","ch1-TCP-DUT-TX-1NSS-40Mhz-MTU-rx/WiFi Link Rate",
+-10,45,-10,150,

@@ -1,0 +1,15 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=WLANPro Test
+Name[en_US.ISO8859-1]=WLANPro Test
+Comment=WLANPro Test
+Comment[en_US.ISO8859-1]=WLANPro Test
+Path=/home/lanforge/Desktop
+Exec=/home/lanforge/Desktop/wpro.sh
+Icon=/usr/share/icons/Adwaita/scalable/apps/utilities-terminal-symbolic.svg
+Type=Application
+Terminal=true
+Categories=Network;X-Candela-Technologies
+GenericName[en_US]=WLANPro Test

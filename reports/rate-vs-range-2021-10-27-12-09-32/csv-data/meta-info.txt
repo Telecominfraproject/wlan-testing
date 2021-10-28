@@ -1,0 +1,18 @@
+chart-0-title-0 Throughput vs Calculated Signal
+chart-0-prio-0 1
+chart-1-title-0 WiFi Link Rate vs Calculated Signal
+chart-1-prio-0 3
+chart-2-title-0 Realtime Throughput
+chart-2-prio-0 2
+chart-3-title-0 Throughput vs LANforge RSSI
+chart-3-prio-0 2
+chart-4-title-0 WiFi Link Rate vs LANforge RSSI
+chart-4-prio-0 2
+chart-5-title-0 TX Completion vs LANforge RSSI
+chart-5-prio-0 3
+chart-6-title-0 TX Completion vs Calculated Power
+chart-6-prio-0 3
+chart-7-title-0 Endpoint RX Packet Loss Percentage
+chart-7-prio-0 4
+chart-8-title-0 Rx Errors
+chart-8-prio-0 5

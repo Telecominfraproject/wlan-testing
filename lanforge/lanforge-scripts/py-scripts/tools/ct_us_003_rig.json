@@ -1,0 +1,46 @@
+{
+    "ct_us_003":{
+        "Notes":[
+            "The json is used to orchastrate the tests to be run on testbed ct_us_003",
+            "This json file is used as an input to the ./lf_check.py file",
+            "The variables that are all capitalized below are replaced with configuration",
+            "from the json file. so LF_MGR_IP in the test below is replaced by the json lf_mgr_ip",
+            "The replacement is loosely coupled so the upper and lower case convention is used",
+            "to identify replaced strings in the lf_check.py code."  
+        ]  
+    },
+    "test_rig_parameters":{
+        "test_bed": "CT-US-003",
+        "test_rig": "CT-US-003",
+        "database_sqlite": "qa_003_test_db",
+        "lf_mgr_ip": "192.168.100.233",
+        "lf_mgr_port": "8080",
+        "lf_mgr_user": "lanforge",
+        "lf_mgr_pass": "lanforge",
+        "upstream_port":"1.1.eth1",
+        "test_timeout": 600,
+        "load_blank_db": false,
+        "load_factory_default_db": false,
+        "load_custom_db": false,
+        "custom_db": "DFLT_ETH1_GEN",
+        "email_list_production": "konikofi@candelatech.com,greearb@candelatech.com,,jreynolds@candelatech.com,matthew@candelatech.com,iain.davidson@candelatech.com,erin.grimes@candelatech.com,logan.lipke@candelatech.com,dipti.dhond@candelatech.com,chuck.rekiere@candelatech.com",
+        "host_ip_production": "192.168.95.6",
+        "email_list_test": "chuck.rekiere@candelatech.com",
+        "host_ip_test": "192.168.95.6",
+        "email_title_txt": "Lanforge QA Testing CT-US-003",
+        "email_txt": "Lanforge QA Testing CT-US-003"
+    },
+    "test_network":{
+        "http_test_ip": "192.168.50.1",
+        "ftp_test_ip": "192.168.50.1",
+        "test_ip": "192.168.50.1"
+    },
+    "radio_dict":{
+        "RADIO_0_CFG":{"KEY":"RADIO_0_CFG","RADIO":"wiphy0","STATIONS":"4","SSID":"ct523c-vap","PASSWD":"ct523c-vap","SECURITY":"wpa2"},
+        "RADIO_1_CFG":{"KEY":"RADIO_1_CFG","RADIO":"wiphy1","STATIONS":"4","SSID":"ct523c-vap","PASSWD":"ct523c-vap","SECURITY":"wpa2"}        
+    }
+}
+			
+	
+		
+	

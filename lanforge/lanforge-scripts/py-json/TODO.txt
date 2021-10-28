@@ -1,0 +1,20 @@
+Able to select ports
+
+Create client groups / single client:
+Should be able to control MAC address,
+ client type(b/g/n/, ac),
+ encryption (WPA2, WPA3),
+ auth -( open, 802.1x , WebAuth, WISPR)
+ Tx power  etc
+
+Able to control below failures with predetermined failure rate
+
+eg:
+
+Generate auth failure
+Generate assoc failure
+Generate EAP failure
+Generate WIPSR/WebAuth failure
+Generate Radius failure
+Generate DHCP failure
+

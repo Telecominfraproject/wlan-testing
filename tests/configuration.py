@@ -343,6 +343,45 @@ CONFIGURATION = {
             }
         }
     },  # checked
+    "advanced-01": {
+        "controller": {
+            'url':'https://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'openwifi',
+        },
+        'access_point': [
+            {
+                'model': 'eap102',
+                'mode': 'wifi6',
+                'serial': '903cb3bd7335',
+                'jumphost': True,
+                'ip': "10.28.3.102",  # 10.28.3.103
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22,  # 22
+                'jumphost_tty': '/dev/ttyAP3',
+                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf194c/20210729-cig_wf194c-v2.0.0-rc2-02244b8-upgrade.bin"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "10.28.3.24",
+                "port": 8080,  # 8080
+                "ssh_port": 22,
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2","1.1.wiphy4"],
+                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3", "1.1.wiphy5"],
+                "AX-Radio": [],
+                "upstream": "1.1.eth1",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            }
+        }
+
+    },
     "advanced-02": {
         "controller": {
             'url':'https://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
@@ -358,7 +397,7 @@ CONFIGURATION = {
                 'ip': "localhost",  # 10.28.3.103
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 22 ,# 8803,  # 22
+                'port': 8803,  # 22
                 'jumphost_tty': '/dev/ttyAP3',
                 'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf194c/20210729-cig_wf194c-v2.0.0-rc2-02244b8-upgrade.bin"
             }
@@ -367,8 +406,8 @@ CONFIGURATION = {
             "name": "lanforge",
             "details": {
                 "ip": "localhost",  # 10.28.3.34
-                "port": 8080, #8802,  # 8080
-                "ssh_port": 22, #8804,
+                "port": 8802,  # 8080
+                "ssh_port": 8804,
                 "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2","1.1.wiphy4"],
                 "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3", "1.1.wiphy5"],
                 "AX-Radio": [],

@@ -1,0 +1,139 @@
+{
+    "ct_us_001":{
+        "Notes":[
+            "The json is used to orchastrate the tests to be run on testbed ct_us_001",
+            "This json file is used as an input to the ./lf_check.py file",
+            "The variables that are all capitalized below are replaced with configuration",
+            "from the json file. so LF_MGR_IP in the test below is replaced by the json lf_mgr_ip",
+            "The replacement is loosely coupled so the upper and lower case convention is used",
+            "to identify replaced strings in the lf_check.py code."  
+        ]  
+    },
+    "test_parameters":{
+        "test_bed": "CT-US-102",
+        "lf_mgr_ip": "192.168.0.102",
+        "lf_mgr_port": "8080",
+        "dut_name": "GT-AXE11000",
+        "dut_bssid_5G": "fc:34:97:2b:38:94",
+        "test_timeout": 1200,
+        "load_blank_db": false,
+        "load_factory_default_db": true,
+        "load_custom_db": false,
+        "custom_db": "DFLT_ETH1_GEN",
+        "email_list_production": "chuck.rekiere@candelatech.com",
+        "host_ip_production": "192.168.100.201",
+        "email_list_test": "chuck.rekiere@candelatech.com",
+        "host_ip_test": "192.168.100.201",
+        "email_title_txt": "Lanforge QA Testing CT-US-001",
+        "email_txt": "Lanforge QA Testing CT-US-001 "
+    },
+    "test_network":{
+        "http_test_ip": "10.40.0.10",
+        "ftp_test_ip": "10.40.0.10",
+        "test_ip": "192.168.0.104"
+    },
+    "test_generic":{
+        "radio_used": "wiphy1",
+        "ssid_used": "axe11000_5G",
+        "ssid_pw_used": "lf_axe11000_5G",
+        "security_used": "wpa2",
+        "num_sta": 1,
+        "col_names": "name,tx_byptes,rx_bytes,dropped",
+        "upstream_port": "eth2"
+    },
+    "test_database":{
+        "database_config": "True",
+        "database_host": "192.168.100.201",
+        "database_port": "8086",
+        "database_token": "-u_Wd-L8o992701QF0c5UmqEp7w7Z7YOMaWLxOMgmHfATJGnQbbmYyNxHBR9PgD6taM_tcxqJl6U8DjU1xINFQ==",
+        "database_org": "Candela",
+        "database_bucket": "lanforge_qa_testing",
+        "dut_set_name": "DUT_NAME ASUSRT-AX88U",
+        "database_tag": "testbed CT-US-102",
+        "test_rig": "CT-US-102"
+    },
+    "test_dashboard":{
+        "dashboard_config": "True",
+        "dashboard_host": "192.168.100.201",
+        "dashboard_token": "eyJrIjoiS1NGRU8xcTVBQW9lUmlTM2dNRFpqNjFqV05MZkM0dzciLCJuIjoibWF0dGhldyIsImlkIjoxfQ=="
+    },
+    "test_blog":{
+        "blog_config": "True",
+        "blog_host": "192.168.100.153",
+        "blog_token": "60df4b0175953f400cd30650:d50e1fabf9a9b5d3d30fe97bc3bf04971d05496a89e92a169a0d72357c81f742",
+        "blog_authors": "Matthew",
+        "blog_customer": "candela",
+        "blog_user_push": "lanforge",
+        "blog_password_push": "lanforge",
+        "blog_flag": "--kpi_to_ghost"
+    },
+    "radio_dict":{
+        "RADIO_0_CFG":{"KEY":"RADIO_0_CFG","RADIO":"wiphy0","STATIONS":"1","SSID":"asus11ax-5","PASSWD":"hello123","SECURITY":"wpa2"},
+        "RADIO_1_CFG":{"KEY":"RADIO_1_CFG","RADIO":"wiphy1","STATIONS":"1","SSID":"asus11ax-5","PASSWD":"hello123","SECURITY":"wpa2"}        
+    },
+    "test_suites":{
+        "suite_l3":{
+                "test_l3_longevity":{"enabled":"TRUE","load_db":"skip","command":"test_l3_longevity.py","args":"--test_duration 15s --polling_interval 5s --upstream_port eth2 --radio 'radio==wiphy1,stations==4,ssid==axe11000_5G,ssid_pw==lf_axe11000_5G,security==wpa2' --endp_type lf_udp --rates_are_totals --side_a_min_bps=20000 --side_b_min_bps=300000000"}
+        },
+        "suite_wc_dp":{
+            "CT-US-001_create_chamberview_dut_1":{"enabled":"TRUE","load_db":"skip","command":"create_chamberview_dut.py","args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --dut_name DUT_NAME",
+                    " --ssid 'ssid_idx=0 ssid=SSID_USED security=WPA2 password=SSID_PW_USED bssid=DUT_BSSID'",
+                    " --ssid 'ssid_idx=1 ssid=SSID_USED security=WPA2 password=SSID_PW_USED bssid=DUT_BSSID'",
+                    " --sw_version '5.4.3' --hw_version 5.12.14+ --serial_num ct523c-3b7b --model_num DUT_NAME"
+                ]
+            },
+            "CT-US-001_create_chamberview_64_ATH10K(9984)":{"enabled":"TRUE","load_db":"skip","command":"create_chamberview.py","args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --delete_scenario",
+                    " --create_scenario ct-us-001-scenario ",
+                    " --raw_line \"profile_link 1.1 STA-AC 64 'DUT: DUT_NAME Radio-1' NA wiphy1,AUTO -1 NA\" "
+                ]
+            },
+            "CT-US-001_wifi_capacity_ATH10K(9984)_64":{"enabled":"TRUE","load_db":"skip","command":"lf_wifi_capacity_test.py","args":"",
+                "args_list":[
+                    " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge --instance_name cicd-wct",
+                    " --upstream 1.1.eth2 --batch_size 1,5,25 --loop_iter 1 --protocol UDP-IPv4 --duration 6000",
+                    " --pull_report --local_lf_report_dir REPORT_PATH "
+                ]
+            },
+            "CT-US-001_create_chamberview_dut_2":{"enabled":"TRUE","load_db":"skip","command":"create_chamberview_dut.py","args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --dut_name DUT_NAME",
+                    " --ssid 'ssid_idx=0 ssid=SSID_USED security=WPA2 password=SSID_PW_USED bssid=DUT_BSSID'",
+                    " --ssid 'ssid_idx=1 ssid=SSID_USED security=WPA2 password=SSID_PW_USED bssid=DUT_BSSID'",
+                    " --sw_version '3.5.4' --hw_version 5.12.14+ --serial_num ct523c-3b7b --model_num DUT_NAME"
+                ]
+            },
+            "CT-US-001_create_chamberview_ath9K_200":{"enabled":"TRUE","load_db":"skip","command":"create_chamberview.py","args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --delete_scenario",
+                    " --create_scenario ct-us-001-scenario ",
+                    " --raw_line \"profile_link 1.1 STA-AC 200 'DUT: DUT_NAME Radio-1' NA wiphy3,AUTO -1 NA\" ",
+                    " --raw_line \"profile_link 1.1 upstream-dhcp 1 NA NA UPSTREAM_PORT,AUTO -1 NA\""                    
+                ]
+            },
+            "CT-US-001_wifi_capacity_ATH9K_200":{"enabled":"TRUE","load_db":"skip","command":"lf_wifi_capacity_test.py","args":"",
+                "args_list":[
+                    " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge --instance_name cicd-wct",
+                    " --upstream 1.1.eth2 --batch_size 1,5,25 --loop_iter 1 --protocol UDP-IPv4 --duration 6000",
+                    " --pull_report --local_lf_report_dir REPORT_PATH "
+                ]
+            },
+            "CT-US-001_dataplane_ATH10K(9984)":{"enabled":"FALSE","load_db":"skip","command":"lf_dataplane_test.py","args":"",
+                "args_list":[
+                    " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge --instance_name cicd-dpt",
+                    " --config_name test_con --upstream 1.1.eth2 --dut asus_5g --duration 30s --station 1.1.wlan1",
+                    " --download_speed 85% --upload_speed 0 --raw_line 'pkts: 60;88;120;256;512;1024;MTU' ",
+                    " --raw_line 'directions: DUT Transmit' --raw_line 'traffic_types: UDP' --raw_line 'bandw_options: 20'",
+                    " --raw_line 'spatial_streams: 1' --pull_report --local_lf_report_dir REPORT_PATH "
+                ]
+            }
+        }
+    }   
+}
+			
+	
+		
+	

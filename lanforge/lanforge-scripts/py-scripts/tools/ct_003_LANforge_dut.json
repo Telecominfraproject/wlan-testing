@@ -1,0 +1,26 @@
+{
+    "ct_lanforge_dut":{
+        "Notes":[
+            "This json file is used as an input to the ./lf_check.py file",
+            "The variables that are all capitalized below are replaced with configuration",
+            "from the json file. so LF_MGR_IP in the test below is replaced by the json lf_mgr_ip",
+            "The replacement is loosely coupled so the upper and lower case convention is used",
+            "to identify replaced strings in the lf_check.py code.",
+            "The dut related configuration is contained in this file"
+        ]  
+    },
+    "test_dut":{
+        "dut_set_name": "DUT_NAME lanforge-dut",
+        "dut_name": "lanforge",
+        "dut_bssid_2g": "94:a6:7e:54:d4:31",
+        "dut_bssid_5g": "94:a6:7e:54:d4:33",
+        "dut_sw": "lanforge_GUI",
+        "ssid_5g_used": "ct-us-003-r3-5g",
+        "ssid_5g_pw_used": "ct-us-003-r3-5g",
+        "security_5g_used": "wpa2",
+        "ssid_2g_used": "ct-us-003-r3-2g",
+        "ssid_2g_pw_used": "ct-us-003-r3-2g",
+        "security_2g_used": "wpa2"
+    }
+}
+			

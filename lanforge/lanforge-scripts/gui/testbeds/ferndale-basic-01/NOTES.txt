@@ -1,0 +1,10 @@
+
+DUT is an MR8300, running OpenWrt.
+This uses ath10k-ct firmware, and by default, the ath10k driver only supports 32 stations per
+radio.  To improve this, I tweaked the setup using the fwcfg files.
+The radios also only work on certain frequencies, so one has to configure them
+carefully.
+
+See the OpenWrt-overlay directory for files that should be copied onto the DUT
+to work with this test.  Once OpenSync cloud stuff is complete, the overlay may
+not be needed.

@@ -67,7 +67,7 @@ profile_config = {
     'setup_profiles',   # Name of the fixture
     [profile_config],   # Passing the above static profile_config data for setup for tests in this class
     indirect=True,
-    scope="class"       # Scope of the fixture (Its experimental for current framework (keep it "class" for default scenario))
+    scope="class"       # Scope of the fixture (Its experimental for current spatial_consist (keep it "class" for default scenario))
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestFeatureABridge(object):

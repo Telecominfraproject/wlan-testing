@@ -1,0 +1,53 @@
+{
+    "ct_us_002":{
+        "Notes":[
+            "The json is used to orchastrate the tests to be run on testbed ct_us_002",
+            "This json file is used as an input to the ./lf_check.py file",
+            "The variables that are all capitalized below are replaced with configuration",
+            "from the json file. so LF_MGR_IP in the test below is replaced by the json lf_mgr_ip",
+            "The replacement is loosely coupled so the upper and lower case convention is used",
+            "to identify replaced strings in the lf_check.py code."  
+        ]  
+    },
+    "test_rig_parameters":{
+        "test_bed": "CT-US-002",
+        "test_rig": "CT-US-002",
+        "database_sqlite": "qa_002_test_db",
+        "lf_mgr_ip": "192.168.100.200",
+        "lf_mgr_port": "8080",
+        "lf_mgr_user": "lanforge",
+        "lf_mgr_pass": "lanforge",
+        "upstream_port": "1.1.eth2",
+        "dut_set_name": "DUT_NAME NETGEAR59-5G",
+        "test_timeout": 600,
+        "load_blank_db": false,
+        "load_factory_default_db": true,
+        "load_custom_db": false,
+        "custom_db": "DFLT_ETH1_GEN",
+        "email_list_production": "konikofi@candelatech.com,greearb@candelatech.com,,jreynolds@candelatech.com,matthew@candelatech.com,iain.davidson@candelatech.com,erin.grimes@candelatech.com,logan.lipke@candelatech.com,dipti.dhond@candelatech.com,chuck.rekiere@candelatech.com",
+        "host_ip_production": "192.168.100.153",
+        "email_list_test": "chuck.rekiere@candelatech.com",
+        "host_ip_test": "192.168.100.153",
+        "email_title_txt": "Lanforge QA Testing CT-US-002",
+        "email_txt": "Lanforge QA Testing CT-US-002"
+    },
+    "test_network":{
+        "http_test_ip": "10.40.0.10",
+        "ftp_test_ip": "10.40.0.10",
+        "test_ip": "192.168.0.104"
+    },
+    "radio_dict":{
+        "1.1.wiphy0":{"KEY":"1.1.wiphy0","RADIO":"1.1.wiphy0","DRIVER":"ath10k(9984)","CAPABILITIES":"802.11an-AC","MAX_STA":"128","MAX_VAP":"24","MAX_VIFS":"64"},
+        "1.1.wiphy1":{"KEY":"1.1.wiphy1","RADIO":"1.1.wiphy1","DRIVER":"ath10k(9984)","CAPABILITIES":"802.11an-AC","MAX_STA":"128","MAX_VAP":"24","MAX_VIFS":"64"},
+        "1.1.wiphy2":{"KEY":"1.1.wiphy2","RADIO":"1.1.wiphy2","DRIVER":"ath10k(9984)","CAPABILITIES":"802.11an-AC","MAX_STA":"128","MAX_VAP":"24","MAX_VIFS":"64"},
+        "1.1.wiphy3":{"KEY":"1.1.wiphy3","RADIO":"1.1.wiphy3","DRIVER":"ath10k(9984)","CAPABILITIES":"802.11an-AC","MAX_STA":"128","MAX_VAP":"24","MAX_VIFS":"64"},
+        "1.1.wiphy4":{"KEY":"1.1.wiphy4","RADIO":"1.1.wiphy4","DRIVER":"iwlwifi(AX200)","CAPABILITIES":"802.11abgn-AX","MAX_STA":"1","MAX_VAP":"1","MAX_VIFS":"1"},
+        "1.1.wiphy5":{"KEY":"1.1.wiphy5","RADIO":"1.1.wiphy5","DRIVER":"iwlwifi(AX200)","CAPABILITIES":"802.11abgn-AX","MAX_STA":"1","MAX_VAP":"1","MAX_VIFS":"1"},
+        "1.1.wiphy6":{"KEY":"1.1.wiphy6","RADIO":"1.1.wiphy6","DRIVER":"iwlwifi(AX200)","CAPABILITIES":"802.11abgn-AX","MAX_STA":"1","MAX_VAP":"1","MAX_VIFS":"1"},
+        "1.1.wiphy7":{"KEY":"1.1.wiphy7","RADIO":"1.1.wiphy7","DRIVER":"iwlwifi(AX200)","CAPABILITIES":"802.11abgn-AX","MAX_STA":"1","MAX_VAP":"1","MAX_VIFS":"1"}
+    }
+}
+			
+	
+		
+	

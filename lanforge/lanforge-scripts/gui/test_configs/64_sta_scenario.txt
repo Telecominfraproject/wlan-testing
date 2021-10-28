@@ -1,0 +1,12 @@
+profile_link 1.1 STA-AC 64 'DUT: TR398-DUT Radio-1' NA wiphy0,AUTO -1
+profile_link 1.1 upstream 1 'DUT: TR398-DUT LAN' NA eth1,AUTO -1
+chamber TR-398 495 239 NA 10.0
+chamber MobileStations 305 240 NA 10.0
+dut Lexus 0 0
+dut SurfacePro 110 152
+dut iphone 0 0
+dut Comcast 565 309
+dut NetgearAP 987 177
+resource 1.2 0 0
+
+
