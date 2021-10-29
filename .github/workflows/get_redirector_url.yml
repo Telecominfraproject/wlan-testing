@@ -1,0 +1,68 @@
+name: Get testbeds current redirector urls
+
+on:
+  workflow_dispatch:
+    inputs:
+      testbeds:
+        default: 'basic-01,basic-02,basic-03,basic-04,basic-05,basic-06,basic-07,basic-08'
+        description: 'Testbed(s) to test'
+        required: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  generate-matrix:
+    name: generate testbed matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    - name: generate-matrix
+      id: set-matrix
+      run: |
+        TESTBEDS="${{ github.event.inputs.testbeds || 'basic-01,basic-02,basic-03,basic-04,basic-05,basic-06,basic-07,basic-08' }}"
+        TESTBEDS=$(echo $TESTBEDS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
+        TESTBEDS=$(echo "$TESTBEDS" | jq -c 'map({"testbed":.})')
+        echo "::set-output name=matrix::{\"include\":${TESTBEDS}}"
+
+  set-redirector-url:
+    needs: [ generate-matrix ]
+    strategy:
+      matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
+    steps:
+    - name: checkout testing repo
+      uses: actions/checkout@v2
+      with:
+        repository: Telecominfraproject/wlan-testing
+        path: wlan-testing
+
+    - name: checkout pki cert scripts repo
+      uses: actions/checkout@v2
+      with:
+        repository: Telecominfraproject/wlan-pki-cert-scripts
+        path: wlan-pki-cert-scripts
+        # TODO delete after tests
+        ref: feature/wifi-5119--digicert-get-ap-redirector
+
+    - name: install dependencies
+      run: |
+        sudo apt-get install -y python3-pip
+        pip install paramiko scp
+
+    - name: create configuration.py file
+      run: |
+        cat << EOF > configuration.py
+        ${{ secrets.LAB_CONFIGURATION }}
+        EOF
+
+    - name: Get redirector URL
+      env:
+        DIGICERT_API_KEY: ${{ secrets.DIGICERT_API_KEY }}
+      run: |
+        for id in $(echo -e 'from configuration import CONFIGURATION\nfor ap in CONFIGURATION["${{ matrix.testbed }}"]["access_point"]: print(ap["serial"])' | python3)
+        do
+          ./wlan-pki-cert-scripts/digicert-get-ap-redirector.sh $id
+          echo "Exit code - $?"
+        done
