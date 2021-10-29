@@ -44,8 +44,6 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-pki-cert-scripts
         path: wlan-pki-cert-scripts
-        # TODO delete after tests
-        ref: feature/wifi-5119--digicert-get-ap-redirector
 
     - name: install dependencies
       run: |
