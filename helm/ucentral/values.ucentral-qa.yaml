@@ -215,8 +215,8 @@ owprov:
       cpu: 10m
       memory: 20Mi
     limits:
-      cpu: 10m
-      memory: 50Mi
+      cpu: 100m
+      memory: 100Mi
 
   certs:
     restapi-ca.pem: |
@@ -272,8 +272,8 @@ owprovui:
       cpu: 10m
       memory: 30m
     limits:
-      cpu: 10m
-      memory: 30m
+      cpu: 100m
+      memory: 100m
 
 kafka:
   heapOpts: -Xmx512m -Xms512m
