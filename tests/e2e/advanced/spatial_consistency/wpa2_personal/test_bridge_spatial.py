@@ -963,11 +963,11 @@ class Test_SpatialConsistency_Bridge(object):
             print("test failed due to no station ip")
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5057", name="WIFI-5057")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5056", name="WIFI-5056")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.degree240_nss1_10db
-    def test_nss1_wpa2_personal_5g_10db_240degree(self, setup_profiles, lf_tools, lf_test, station_names_fiveg,
+    @pytest.mark.degree240_nss2_10db
+    def test_nss2_wpa2_personal_5g_10db_240degree(self, setup_profiles, lf_tools, lf_test, station_names_fiveg,
                                                   create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -982,12 +982,12 @@ class Test_SpatialConsistency_Bridge(object):
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 240']]
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
-                                        instance_name="SPATIAL_NSS1_RVR1_Degree240_fiveg_10db",
+                                        instance_name="SPATIAL_NSS2_RVR1_Degree240_fiveg_10db",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             print("report name ", report_name)
@@ -1018,7 +1018,7 @@ class Test_SpatialConsistency_Bridge(object):
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(250):
+                if float(val[5]) > float(500):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
