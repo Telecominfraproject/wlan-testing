@@ -27,7 +27,7 @@ jobs:
         TESTBEDS=$(echo "$TESTBEDS" | jq -c 'map({"testbed":.})')
         echo "::set-output name=matrix::{\"include\":${TESTBEDS}}"
 
-  set-redirector-url:
+  get-redirector-url:
     needs: [ generate-matrix ]
     runs-on: ubuntu-latest
     strategy:
