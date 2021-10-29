@@ -17,6 +17,14 @@ owgw:
     # rtty
     rtty.enabled: "true"
 
+  resources:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+    limits:
+      cpu: 100m
+      memory: 200Mi
+
   certs:
     restapi-ca.pem: |
       -----BEGIN CERTIFICATE-----
@@ -54,6 +62,14 @@ owsec:
         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285"
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16001,17001"
         external-dns.alpha.kubernetes.io/ttl: "60"
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 15Mi
+    limits:
+      cpu: 100m
+      memory: 100Mi
 
   certs:
     restapi-ca.pem: |
@@ -95,6 +111,14 @@ rttys:
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "5912,5913"
         external-dns.alpha.kubernetes.io/ttl: "60"
 
+  resources:
+    requests:
+      cpu: 10m
+      memory: 15Mi
+    limits:
+      cpu: 100m
+      memory: 100Mi
+
 owgwui:
   services:
     owgwui:
@@ -119,6 +143,14 @@ owgwui:
   public_env_variables:
     ALLOW_UCENTRALSEC_CHANGE: false
 
+  resources:
+    requests:
+      cpu: 10m
+      memory: 30Mi
+    limits:
+      cpu: 10m
+      memory: 30Mi
+
 owfms:
   services:
     owfms:
@@ -131,6 +163,14 @@ owfms:
         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285"
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16004,17004"
         external-dns.alpha.kubernetes.io/ttl: "60"
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 30Mi
+    limits:
+      cpu: 50m
+      memory: 80Mi
 
   certs:
     restapi-ca.pem: |
@@ -169,6 +209,14 @@ owprov:
         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285"
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16005,17005"
         external-dns.alpha.kubernetes.io/ttl: "60"
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 20Mi
+    limits:
+      cpu: 10m
+      memory: 50Mi
 
   certs:
     restapi-ca.pem: |
@@ -218,6 +266,14 @@ owprovui:
 
   public_env_variables:
     ALLOW_UCENTRALSEC_CHANGE: false
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 30m
+    limits:
+      cpu: 10m
+      memory: 30m
 
 kafka:
   heapOpts: -Xmx512m -Xms512m
