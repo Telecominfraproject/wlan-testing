@@ -280,13 +280,13 @@ owprovui:
   public_env_variables:
     ALLOW_UCENTRALSEC_CHANGE: false
 
-  resources:
-    requests:
-      cpu: 10m
-      memory: 30m
-    limits:
-      cpu: 100m
-      memory: 100m
+#  resources:
+#    requests:
+#      cpu: 10m
+#      memory: 30m
+#    limits:
+#      cpu: 100m
+#      memory: 100m
 
 kafka:
   heapOpts: -Xmx512m -Xms512m
