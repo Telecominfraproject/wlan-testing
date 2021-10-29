@@ -298,7 +298,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.fiveg
     @pytest.mark.degree240_nss1
     def test_nss1_wpa2_personal_5g_10db_240degree(self, setup_profiles, lf_tools, lf_test, station_names_fiveg,
-                                                 create_lanforge_chamberview_dut, get_configuration):
+                                                  create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
