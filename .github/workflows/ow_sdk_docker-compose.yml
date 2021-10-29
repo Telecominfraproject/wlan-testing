@@ -340,7 +340,7 @@ jobs:
       env:
         OWSEC: "openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16001"
         OWSEC_USERNAME: ${{ secrets.UCENTRALGW_AUTH_USERNAME }}
-        OWSEC_PASSWORD: ${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
+        OWSEC_PASSWORD: ${{ secrets.OWSEC_AUTH_PASSWORD_PLAIN }}
       run: |
         docker run --rm -e OWSEC="$OWSEC" -e OWSEC_USERNAME="$OWSEC_USERNAME" -e OWSEC_PASSWORD="$OWSEC_PASSWORD" tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo:main
 
