@@ -476,8 +476,8 @@ jobs:
         do
           ./wlan-pki-cert-scripts/digicert-change-ap-redirector.sh $id gw-qa01.cicd.lab.wlan.tip.build
           current_redirector=$(./wlan-pki-cert-scripts/digicert-get-ap-redirector.sh $id)
-          if [[ "$current_redirector" != "${{ needs.deploy-controller.outputs.gateway_url }}" ]]; then
-            echo "Current redirector in DigiCert ($current_redirector) is different from the required one (${{ needs.deploy-controller.outputs.gateway_url }})"
+          if [[ "$current_redirector" != "gw-qa01.cicd.lab.wlan.tip.build" ]]; then
+            echo "Current redirector in DigiCert ($current_redirector) is different from the required one (gw-qa01.cicd.lab.wlan.tip.build)"
             exit 1
           fi
         done
