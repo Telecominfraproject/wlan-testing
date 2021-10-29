@@ -226,7 +226,7 @@ class FMSUtils:
         devices = self.get_device_set()
         model_name = ""
         for device in devices['deviceTypes']:
-            if str(device).__contains__(model):
+            if str(device).__eq__(model):
                 model_name = device
         return model_name
 
