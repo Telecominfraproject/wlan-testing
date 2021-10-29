@@ -214,7 +214,7 @@ class Test_SpatialConsistency_Bridge(object):
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(90):
+                if float(val[5]) > float(45):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
