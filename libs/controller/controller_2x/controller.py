@@ -433,7 +433,7 @@ class UProfileUtility:
             "band": "5G",
             "country": "US",
             # "channel-mode": "HE",
-            "channel-width": 80,
+            "channel-width": 160,
             # "channel": "auto"
         })
 
