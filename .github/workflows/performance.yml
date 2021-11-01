@@ -128,6 +128,13 @@ jobs:
               containers:
               - name: tests
                 image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+                resources:
+                  requests:
+                    memory: "512Mi"
+                    cpu: "500m"
+                  limits:
+                    memory: "512Mi"
+                    cpu: "500m"
                 command:
                   - /bin/bash
                   - -x
