@@ -286,6 +286,12 @@ jobs:
                   mountPath: "/wlan-testing/tests/configuration.py"
                   subPath: configuration
                   readOnly: true
+              nodeSelector:
+                env: tests
+              tolerations:
+              - key: "tests"
+                operator: "Exists"
+                effect: "NoSchedule"
               imagePullSecrets:
               - name: tip-docker-registry-key
               restartPolicy: Never
