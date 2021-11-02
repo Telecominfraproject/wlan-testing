@@ -127,6 +127,7 @@ helm upgrade --install --create-namespace --wait --timeout 20m \
   --set owprovui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=provui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owprovui.ingresses.default.hosts={provui-${NAMESPACE}.cicd.lab.wlan.tip.build} \
   --set owprovui.public_env_variables.DEFAULT_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
+  --set clustersysteminfo.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set-file owgw.certs."restapi-cert\.pem"=$CERT_LOCATION \
   --set-file owgw.certs."restapi-key\.pem"=$KEY_LOCATION \
   --set-file owgw.certs."websocket-cert\.pem"=$CERT_LOCATION \
