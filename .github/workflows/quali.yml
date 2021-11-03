@@ -466,10 +466,10 @@ jobs:
           name: "${{ steps.job.outputs.name }}"
         spec:
           template:
+            metadata:
+              annotations:
+                cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
             spec:
-              metadata:
-                annotations:
-                  cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
               containers:
               - name: tests
                 image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
