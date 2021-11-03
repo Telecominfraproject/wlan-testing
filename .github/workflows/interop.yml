@@ -123,6 +123,13 @@ jobs:
               containers:
               - name: tests
                 image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+                resources:
+                  requests:
+                    memory: "512Mi"
+                    cpu: "250m"
+                  limits:
+                    memory: "512Mi"
+                    cpu: "250m"
                 command:
                   - /bin/bash
                   - -x
@@ -139,6 +146,12 @@ jobs:
                   mountPath: "/wlan-testing/tests/configuration.py"
                   subPath: configuration
                   readOnly: true
+              nodeSelector:
+                env: tests
+              tolerations:
+              - key: "tests"
+                operator: "Exists"
+                effect: "NoSchedule"
               imagePullSecrets:
               - name: tip-docker-registry-key
               restartPolicy: Never
@@ -154,11 +167,11 @@ jobs:
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
 
         kubectl wait "pod/$podname" --for condition=ready --timeout=600s
+        kubectl logs -f $podname &
 
         until [ -s test_everything.xml ]
         do
           sleep 10
-          echo "waiting for tests to complete..."
           kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
         done
         echo "tests completed"

@@ -15,6 +15,7 @@ import time
 import random
 
 import paramiko
+import pytest
 from scp import SCPClient
 import os
 
@@ -336,7 +337,11 @@ class APNOS:
                 active = output.decode('utf-8').splitlines()[4].split(":")[1].replace(" ", "").replace(",", "")
             client.close()
         except Exception as e:
-            print(e)
+            if output.__contains__(b'"connected":'):
+                pass
+            else:
+                pytest.exit("ubus call ucentral status: error" + str(output))
+                print(e)
             connected, latest, active = "Error", "Error", "Error"
         return connected, latest, active
 

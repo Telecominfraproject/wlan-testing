@@ -40,7 +40,8 @@ from lf_rx_sensitivity_test import RxSensitivityTest
 from lf_ap_auto_test import ApAutoTest
 from csv_to_influx import CSVtoInflux
 from influx2 import RecordInflux
-#from lf_multipsk import MultiPsk
+from lf_multipsk import MultiPsk
+from lf_rvr_test import RvrTest
 
 
 class RunTest:
@@ -61,6 +62,7 @@ class RunTest:
         self.dataplane_obj = None
         self.rx_sensitivity_obj = None
         self.dualbandptest_obj = None
+        self.msthpt_obj = None
         self.influx_params = influx_params
         # self.influxdb = RecordInflux(_influx_host=influx_params["influx_host"],
         #                              _influx_port=influx_params["influx_port"],
@@ -71,6 +73,8 @@ class RunTest:
         if not os.path.exists(self.local_report_path):
             os.mkdir(self.local_report_path)
         # self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
+
+
 
     def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[],
                             station_name=[], mode="BRIDGE", vlan_id=1, band="twog"):
@@ -228,7 +232,7 @@ class RunTest:
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
                       instance_name="wct_instance", download_rate="1Gbps", influx_tags=[],
-                      upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000"):
+                      upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", raw_lines=[]):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         if mode == "BRIDGE":
             upstream_port = self.upstream_port
@@ -239,6 +243,7 @@ class RunTest:
         '''SINGLE WIFI CAPACITY using lf_wifi_capacity.py'''
         wificapacity_obj = WiFiCapacityTest(lfclient_host=self.lanforge_ip,
                                             lf_port=self.lanforge_port,
+                                            ssh_port=self.lf_ssh_port,
                                             lf_user="lanforge",
                                             lf_password="lanforge",
                                             local_lf_report_dir=self.local_report_path,
@@ -261,7 +266,7 @@ class RunTest:
                                             ssid=None,
                                             enables=[],
                                             disables=[],
-                                            raw_lines=[],
+                                            raw_lines=raw_lines,
                                             raw_lines_file="",
                                             sets=[])
 
@@ -474,7 +479,7 @@ class RunTest:
         influx.glob()
         return self.apstab_obj
 
-    
+
     def ratevsrange(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
                     upload_rate="0", duration="1m", instance_name="test_demo", raw_lines=None):
         if mode == "BRIDGE":
@@ -679,6 +684,71 @@ class RunTest:
         else:
             return False
 
+    def Multi_Sta_Thpt(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
+                       raw_line=[], instance_name="test_demo", dut_5g="", dut_2g=""):
+
+        inst_name = instance_name.split('_')[0]
+        instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
+
+        if mode == "BRIDGE":
+            self.upstream_port = self.upstream_port
+        elif mode == "NAT":
+            self.upstream_port = self.upstream_port
+        else:
+            self.upstream_port = self.upstream_port + "." + str(vlan_id)
+
+        sets = [['Basic Client Connectivity', '0'], ['Multi Band Performance', '0'],
+                ['Throughput vs Pkt Size', '0'], ['Capacity', '0'],
+                ['Stability', '0'],
+                ['Band-Steering', '0'], ['Multi-Station Throughput vs Pkt Size', '1'],
+                ['Long-Term', '0']]
+
+        if len(self.twog_radios) == 1:
+            twog_radios = [[self.twog_radios[0]]]
+
+        elif len(self.twog_radios) > 1:
+            twog_radio = []
+            for i in range(0, len(self.twog_radios)):
+                twog_radio.append([self.twog_radios[i]])
+            twog_radios = twog_radio
+
+        if len(self.fiveg_radios) == 1:
+            fiveg_radios = [[self.fiveg_radios[0]]]
+
+        elif len(self.fiveg_radios) > 1:
+            fiveg_radio = []
+            for i in range(0, len(self.fiveg_radios)):
+                fiveg_radio.append([self.fiveg_radios[i]])
+            fiveg_radios = fiveg_radio
+
+        self.msthpt_obj = ApAutoTest(lf_host=self.lanforge_ip,
+                                     lf_port=self.lanforge_port,
+                                     ssh_port=self.lf_ssh_port,
+                                     lf_user="lanforge",
+                                     lf_password="lanforge",
+                                     instance_name=instance_name,
+                                     config_name="dbp_config",
+                                     upstream="1.1." + self.upstream_port,
+                                     pull_report=True,
+                                     dut5_0=dut_5g,
+                                     dut2_0=dut_2g,
+                                     load_old_cfg=False,
+                                     local_lf_report_dir=self.local_report_path,
+                                     radio2=twog_radios,
+                                     radio5=fiveg_radios,
+                                     sets=sets,
+                                     raw_lines=raw_line
+                                     )
+        self.msthpt_obj.setup()
+        self.msthpt_obj.run()
+        report_name = self.msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        influx = CSVtoInflux(influxdb=self.influxdb,
+                              _influx_tag=self.influx_params["influx_tag"],
+                              target_csv=self.local_report_path + report_name + "/kpi.csv")
+        influx.post_to_influx()
+        return self.msthpt_obj
+
+
 if __name__ == '__main__':
     influx_host = "influx.cicd.lab.wlan.tip.build"
     influx_port = 80
@@ -694,7 +764,7 @@ if __name__ == '__main__':
         "influx_tag": ["basic-03", "ec420"],
     }
     lanforge_data = {
-                "ip": "192.168.200.80",
+                "ip": "192.168.200.10",
                 "port": 8080,
                 "ssh_port": 22,
                 "2.4G-Radio": ["wiphy0"],
@@ -708,8 +778,20 @@ if __name__ == '__main__':
                 "AX-Station-Name": "ax"
             }
     obj = RunTest(lanforge_data=lanforge_data, debug=False, influx_params=influx_params)
-    obj.Client_Connect(ssid="ssid_wpa_5g_br", passkey="something", security="wpa", station_name=['sta0000'])
-    obj.dataplane(station_name=["sta0000"])
+    upstream = lanforge_data['upstream']
+    data = obj.staConnect.json_get("/port/all")
+    for i in data["interfaces"]:
+        if list(i.keys())[0] == "1.1.eth1.10":
+            print(i)
+    # print(dict(list(data['interfaces'])).keys())
+    # print(obj.staConnect.json_get("/port/" + upstream.split(".")[0] +
+    #                         "/" + upstream.split(".")[1] +
+    #                         "/" + upstream.split(".")[2] + "/" + "10"))
+    # print("/port/" + upstream.split(".")[0] +
+    #                         "/" + upstream.split(".")[1] +
+    #                         "/" + upstream.split(".")[2] + "/" + "100")
+    # obj.Client_Connect(ssid="ssid_wpa_5g_br", passkey="something", security="wpa", station_name=['sta0000'])
+    # obj.dataplane(station_name=["sta0000"])
     # a = obj.staConnect.json_get("/events/since/")
     # print(a)
     # print(obj.eap_connect.json_get("port/1/1/sta0000?fields=ap,ip"))

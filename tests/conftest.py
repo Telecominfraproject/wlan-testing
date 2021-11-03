@@ -262,7 +262,7 @@ def get_sdk_version(fixtures_ver):
 
 # Controller Fixture
 @pytest.fixture(scope="session")
-def setup_controller(request, get_configuration, test_access_point, add_env_properties, fixtures_ver):
+def setup_controller(request, get_configuration, add_env_properties, fixtures_ver):
     """sets up the controller connection and yields the sdk_client object"""
     sdk_client = fixtures_ver.controller_obj
     request.addfinalizer(fixtures_ver.disconnect)
@@ -610,8 +610,12 @@ def add_env_properties(get_configuration, get_sdk_version, get_apnos, fixtures_v
                        add_allure_environment_property: Callable) -> None:
     add_allure_environment_property('Access-Point-Model', get_configuration["access_point"][0]["model"])
     add_allure_environment_property('SDK-Version', get_sdk_version)
-    add_allure_environment_property('Access-Point-Firmware-Version',
-                                    fixtures_ver.get_ap_version(get_apnos, get_configuration)[0].split("\n")[1])
+    try:
+        add_allure_environment_property('Access-Point-Firmware-Version',
+                                        fixtures_ver.get_ap_version(get_apnos, get_configuration)[0].split("\n")[1])
+    except Exception as e:
+        print(e)
+        pass
     add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
     add_allure_environment_property('AP-Serial-Number', get_configuration["access_point"][0]["serial"] + "\n")
 
