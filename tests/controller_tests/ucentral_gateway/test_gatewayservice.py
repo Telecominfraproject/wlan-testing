@@ -126,7 +126,7 @@ class TestUcentralGatewayService(object):
         print(devices)
 
     @pytest.mark.sdk_restapi
-    def test_gwservice_createdevice(self, setup_controller):
+    def test_gwservice_createdevice(self, setup_controller, testbed):
         """
             Test the create device endpoint
             WIFI-3453
@@ -141,7 +141,7 @@ class TestUcentralGatewayService(object):
                    'manufacturer': 'Testing',
                    'owner': ''}
         print(json.dumps(payload))
-        resp = setup_controller.request("gw", "device/deadbeef0011", "POST", None, json.dumps(payload))
+        resp = setup_controller.request("gw", "device/deadbeef0011" + testbed, "POST", None, json.dumps(payload))
         allure.attach(name="response: ", body=str(resp.json()))
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="gw create devices", body=body)
