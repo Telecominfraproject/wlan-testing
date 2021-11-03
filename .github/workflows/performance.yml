@@ -122,11 +122,12 @@ jobs:
         kind: Job
         metadata:
           name: "${{ steps.job.outputs.name }}"
-          annotations:
-            cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
         spec:
           template:
             spec:
+              metadata:
+                annotations:
+                  cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
               containers:
               - name: tests
                 image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
