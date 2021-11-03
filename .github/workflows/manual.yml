@@ -124,6 +124,8 @@ jobs:
         kind: Job
         metadata:
           name: "${{ steps.job.outputs.name }}"
+          annotations:
+            cluster-autoscaler.kubernetes.io/safe-to-evict: false
         spec:
           template:
             spec:
