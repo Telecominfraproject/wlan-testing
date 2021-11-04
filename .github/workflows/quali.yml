@@ -48,6 +48,10 @@ on:
         required: true
         default: 'next-latest'
         description: 'revision of firmware to flash on AP, <branch>-<commit>'
+      marker_expression:
+        required: true
+        default: 'sdk_restapi'
+        description: 'Marker expression to select tests to execute'
 
 jobs:
   vars:
@@ -72,6 +76,7 @@ jobs:
           echo ::set-output name=ui::$(echo "${{ github.event.inputs.openwifi_ui_revision || 'main' }}")
           echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'EC420,EAP101,ECW5211,ECW5410' }}")
           echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'next-latest' }}")
+          echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'sdk_restapi' }}")
 
   generate-matrix:
     name: generate AP model matrix
@@ -486,8 +491,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    #pytest -m "uc_sanity" -s -vvv --testbed="basic" --alluredir=/tmp/allure-results -o firmware="${{ needs.vars.outputs.ap_version }}"
-                    pytest -m "sdk_restapi" -s -vvv --testbed="basic" --alluredir=/tmp/allure-results -o firmware="${{ needs.vars.outputs.ap_version }}"
+                    pytest -m "${{ needs.vars.outputs.marker_expression }}" -s -vvv --testbed="basic" --alluredir=/tmp/allure-results -o firmware="${{ needs.vars.outputs.ap_version }}"
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
