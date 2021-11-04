@@ -2682,3 +2682,14 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
 def close_driver(driver):
     driver.close()
     driver.quit()
+
+# def capture_start_har(setup_perfectoMobile):
+#     setup_perfectoMobile[1].step_start("Start HAR capture on Phone...")
+#     # params = {'generateHarFile', 'true'}
+#     params = {'generateHarFile' : 'true'}
+#     setup_perfectoMobile[0].execute_script('mobile:vnetwork:start', params)
+#
+# def capture_stop_har(setup_perfectoMobile):
+#     setup_perfectoMobile[1].step_start("Stop HAR capture on Phone...")
+#     params = {'generateHarFile' : 'true'}
+#     setup_perfectoMobile[0].execute_script('mobile:vnetwork:stop', params)

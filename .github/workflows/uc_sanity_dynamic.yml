@@ -1,4 +1,4 @@
-name: 2.x sanity testing
+name: 2.x sanity testing in dynamic environment
 env:
   # thirdparties
   DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
@@ -17,10 +17,6 @@ env:
   ALLURE_CLI_VERSION: 2.14.0
 
 on:
-  repository_dispatch:
-    types:
-    - new-ap-release
-    - new-cloud-release
   workflow_dispatch:
     inputs:
       testbeds:
@@ -31,8 +27,6 @@ on:
         default: 'uc_sanity'
         description: 'Markers expression that will be passed to the pytest command.'
         required: false
-  schedule:
-  - cron: '30 20 * * *'
 
 defaults:
   run:
@@ -67,6 +61,82 @@ jobs:
     - name: push docker image
       run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
 
+  deploy-controller:
+    name: Deploy OpenWIFI Cloud SDK
+    runs-on: ubuntu-latest
+    outputs:
+      gateway_url: ${{ steps.gateway_url.outputs.value }}
+      sec_url: ${{ steps.sec_url.outputs.value }}
+      namespace: ${{ steps.namespace.outputs.value }}
+    steps:
+    - name: Checkout repo with Helm values
+      uses: actions/checkout@v2
+      with:
+        path: wlan-testing
+
+    - name: Prepare certificates from secrets
+      working-directory: wlan-testing/helm/ucentral
+      run: |
+        echo "${{ secrets.DIGICERT_CERT }}" | base64 -d > cert.pem
+        echo "${{ secrets.DIGICERT_KEY }}" | base64 -d > key.pem
+
+    - name: Fetch kubeconfig
+      run: |
+        aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    - name: Set namespace output
+      id: namespace
+      run: echo "::set-output name=value::openwifi-${{ github.run_id }}"
+
+    - name: Set gateway URL output
+      id: gateway_url
+      run: echo "::set-output name=value::gw-${{ github.run_id }}.cicd.lab.wlan.tip.build"
+
+    - name: Set sec service URL output
+      id: sec_url
+      run: echo "::set-output name=value::sec-${{ github.run_id }}.cicd.lab.wlan.tip.build"
+
+    - name: Deploy OpenWIFI Cloud SDK
+      working-directory: wlan-testing/helm/ucentral
+      run: |
+        export NAMESPACE=${{ github.run_id }}
+        export DEPLOY_METHOD=git
+        export CHART_VERSION=main
+        export OWGW_VERSION=master
+        export OWGWUI_VERSION=main
+        export OWSEC_VERSION=main
+        export OWFMS_VERSION=main
+        export OWPROV_VERSION=main
+        export OWPROVUI_VERSION=main
+        export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
+        export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
+        export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
+        export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
+        export OWFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
+        export CERT_LOCATION=cert.pem
+        export KEY_LOCATION=key.pem
+        ./deploy.sh
+
+    - name: Show resource state on deployment failure
+      if: failure()
+      run: |
+        kubectl get pods --namespace openwifi-${{ github.run_id }}
+        kubectl get services --namespace openwifi-${{ github.run_id }}
+        kubectl get persistentvolumeclaims --namespace openwifi-${{ github.run_id }}
+    - name: Describe pods on deployment failure
+      if: failure()
+      run: |
+        kubectl describe pods --namespace openwifi-${{ github.run_id }}
+    - name: Describe services on deployment failure
+      if: failure()
+      run: |
+        kubectl describe services --namespace openwifi-${{ github.run_id }}
+    - name: Describe persistentvolumeclaims on deployment failure
+      if: failure()
+      run: |
+        kubectl describe persistentvolumeclaims --namespace openwifi-${{ github.run_id }}
+
   generate-matrix:
     name: generate testbed matrix
     runs-on: ubuntu-latest
@@ -81,9 +151,75 @@ jobs:
         TESTBEDS=$(echo "$TESTBEDS" | jq -c 'map({"testbed":.})')
         echo "::set-output name=matrix::{\"include\":${TESTBEDS}}"
 
+  set-redirector-url:
+    needs: [ deploy-controller, generate-matrix ]
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
+    runs-on: self-hosted
+    steps:
+    - name: checkout testing repo
+      uses: actions/checkout@v2
+      with:
+        repository: Telecominfraproject/wlan-testing
+        path: wlan-testing
+        ref: WIFI-3620
+
+    - name: checkout pki cert scripts repo
+      uses: actions/checkout@v2
+      with:
+        repository: Telecominfraproject/wlan-pki-cert-scripts
+        path: wlan-pki-cert-scripts
+
+    - name: install dependencies
+      run: |
+        sudo apt-get install -y python3-pip
+        pip install paramiko scp allure-pytest
+
+    - name: create configuration.py file
+      run: |
+        cat << EOF > configuration.py
+        ${{ secrets.LAB_CONFIGURATION }}
+        EOF
+
+    - name: set redirector URL
+      env:
+        DIGICERT_API_KEY: ${{ secrets.DIGICERT_API_KEY }}
+      run: |
+        for id in $(echo -e 'from configuration import CONFIGURATION\nfor ap in CONFIGURATION["${{ matrix.testbed }}"]["access_point"]: print(ap["serial"])' | python3)
+        do
+          ./wlan-pki-cert-scripts/digicert-change-ap-redirector.sh $id "${{ needs.deploy-controller.outputs.gateway_url }}"
+          current_redirector=$(./wlan-pki-cert-scripts/digicert-get-ap-redirector.sh $id)
+          if [[ "$current_redirector" != "${{ needs.deploy-controller.outputs.gateway_url }}" ]]; then
+            echo "Current redirector in DigiCert ($current_redirector) is different from the required one (${{ needs.deploy-controller.outputs.gateway_url }})"
+            exit 1
+          fi
+        done
+
+    - name: factory reset APs
+      run: |
+        set -x
+        AP_LEN=$(echo -e "from configuration import CONFIGURATION\nprint(len(CONFIGURATION['${{ matrix.testbed }}']['access_point']) - 1)" | python3)
+        for index in $(seq 0 $AP_LEN)
+        do
+          HOST=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['ip'])" | python3)
+          JUMPHOST=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['jumphost'])" | python3)
+          TTY=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['jumphost_tty'])" | python3)
+          PORT=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['port'])" | python3)
+          USERNAME=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['username'])" | python3)
+          PASSWORD=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['password'])" | python3)
+
+          cd wlan-testing/tools
+          python3 ap_tools.py --host $HOST --jumphost $JUMPHOST --tty $TTY --port $PORT --username $USERNAME --password $PASSWORD --cmd "jffs2reset -y -r"
+          cd ../..
+        done
+
+    - name: wait for APs to come up again
+      run: sleep 300
+
   test:
     runs-on: ubuntu-latest
-    needs: [ build, generate-matrix ]
+    needs: [ build, generate-matrix, deploy-controller, set-redirector-url ]
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
@@ -111,6 +247,8 @@ jobs:
         cat << EOF > configuration.py
         ${{ secrets.LAB_CONFIGURATION }}
         EOF
+        sed -i -r "s/'url': ('|\").*('|\")/'url': 'https:\/\/${{ needs.deploy-controller.outputs.sec_url }}:16001'/" configuration.py
+        cat configuration.py
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
     - name: run sanity tests
       run: |
@@ -171,7 +309,7 @@ jobs:
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
         kubectl wait "pod/$podname" --for condition=ready --timeout=600s
         kubectl logs -f $podname &
-
+        #sleep 30 # wait for the pod to come up
         until [ -s test_everything.xml ]
         do
           sleep 10
@@ -297,3 +435,85 @@ jobs:
     steps:
     - name: cleanup Docker image
       run: curl -u${{ env.DOCKER_USER_NAME }}:${{ env.DOCKER_USER_PASSWORD }} -X DELETE "https://tip.jfrog.io/artifactory/tip-wlan-cloud-docker-repo/cloud-sdk-nightly/${{ github.run_id }}"
+
+  destroy-controller:
+    needs: [ test ]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+    - name: Checkout repo with Helm values
+      uses: actions/checkout@v2
+      with:
+        path: wlan-testing
+
+    - name: Fetch kubeconfig
+      run: |
+        aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    - name: Delete namespace
+      run: kubectl delete ns --ignore-not-found=true "openwifi-${{ github.run_id }}"
+
+  reset-redirector-url:
+    needs: [ test, generate-matrix ]
+    if: always()
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
+    runs-on: self-hosted
+    steps:
+    - name: checkout testing repo
+      uses: actions/checkout@v2
+      with:
+        repository: Telecominfraproject/wlan-testing
+        path: wlan-testing
+        ref: WIFI-3620
+
+    - name: checkout pki cert scripts repo
+      uses: actions/checkout@v2
+      with:
+        repository: Telecominfraproject/wlan-pki-cert-scripts
+        path: wlan-pki-cert-scripts
+
+    - name: install dependencies
+      run: |
+        pip install paramiko scp allure-pytest
+
+    - name: create configuration.py file
+      run: |
+        cat << EOF > configuration.py
+        ${{ secrets.LAB_CONFIGURATION }}
+        EOF
+
+    - name: reset redirector URL
+      env:
+        DIGICERT_API_KEY: ${{ secrets.DIGICERT_API_KEY }}
+      run: |
+        for id in $(echo -e 'from configuration import CONFIGURATION\nfor ap in CONFIGURATION["${{ matrix.testbed }}"]["access_point"]: print(ap["serial"])' | python3)
+        do
+          ./wlan-pki-cert-scripts/digicert-change-ap-redirector.sh $id gw-qa01.cicd.lab.wlan.tip.build
+          current_redirector=$(./wlan-pki-cert-scripts/digicert-get-ap-redirector.sh $id)
+          if [[ "$current_redirector" != "gw-qa01.cicd.lab.wlan.tip.build" ]]; then
+            echo "Current redirector in DigiCert ($current_redirector) is different from the required one (gw-qa01.cicd.lab.wlan.tip.build)"
+            exit 1
+          fi
+        done
+
+    - name: factory reset APs
+      run: |
+        AP_LEN=$(echo -e "from configuration import CONFIGURATION\nprint(len(CONFIGURATION['${{ matrix.testbed }}']['access_point']) - 1)" | python3)
+        for index in $(seq 0 $AP_LEN)
+        do
+          HOST=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['ip'])" | python3)
+          JUMPHOST=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['jumphost'])" | python3)
+          TTY=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['jumphost_tty'])" | python3)
+          PORT=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['port'])" | python3)
+          USERNAME=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['username'])" | python3)
+          PASSWORD=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['password'])" | python3)
+
+          cd wlan-testing/tools
+          python3 ap_tools.py --host $HOST --jumphost $JUMPHOST --tty $TTY --port $PORT --username $USERNAME --password $PASSWORD --cmd "jffs2reset -y -r"
+          cd ../..
+        done
+        
+    - name: wait for APs to come up again
+      run: sleep 300    
