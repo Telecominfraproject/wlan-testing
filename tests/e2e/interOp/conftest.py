@@ -261,9 +261,17 @@ def failure_tracking_fixture(request):
 empty_get_vif_state_list = []
 
 @pytest.fixture(scope="class")
-def get_vif_state():
-    yield empty_get_vif_state_list
-
+def get_vif_state(get_apnos, get_configuration, request, lf_tools, skip_lf):
+    if not skip_lf:
+        if request.config.getoption("1.x"):
+            ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
+            vif_state = list(ap_ssh.get_vif_state_ssids())
+            vif_state.sort()
+            yield vif_state
+        else:
+            yield lf_tools.ssid_list
+    else:
+        yield empty_get_vif_state_list
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
