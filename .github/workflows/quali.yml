@@ -46,8 +46,8 @@ on:
         description: 'the AP models to test'
       ap_version:
         required: true
-        default: 'latest'
-        description: 'revision of firmware to flash on AP, <branch>-<commit> | latest'
+        default: 'next-latest'
+        description: 'revision of firmware to flash on AP, <branch>-<commit>'
 
 jobs:
   vars:
@@ -71,7 +71,7 @@ jobs:
           echo ::set-output name=fms::$(echo "${{ github.event.inputs.openwifi_fms_revision || 'main' }}")
           echo ::set-output name=ui::$(echo "${{ github.event.inputs.openwifi_ui_revision || 'main' }}")
           echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'EC420,EAP101,ECW5211,ECW5410' }}")
-          echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'latest' }}")
+          echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'next-latest' }}")
 
   generate-matrix:
     name: generate AP model matrix
