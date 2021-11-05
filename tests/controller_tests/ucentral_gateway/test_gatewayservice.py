@@ -3,6 +3,10 @@
     UCentral Gateway Services Rest API Tests
 
 """
+
+import string
+import random
+
 import pytest
 import json
 import allure
@@ -126,22 +130,26 @@ class TestUcentralGatewayService(object):
         print(devices)
 
     @pytest.mark.sdk_restapi
-    def test_gwservice_createdevice(self, setup_controller):
+    def test_gwservice_createdevice(self, setup_controller, testbed):
         """
             Test the create device endpoint
             WIFI-3453
         """
-
-        payload = {'serialNumber': 'deadbeef0011',
+        device_mac = "02:00:00:%02x:%02x:%02x" % (random.randint(0, 255),
+                                     random.randint(0, 255),
+                                     random.randint(0, 255))
+        device_name = device_mac.replace(":", "")
+        # device_name = "deadbeef0011" + testbed.replace("-","")
+        payload = {'serialNumber': device_name,
                    'UUID': '123456',
                    'configuration': self.configuration,
                    'deviceType': 'AP',
                    'location': '',
-                   'macAddress': 'DE:AD:BE:EF:00:11',
+                   'macAddress': device_mac,
                    'manufacturer': 'Testing',
                    'owner': ''}
         print(json.dumps(payload))
-        resp = setup_controller.request("gw", "device/deadbeef0011", "POST", None, json.dumps(payload))
+        resp = setup_controller.request("gw", "device/" + device_name, "POST", None, json.dumps(payload))
         allure.attach(name="response: ", body=str(resp.json()))
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="gw create devices", body=body)
@@ -150,13 +158,13 @@ class TestUcentralGatewayService(object):
         devices = json.loads(resp.text)
         print(devices)
 
-        resp = setup_controller.request("gw", "device/deadbeef0011", "GET", None, None)
+        resp = setup_controller.request("gw", "device/" + device_name, "GET", None, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="gw create device verify", body=body)
         if resp.status_code != 200:
             assert False
 
-        resp = setup_controller.request("gw", "device/deadbeef0011", "DELETE", None, None)
+        resp = setup_controller.request("gw", "device/" + device_name, "DELETE", None, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="gw create device delete", body=body)
         if resp.status_code != 200:
