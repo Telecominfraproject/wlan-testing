@@ -3152,16 +3152,17 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                     # ------------------------------------------------------
                     try:
                         for k in range(3):
-                            # available_ssids = []
-                            available_ssids = get_all_available_ssids(driver, deviceModelName)
-                            print("active_ssid_list: ", available_ssids)
-                            allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
-                            # try:
-                            #     elements = WebDriverWait(driver, 20).until(
-                            #         EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
-                            #     available_ssids.append(elements.text)
-                            # except:
-                            #     pass
+
+                            # available_ssids = get_all_available_ssids(driver, deviceModelName)
+                            # print("active_ssid_list: ", available_ssids)
+                            # allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
+                            available_ssids = []
+                            try:
+                                elements = WebDriverWait(driver, 20).until(
+                                    EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
+                                available_ssids.append(elements.text)
+                            except:
+                                pass
 
                             try:
                                 if WifiName not in available_ssids:
@@ -3235,14 +3236,15 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                         print("User name not Loaded")
                     # -------------------------------------------------------
                     # Scroll Down
-                    scrollDown(setup_perfectoMobile)
-                    time.sleep(2)
+                    # scrollDown(setup_perfectoMobile)
+                    # time.sleep(2)
                     # Set Password
                     # -------------------------------------------------------
                     try:
                         driver.implicitly_wait(6)
                         report.step_start("Set Password")
                         print("Set Password")
+                        time.sleep(5)
                         wifi_password_element = driver.find_element_by_xpath(
                             "//*[@resource-id='com.android.settings:id/password']")
                         print("Entered Password1")
@@ -3769,8 +3771,15 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                     # ------------------------------------------------------
                     try:
                         for k in range(3):
-                            available_ssids = get_all_available_ssids(driver, deviceModelName)
-                            print("active_ssid_list: ", available_ssids)
+                            # available_ssids = get_all_available_ssids(driver, deviceModelName)
+                            # print("active_ssid_list: ", available_ssids)
+                            available_ssids = []
+                            try:
+                                elements = WebDriverWait(driver, 20).until(
+                                    EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
+                                available_ssids.append(elements.text)
+                            except:
+                                pass
                             #allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
                             try:
                                 if WifiName not in available_ssids:
@@ -3841,8 +3850,8 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                         print("User name not Loaded")
                     # -------------------------------------------------------
                     # Scroll Down
-                    scrollDown(setup_perfectoMobile)
-                    time.sleep(2)
+                    # scrollDown(setup_perfectoMobile)
+                    # time.sleep(2)
                     # Set Password
                     # -------------------------------------------------------
                     try:
