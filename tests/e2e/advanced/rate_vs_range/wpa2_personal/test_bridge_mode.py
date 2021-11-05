@@ -15,7 +15,7 @@ import os.path
 import csv
 import pandas as pd
 
-pytestmark = [pytest.mark.advance_perf, pytest.mark.ratevsrange, pytest.mark.bridge]
+pytestmark = [pytest.mark.advance, pytest.mark.ratevsrange, pytest.mark.bridge]
 
 
 setup_params_general = {
@@ -108,7 +108,7 @@ class TestRatevsRangeBridge(object):
     @pytest.mark.twog
     @pytest.mark.client11g
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2496", name="WIFI-2496")
-    def test_client_wpa2_personal_2g_11g(self, get_vif_state,
+    def test_client_wpa2_personal_2g_11g(self,
                                          lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                          get_configuration, lf_tools):
         """
@@ -124,9 +124,6 @@ class TestRatevsRangeBridge(object):
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -171,7 +168,7 @@ class TestRatevsRangeBridge(object):
     @pytest.mark.fiveg
     @pytest.mark.client11a
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2497", name="WIFI-2497")
-    def test_client_wpa2_personal_5g_11a(self, get_vif_state,
+    def test_client_wpa2_personal_5g_11a(self,
                                          lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                          get_configuration,lf_tools):
         """
@@ -187,9 +184,6 @@ class TestRatevsRangeBridge(object):
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -232,7 +226,7 @@ class TestRatevsRangeBridge(object):
     @pytest.mark.fiveg
     @pytest.mark.client11an
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2498", name="WIFI-2498")
-    def test_client_wpa2_personal_5g_11an(self, get_vif_state,
+    def test_client_wpa2_personal_5g_11an(self,
                                          lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                          get_configuration, lf_tools):
         """
@@ -248,9 +242,7 @@ class TestRatevsRangeBridge(object):
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -294,8 +286,7 @@ class TestRatevsRangeBridge(object):
     @pytest.mark.fiveg
     @pytest.mark.client11ac
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2499", name="WIFI-2499")
-    def test_client_wpa2_personal_5g_11ac(self, get_vif_state,
-                                          lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_5g_11ac(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                           get_configuration, lf_tools):
         """
 
@@ -310,9 +301,7 @@ class TestRatevsRangeBridge(object):
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
