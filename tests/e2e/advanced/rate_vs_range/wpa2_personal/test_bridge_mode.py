@@ -78,6 +78,7 @@ class TestRatevsRangeBridge(object):
             print("report name ", report_name)
             entries = os.listdir("../reports/" + report_name + '/')
             print("entries",entries)
+            lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Rate vs Range Test")
             pdf = False
             for i in entries:
                 if ".pdf" in i:
