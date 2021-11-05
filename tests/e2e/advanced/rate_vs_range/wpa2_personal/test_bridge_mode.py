@@ -72,7 +72,7 @@ class TestRatevsRangeBridge(object):
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
-                                       instance_name="BRIDGE_RVR_11B_2x",
+                                       instance_name="BRIDGE_RVR_11B_TWO_G",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             print("report name ", report_name)
