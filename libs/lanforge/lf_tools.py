@@ -18,7 +18,7 @@ sys.path.append(f"../lanforge/lanforge-scripts/py-scripts/tip-cicd-sanity")
 sys.path.append(f'../libs')
 sys.path.append(f'../libs/lanforge/')
 import allure
-
+from sta_connect2 import StaConnect2
 from create_chamberview import CreateChamberview
 from create_chamberview_dut import DUT
 import time
@@ -88,6 +88,7 @@ class ChamberView:
             self.exit_on_error = False
             self.dut_idx_mapping = {}
             self.ssid_list = []
+            self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
             self.raw_line = [
             ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " + self.upstream_port.split(".")
             [2] + ",AUTO -1 NA"],
@@ -148,10 +149,17 @@ class ChamberView:
         return self.CreateChamberview, self.scenario_name
 
     def add_vlan(self, vlan_ids=[]):
+        data = self.staConnect.json_get("/port/all")
+        flag = 0
         for vlans in vlan_ids:
-            self.raw_line.append(["profile_link 1.1 " + "vlan-100 1 " + self.upstream_port
-                                  + " NA " + self.upstream_port.split(".")[2] + ",AUTO -1 " + str(vlans)])
-        self.Chamber_View()
+            for i in data["interfaces"]:
+                if list(i.keys())[0] != self.upstream_port + "." + str(vlans):
+                    flag = 1
+        if flag == 1:
+            for vlans in vlan_ids:
+                self.raw_line.append(["profile_link 1.1 " + "vlan-100 1 " + self.upstream_port
+                                      + " NA " + self.upstream_port.split(".")[2] + ",AUTO -1 " + str(vlans)])
+            self.Chamber_View()
 
     def add_stations(self, band="2G", num_stations="max", dut="NA", ssid_name=[]):
         idx = 0
@@ -281,7 +289,8 @@ class ChamberView:
             if df.empty == True:
                 return "empty"
             else:
-                return df
+                result = df.to_string(index=False)
+                return result
 
     def attach_report_graphs(self, report_name=None, pdf_name="WIFI Capacity Test PDF Report"):
         relevant_path = "../reports/" + report_name + "/"
