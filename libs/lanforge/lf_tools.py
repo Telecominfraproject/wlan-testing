@@ -23,6 +23,7 @@ from create_chamberview import CreateChamberview
 from create_chamberview_dut import DUT
 import time
 from LANforge.lfcli_base import LFCliBase
+from lf_cleanup import lf_clean
 import json
 import os
 import pandas as pd
@@ -126,6 +127,11 @@ class ChamberView:
         ]
         print(self.raw_line)
         self.Chamber_View()
+
+    def layer3_cleanup(self):
+        self.clean = lf_clean(host=self.lanforge_ip, clean_cxs=True)
+        self.clean.cxs_clean()
+        self.clean.endp_clean()
 
     def reset_dut(self):
         temp = []
