@@ -104,241 +104,249 @@ class TestRatevsRangeBridge(object):
         else:
             assert False
 
-    # @pytest.mark.wpa2_personal
-    # @pytest.mark.twog
-    # @pytest.mark.client11g
-    # def test_client_wpa2_personal_2g_11g(self, get_vif_state,
-    #                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
-    #                                      get_configuration, lf_tools):
-    #     """
-    #
-    #     pytest -m "ratevsrange and bridge and client11g" -s -vvv --skip-testrail --testbed=advanced-02
-    #     jira- wifi-2496
-    #     """
-    #     profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
-    #     ssid_name = profile_data["ssid_name"]
-    #     security_key = profile_data["security_key"]
-    #     security = "wpa2"
-    #     mode = "BRIDGE"
-    #     band = "twog"
-    #     vlan = 1
-    #     dut_name = create_lanforge_chamberview_dut
-    #     if ssid_name not in get_vif_state:
-    #         allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-    #         pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-    #     station = lf_test.Client_Connect(ssid=ssid_name, security=security,
-    #                                      passkey=security_key, mode=mode, band=band,
-    #                                      station_name=station_names_twog, vlan_id=vlan)
-    #     print("station", station)
-    #
-    #     val = [['modes: 802.11g'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
-    #            ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
-    #            ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
-    #     if station:
-    #         time.sleep(3)
-    #         rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
-    #                                     instance_name="BRIDGE_RVR_11G",
-    #                                     vlan_id=vlan, dut_name=dut_name, raw_lines=val)
-    #         report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-    #         entries = os.listdir("../reports/" + report_name + '/')
-    #         pdf = False
-    #         for i in entries:
-    #             if ".pdf" in i:
-    #                 pdf = i
-    #         if pdf:
-    #             allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-    #                                name=get_configuration["access_point"][0]["model"] + "ratevsrange")
-    #         print("Test Completed... Cleaning up Stations")
-    #         lf_test.Client_disconnect(station_name=station_names_twog)
-    #         script_dir = os.path.dirname(__file__)  # Script directory
-    #         print(script_dir)
-    #         kpi_val = lf_tools.read_kpi_file(column_name=None, dir_name=report_name)
-    #         print(str(kpi_val))
-    #         if str(kpi_val) == "empty":
-    #             print("kpi is empty, station did not got ip, Test failed")
-    #             allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
-    #             assert False
-    #         else:
-    #             print("Test passed successfully")
-    #             allure.attach(name="Kpi Data", body=str(kpi_val))
-    #         assert station
-    #     else:
-    #         assert False
-    #
-    # @pytest.mark.wpa2_personal
-    # @pytest.mark.fiveg
-    # @pytest.mark.client11a
-    # def test_client_wpa2_personal_5g_11a(self, get_vif_state,
-    #                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-    #                                      get_configuration,lf_tools):
-    #     """
-    #
-    #     pytest -m "ratevsrange and bridge and client11a" -s -vvv --skip-testrail --testbed=advanced-02
-    #     jira- wifi-2497
-    #     """
-    #     profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
-    #     ssid_name = profile_data["ssid_name"]
-    #     security_key = profile_data["security_key"]
-    #     security = "wpa2"
-    #     mode = "BRIDGE"
-    #     band = "fiveg"
-    #     vlan = 1
-    #     dut_name = create_lanforge_chamberview_dut
-    #     if ssid_name not in get_vif_state:
-    #         allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-    #         pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-    #     station = lf_test.Client_Connect(ssid=ssid_name, security=security,
-    #                                      passkey=security_key, mode=mode, band=band,
-    #                                      station_name=station_names_fiveg, vlan_id=vlan)
-    #     print("station", station)
-    #
-    #     val = [['modes: 802.11a'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
-    #            ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
-    #            ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
-    #     if station:
-    #         time.sleep(3)
-    #         rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
-    #                                     instance_name="BRIDGE_RVR_11A",
-    #                                     vlan_id=vlan, dut_name=dut_name, raw_lines=val)
-    #         report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-    #         entries = os.listdir("../reports/" + report_name + '/')
-    #         pdf = False
-    #         for i in entries:
-    #             if ".pdf" in i:
-    #                 pdf = i
-    #         if pdf:
-    #             allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-    #                                name=get_configuration["access_point"][0]["model"] + "ratevsrange")
-    #         print("Test Completed... Cleaning up Stations")
-    #         lf_test.Client_disconnect(station_name=station_names_fiveg)
-    #         kpi_val = lf_tools.read_kpi_file(column_name=['numeric-score'], dir_name=report_name)
-    #         print(str(kpi_val))
-    #         if str(kpi_val) == "empty":
-    #             print("kpi is empty, station did not got ip, Test failed")
-    #             allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
-    #             assert False
-    #         else:
-    #             print("Test passed successfully")
-    #             allure.attach(name="Kpi Data", body=str(kpi_val))
-    #         assert station
-    #     else:
-    #         assert False
-    #
-    # @pytest.mark.wpa2_personal
-    # @pytest.mark.fiveg
-    # @pytest.mark.client11an
-    # def test_client_wpa2_personal_5g_11an(self, get_vif_state,
-    #                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-    #                                      get_configuration, lf_tools):
-    #     """
-    #
-    #     pytest -m "ratevsrange and bridge and client11an" -s -vvv --skip-testrail --testbed=advanced-02
-    #     jira- wifi-2498
-    #     """
-    #     profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
-    #     ssid_name = profile_data["ssid_name"]
-    #     security_key = profile_data["security_key"]
-    #     security = "wpa2"
-    #     mode = "BRIDGE"
-    #     band = "fiveg"
-    #     vlan = 1
-    #     dut_name = create_lanforge_chamberview_dut
-    #     if ssid_name not in get_vif_state:
-    #         allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-    #         pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-    #     station = lf_test.Client_Connect(ssid=ssid_name, security=security,
-    #                                      passkey=security_key, mode=mode, band=band,
-    #                                      station_name=station_names_fiveg, vlan_id=vlan)
-    #     print("station", station)
-    #
-    #     val = [['modes: 802.11an'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
-    #            ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
-    #            ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
-    #     if station:
-    #         time.sleep(3)
-    #         rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
-    #                                     instance_name="BRIDGE_RVR_11AN",
-    #                                     vlan_id=vlan, dut_name=dut_name, raw_lines=val)
-    #         report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-    #         entries = os.listdir("../reports/" + report_name + '/')
-    #         pdf = False
-    #         for i in entries:
-    #             if ".pdf" in i:
-    #                 pdf = i
-    #         if pdf:
-    #             allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-    #                                name=get_configuration["access_point"][0]["model"] + "ratevsrange")
-    #         print("Test Completed... Cleaning up Stations")
-    #         lf_test.Client_disconnect(station_name=station_names_fiveg)
-    #         kpi_val = lf_tools.read_kpi_file(column_name=None, dir_name=report_name)
-    #         print(str(kpi_val))
-    #         if str(kpi_val) == "empty":
-    #             print("kpi is empty, station did not got ip, Test failed")
-    #             allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
-    #             assert False
-    #         else:
-    #             print("Test passed successfully")
-    #             allure.attach(name="Kpi Data", body=str(kpi_val))
-    #         assert station
-    #     else:
-    #         assert False
-    #
-    # @pytest.mark.performance_advanced
-    # @pytest.mark.wpa2_personal
-    # @pytest.mark.fiveg
-    # @pytest.mark.client11ac
-    # def test_client_wpa2_personal_5g_11ac(self, get_vif_state,
-    #                                       lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
-    #                                       get_configuration, lf_tools):
-    #     """
-    #
-    #     pytest -m "ratevsrange and bridge and client11ac" -s -vvv --skip-testrail --testbed=advanced-02
-    #     jira- wifi-2499
-    #     """
-    #     profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
-    #     ssid_name = profile_data["ssid_name"]
-    #     security_key = profile_data["security_key"]
-    #     security = "wpa2"
-    #     mode = "BRIDGE"
-    #     band = "fiveg"
-    #     vlan = 1
-    #     dut_name = create_lanforge_chamberview_dut
-    #     if ssid_name not in get_vif_state:
-    #         allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-    #         pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-    #     station = lf_test.Client_Connect(ssid=ssid_name, security=security,
-    #                                      passkey=security_key, mode=mode, band=band,
-    #                                      station_name=station_names_fiveg, vlan_id=vlan)
-    #     print("station", station)
-    #
-    #     val = [['modes: 802.11an-AC'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
-    #            ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'] ,['attenuator2: 1.1.3059'], ['attenuations: 0..+50..950'],['attenuations2: 0..+50..950']]
-    #
-    #     if station:
-    #         time.sleep(3)
-    #         rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
-    #                                     instance_name="BRIDGE_RVR_11AC",
-    #                                     vlan_id=vlan, dut_name=dut_name, raw_lines=val)
-    #         report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-    #         entries = os.listdir("../reports/" + report_name + '/')
-    #         pdf = False
-    #         for i in entries:
-    #             if ".pdf" in i:
-    #                 pdf = i
-    #         if pdf:
-    #             allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-    #                                name=get_configuration["access_point"][0]["model"] + "ratevsrange")
-    #         print("Test Completed... Cleaning up Stations")
-    #         lf_test.Client_disconnect(station_name=station_names_fiveg)
-    #         kpi_val = lf_tools.read_kpi_file(column_name=None, dir_name=report_name)
-    #         print(str(kpi_val))
-    #         if str(kpi_val) == "empty":
-    #             print("kpi is empty, station did not got ip, Test failed")
-    #             allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
-    #             assert False
-    #         else:
-    #             print("Test passed successfully")
-    #             allure.attach(name="Kpi Data", body=str(kpi_val))
-    #         assert station
-    #     else:
-    #         assert False
+    @pytest.mark.wpa2_personal
+    @pytest.mark.twog
+    @pytest.mark.client11g
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2496", name="WIFI-2496")
+    def test_client_wpa2_personal_2g_11g(self, get_vif_state,
+                                         lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                         get_configuration, lf_tools):
+        """
+
+        pytest -m "ratevsrange and bridge and client11g" -s -vvv --skip-testrail --testbed=advanced-02
+        jira- wifi-2496
+        """
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
+        ssid_name = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+        security = "wpa2"
+        mode = "BRIDGE"
+        band = "twog"
+        vlan = 1
+        dut_name = create_lanforge_chamberview_dut
+        if ssid_name not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+                                         passkey=security_key, mode=mode, band=band,
+                                         station_name=station_names_twog, vlan_id=vlan)
+        print("station", station)
+
+        val = [['modes: 802.11g'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
+               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
+        if station:
+            time.sleep(3)
+            rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
+                                        instance_name="BRIDGE_RVR_11G_TWO_G",
+                                        vlan_id=vlan, dut_name=dut_name, raw_lines=val)
+            report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            entries = os.listdir("../reports/" + report_name + '/')
+            lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Rate vs Range Test")
+            pdf = False
+            for i in entries:
+                if ".pdf" in i:
+                    pdf = i
+            if pdf:
+                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
+                                   name=get_configuration["access_point"][0]["model"] + "ratevsrange")
+            print("Test Completed... Cleaning up Stations")
+            lf_test.Client_disconnect(station_name=station_names_twog)
+            script_dir = os.path.dirname(__file__)  # Script directory
+            print(script_dir)
+            kpi_val = lf_tools.read_kpi_file(column_name=None, dir_name=report_name)
+            print(str(kpi_val))
+            if str(kpi_val) == "empty":
+                print("kpi is empty, station did not got ip, Test failed")
+                allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
+                assert False
+            else:
+                print("Test passed successfully")
+                allure.attach(name="Kpi Data", body=str(kpi_val))
+            assert station
+        else:
+            assert False
+
+    @pytest.mark.wpa2_personal
+    @pytest.mark.fiveg
+    @pytest.mark.client11a
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2497", name="WIFI-2497")
+    def test_client_wpa2_personal_5g_11a(self, get_vif_state,
+                                         lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+                                         get_configuration,lf_tools):
+        """
+
+        pytest -m "ratevsrange and bridge and client11a" -s -vvv --skip-testrail --testbed=advanced-02
+        jira- wifi-2497
+        """
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        ssid_name = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+        security = "wpa2"
+        mode = "BRIDGE"
+        band = "fiveg"
+        vlan = 1
+        dut_name = create_lanforge_chamberview_dut
+        if ssid_name not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+                                         passkey=security_key, mode=mode, band=band,
+                                         station_name=station_names_fiveg, vlan_id=vlan)
+        print("station", station)
+
+        val = [['modes: 802.11a'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
+               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
+        if station:
+            time.sleep(3)
+            rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
+                                        instance_name="BRIDGE_RVR_11A_FIVE_G",
+                                        vlan_id=vlan, dut_name=dut_name, raw_lines=val)
+            report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            entries = os.listdir("../reports/" + report_name + '/')
+            lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Rate vs Range Test")
+            pdf = False
+            for i in entries:
+                if ".pdf" in i:
+                    pdf = i
+            if pdf:
+                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
+                                   name=get_configuration["access_point"][0]["model"] + "ratevsrange")
+            print("Test Completed... Cleaning up Stations")
+            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            kpi_val = lf_tools.read_kpi_file(column_name=['numeric-score'], dir_name=report_name)
+            print(str(kpi_val))
+            if str(kpi_val) == "empty":
+                print("kpi is empty, station did not got ip, Test failed")
+                allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
+                assert False
+            else:
+                print("Test passed successfully")
+                allure.attach(name="Kpi Data", body=str(kpi_val))
+            assert station
+        else:
+            assert False
+
+    @pytest.mark.wpa2_personal
+    @pytest.mark.fiveg
+    @pytest.mark.client11an
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2498", name="WIFI-2498")
+    def test_client_wpa2_personal_5g_11an(self, get_vif_state,
+                                         lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+                                         get_configuration, lf_tools):
+        """
+
+        pytest -m "ratevsrange and bridge and client11an" -s -vvv --skip-testrail --testbed=advanced-02
+        jira- wifi-2498
+        """
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        ssid_name = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+        security = "wpa2"
+        mode = "BRIDGE"
+        band = "fiveg"
+        vlan = 1
+        dut_name = create_lanforge_chamberview_dut
+        if ssid_name not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+                                         passkey=security_key, mode=mode, band=band,
+                                         station_name=station_names_fiveg, vlan_id=vlan)
+        print("station", station)
+
+        val = [['modes: 802.11an'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
+               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
+        if station:
+            time.sleep(3)
+            rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
+                                        instance_name="BRIDGE_RVR_11AN_FIVE_G",
+                                        vlan_id=vlan, dut_name=dut_name, raw_lines=val)
+            report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            entries = os.listdir("../reports/" + report_name + '/')
+            lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Rate vs Range Test")
+            pdf = False
+            for i in entries:
+                if ".pdf" in i:
+                    pdf = i
+            if pdf:
+                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
+                                   name=get_configuration["access_point"][0]["model"] + "ratevsrange")
+            print("Test Completed... Cleaning up Stations")
+            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            kpi_val = lf_tools.read_kpi_file(column_name=None, dir_name=report_name)
+            print(str(kpi_val))
+            if str(kpi_val) == "empty":
+                print("kpi is empty, station did not got ip, Test failed")
+                allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
+                assert False
+            else:
+                print("Test passed successfully")
+                allure.attach(name="Kpi Data", body=str(kpi_val))
+            assert station
+        else:
+            assert False
+
+    @pytest.mark.performance_advanced
+    @pytest.mark.wpa2_personal
+    @pytest.mark.fiveg
+    @pytest.mark.client11ac
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2499", name="WIFI-2499")
+    def test_client_wpa2_personal_5g_11ac(self, get_vif_state,
+                                          lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+                                          get_configuration, lf_tools):
+        """
+
+        pytest -m "ratevsrange and bridge and client11ac" -s -vvv --skip-testrail --testbed=advanced-02
+        jira- wifi-2499
+        """
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        ssid_name = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+        security = "wpa2"
+        mode = "BRIDGE"
+        band = "fiveg"
+        vlan = 1
+        dut_name = create_lanforge_chamberview_dut
+        if ssid_name not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+                                         passkey=security_key, mode=mode, band=band,
+                                         station_name=station_names_fiveg, vlan_id=vlan)
+        print("station", station)
+
+        val = [['modes: 802.11an-AC'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
+               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'] ,['attenuator2: 1.1.3059'], ['attenuations: 0..+50..950'],['attenuations2: 0..+50..950']]
+
+        if station:
+            time.sleep(3)
+            rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
+                                        instance_name="BRIDGE_RVR_11AC_FIVE_G",
+                                        vlan_id=vlan, dut_name=dut_name, raw_lines=val)
+            report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            entries = os.listdir("../reports/" + report_name + '/')
+            lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Rate vs Range Test")
+            pdf = False
+            for i in entries:
+                if ".pdf" in i:
+                    pdf = i
+            if pdf:
+                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
+                                   name=get_configuration["access_point"][0]["model"] + "ratevsrange")
+            print("Test Completed... Cleaning up Stations")
+            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            kpi_val = lf_tools.read_kpi_file(column_name=None, dir_name=report_name)
+            print(str(kpi_val))
+            if str(kpi_val) == "empty":
+                print("kpi is empty, station did not got ip, Test failed")
+                allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
+                assert False
+            else:
+                print("Test passed successfully")
+                allure.attach(name="Kpi Data", body=str(kpi_val))
+            assert station
+        else:
+            assert False
