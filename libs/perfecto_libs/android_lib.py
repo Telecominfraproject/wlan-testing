@@ -3236,8 +3236,8 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                         print("User name not Loaded")
                     # -------------------------------------------------------
                     # Scroll Down
-                    # scrollDown(setup_perfectoMobile)
-                    # time.sleep(2)
+                    scrollDown(setup_perfectoMobile)
+                    time.sleep(2)
                     # Set Password
                     # -------------------------------------------------------
                     try:
@@ -3850,8 +3850,8 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                         print("User name not Loaded")
                     # -------------------------------------------------------
                     # Scroll Down
-                    # scrollDown(setup_perfectoMobile)
-                    # time.sleep(2)
+                    scrollDown(setup_perfectoMobile)
+                    time.sleep(2)
                     # Set Password
                     # -------------------------------------------------------
                     try:
