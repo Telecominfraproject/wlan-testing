@@ -5,6 +5,17 @@ from cloudshell.api.cloudshell_api import UpdateTopologyGlobalInputsRequest, Upd
 
 from common import get_session
 
+def get_attribute_value(cloudshell_session, attribute):
+    if attribute.Type == 'Boolean':
+        return True if attribute.Value == 'True' else False
+    elif attribute.Type == 'Numeric':
+        return int(attribute.Value)
+    elif attribute.Type == 'Password':
+        return cloudshell_session.DecryptPassword(attribute.Value).Value
+    else:
+        return attribute.Value
+
+
 def main():
     session = get_session()
     res_id = sys.argv[1]
@@ -38,14 +49,7 @@ def main():
                 key = 'username' if key == 'uname' else key
                 key = 'password' if key == 'passkey' else key
 
-                if attribute.Type == 'Boolean':
-                    value = True if attribute.Value == 'True' else False
-                elif attribute.Type == 'Numeric':
-                    value = int(attribute.Value)
-                else:
-                    value = attribute.Value
-    
-                ap_config[key] = value
+                ap_config[key] = get_attribute_value(session, attribute)
 
             config['access_point'].append(ap_config)
 
@@ -55,14 +59,7 @@ def main():
             for attribute in details.ResourceAttributes:
                 key = attribute.Name.replace(f"{resource.ResourceModelName}.", '')
 
-                if attribute.Type == 'Boolean':
-                    value = True if attribute.Value == 'True' else False
-                elif attribute.Type == 'Numeric':
-                    value = int(attribute.Value)
-                else:
-                    value = attribute.Value
-    
-                tf_config[key] = value
+                tf_config[key] = get_attribute_value(session, attribute)
 
             config['traffic_generator'] = {
                 'name': 'lanforge',
