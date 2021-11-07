@@ -199,6 +199,7 @@ class TestMultiStaThptnat(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.multi_sta_perf_throughput
     @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -240,6 +241,7 @@ class TestMultiStaThptnat(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.multi_sta_perf_throughput
     @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -281,6 +283,7 @@ class TestMultiStaThptnat(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.multi_sta_perf_throughput
     @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -322,6 +325,7 @@ class TestMultiStaThptnat(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.multi_sta_perf_throughput
     @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
