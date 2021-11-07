@@ -69,7 +69,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:1'], ['tput_multi_ul:0']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_1", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -112,7 +112,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge",
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_2",
                                             raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
@@ -156,7 +156,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_3", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -198,13 +198,14 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:0'], ['tput_multi_ul:1']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_4", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.multi_sta_perf_throughput
     @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -241,13 +242,14 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_5", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.multi_sta_perf_throughput
     @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -284,13 +286,14 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_6", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.multi_sta_perf_throughput
     @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -327,13 +330,14 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_7", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.multi_sta_perf_throughput
     @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -370,7 +374,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:0'], ['tput_multi_ul:1']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_8", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -378,14 +382,13 @@ class TestMultiStaThptbridge(object):
         assert True
 
     @pytest.mark.wpa2_personal
-    # @pytest.mark.twog
     @pytest.mark.fiveg
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_udp_dl_5g_9",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3782")
     def test_mstathpt_wpa2p_bridge_udp_dl_5g_9(self, get_vif_state, lf_tools,
                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog  and fiveg"
+        pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -413,7 +416,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:1'], ['tput_multi_ul:0']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_9", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -455,7 +458,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_10", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -497,7 +500,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_11", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -539,7 +542,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:0'], ['tput_multi_ul:1']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_12", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -581,7 +584,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:1'], ['tput_multi_ul:0']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_13", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -623,7 +626,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_14", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -665,7 +668,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_15", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -707,7 +710,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:0'], ['tput_multi_ul:1']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_16", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -749,7 +752,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:1'], ['tput_multi_ul:0']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_17", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -791,7 +794,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_18", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -833,7 +836,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_19", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -875,7 +878,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:0'], ['tput_multi_ul:1']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_20", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -917,7 +920,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:1'], ['tput_multi_ul:0']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_21", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -959,7 +962,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_22", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -1001,7 +1004,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_23", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -1043,7 +1046,7 @@ class TestMultiStaThptbridge(object):
                      ['tput_multi_udp:0'], ['tput_multi_ul:1']]
 
         msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                            instance_name="multistathpt_instance_wpa2p_5g_bridge", raw_line=raw_lines,
+                                            instance_name="multistathpt_instance_wpa2p_5g_bridge_24", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
