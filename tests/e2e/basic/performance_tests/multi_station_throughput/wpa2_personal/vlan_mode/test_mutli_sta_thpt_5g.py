@@ -1,7 +1,7 @@
 """
 
     Multi Station throughput vs Packet Size test: VLAN Mode
-    pytest -m "Multi_Sta_Thpt and wpa2_personal and vlan and fiveg"
+    pytest -m "multi_sta_thpt and wpa2_personal and vlan and fiveg"
 
 """
 
@@ -9,7 +9,7 @@ import os
 import allure
 import pytest
 
-pytestmark = [pytest.mark.performance, pytest.mark.Multi_Sta_Thpt, pytest.mark.wpa2_personal, pytest.mark.vlan,
+pytestmark = [pytest.mark.performance, pytest.mark.multi_sta_thpt, pytest.mark.wpa2_personal, pytest.mark.vlan,
               pytest.mark.fiveg]
 
 setup_params_general = {
@@ -24,9 +24,6 @@ setup_params_general = {
 
 @allure.suite("performance")
 @allure.feature("VLAN Mode WPA2 PERSONAL Multi Station Throughput")
-@pytest.mark.Multi_Sta_Thpt
-@pytest.mark.wifi5
-@pytest.mark.wifi6
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -43,7 +40,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_udp_dl_5g_1(self, get_vif_state, lf_tools,
                                              create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -68,7 +65,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:200,512,1024,MTU'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_1", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -83,7 +80,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_tcp_dl_5g_2(self, get_vif_state, lf_tools,
                                              create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal  and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal  and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -109,7 +106,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:200,512,1024,MTU'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan",
                                             raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
@@ -126,7 +123,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_udp_ul_5g_3(self, get_vif_state, lf_tools,
                                              create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -151,7 +148,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:200,512,1024,MTU'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -166,7 +163,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_tcp_ul_5g_4(self, get_vif_state, lf_tools,
                                              create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -191,7 +188,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:200,512,1024,MTU'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_4", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -208,7 +205,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_udp_dl_5g_5(self, get_vif_state, lf_tools,
                                              create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -233,7 +230,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:200,512,1024,MTU'], ['capacities:MAX'], ['tput_multi_tcp:0'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_5", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -250,7 +247,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_tcp_dl_5g_6(self, get_vif_state, lf_tools,
                                              create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -275,7 +272,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:200,512,1024,MTU'], ['capacities:MAX'], ['tput_multi_tcp:1'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_6", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -292,7 +289,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_udp_ul_5g_7(self, get_vif_state, lf_tools,
                                              create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -317,7 +314,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:200,512,1024,MTU'], ['capacities:MAX'], ['tput_multi_tcp:0'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_7", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -334,7 +331,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_tcp_ul_5g_8(self, get_vif_state, lf_tools,
                                              create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -359,7 +356,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:200,512,1024,MTU'], ['capacities:MAX'], ['tput_multi_tcp:1'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_8", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -375,7 +372,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_udp_dl_5g_9(self, get_vif_state, lf_tools,
                                              create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -400,7 +397,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:200,512'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_9", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -415,7 +412,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_tcp_dl_5g_10(self, get_vif_state, lf_tools,
                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -440,7 +437,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:200'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_10", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -455,7 +452,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_udp_ul_5g_11(self, get_vif_state, lf_tools,
                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -480,7 +477,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:200'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_11", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -495,7 +492,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_tcp_ul_5g_12(self, get_vif_state, lf_tools,
                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -520,7 +517,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:200'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_12", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -535,7 +532,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_udp_dl_5g_13(self, get_vif_state, lf_tools,
                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -560,7 +557,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:512'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_13", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -575,7 +572,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_tcp_dl_5g_14(self, get_vif_state, lf_tools,
                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -600,7 +597,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:512'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_14", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -615,7 +612,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_udp_ul_5g_15(self, get_vif_state, lf_tools,
                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -640,7 +637,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:512'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_15", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -655,7 +652,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_tcp_ul_5g_16(self, get_vif_state, lf_tools,
                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -680,7 +677,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:512'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_16", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -695,7 +692,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_udp_ul_5g_17(self, get_vif_state, lf_tools,
                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -720,7 +717,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:1024'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_17", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -735,7 +732,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_tcp_dl_5g_18(self, get_vif_state, lf_tools,
                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -760,7 +757,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:1024'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_18", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -775,7 +772,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_udp_ul_5g_19(self, get_vif_state, lf_tools,
                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -800,7 +797,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:1024'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_19", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -815,7 +812,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_tcp_ul_5g_20(self, get_vif_state, lf_tools,
                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -840,7 +837,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:1024'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_20", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -855,7 +852,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_udp_dl_5g_21(self, get_vif_state, lf_tools,
                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -880,7 +877,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:MTU'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_21", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -895,7 +892,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_tcp_dl_5g_22(self, get_vif_state, lf_tools,
                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -920,7 +917,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:MTU'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_22", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -935,7 +932,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_udp_ul_5g_23(self, get_vif_state, lf_tools,
                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -960,7 +957,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:MTU'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_23", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
@@ -975,7 +972,7 @@ class TestMultiStaThptvlan(object):
     def test_mstathpt_wpa2p_vlan_tcp_ul_5g_24(self, get_vif_state, lf_tools,
                                               create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and vlan and wpa2_personal and fiveg"
+        pytest -m "multi_sta_thpt and vlan and wpa2_personal and fiveg"
 
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -1000,7 +997,7 @@ class TestMultiStaThptvlan(object):
                      ['frame_sizes:MTU'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G="", ssid_5G=ssid_5G,
                                             instance_name="multistathpt_instance_wpa2p_5g_vlan_24", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g="")
 
