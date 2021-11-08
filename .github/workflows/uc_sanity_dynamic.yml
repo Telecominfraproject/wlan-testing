@@ -118,6 +118,9 @@ jobs:
         export KEY_LOCATION=key.pem
         ./deploy.sh
 
+    - name: wait for DNS to propagate
+      run: sleep 300
+
     - name: Show resource state on deployment failure
       if: failure()
       run: |
