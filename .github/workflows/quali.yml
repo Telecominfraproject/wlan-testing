@@ -130,7 +130,7 @@ jobs:
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
     env:
       CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-      CLOUDSHELL_USER: admin
+      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
       CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
     steps:
