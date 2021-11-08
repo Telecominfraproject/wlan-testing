@@ -1,7 +1,7 @@
 """
 
     Multi Station throughput vs Packet Size test: Bridge Mode
-    pytest -m "Multi_Sta_Thpt and wpa2_personal and bridge and twog"
+    pytest -m "multi_sta_thpt and wpa2_personal and bridge and twog"
 
 """
 
@@ -9,7 +9,7 @@ import os
 import allure
 import pytest
 
-pytestmark = [pytest.mark.performance, pytest.mark.Multi_Sta_Thpt, pytest.mark.wpa2_personal, pytest.mark.bridge,
+pytestmark = [pytest.mark.performance, pytest.mark.multi_sta_thpt, pytest.mark.wpa2_personal, pytest.mark.bridge,
               pytest.mark.twog]
 
 setup_params_general = {
@@ -24,9 +24,6 @@ setup_params_general = {
 
 @allure.suite("performance")
 @allure.feature("BRIDGE MODE WPA2 PERSONAL Multi_Station_Throughput")
-@pytest.mark.Multi_Sta_Thpt
-@pytest.mark.wifi5
-@pytest.mark.wifi6
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -43,7 +40,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_udp_dl_2g_1(self, get_vif_state, lf_tools,
                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-                 pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+                 pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -67,7 +64,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:200,512,1024,MTU'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_1", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
 
@@ -82,7 +79,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_tcp_dl_2g_2(self, get_vif_state, lf_tools,
                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-            pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+            pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -107,7 +104,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:200,512,1024,MTU'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_2",
                                             raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
@@ -124,7 +121,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_udp_ul_2g_3(self, get_vif_state, lf_tools,
                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-                    pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+                    pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -148,7 +145,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:200,512,1024,MTU'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_3", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
 
@@ -163,7 +160,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_tcp_ul_2g_4(self, get_vif_state, lf_tools,
                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-                        pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+                        pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -187,7 +184,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:200,512,1024,MTU'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_4", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
 
@@ -204,7 +201,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_udp_dl_2g_5(self, get_vif_state, lf_tools,
                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-                          pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+                          pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -228,7 +225,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:200,512,1024,MTU'], ['capacities:MAX'], ['tput_multi_tcp:0'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_5", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
 
@@ -245,7 +242,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_tcp_dl_2g_6(self, get_vif_state, lf_tools,
                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-                               pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+                               pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -269,7 +266,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:200,512,1024,MTU'], ['capacities:MAX'], ['tput_multi_tcp:1'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_6", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
 
@@ -286,7 +283,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_udp_ul_2g_7(self, get_vif_state, lf_tools,
                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-                               pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+                               pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -310,7 +307,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:200,512,1024,MTU'], ['capacities:MAX'], ['tput_multi_tcp:0'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_7", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
 
@@ -327,7 +324,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_tcp_ul_2g_8(self, get_vif_state, lf_tools,
                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-                                  pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+                                  pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -351,7 +348,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:200,512,1024,MTU'], ['capacities:MAX'], ['tput_multi_tcp:1'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_8", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
 
@@ -366,7 +363,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_udp_dl_2g_9(self, get_vif_state, lf_tools,
                                                create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-               pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+               pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -390,7 +387,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:200,512'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_9", raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
 
@@ -405,7 +402,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_tcp_dl_2g_10(self, get_vif_state, lf_tools,
                                                 create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-                    pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+                    pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -429,7 +426,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:200'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_10",
                                             raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
@@ -445,7 +442,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_udp_ul_2g_11(self, get_vif_state, lf_tools,
                                                 create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-                       pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+                       pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -469,7 +466,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:200'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_11",
                                             raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
@@ -485,7 +482,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_tcp_ul_2g_12(self, get_vif_state, lf_tools,
                                                 create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-                       pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+                       pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
@@ -510,7 +507,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:200'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_12",
                                             raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
@@ -526,7 +523,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_udp_dl_2g_13(self, get_vif_state, lf_tools,
                                                 create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-                       pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+                       pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -550,7 +547,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:512'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_13",
                                             raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
@@ -566,7 +563,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_tcp_dl_2g_14(self, get_vif_state, lf_tools,
                                                 create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-                          pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+                          pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -590,7 +587,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:512'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_14",
                                             raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
@@ -606,7 +603,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_udp_ul_2g_15(self, get_vif_state, lf_tools,
                                                 create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-                          pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+                          pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -630,7 +627,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:512'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_15",
                                             raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
@@ -646,7 +643,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_tcp_ul_2g_16(self, get_vif_state, lf_tools,
                                                 create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-                             pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+                             pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -670,7 +667,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:512'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_16",
                                             raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
@@ -686,7 +683,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_udp_dl_2g_17(self, get_vif_state, lf_tools,
                                                 create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-                             pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+                             pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -710,7 +707,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:1024'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_17",
                                             raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
@@ -726,7 +723,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_tcp_dl_2g_18(self, get_vif_state, lf_tools,
                                                 create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-                             pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+                             pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -750,7 +747,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:1024'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_18",
                                             raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
@@ -766,7 +763,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_udp_ul_2g_19(self, get_vif_state, lf_tools,
                                                 create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-         pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+         pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -790,7 +787,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:1024'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_19",
                                             raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
@@ -806,7 +803,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_tcp_ul_2g_20(self, get_vif_state, lf_tools,
                                                 create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+        pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -830,7 +827,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:1024'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_20",
                                             raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
@@ -846,7 +843,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_udp_dl_2g_21(self, get_vif_state, lf_tools,
                                                 create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-        pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+        pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -870,7 +867,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:MTU'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_21",
                                             raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
@@ -886,7 +883,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_tcp_dl_2g_22(self, get_vif_state, lf_tools,
                                                 create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-             pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+             pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -910,7 +907,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:MTU'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:1'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:0']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_22",
                                             raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
@@ -926,7 +923,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_udp_ul_2g_23(self, get_vif_state, lf_tools,
                                                 create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-                 pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+                 pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -950,7 +947,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:MTU'], ['capacities:1,2,5'], ['tput_multi_tcp:0'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:1'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_23",
                                             raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
@@ -966,7 +963,7 @@ class TestMultiStaThptbridge(object):
     def test_mstathpt_wpa2p_bridge_tcp_ul_2g_24(self, get_vif_state, lf_tools,
                                                 create_lanforge_chamberview_dut, lf_test, get_configuration):
         """
-                 pytest -m "Multi_Sta_Thpt and bridge and wpa2_personal and twog"
+                 pytest -m "multi_sta_thpt and bridge and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
@@ -990,7 +987,7 @@ class TestMultiStaThptbridge(object):
                      ['frame_sizes:MTU'], ['capacities:1,2,5'], ['tput_multi_tcp:1'], ['tput_multi_dl:0'],
                      ['tput_multi_udp:0'], ['tput_multi_ul:1']]
 
-        msthpt_obj = lf_test.Multi_Sta_Thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
+        msthpt_obj = lf_test.multi_sta_thpt(mode=mode, ssid_2G=ssid_2G, ssid_5G="",
                                             instance_name="multistathpt_instance_wpa2p_2g_bridge_24",
                                             raw_line=raw_lines,
                                             vlan_id=vlan, dut_5g="", dut_2g=dut_2g)
