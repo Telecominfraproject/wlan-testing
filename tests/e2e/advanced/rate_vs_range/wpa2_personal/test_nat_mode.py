@@ -15,7 +15,7 @@ import os.path
 import csv
 import pandas as pd
 
-pytestmark = [pytest.mark.advance, pytest.mark.ratevsrange, pytest.mark.nat]
+# pytestmark = [pytest.mark.advance, pytest.mark.ratevsrange, pytest.mark.nat]
 
 
 setup_params_general = {
