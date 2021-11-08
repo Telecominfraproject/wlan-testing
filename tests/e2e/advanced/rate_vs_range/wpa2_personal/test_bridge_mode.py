@@ -66,13 +66,13 @@ class TestRatevsRangeBridge(object):
                                          station_name=station_names_twog, vlan_id=vlan)
         print("station", station)
 
-        val = [['modes: 802.11b'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
+        val = [['modes: 802.11b'], ['pkts: 60;142;256;512;1024;MTU;4000;9000'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:UDP;TCP'],
                ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
                ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
-                                       instance_name="BRIDGE_RVR_11B_TWO_G",
+                                       instance_name="BRIDGE_RVR_11B_TWOG",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             print("report name ", report_name)
@@ -129,13 +129,13 @@ class TestRatevsRangeBridge(object):
                                          station_name=station_names_twog, vlan_id=vlan)
         print("station", station)
 
-        val = [['modes: 802.11g'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
+        val = [['modes: 802.11g'], ['pkts: 60;142;256;512;1024;MTU;4000;9000'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:UDP;TCP'],
                ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
                ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
-                                        instance_name="BRIDGE_RVR_11G_TWO_G",
+                                        instance_name="BRIDGE_RVR_11G_TWOG",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -189,13 +189,13 @@ class TestRatevsRangeBridge(object):
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
 
-        val = [['modes: 802.11a'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
+        val = [['modes: 802.11a'], ['pkts: 60;142;256;512;1024;MTU;4000;9000'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:UDP;TCP'],
                ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
                ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
-                                        instance_name="BRIDGE_RVR_11A_FIVE_G",
+                                        instance_name="BRIDGE_RVR_11A_FIVEG",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -248,13 +248,13 @@ class TestRatevsRangeBridge(object):
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
 
-        val = [['modes: 802.11an'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
+        val = [['modes: 802.11an'], ['pkts: 60;142;256;512;1024;MTU;4000;9000'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:UDP;TCP'],
                ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
                ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
-                                        instance_name="BRIDGE_RVR_11AN_FIVE_G",
+                                        instance_name="BRIDGE_RVR_11AN_FIVEG",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -307,13 +307,13 @@ class TestRatevsRangeBridge(object):
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
 
-        val = [['modes: 802.11an-AC'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
+        val = [['modes: 802.11an-AC'], ['pkts: 60;142;256;512;1024;MTU;4000;9000'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:UDP;TCP'],
                ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'] ,['attenuator2: 1.1.3059'], ['attenuations: 0..+50..950'],['attenuations2: 0..+50..950']]
 
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
-                                        instance_name="BRIDGE_RVR_11AC_FIVE_G",
+                                        instance_name="BRIDGE_RVR_11AC_FIVEG",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
