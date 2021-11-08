@@ -684,7 +684,7 @@ class RunTest:
         else:
             return False
 
-    def Multi_Sta_Thpt(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
+    def multi_sta_thpt(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
                        raw_line=[], instance_name="test_demo", dut_5g="", dut_2g=""):
 
         inst_name = instance_name.split('_')[0]
