@@ -8,12 +8,9 @@
 """
 import os
 import time
-
 import pytest
 import allure
 import os.path
-import csv
-import pandas as pd
 
 pytestmark = [pytest.mark.advance, pytest.mark.ratevsrange, pytest.mark.bridge]
 
