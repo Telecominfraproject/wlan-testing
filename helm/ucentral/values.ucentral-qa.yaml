@@ -297,6 +297,8 @@ owprovui:
     cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
 
 kafka:
+  commonAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
   heapOpts: -Xmx512m -Xms512m
   resources:
     requests:
@@ -310,6 +312,8 @@ kafka:
   livenessProbe:
     initialDelaySeconds: 60
   zookeeper:
+    commonAnnotations:
+      cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
     heapSize: 256
     resources:
       requests:
