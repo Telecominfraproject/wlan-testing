@@ -149,6 +149,10 @@ jobs:
         RES_ID=$(python .quali/start_reservation.py --openwifi-version "${{ needs.vars.outputs.openwifi_revision }}" --openwifi-gw-version "${{ needs.vars.outputs.openwifi_gw_revision }}" --openwifi-sec-version "${{ needs.vars.outputs.openwifi_sec_revision }}" --openwifi-fms-version "${{ needs.vars.outputs.openwifi_fms_revision }}" --openwifi-ui-version "${{ needs.vars.outputs.openwifi_ui_revision }}" --ap-model "${{ matrix.ap_model }}")
         echo ::set-output name=res_id::"$RES_ID"
 
+    - name: set reservation identifier
+      id: reservation
+      run: echo ::set-output name=identifier::$(echo ${{ steps.start.outputs.res_id }} | cut -d "-" -f 1)
+
     - name: wait for DNS to propagate
       run: sleep 300
 
@@ -493,6 +497,14 @@ jobs:
                   - -x
                   - -c
                   - |
+                    apt-get update
+                    apt-get install -y dnsutils
+                    HOSTS="sec-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build"
+                    for HOST in \$HOSTS; do
+                      until sleep 1; host \$HOST; do :; done
+                      echo "DNS record for \$HOST resolved successfully!"
+                    done
+
                     cd tests
                     pytest -m "${{ needs.vars.outputs.marker_expression }}" -s -vvv --testbed="basic" --alluredir=/tmp/allure-results -o firmware="${{ needs.vars.outputs.ap_version }}"
                     ret=\$?
