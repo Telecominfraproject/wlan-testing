@@ -42,6 +42,7 @@ from csv_to_influx import CSVtoInflux
 from influx2 import RecordInflux
 from lf_multipsk import MultiPsk
 from lf_rvr_test import RvrTest
+from attenuator_serial import AttenuatorSerial
 
 
 class RunTest:
@@ -751,6 +752,14 @@ class RunTest:
 
         influx.glob()
         return self.msthpt_obj
+
+    def attenuator_serial(self):
+        self.obj = AttenuatorSerial(
+            lfclient_host=self.lanforge_ip,
+            lfclient_port=self.lanforge_port
+        )
+        val = self.obj.show()
+        return val
 
 
 if __name__ == '__main__':

@@ -63,42 +63,35 @@ class TestRatevsRangeBridge(object):
                                          station_name=station_names_twog, vlan_id=vlan)
         print("station", station)
 
-        val = [['modes: 802.11b'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:UDP;TCP'],
-               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
+        val = [['modes: 802.11b'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:;TCP'],
+               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
-                                       instance_name="MODEBRIDGE_RVR_11B_TWOG",
+                                       instance_name="MODEBRIDGE_RVR_11B_TWOG_modified",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             print("report name ", report_name)
             entries = os.listdir("../reports/" + report_name + '/')
             print("entries",entries)
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Rate vs Range Test")
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "ratevsrange")
-
-
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_twog)
-            # kpi_val = lf_tools.read_kpi_file(column_name=None, dir_name=report_name)
-            # print(str(kpi_val))
-            # if str(kpi_val) == "empty":
-            #     print("kpi is empty, station did not got ip, Test failed")
-            #     allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
-            #     assert False
-            # else:
-            #     print("Test passed successfully")
-            #     allure.attach(name="Kpi Data", body=str(kpi_val))
             assert station
         else:
             assert False
+    # kpi_val = lf_tools.read_kpi_file(column_name=None, dir_name=report_name)
+    # print(str(kpi_val))
+    # if str(kpi_val) == "empty":
+    #     print("kpi is empty, station did not got ip, Test failed")
+    #     allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
+    #     assert False
+    # else:
+    #     print("Test passed successfully")
+    #     allure.attach(name="Kpi Data", body=str(kpi_val))
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -124,25 +117,19 @@ class TestRatevsRangeBridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
         print("station", station)
-
-        val = [['modes: 802.11g'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:UDP;TCP'],
-               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
+        val = [['modes: 802.11g'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types: TCP'],
+               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
-                                        instance_name="MODEBRIDGE_RVR_11G_TWOG",
+                                        instance_name="MODEBRIDGE_RVR_11G_TWOG_modified",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Rate vs Range Test")
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "ratevsrange")
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
@@ -173,25 +160,19 @@ class TestRatevsRangeBridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
-
-        val = [['modes: 802.11a'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:UDP;TCP'],
-               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
+        val = [['modes: 802.11a'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:TCP'],
+               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
-                                        instance_name="MODEBRIDGE_RVR_11A_FIVEG",
+                                        instance_name="MODEBRIDGE_RVR_11A_FIVEG_modified",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Rate vs Range Test")
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "ratevsrange")
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_fiveg)
             assert station
@@ -223,25 +204,19 @@ class TestRatevsRangeBridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
-
-        val = [['modes: 802.11an'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:UDP;TCP'],
-               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
+        val = [['modes: 802.11an'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:TCP'],
+               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
-                                        instance_name="MODEBRIDGE_RVR_11AN_FIVEG",
+                                        instance_name="MODEBRIDGE_RVR_11AN_FIVEG_modified",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Rate vs Range Test")
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "ratevsrange")
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_fiveg)
             assert station
@@ -273,25 +248,20 @@ class TestRatevsRangeBridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
-
-        val = [['modes: 802.11an-AC'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:UDP;TCP'],
-               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'] ,['attenuator2: 1.1.3059'], ['attenuations: 0..+50..950'],['attenuations2: 0..+50..950']]
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
+        val = [['modes: 802.11an-AC'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:TCP'],
+               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
+               ['attenuations: 0..+50..950'],['attenuations2: 0..+50..950']]
 
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
-                                        instance_name="MODEBRIDGE_RVR_11AC_FIVEG",
+                                        instance_name="MODEBRIDGE_RVR_11AC_FIVEG_modified",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Rate vs Range Test")
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "ratevsrange")
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_fiveg)
             assert station
