@@ -139,7 +139,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ steps.marker.outputs.expression }}" -s -vvv --testbed=interop-03 -o 'jobName=Github-Interop-${{ matrix.test_type }}' -o 'jobNumber=${{ github.run_number }}' --alluredir=/tmp/allure-results
+                    pytest -m "${{ steps.marker.outputs.expression }}" -s -vvv --testbed=interop-03 -o 'jobName=Github-Interop-${{ matrix.test_type }}' -o 'jobNumber=${{ github.run_number }}' --alluredir=/tmp/allure-results --skip-lanforge
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
