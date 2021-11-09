@@ -130,7 +130,7 @@ jobs:
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
     env:
       CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-      CLOUDSHELL_USER: admin
+      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
       CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
     steps:
@@ -182,7 +182,7 @@ jobs:
         }
 
         RADIUS_SERVER_DATA = {
-            "ip": "10.10.10.72",
+            "ip": "10.10.1.221",
             "port": 1812,
             "secret": "testing123",
             "user": "user",
@@ -191,8 +191,8 @@ jobs:
         }
 
         RADIUS_ACCOUNTING_DATA = {
-            "ip": "10.10.10.72",
-            "port": 1812,
+            "ip": "10.10.1.221",
+            "port": 1813,
             "secret": "testing123",
             "user": "user",
             "password": "password",
