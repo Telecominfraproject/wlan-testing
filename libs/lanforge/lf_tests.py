@@ -684,7 +684,7 @@ class RunTest:
         else:
             return False
 
-    def Multi_Sta_Thpt(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
+    def multi_sta_thpt(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
                        raw_line=[], instance_name="test_demo", dut_5g="", dut_2g=""):
 
         inst_name = instance_name.split('_')[0]
@@ -742,10 +742,14 @@ class RunTest:
         self.msthpt_obj.setup()
         self.msthpt_obj.run()
         report_name = self.msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        influx = CSVtoInflux(influxdb=self.influxdb,
-                              _influx_tag=self.influx_params["influx_tag"],
-                              target_csv=self.local_report_path + report_name + "/kpi.csv")
-        influx.post_to_influx()
+        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                             influx_port=self.influx_params["influx_port"],
+                             influx_org=self.influx_params["influx_org"],
+                             influx_token=self.influx_params["influx_token"],
+                             influx_bucket=self.influx_params["influx_bucket"],
+                             path=report_name)
+
+        influx.glob()
         return self.msthpt_obj
 
 
