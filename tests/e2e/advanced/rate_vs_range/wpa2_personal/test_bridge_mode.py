@@ -63,7 +63,7 @@ class TestRatevsRangeBridge(object):
                                          station_name=station_names_twog, vlan_id=vlan)
         print("station", station)
 
-        val = [['modes: 802.11b'], ['pkts: 60;142;256;512;1024;MTU;4000;9000'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:UDP;TCP'],
+        val = [['modes: 802.11b'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:UDP;TCP'],
                ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
                ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
         if station:
