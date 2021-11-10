@@ -94,6 +94,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         path: wlan-testing
+        ref: WIFI-3719-add-compose-to-nightly-pipeline
 
     # build and push docker-compose-deployment image
     - name: docker login
