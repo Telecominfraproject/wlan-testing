@@ -58,7 +58,7 @@ class TestRatevsOrientationBridge(object):
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
-                                        instance_name="MODEBRIDGE_RVR_orientation_11AC_FIVEG",
+                                        instance_name="ORIENTATION_RVR_BRIDGE_11_AC",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
