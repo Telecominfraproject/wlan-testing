@@ -19,7 +19,7 @@ on:
       testbeds:
         default: 'basic-01,basic-02,basic-03,basic-04,basic-05,basic-06,basic-07,basic-08'
         description: 'Testbed(s) to test'
-        required: false
+        required: true
       marker_expression:
         default: 'uc_sanity'
         description: 'Markers expression that will be passed to the pytest command.'
@@ -95,8 +95,16 @@ jobs:
       with:
         path: wlan-testing
 
-    - name: Prepare certificates from secrets
+    # build and push docker-compose-deployment image
+    - name: docker login
+      run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
+    - name: build docker image
       working-directory: wlan-testing/docker-compose/openwifi
+      run: docker build -t ${{ env.DOCKER_SERVER }}/docker-compose-deployment:${{ github.run_id }} .
+    - name: push docker image
+      run: docker push ${{ env.DOCKER_SERVER }}/docker-compose-deployment:${{ github.run_id }}
+
+    - name: Prepare certificates from secrets
       run: |
         echo "${{ secrets.DIGICERT_CERT }}" | base64 -d > websocket-cert.pem
         echo "${{ secrets.DIGICERT_KEY }}" | base64 -d > websocket-key.pem
@@ -118,7 +126,6 @@ jobs:
       run: echo "::set-output name=value::openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
 
     - name: Create Kubernetes namespace and secret
-      working-directory: wlan-testing/docker-compose/openwifi
       run: |
         kubectl create ns openwifi-docker-compose-${{ github.run_id }}
         kubectl create secret generic tip-cicd-wildcard-certs --from-file=websocket-cert.pem=websocket-cert.pem --from-file=websocket-key.pem=websocket-key.pem -n openwifi-docker-compose-${{ github.run_id }} 
@@ -242,9 +249,7 @@ jobs:
               mountPath: /wlan-cloud-ucentral-deploy
         
           - name: docker-compose-deployment
-            image: docker/compose:latest
-            command: ["/bin/sh", "-c"]
-            args: ["apk add git; wget https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/WIFI-3719-add-compose-to-nightly-pipeline/docker-compose/openwifi/deploy.sh; chmod +x deploy.sh; sh deploy.sh"]
+            image: ${{ env.DOCKER_SERVER }}/docker-compose-deployment:${{ github.run_id }}
             env:
             - name: DOCKER_TLS_VERIFY
               value: "true"
@@ -355,14 +360,14 @@ jobs:
     - name: generate-matrix
       id: set-matrix
       run: |
-        TESTBEDS="${{ github.event.inputs.testbeds || 'basic-01,basic-02,basic-03,basic-04,basic-05,basic-06,basic-07,basic-08' }}"
+        TESTBEDS="${{ github.event.inputs.testbeds }}"
         TESTBEDS=$(echo $TESTBEDS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
         TESTBEDS=$(echo "$TESTBEDS" | jq -c 'map({"testbed":.})')
         echo "::set-output name=matrix::{\"include\":${TESTBEDS}}"
 
   set-redirector-url:
     needs: [ deploy-controller, generate-matrix ]
-    if: ${{ github.event.inputs.marker_expression == 'uc_sanity' }}
+    if: github.event.inputs.marker_expression == 'uc_sanity'
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
@@ -428,7 +433,8 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    needs: [ build, generate-matrix, deploy-controller ]
+    needs: [ build, generate-matrix, deploy-controller, set-redirector-url ]
+    if: always()
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
@@ -648,6 +654,9 @@ jobs:
     - name: cleanup Docker image
       run: curl -u${{ env.DOCKER_USER_NAME }}:${{ env.DOCKER_USER_PASSWORD }} -X DELETE "https://tip.jfrog.io/artifactory/tip-wlan-cloud-docker-repo/cloud-sdk-nightly/${{ github.run_id }}"
 
+    - name: cleanup docker-compose-deployment image
+      run: curl -u${{ env.DOCKER_USER_NAME }}:${{ env.DOCKER_USER_PASSWORD }} -X DELETE "https://tip.jfrog.io/artifactory/tip-wlan-cloud-docker-repo/docker-compose-deployment/${{ github.run_id }}"
+
   destroy-controller:
     needs: [ test ]
     runs-on: ubuntu-latest
@@ -666,8 +675,8 @@ jobs:
       run: kubectl delete ns --ignore-not-found=true "openwifi-docker-compose-${{ github.run_id }}"
 
   reset-redirector-url:
-    needs: [ set-redirector-url, test, generate-matrix ]
-    if: always()
+    needs: [ test, generate-matrix ]
+    if: github.event.inputs.marker_expression == 'uc_sanity' && always()
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
