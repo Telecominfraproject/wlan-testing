@@ -51,6 +51,8 @@ on:
         required: true
         default: 'uc_sanity'
         description: 'Marker expression to select tests to execute'
+  schedule:
+  - cron: '30 20 * * *'
 
 jobs:
   vars:
