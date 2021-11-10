@@ -362,7 +362,7 @@ jobs:
 
   set-redirector-url:
     needs: [ deploy-controller, generate-matrix ]
-    if: ${{ github.event.inputs.marker_expression }} == 'uc_sanity'
+    if: ${{ github.event.inputs.marker_expression == 'uc_sanity' }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
