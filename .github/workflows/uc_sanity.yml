@@ -31,8 +31,6 @@ on:
         default: 'uc_sanity'
         description: 'Markers expression that will be passed to the pytest command.'
         required: false
-  schedule:
-  - cron: '30 20 * * *'
 
 defaults:
   run:
