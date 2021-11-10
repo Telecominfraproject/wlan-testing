@@ -41,7 +41,7 @@ on:
         description: 'revision of the Open Wifi UI'
       ap_models:
         required: true
-        default: 'EC420,EAP101,ECW5211,ECW5410'
+        default: 'ECW5410,EAP101,EC420,ECW5211,WF188N,EAP102,CIG194C'
         description: 'the AP models to test'
       ap_version:
         required: true
@@ -49,7 +49,7 @@ on:
         description: 'revision of firmware to flash on AP, <branch>-<commit>'
       marker_expression:
         required: true
-        default: 'sdk_restapi'
+        default: 'uc_sanity'
         description: 'Marker expression to select tests to execute'
 
 jobs:
@@ -74,9 +74,9 @@ jobs:
           echo ::set-output name=sec::$(echo "${{ github.event.inputs.openwifi_sec_revision || 'main' }}")
           echo ::set-output name=fms::$(echo "${{ github.event.inputs.openwifi_fms_revision || 'main' }}")
           echo ::set-output name=ui::$(echo "${{ github.event.inputs.openwifi_ui_revision || 'main' }}")
-          echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'EC420,EAP101,ECW5211,ECW5410' }}")
+          echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'ECW5410,EAP101,EC420,ECW5211,WF188N,EAP102,CIG194C' }}")
           echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'next-latest' }}")
-          echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'sdk_restapi' }}")
+          echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'uc_sanity' }}")
 
   generate-matrix:
     name: generate AP model matrix
