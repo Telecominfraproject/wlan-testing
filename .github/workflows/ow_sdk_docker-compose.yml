@@ -17,13 +17,13 @@ on:
   workflow_dispatch:
     inputs:
       testbeds:
-        default: 'basic-01,basic-02,basic-03,basic-04,basic-05,basic-06,basic-07,basic-08'
+        default: 'basic-05'
         description: 'Testbed(s) to test'
-        required: true
+        required: false
       marker_expression:
-        default: 'uc_sanity'
+        default: 'sdk_restapi'
         description: 'Markers expression that will be passed to the pytest command.'
-        required: true
+        required: false
       owgw_version:
         default: 'master'
         description: 'OpenWIFI Gateway version to be deployed.'
@@ -94,7 +94,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         path: wlan-testing
-        ref: WIFI-3719-add-compose-to-nightly-pipeline
+#        ref: WIFI-3719-add-compose-to-nightly-pipeline
 
     # build and push docker-compose-deployment image
 #    - name: docker login
@@ -365,7 +365,7 @@ jobs:
     - name: generate-matrix
       id: set-matrix
       run: |
-        TESTBEDS="${{ github.event.inputs.testbeds }}"
+        TESTBEDS="${{ github.event.inputs.testbeds || 'basic-05' }}"
         TESTBEDS=$(echo $TESTBEDS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
         TESTBEDS=$(echo "$TESTBEDS" | jq -c 'map({"testbed":.})')
         echo "::set-output name=matrix::{\"include\":${TESTBEDS}}"
@@ -464,6 +464,10 @@ jobs:
         kubectl config set-context --current --namespace=$NAMESPACE
         echo "::set-output name=name::${NAMESPACE}"
 
+    - name: add debugging info
+      run: |
+        echo "${{ needs.deploy-controller.outputs.sec_url }}"
+
     - name: create configuration.py secret
       run: |
         cat << EOF > configuration.py
@@ -502,7 +506,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression }}" -s -vvv --testbed="${{ matrix.testbed }}" --alluredir=/tmp/allure-results
+                    pytest -m "${{ github.event.inputs.marker_expression || 'sdk_restapi' }}" -s -vvv --testbed="${{ matrix.testbed }}" --alluredir=/tmp/allure-results
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -596,8 +600,8 @@ jobs:
 
     - name: copy history into results
       run: |
-        if [ -e "reports/docker-compose/${{ github.event.inputs.marker_expression }}/${{ matrix.testbed }}/latest" ] ; then
-          cp -r reports/docker-compose/${{ github.event.inputs.marker_expression }}/${{ matrix.testbed }}/latest/history/ allure-results/history
+        if [ -e "reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ matrix.testbed }}/latest" ] ; then
+          cp -r reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ matrix.testbed }}/latest/history/ allure-results/history
         fi
 
     - name: add report metadata
@@ -625,11 +629,11 @@ jobs:
 
     - name: copy new report
       run: |
-        mkdir -p reports/docker-compose/${{ github.event.inputs.marker_expression }}/${{ matrix.testbed }}
-        cp -Tr allure-report reports/docker-compose/${{ github.event.inputs.marker_expression }}/${{ matrix.testbed }}/${{ github.run_number }}
+        mkdir -p reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ matrix.testbed }}
+        cp -Tr allure-report reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ matrix.testbed }}/${{ github.run_number }}
 
     - name: update latest symlink
-      working-directory: reports/docker-compose/${{ github.event.inputs.marker_expression }}/${{ matrix.testbed }}
+      working-directory: reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ matrix.testbed }}
       run: ln -fns ${{ github.run_number }} latest
 
     - name: generate new index.html
