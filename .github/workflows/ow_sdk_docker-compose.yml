@@ -465,7 +465,6 @@ jobs:
         echo "::set-output name=name::${NAMESPACE}"
 
     - name: add debugging info
-      needs: deploy-controller
       run: |
         echo ${{ needs.deploy-controller.outputs.sec_url }}
 
