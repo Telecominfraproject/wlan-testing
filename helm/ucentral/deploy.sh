@@ -90,7 +90,7 @@ else
 fi
 
 # Run the deployment
-helm upgrade --install --create-namespace --wait --timeout 20m \
+helm upgrade --install --create-namespace --wait --timeout 30m \
   --namespace openwifi-${NAMESPACE} \
   -f $VALUES_FILE_LOCATION \
   --set owgw.configProperties."rtty\.token"=${RTTY_TOKEN} \
