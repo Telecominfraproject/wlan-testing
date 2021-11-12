@@ -467,6 +467,8 @@ jobs:
     - name: add debugging info
       run: |
         echo ${{ needs.deploy-controller.outputs.sec_url }}
+        echo ${{ needs.deploy-controller.outputs.namespace }}
+        echo ${{ needs.deploy-controller.outputs.gateway_url }}
 
     - name: create configuration.py secret
       run: |
