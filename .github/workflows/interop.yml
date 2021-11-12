@@ -297,6 +297,16 @@ jobs:
         branch: gh-pages
         directory: reports
 
+    - name: upload to S3
+      if: github.ref == 'refs/heads/master' && needs.test.outputs.additional_markers == ''
+      uses: ./wlan-testing/.github/actions/allure-report-to-s3
+      with:
+        test_type: interop
+        testbed: interop
+        report_path: allure-report
+        s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
+        s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
+
   cleanup:
     needs: [ test ]
     runs-on: ubuntu-latest

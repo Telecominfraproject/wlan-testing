@@ -1,0 +1,56 @@
+name: upload report to S3
+description: upload an Allure report to AWS S3 and update the latest reference
+
+inputs:
+  test_type:
+    description: test type of the report
+    required: true
+  testbed:
+    description: testbed the report is about
+    required: true
+  report_path:
+    description: path to the Allure report folder
+    required: true
+  s3_access_key_id:
+    description: AWS access key ID to access S3 bucket
+    required: true
+  s3_access_key_secret:
+    description: AWS access key secret to access S3 bucket
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+  - name: install AWS cli
+    uses: unfor19/install-aws-cli-action@v1
+
+  - name: upload report to AWS S3
+    env:
+      AWS_S3_BUCKET_NAME: openwifi-allure-reports
+      AWS_ACCOUNT_ID: "289708231103"
+      AWS_ACCESS_KEY_ID: ${{ inputs.s3_access_key_id }}
+      AWS_SECRET_ACCESS_KEY: ${{ inputs.s3_access_key_secret }}
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_DEFAULT_OUTPUT: json
+    shell: bash
+    run: aws s3 cp --acl public-read --recursive ${{ inputs.report_path }} s3://${AWS_S3_BUCKET_NAME}/${{ inputs.test_type }}/${{ inputs.testbed }}/${{ github.run_number }}
+
+  - name: update reference to latest report
+    env:
+      AWS_S3_BUCKET_NAME: openwifi-allure-reports
+      AWS_ACCOUNT_ID: "289708231103"
+      AWS_ACCESS_KEY_ID: ${{ inputs.s3_access_key_id }}
+      AWS_SECRET_ACCESS_KEY: ${{ inputs.s3_access_key_secret }}
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_DEFAULT_OUTPUT: json
+    shell: bash
+    run: |
+      cat <<EOF > index.html
+      <html>
+      <head>
+      <meta http-equiv="refresh" content="0; url=../${{ github.run_number }}/" />
+      </head>
+      </html>
+      EOF
+
+      aws s3 cp --acl public-read index.html s3://${AWS_S3_BUCKET_NAME}/${{ inputs.test_type }}/${{ inputs.testbed }}/latest/index.html
