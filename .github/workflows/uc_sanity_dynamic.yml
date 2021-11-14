@@ -116,6 +116,7 @@ jobs:
         export OWFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
         export CERT_LOCATION=cert.pem
         export KEY_LOCATION=key.pem
+        export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
         ./deploy.sh
 
     - name: wait for DNS to propagate
