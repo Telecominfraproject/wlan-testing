@@ -252,6 +252,7 @@ jobs:
         ${{ secrets.LAB_CONFIGURATION }}
         EOF
         sed -i -r "s/'url': ('|\").*('|\")/'url': 'https:\/\/${{ needs.deploy-controller.outputs.sec_url }}:16001'/" configuration.py
+        sed -i -r "s/'password': ('|\")openwifi('|\")/'password': '"${{ secrets.OWSEC_NEW_PASSWORD }}"'/" configuration.py
         cat configuration.py
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
     - name: run sanity tests
