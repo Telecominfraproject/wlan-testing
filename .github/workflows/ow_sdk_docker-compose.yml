@@ -87,7 +87,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       gateway_url: ${{ steps.gateway_url.outputs.value }}
-      sec_url: ${{ steps.sec_url.outputs.value }}
+      securityurl: ${{ steps.sec_url.outputs.value }}
       namespace: ${{ steps.namespace.outputs.value }}
     steps:
     - name: Checkout wlan-testing repo
@@ -472,7 +472,7 @@ jobs:
 
     - name: add debugging info
       run: |
-        echo ${{ needs.deploy-controller.outputs.sec_url }}
+        echo ${{ needs.deploy-controller.outputs.securityurl }}
         echo ${{ needs.deploy-controller.outputs.namespace }}
         echo ${{ needs.deploy-controller.outputs.gateway_url }}
 
