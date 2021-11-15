@@ -292,6 +292,7 @@ jobs:
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git add .
         git commit -m "Automated deployment: $(date -u)"
+
     - name: push
       if: github.ref == 'refs/heads/master'
       uses: ad-m/github-push-action@v0.6.0
@@ -299,6 +300,16 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: gh-pages
         directory: reports
+
+    - name: upload to S3
+      if: github.ref == 'refs/heads/master'
+      uses: ./wlan-testing/.github/actions/allure-report-to-s3
+      with:
+        test_type: performance
+        testbed: ${{ needs.test.outputs.testbed }}
+        report_path: allure-report
+        s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
+        s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
 
   cleanup:
     needs: [ test ]
