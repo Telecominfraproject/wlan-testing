@@ -94,7 +94,6 @@ jobs:
       uses: actions/checkout@v2
       with:
         path: wlan-testing
-#        ref: WIFI-3719-add-compose-to-nightly-pipeline
 
     # build and push docker-compose-deployment image
 #    - name: docker login
@@ -117,21 +116,21 @@ jobs:
 
     - name: Set namespace output
       id: namespace
-      run: echo "::set-output name=value::openwifi-docker-compose-${{ github.run_id }}"
+      run: echo "::set-output name=value::ow-docker-compose-${{ github.run_id }}"
 
     - name: Set gateway URL output
       id: gateway_url
-      run: echo "::set-output name=value::openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
+      run: echo "::set-output name=value::ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
 
     - name: Set sec service URL output
       id: sec_url
-      run: echo "::set-output name=value::openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
+      run: echo "::set-output name=value::ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
 
     - name: Create Kubernetes namespace and secret
       working-directory: wlan-testing/docker-compose/openwifi
       run: |
-        kubectl create ns openwifi-docker-compose-${{ github.run_id }}
-        kubectl create secret generic tip-cicd-wildcard-certs --from-file=websocket-cert.pem=websocket-cert.pem --from-file=websocket-key.pem=websocket-key.pem -n openwifi-docker-compose-${{ github.run_id }} 
+        kubectl create ns ow-docker-compose-${{ github.run_id }}
+        kubectl create secret generic tip-cicd-wildcard-certs --from-file=websocket-cert.pem=websocket-cert.pem --from-file=websocket-key.pem=websocket-key.pem -n ow-docker-compose-${{ github.run_id }}
 
     - name: Deploy OpenWIFI Cloud SDK
       working-directory: wlan-testing/docker-compose/openwifi
@@ -142,23 +141,23 @@ jobs:
         OWFMS_S3_SECRET: ${{ secrets.UCENTRALFMS_S3_SECRET }}
         OWFMS_S3_KEY: ${{ secrets.UCENTRALFMS_S3_KEY }}
       run: |
-        cat <<EOF | kubectl create -f - -n openwifi-docker-compose-${{ github.run_id }}
+        cat <<EOF | kubectl create -f - -n ow-docker-compose-${{ github.run_id }}
         apiVersion: v1
         kind: Service
         metadata:
-          name: openwifi-docker-compose-${{ github.run_id }}
+          name: ow-docker-compose-${{ github.run_id }}
           annotations:
             service.beta.kubernetes.io/aws-load-balancer-type: "nlb-ip"
             service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
-            external-dns.alpha.kubernetes.io/hostname: openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build
+            external-dns.alpha.kubernetes.io/hostname: ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build
             service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
             service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285"
             service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002,16003,443,16001,16004,16005,8443,5912,5913"
           labels:
-            app: openwifi-docker-compose-${{ github.run_id }}
+            app: ow-docker-compose-${{ github.run_id }}
         spec:
           selector:
-            app: openwifi-docker-compose-${{ github.run_id }}
+            app: ow-docker-compose-${{ github.run_id }}
           type: LoadBalancer
           ports:
           - name: owgw-websocket
@@ -223,11 +222,11 @@ jobs:
         apiVersion: v1
         kind: Pod
         metadata:
-          name: openwifi-docker-compose-${{ github.run_id }}
+          name: ow-docker-compose-${{ github.run_id }}
           annotations:
             cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
           labels:
-            app: openwifi-docker-compose-${{ github.run_id }}
+            app: ow-docker-compose-${{ github.run_id }}
         spec:
           volumes:
           - name: client-certs
@@ -285,21 +284,21 @@ jobs:
             - name: DEPLOY_VERSION
               value: "main"
             - name: SYSTEM_URI_UI
-              value: "https://openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
+              value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
             - name: DEFAULT_UCENTRALSEC_URL
-              value: "https://openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16001"
+              value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16001"
             - name: RTTY_TOKEN
               value: "$RTTY_TOKEN"
             - name: OWGW_FILEUPLOADER_HOST_NAME
-              value: "openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
+              value: "ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
             - name: OWGW_FILEUPLOADER_URI
-              value: "https://openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16003"
+              value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16003"
             - name: OWGW_SYSTEM_URI_PRIVATE
               value: "https://owgw.wlan.local:17002"
             - name: OWGW_SYSTEM_URI_PUBLIC
-              value: "https://openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16002"
+              value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16002"
             - name: OWGW_RTTY_SERVER
-              value: "openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
+              value: "ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
             - name: OWSEC_AUTHENTICATION_DEFAULT_USERNAME
               value: "$OWSEC_AUTHENTICATION_DEFAULT_USERNAME"
             - name: OWSEC_AUTHENTICATION_DEFAULT_PASSWORD
@@ -307,11 +306,11 @@ jobs:
             - name: OWSEC_SYSTEM_URI_PRIVATE
               value: "https://owsec.wlan.local:17001"
             - name: OWSEC_SYSTEM_URI_PUBLIC
-              value: "https://openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16001"
+              value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16001"
             - name: OWFMS_SYSTEM_URI_PRIVATE
               value: "https://owfms.wlan.local:17004"
             - name: OWFMS_SYSTEM_URI_PUBLIC
-              value: "https://openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16004"
+              value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16004"
             - name: OWFMS_S3_SECRET
               value: "$OWFMS_S3_SECRET"
             - name: OWFMS_S3_KEY
@@ -319,7 +318,7 @@ jobs:
             - name: OWPROV_SYSTEM_URI_PRIVATE
               value: "https://owprov.wlan.local:17005"
             - name: OWPROV_SYSTEM_URI_PUBLIC
-              value: "https://openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16005"
+              value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16005"
             - name: WEBSOCKET_CERT
               value: "/tip-cicd-wildcard-certs/websocket-cert.pem"
             - name: WEBSOCKET_KEY
@@ -337,20 +336,20 @@ jobs:
     - name: Show resource state on deployment failure
       if: failure()
       run: |
-        kubectl get pods --namespace openwifi-${{ github.run_id }}
-        kubectl get services --namespace openwifi-${{ github.run_id }}
+        kubectl get pods --namespace ow-docker-compose-${{ github.run_id }}
+        kubectl get services --namespace ow-docker-compose-${{ github.run_id }}
     - name: Describe pods on deployment failure
       if: failure()
       run: |
-        kubectl describe pods --namespace openwifi-${{ github.run_id }}
+        kubectl describe pods --namespace ow-docker-compose-${{ github.run_id }}
     - name: Describe services on deployment failure
       if: failure()
       run: |
-        kubectl describe services --namespace openwifi-${{ github.run_id }}
+        kubectl describe services --namespace ow-docker-compose-${{ github.run_id }}
 
     - name: Change password and check if deployment is ready using clustersysteminfo image
       env:
-        OWSEC: "openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16001"
+        OWSEC: "ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16001"
         OWSEC_DEFAULT_USERNAME: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
         OWSEC_DEFAULT_PASSWORD: ${{ secrets.OWSEC_DEFAULT_PASSWORD }}
         OWSEC_NEW_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
@@ -389,7 +388,6 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-testing
         path: wlan-testing
-        ref: WIFI-3620
 
     - name: checkout pki cert scripts repo
       uses: actions/checkout@v2
@@ -444,8 +442,8 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    needs: [ build, generate-matrix, deploy-controller ]
-#    if: always()
+    needs: [ build, generate-matrix, deploy-controller, set-redirector-url ]
+    if: always()
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
@@ -469,14 +467,6 @@ jobs:
         kubectl create ns $NAMESPACE
         kubectl config set-context --current --namespace=$NAMESPACE
         echo "::set-output name=name::${NAMESPACE}"
-
-    - name: add debugging info
-      env:
-        SEC_URL: ${{ needs.deploy-controller.outputs.sec_url }}
-      run: |
-        echo "$SEC_URL"
-        echo ${{ needs.deploy-controller.outputs.namespace }}
-        echo ${{ needs.deploy-controller.outputs.gateway_url }}
 
     - name: create configuration.py secret
       run: |
@@ -692,7 +682,7 @@ jobs:
         aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
     - name: Delete namespace
-      run: kubectl delete ns --ignore-not-found=true "openwifi-docker-compose-${{ github.run_id }}"
+      run: kubectl delete ns --ignore-not-found=true "ow-docker-compose-${{ github.run_id }}"
 
   reset-redirector-url:
     needs: [ test, generate-matrix ]
@@ -707,7 +697,6 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-testing
         path: wlan-testing
-        ref: WIFI-3620
 
     - name: checkout pki cert scripts repo
       uses: actions/checkout@v2
