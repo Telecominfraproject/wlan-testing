@@ -348,32 +348,19 @@ jobs:
       run: |
         kubectl describe services --namespace openwifi-${{ github.run_id }}
 
-    - name: Check if deployment is ready using clustersysteminfo image
+    - name: Change password and check if deployment is ready using clustersysteminfo image
       env:
         OWSEC: "openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16001"
-        OWSEC_USERNAME: ${{ secrets.UCENTRALGW_AUTH_USERNAME }}
-        OWSEC_PASSWORD: ${{ secrets.OWSEC_AUTH_PASSWORD_PLAIN }}
-      run: |
-        docker run --rm \
-          -e OWSEC \
-          -e OWSEC_USERNAME \
-          -e OWSEC_PASSWORD \
-          tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo:main
-
-    - name: Change default OWSec username and password
-      env:
-        OWSEC: "openwifi-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16001"
-        OWSEC_DEFAULT_USERNAME: ${{ secrets.UCENTRALGW_AUTH_USERNAME }}
-        OWSEC_DEFAULT_PASSWORD: ${{ secrets.OWSEC_AUTH_PASSWORD_PLAIN }}
-        OWSEC_NEW_PASSWORD: ${{ secrets.OWSEC_AUTH_PASSWORD_PLAIN }}
+        OWSEC_DEFAULT_USERNAME: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
+        OWSEC_DEFAULT_PASSWORD: ${{ secrets.OWSEC_DEFAULT_PASSWORD }}
+        OWSEC_NEW_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
       run: |
         docker run --rm \
           -e OWSEC \
           -e OWSEC_DEFAULT_USERNAME \
           -e OWSEC_DEFAULT_PASSWORD \
           -e OWSEC_NEW_PASSWORD \
-          tip-tip-wlan-cloud-ucentral.jfrog.io/owsec:main \
-          ./cli testlogin $OWSEC_DEFAULT_USERNAME $OWSEC_DEFAULT_PASSWORD $OWSEC_NEW_PASSWORD
+          tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo:main
 
   generate-matrix:
     name: generate testbed matrix
@@ -495,6 +482,7 @@ jobs:
         ${{ secrets.LAB_CONFIGURATION }}
         EOF
         sed -i -r "s/'url': ('|\").*('|\")/'url': 'https:\/\/${{ needs.deploy-controller.outputs.sec_url }}:16001'/" configuration.py
+        sed -i -r "s/'password': ('|\")openwifi('|\")/'password': '"${{ secrets.OWSEC_NEW_PASSWORD }}"'/" configuration.py
         cat configuration.py
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
 
