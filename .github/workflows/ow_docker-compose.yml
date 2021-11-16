@@ -253,7 +253,7 @@ jobs:
           - name: docker-compose-deployment
             image: docker/compose:latest
             command: ["/bin/sh", "-c"]
-            args: ["apk add git; wget https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/WIFI-3719-add-compose-to-nightly-pipeline/docker-compose/openwifi/deploy.sh; chmod +x deploy.sh; sh deploy.sh"]
+            args: ["apk add git; wget https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/master/docker-compose/openwifi/deploy.sh; chmod +x deploy.sh; sh deploy.sh"]
             env:
             - name: DOCKER_TLS_VERIFY
               value: "true"
