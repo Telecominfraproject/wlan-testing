@@ -464,6 +464,14 @@ jobs:
                   - -x
                   - -c
                   - |
+                    apt-get update
+                    apt-get install -y dnsutils
+                    HOSTS="sec-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build"
+                    for HOST in \$HOSTS; do
+                      until sleep 1; host \$HOST; do :; done
+                      echo "DNS record for \$HOST resolved successfully!"
+                    done
+
                     cd tests
                     pytest -m "${{ github.event.inputs.marker_expression }}" -s -vvv --testbed="${{ github.event.inputs.testbed }}" -o firmware="${{ github.event.inputs.firmware }}" --alluredir=/tmp/allure-results
                     ret=\$?
