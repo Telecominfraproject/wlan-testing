@@ -1,4 +1,4 @@
-name: 2.x sanity testing in dynamic environment
+name: 2.x testing with Docker Compose deployment
 env:
   # thirdparties
   DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
@@ -11,22 +11,43 @@ env:
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
-  # Cloud SDK certs
-  CACERT: ${{ secrets.CACERT }}
-  CAKEY: ${{ secrets.CAKEY }}
   ALLURE_CLI_VERSION: 2.14.0
 
 on:
   workflow_dispatch:
     inputs:
       testbeds:
-        default: 'basic-01,basic-02,basic-03,basic-04,basic-05,basic-06,basic-07,basic-08'
+        default: 'basic-05'
         description: 'Testbed(s) to test'
         required: false
       marker_expression:
-        default: 'uc_sanity'
+        default: 'sdk_restapi'
         description: 'Markers expression that will be passed to the pytest command.'
         required: false
+      owgw_version:
+        default: 'master'
+        description: 'OpenWIFI Gateway version to be deployed.'
+        required: true
+      owgwui_version:
+        default: 'main'
+        description: 'OpenWIFI Web UI version to be deployed.'
+        required: true
+      owsec_version:
+        default: 'main'
+        description: 'OpenWIFI Security version to be deployed.'
+        required: true
+      owfms_version:
+        default: 'main'
+        description: 'OpenWIFI Firmware version to be deployed.'
+        required: true
+      owprov_version:
+        default: 'main'
+        description: 'OpenWIFI Provisioning version to be deployed.'
+        required: true
+      owprovui_version:
+        default: 'main'
+        description: 'OpenWIFI Provisioning Web UI version to be deployed.'
+        required: true
 
 defaults:
   run:
@@ -69,16 +90,25 @@ jobs:
       sec_url: ${{ steps.sec_url.outputs.value }}
       namespace: ${{ steps.namespace.outputs.value }}
     steps:
-    - name: Checkout repo with Helm values
+    - name: Checkout wlan-testing repo
       uses: actions/checkout@v2
       with:
         path: wlan-testing
 
+    # build and push docker-compose-deployment image
+#    - name: docker login
+#      run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
+#    - name: build docker image
+#      working-directory: wlan-testing/docker-compose/openwifi
+#      run: docker build -t ${{ env.DOCKER_SERVER }}/docker-compose-deployment:${{ github.run_id }} .
+#    - name: push docker image
+#      run: docker push ${{ env.DOCKER_SERVER }}/docker-compose-deployment:${{ github.run_id }}
+#
     - name: Prepare certificates from secrets
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-testing/docker-compose/openwifi
       run: |
-        echo "${{ secrets.DIGICERT_CERT }}" | base64 -d > cert.pem
-        echo "${{ secrets.DIGICERT_KEY }}" | base64 -d > key.pem
+        echo "${{ secrets.DIGICERT_CERT }}" | base64 -d > websocket-cert.pem
+        echo "${{ secrets.DIGICERT_KEY }}" | base64 -d > websocket-key.pem
 
     - name: Fetch kubeconfig
       run: |
@@ -86,60 +116,250 @@ jobs:
 
     - name: Set namespace output
       id: namespace
-      run: echo "::set-output name=value::openwifi-${{ github.run_id }}"
+      run: echo "::set-output name=value::ow-docker-compose-${{ github.run_id }}"
 
     - name: Set gateway URL output
       id: gateway_url
-      run: echo "::set-output name=value::gw-${{ github.run_id }}.cicd.lab.wlan.tip.build"
+      run: echo "::set-output name=value::ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
 
     - name: Set sec service URL output
       id: sec_url
-      run: echo "::set-output name=value::sec-${{ github.run_id }}.cicd.lab.wlan.tip.build"
+      run: echo "::set-output name=value::ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
+
+    - name: Create Kubernetes namespace and secret
+      working-directory: wlan-testing/docker-compose/openwifi
+      run: |
+        kubectl create ns ow-docker-compose-${{ github.run_id }}
+        kubectl create secret generic tip-cicd-wildcard-certs --from-file=websocket-cert.pem=websocket-cert.pem --from-file=websocket-key.pem=websocket-key.pem -n ow-docker-compose-${{ github.run_id }}
 
     - name: Deploy OpenWIFI Cloud SDK
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-testing/docker-compose/openwifi
+      env:
+        RTTY_TOKEN: ${{ secrets.RTTY_TOKEN }}
+        OWSEC_AUTHENTICATION_DEFAULT_USERNAME: ${{ secrets.UCENTRALGW_AUTH_USERNAME }}
+        OWSEC_AUTHENTICATION_DEFAULT_PASSWORD: ${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
+        OWFMS_S3_SECRET: ${{ secrets.UCENTRALFMS_S3_SECRET }}
+        OWFMS_S3_KEY: ${{ secrets.UCENTRALFMS_S3_KEY }}
       run: |
-        export NAMESPACE=${{ github.run_id }}
-        export DEPLOY_METHOD=git
-        export CHART_VERSION=main
-        export OWGW_VERSION=master
-        export OWGWUI_VERSION=main
-        export OWSEC_VERSION=main
-        export OWFMS_VERSION=main
-        export OWPROV_VERSION=main
-        export OWPROVUI_VERSION=main
-        export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
-        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
-        export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
-        export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
-        export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
-        export OWFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
-        export CERT_LOCATION=cert.pem
-        export KEY_LOCATION=key.pem
-        export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
-        ./deploy.sh
-
-    - name: wait for DNS to propagate
-      run: sleep 300
+        cat <<EOF | kubectl create -f - -n ow-docker-compose-${{ github.run_id }}
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: ow-docker-compose-${{ github.run_id }}
+          annotations:
+            service.beta.kubernetes.io/aws-load-balancer-type: "nlb-ip"
+            service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+            external-dns.alpha.kubernetes.io/hostname: ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build
+            service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
+            service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285"
+            service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002,16003,443,16001,16004,16005,8443,5912,5913"
+          labels:
+            app: ow-docker-compose-${{ github.run_id }}
+        spec:
+          selector:
+            app: ow-docker-compose-${{ github.run_id }}
+          type: LoadBalancer
+          ports:
+          - name: owgw-websocket
+            port: 15002
+            targetPort: 15002
+            protocol: TCP
+          - name: owgw-restapi
+            port: 16002
+            targetPort: 16002
+            protocol: TCP
+          - name: owgw-alivecheck
+            port: 16102
+            targetPort: 16102
+            protocol: TCP
+          - name: owgw-fileupload
+            port: 16003
+            targetPort: 16003
+            protocol: TCP
+          - name: owgw-ui-http
+            port: 80
+            targetPort: 80
+            protocol: TCP
+          - name: owgw-ui-https
+            port: 443
+            targetPort: 443
+          - name: owsec-restapi
+            port: 16001
+            targetPort: 16001
+            protocol: TCP
+          - name: owsec-alivecheck
+            port: 16101
+            targetPort: 16101
+          - name: owfms-restapi
+            port: 16004
+            targetPort: 16004
+            protocol: TCP
+          - name: owfms-alivecheck
+            port: 16104
+            targetPort: 16104
+          - name: owprov-restapi
+            port: 16005
+            targetPort: 16005
+            protocol: TCP
+          - name: owprov-alivecheck
+            port: 16105
+            targetPort: 16105
+          - name: owprov-ui-http
+            port: 8080
+            targetPort: 8080
+            protocol: TCP
+          - name: owprov-ui-https
+            port: 8443
+            targetPort: 8443
+          - name: rttys-dev
+            port: 5912
+            targetPort: 5912
+            protocol: TCP
+          - name: rttys-user
+            port: 5913
+            targetPort: 5913
+        ---
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          name: ow-docker-compose-${{ github.run_id }}
+          annotations:
+            cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+          labels:
+            app: ow-docker-compose-${{ github.run_id }}
+        spec:
+          volumes:
+          - name: client-certs
+            emptyDir: {}
+          - name: deploy-repo
+            emptyDir: {}
+          - name: tip-cicd-wildcard-certs
+            secret:
+              secretName: tip-cicd-wildcard-certs
+          containers:
+          - name: docker-daemon
+            image: docker:dind
+            env:
+            - name: DOCKER_TLS_CERTDIR
+              value: "/certs"
+            securityContext:
+              privileged: true
+            volumeMounts:
+            - name: client-certs
+              mountPath: /certs/client
+            - name: deploy-repo
+              mountPath: /wlan-cloud-ucentral-deploy
+        
+          - name: docker-compose-deployment
+            image: docker/compose:latest
+            command: ["/bin/sh", "-c"]
+            args: ["apk add git; wget https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/master/docker-compose/openwifi/deploy.sh; chmod +x deploy.sh; sh deploy.sh"]
+            env:
+            - name: DOCKER_TLS_VERIFY
+              value: "true"
+            - name: DOCKER_HOST
+              value: "127.0.0.1:2376"
+            - name: DOCKER_CERT_PATH
+              value: "/certs/client"
+            - name: OWGW_TAG
+              value: "${{ github.event.inputs.owgw_version }}"
+            - name: OWGWUI_TAG
+              value: "${{ github.event.inputs.owgwui_version }}"
+            - name: OWSEC_TAG
+              value: "${{ github.event.inputs.owsec_version }}"
+            - name: OWFMS_TAG
+              value: "${{ github.event.inputs.owfms_version }}"
+            - name: OWPROV_TAG
+              value: "${{ github.event.inputs.owprov_version }}"
+            - name: OWPROVUI_TAG
+              value: "${{ github.event.inputs.owprovui_version }}"
+            - name: INTERNAL_OWGW_HOSTNAME
+              value: "owgw.wlan.local"
+            - name: INTERNAL_OWSEC_HOSTNAME
+              value: "owsec.wlan.local"
+            - name: INTERNAL_OWFMS_HOSTNAME
+              value: "owfms.wlan.local"
+            - name: INTERNAL_OWPROV_HOSTNAME
+              value: "owprov.wlan.local"
+            - name: DEPLOY_VERSION
+              value: "main"
+            - name: SYSTEM_URI_UI
+              value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
+            - name: DEFAULT_UCENTRALSEC_URL
+              value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16001"
+            - name: RTTY_TOKEN
+              value: "$RTTY_TOKEN"
+            - name: OWGW_FILEUPLOADER_HOST_NAME
+              value: "ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
+            - name: OWGW_FILEUPLOADER_URI
+              value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16003"
+            - name: OWGW_SYSTEM_URI_PRIVATE
+              value: "https://owgw.wlan.local:17002"
+            - name: OWGW_SYSTEM_URI_PUBLIC
+              value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16002"
+            - name: OWGW_RTTY_SERVER
+              value: "ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
+            - name: OWSEC_AUTHENTICATION_DEFAULT_USERNAME
+              value: "$OWSEC_AUTHENTICATION_DEFAULT_USERNAME"
+            - name: OWSEC_AUTHENTICATION_DEFAULT_PASSWORD
+              value: "$OWSEC_AUTHENTICATION_DEFAULT_PASSWORD"
+            - name: OWSEC_SYSTEM_URI_PRIVATE
+              value: "https://owsec.wlan.local:17001"
+            - name: OWSEC_SYSTEM_URI_PUBLIC
+              value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16001"
+            - name: OWFMS_SYSTEM_URI_PRIVATE
+              value: "https://owfms.wlan.local:17004"
+            - name: OWFMS_SYSTEM_URI_PUBLIC
+              value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16004"
+            - name: OWFMS_S3_SECRET
+              value: "$OWFMS_S3_SECRET"
+            - name: OWFMS_S3_KEY
+              value: "$OWFMS_S3_KEY"
+            - name: OWPROV_SYSTEM_URI_PRIVATE
+              value: "https://owprov.wlan.local:17005"
+            - name: OWPROV_SYSTEM_URI_PUBLIC
+              value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16005"
+            - name: WEBSOCKET_CERT
+              value: "/tip-cicd-wildcard-certs/websocket-cert.pem"
+            - name: WEBSOCKET_KEY
+              value: "/tip-cicd-wildcard-certs/websocket-key.pem"
+            volumeMounts:
+            - name: client-certs
+              mountPath: /certs/client
+            - name: deploy-repo
+              mountPath: /wlan-cloud-ucentral-deploy
+            - name: tip-cicd-wildcard-certs
+              readOnly: true
+              mountPath: "/tip-cicd-wildcard-certs"
+        EOF
 
     - name: Show resource state on deployment failure
       if: failure()
       run: |
-        kubectl get pods --namespace openwifi-${{ github.run_id }}
-        kubectl get services --namespace openwifi-${{ github.run_id }}
-        kubectl get persistentvolumeclaims --namespace openwifi-${{ github.run_id }}
+        kubectl get pods --namespace ow-docker-compose-${{ github.run_id }}
+        kubectl get services --namespace ow-docker-compose-${{ github.run_id }}
     - name: Describe pods on deployment failure
       if: failure()
       run: |
-        kubectl describe pods --namespace openwifi-${{ github.run_id }}
+        kubectl describe pods --namespace ow-docker-compose-${{ github.run_id }}
     - name: Describe services on deployment failure
       if: failure()
       run: |
-        kubectl describe services --namespace openwifi-${{ github.run_id }}
-    - name: Describe persistentvolumeclaims on deployment failure
-      if: failure()
+        kubectl describe services --namespace ow-docker-compose-${{ github.run_id }}
+
+    - name: Change password and check if deployment is ready using clustersysteminfo image
+      env:
+        OWSEC: "ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16001"
+        OWSEC_DEFAULT_USERNAME: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
+        OWSEC_DEFAULT_PASSWORD: ${{ secrets.OWSEC_DEFAULT_PASSWORD }}
+        OWSEC_NEW_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
       run: |
-        kubectl describe persistentvolumeclaims --namespace openwifi-${{ github.run_id }}
+        docker run --rm \
+          -e OWSEC \
+          -e OWSEC_DEFAULT_USERNAME \
+          -e OWSEC_DEFAULT_PASSWORD \
+          -e OWSEC_NEW_PASSWORD \
+          tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo:main
 
   generate-matrix:
     name: generate testbed matrix
@@ -150,13 +370,14 @@ jobs:
     - name: generate-matrix
       id: set-matrix
       run: |
-        TESTBEDS="${{ github.event.inputs.testbeds || 'basic-01,basic-02,basic-03,basic-04,basic-05,basic-06,basic-07,basic-08' }}"
+        TESTBEDS="${{ github.event.inputs.testbeds || 'basic-05' }}"
         TESTBEDS=$(echo $TESTBEDS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
         TESTBEDS=$(echo "$TESTBEDS" | jq -c 'map({"testbed":.})')
         echo "::set-output name=matrix::{\"include\":${TESTBEDS}}"
 
   set-redirector-url:
     needs: [ deploy-controller, generate-matrix ]
+    if: github.event.inputs.marker_expression == 'uc_sanity'
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
@@ -167,7 +388,6 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-testing
         path: wlan-testing
-        ref: WIFI-3620
 
     - name: checkout pki cert scripts repo
       uses: actions/checkout@v2
@@ -212,7 +432,6 @@ jobs:
           PORT=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['port'])" | python3)
           USERNAME=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['username'])" | python3)
           PASSWORD=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['password'])" | python3)
-
           cd wlan-testing/tools
           python3 ap_tools.py --host $HOST --jumphost $JUMPHOST --tty $TTY --port $PORT --username $USERNAME --password $PASSWORD --cmd "jffs2reset -y -r"
           cd ../..
@@ -224,6 +443,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     needs: [ build, generate-matrix, deploy-controller, set-redirector-url ]
+    if: always()
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
@@ -235,6 +455,7 @@ jobs:
       run: |
         wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
         tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+
     - name: set job name
       id: job
       run: echo "::set-output name=name::testing-${{ github.run_number }}"
@@ -242,10 +463,11 @@ jobs:
     - name: prepare namespace
       id: namespace
       run: |
-        NAMESPACE="testing-${{ github.run_id }}-${{ matrix.testbed }}"
+        NAMESPACE="testing-${{ github.run_id }}"
         kubectl create ns $NAMESPACE
         kubectl config set-context --current --namespace=$NAMESPACE
         echo "::set-output name=name::${NAMESPACE}"
+
     - name: create configuration.py secret
       run: |
         cat << EOF > configuration.py
@@ -255,7 +477,8 @@ jobs:
         sed -i -r "s/'password': ('|\")openwifi('|\")/'password': '"${{ secrets.OWSEC_NEW_PASSWORD }}"'/" configuration.py
         cat configuration.py
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
-    - name: run sanity tests
+
+    - name: run tests
       run: |
         cat <<EOF | kubectl apply -f -
         apiVersion: batch/v1
@@ -284,7 +507,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression || 'uc_sanity' }}" -s -vvv --testbed="${{ matrix.testbed }}" --alluredir=/tmp/allure-results
+                    pytest -m "${{ github.event.inputs.marker_expression || 'sdk_restapi' }}" -s -vvv --testbed="${{ matrix.testbed }}" --alluredir=/tmp/allure-results
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -326,11 +549,13 @@ jobs:
         echo "waiting for pod to exit"
         kubectl logs -f $podname >/dev/null 2>&1
         exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
+
     - name: print logs
       if: always()
       run: |
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
         kubectl logs $podname
+
     - name: upload Allure results as artifact
       if: always()
       uses: actions/upload-artifact@v2
@@ -376,8 +601,8 @@ jobs:
 
     - name: copy history into results
       run: |
-        if [ -e "reports/sanity/${{ matrix.testbed }}/latest" ] ; then
-          cp -r reports/sanity/${{ matrix.testbed }}/latest/history/ allure-results/history
+        if [ -e "reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ matrix.testbed }}/latest" ] ; then
+          cp -r reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ matrix.testbed }}/latest/history/ allure-results/history
         fi
 
     - name: add report metadata
@@ -404,14 +629,12 @@ jobs:
       run: cp -r allure-results allure-report/results
 
     - name: copy new report
-      if: ${{ (github.event.inputs.marker_expression || 'uc_sanity') == 'uc_sanity' }}
       run: |
-        mkdir -p reports/sanity/${{ matrix.testbed }}
-        cp -Tr allure-report reports/sanity/${{ matrix.testbed }}/${{ github.run_number }}
+        mkdir -p reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ matrix.testbed }}
+        cp -Tr allure-report reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ matrix.testbed }}/${{ github.run_number }}
 
     - name: update latest symlink
-      if: ${{ (github.event.inputs.marker_expression || 'uc_sanity') == 'uc_sanity' }}
-      working-directory: reports/sanity/${{ matrix.testbed }}
+      working-directory: reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ matrix.testbed }}
       run: ln -fns ${{ github.run_number }} latest
 
     - name: generate new index.html
@@ -441,12 +664,15 @@ jobs:
     - name: cleanup Docker image
       run: curl -u${{ env.DOCKER_USER_NAME }}:${{ env.DOCKER_USER_PASSWORD }} -X DELETE "https://tip.jfrog.io/artifactory/tip-wlan-cloud-docker-repo/cloud-sdk-nightly/${{ github.run_id }}"
 
+#    - name: cleanup docker-compose-deployment image
+#      run: curl -u${{ env.DOCKER_USER_NAME }}:${{ env.DOCKER_USER_PASSWORD }} -X DELETE "https://tip.jfrog.io/artifactory/tip-wlan-cloud-docker-repo/docker-compose-deployment/${{ github.run_id }}"
+
   destroy-controller:
     needs: [ test ]
     runs-on: ubuntu-latest
     if: always()
     steps:
-    - name: Checkout repo with Helm values
+    - name: Checkout wlan-testing repo
       uses: actions/checkout@v2
       with:
         path: wlan-testing
@@ -456,11 +682,11 @@ jobs:
         aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
     - name: Delete namespace
-      run: kubectl delete ns --ignore-not-found=true "openwifi-${{ github.run_id }}"
+      run: kubectl delete ns --ignore-not-found=true "ow-docker-compose-${{ github.run_id }}"
 
   reset-redirector-url:
     needs: [ test, generate-matrix ]
-    if: always()
+    if: github.event.inputs.marker_expression == 'uc_sanity' && always()
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
@@ -471,7 +697,6 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-testing
         path: wlan-testing
-        ref: WIFI-3620
 
     - name: checkout pki cert scripts repo
       uses: actions/checkout@v2
@@ -514,11 +739,10 @@ jobs:
           PORT=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['port'])" | python3)
           USERNAME=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['username'])" | python3)
           PASSWORD=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['password'])" | python3)
-
           cd wlan-testing/tools
           python3 ap_tools.py --host $HOST --jumphost $JUMPHOST --tty $TTY --port $PORT --username $USERNAME --password $PASSWORD --cmd "jffs2reset -y -r"
           cd ../..
         done
-        
+
     - name: wait for APs to come up again
-      run: sleep 300    
+      run: sleep 300

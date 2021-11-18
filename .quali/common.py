@@ -3,7 +3,7 @@ import time
 
 from cloudshell.api.cloudshell_api import CloudShellAPISession
 
-TIMEOUT=1800
+TIMEOUT=3600
 
 def get_session() -> CloudShellAPISession:
     url = os.environ['CLOUDSHELL_URL']
