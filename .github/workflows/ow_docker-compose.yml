@@ -14,6 +14,8 @@ env:
   ALLURE_CLI_VERSION: 2.14.0
 
 on:
+  repository_dispatch:
+    types: [openwifi-sdk-pr]
   workflow_dispatch:
     inputs:
       testbeds:
@@ -27,27 +29,27 @@ on:
       owgw_version:
         default: 'master'
         description: 'OpenWIFI Gateway version to be deployed.'
-        required: true
+        required: false
       owgwui_version:
         default: 'main'
         description: 'OpenWIFI Web UI version to be deployed.'
-        required: true
+        required: false
       owsec_version:
         default: 'main'
         description: 'OpenWIFI Security version to be deployed.'
-        required: true
+        required: false
       owfms_version:
         default: 'main'
         description: 'OpenWIFI Firmware version to be deployed.'
-        required: true
+        required: false
       owprov_version:
         default: 'main'
         description: 'OpenWIFI Provisioning version to be deployed.'
-        required: true
+        required: false
       owprovui_version:
         default: 'main'
         description: 'OpenWIFI Provisioning Web UI version to be deployed.'
-        required: true
+        required: false
 
 defaults:
   run:
@@ -262,17 +264,17 @@ jobs:
             - name: DOCKER_CERT_PATH
               value: "/certs/client"
             - name: OWGW_TAG
-              value: "${{ github.event.inputs.owgw_version }}"
+              value: "${{ github.event.inputs.owgw_version || github.event.client_payload.owgw_tag }}"
             - name: OWGWUI_TAG
-              value: "${{ github.event.inputs.owgwui_version }}"
+              value: "${{ github.event.inputs.owgwui_version || github.event.client_payload.owgwui_tag }}"
             - name: OWSEC_TAG
-              value: "${{ github.event.inputs.owsec_version }}"
+              value: "${{ github.event.inputs.owsec_version || github.event.client_payload.owsec_tag }}"
             - name: OWFMS_TAG
-              value: "${{ github.event.inputs.owfms_version }}"
+              value: "${{ github.event.inputs.owfms_version || github.event.client_payload.owfms_tag }}"
             - name: OWPROV_TAG
-              value: "${{ github.event.inputs.owprov_version }}"
+              value: "${{ github.event.inputs.owprov_version || github.event.client_payload.owprov_tag }}"
             - name: OWPROVUI_TAG
-              value: "${{ github.event.inputs.owprovui_version }}"
+              value: "${{ github.event.inputs.owprovui_version || github.event.client_payload.owprovui_tag }}"
             - name: INTERNAL_OWGW_HOSTNAME
               value: "owgw.wlan.local"
             - name: INTERNAL_OWSEC_HOSTNAME
