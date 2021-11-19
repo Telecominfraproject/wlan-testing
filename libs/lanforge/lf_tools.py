@@ -119,6 +119,7 @@ class ChamberView:
                 self.CreateDut.ssid = []
 
     def reset_scenario(self):
+        self.layer3_cleanup()
         self.raw_line = [
             ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " + self.upstream_port.split(".")
             [2] + ",AUTO -1 NA"],
