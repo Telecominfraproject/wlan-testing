@@ -904,7 +904,11 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             report.step_start("Loading Wifi Page")
             element = WebDriverWait(driver, 60).until(
                 EC.presence_of_element_located((MobileBy.XPATH, "//XCUIElementTypeCell[@name='Wi-Fi']")))
-            print("===============================================", element)
+            print("==================== Element ===========================", element)
+            print("Waiting for 60 sec to test")
+            driver.implicitly_wait(30)
+            time.sleep(30)
+            print("next clicking on element: ",element)
             element.click()
             print("===============================================", element)
         except NoSuchElementException:
