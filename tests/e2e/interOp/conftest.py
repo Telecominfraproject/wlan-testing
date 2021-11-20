@@ -598,10 +598,13 @@ def setup_perfectoMobile_iOS(request):
     reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
     reportClient(reporting_client)
     try:
+        print("in 601")
         params = {'property': 'model'}
         deviceModel = driver.execute_script('mobile:handset:info', params)
         device_name_list.append(deviceModel)
+        print("in 605")
     except:
+        print("In Except")
         pass
 
     def teardown():
