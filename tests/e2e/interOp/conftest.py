@@ -602,10 +602,9 @@ def setup_perfectoMobile_iOS(request):
         params = {'property': 'model'}
         deviceModel = driver.execute_script('mobile:handset:info', params)
         device_name_list.append(deviceModel)
-    except e:
-        print("Unable to execute script to get device parameters, device is unreachable")
-        print(e)
-        assert False
+    except Exception as e:
+        print("Unable to execute script to get device parameters", e)
+
 
     def teardown():
         try:
