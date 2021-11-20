@@ -431,15 +431,17 @@ def setup_perfectoMobile_android(request):
     reportClient(reporting_client)
 
     try:
+        print("Executing script to get device parameters")
         params = {'property': 'model'}
         deviceModel = driver.execute_script('mobile:handset:info', params)
-        device_name_list.append(deviceModel)
+        print("Getting handset info", deviceModel)
     except:
-        pass
+        print("Fail to get device info")
 
     def teardown():
         try:
             print("\n---------- Tear Down ----------")
+
             try:
                 params = {'property': 'model'}
                 deviceModel = driver.execute_script('mobile:handset:info', params)
@@ -601,21 +603,26 @@ def setup_perfectoMobile_iOS(request):
         print("Executing script to get device parameters")
         params = {'property': 'model'}
         deviceModel = driver.execute_script('mobile:handset:info', params)
-        device_name_list.append(deviceModel)
-    except Exception as e:
-        print("Unable to execute script to get device parameters", e)
-
+        print("Getting handset info", deviceModel)
+    except:
+        print("Fail to get device info")
 
     def teardown():
         try:
             print("\n---------- Tear Down ----------")
-            print('Report-Url: ' + reporting_client.report_url())
+
             try:
+                print("Executing script to get device parameters")
+                params = {'property': 'model'}
+                deviceModel = driver.execute_script('mobile:handset:info', params)
                 allure.dynamic.link(
                     str(reporting_client.report_url()),
                     name=str(deviceModel))
             except:
                 print("fail to attach video link")
+
+            print('Report-Url: ' + reporting_client.report_url())
+
             print("----------------------------------------------------------\n\n\n\n")
             driver.close()
         except Exception as e:
