@@ -877,6 +877,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             print("Verifying Connected Wifi Connection")
             report.step_start("Loading Wifi Page")
             element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']")
+            print("===============================================",element)
             element.click()
         except NoSuchElementException:
             print("Exception: Verify Xpath - unable to click on Wifi")
