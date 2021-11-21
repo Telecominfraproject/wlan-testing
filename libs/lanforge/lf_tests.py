@@ -44,6 +44,7 @@ from influx2 import RecordInflux
 from lf_multipsk import MultiPsk
 from lf_rvr_test import RvrTest
 from attenuator_serial import AttenuatorSerial
+from lf_atten_mod_test import CreateAttenuator
 
 
 class RunTest:
@@ -325,6 +326,31 @@ class RunTest:
             self.client_connect.radio = self.fiveg_radios[0]
         if band == "ax":
             self.client_connect.radio = self.ax_radios[0]
+        self.client_connect.build()
+        self.client_connect.wait_for_ip(station_name)
+        print(self.client_connect.wait_for_ip(station_name))
+        if self.client_connect.wait_for_ip(station_name):
+            self.client_connect._pass("ALL Stations got IP's", print_=True)
+            return self.client_connect
+        else:
+            return False
+
+    def Client_Connect_Using_Radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
+                                   vlan_id=100, radio=self.twog_radios[0], sta_mode=0,
+                                   station_name=[]):
+        self.client_connect = CreateStation(_host=self.lanforge_ip, _port=self.lanforge_port,
+                                            _sta_list=station_name, _password=passkey, _ssid=ssid, _security=security)
+
+        self.client_connect.station_profile.sta_mode = sta_mode
+        self.client_connect.upstream_resource = 1
+        if mode == "BRIDGE":
+            self.client_connect.upstream_port = self.upstream_port
+        elif mode == "NAT":
+            self.client_connect.upstream_port = self.upstream_port
+        else:
+            self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
+
+        self.client_connect.radio = radio
         self.client_connect.build()
         self.client_connect.wait_for_ip(station_name)
         print(self.client_connect.wait_for_ip(station_name))
@@ -776,6 +802,11 @@ class RunTest:
         )
         val = self.obj.show()
         return val
+
+    def attenuator_modify(self, serno, idx, val):
+        atten_obj = CreateAttenuator(self.lanforge_ip, self.lanforge_port, serno, idx, val)
+        atten_obj.build()
+
 
 
 if __name__ == '__main__':
