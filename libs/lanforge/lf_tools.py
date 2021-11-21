@@ -135,6 +135,24 @@ class ChamberView:
         self.CreateDut.ssid = temp
         self.CreateDut.add_ssids()
 
+    def get_station_list(self):
+        realm_obj = self.staConnect.localrealm
+        sta = realm_obj.station_list()
+        sta_list = []
+        for i in sta:
+            for j in i:
+                sta_list.append(j)
+        return sta_list
+
+    def admin_up_down(self, sta_list=[], option="up"):
+        realm_obj = self.staConnect.localrealm
+        if option == "up":
+            for i in sta_list:
+                realm_obj.admin_up(i)
+        elif option == "down":
+            for j in sta_list:
+                realm_obj.admin_down(j)
+
     def Chamber_View(self):
         if self.delete_old_scenario:
             self.CreateChamberview.clean_cv_scenario(type="Network-Connectivity", scenario_name=self.scenario_name)
