@@ -34,7 +34,8 @@ class TestMultiAssoDisassoBridge(object):
         # run wifi capacity test here
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
-        ssid_name = profile_data["ssid_name"]
+        ssid_name = []
+        ssid_name.append(profile_data["ssid_name"])
         print(ssid_name)
         mode = "BRIDGE"
         vlan = 1
