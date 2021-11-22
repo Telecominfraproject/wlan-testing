@@ -36,8 +36,7 @@ class TestMultiAssoDisassoBridge(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         vlan = 1
-        dut_name = create_lanforge_chamberview_dut
-        lf_tools.add_stations(band="2G", num_stations=16, dut=dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="2G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         sta_list = lf_tools.get_station_list()
         print(sta_list)
