@@ -30,15 +30,17 @@ class TestMultiAssoDisassoBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.up
-    def test_multi_station_udp_upload_2g(self, lf_test, lf_tools):
+    def test_multi_station_udp_upload_2g(self, lf_test, lf_tools, create_lanforge_chamberview_dut):
         # run wifi capacity test here
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         vlan = 1
-        lf_tools.add_stations(band="2G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
+        dut_name = create_lanforge_chamberview_dut
+        lf_tools.add_stations(band="2G", num_stations=16, dut=dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         sta_list = lf_tools.get_station_list()
+        print(sta_list)
         lf_tools.admin_up_down(sta_list=sta_list, option="up")
         sel_stations = ",".join(sta_list[0:8])
         val = [['dl_rate_sel: Per-Station Downliad Rate:']]
