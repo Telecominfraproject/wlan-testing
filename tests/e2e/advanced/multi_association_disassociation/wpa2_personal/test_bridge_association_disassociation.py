@@ -32,6 +32,7 @@ class TestMultiAssoDisassoBridge(object):
     @pytest.mark.up
     def test_multi_station_udp_upload_2g(self, lf_test, lf_tools, create_lanforge_chamberview_dut):
         # run wifi capacity test here
+        lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
