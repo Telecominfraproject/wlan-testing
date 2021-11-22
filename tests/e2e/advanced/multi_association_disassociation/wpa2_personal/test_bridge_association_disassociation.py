@@ -35,28 +35,29 @@ class TestMultiAssoDisassoBridge(object):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
+        print(ssid_name)
         mode = "BRIDGE"
         vlan = 1
         lf_tools.add_stations(band="2G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        sta_list = lf_tools.get_station_list()
-        print(sta_list)
-        lf_tools.admin_up_down(sta_list=sta_list, option="up")
-        sel_stations = ",".join(sta_list[0:8])
-        val = [['dl_rate_sel: Per-Station Downliad Rate:']]
-        wct_obj = lf_test.wifi_capacity(instance_name="udp_upload_2g", mode=mode, vlan_id=vlan,
-                                        download_rate="0Gbps", stations=sel_stations, raw_lines=val, batch_size="8",
-                                        upload_rate="4Mbps", protocol="UDP-IPv4", duration="120000", create_stations=False)
-        time.sleep(30)
-        lf_tools.admin_up_down(sta_list=sta_list[8:16], option="down")
-        time.sleep(10)
-        lf_tools.admin_up_down(sta_list=sta_list[8:16], option="up")
-
-
-
-        report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
-        lf_tools.attach_report_graphs(report_name=report_name)
-        print("Test Completed... Cleaning up Stations")
-        assert True
+        # sta_list = lf_tools.get_station_list()
+        # print(sta_list)
+        # lf_tools.admin_up_down(sta_list=sta_list, option="up")
+        # sel_stations = ",".join(sta_list[0:8])
+        # val = [['dl_rate_sel: Per-Station Downliad Rate:']]
+        # wct_obj = lf_test.wifi_capacity(instance_name="udp_upload_2g", mode=mode, vlan_id=vlan,
+        #                                 download_rate="0Gbps", stations=sel_stations, raw_lines=val, batch_size="8",
+        #                                 upload_rate="4Mbps", protocol="UDP-IPv4", duration="120000", create_stations=False)
+        # time.sleep(30)
+        # lf_tools.admin_up_down(sta_list=sta_list[8:16], option="down")
+        # time.sleep(10)
+        # lf_tools.admin_up_down(sta_list=sta_list[8:16], option="up")
+        #
+        #
+        #
+        # report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        #
+        # lf_tools.attach_report_graphs(report_name=report_name)
+        # print("Test Completed... Cleaning up Stations")
+        # assert True
 
