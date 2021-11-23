@@ -52,7 +52,7 @@ class TestVlanConfigFivegRadio(object):
     @pytest.mark.valid_client_ip_wpa_fiveg  # wifi-2169
     @allure.testcase(name="test_station_ip_wpa_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2169")
-    def test_station_ip_wpa_ssid_5g(self, get_lanforge_data, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_station_ip_wpa_ssid_5g(self, setup_profiles, create_vlan, lf_test, lf_tools,
                                     get_vlan_list, update_report, station_names_fiveg,
                                     test_cases, get_configuration):
         """
@@ -108,7 +108,7 @@ class TestVlanConfigFivegRadio(object):
     @pytest.mark.valid_client_ip_wpa2_fiveg  # wifi-2157
     @allure.testcase(name="test_station_ip_wpa2_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2157")
-    def test_station_ip_wpa2_ssid_5g(self, get_lanforge_data, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_station_ip_wpa2_ssid_5g(self, setup_profiles, create_vlan, lf_test, lf_tools,
                                      update_report, station_names_fiveg,
                                      test_cases, get_configuration):
         """
@@ -157,7 +157,7 @@ class TestVlanConfigFivegRadio(object):
     @pytest.mark.disable_vlan_fiveg  # wifi-2174
     @allure.testcase(name="test_disable_vlan_wpa2_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2174")
-    def test_disable_vlan_wpa2_ssid_5g(self, get_lanforge_data, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_disable_vlan_wpa2_ssid_5g(self, setup_profiles, create_vlan, lf_test, lf_tools,
                                        update_report, station_names_fiveg,
                                        test_cases, get_configuration):
         """
@@ -208,7 +208,7 @@ class TestVlanConfigFivegRadio(object):
     @pytest.mark.valid_client_ip_open_fiveg  # wifi-2161
     @allure.testcase(name="test_station_ip_open_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2161")
-    def test_station_ip_open_ssid_5g(self, get_lanforge_data, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_station_ip_open_ssid_5g(self, setup_profiles, create_vlan, lf_test, lf_tools,
                                      get_vlan_list, update_report, station_names_fiveg,
                                      test_cases, get_configuration):
         """
@@ -263,7 +263,7 @@ class TestVlanConfigFivegRadio(object):
     @pytest.mark.test_station_ip_wpa_wpa2_ssid_5g  # wifi-2167
     @allure.testcase(name="test_station_ip_wpa_wpa2_personal_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2167")
-    def test_station_ip_wpa_wpa2_personal_ssid_5g(self, get_lanforge_data, setup_profiles, create_vlan, lf_test,
+    def test_station_ip_wpa_wpa2_personal_ssid_5g(self, setup_profiles, create_vlan, lf_test,
                                                   lf_tools, get_vlan_list, update_report, station_names_fiveg,
                                                   test_cases, get_configuration):
         """
@@ -319,7 +319,7 @@ class TestVlanConfigFivegRadio(object):
     @pytest.mark.valid_client_ip_wpa2_personal  # wifi-2172
     @allure.testcase(name="test_station_ip_wpa2_personal_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2172")
-    def test_station_ip_wpa2_personal_ssid_5g(self, get_lanforge_data, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_station_ip_wpa2_personal_ssid_5g(self, setup_profiles, create_vlan, lf_test, lf_tools,
                                               get_vlan_list, update_report, station_names_fiveg,
                                               test_cases, get_configuration):
         """

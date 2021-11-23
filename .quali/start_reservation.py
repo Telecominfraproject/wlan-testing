@@ -21,7 +21,6 @@ def main():
     parser.add_argument('--wifi-type', default='Wifi5')
     args = parser.parse_args()
 
-
     # Login to Sandbox API and get back Authorization token to use for later calls, auth token should timeout within 10 minutes by default
     #TODO handle Quali Server host + gihtub user credentials
     url = 'http://localhost:82/api/login'

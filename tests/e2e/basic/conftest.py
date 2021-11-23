@@ -13,7 +13,6 @@ if "libs" not in sys.path:
 from controller.controller_1x.controller import ProfileUtility
 from controller.controller_2x.controller import UProfileUtility
 import time
-from lanforge.lf_tests import RunTest
 from lanforge.lf_tools import ChamberView
 import pytest
 import allure
@@ -48,10 +47,9 @@ def create_lanforge_chamberview_dut(lf_tools):
 
 
 @pytest.fixture(scope="class")
-def setup_profiles(request, setup_controller, testbed, get_equipment_id, fixtures_ver,
+def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtures_ver, reset_scenario_lf,
                    instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                    get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
-    lf_tools.reset_scenario()
     param = dict(request.param)
 
     # VLAN Setup
@@ -76,19 +74,13 @@ def setup_profiles(request, setup_controller, testbed, get_equipment_id, fixture
         lf_tools.add_vlan(vlan_ids=vlan_list)
 
     # call this, if 1.x
-    return_var = fixtures_ver.setup_profiles(request, param, setup_controller, testbed, get_equipment_id,
+    return_var = fixtures_ver.setup_profiles(request, param, setup_controller, testbed, get_equipment_ref,
                                              instantiate_profile,
                                              get_markers, create_lanforge_chamberview_dut, lf_tools,
                                              get_security_flags, get_configuration, radius_info, get_apnos,
                                              radius_accounting_info)
 
     yield return_var
-
-
-@pytest.fixture(scope="session")
-def lf_test(get_configuration, setup_influx):
-    obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'], influx_params=setup_influx)
-    yield obj
 
 
 @pytest.fixture(scope="session")
@@ -104,6 +96,14 @@ def station_names_fiveg(request, get_configuration):
     station_names = []
     for i in range(0, int(request.config.getini("num_stations"))):
         station_names.append(get_configuration["traffic_generator"]["details"]["5G-Station-Name"] + "0" + str(i))
+    yield station_names
+
+
+@pytest.fixture(scope="session")
+def station_names_ax(request, get_configuration):
+    station_names = []
+    for i in range(0, int(request.config.getini("num_stations"))):
+        station_names.append(get_configuration["traffic_generator"]["details"]["AX-Station-Name"] + "0" + str(i))
     yield station_names
 
 
@@ -130,3 +130,14 @@ def get_vlan_list(get_apnos, get_configuration):
     vlan_list = list(ap_ssh.get_vlan())
     vlan_list.sort()
     yield vlan_list
+
+
+@pytest.fixture(scope="session")
+def reset_scenario_lf(request, lf_tools):
+    lf_tools.reset_scenario()
+
+    def teardown_session():
+        lf_tools.reset_scenario()
+
+    request.addfinalizer(teardown_session)
+    yield ""

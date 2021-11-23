@@ -91,6 +91,7 @@ jobs:
         cat << EOF > configuration.py
         ${{ secrets.LAB_CONFIGURATION }}
         EOF
+        sed -i -r "s/'password': ('|\")openwifi('|\")/'password': '"${{ secrets.OWSEC_NEW_PASSWORD }}"'/" configuration.py
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
 
     - name: calculate marker expression
@@ -119,17 +120,27 @@ jobs:
           name: "${{ steps.job.outputs.name }}"
         spec:
           template:
+            metadata:
+              annotations:
+                cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
             spec:
               containers:
               - name: tests
                 image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+                resources:
+                  requests:
+                    memory: "512Mi"
+                    cpu: "250m"
+                  limits:
+                    memory: "512Mi"
+                    cpu: "250m"
                 command:
                   - /bin/bash
                   - -x
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ steps.marker.outputs.expression }}" -s -vvv --testbed=interop -o 'jobName=Github-Interop-${{ matrix.test_type }}' -o 'jobNumber=${{ github.run_number }}' --skip-testrail --alluredir=/tmp/allure-results
+                    pytest -m "${{ steps.marker.outputs.expression }}" -s -vvv --testbed=interop -o 'jobName=Github-Interop-${{ matrix.test_type }}' -o 'jobNumber=${{ github.run_number }}' --alluredir=/tmp/allure-results
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -139,6 +150,12 @@ jobs:
                   mountPath: "/wlan-testing/tests/configuration.py"
                   subPath: configuration
                   readOnly: true
+              nodeSelector:
+                env: tests
+              tolerations:
+              - key: "tests"
+                operator: "Exists"
+                effect: "NoSchedule"
               imagePullSecrets:
               - name: tip-docker-registry-key
               restartPolicy: Never
@@ -153,7 +170,7 @@ jobs:
 
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
 
-        kubectl wait "pod/$podname" --for condition=ready
+        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
 
         until [ -s test_everything.xml ]
         do

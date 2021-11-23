@@ -113,6 +113,7 @@ jobs:
         cat << EOF > configuration.py
         ${{ secrets.LAB_CONFIGURATION }}
         EOF
+        sed -i -r "s/'password': ('|\")openwifi('|\")/'password': '"${{ secrets.OWSEC_NEW_PASSWORD }}"'/" configuration.py
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
 
     - name: run perf tests
@@ -124,17 +125,27 @@ jobs:
           name: "${{ steps.job.outputs.name }}"
         spec:
           template:
+            metadata:
+              annotations:
+                cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
             spec:
               containers:
               - name: tests
                 image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+                resources:
+                  requests:
+                    memory: "512Mi"
+                    cpu: "250m"
+                  limits:
+                    memory: "512Mi"
+                    cpu: "250m"
                 command:
                   - /bin/bash
                   - -x
                   - -c
                   - |
                     cd tests
-                    pytest -m "performance and ${{ matrix.marker }}" -s -vvv --testbed="${{ steps.testbed.outputs.name }}" --skip-testrail --alluredir=/tmp/allure-results
+                    pytest -m "performance and ${{ matrix.marker }}" -s -vvv --testbed="${{ steps.testbed.outputs.name }}" --alluredir=/tmp/allure-results
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -144,6 +155,12 @@ jobs:
                   mountPath: "/wlan-testing/tests/configuration.py"
                   subPath: configuration
                   readOnly: true
+              nodeSelector:
+                env: tests
+              tolerations:
+              - key: "tests"
+                operator: "Exists"
+                effect: "NoSchedule"
               imagePullSecrets:
               - name: tip-docker-registry-key
               restartPolicy: Never
@@ -156,7 +173,7 @@ jobs:
         # wait for pod to spawn
         sleep 1
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-        kubectl wait "pod/$podname" --for condition=ready
+        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
         #sleep 30 # wait for the pod to come up
         until [ -s test_everything.xml ]
         do
@@ -275,6 +292,7 @@ jobs:
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git add .
         git commit -m "Automated deployment: $(date -u)"
+
     - name: push
       if: github.ref == 'refs/heads/master'
       uses: ad-m/github-push-action@v0.6.0
@@ -282,6 +300,16 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: gh-pages
         directory: reports
+
+    - name: upload to S3
+      if: github.ref == 'refs/heads/master'
+      uses: ./wlan-testing/.github/actions/allure-report-to-s3
+      with:
+        test_type: performance
+        testbed: ${{ needs.test.outputs.testbed }}
+        report_path: allure-report
+        s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
+        s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
 
   cleanup:
     needs: [ test ]

@@ -23,6 +23,10 @@ on:
         default: 'basic-01'
         description: 'testbed to execute tests against'
         required: false
+      firmware:
+        default: 'next-latest'
+        description: 'Target firmware version to be specified <branch>-<commit | latest>'
+        required: false
       marker_expression:
         default: ''
         description: "marker expression that will be passed to pytest's -m"
@@ -66,12 +70,28 @@ jobs:
       run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     needs: [ build ]
 
     steps:
+    - name: install JRE
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y default-jre
+
+    - name: install aws CLI tool
+      run: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
+
     - name: get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: install Allure CLI tool
       run: |
@@ -95,9 +115,10 @@ jobs:
         cat << EOF > configuration.py
         ${{ secrets.LAB_CONFIGURATION }}
         EOF
+        sed -i -r "s/'password': ('|\")openwifi('|\")/'password': '"${{ secrets.OWSEC_NEW_PASSWORD }}"'/" configuration.py
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
 
-    - name: run perf tests
+    - name: run tests
       run: |
         cat <<EOF | kubectl apply -f -
         apiVersion: batch/v1
@@ -106,17 +127,27 @@ jobs:
           name: "${{ steps.job.outputs.name }}"
         spec:
           template:
+            metadata:
+              annotations:
+                cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
             spec:
               containers:
               - name: tests
                 image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+                resources:
+                  requests:
+                    memory: "512Mi"
+                    cpu: "250m"
+                  limits:
+                    memory: "512Mi"
+                    cpu: "250m"
                 command:
                   - /bin/bash
                   - -x
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression }}" -s -vvv --testbed="${{ github.event.inputs.testbed }}" --skip-testrail --alluredir=/tmp/allure-results "${{ github.event.inputs.additional_args }}"
+                    pytest -m "${{ github.event.inputs.marker_expression }}" -s -vvv --testbed="${{ github.event.inputs.testbed }}" -o firmware="${{ github.event.inputs.firmware }}" --alluredir=/tmp/allure-results ${{ github.event.inputs.additional_args }}
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -126,6 +157,12 @@ jobs:
                   mountPath: "/wlan-testing/tests/configuration.py"
                   subPath: configuration
                   readOnly: true
+              nodeSelector:
+                env: tests
+              tolerations:
+              - key: "tests"
+                operator: "Exists"
+                effect: "NoSchedule"
               imagePullSecrets:
               - name: tip-docker-registry-key
               restartPolicy: Never
@@ -138,12 +175,11 @@ jobs:
         # wait for pod to spawn
         sleep 1
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-        kubectl wait "pod/$podname" --for condition=ready
-        #sleep 30 # wait for the pod to come up
+        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
+        kubectl logs -f $podname &
         until [ -s test_everything.xml ]
         do
           sleep 10
-          echo "waiting for tests to complete..."
           kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
         done
         echo "tests completed"
@@ -152,12 +188,6 @@ jobs:
         echo "waiting for pod to exit"
         kubectl logs -f $podname >/dev/null 2>&1
         exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
-
-    - name: print logs
-      if: always()
-      run: |
-        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-        kubectl logs $podname
 
     - name: upload Allure results as artifact
       if: always()

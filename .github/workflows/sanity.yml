@@ -187,7 +187,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression || 'sanity and not interop' }}" -s -vvv --testbed="${{ matrix.testbed }}" --skip-testrail --alluredir=/tmp/allure-results -o build=${{ github.event.inputs.ap_firmware_url || 'null'}} --1.x
+                    pytest -m "${{ github.event.inputs.marker_expression || 'sanity and not interop' }}" -s -vvv --testbed="${{ matrix.testbed }}" --alluredir=/tmp/allure-results -o build=${{ github.event.inputs.ap_firmware_url || 'null'}} --1.x
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -212,7 +212,7 @@ jobs:
 
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
 
-        kubectl wait "pod/$podname" --for condition=ready
+        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
 
         #sleep 30 # wait for the pod to come up
 

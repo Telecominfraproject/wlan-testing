@@ -10,6 +10,7 @@ from perfecto import (PerfectoExecutionContext, PerfectoReportiumClient, TestCon
 import pytest
 import logging
 import re
+import allure
 
 sys.path.append(
     os.path.dirname(
@@ -151,17 +152,17 @@ def upload_firmware(should_upload_firmware, instantiate_firmware, get_latest_fir
 
 
 @pytest.fixture(scope="session")
-def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_firmware_cloud, get_latest_firmware,
+def upgrade_firmware(request, instantiate_firmware, get_equipment_ref, check_ap_firmware_cloud, get_latest_firmware,
                      should_upgrade_firmware):
     if get_latest_firmware != check_ap_firmware_cloud:
         if request.config.getoption("--skip-upgrade"):
             status = "skip-upgrade"
         else:
-            status = instantiate_firmware.upgrade_fw(equipment_id=get_equipment_id, force_upload=False,
+            status = instantiate_firmware.upgrade_fw(equipment_id=get_equipment_ref, force_upload=False,
                                                      force_upgrade=should_upgrade_firmware)
     else:
         if should_upgrade_firmware:
-            status = instantiate_firmware.upgrade_fw(equipment_id=get_equipment_id, force_upload=False,
+            status = instantiate_firmware.upgrade_fw(equipment_id=get_equipment_ref, force_upload=False,
                                                      force_upgrade=should_upgrade_firmware)
         else:
             status = "skip-upgrade"
@@ -169,8 +170,8 @@ def upgrade_firmware(request, instantiate_firmware, get_equipment_id, check_ap_f
 
 
 @pytest.fixture(scope="session")
-def check_ap_firmware_cloud(setup_controller, get_equipment_id):
-    yield setup_controller.get_ap_firmware_old_method(equipment_id=get_equipment_id)
+def check_ap_firmware_cloud(setup_controller, get_equipment_ref):
+    yield setup_controller.get_ap_firmware_old_method(equipment_id=get_equipment_ref)
 
 
 """
@@ -195,39 +196,40 @@ def setup_vlan():
 
 
 @pytest.fixture(scope="class")
-def setup_profiles(request, setup_controller, testbed, get_equipment_id, fixtures_ver,
+def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtures_ver, skip_lf,
                    instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                    get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
-    lf_tools.reset_scenario()
+
     param = dict(request.param)
-
+    if not skip_lf:
+        lf_tools.reset_scenario()
     # VLAN Setup
-    if request.param["mode"] == "VLAN":
+        if request.param["mode"] == "VLAN":
 
-        vlan_list = list()
-        refactored_vlan_list = list()
-        ssid_modes = request.param["ssid_modes"].keys()
-        for mode in ssid_modes:
-            for ssid in range(len(request.param["ssid_modes"][mode])):
-                if "vlan" in request.param["ssid_modes"][mode][ssid]:
-                    vlan_list.append(request.param["ssid_modes"][mode][ssid]["vlan"])
-                else:
-                    pass
-        if vlan_list:
-            [refactored_vlan_list.append(x) for x in vlan_list if x not in refactored_vlan_list]
-            vlan_list = refactored_vlan_list
-            for i in range(len(vlan_list)):
-                if vlan_list[i] > 4095 or vlan_list[i] < 1:
-                    vlan_list.pop(i)
-    if request.param["mode"] == "VLAN":
-        lf_tools.add_vlan(vlan_ids=vlan_list)
+            vlan_list = list()
+            refactored_vlan_list = list()
+            ssid_modes = request.param["ssid_modes"].keys()
+            for mode in ssid_modes:
+                for ssid in range(len(request.param["ssid_modes"][mode])):
+                    if "vlan" in request.param["ssid_modes"][mode][ssid]:
+                        vlan_list.append(request.param["ssid_modes"][mode][ssid]["vlan"])
+                    else:
+                        pass
+            if vlan_list:
+                [refactored_vlan_list.append(x) for x in vlan_list if x not in refactored_vlan_list]
+                vlan_list = refactored_vlan_list
+                for i in range(len(vlan_list)):
+                    if vlan_list[i] > 4095 or vlan_list[i] < 1:
+                        vlan_list.pop(i)
+        if request.param["mode"] == "VLAN":
+            lf_tools.add_vlan(vlan_ids=vlan_list)
 
     # call this, if 1.x
-    return_var = fixtures_ver.setup_profiles(request, param, setup_controller, testbed, get_equipment_id,
+    return_var = fixtures_ver.setup_profiles(request, param, setup_controller, testbed, get_equipment_ref,
                                              instantiate_profile,
                                              get_markers, create_lanforge_chamberview_dut, lf_tools,
                                              get_security_flags, get_configuration, radius_info, get_apnos,
-                                             radius_accounting_info)
+                                             radius_accounting_info, skip_lf=skip_lf)
     yield return_var
 
 
@@ -256,16 +258,21 @@ def failure_tracking_fixture(request):
     yield tests_failed_during_module
 
 
-@pytest.fixture(scope="class")
-def get_vif_state(get_apnos, get_configuration, request, lf_tools):
-    if request.config.getoption("1.x"):
-        ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
-        vif_state = list(ap_ssh.get_vif_state_ssids())
-        vif_state.sort()
-        yield vif_state
-    else:
-        yield lf_tools.ssid_list
 
+empty_get_vif_state_list = []
+
+@pytest.fixture(scope="class")
+def get_vif_state(get_apnos, get_configuration, request, lf_tools, skip_lf):
+    if not skip_lf:
+        if request.config.getoption("1.x"):
+            ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
+            vif_state = list(ap_ssh.get_vif_state_ssids())
+            vif_state.sort()
+            yield vif_state
+        else:
+            yield lf_tools.ssid_list
+    else:
+        yield empty_get_vif_state_list
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
@@ -423,10 +430,27 @@ def setup_perfectoMobile_android(request):
     reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
     reportClient(reporting_client)
 
+    try:
+        params = {'property': 'model'}
+        deviceModel = driver.execute_script('mobile:handset:info', params)
+        device_name_list.append(deviceModel)
+    except:
+        pass
+
     def teardown():
         try:
             print("\n---------- Tear Down ----------")
+            try:
+                params = {'property': 'model'}
+                deviceModel = driver.execute_script('mobile:handset:info', params)
+                allure.dynamic.link(
+                    str(reporting_client.report_url()),
+                    name=str(deviceModel))
+            except:
+                print("fail to attach video link")
+
             print('Report-Url: ' + reporting_client.report_url())
+
             print("----------------------------------------------------------\n\n\n\n")
             driver.close()
         except Exception as e:
@@ -573,11 +597,23 @@ def setup_perfectoMobile_iOS(request):
     reporting_client = PerfectoReportiumClient(perfecto_execution_context)
     reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
     reportClient(reporting_client)
+    try:
+        params = {'property': 'model'}
+        deviceModel = driver.execute_script('mobile:handset:info', params)
+        device_name_list.append(deviceModel)
+    except:
+        pass
 
     def teardown():
         try:
             print("\n---------- Tear Down ----------")
             print('Report-Url: ' + reporting_client.report_url())
+            try:
+                allure.dynamic.link(
+                    str(reporting_client.report_url()),
+                    name=str(deviceModel))
+            except:
+                print("fail to attach video link")
             print("----------------------------------------------------------\n\n\n\n")
             driver.close()
         except Exception as e:
