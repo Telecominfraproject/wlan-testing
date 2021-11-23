@@ -48,8 +48,10 @@ class TestMultiAssoDisassoBridge(object):
                                         download_rate="0Gbps", stations=sel_stations, raw_lines=val, batch_size="8",
                                         upload_rate="4Mbps", protocol="UDP-IPv4", duration="120000", create_stations=False)
         time.sleep(30)
+        print("stations down")
         lf_tools.admin_up_down(sta_list=sta_list[8:16], option="down")
         time.sleep(10)
+        print("stations down")
         lf_tools.admin_up_down(sta_list=sta_list[8:16], option="up")
 
 
