@@ -1,0 +1,45 @@
+name: build and push Docker image
+description: build and push the wlan-testing Docker image
+
+inputs:
+  registry:
+    description: the registry to push to
+    required: true
+  registry_user:
+    description: the user to authenticate against the registry
+    required: true
+  registry_password:
+    description: the password to authenticate against the registry
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+  - name: Checkout Testing repo
+    uses: actions/checkout@v2
+    with:
+      path: wlan-testing
+
+  - name: Checkout LANforge scripts
+    uses: actions/checkout@v2
+    with:
+      path: wlan-lanforge-scripts
+      repository: Telecominfraproject/wlan-lanforge-scripts
+
+  - name: import LANforge scripts
+    shell: bash
+    working-directory: wlan-testing
+    run: ./sync_repos.bash
+
+  - name: docker login
+    shell: bash
+    run: docker login ${{ inputs.registry }} -u ${{ inputs.registry_user }} -p ${{ inputs.registry_password }}
+
+  - name: build docker image
+    working-directory: wlan-testing
+    shell: bash
+    run: docker build -t ${{ inputs.registry }}/cloud-sdk-nightly:${{ github.run_id }} -f docker/Dockerfile .
+
+  - name: push docker image
+    shell: bash
+    run: docker push ${{ inputs.registry }}/cloud-sdk-nightly:${{ github.run_id }}
