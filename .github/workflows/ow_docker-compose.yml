@@ -363,92 +363,9 @@ jobs:
           -e OWSEC_NEW_PASSWORD \
           tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo:main
 
-  generate-matrix:
-    name: generate testbed matrix
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-    - name: generate-matrix
-      id: set-matrix
-      run: |
-        TESTBEDS="${{ github.event.inputs.testbeds || 'basic-05' }}"
-        TESTBEDS=$(echo $TESTBEDS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
-        TESTBEDS=$(echo "$TESTBEDS" | jq -c 'map({"testbed":.})')
-        echo "::set-output name=matrix::{\"include\":${TESTBEDS}}"
-
-  set-redirector-url:
-    needs: [ deploy-controller, generate-matrix ]
-    if: github.event.inputs.marker_expression == 'uc_sanity'
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
-    runs-on: self-hosted
-    steps:
-    - name: checkout testing repo
-      uses: actions/checkout@v2
-      with:
-        repository: Telecominfraproject/wlan-testing
-        path: wlan-testing
-
-    - name: checkout pki cert scripts repo
-      uses: actions/checkout@v2
-      with:
-        repository: Telecominfraproject/wlan-pki-cert-scripts
-        path: wlan-pki-cert-scripts
-
-    - name: install dependencies
-      run: |
-        sudo apt-get install -y python3-pip
-        pip install paramiko scp allure-pytest
-
-    - name: create configuration.py file
-      run: |
-        cat << EOF > configuration.py
-        ${{ secrets.LAB_CONFIGURATION }}
-        EOF
-
-    - name: set redirector URL
-      env:
-        DIGICERT_API_KEY: ${{ secrets.DIGICERT_API_KEY }}
-      run: |
-        for id in $(echo -e 'from configuration import CONFIGURATION\nfor ap in CONFIGURATION["${{ matrix.testbed }}"]["access_point"]: print(ap["serial"])' | python3)
-        do
-          ./wlan-pki-cert-scripts/digicert-change-ap-redirector.sh $id "${{ needs.deploy-controller.outputs.gateway_url }}"
-          current_redirector=$(./wlan-pki-cert-scripts/digicert-get-ap-redirector.sh $id)
-          if [[ "$current_redirector" != "${{ needs.deploy-controller.outputs.gateway_url }}" ]]; then
-            echo "Current redirector in DigiCert ($current_redirector) is different from the required one (${{ needs.deploy-controller.outputs.gateway_url }})"
-            exit 1
-          fi
-        done
-
-    - name: factory reset APs
-      run: |
-        set -x
-        AP_LEN=$(echo -e "from configuration import CONFIGURATION\nprint(len(CONFIGURATION['${{ matrix.testbed }}']['access_point']) - 1)" | python3)
-        for index in $(seq 0 $AP_LEN)
-        do
-          HOST=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['ip'])" | python3)
-          JUMPHOST=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['jumphost'])" | python3)
-          TTY=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['jumphost_tty'])" | python3)
-          PORT=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['port'])" | python3)
-          USERNAME=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['username'])" | python3)
-          PASSWORD=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['password'])" | python3)
-          cd wlan-testing/tools
-          python3 ap_tools.py --host $HOST --jumphost $JUMPHOST --tty $TTY --port $PORT --username $USERNAME --password $PASSWORD --cmd "jffs2reset -y -r"
-          cd ../..
-        done
-
-    - name: wait for APs to come up again
-      run: sleep 300
-
   test:
     runs-on: ubuntu-latest
-    needs: [ build, generate-matrix, deploy-controller, set-redirector-url ]
-    if: always()
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
+    needs: [ build, deploy-controller ]
     steps:
     - name: get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -509,7 +426,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression || 'sdk_restapi' }}" -s -vvv --testbed="${{ matrix.testbed }}" --alluredir=/tmp/allure-results
+                    pytest -m "${{ github.event.inputs.marker_expression || 'sdk_restapi' }}" -s -vvv --testbed="${{ github.event.inputs.testbeds || 'basic-05' }}" --alluredir=/tmp/allure-results
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -562,7 +479,7 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v2
       with:
-        name: allure-results-${{ matrix.testbed }}
+        name: allure-results-${{ github.event.inputs.testbeds || 'basic-05' }}
         path: allure-results
 
     - name: cleanup
@@ -572,12 +489,8 @@ jobs:
 
   report:
     runs-on: ubuntu-latest
-    needs: [ test, generate-matrix ]
+    needs: [ test ]
     if: always()
-    strategy:
-      max-parallel: 1
-      fail-fast: false
-      matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
     steps:
     - name: install Allure CLI tool
       run: |
@@ -586,7 +499,7 @@ jobs:
 
     - uses: actions/download-artifact@v2
       with:
-        name: allure-results-${{ matrix.testbed }}
+        name: allure-results-${{ github.event.inputs.testbeds || 'basic-05' }}
         path: allure-results
 
     - name: checkout testing repo
@@ -603,14 +516,14 @@ jobs:
 
     - name: copy history into results
       run: |
-        if [ -e "reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ matrix.testbed }}/latest" ] ; then
-          cp -r reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ matrix.testbed }}/latest/history/ allure-results/history
+        if [ -e "reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ github.event.inputs.testbeds || 'basic-05' }} /latest" ] ; then
+          cp -r reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ github.event.inputs.testbeds || 'basic-05' }}/latest/history/ allure-results/history
         fi
 
     - name: add report metadata
       run: |
         cat << EOF >> allure-results/environment.properties
-        Testbed=${{ matrix.testbed }}
+        Testbed=${{ github.event.inputs.testbeds || 'basic-05' }}
         Tests.CommitId=$(cd wlan-testing && git rev-parse --short HEAD)
         CiRun.Id=${{ github.run_id }}
         CiRun.Number=${{ github.run_number }}
@@ -623,7 +536,7 @@ jobs:
     - name: upload Allure report as artifact
       uses: actions/upload-artifact@v2
       with:
-        name: allure-report-${{ matrix.testbed }}
+        name: allure-report-${{ github.event.inputs.testbeds || 'basic-05' }}
         path: allure-report
 
     # doing this to be able to aggregate multiple reports together later on
@@ -632,11 +545,11 @@ jobs:
 
     - name: copy new report
       run: |
-        mkdir -p reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ matrix.testbed }}
-        cp -Tr allure-report reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ matrix.testbed }}/${{ github.run_number }}
+        mkdir -p reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ github.event.inputs.testbeds || 'basic-05' }}
+        cp -Tr allure-report reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ github.event.inputs.testbeds || 'basic-05' }}/${{ github.run_number }}
 
     - name: update latest symlink
-      working-directory: reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ matrix.testbed }}
+      working-directory: reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ github.event.inputs.testbeds || 'basic-05' }}
       run: ln -fns ${{ github.run_number }} latest
 
     - name: generate new index.html
@@ -685,66 +598,3 @@ jobs:
 
     - name: Delete namespace
       run: kubectl delete ns --ignore-not-found=true "ow-docker-compose-${{ github.run_id }}"
-
-  reset-redirector-url:
-    needs: [ test, generate-matrix ]
-    if: github.event.inputs.marker_expression == 'uc_sanity' && always()
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
-    runs-on: self-hosted
-    steps:
-    - name: checkout testing repo
-      uses: actions/checkout@v2
-      with:
-        repository: Telecominfraproject/wlan-testing
-        path: wlan-testing
-
-    - name: checkout pki cert scripts repo
-      uses: actions/checkout@v2
-      with:
-        repository: Telecominfraproject/wlan-pki-cert-scripts
-        path: wlan-pki-cert-scripts
-
-    - name: install dependencies
-      run: |
-        pip install paramiko scp allure-pytest
-
-    - name: create configuration.py file
-      run: |
-        cat << EOF > configuration.py
-        ${{ secrets.LAB_CONFIGURATION }}
-        EOF
-
-    - name: reset redirector URL
-      env:
-        DIGICERT_API_KEY: ${{ secrets.DIGICERT_API_KEY }}
-      run: |
-        for id in $(echo -e 'from configuration import CONFIGURATION\nfor ap in CONFIGURATION["${{ matrix.testbed }}"]["access_point"]: print(ap["serial"])' | python3)
-        do
-          ./wlan-pki-cert-scripts/digicert-change-ap-redirector.sh $id gw-qa01.cicd.lab.wlan.tip.build
-          current_redirector=$(./wlan-pki-cert-scripts/digicert-get-ap-redirector.sh $id)
-          if [[ "$current_redirector" != "gw-qa01.cicd.lab.wlan.tip.build" ]]; then
-            echo "Current redirector in DigiCert ($current_redirector) is different from the required one (gw-qa01.cicd.lab.wlan.tip.build)"
-            exit 1
-          fi
-        done
-
-    - name: factory reset APs
-      run: |
-        AP_LEN=$(echo -e "from configuration import CONFIGURATION\nprint(len(CONFIGURATION['${{ matrix.testbed }}']['access_point']) - 1)" | python3)
-        for index in $(seq 0 $AP_LEN)
-        do
-          HOST=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['ip'])" | python3)
-          JUMPHOST=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['jumphost'])" | python3)
-          TTY=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['jumphost_tty'])" | python3)
-          PORT=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['port'])" | python3)
-          USERNAME=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['username'])" | python3)
-          PASSWORD=$(echo -e "from configuration import CONFIGURATION\nprint(CONFIGURATION['${{ matrix.testbed }}']['access_point'][$index]['password'])" | python3)
-          cd wlan-testing/tools
-          python3 ap_tools.py --host $HOST --jumphost $JUMPHOST --tty $TTY --port $PORT --username $USERNAME --password $PASSWORD --cmd "jffs2reset -y -r"
-          cd ../..
-        done
-
-    - name: wait for APs to come up again
-      run: sleep 300
