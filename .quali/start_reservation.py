@@ -98,6 +98,7 @@ def main():
         session = get_session()
         wait_for_provisioning_status(session, reservation_id, 'Ready')
     else:
+        #TODO Raise error how you wish for a Sandbox failing to be started
         print('Error Starting Sandbox: {}: {}'.format(response.status_code, response_dict['message']))
 
 
