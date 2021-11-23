@@ -154,9 +154,6 @@ jobs:
       id: reservation
       run: echo ::set-output name=identifier::$(echo ${{ steps.start.outputs.res_id }} | cut -d "-" -f 1)
 
-    - name: wait for DNS to propagate
-      run: sleep 300
-
     - name: get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
@@ -502,9 +499,12 @@ jobs:
                     apt-get install -y dnsutils
                     HOSTS="sec-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build"
                     for HOST in \$HOSTS; do
-                      until sleep 1; host \$HOST; do :; done
+                      until sleep 1; getent hosts \$HOST; do :; done
+                      getent hosts \$HOST >> /etc/hosts
                       echo "DNS record for \$HOST resolved successfully!"
                     done
+
+                    cat /etc/hosts
 
                     cd tests
                     pytest -m "${{ needs.vars.outputs.marker_expression }}" -s -vvv --testbed="basic" --alluredir=/tmp/allure-results -o firmware="${{ needs.vars.outputs.ap_version }}"
