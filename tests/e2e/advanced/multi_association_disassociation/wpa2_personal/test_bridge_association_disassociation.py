@@ -53,11 +53,7 @@ class TestMultiAssoDisassoBridge(object):
         time.sleep(10)
         print("stations down")
         lf_tools.admin_up_down(sta_list=sta_list[8:16], option="up")
-
-
-
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
         lf_tools.attach_report_graphs(report_name=report_name)
         print("Test Completed... Cleaning up Stations")
         assert True
