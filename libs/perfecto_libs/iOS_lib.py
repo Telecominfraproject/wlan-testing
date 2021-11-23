@@ -2163,7 +2163,6 @@ def captive_portal(request, WifiName, WifiPass, setup_perfectoMobile, connData):
         print("Join Button Not Enabled...Password may not be needed")
     # ---------------------Click on join-------------------------------
 
-
     try:
         time.sleep(4)
         driver.implicitly_wait(4)
@@ -2176,6 +2175,8 @@ def captive_portal(request, WifiName, WifiPass, setup_perfectoMobile, connData):
             element.click()
         except NoSuchElementException:
             print("Exception: Accept Terms of Service Button Not Found")
+            reportFlag = False
+            assert reportFlag
         try:
             time.sleep(2)
             driver.implicitly_wait(2)
@@ -2201,13 +2202,16 @@ def captive_portal(request, WifiName, WifiPass, setup_perfectoMobile, connData):
             report.step_start("Final Confirmation Page for Captive Portal Login")
             time.sleep(2)
             driver.implicitly_wait(2)
-            if element == driver.find_element_by_xpath("//XCUIElementTypeOther[@label='Success']"):
-                element1 = driver.find_element_by_xpath("//*[@label='Done']")
-                element1.click()
-            else:
-                print("Failed to log in to captive portal")
+            element = driver.find_element_by_xpath("//*[@label='Done']")
+            element.click()
+            # if element == driver.find_element_by_xpath("//XCUIElementTypeOther[@label='Success']"):
+            #     element1 = driver.find_element_by_xpath("//*[@label='Done']")
+            #     element1.click()
+            # else:
+            #     print("Failed to log in to captive portal")
         except NoSuchElementException:
             print("Exception: final Page for Captive Portal Not Found")
+
 
     except NoSuchElementException:
         print("No Spash Page Found")
