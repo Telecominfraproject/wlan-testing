@@ -661,7 +661,7 @@ class Fixtures_2x:
                                                ]
                 ssid_data.append(ssid)
                 lf_tools.ssid_list.append(ssid_info_sdk[interface][0])
-            if skip_lf:
+            if not skip_lf:
                 lf_tools.dut_idx_mapping = idx_mapping
                 lf_tools.update_ssid(ssid_data=ssid_data)
         except Exception as e:
