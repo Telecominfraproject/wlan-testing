@@ -89,12 +89,17 @@ def main():
 
     response = requests.post(url, data=json.dumps(data), headers=headers)
     response_dict = json.loads(response.text)
-    reservation_id = response_dict['id']
 
-    print(reservation_id)
+    if response.ok:
+        reservation_id = response_dict['id']
+        print('Successfully Started Sandbox.')
+        print(reservation_id)
 
-    session = get_session()
-    wait_for_provisioning_status(session, reservation_id, 'Ready')
+        session = get_session()
+        wait_for_provisioning_status(session, reservation_id, 'Ready')
+    else:
+        print('Error Starting Sandbox: {}: {}'.format(response.status_code, response_dict['message']))
+
 
 if __name__ == '__main__':
     main()
