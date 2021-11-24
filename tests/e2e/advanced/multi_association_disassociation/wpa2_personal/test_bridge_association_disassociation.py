@@ -67,24 +67,22 @@ class TestMultiAssoDisassoBridge(object):
 
         kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
         print(type(kpi_val))
-        print(str(kpi_val))
-        val = kpi_val.split(" ")
-        print(val)
+        print(kpi_val)
+        print(kpi_val[1])
         pass_value = 32 * 0.999
         print("pass value ", pass_value)
-        print(val[12])
         if str(kpi_val) == "empty":
             print("kpi is empty, station did not got ip, Test failed")
             allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
             assert False
         else:
 
-            if float(val[12]) >= float(pass_value):
+            if float(str(kpi_val[1])[1:-1]) >= float(pass_value):
                 print("Test passed successfully")
                 allure.attach(name="Kpi Data", body=str(kpi_val))
                 assert True
             else:
-                print(" valueTest faled due to lesser")
+                print(" valueTest failed due to lesser")
                 allure.attach(name="Kpi Data", body=str(kpi_val))
                 assert False
         print("Test Completed... Cleaning up Stations")
@@ -129,24 +127,22 @@ class TestMultiAssoDisassoBridge(object):
 
         kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
         print(type(kpi_val))
-        print(str(kpi_val))
-        val = kpi_val.split(" ")
-        print(val)
+        print(kpi_val)
+        print(kpi_val[0])
         pass_value = 32 * 0.999
         print("pass value ", pass_value)
-        print(val[6])
         if str(kpi_val) == "empty":
             print("kpi is empty, station did not got ip, Test failed")
             allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
             assert False
         else:
 
-            if float(val[6]) >= float(pass_value):
+            if float(str(kpi_val[0])[1:-1]) >= float(pass_value):
                 print("Test passed successfully")
                 allure.attach(name="Kpi Data", body=str(kpi_val))
                 assert True
             else:
-                print(" valueTest faled due to lesser")
+                print(" valueTest failed due to lesser")
                 allure.attach(name="Kpi Data", body=str(kpi_val))
                 assert False
         print("Test Completed... Cleaning up Stations")
@@ -191,24 +187,22 @@ class TestMultiAssoDisassoBridge(object):
 
         kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
         print(type(kpi_val))
-        print(str(kpi_val))
-        val = kpi_val.split(" ")
-        print(val)
+        print(kpi_val)
+        print(kpi_val[1])
         pass_value = 64 * 0.999
         print("pass value ", pass_value)
-        print(val[12])
         if str(kpi_val) == "empty":
             print("kpi is empty, station did not got ip, Test failed")
             allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
             assert False
         else:
 
-            if float(val[12]) >= float(pass_value):
+            if float(str(kpi_val[1])[1:-1]) >= float(pass_value):
                 print("Test passed successfully")
                 allure.attach(name="Kpi Data", body=str(kpi_val))
                 assert True
             else:
-                print(" valueTest faled due to lesser")
+                print(" valueTest failed due to lesser")
                 allure.attach(name="Kpi Data", body=str(kpi_val))
                 assert False
         print("Test Completed... Cleaning up Stations")
@@ -253,15 +247,11 @@ class TestMultiAssoDisassoBridge(object):
 
         kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
         print(type(kpi_val))
-        #print(str(kpi_val))
         print(kpi_val)
         print(kpi_val[0])
-        #val = kpi_val.split(" ")
-        #print(val)
         pass_value = 64 * 0.999
         print("pass value ", pass_value)
-        #print(val[6])
-        if not any(kpi_val):
+        if str(kpi_val) == "empty":
             print("kpi is empty, station did not got ip, Test failed")
             allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
             assert False
@@ -272,7 +262,7 @@ class TestMultiAssoDisassoBridge(object):
                 allure.attach(name="Kpi Data", body=str(kpi_val))
                 assert True
             else:
-                print(" valueTest faled due to lesser")
+                print(" valueTest failed due to lesser")
                 allure.attach(name="Kpi Data", body=str(kpi_val))
                 assert False
         print("Test Completed... Cleaning up Stations")
