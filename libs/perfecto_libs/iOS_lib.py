@@ -904,13 +904,9 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             report.step_start("Loading Wifi Page")
             element = WebDriverWait(driver, 60).until(
                 EC.presence_of_element_located((MobileBy.XPATH, "//XCUIElementTypeCell[@name='Wi-Fi']")))
-            print("==================== Element ===========================", element)
-            print("Waiting for 60 sec to test")
-            driver.implicitly_wait(30)
-            time.sleep(30)
-            print("next clicking on element: ",element)
+            print("Element value for (//XCUIElementTypeCell[@name='Wi-Fi']): ", element)
             element.click()
-            print("===============================================", element)
+
         except NoSuchElementException:
             print("Exception: Verify Xpath - unable to click on Wifi")
 
@@ -919,6 +915,8 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
         # --------------------To Turn on WIFi Switch if already OFF--------------------------------
         try:
             get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
+            print("Element value for (//*[@label='Wi-Fi' and @value='0']): ", get_wifi_switch_element)
+
             get_wifi_switch_element_text = get_wifi_switch_element.text
             try:
                 if get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0:
