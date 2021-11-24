@@ -152,6 +152,7 @@ class ChamberView:
         elif option == "down":
             for j in sta_list:
                 realm_obj.admin_down(j)
+        time.sleep(2)
 
     def Chamber_View(self):
         if self.delete_old_scenario:
@@ -307,7 +308,7 @@ class ChamberView:
             if df.empty == True:
                 return "empty"
             else:
-                result = df.to_string(index=False)
+                result = df[column_name].values.tolist()
                 return result
 
     def attach_report_graphs(self, report_name=None, pdf_name="WIFI Capacity Test PDF Report"):
