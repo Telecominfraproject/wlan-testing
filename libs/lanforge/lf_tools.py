@@ -311,6 +311,32 @@ class ChamberView:
                 result = df[column_name].values.tolist()
                 return result
 
+    def read_csv_individual_station_throughput(self, dir_name, option):
+        try:
+            df = pd.read_csv("../reports/" + str(dir_name) + "/csv-data/data-Combined_bps__60_second_running_average-1.csv", sep=r'\t', engine='python')
+            print("csv file opened")
+        except FileNotFoundError:
+            print("csv file does not exist")
+            return False
+
+        dict_data = {}
+        if option == "download":
+            csv_sta_names = df.iloc[[0]].values.tolist()
+            csv_throughput_values = df.iloc[[1]].values.tolist()
+        elif option == "upload":
+            csv_sta_names = df.iloc[[0]].values.tolist()
+            csv_throughput_values = df.iloc[[2]].values.tolist()
+        else:
+            print("Provide proper option: download or upload")
+            return
+
+        sta_list = csv_sta_names[0][0][:-1].replace('"', '').split(",")
+        th_list = list(map(float, csv_throughput_values[0][0].split(",")))
+        for i in range(len(sta_list)):
+            dict_data[sta_list[i]] = th_list[i]
+
+        return dict_data
+
     def attach_report_graphs(self, report_name=None, pdf_name="WIFI Capacity Test PDF Report"):
         relevant_path = "../reports/" + report_name + "/"
         entries = os.listdir("../reports/" + report_name + '/')
