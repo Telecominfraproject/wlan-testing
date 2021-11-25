@@ -1996,7 +1996,7 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
 #Captive Portal
 def captive_portal(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
-    print("Select Wifi/AccessPoint Connection")
+    print("Select Wifi/CaptivePortal Connection")
     print("-------------------------------------")
 
     reportFlag = True
@@ -2167,7 +2167,7 @@ def captive_portal(request, WifiName, WifiPass, setup_perfectoMobile, connData):
         time.sleep(4)
         driver.implicitly_wait(4)
         try:
-            time.sleep(2)
+            time.sleep(8)
             driver.implicitly_wait(2)
             print("Acceptiong terms and Services")
             report.step_start("loading Terms Page")
@@ -2219,6 +2219,7 @@ def captive_portal(request, WifiName, WifiPass, setup_perfectoMobile, connData):
 
 # ---------------------Additional INFO-------------------------------
     try:
+        time.sleep(4)
         print("Selecting SSID: ",WifiName)
         report.step_start("Selecting SSID")
         additional_details_element =  WebDriverWait(driver, 30).until(
@@ -2232,13 +2233,20 @@ def captive_portal(request, WifiName, WifiPass, setup_perfectoMobile, connData):
             # (//*[@label="IP Address"]/parent::*/XCUIElementTypeStaticText)[2]
             ip_address_element_text = driver.find_element_by_xpath("(//*[@label='IP Address']/parent::*/XCUIElementTypeStaticText)[2]").text
             print("ip_address_element_text: ", ip_address_element_text)
+            # is_internet=True
         except Exception as e:
             print("IP Address not Found")
             request.config.cache.set(key="select IP failed", value=str(e))
+        try:
+            WifiInternetErrMsg2 = WebDriverWait(driver, 30).until(
+                EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
+        except Exception as e:
+            is_internet = True
+            print("No Wifi-AP Error Internet Error: " + WifiName)
     except Exception as e:
         request.config.cache.set(key="select additional info failed", value=str(e))
     # ---------------------Additional INFO-------------------------------
 
     # --------------------- close app-------------------------------
-    closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+    #closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
     return ip_address_element_text, is_internet
