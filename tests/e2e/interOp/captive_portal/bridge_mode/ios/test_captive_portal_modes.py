@@ -27,14 +27,14 @@ pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.m
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "open": [{"ssid_name": "captive_open_2g", "appliedRadios": ["2G"]},
-                 {"ssid_name": "captive_open_5g", "appliedRadios": ["5G"]}],
-        "wpa": [{"ssid_name": "captive_wpa_2g", "appliedRadios": ["2G"], "security_key": "lanforge"},
-                {"ssid_name": "captive_wpa_5g", "appliedRadios": ["5G"],
+        "open": [{"ssid_name": "test_captive_open_2g", "appliedRadios": ["2G"]},
+                 {"ssid_name": "test_captive_open_5g", "appliedRadios": ["5G"]}],
+        "wpa": [{"ssid_name": "test_captive_wpa_2g", "appliedRadios": ["2G"], "security_key": "lanforge"},
+                {"ssid_name": "test_captive_wpa_5g", "appliedRadios": ["5G"],
                  "security_key": "lanforge"}],
         "wpa2_personal": [
-            {"ssid_name": "captive_wpa2_2g", "appliedRadios": ["2G"], "security_key": "lanforge"},
-            {"ssid_name": "captive_wpa2_5g", "appliedRadios": ["5G"],
+            {"ssid_name": "test_captive_wpa2_2g", "appliedRadios": ["2G"], "security_key": "lanforge"},
+            {"ssid_name": "test_captive_wpa2_5g", "appliedRadios": ["5G"],
              "security_key": "lanforge"}]},
     "rf": {},
     "radius": False
@@ -59,7 +59,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
 
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5146", name="WIFI-5146")
-    @pytest.mark.sg1
+    @pytest.mark.sg1113
     @pytest.mark.twog
     @pytest.mark.open
     def test_Captive_Portal_Open_2g_BRIDGE(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
@@ -95,7 +95,6 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5146", name="WIFI-5146")
-    @pytest.mark.sg1
     @pytest.mark.fiveg
     @pytest.mark.open
     def test_Captive_Portal_Open_5g_BRIDGE(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
@@ -117,6 +116,8 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
 
         # Set Wifi/AP Mode
         ip, is_internet = captive_portal(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        print(ip)
+        print(is_internet)
         if is_internet:
             if ip:
                 text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
@@ -132,7 +133,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5149", name="WIFI-5149")
-    @pytest.mark.sg1
+    @pytest.mark.sg12344
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_Captive_Portal_WPA_2g_Bridge(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
@@ -168,7 +169,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5149", name="WIFI-5149")
-    @pytest.mark.sg1
+    @pytest.mark.sg1112
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_Captive_Portal_WPA_5g_Bridge(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
@@ -205,7 +206,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5153", name="WIFI-5153")
-    @pytest.mark.sg1
+    @pytest.mark.sg111
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_Captive_Portal_WPA2_2g_Personal_Bridge(self, request, get_vif_state, get_ap_logs,
@@ -243,7 +244,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5153", name="WIFI-5153")
-    @pytest.mark.sg1
+    @pytest.mark.sg111
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_Captive_Portal_WPA2_5g_Personal_Bridge(self, request, get_vif_state, get_ap_logs,
