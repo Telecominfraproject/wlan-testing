@@ -27,14 +27,14 @@ pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.m
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "open": [{"ssid_name": "test_captive_open_2g", "appliedRadios": ["2G"]},
-                 {"ssid_name": "test_captive_open_5g", "appliedRadios": ["5G"]}],
-        "wpa": [{"ssid_name": "test_captive_wpa_2g", "appliedRadios": ["2G"], "security_key": "lanforge"},
-                {"ssid_name": "test_captive_wpa_5g", "appliedRadios": ["5G"],
+        "open": [{"ssid_name": "captive_open_2g", "appliedRadios": ["2G"]},
+                 {"ssid_name": "captive_open_5g", "appliedRadios": ["5G"]}],
+        "wpa": [{"ssid_name": "captive_wpa_2g", "appliedRadios": ["2G"], "security_key": "lanforge"},
+                {"ssid_name": "captive_wpa_5g", "appliedRadios": ["5G"],
                  "security_key": "lanforge"}],
         "wpa2_personal": [
-            {"ssid_name": "test_captive_wpa2_2g", "appliedRadios": ["2G"], "security_key": "lanforge"},
-            {"ssid_name": "test_captive_wpa2_5g", "appliedRadios": ["5G"],
+            {"ssid_name": "captive_wpa2_2g", "appliedRadios": ["2G"], "security_key": "lanforge"},
+            {"ssid_name": "captive_wpa2_5g", "appliedRadios": ["5G"],
              "security_key": "lanforge"}]},
     "rf": {},
     "radius": False
@@ -115,8 +115,6 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
 
         # Set Wifi/AP Mode
         ip, is_internet = captive_portal(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-        print(ip)
-        print(is_internet)
         if is_internet:
             if ip:
                 text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
