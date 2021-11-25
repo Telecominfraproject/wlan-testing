@@ -4,7 +4,7 @@ owgw:
     owgw:
       readiness:
         exec:
-          command: true
+          command: ["true"]
 
   services:
     owgw:
@@ -22,7 +22,7 @@ owgw:
     # -> Public part
     # File uploader
     # rtty
-    rtty.enabled: "true"
+    rtty.enabled: ["true"]
 
   resources:
     requests:
@@ -78,7 +78,7 @@ owsec:
     owsec:
       readiness:
         exec:
-          command: true
+          command: ["true"]
 
   services:
     owsec:
@@ -195,7 +195,7 @@ owfms:
     owfms:
       readiness:
         exec:
-          command: true
+          command: ["true"]
 
   services:
     owfms:
@@ -250,7 +250,7 @@ owprov:
     owprov:
       readiness:
         exec:
-          command: true
+          command: ["true"]
  
   services:
     owprov:
