@@ -60,30 +60,33 @@ class TestMultiAssoDisassoBridge(object):
                                         download_rate="0Gbps", stations=sel_stations, raw_lines=val, batch_size="8",
                                         upload_rate="4Mbps", protocol="UDP-IPv4", duration="120000", create_stations=False)
 
-
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
 
-        kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
-        print(type(kpi_val))
-        print(kpi_val)
-        print(kpi_val[1])
-        pass_value = 32 * 0.999
+        csv_val = lf_tools.read_csv_individual_station_throughput(dir_name=report_name, option="upload")
+        print(type(csv_val))
+        print(csv_val)
+        pass_value = 4 * 0.99
         print("pass value ", pass_value)
-        if str(kpi_val) == "empty":
-            print("kpi is empty, station did not got ip, Test failed")
-            allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
+        pass_fail = []
+        if not csv_val:
+            print("csv file does not exist, station did not got ip, Test failed")
+            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
             assert False
         else:
-
-            if float(str(kpi_val[1])[1:-1]) >= float(pass_value):
+            for i in csv_val.values():
+                if i >= pass_value:
+                    pass_fail.append(1)
+                else:
+                    pass_fail.append(0)
+            if pass_fail.count(0) == 0:
                 print("Test passed successfully")
-                allure.attach(name="Kpi Data", body=str(kpi_val))
+                allure.attach(name="Csv Data", body=str(csv_val))
                 assert True
             else:
                 print(" valueTest failed due to lesser")
-                allure.attach(name="Kpi Data", body=str(kpi_val))
+                allure.attach(name="Csv Data", body=str(csv_val))
                 assert False
         print("Test Completed... Cleaning up Stations")
 
@@ -125,25 +128,29 @@ class TestMultiAssoDisassoBridge(object):
 
         lf_tools.attach_report_graphs(report_name=report_name)
 
-        kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
-        print(type(kpi_val))
-        print(kpi_val)
-        print(kpi_val[0])
-        pass_value = 32 * 0.999
+        csv_val = lf_tools.read_csv_individual_station_throughput(dir_name=report_name, option="download")
+        print(type(csv_val))
+        print(csv_val)
+        pass_value = 4 * 0.99
         print("pass value ", pass_value)
-        if str(kpi_val) == "empty":
-            print("kpi is empty, station did not got ip, Test failed")
-            allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
+        pass_fail = []
+        if not csv_val:
+            print("csv file does not exist, station did not got ip, Test failed")
+            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
             assert False
         else:
-
-            if float(str(kpi_val[0])[1:-1]) >= float(pass_value):
+            for i in csv_val.values():
+                if i >= pass_value:
+                    pass_fail.append(1)
+                else:
+                    pass_fail.append(0)
+            if pass_fail.count(0) == 0:
                 print("Test passed successfully")
-                allure.attach(name="Kpi Data", body=str(kpi_val))
+                allure.attach(name="Csv Data", body=str(csv_val))
                 assert True
             else:
                 print(" valueTest failed due to lesser")
-                allure.attach(name="Kpi Data", body=str(kpi_val))
+                allure.attach(name="Csv Data", body=str(csv_val))
                 assert False
         print("Test Completed... Cleaning up Stations")
 
@@ -185,25 +192,29 @@ class TestMultiAssoDisassoBridge(object):
 
         lf_tools.attach_report_graphs(report_name=report_name)
 
-        kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
-        print(type(kpi_val))
-        print(kpi_val)
-        print(kpi_val[1])
-        pass_value = 64 * 0.999
+        csv_val = lf_tools.read_csv_individual_station_throughput(dir_name=report_name, option="upload")
+        print(type(csv_val))
+        print(csv_val)
+        pass_value = 8 * 0.99
         print("pass value ", pass_value)
-        if str(kpi_val) == "empty":
-            print("kpi is empty, station did not got ip, Test failed")
-            allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
+        pass_fail = []
+        if not csv_val:
+            print("csv file does not exist, station did not got ip, Test failed")
+            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
             assert False
         else:
-
-            if float(str(kpi_val[1])[1:-1]) >= float(pass_value):
+            for i in csv_val.values():
+                if i >= pass_value:
+                    pass_fail.append(1)
+                else:
+                    pass_fail.append(0)
+            if pass_fail.count(0) == 0:
                 print("Test passed successfully")
-                allure.attach(name="Kpi Data", body=str(kpi_val))
+                allure.attach(name="Csv Data", body=str(csv_val))
                 assert True
             else:
                 print(" valueTest failed due to lesser")
-                allure.attach(name="Kpi Data", body=str(kpi_val))
+                allure.attach(name="Csv Data", body=str(csv_val))
                 assert False
         print("Test Completed... Cleaning up Stations")
 
@@ -245,25 +256,29 @@ class TestMultiAssoDisassoBridge(object):
 
         lf_tools.attach_report_graphs(report_name=report_name)
 
-        kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
-        print(type(kpi_val))
-        print(kpi_val)
-        print(kpi_val[0])
-        pass_value = 64 * 0.999
+        csv_val = lf_tools.read_csv_individual_station_throughput(dir_name=report_name, option="download")
+        print(type(csv_val))
+        print(csv_val)
+        pass_value = 8 * 0.99
         print("pass value ", pass_value)
-        if str(kpi_val) == "empty":
-            print("kpi is empty, station did not got ip, Test failed")
-            allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
+        pass_fail = []
+        if not csv_val:
+            print("csv file does not exist, station did not got ip, Test failed")
+            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
             assert False
         else:
-
-            if float(str(kpi_val[0])[1:-1]) >= float(pass_value):
+            for i in csv_val.values():
+                if i >= pass_value:
+                    pass_fail.append(1)
+                else:
+                    pass_fail.append(0)
+            if pass_fail.count(0) == 0:
                 print("Test passed successfully")
-                allure.attach(name="Kpi Data", body=str(kpi_val))
+                allure.attach(name="Csv Data", body=str(csv_val))
                 assert True
             else:
                 print(" valueTest failed due to lesser")
-                allure.attach(name="Kpi Data", body=str(kpi_val))
+                allure.attach(name="Csv Data", body=str(csv_val))
                 assert False
         print("Test Completed... Cleaning up Stations")
 
