@@ -525,6 +525,12 @@ def test_access_point(fixtures_ver, request, get_configuration, get_apnos):
 
 
 @pytest.fixture(scope="session")
+def test_ap_connection_status(fixtures_ver, request, get_configuration, get_apnos):
+    """used to check the manager status of AP, should be used as a setup to verify if ap can reach cloud"""
+    connection, redirector_value = fixtures_ver.get_ap_status_logs(get_configuration, get_apnos)
+    yield connection, redirector_value
+
+@pytest.fixture(scope="session")
 def traffic_generator_connectivity(testbed, get_configuration):
     """Verify if traffic generator is reachable"""
     if get_configuration['traffic_generator']['name'] == "lanforge":

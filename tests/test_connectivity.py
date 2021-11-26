@@ -1,10 +1,12 @@
 """
     Test Case Module:  Testing Basic Connectivity with Resources
 """
+import time
 
 import allure
 import pytest
 import requests
+import json
 
 pytestmark = [pytest.mark.test_resources, pytest.mark.sanity, pytest.mark.uc_sanity,
               pytest.mark.sanity_55]
@@ -17,26 +19,119 @@ class TestResources(object):
     @pytest.mark.test_cloud_controller
     @pytest.mark.uc_sanity
     @allure.testcase(name="test_controller_connectivity", url="")
-    def test_controller_connectivity(self, setup_controller):
+    def test_controller_connectivity(self, get_apnos, setup_controller, get_configuration):
         """Test case to verify cloud Controller Connectivity"""
         login_response_json = setup_controller.login_resp.json()
+        print("login_response_json: ",login_response_json)
+
         response_code = setup_controller.login_resp.status_code
-        allure.attach(name="Login Response Code", body=str(response_code))
-        allure.attach(name="Login Response JSON",
-                      body=str(login_response_json),
-                      attachment_type=allure.attachment_type.JSON)
+        print("response_code: ",response_code)
+
+        if response_code != 200:
+            for i in range(10):
+                if setup_controller.login_resp.status_code != 200 and i < 9:
+                    print("sleeping for 30 sec, login response not equals to 200")
+                    time.sleep(30)
+                elif setup_controller.login_resp.status_code != 200 and i == 9:
+                    pytest.exit("exiting from pytest, login response is no 200")
+                else:
+                    break
+
         version = setup_controller.get_sdk_version()
-        print(version)
-        assert response_code == 200
+        print("version: ",version)
+
+        gw_status_check = setup_controller.get_system_gw().status_code
+        print("gw_status_check response from gateway: ",gw_status_check)
+        fms_status_check = setup_controller.get_system_fms().status_code
+        print("fms_status_check response from fms: ", fms_status_check)
+
+        if gw_status_check != 200:
+            for i in range(10):
+                if setup_controller.get_system_gw().status_code != 200 and i < 9:
+                    print("sleeping for 30 sec, gw service is down with response not equals to 200")
+                    time.sleep(30)
+                elif setup_controller.get_system_gw().status_code != 200 and i == 9:
+                    pytest.exit("GW service is not up yet, exiting from pytest")
+                else:
+                    break
+
+        if fms_status_check != 200:
+            for i in range(10):
+                if setup_controller.get_system_fms().status_code != 200 and i < 9:
+                    print("sleeping for 30 sec, fms service is down with response not equals to 200")
+                    time.sleep(30)
+                elif setup_controller.get_system_fms().status_code != 200 and i == 9:
+                    pytest.exit("fms service is not up yet, exiting from pytest")
+                else:
+                    break
+
+        available_device_list = []
+        devices = setup_controller.get_devices()
+        number_devices = len(devices["devices"])
+        for i in range(number_devices):
+            available_device_list.append(devices["devices"][i]["serialNumber"])
+        print("available_device_list: ",available_device_list)
+
+        if get_configuration["access_point"][0]["serial"] not in available_device_list:
+            for i in range(10):
+                available_device_list = []
+                devices = setup_controller.get_devices()
+                number_devices = len(devices["devices"])
+                for i in range(number_devices):
+                    available_device_list.append(devices["devices"][i]["serialNumber"])
+                print(available_device_list)
+
+                if get_configuration["access_point"][0]["serial"] not in available_device_list and i < 9:
+                    print("unable to find device on UI, Sleeping for 30 sec")
+                    time.sleep(30)
+                elif get_configuration["access_point"][0]["serial"] not in available_device_list and i == 9:
+                    pytest.exit("Device" + get_configuration["access_point"][0]["serial"] + "not found on UI")
+                else:
+                    break
+
+        for ap in get_configuration['access_point']:
+
+            ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
+            uci_show_ucentral = ap_ssh.run_generic_command("uci show ucentral")
+            print(uci_show_ucentral)
+            print(ap_ssh.get_ap_uci_show_ucentral())
+            if ap_ssh.get_ap_uci_show_ucentral() != get_configuration["controller"]['url']:
+                for i in range(10):
+                    ucentral_show = ap_ssh.get_ap_uci_show_ucentral()
+
+                    if ucentral_show != get_configuration["controller"]['url'] and i < 9:
+                        print("AP is not pointing to right SDK, retry after 30 sec")
+                        time.sleep(30)
+                    elif ucentral_show != get_configuration["controller"]['url'] and i == 9:
+                        pytest.exit("AP is not pointing to right SDK")
+                    else:
+                        break
+
+            # for i in uci_show_ucentral:
+            #     if i.startswith("ucentral.config.server="):
+            #         ap_sdk_information = i.split("=")[1]
+            #         if ap_sdk_information != get_configuration["controller"]['url']:
+            #             print("ap_sdk_information from AP: ",ap_sdk_information)
+            #             print("Expected SDK: ",get_configuration["controller"]['url'])
+            #             print("SDK not same")
+
+
+
+
+        assert True
 
     @pytest.mark.test_access_points_connectivity
     @allure.testcase(name="test_access_points_connectivity", url="")
-    def test_access_points_connectivity(self, test_access_point, fixtures_ver):
+    def test_access_points_connectivity(self, test_access_point, test_ap_connection_status, fixtures_ver):
         """Test case to verify Access Points Connectivity"""
         data = []
         for status in test_access_point:
             data.append(status[0])
         allure.attach(name="AP - Cloud connectivity info", body=str(fixtures_ver.ubus_connection))
+        print("test_ap_connection_status: ", test_ap_connection_status)
+        if test_ap_connection_status[0] == 0:
+            assert False
+            pytest.exit("AP in Disconnected State")
         assert False not in data
 
     @pytest.mark.traffic_generator_connectivity
