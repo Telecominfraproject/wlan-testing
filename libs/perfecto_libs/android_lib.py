@@ -51,7 +51,6 @@ def closeApp(appName, setup_perfectoMobile):
     setup_perfectoMobile[1].step_start("Closing App: " + appName)
     params = {'identifier': appName}
     setup_perfectoMobile[0].execute_script('mobile:application:close', params)
-    print("Closed App")
 
 def scrollDown(setup_perfectoMobile):
     print("Scroll Down")
