@@ -3003,7 +3003,7 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
         # -----------------To Open Connections page---------------------------
 
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
-    return ssid_with_internet
+    return ip_address_element_text, ssid_with_internet
 
 
 def close_driver(driver):
