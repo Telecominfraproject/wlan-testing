@@ -2002,9 +2002,9 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
     # ---------------------close app-------------------------------
 
 #Captive Portal
-def captive_portal(request, WifiName, WifiPass, setup_perfectoMobile, connData):
+def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
-    print("CaptivePortal Connection")
+    print("CaptivePortal Connection IOS")
     print("-------------------------------------")
 
     reportFlag = True
