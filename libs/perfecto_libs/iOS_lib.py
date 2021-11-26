@@ -369,6 +369,10 @@ def Toggle_WifiMode_iOS(request, setup_perfectoMobile, connData):
         print("Airplane Wifi Button not loaded...")
 
 def get_WifiIPAddress_iOS(request, setup_perfectoMobile, connData, wifiName):
+    print("\n------------------------------------")
+    print("Get Wifi IP Address IOS")
+    print("--------------------------------------")
+
     report = setup_perfectoMobile[1]
     driver = setup_perfectoMobile[0]
 
@@ -849,7 +853,7 @@ def deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile
 #To get an IP address
 def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
-    print("Select Wifi/AccessPoint Connection")
+    print("Select Wifi/Get IP Address IOS Connection")
     print("-------------------------------------")
 
     reportFlag = True
@@ -1121,6 +1125,10 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
 #//XCUIElementTypeOther[2]/XCUIElementTypeOther[1]/XCUIElementTypeStaticText
 def get_all_available_ssids(driver):
+    print("\n----------------------------")
+    print("Get All Available SSID")
+    print("------------------------------")
+
     active_ssid_list = []
     try:
         time.sleep(8)
@@ -1138,7 +1146,7 @@ def get_all_available_ssids(driver):
 #Connect to WIFI
 def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
-    print("Select Wifi/AccessPoint Connection")
+    print("Select Wifi Connect Connection")
     print("-------------------------------------")
 
     reportFlag = True
@@ -1327,7 +1335,7 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
 #To disconnect and forget network
 def wifi_disconnect_and_forget(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
-    print("Select Wifi/AccessPoint Connection")
+    print("Wifi Disconnect and Forget Connection")
     print("-------------------------------------")
 
     reportFlag = True
@@ -1478,7 +1486,7 @@ def wifi_disconnect_and_forget(request, WifiName, WifiPass, setup_perfectoMobile
 #To get an IP address
 def get_ip_address_eap_ios(request, WifiName ,User, ttls_passwd, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
-    print("Select Wifi/AccessPoint Connection")
+    print("Get IP Address Enterprise IOS Connection")
     print("-------------------------------------")
 
     reportFlag = True
@@ -1780,7 +1788,7 @@ def get_ip_address_eap_ios(request, WifiName ,User, ttls_passwd, setup_perfectoM
 
 def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
-    print("Select Wifi/AccessPoint Connection")
+    print("Wifi Connect Enterprise Connection")
     print("-------------------------------------")
 
     reportFlag = True
@@ -1996,7 +2004,7 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
 #Captive Portal
 def captive_portal(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
-    print("Select Wifi/CaptivePortal Connection")
+    print("CaptivePortal Connection")
     print("-------------------------------------")
 
     reportFlag = True
