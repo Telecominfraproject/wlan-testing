@@ -19,7 +19,7 @@ if 'perfecto_libs' not in sys.path:
 
 from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnection, ping_deftapps_iOS, \
     Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown,\
-    verifyUploadDownloadSpeediOS, get_ip_address_ios, captive_portal, wifi_connect, wifi_disconnect_and_forget
+    verifyUploadDownloadSpeediOS, get_ip_address_ios, captive_portal_ios, wifi_connect, wifi_disconnect_and_forget
 
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
               pytest.mark.captive_portal, pytest.mark.interop_uc_sanity, pytest.mark.bridge]
@@ -77,7 +77,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
         connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = captive_portal(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = captive_portal_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         if is_internet:
             if ip:
                 text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
@@ -112,7 +112,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
         connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = captive_portal(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = captive_portal_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         if is_internet:
             if ip:
                 text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
@@ -147,7 +147,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
         connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = captive_portal(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = captive_portal_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         if is_internet:
             if ip:
                 text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
@@ -182,7 +182,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
         connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = captive_portal(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = captive_portal_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         if is_internet:
             if ip:
                 text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
@@ -218,7 +218,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
         connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = captive_portal(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = captive_portal_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         if is_internet:
             if ip:
                 text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
@@ -255,7 +255,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
         connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = captive_portal(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = captive_portal_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         if is_internet:
             if ip:
                 text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
