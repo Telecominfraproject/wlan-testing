@@ -51,6 +51,7 @@ def closeApp(appName, setup_perfectoMobile):
     setup_perfectoMobile[1].step_start("Closing App: " + appName)
     params = {'identifier': appName}
     setup_perfectoMobile[0].execute_script('mobile:application:close', params)
+    print("Closed App")
 
 def scrollDown(setup_perfectoMobile):
     print("Scroll Down")
@@ -2984,29 +2985,6 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                 print("Auto reconnect is already off")
                         except:
                             print("Couldn't find auto reconnect element")
-
-                        # ------------------------------- Forget SSID ----------------
-                        try:
-                            check_if_no_internet_popup(driver)
-                            forget_ssid = driver.find_element_by_xpath(
-                                "//*[@resource-id='com.android.settings:id/forget_button']//*[@resource-id='com.android.settings:id/icon']")
-                            forget_ssid.click()
-                            print("Forgetting ssid")
-
-                            # ------------------------------- Wifi Switch ----------------
-                            try:
-                                print("clicking on wifi switch")
-                                get_switch_element = driver.find_element_by_xpath(
-                                    "//*[@resource-id='com.android.settings:id/switch_widget']")
-                                driver.implicitly_wait(2)
-                                get_switch_element.click()
-                            except:
-                                print("couldn't click on wifi switch")
-                            # allure.attach(name= body=str("couldn't click on wifi switch"))
-                        except:
-                            print("Couldn't forget ssid")
-                            # closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                            # return ip_address_element_text, ssid_with_internet
                     except:
                         print("Couldn't get into Additional settings")
                 except NoSuchElementException:
