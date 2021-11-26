@@ -71,11 +71,11 @@ jobs:
       - name: set variables
         id: vars
         run: |
-          echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'main' }}")
-          echo ::set-output name=gw::$(echo "${{ github.event.inputs.openwifi_gw_revision || 'master' }}")
-          echo ::set-output name=sec::$(echo "${{ github.event.inputs.openwifi_sec_revision || 'main' }}")
-          echo ::set-output name=fms::$(echo "${{ github.event.inputs.openwifi_fms_revision || 'main' }}")
-          echo ::set-output name=ui::$(echo "${{ github.event.inputs.openwifi_ui_revision || 'main' }}")
+          echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'v2.4.0-RC2' }}")
+          echo ::set-output name=gw::$(echo "${{ github.event.inputs.openwifi_gw_revision || 'v2.4.0-RC2' }}")
+          echo ::set-output name=sec::$(echo "${{ github.event.inputs.openwifi_sec_revision || 'v2.4.0-RC2' }}")
+          echo ::set-output name=fms::$(echo "${{ github.event.inputs.openwifi_fms_revision || 'v2.4.0-RC2' }}")
+          echo ::set-output name=ui::$(echo "${{ github.event.inputs.openwifi_ui_revision || 'v2.4.0-RC2' }}")
           echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'ECW5410,EAP101,EC420,ECW5211,WF188N,EAP102,CIG194C' }}")
           echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'next-latest' }}")
           echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'uc_sanity' }}")
@@ -153,9 +153,6 @@ jobs:
     - name: set reservation identifier
       id: reservation
       run: echo ::set-output name=identifier::$(echo ${{ steps.start.outputs.res_id }} | cut -d "-" -f 1)
-
-    - name: wait for DNS to propagate
-      run: sleep 300
 
     - name: get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -468,6 +465,8 @@ jobs:
         }
         EOF
 
+        cat configuration.py
+
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
 
     - name: run tests
@@ -502,9 +501,12 @@ jobs:
                     apt-get install -y dnsutils
                     HOSTS="sec-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build"
                     for HOST in \$HOSTS; do
-                      until sleep 1; host \$HOST; do :; done
+                      until sleep 1; getent hosts \$HOST; do :; done
+                      getent hosts \$HOST >> /etc/hosts
                       echo "DNS record for \$HOST resolved successfully!"
                     done
+
+                    cat /etc/hosts
 
                     cd tests
                     pytest -m "${{ needs.vars.outputs.marker_expression }}" -s -vvv --testbed="basic" --alluredir=/tmp/allure-results -o firmware="${{ needs.vars.outputs.ap_version }}"
@@ -569,7 +571,7 @@ jobs:
 
   report:
     runs-on: ubuntu-latest
-    needs: [ test, generate-matrix ]
+    needs: [ test, vars, generate-matrix ]
     if: always()
     strategy:
       max-parallel: 1
@@ -625,13 +627,11 @@ jobs:
       run: cp -r allure-results allure-report/results
 
     - name: copy new report
-      if: ${{ (github.event.inputs.marker_expression || 'uc_sanity') == 'uc_sanity' }}
       run: |
         mkdir -p reports/sanity/${{ matrix.ap_model }}
         cp -Tr allure-report reports/sanity/${{ matrix.ap_model }}/${{ github.run_number }}
 
     - name: update latest symlink
-      if: ${{ (github.event.inputs.marker_expression || 'uc_sanity') == 'uc_sanity' }}
       working-directory: reports/sanity/${{ matrix.ap_model }}
       run: ln -fns ${{ github.run_number }} latest
 
@@ -647,7 +647,7 @@ jobs:
         git commit -m "Automated deployment: $(date -u)"
 
     - name: push
-      if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/master' && needs.vars.outputs.marker_expression == 'uc_sanity'
       uses: ad-m/github-push-action@v0.6.0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -655,7 +655,7 @@ jobs:
         directory: reports
 
     - name: upload to S3
-      if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/master' && needs.vars.outputs.marker_expression == 'uc_sanity'
       uses: ./wlan-testing/.github/actions/allure-report-to-s3
       with:
         test_type: sanity

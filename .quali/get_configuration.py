@@ -37,7 +37,7 @@ def main():
         config['controller']['url'] = f'https://sec-{res_id.split("-")[0]}.cicd.lab.wlan.tip.build:16001'
         config['controller']['username'] = next(attr.Value for attr in service.Attributes if attr.Name == f'{service.ServiceName}.User')
         #config['controller']['password'] = next(attr.Value for attr in service.Attributes if attr.Name == f'{service.ServiceName}.Password')
-        config['controller']['password'] = 'openwifi'
+        config['controller']['password'] = 'OpenWifi%123'
 
     for resource in resources_in_reservation:
         if resource.ResourceModelName == 'ApV2':
