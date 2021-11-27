@@ -94,7 +94,7 @@ class TestResources(object):
             ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
             uci_show_ucentral = ap_ssh.run_generic_command("uci show ucentral")
             print(uci_show_ucentral)
-            print(ap_ssh.get_ap_uci_show_ucentral())
+            print("AP is pointing to: ", ap_ssh.get_ap_uci_show_ucentral())
             expected_sdk = str(get_configuration["controller"]['url'].replace("https://sec", "\'gw").replace(":16001","\'"))
             if ap_ssh.get_ap_uci_show_ucentral() != expected_sdk:
                 for i in range(10):
