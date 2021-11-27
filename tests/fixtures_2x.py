@@ -323,12 +323,12 @@ class Fixtures_2x:
         redirector_data = None
         for access_point_info in get_configuration['access_point']:
             ap_ssh = get_apnos(access_point_info, sdk="2.x")
-            for i in range(10):
+            for i in range(15):
                 connectivity_data = ap_ssh.run_generic_command(cmd="ubus call ucentral status")
                 if "disconnected" in str(connectivity_data):
                     print("AP in disconnected state, sleeping for 30 sec")
                     time.sleep(30)
-                    if i == 5:
+                    if i == 10:
                         print("rebooting AP")
                         ap_ssh.reboot()
                         print("sleep for 300 sec")

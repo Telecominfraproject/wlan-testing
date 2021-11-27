@@ -223,9 +223,12 @@ class TestFMS(object):
         assert False not in PASS
 
     @pytest.mark.firmware_upgrade
-    def test_firmware_upgrade_request(self, firmware_upgrade, get_ap_logs):
+    def test_firmware_upgrade_request(self, firmware_upgrade, get_ap_logs, test_ap_connection_status):
         for update in firmware_upgrade:
             allure.attach(name='serial: ' + update[0], body="")
+        if test_ap_connection_status[0] == 0:
+            assert False
+            pytest.exit("AP in Disconnected State")
         assert True
 
     @pytest.mark.test_firmware_ap
