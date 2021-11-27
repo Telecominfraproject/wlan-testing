@@ -95,28 +95,21 @@ class TestResources(object):
             uci_show_ucentral = ap_ssh.run_generic_command("uci show ucentral")
             print(uci_show_ucentral)
             print(ap_ssh.get_ap_uci_show_ucentral())
-            if ap_ssh.get_ap_uci_show_ucentral() != get_configuration["controller"]['url']:
+            expected_sdk = str(get_configuration["controller"]['url'].replace("https://sec", "\'gw").replace(":16001","\'"))
+            if ap_ssh.get_ap_uci_show_ucentral() != expected_sdk:
                 for i in range(10):
-                    ucentral_show = ap_ssh.get_ap_uci_show_ucentral()
+                    ucentral_show = str(ap_ssh.get_ap_uci_show_ucentral().strip())
+                    print("AP pointing to: ", ucentral_show)
+                    print("AP should point to: ", expected_sdk)
 
-                    if ucentral_show != get_configuration["controller"]['url'] and i < 9:
+                    if ucentral_show != expected_sdk and i < 9:
                         print("AP is not pointing to right SDK, retry after 30 sec")
                         time.sleep(30)
-                    elif ucentral_show != get_configuration["controller"]['url'] and i == 9:
+                    elif ucentral_show != expected_sdk and i == 9:
+                        assert False
                         pytest.exit("AP is not pointing to right SDK")
                     else:
                         break
-
-            # for i in uci_show_ucentral:
-            #     if i.startswith("ucentral.config.server="):
-            #         ap_sdk_information = i.split("=")[1]
-            #         if ap_sdk_information != get_configuration["controller"]['url']:
-            #             print("ap_sdk_information from AP: ",ap_sdk_information)
-            #             print("Expected SDK: ",get_configuration["controller"]['url'])
-            #             print("SDK not same")
-
-
-
 
         assert True
 
