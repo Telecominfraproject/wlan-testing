@@ -500,7 +500,7 @@ jobs:
                     HOSTS="sec-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build"
                     for HOST in \$HOSTS; do
                       HOST_ENTRY=""
-                      until [[ ! -z "\$HOST_ENTRY" ]]; do HOST_ENTRY=\$(getent hosts \$HOST); done;
+                      until [[ ! -z "\$HOST_ENTRY" ]]; do sleep 1; HOST_ENTRY=\$(getent hosts \$HOST); done;
                       echo "\$HOST_ENTRY" >> /etc/hosts
                       echo "DNS record for \$HOST resolved successfully!"
                     done
