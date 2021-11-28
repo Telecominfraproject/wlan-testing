@@ -32,9 +32,12 @@ setup_params_general = {
         "wpa": [{"ssid_name": "captive_wpa_2g", "appliedRadios": ["2G"], "security_key": "lanforge"},
                 {"ssid_name": "captive_wpa_5g", "appliedRadios": ["5G"],
                  "security_key": "lanforge"}],
-        "wpa2_personal": [
-            {"ssid_name": "captive_wpa2_2g", "appliedRadios": ["2G"], "security_key": "lanforge"},
-            {"ssid_name": "captive_wpa2_5g", "appliedRadios": ["5G"],
+        "wpa2": [{"ssid_name": "captive_wpa2_2g", "appliedRadios": ["2G"], "security_key": "lanforge"},
+                {"ssid_name": "captive2_wpa_5g", "appliedRadios": ["5G"],
+                 "security_key": "lanforge"}],
+        "wpa3_personal": [
+            {"ssid_name": "captive_wpa3_2g", "appliedRadios": ["2G"], "security_key": "lanforge"},
+            {"ssid_name": "captive_wpa3_5g", "appliedRadios": ["5G"],
              "security_key": "lanforge"}]},
     "rf": {},
     "radius": False
@@ -241,6 +244,82 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
                                                     setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        ssidName = profile_data["ssid_name"]
+        ssidPassword = profile_data["security_key"]
+        print("SSID_NAME: " + ssidName)
+        print("SSID_PASS: " + ssidPassword)
+        get_vif_state.append(ssidName)
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
+        connData = get_APToMobileDevice_data
+
+        # Set Wifi/AP Mode
+        ip, is_internet = captive_portal_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        if is_internet:
+            if ip:
+                text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
+            else:
+                text_body = ("connected to " + ssidName + "with Internet, couldn't get IP address")
+            print(text_body)
+            allure.attach(name="Connection Status: ", body=str(text_body))
+
+            assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        else:
+            allure.attach(name="Connection Status: ", body=str("No Internet access"))
+            assert False
+
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5130", name="WIFI-5130")
+    @pytest.mark.sg123
+    @pytest.mark.twog
+    @pytest.mark.wpa3_personal
+    def test_Captive_Portal_WPA3_2g_Personal_Bridge(self, request, get_vif_state, get_ap_logs,
+                                                   get_APToMobileDevice_data,
+                                                   setup_perfectoMobile_iOS):
+
+        profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
+        ssidName = profile_data["ssid_name"]
+        ssidPassword = profile_data["security_key"]
+        print("SSID_NAME: " + ssidName)
+        print("SSID_PASS: " + ssidPassword)
+        get_vif_state.append(ssidName)
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
+        report = setup_perfectoMobile_iOS[1]
+        driver = setup_perfectoMobile_iOS[0]
+        connData = get_APToMobileDevice_data
+
+        # Set Wifi/AP Mode
+        ip, is_internet = captive_portal_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        if is_internet:
+            if ip:
+                text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
+            else:
+                text_body = ("connected to " + ssidName + "with Internet, couldn't get IP address")
+            print(text_body)
+            allure.attach(name="Connection Status: ", body=str(text_body))
+
+            assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        else:
+            allure.attach(name="Connection Status: ", body=str("No Internet access"))
+            assert False
+
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5140", name="WIFI-5140")
+    @pytest.mark.sg123
+    @pytest.mark.fiveg
+    @pytest.mark.wpa3_personal
+    def test_Captive_Portal_WPA3_5g_Personal_Bridge(self, request, get_vif_state, get_ap_logs,
+                                                    get_APToMobileDevice_data,
+                                                    setup_perfectoMobile_iOS):
+
+        profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
