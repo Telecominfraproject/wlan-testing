@@ -3070,7 +3070,7 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                 return ssid_with_internet
                         else:
                             print("Switch is already On")
-                            # check_if_no_internet_popup(driver)
+                            check_if_no_internet_popup(driver)
                     except:
                         print("Couldn't turn on WIFI switch")
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
@@ -3078,19 +3078,19 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
                     # ---------------------This is to Forget current connected SSID-------------------------------
                     try:  # To deal with already connected SSID
-                        # check_if_no_internet_popup(driver)
+                        check_if_no_internet_popup(driver)
                         network_category = driver.find_element_by_xpath("//*[@text='Connected']")
                         try:  # To forget existing ssid
                             print("To forget ssid")
                             report.step_start("To forget ssid")
-                            # check_if_no_internet_popup(driver)
+                            check_if_no_internet_popup(driver)
                             additional_details_element = driver.find_element_by_xpath(
                                 "//*[@resource-id='com.android.settings:id/settings_button_no_background']")
                             additional_details_element.click()
                         except:
                             print("Couldn't get into additional details")
                         try:
-                            # check_if_no_internet_popup(driver)
+                            check_if_no_internet_popup(driver)
                             forget_ssid = driver.find_element_by_xpath(
                                 "//*[@resource-id='com.android.settings:id/button1']")
                             forget_ssid.click()
