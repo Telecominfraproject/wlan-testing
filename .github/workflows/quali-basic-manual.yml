@@ -99,6 +99,10 @@ jobs:
 
     - name: start reservation
       id: start
+      env:
+        CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
+        CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
+        CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
       run: |
         RES_ID=$(python .quali/start_reservation.py --openwifi-version "${{ github.event.inputs.openwifi_revision }}" --openwifi-gw-version "${{ github.event.inputs.openwifi_gw_revision }}" --openwifi-sec-version "${{ github.event.inputs.openwifi_sec_revision }}" --openwifi-fms-version "${{ github.event.inputs.openwifi_fms_revision }}" --openwifi-ui-version "${{ github.event.inputs.openwifi_ui_revision }}" --ap-model "${{ github.event.inputs.ap_model }}")
         echo ::set-output name=res_id::"$RES_ID"
@@ -144,6 +148,10 @@ jobs:
         echo "::set-output name=name::${NAMESPACE}"
 
     - name: prepare configuration
+      env:
+        CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
+        CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
+        CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
       run: |
         cat << EOF > configuration.py
         Customer = ""
@@ -539,6 +547,10 @@ jobs:
     - name: stop reservation
       if: always()
       run: python .quali/stop_reservation.py ${{ steps.start.outputs.res_id }}
+      env:
+        CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
+        CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
+        CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
   cleanup:
     needs: [ test ]
