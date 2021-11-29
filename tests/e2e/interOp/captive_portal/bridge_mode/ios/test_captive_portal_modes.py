@@ -60,6 +60,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
         pytest -m "captive portal and bridge and InteropsuiteA"
     """
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5179", name="WIFI-5179")
     @pytest.mark.twog
     @pytest.mark.open
     def test_Captive_Portal_Open_2g_BRIDGE(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
@@ -129,7 +130,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
         else:
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5182", name="WIFI-5182")
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_Captive_Portal_WPA_2g_Bridge(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
@@ -199,7 +200,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
         else:
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5186", name="WIFI-5186")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_Captive_Portal_WPA2_2g_Personal_Bridge(self, request, get_vif_state, get_ap_logs,
@@ -274,7 +275,6 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5130", name="WIFI-5130")
-    @pytest.mark.sg123
     @pytest.mark.twog
     @pytest.mark.wpa3_personal
     def test_Captive_Portal_WPA3_2g_Personal_Bridge(self, request, get_vif_state, get_ap_logs,
