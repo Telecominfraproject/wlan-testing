@@ -47,13 +47,13 @@ setup_params_general = {
 @allure.sub_suite(sub_suite_name="Bridge Mode Captive Portal : Suite-A")
 @pytest.mark.InteropsuiteA
 @allure.feature("BRIDGE MODE CAPTIVE PORTAL")
-# @pytest.mark.parametrize(
-#     'setup_profiles',
-#     [setup_params_general],
-#     indirect=True,
-#     scope="class"
-# )
-#@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeCaptivePortalSuiteOneBridge(object):
     """ Captive Portal SuiteA
         pytest -m "captive portal and bridge and InteropsuiteA"
