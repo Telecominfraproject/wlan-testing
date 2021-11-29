@@ -23,13 +23,12 @@ sys.path.append(f"../lanforge/lanforge-scripts/py-scripts/tip-cicd-sanity")
 
 sys.path.append(f'../libs')
 sys.path.append(f'../tools')
-from tools.scp_util import SCP_File
 sys.path.append(f'../libs/lanforge/')
 from sta_connect2 import StaConnect2
 import time
 import string
 import random
-
+from scp_util import SCP_File
 S = 12
 # from eap_connect import EAPConnect
 from test_ipv4_ttls import TTLSTest
