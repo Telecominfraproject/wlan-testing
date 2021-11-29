@@ -11,8 +11,8 @@ setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
+            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan":100},
+            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan":100}
         ]
     },
     "rf": {},
@@ -42,6 +42,7 @@ class TestMultiAssoDisassoVlan(object):
             lf_tools.admin_up_down(sta_list=station_list, option="up")
             print("stations up")
 
+        lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         print(ssid_name)
@@ -105,6 +106,7 @@ class TestMultiAssoDisassoVlan(object):
             lf_tools.admin_up_down(sta_list=station_list, option="up")
             print("stations up")
 
+        lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         print(ssid_name)
@@ -169,6 +171,7 @@ class TestMultiAssoDisassoVlan(object):
             lf_tools.admin_up_down(sta_list=station_list, option="up")
             print("stations up")
 
+        lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         print(ssid_name)
@@ -233,6 +236,7 @@ class TestMultiAssoDisassoVlan(object):
             lf_tools.admin_up_down(sta_list=station_list, option="up")
             print("stations up")
 
+        lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         print(ssid_name)
