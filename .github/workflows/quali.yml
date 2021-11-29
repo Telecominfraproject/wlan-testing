@@ -71,11 +71,11 @@ jobs:
       - name: set variables
         id: vars
         run: |
-          echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'main' }}")
-          echo ::set-output name=gw::$(echo "${{ github.event.inputs.openwifi_gw_revision || 'master' }}")
-          echo ::set-output name=sec::$(echo "${{ github.event.inputs.openwifi_sec_revision || 'main' }}")
-          echo ::set-output name=fms::$(echo "${{ github.event.inputs.openwifi_fms_revision || 'main' }}")
-          echo ::set-output name=ui::$(echo "${{ github.event.inputs.openwifi_ui_revision || 'main' }}")
+          echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'v2.4.0-RC2' }}")
+          echo ::set-output name=gw::$(echo "${{ github.event.inputs.openwifi_gw_revision || 'v2.4.0-RC2' }}")
+          echo ::set-output name=sec::$(echo "${{ github.event.inputs.openwifi_sec_revision || 'v2.4.0-RC2' }}")
+          echo ::set-output name=fms::$(echo "${{ github.event.inputs.openwifi_fms_revision || 'v2.4.0-RC2' }}")
+          echo ::set-output name=ui::$(echo "${{ github.event.inputs.openwifi_ui_revision || 'v2.4.0-RC2' }}")
           echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'ECW5410,EAP101,EC420,ECW5211,WF188N,EAP102,CIG194C' }}")
           echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'next-latest' }}")
           echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'uc_sanity' }}")
@@ -465,6 +465,8 @@ jobs:
         }
         EOF
 
+        cat configuration.py
+
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
 
     - name: run tests
@@ -495,12 +497,11 @@ jobs:
                   - -x
                   - -c
                   - |
-                    apt-get update
-                    apt-get install -y dnsutils
                     HOSTS="sec-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build"
                     for HOST in \$HOSTS; do
-                      until sleep 1; getent hosts \$HOST; do :; done
-                      getent hosts \$HOST >> /etc/hosts
+                      HOST_ENTRY=""
+                      until [[ ! -z "\$HOST_ENTRY" ]]; do sleep 1; HOST_ENTRY=\$(getent hosts \$HOST); done;
+                      echo "\$HOST_ENTRY" >> /etc/hosts
                       echo "DNS record for \$HOST resolved successfully!"
                     done
 
