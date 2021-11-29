@@ -336,7 +336,7 @@ class RunTest:
             return False
 
     def Client_Connect_Using_Radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
-                                   vlan_id=100, radio=self.twog_radios[0], sta_mode=0,
+                                   vlan_id=100, radio=None, sta_mode=0,
                                    station_name=[]):
         self.client_connect = CreateStation(_host=self.lanforge_ip, _port=self.lanforge_port,
                                             _sta_list=station_name, _password=passkey, _ssid=ssid, _security=security)
