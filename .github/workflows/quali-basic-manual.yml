@@ -1,0 +1,561 @@
+name: manual pytest execution against basic lab
+env:
+  # thirdparties
+  DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
+  DOCKER_USER_NAME: wlan-testing-cicd
+  DOCKER_USER_PASSWORD: ${{ secrets.DOCKER_USER_PASSWORD }}
+  # AWS credentials
+  AWS_EKS_NAME: tip-wlan-main
+  AWS_DEFAULT_OUTPUT: json
+  AWS_DEFAULT_REGION: us-east-2
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+  # Cloud SDK certs
+  CACERT: ${{ secrets.CACERT }}
+  CAKEY: ${{ secrets.CAKEY }}
+  ALLURE_CLI_VERSION: 2.14.0
+
+on:
+  workflow_dispatch:
+    inputs:
+      openwifi_revision:
+        required: true
+        default: 'main'
+        description: 'revision of the Open Wifi Helm chart'
+      openwifi_gw_revision:
+        required: true
+        default: 'master'
+        description: 'revision of the Open Wifi gateway service'
+      openwifi_sec_revision:
+        required: true
+        default: 'main'
+        description: 'revision of the Open Wifi security service'
+      openwifi_fms_revision:
+        required: true
+        default: 'main'
+        description: 'revision of the Open Wifi fms service'
+      openwifi_ui_revision:
+        required: true
+        default: 'main'
+        description: 'revision of the Open Wifi UI'
+      ap_model:
+        description: 'AP model to test, one of ECW5410,EAP101,EC420,ECW5211,WF188N,EAP102,CIG194C'
+        required: true
+      firmware:
+        default: 'next-latest'
+        description: 'Target firmware version to be specified <branch>-<commit | latest>'
+        required: false
+      marker_expression:
+        description: "marker expression that will be passed to pytest's -m"
+        required: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    # checkout needed repositories
+    - name: Checkout Testing repo
+      uses: actions/checkout@v2
+      with:
+        path: wlan-testing
+
+    - name: Checkout LANforge scripts
+      uses: actions/checkout@v2
+      with:
+        path: wlan-lanforge-scripts
+        repository: Telecominfraproject/wlan-lanforge-scripts
+
+    - name: import LANforge scripts
+      working-directory: wlan-testing
+      run: ./sync_repos.bash
+
+    # build and push docker image
+    - name: docker login
+      run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
+    - name: build docker image
+      working-directory: wlan-testing
+      run: docker build -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }} -f docker/Dockerfile .
+    - name: push docker image
+      run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+
+  test:
+    runs-on: [ self-hosted, small ]
+    needs: [ build ]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: install dependencies
+      run: pip install -r .quali/requirements.txt
+
+    - name: start reservation
+      id: start
+      env:
+        CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
+        CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
+        CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
+      run: |
+        RES_ID=$(python .quali/start_reservation.py --openwifi-version "${{ github.event.inputs.openwifi_revision }}" --openwifi-gw-version "${{ github.event.inputs.openwifi_gw_revision }}" --openwifi-sec-version "${{ github.event.inputs.openwifi_sec_revision }}" --openwifi-fms-version "${{ github.event.inputs.openwifi_fms_revision }}" --openwifi-ui-version "${{ github.event.inputs.openwifi_ui_revision }}" --ap-model "${{ github.event.inputs.ap_model }}")
+        echo ::set-output name=res_id::"$RES_ID"
+
+    - name: set reservation identifier
+      id: reservation
+      run: echo ::set-output name=identifier::$(echo ${{ steps.start.outputs.res_id }} | cut -d "-" -f 1)
+
+    - name: install JRE
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y default-jre
+
+    - name: install aws CLI tool
+      run: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
+
+    - name: get EKS access credentials
+      run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+    - name: install Allure CLI tool
+      run: |
+        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+
+    - name: set job name
+      id: job
+      run: echo "::set-output name=name::manual-${{ github.run_id }}"
+
+    - name: prepare namespace
+      id: namespace
+      run: |
+        NAMESPACE="testing-${{ github.run_id }}"
+        kubectl create ns $NAMESPACE
+        kubectl config set-context --current --namespace=$NAMESPACE
+        echo "::set-output name=name::${NAMESPACE}"
+
+    - name: prepare configuration
+      env:
+        CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
+        CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
+        CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
+      run: |
+        cat << EOF > configuration.py
+        Customer = ""
+        server = ""
+        CONFIGURATION = {
+          "basic": $(python .quali/get_configuration.py ${{ steps.start.outputs.res_id }})
+        }
+
+        RADIUS_SERVER_DATA = {
+            "ip": "10.10.1.221",
+            "port": 1812,
+            "secret": "testing123",
+            "user": "user",
+            "password": "password",
+            "pk_password": "whatever"
+        }
+
+        RADIUS_ACCOUNTING_DATA = {
+            "ip": "10.10.1.221",
+            "port": 1813,
+            "secret": "testing123",
+            "user": "user",
+            "password": "password",
+            "pk_password": "whatever"
+        }
+
+        PASSPOINT_RADIUS_SERVER_DATA = {
+            "ip": "52.234.179.191",
+            "port": 11812,
+            "secret": "yeababy20!",
+            "user": "nolaradius",
+            "password": "nolastart",
+            "pk_password": "whatever"
+        }
+
+        PASSPOINT_RADIUS_ACCOUNTING_SERVER_DATA = {
+            "ip": "52.234.179.191",
+            "port": 11813,
+            "secret": "yeababy20!"
+        }
+
+        PASSPOINT_PROVIDER_INFO = {
+            "mcc": None,
+            "mnc": None,
+            "network": None,
+            "nai_realms": {
+                "domain": "oss.ameriband.com",
+                "encoding": 0,
+                "eap_map": {"EAP-TTLS with username/password": ["Credential Type:username/password",
+                                                                "Non-EAP Inner Authentication Type:MSCHAPV2"]}
+            },
+            "osu_nai_standalone": "anonymous@ameriband.com",
+            "osu_nai_shared": "anonymous@ameriband.com",
+            "roaming_oi": []
+        }
+
+        PASSPOINT_OPERATOR_INFO = {
+            "osen": "Disabled",
+            "domain_name_list": ["telecominfraproject.atlassian.net"],
+            "operator_names": [
+                {"locale": "eng", "name": "Default friendly passpoint_operator name"},
+                {"locale": "fra", "name": "Nom de l'opérateur convivial par défaut"}
+            ]
+        }
+
+        PASSPOINT_VENUE_INFO = {
+            "venue_type": {"group": "Business", "type": "Police Station"},
+            "venue_names": [
+                {"locale": "eng", "name": "Example passpoint_venue", "url": "http://www.example.com/info-eng"},
+                {"locale": "fra", "name": "Exemple de lieu", "url": "http://www.example.com/info-fra"}
+            ]
+        }
+
+        PASSPOINT_PROFILE_INFO = {
+            "profile_download_url_ios": "https://onboard.almondlabs.net/ttls/AmeriBand-Profile.mobileconfig",
+            "profile_download_url_android": "https://onboard.almondlabs.net/ttls/androidconfig.cfg",
+            "profile_name_on_device": "AmeriBand",
+            "radius_configuration": {
+                "user_defined_nas_id": "FB001AP001",
+                "operator_id": "AmeribandTIP",
+                "radius_acounting_service_interval": 60
+            },
+            "interworking_hs2dot0": "Enabled",
+            "hessid": None,
+            "access_network": {
+                "Access Network Type": "Free Public Network",
+                "Authentication Type": "Acceptance of Terms & Conditions",
+                "Emergency Services Reachable": "Enabled",
+                "Unauthenticated Emergency Service": "Disabled",
+            },
+            "ip_connectivity": {
+                "Internet Connectivity": "Enabled",
+                "IP Address Type": "Public IPv4 Address Available",
+                "Connection Capability": [{"status": "open", "protocol": "TCP", "port": 8888}],
+                "ANQP Domain ID": 1234,
+                "GAS Address 3 Behaviour": "P2P Spec Workaround From Request",
+                "Disable DGAF": False
+            }
+        }
+
+        TEST_CASES = {
+            "ap_upgrade": 2233,
+            "5g_wpa2_bridge": 2236,
+            "2g_wpa2_bridge": 2237,
+            "5g_wpa_bridge": 2419,
+            "2g_wpa_bridge": 2420,
+            "2g_wpa_nat": 4323,
+            "5g_wpa_nat": 4324,
+            "2g_wpa2_nat": 4325,
+            "5g_wpa2_nat": 4326,
+            "2g_wpa2_eap_ttls_bridge": 5214,
+            "5g_wpa2_eap_ttls_bridge": 5215,
+            "2g_wpa2_eap_ttls_nat": 5216,
+            "5g_wpa2_eap_ttls_nat": 5217,
+            "cloud_connection": 5222,
+            "cloud_fw": 5247,
+            "5g_wpa2_vlan": 5248,
+            "5g_wpa_vlan": 5249,
+            "5g_wpa2_eap_ttls_vlan": 5250,
+            "2g_wpa2_vlan": 5251,
+            "2g_wpa_vlan": 5252,
+            "2g_wpa2_eap_ttls_vlan": 5253,
+            "cloud_ver": 5540,
+            "bridge_vifc": 5541,
+            "nat_vifc": 5542,
+            "vlan_vifc": 5543,
+            "bridge_vifs": 5544,
+            "nat_vifs": 5545,
+            "vlan_vifs": 5546,
+            "upgrade_api": 5547,
+            "create_fw": 5548,
+            "ap_profile_bridge": 5641,
+            "ap_profile_nat": 5642,
+            "ap_profile_vlan": 5643,
+            "ssid_2g_wpa2_eap_bridge": 5644,
+            "ssid_2g_wpa2_bridge": 5645,
+            "ssid_2g_wpa_bridge": 5646,
+            "ssid_5g_wpa2_eap_bridge": 5647,
+            "ssid_5g_wpa2_bridge": 5648,
+            "ssid_5g_wpa_bridge": 5649,
+            "ssid_2g_wpa2_eap_nat": 5650,
+            "ssid_2g_wpa2_nat": 5651,
+            "ssid_2g_wpa_nat": 5652,
+            "ssid_5g_wpa2_eap_nat": 5653,
+            "ssid_5g_wpa2_nat": 5654,
+            "ssid_5g_wpa_nat": 5655,
+            "ssid_2g_wpa2_eap_vlan": 5656,
+            "ssid_2g_wpa2_vlan": 5657,
+            "ssid_2g_wpa_vlan": 5658,
+            "ssid_5g_wpa2_eap_vlan": 5659,
+            "ssid_5g_wpa2_vlan": 5660,
+            "ssid_5g_wpa_vlan": 5661,
+            "radius_profile": 5808,
+            "bridge_ssid_update": 8742,
+            "nat_ssid_update": 8743,
+            "vlan_ssid_update": 8744,
+            "2g_wpa3_bridge": 9740,
+            "5g_wpa3_bridge": 9741,
+            "ssid_2g_wpa3_bridge": 9742,
+            "ssid_5g_wpa3_bridge": 9743,
+            "ssid_2g_wpa3_nat": 9744,
+            "ssid_5g_wpa3_nat": 9745,
+            "ssid_2g_wpa3_vlan": 9746,
+            "ssid_5g_wpa3_vlan": 9747,
+            "2g_wpa3_nat": 9748,
+            "5g_wpa3_nat": 9749,
+            "2g_wpa3_vlan": 9750,
+            "5g_wpa3_vlan": 9751,
+            "ssid_2g_wpa3_eap_bridge": 9752,
+            "ssid_5g_wpa3_eap_bridge": 9753,
+            "2g_wpa3_eap_ttls_bridge": 9754,
+            "5g_wpa3_eap_ttls_bridge": 9755,
+            "ssid_2g_wpa3_eap_nat": 9756,
+            "ssid_5g_wpa3_eap_nat": 9757,
+            "ssid_2g_wpa3_eap_vlan": 9758,
+            "ssid_5g_wpa3_eap_vlan": 9759,
+            "2g_wpa3_eap_ttls_nat": 9760,
+            "5g_wpa3_eap_ttls_nat": 9761,
+            "2g_wpa3_eap_ttls_vlan": 9762,
+            "5g_wpa3_eap_ttls_vlan": 9763,
+            "ssid_2g_wpa3_mixed_bridge": 9764,
+            "ssid_5g_wpa3_mixed_bridge": 9765,
+            "2g_wpa3_mixed_eap_ttls_wpa3_bridge": 9766,
+            "2g_wpa3_mixed_wpa3_bridge": 9767,
+            "5g_wpa3_mixed_eap_ttls_wpa3_bridge": 9768,
+            "5g_wpa3_mixed_wpa3_bridge": 9769,
+            "ssid_2g_wpa3_mixed_nat": 9770,
+            "ssid_5g_wpa3_mixed_nat": 9771,
+            "ssid_2g_wpa3_mixed_vlan": 9772,
+            "ssid_5g_wpa3_mixed_vlan": 9773,
+            # "2g_wpa3_mixed_wpa2_nat": 9774,
+            "2g_wpa3_mixed_wpa3_nat": 9775,
+            # "5g_wpa3_mixed_wpa2_nat": 9776,
+            "5g_wpa3_mixed_wpa3_nat": 9777,
+            # "2g_wpa3_mixed_wpa2_vlan": 9778,
+            "2g_wpa3_mixed_wpa3_vlan": 9779,
+            # "5g_wpa3_mixed_wpa2_vlan": 9780,
+            "5g_wpa3_mixed_wpa3_vlan": 9781,
+            "ssid_2g_wpa3_enterprise_mixed_bridge": 9782,
+            "ssid_5g_wpa3_enterprise_mixed_bridge": 9783,
+            "2g_wpa2_mixed_eap_wpa2_bridge": 9784,
+            "2g_wpa3_mixed_eap_wpa3_bridge": 9785,
+            "5g_wpa3_mixed_eap_wpa2_bridge": 9786,
+            "5g_wpa3_mixed_eap_wpa3_bridge": 9787,
+            "ssid_2g_wpa3_enterprise_mixed_nat": 9788,
+            "ssid_5g_wpa3_enterprise_mixed_nat": 9789,
+            "2g_wpa3_mixed_eap_wpa2_nat": 9790,
+            "2g_wpa3_mixed_eap_ttls_wpa3_nat": 9791,
+            "5g_wpa3_mixed_eap_wpa2_nat": 9792,
+            "5g_wpa3_mixed_eap_ttls_wpa3_nat": 9793,
+            "ssid_2g_wpa3_enterprise_mixed_vlan": 9794,
+            "ssid_5g_wpa3_enterprise_mixed_vlan": 9795,
+            "2g_wpa3_mixed_eap_wpa2_vlan": 9796,
+            "2g_wpa3_mixed_eap_ttls_wpa3_vlan": 9797,
+            "5g_wpa3_mixed_eap_wpa2_vlan": 9798,
+            "5g_wpa3_mixed_eap_ttls_wpa3_vlan": 9799,
+            "ssid_2g_open_bridge": 9805,
+            "ssid_5g_open_bridge": 9806,
+            "ssid_2g_open_nat": 9807,
+            "ssid_5g_open_nat": 9808,
+            "ssid_2g_open_vlan": 9809,
+            "ssid_5g_open_vlan": 9810,
+            "ssid_2g_wpa2_mixed_bridge": 9811,
+            "ssid_5g_wpa2_mixed_bridge": 9812,
+            "ssid_2g_wpa2_mixed_nat": 9813,
+            "ssid_5g_wpa2_mixed_nat": 9814,
+            "ssid_2g_wpa2_mixed_vlan": 9815,
+            "ssid_5g_wpa2_mixed_vlan": 9817,
+            "ssid_2g_wpa_wpa2_enterprise_mixed_bridge": 9818,
+            "ssid_5g_wpa_wpa2_enterprise_mixed_bridge": 9819,
+            "ssid_2g_wpa_wpa2_enterprise_mixed_nat": 9820,
+            "ssid_5g_wpa_wpa2_enterprise_mixed_nat": 9821,
+            "ssid_2g_wpa_wpa2_enterprise_mixed_vlan": 9822,
+            "ssid_5g_wpa_wpa2_enterprise_mixed_vlan": 9823,
+            "ssid_2g_wpa_eap_bridge": 9824,
+            "ssid_5g_wpa_eap_bridge": 9825,
+            # "ssid_2g_wpa2_eap_bridge": 9824,
+            # "ssid_5g_wpa2_eap_bridge": 9825,
+            "ssid_2g_wpa_eap_nat": 9826,
+            "ssid_5g_wpa_eap_nat": 9827,
+            "ssid_2g_wpa_eap_vlan": 9828,
+            "ssid_5g_wpa_eap_vlan": 9829,
+            # "ap_update_bridge": 9856,
+            # "ap_update_nat": 9857,
+            # "ap_update_vlan": 9858,
+            # "bridge_vifc_update": 9859,
+            # "nat_vifc_update": 9860,
+            # "vlan_vifc_update": 9861,
+            # "bridge_vifs_update": 9862,
+            # "nat_vifs_update": 9863,
+            # "vlan_vifs_update": 9864,
+            "2g_wpa_eap_ttls_bridge": 9867,
+            "5g_wpa_eap_ttls_bridge": 9768,
+            "2g_wpa_eap_ttls_nat": 9869,
+            "5g_wpa_eap_ttls_nat": 9770,
+            "2g_wpa_eap_ttls_vlan": 9871,
+            "5g_wpa_eap_ttls_vlan": 9872,
+            # "2g_wpa2_mixed_eap_wpa_bridge": 9873,
+            "2g_wpa2_mixed_eap_ttls_wpa2_bridge": 9874,
+            # "5g_wpa2_mixed_eap_wpa_bridge": 9875,
+            "5g_wpa2_mixed_eap_ttls_wpa2_bridge": 9876,
+            # "2g_wpa2_mixed_eap_wpa_nat": 9877,
+            "2g_wpa2_mixed_eap_ttls_wpa2_nat": 9878,
+            # "5g_wpa2_mixed_eap_wpa_nat": 9879,
+            "5g_wpa2_mixed_eap_ttls_wpa2_nat": 9880,
+            # "2g_wpa2_mixed_eap_wpa_vlan": 9881,
+            "2g_wpa2_mixed_eap_ttls_wpa2_vlan": 9882,
+            # "5g_wpa2_mixed_eap_wpa_vlan": 9883,
+            "5g_wpa2_mixed_eap_ttls_wpa2_vlan": 9884,
+            # "2g_wpa2_mixed_wpa_bridge": 9885,
+            "2g_wpa2_mixed_wpa2_bridge": 9886,
+            # "5g_wpa2_mixed_wpa_bridge": 9887,
+            "5g_wpa2_mixed_wpa2_bridge": 9888,
+            # "2g_wpa2_mixed_wpa_nat": 9889,
+            "2g_wpa2_mixed_wpa2_nat": 9890,
+            # "5g_wpa2_mixed_wpa_nat": 9891,
+            "5g_wpa2_mixed_wpa2_nat": 9892,
+            # "2g_wpa2_mixed_wpa_vlan": 9893,
+            "2g_wpa2_mixed_wpa2_vlan": 9894,
+            # "5g_wpa2_mixed_wpa_vlan": 9895,
+            "5g_wpa2_mixed_wpa2_vlan": 9896,
+            "2g_open_bridge": 2234,
+            "5g_open_bridge": 2235,
+            "2g_open_nat": 4321,
+            "5g_open_nat": 4322,
+            "2g_open_vlan": 9897,
+            "5g_open_vlan": 9898
+        }
+        EOF
+
+        kubectl create secret generic configuration --from-file=configuration=./configuration.py
+
+    - name: run tests
+      run: |
+        cat <<EOF | kubectl apply -f -
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: "${{ steps.job.outputs.name }}"
+        spec:
+          template:
+            metadata:
+              annotations:
+                cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+            spec:
+              containers:
+              - name: tests
+                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+                resources:
+                  requests:
+                    memory: "512Mi"
+                    cpu: "250m"
+                  limits:
+                    memory: "512Mi"
+                    cpu: "250m"
+                command:
+                  - /bin/bash
+                  - -x
+                  - -c
+                  - |
+                    HOSTS="sec-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build"
+                    for HOST in \$HOSTS; do
+                      HOST_ENTRY=""
+                      until [[ ! -z "\$HOST_ENTRY" ]]; do sleep 1; HOST_ENTRY=\$(getent hosts \$HOST); done;
+                      echo "\$HOST_ENTRY" >> /etc/hosts
+                      echo "DNS record for \$HOST resolved successfully!"
+                    done
+
+                    cd tests
+                    pytest -m "${{ github.event.inputs.marker_expression }}" -s -vvv --testbed="basic" -o firmware="${{ github.event.inputs.firmware }}" --alluredir=/tmp/allure-results
+                    ret=\$?
+                    # sleep some time to be able to download the Allure results
+                    sleep 60
+                    exit \$ret
+                volumeMounts:
+                - name: configuration
+                  mountPath: "/wlan-testing/tests/configuration.py"
+                  subPath: configuration
+                  readOnly: true
+              nodeSelector:
+                env: tests
+              tolerations:
+              - key: "tests"
+                operator: "Exists"
+                effect: "NoSchedule"
+              imagePullSecrets:
+              - name: tip-docker-registry-key
+              restartPolicy: Never
+              volumes:
+              - name: configuration
+                secret:
+                  secretName: configuration
+          backoffLimit: 0
+        EOF
+        # wait for pod to spawn
+        sleep 1
+        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
+        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
+        kubectl logs -f $podname &
+        until [ -s test_everything.xml ]
+        do
+          sleep 10
+          kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
+        done
+        echo "tests completed"
+        echo "downloading allure results..."
+        kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
+        echo "waiting for pod to exit"
+        kubectl logs -f $podname >/dev/null 2>&1
+        exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
+
+    - name: upload Allure results as artifact
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: allure-results
+        path: allure-results
+
+    - name: generate Allure report
+      run: allure-${{ env.ALLURE_CLI_VERSION }}/bin/allure generate allure-results
+
+    - name: upload Allure report as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: allure-report
+        path: allure-report
+
+    - name: cleanup
+      if: always()
+      run: |
+        kubectl delete ns "${{ steps.namespace.outputs.name }}" --wait=true
+
+    - name: stop reservation
+      if: always()
+      run: python .quali/stop_reservation.py ${{ steps.start.outputs.res_id }}
+      env:
+        CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
+        CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
+        CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
+
+  cleanup:
+    needs: [ test ]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+    - name: cleanup Docker image
+      run: curl -u${{ env.DOCKER_USER_NAME }}:${{ env.DOCKER_USER_PASSWORD }} -X DELETE "https://tip.jfrog.io/artifactory/tip-wlan-cloud-docker-repo/cloud-sdk-nightly/${{ github.run_id }}"
