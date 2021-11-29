@@ -28,7 +28,7 @@ setup_params_general = {
 }
 
 
-@pytest.mark.uc_sanityo
+@pytest.mark.uc_sanity
 @pytest.mark.suiteA
 @allure.feature("vlan MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
