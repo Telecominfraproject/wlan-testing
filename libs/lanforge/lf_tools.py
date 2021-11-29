@@ -149,9 +149,11 @@ class ChamberView:
         if option == "up":
             for i in sta_list:
                 realm_obj.admin_up(i)
+                time.sleep(0.005)
         elif option == "down":
             for j in sta_list:
                 realm_obj.admin_down(j)
+                time.sleep(0.005)
         time.sleep(2)
 
     def Chamber_View(self):
