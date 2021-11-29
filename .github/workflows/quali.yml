@@ -552,6 +552,22 @@ jobs:
         kubectl logs -f $podname >/dev/null 2>&1
         exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
 
+    - name: show gw logs
+      if: failure()
+      run: kubectl -n openwifi-${{ steps.reservation.outputs.identifier }} logs deployment/owgw
+
+    - name: show fms logs
+      if: failure()
+      run: kubectl -n openwifi-${{ steps.reservation.outputs.identifier }} logs deployment/owfms
+
+    - name: show prov logs
+      if: failure()
+      run: kubectl -n openwifi-${{ steps.reservation.outputs.identifier }} logs deployment/owprov
+
+    - name: show sec logs
+      if: failure()
+      run: kubectl -n openwifi-${{ steps.reservation.outputs.identifier }} logs deployment/owsec
+
     - name: upload Allure results as artifact
       if: always()
       uses: actions/upload-artifact@v2
