@@ -42,7 +42,6 @@ from LANforge.LFUtils import *
 if 'py-json' not in sys.path:
     sys.path.append('../py-scripts')
 from apnos.apnos import APNOS
-from controller.controller_1x.controller import Controller
 from controller.controller_1x.controller import FirmwareUtility
 import pytest
 from lanforge.lf_tests import RunTest
@@ -50,11 +49,10 @@ from cv_test_manager import cv_test
 from configuration import CONFIGURATION
 from configuration import RADIUS_SERVER_DATA
 from configuration import RADIUS_ACCOUNTING_DATA
-
+from lanforge.scp_util import SCP_File
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
 from lf_tools import ChamberView
-from sta_connect2 import StaConnect2
 from os import path
 from typing import Any, Callable, Optional
 
@@ -683,19 +681,21 @@ def get_ap_logs(request, get_apnos, get_configuration):
 
 @pytest.fixture(scope="function")
 def get_lf_logs(request, get_apnos, get_configuration):
-    S = 9
-    instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
-    for ap in get_configuration['access_point']:
-        ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
-        ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
+    ip = get_configuration["traffic_generator"]["details"]["ip"]
+    port = get_configuration["traffic_generator"]["details"]["ssh_port"]
 
-    def collect_logs():
-        for ap in get_configuration['access_point']:
-            ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
-            ap_ssh.run_generic_command(cmd="logger stop testcase: " + instance_name)
-            ap_logs = ap_ssh.get_logread(start_ref="start testcase: " + instance_name,
-                                         stop_ref="stop testcase: " + instance_name)
-            allure.attach(name='logread', body=str(ap_logs))
-        pass
+    def collect_logs_lf():
+        log_0 = "/home/lanforge/lanforge_log_0.txt"
+        log_1 = "/home/lanforge/lanforge_log_1.txt"
+        obj = SCP_File(ip=ip, port=port, username="root", password="lanforge", remote_path=log_0,
+                       local_path=".")
+        obj.pull_file()
+        allure.attach.file(source="lanforge_log_0.txt",
+                           name="lanforge_log_0")
+        obj = SCP_File(ip=ip, port=port, username="root", password="lanforge", remote_path=log_1,
+                       local_path=".")
+        obj.pull_file()
+        allure.attach.file(source="lanforge_log_1.txt",
+                           name="lanforge_log_1")
 
-    request.addfinalizer(collect_logs)
+    request.addfinalizer(collect_logs_lf)
