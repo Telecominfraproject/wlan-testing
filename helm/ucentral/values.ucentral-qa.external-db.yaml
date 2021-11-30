@@ -28,6 +28,21 @@ owgw:
       cpu: 100m
       memory: 200Mi
 
+  securityContext:
+    sysctls:
+    - name: net.ipv4.tcp_keepalive_intvl
+      value: "5"
+    - name: net.ipv4.tcp_keepalive_probes
+      value: "2"
+    - name: net.ipv4.tcp_keepalive_time
+      value: "45"
+
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+
+  podSecurityPolicy:
+    enabled: true
+
   certs:
     restapi-ca.pem: |
       -----BEGIN CERTIFICATE-----
@@ -84,6 +99,9 @@ owsec:
       cpu: 100m
       memory: 100Mi
 
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+
   certs:
     restapi-ca.pem: |
       -----BEGIN CERTIFICATE-----
@@ -132,6 +150,9 @@ rttys:
       cpu: 100m
       memory: 100Mi
 
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+
 owgwui:
   services:
     owgwui:
@@ -164,6 +185,9 @@ owgwui:
       cpu: 10m
       memory: 30Mi
 
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+
 owfms:
   services:
     owfms:
@@ -184,6 +208,9 @@ owfms:
     limits:
       cpu: 50m
       memory: 80Mi
+
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
 
   certs:
     restapi-ca.pem: |
@@ -230,6 +257,9 @@ owprov:
     limits:
       cpu: 100m
       memory: 100Mi
+
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
 
   certs:
     restapi-ca.pem: |
@@ -288,7 +318,12 @@ owprovui:
 #      cpu: 100m
 #      memory: 100m
 
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+
 kafka:
+  commonAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
   heapOpts: -Xmx512m -Xms512m
   resources:
     requests:
@@ -302,6 +337,8 @@ kafka:
   livenessProbe:
     initialDelaySeconds: 60
   zookeeper:
+    commonAnnotations:
+      cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
     heapSize: 256
     resources:
       requests:

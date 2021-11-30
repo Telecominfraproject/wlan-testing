@@ -4,7 +4,7 @@ import os
 import time
 import pandas as pd
 
-pytestmark = [pytest.mark.spatial_consistency, pytest.mark.bridge]
+pytestmark = [pytest.mark.advance, pytest.mark.spatial_consistency, pytest.mark.bridge]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -43,8 +43,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: 1.1.3034'],['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'],['attenuations2: 100'],['chamber: DUT-Chamber'], ['tt_deg: 0']]
         if station:
             time.sleep(3)
@@ -110,8 +112,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 0']]
         if station:
             time.sleep(3)
@@ -177,8 +181,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 1'],['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 60']]
         if station:
             time.sleep(3)
@@ -244,8 +250,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 60']]
         if station:
             time.sleep(3)
@@ -311,8 +319,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 240']]
         if station:
             time.sleep(3)
@@ -378,8 +388,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 2'],['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 0']]
         if station:
             time.sleep(3)
@@ -445,8 +457,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 60']]
         if station:
             time.sleep(3)
@@ -512,8 +526,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 60']]
         if station:
             time.sleep(3)
@@ -579,8 +595,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 120']]
         if station:
             time.sleep(3)
@@ -646,8 +664,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 120']]
         if station:
             time.sleep(3)
@@ -713,8 +733,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 240']]
         if station:
             time.sleep(3)
@@ -780,8 +802,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 2'],['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 240']]
         if station:
             time.sleep(3)
@@ -847,8 +871,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 120']]
         if station:
             time.sleep(3)
@@ -914,8 +940,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 2'],['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 120']]
         if station:
             time.sleep(3)
@@ -981,8 +1009,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 240']]
         if station:
             time.sleep(3)
@@ -1048,8 +1078,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 300']]
         if station:
             time.sleep(3)
@@ -1115,8 +1147,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 300']]
         if station:
             time.sleep(3)
@@ -1182,8 +1216,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 300']]
         if station:
             time.sleep(3)
@@ -1249,8 +1285,10 @@ class Test_SpatialConsistency_Bridge(object):
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
         print("station", station)
+        ser_no = lf_test.attenuator_serial()
+        print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: 1.1.3034'], ['attenuator2: 1.1.3059'],
+               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 300']]
         if station:
             time.sleep(3)

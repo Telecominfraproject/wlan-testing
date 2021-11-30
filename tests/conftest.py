@@ -42,7 +42,6 @@ from LANforge.LFUtils import *
 if 'py-json' not in sys.path:
     sys.path.append('../py-scripts')
 from apnos.apnos import APNOS
-from controller.controller_1x.controller import Controller
 from controller.controller_1x.controller import FirmwareUtility
 import pytest
 from lanforge.lf_tests import RunTest
@@ -50,11 +49,10 @@ from cv_test_manager import cv_test
 from configuration import CONFIGURATION
 from configuration import RADIUS_SERVER_DATA
 from configuration import RADIUS_ACCOUNTING_DATA
-
+from lanforge.scp_util import SCP_File
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
 from lf_tools import ChamberView
-from sta_connect2 import StaConnect2
 from os import path
 from typing import Any, Callable, Optional
 
@@ -95,6 +93,13 @@ def pytest_addoption(parser):
         action="store_true",
         default=False,
         help="skip updating firmware on the AP (useful for local testing)"
+    )
+
+    parser.addoption(
+        "--skip-lanforge",
+        action="store_true",
+        default=False,
+        help="skip to do any interactions on lanforge (to be used in case of interop)"
     )
 
     # change behaviour
@@ -258,6 +263,11 @@ def get_equipment_ref(request, setup_controller, testbed, get_configuration):
 def get_sdk_version(fixtures_ver):
     version = fixtures_ver.get_sdk_version()
     yield version
+
+
+@pytest.fixture(scope="session")
+def skip_lf(request):
+    yield request.config.getoption("--skip-lanforge")
 
 
 # Controller Fixture
@@ -542,26 +552,33 @@ def traffic_generator_connectivity(testbed, get_configuration):
 
 
 @pytest.fixture(scope="session")
-def create_lanforge_chamberview_dut(lf_tools):
-    dut_object, dut_name = lf_tools.Create_Dut()
+def create_lanforge_chamberview_dut(lf_tools, skip_lf):
+    dut_name = ""
+    if not skip_lf:
+        dut_object, dut_name = lf_tools.Create_Dut()
     return dut_name
 
 
 @pytest.fixture(scope="session")
-def lf_tools(get_configuration, testbed):
+def lf_tools(get_configuration, testbed, skip_lf):
     """ Create a DUT on LANforge"""
-    obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
-                      testbed=testbed, access_point_data=get_configuration["access_point"])
-
+    if not skip_lf:
+        obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
+                          testbed=testbed, access_point_data=get_configuration["access_point"])
+    else:
+        obj = False
     yield obj
 
 
 @pytest.fixture(scope="session")
-def lf_test(get_configuration, setup_influx, request):
-    if request.config.getoption("--exit-on-fail"):
-        obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'], influx_params=setup_influx, debug=True)
-    if request.config.getoption("--exit-on-fail") is False:
-        obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'], influx_params=setup_influx, debug=False)
+def lf_test(get_configuration, setup_influx, request, skip_lf):
+    if not skip_lf:
+        if request.config.getoption("--exit-on-fail"):
+            obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'], influx_params=setup_influx,
+                          debug=True)
+        if request.config.getoption("--exit-on-fail") is False:
+            obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'], influx_params=setup_influx,
+                          debug=False)
     yield obj
 
 
@@ -660,3 +677,25 @@ def get_ap_logs(request, get_apnos, get_configuration):
         pass
 
     request.addfinalizer(collect_logs)
+
+
+@pytest.fixture(scope="function")
+def get_lf_logs(request, get_apnos, get_configuration):
+    ip = get_configuration["traffic_generator"]["details"]["ip"]
+    port = get_configuration["traffic_generator"]["details"]["ssh_port"]
+
+    def collect_logs_lf():
+        log_0 = "/home/lanforge/lanforge_log_0.txt"
+        log_1 = "/home/lanforge/lanforge_log_1.txt"
+        obj = SCP_File(ip=ip, port=port, username="root", password="lanforge", remote_path=log_0,
+                       local_path=".")
+        obj.pull_file()
+        allure.attach.file(source="lanforge_log_0.txt",
+                           name="lanforge_log_0")
+        obj = SCP_File(ip=ip, port=port, username="root", password="lanforge", remote_path=log_1,
+                       local_path=".")
+        obj.pull_file()
+        allure.attach.file(source="lanforge_log_1.txt",
+                           name="lanforge_log_1")
+
+    request.addfinalizer(collect_logs_lf)

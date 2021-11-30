@@ -139,7 +139,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ steps.marker.outputs.expression }}" -s -vvv --testbed=interop-03 -o 'jobName=Github-Interop-${{ matrix.test_type }}' -o 'jobNumber=${{ github.run_number }}' --alluredir=/tmp/allure-results
+                    pytest -m "${{ steps.marker.outputs.expression }}" -s -vvv --testbed=interop-03 -o 'jobName=Github-Interop-${{ matrix.test_type }}' -o 'jobNumber=${{ github.run_number }}' --alluredir=/tmp/allure-results --skip-lanforge
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -183,12 +183,6 @@ jobs:
         echo "waiting for pod to exit"
         kubectl logs -f $podname >/dev/null 2>&1
         exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
-
-    - name: print logs
-      if: ${{ always() }}
-      run: |
-        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-        kubectl logs $podname
 
     - name: upload Allure results as artifact
       if: ${{ always() }}
@@ -296,6 +290,16 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: gh-pages
         directory: reports
+
+    - name: upload to S3
+      if: github.ref == 'refs/heads/master' && needs.test.outputs.additional_markers == ''
+      uses: ./wlan-testing/.github/actions/allure-report-to-s3
+      with:
+        test_type: interop
+        testbed: interop
+        report_path: allure-report
+        s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
+        s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
 
   cleanup:
     needs: [ test ]

@@ -22,12 +22,13 @@ for folder in 'py-json', 'py-scripts':
 sys.path.append(f"../lanforge/lanforge-scripts/py-scripts/tip-cicd-sanity")
 
 sys.path.append(f'../libs')
+sys.path.append(f'../tools')
 sys.path.append(f'../libs/lanforge/')
 from sta_connect2 import StaConnect2
 import time
 import string
 import random
-
+from scp_util import SCP_File
 S = 12
 # from eap_connect import EAPConnect
 from test_ipv4_ttls import TTLSTest
@@ -42,6 +43,7 @@ from csv_to_influx import CSVtoInflux
 from influx2 import RecordInflux
 from lf_multipsk import MultiPsk
 from lf_rvr_test import RvrTest
+from attenuator_serial import AttenuatorSerial
 
 
 class RunTest:
@@ -49,6 +51,7 @@ class RunTest:
     def __init__(self, lanforge_data=None, local_report_path="../reports/", influx_params=None, debug=False):
         self.lanforge_ip = lanforge_data["ip"]
         self.lanforge_port = lanforge_data["port"]
+        self.lanforge_ssh_port = lanforge_data["ssh_port"]
         self.twog_radios = lanforge_data["2.4G-Radio"]
         self.fiveg_radios = lanforge_data["5G-Radio"]
         self.ax_radios = lanforge_data["AX-Radio"]
@@ -128,6 +131,13 @@ class RunTest:
                     print("test result: " + result)
                 pytest.exit("Test Failed: Debug True")
         self.staConnect.cleanup()
+        supplicqant = "/home/lanforge/wifi/wpa_supplicant_log_" + self.staConnect.radio.split(".")[2] + ".txt"
+        obj = SCP_File(ip=self.lanforge_ip, port=self.lanforge_ssh_port, username="root", password="lanforge",
+                       remote_path=supplicqant,
+                       local_path=".")
+        obj.pull_file()
+        allure.attach.file(source="wpa_supplicant_log_" + self.staConnect.radio.split(".")[2] + ".txt",
+                           name="supplicant_log")
         for result in run_results:
             print("test result: " + result)
         result = True
@@ -214,6 +224,13 @@ class RunTest:
             #     print(e)
 
         self.eap_connect.stop()
+        supplicqant = "/home/lanforge/wifi/wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt"
+        obj = SCP_File(ip=self.lanforge_ip, port=self.lanforge_ssh_port, username="root", password="lanforge",
+                       remote_path=supplicqant,
+                       local_path=".")
+        obj.pull_file()
+        allure.attach.file(source="wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt",
+                           name="supplicant_log")
         if not self.eap_connect.passes():
             if self.debug:
                 print("test result: " + self.eap_connect.passes())
@@ -684,7 +701,7 @@ class RunTest:
         else:
             return False
 
-    def Multi_Sta_Thpt(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
+    def multi_sta_thpt(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
                        raw_line=[], instance_name="test_demo", dut_5g="", dut_2g=""):
 
         inst_name = instance_name.split('_')[0]
@@ -742,11 +759,23 @@ class RunTest:
         self.msthpt_obj.setup()
         self.msthpt_obj.run()
         report_name = self.msthpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        influx = CSVtoInflux(influxdb=self.influxdb,
-                              _influx_tag=self.influx_params["influx_tag"],
-                              target_csv=self.local_report_path + report_name + "/kpi.csv")
-        influx.post_to_influx()
+        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                             influx_port=self.influx_params["influx_port"],
+                             influx_org=self.influx_params["influx_org"],
+                             influx_token=self.influx_params["influx_token"],
+                             influx_bucket=self.influx_params["influx_bucket"],
+                             path=report_name)
+
+        influx.glob()
         return self.msthpt_obj
+
+    def attenuator_serial(self):
+        self.obj = AttenuatorSerial(
+            lfclient_host=self.lanforge_ip,
+            lfclient_port=self.lanforge_port
+        )
+        val = self.obj.show()
+        return val
 
 
 if __name__ == '__main__':
