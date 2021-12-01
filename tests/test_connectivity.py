@@ -140,7 +140,7 @@ class TestResources(object):
         expected_sdk = str(get_configuration["controller"]['url'].replace("https://sec", "\'gw").replace(":16001", "\'"))
         print("Expected SDK: ", expected_sdk)
         allure.attach(name="Exoected SDK: ", body=str(expected_sdk))
-        print("SDK On AP: ", get_uci_show)
+        print("SDK On AP: ", str(get_uci_show.split("=")[1]))
         allure.attach(name="SDK Pointed by AP: ", body=str(get_uci_show.split("=")[1]))
         if expected_sdk not in get_uci_show:
             pytest.exit("AP has invalid Redirector")
