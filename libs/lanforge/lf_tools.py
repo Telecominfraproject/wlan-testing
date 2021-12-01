@@ -310,7 +310,7 @@ class ChamberView:
             if df.empty == True:
                 return "empty"
             else:
-                result = df[column_name].values.tolist()
+                result = df.to_string(index=False)
                 return result
 
     def read_csv_individual_station_throughput(self, dir_name, option):
