@@ -11,7 +11,7 @@ import warnings
 from _pytest.outcomes import xfail
 import urllib3
 from perfecto.model.model import Job, Project
-from perfecto import (PerfectoExecutionContext, PerfectoReportiumClient,TestContext, TestResultFactory)
+from perfecto import (PerfectoExecutionContext, PerfectoReportiumClient, TestContext, TestResultFactory)
 import pytest
 import logging
 import re
@@ -37,14 +37,16 @@ try:
 except ImportError:
     from ConfigParser import ConfigParser  # ver. < 3.0
 
+
 def openApp(appName, setup_perfectoMobile):
     print("Refreshing App: " + appName)
     setup_perfectoMobile[1].step_start("Opening App: " + appName)
     params = {'identifier': appName}
-    #Open/Close/Open Action is performed to ensure the app is back to its Original Settings
+    # Open/Close/Open Action is performed to ensure the app is back to its Original Settings
     setup_perfectoMobile[0].execute_script('mobile:application:open', params)
     setup_perfectoMobile[0].execute_script('mobile:application:close', params)
     setup_perfectoMobile[0].execute_script('mobile:application:open', params)
+
 
 def closeApp(appName, setup_perfectoMobile):
     print("Closing App.." + appName)
@@ -52,6 +54,7 @@ def closeApp(appName, setup_perfectoMobile):
     params = {'identifier': appName}
     setup_perfectoMobile[0].execute_script('mobile:application:close', params)
     print("Closed App")
+
 
 def scrollDown(setup_perfectoMobile):
     print("Scroll Down")
@@ -75,6 +78,7 @@ def getDeviceID(setup_perfectoMobile):
     print("DeviceID: " + deviceID)
     return deviceID
 
+
 def getDeviceModelName(setup_perfectoMobile):
     report = setup_perfectoMobile[1]
     driver = setup_perfectoMobile[0]
@@ -84,6 +88,7 @@ def getDeviceModelName(setup_perfectoMobile):
     deviceModel = driver.execute_script('mobile:handset:info', params)
     print("ModelName: " + deviceModel)
     return deviceModel
+
 
 def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
@@ -98,13 +103,13 @@ def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMo
     contexts = driver.contexts
     driver.switch_to.context(contexts[0])
 
-    #Open Settings Application
+    # Open Settings Application
     openApp(connData["appPackage-android"], setup_perfectoMobile)
 
     deviceModelName = getDeviceModelName(setup_perfectoMobile)
-    print ("Selected Device Model: " + deviceModelName)
+    print("Selected Device Model: " + deviceModelName)
 
-    if deviceModelName!=("Pixel 4"):
+    if deviceModelName != ("Pixel 4"):
 
         report.step_start("Set Wifi Network to " + WifiName)
         try:
@@ -127,18 +132,19 @@ def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMo
                 report.step_start("Checking Wifi Radio Button Status")
                 try:
                     driver.implicitly_wait(5)
-                    WifiRadioBtnConnections = driver.find_element_by_xpath("//*[@resource-id='android:id/switch_widget' and @content-desc='Wi-Fi' and @text='Off']")
+                    WifiRadioBtnConnections = driver.find_element_by_xpath(
+                        "//*[@resource-id='android:id/switch_widget' and @content-desc='Wi-Fi' and @text='Off']")
                     report.step_start("Wifi Radio Button Disabled, Enabling Radio Button..")
                     print("Wifi Radio Button Disabled, Enabling Radio Button..")
                     WifiRadioBtnConnections.click()
                 except NoSuchElementException:
-                    Wifi_AP_Name="Null"
+                    Wifi_AP_Name = "Null"
                     driver.implicitly_wait(25)
                     report.step_start("Wifi Radio Button Already Enabled")
                     print("Wifi Radio Button Already Enabled")
 
         except NoSuchElementException:
-            Wifi_AP_Name="Null"
+            Wifi_AP_Name = "Null"
             print("Device not connected to any Wifi")
 
         report.step_start("Clicking Wi-Fi")
@@ -150,7 +156,8 @@ def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMo
 
             try:
                 report.step_start("Verify if Wifi is Connected")
-                WifiInternetErrMsg = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")
+                WifiInternetErrMsg = driver.find_element_by_xpath(
+                    "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")
                 print("Wifi Successfully Connected")
 
             except NoSuchElementException:
@@ -158,29 +165,31 @@ def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMo
 
         else:
 
-            #print("Set Wifi Radio Button to enabled")
-            #try:
+            # print("Set Wifi Radio Button to enabled")
+            # try:
             #    report.step_start("Set Wifi Radio Button to enabled")
             #    wifiRadioBtn = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/switch_widget' and @text='Wi-Fi, Off']")
             #    wifiRadioBtn.click()
-           # except NoSuchElementException:
-           #     report.step_start("Set Wifi Radio Button Already enabled")
-             #   print("Radio button Already Enabled")
+            # except NoSuchElementException:
+            #     report.step_start("Set Wifi Radio Button Already enabled")
+            #   print("Radio button Already Enabled")
 
             print("Selecting Wifi: " + WifiName)
             try:
                 report.step_start("Selecting Wifi: " + WifiName)
-                wifiSelectionElement = WebDriverWait(driver, 35).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='"+ WifiName + "']")))
+                wifiSelectionElement = WebDriverWait(driver, 35).until(
+                    EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
                 wifiSelectionElement.click()
             except Exception as e:
                 print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
                 request.config.cache.set(key="SelectingWifiFailed", value=str(e))
                 assert False
 
-            #Set password if Needed
+            # Set password if Needed
             try:
                 report.step_start("Set Wifi Password")
-                wifiPasswordElement = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/edittext']")
+                wifiPasswordElement = driver.find_element_by_xpath(
+                    "//*[@resource-id='com.android.settings:id/edittext']")
                 wifiPasswordElement.send_keys(WifiPass)
             except NoSuchElementException:
                 print("Password Page Not Loaded, password May be cached in the System")
@@ -194,7 +203,8 @@ def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMo
 
             try:
                 report.step_start("Verify if Wifi is Connected")
-                WifiInternetErrMsg = WebDriverWait(driver, 60).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                WifiInternetErrMsg = WebDriverWait(driver, 60).until(EC.presence_of_element_located((MobileBy.XPATH,
+                                                                                                     "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                 print("Wifi Successfully Connected")
 
             except NoSuchElementException:
@@ -214,12 +224,13 @@ def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMo
         try:
             print("Get Connected Wifi Name if any")
             report.step_start("Get Connected Wifi Name if any")
-            WifiNameElement = WebDriverWait(driver, 35).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='android:id/title' and @text='Wi‑Fi']/parent::*/android.widget.TextView[@resource-id='android:id/summary']")))
+            WifiNameElement = WebDriverWait(driver, 35).until(EC.presence_of_element_located((MobileBy.XPATH,
+                                                                                              "//*[@resource-id='android:id/title' and @text='Wi‑Fi']/parent::*/android.widget.TextView[@resource-id='android:id/summary']")))
             Wifi_AP_Name = WifiNameElement.text
             print("Current Wifi Status Name: " + Wifi_AP_Name)
             WifiNameElement.click()
         except NoSuchElementException:
-            Wifi_AP_Name="Null"
+            Wifi_AP_Name = "Null"
             print("Device not connected to any Wifi")
 
         if Wifi_AP_Name.__eq__(WifiName):
@@ -227,7 +238,8 @@ def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMo
 
             try:
                 report.step_start("Verify if Wifi is Connected")
-                WifiInternetErrMsg = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")
+                WifiInternetErrMsg = driver.find_element_by_xpath(
+                    "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")
                 print("Wifi Successfully Connected")
 
             except NoSuchElementException:
@@ -238,7 +250,8 @@ def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMo
             print("Set Wifi Radio Button to enabled")
             try:
                 report.step_start("Set Wifi Radio Button to enabled")
-                wifiRadioBtn = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/switch_widget' and @text='OFF']")
+                wifiRadioBtn = driver.find_element_by_xpath(
+                    "//*[@resource-id='com.android.settings:id/switch_widget' and @text='OFF']")
                 wifiRadioBtn.click()
             except NoSuchElementException:
                 report.step_start("Set Wifi Radio Button Already enabled")
@@ -247,35 +260,40 @@ def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMo
             print("Selecting Wifi: " + WifiName)
             try:
                 report.step_start("Selecting Wifi: " + WifiName)
-                wifiSelectionElement = WebDriverWait(driver, 35).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='"+ WifiName + "']")))
+                wifiSelectionElement = WebDriverWait(driver, 35).until(
+                    EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
                 wifiSelectionElement.click()
             except NoSuchElementException:
                 print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
 
-            #Set password if Needed
+            # Set password if Needed
             try:
                 report.step_start("Set Wifi Password")
-                wifiPasswordElement = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/password']")
+                wifiPasswordElement = driver.find_element_by_xpath(
+                    "//*[@resource-id='com.android.settings:id/password']")
                 wifiPasswordElement.send_keys(WifiPass)
             except NoSuchElementException:
                 print("Password Page Not Loaded, password May be cached in the System")
 
             try:
                 report.step_start("Click Connect Button")
-                joinBTNElement = driver.find_element_by_xpath("//*[@resource-id='android:id/button1' and @text='Connect']")
+                joinBTNElement = driver.find_element_by_xpath(
+                    "//*[@resource-id='android:id/button1' and @text='Connect']")
                 joinBTNElement.click()
             except NoSuchElementException:
                 print("Connect Button Not Enabled...Verify if Password is set properly  ")
 
             try:
                 report.step_start("Verify if Wifi is Connected")
-                WifiInternetErrMsg = WebDriverWait(driver, 35).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                WifiInternetErrMsg = WebDriverWait(driver, 35).until(EC.presence_of_element_located((MobileBy.XPATH,
+                                                                                                     "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                 print("Wifi Successfully Connected")
 
             except NoSuchElementException:
                 print("Wifi Connection Error: " + WifiName)
 
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
+
 
 def ForgetWifiConnection(request, setup_perfectoMobile, WifiName, connData):
     print("\n-----------------------------")
@@ -288,15 +306,15 @@ def ForgetWifiConnection(request, setup_perfectoMobile, WifiName, connData):
     print("Switching Context to Native")
     driver.switch_to.context('NATIVE_APP')
     contexts = driver.contexts
-    #print(contexts)
+    # print(contexts)
 
-    #Open Settings Application
+    # Open Settings Application
     openApp(connData["appPackage-android"], setup_perfectoMobile)
 
     deviceModelName = getDeviceModelName(setup_perfectoMobile)
-    print ("Selected Device Model: " + deviceModelName)
+    print("Selected Device Model: " + deviceModelName)
 
-    if deviceModelName!=("Pixel 4"):
+    if deviceModelName != ("Pixel 4"):
 
         report.step_start("Forget Existing Wifi" + WifiName)
         try:
@@ -314,7 +332,7 @@ def ForgetWifiConnection(request, setup_perfectoMobile, WifiName, connData):
             Wifi_AP_Name = WifiNameElement.text
             print("Connected to Wifi: " + Wifi_AP_Name)
         except NoSuchElementException:
-            Wifi_AP_Name="Null"
+            Wifi_AP_Name = "Null"
             print("Device not connected to any Wifi")
 
         report.step_start("Clicking Wi-Fi")
@@ -328,7 +346,8 @@ def ForgetWifiConnection(request, setup_perfectoMobile, WifiName, connData):
             print("Load Wifi Details Page")
             try:
                 report.step_start("Load Wifi Details Page")
-                WifiInternetDetails = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/wifi_details']")
+                WifiInternetDetails = driver.find_element_by_xpath(
+                    "//*[@resource-id='com.android.settings:id/wifi_details']")
                 WifiInternetDetails.click()
             except NoSuchElementException:
                 print("Wifi Connection Error: " + WifiName)
@@ -336,7 +355,8 @@ def ForgetWifiConnection(request, setup_perfectoMobile, WifiName, connData):
             print("Forget Wifi Network")
             try:
                 report.step_start("Forget Wifi Network")
-                WifiForget= driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/smallLabel' and @text='Forget']")
+                WifiForget = driver.find_element_by_xpath(
+                    "//*[@resource-id='com.android.settings:id/smallLabel' and @text='Forget']")
                 WifiForget.click()
             except NoSuchElementException:
                 print("Wifi Connection Error: " + WifiName)
@@ -344,7 +364,8 @@ def ForgetWifiConnection(request, setup_perfectoMobile, WifiName, connData):
             print("Verify if wifi is disconnected from: " + WifiName)
             try:
                 report.step_start("Verify if wifi is disconnected from: " + WifiName)
-                WifiDisconnect = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")
+                WifiDisconnect = driver.find_element_by_xpath(
+                    "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")
                 print("Wifi Not disconnected, check xpath for: " + WifiName)
                 assert False
             except Exception as e:
@@ -357,14 +378,16 @@ def ForgetWifiConnection(request, setup_perfectoMobile, WifiName, connData):
             report.step_start("Probably wifi auto connected to another network")
             try:
                 report.step_start("Wifi Details Page")
-                WifiInternetDetails = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/wifi_details']")
+                WifiInternetDetails = driver.find_element_by_xpath(
+                    "//*[@resource-id='com.android.settings:id/wifi_details']")
                 WifiInternetDetails.click()
             except NoSuchElementException:
                 print("Wifi Connection Error: " + WifiName)
 
             try:
                 report.step_start("Forget Wifi Network")
-                WifiForget= driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/smallLabel' and @text='Forget']")
+                WifiForget = driver.find_element_by_xpath(
+                    "//*[@resource-id='com.android.settings:id/smallLabel' and @text='Forget']")
                 WifiForget.click()
             except NoSuchElementException:
                 print("Wifi Connection Error: " + WifiName)
@@ -372,15 +395,16 @@ def ForgetWifiConnection(request, setup_perfectoMobile, WifiName, connData):
             print("Verify if wifi is disconnected from: " + WifiName)
             try:
                 report.step_start("Verify if wifi is disconnected from: " + WifiName)
-                #WifiForget= driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")
+                # WifiForget= driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")
                 print("Wifi Not disconnected, check xpath for: " + WifiName)
-                WifiForget = WebDriverWait(driver, 20).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                WifiForget = WebDriverWait(driver, 20).until(EC.presence_of_element_located((MobileBy.XPATH,
+                                                                                             "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
             except Exception as e:
                 assert True
                 print("Wifi Disconnected Successfully: " + WifiName)
 
     else:
-        #print("Pixel Custom Code")
+        # print("Pixel Custom Code")
         report.step_start("Forget Wifi Network on Pixel" + WifiName)
         try:
             print("Click Network & Internet")
@@ -393,39 +417,42 @@ def ForgetWifiConnection(request, setup_perfectoMobile, WifiName, connData):
         try:
             print("Get Connected Wifi Name if any")
             report.step_start("Get Connected Wifi Name if any")
-            WifiNameElement = WebDriverWait(driver, 35).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='android:id/title' and @text='Wi‑Fi']/parent::*/android.widget.TextView[@resource-id='android:id/summary']")))
+            WifiNameElement = WebDriverWait(driver, 35).until(EC.presence_of_element_located((MobileBy.XPATH,
+                                                                                              "//*[@resource-id='android:id/title' and @text='Wi‑Fi']/parent::*/android.widget.TextView[@resource-id='android:id/summary']")))
             Wifi_AP_Name = WifiNameElement.text
             print("Current Wifi Status Name: " + Wifi_AP_Name)
             WifiNameElement.click()
         except NoSuchElementException:
-            Wifi_AP_Name="Null"
+            Wifi_AP_Name = "Null"
             print("Device not connected to any Wifi")
 
-
-        #print("Wifi Name Matches - Already Connected To: " + Wifi_AP_Name)
+        # print("Wifi Name Matches - Already Connected To: " + Wifi_AP_Name)
         try:
             report.step_start("Wifi More information")
-            WifiInternetMoreSettings = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/settings_button_no_background']")
+            WifiInternetMoreSettings = driver.find_element_by_xpath(
+                "//*[@resource-id='com.android.settings:id/settings_button_no_background']")
             WifiInternetMoreSettings.click()
         except NoSuchElementException:
             print("Wifi Not Connected to any Wifi Error: " + WifiName)
 
         try:
             report.step_start("Forget Wifi Network")
-            WifiInternetMoreSettings = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/button1' and @text='Forget']")
+            WifiInternetMoreSettings = driver.find_element_by_xpath(
+                "//*[@resource-id='com.android.settings:id/button1' and @text='Forget']")
             WifiInternetMoreSettings.click()
         except NoSuchElementException:
             print("Wifi Connection Error: " + WifiName)
 
-
         try:
             report.step_start("Verify if Wifi is Connected")
-            WifiInternetErrMsg = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")
+            WifiInternetErrMsg = driver.find_element_by_xpath(
+                "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")
             print("Forgot Wifi Error, check xpath")
         except Exception as e:
             print("Wifi Disconnected Successfully: " + WifiName)
 
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
+
 
 def Toggle_AirplaneMode_android(request, setup_perfectoMobile, connData):
     print("\n-----------------------")
@@ -438,13 +465,13 @@ def Toggle_AirplaneMode_android(request, setup_perfectoMobile, connData):
     print("Switching Context to Native")
     driver.switch_to.context('NATIVE_APP')
     contexts = driver.contexts
-    #print(contexts)
+    # print(contexts)
 
-    #Open Settings Application
+    # Open Settings Application
     openApp(connData["appPackage-android"], setup_perfectoMobile)
 
     deviceModelName = getDeviceModelName(setup_perfectoMobile)
-    print ("Selected Device Model: " + deviceModelName)
+    print("Selected Device Model: " + deviceModelName)
 
     airplaneFlag = False
 
@@ -483,6 +510,7 @@ def Toggle_AirplaneMode_android(request, setup_perfectoMobile, connData):
 
     return airplaneFlag
 
+
 def Toggle_WifiMode_android(request, setup_perfectoMobile, WifiName, connData):
     print("\n-----------------------")
     print("Toggle Wifi Mode")
@@ -494,13 +522,13 @@ def Toggle_WifiMode_android(request, setup_perfectoMobile, WifiName, connData):
     print("Switching Context to Native")
     driver.switch_to.context('NATIVE_APP')
     contexts = driver.contexts
-    #print(contexts)
+    # print(contexts)
 
-    #Open Settings Application
+    # Open Settings Application
     openApp(connData["appPackage-android"], setup_perfectoMobile)
 
     deviceModelName = getDeviceModelName(setup_perfectoMobile)
-    print ("Selected Device Model: " + deviceModelName)
+    print("Selected Device Model: " + deviceModelName)
 
     WifiFlag = False
 
@@ -519,7 +547,7 @@ def Toggle_WifiMode_android(request, setup_perfectoMobile, WifiName, connData):
         Wifi_AP_Name = WifiNameElement.text
         print("Current Wifi Status Name: " + Wifi_AP_Name)
     except NoSuchElementException:
-        Wifi_AP_Name="Null"
+        Wifi_AP_Name = "Null"
         print("Device not connected to any Wifi")
 
     print("Current Selected Wifi: " + Wifi_AP_Name)
@@ -540,7 +568,7 @@ def Toggle_WifiMode_android(request, setup_perfectoMobile, WifiName, connData):
         Wifi_AP_Name2 = WifiNameElement.text
         print("Device Connected to Wifi: " + Wifi_AP_Name2)
     except NoSuchElementException:
-        Wifi_AP_Name2="Null"
+        Wifi_AP_Name2 = "Null"
         print("Device connected to Wifi: " + Wifi_AP_Name2)
 
     try:
@@ -554,11 +582,12 @@ def Toggle_WifiMode_android(request, setup_perfectoMobile, WifiName, connData):
     try:
         print("Get Connected Wifi Name if any after Wifi Radio is Enabled")
         report.step_start("Get Connected Wifi Name if any after Wifi Radio is disabled")
-        WifiNameElement3 = WebDriverWait(driver, 35).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='android:id/summary']")))
+        WifiNameElement3 = WebDriverWait(driver, 35).until(
+            EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='android:id/summary']")))
         Wifi_AP_Name3 = WifiNameElement3.text
         print("Current Wifi Status Name: " + Wifi_AP_Name3)
     except NoSuchElementException and TimeoutException:
-        Wifi_AP_Name3="Null"
+        Wifi_AP_Name3 = "Null"
         print("Device did not connect back to Wifi: " + WifiName)
 
     if Wifi_AP_Name3.__eq__(WifiName):
@@ -567,6 +596,7 @@ def Toggle_WifiMode_android(request, setup_perfectoMobile, WifiName, connData):
         WifiFlag = False
 
     return WifiFlag
+
 
 def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMobileDevice_data):
     print("\n-------------------------------------")
@@ -577,7 +607,7 @@ def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMob
     driver = setup_perfectoMobile[0]
     connData = get_APToMobileDevice_data
 
-    currentResult=False
+    currentResult = False
 
     driver.switch_to.context('WEBVIEW_1')
 
@@ -590,7 +620,7 @@ def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMob
         elementFindTxt.send_keys("Internet Speed Test")
     except Exception as e:
         print("Launching Safari Failed")
-        print (e)
+        print(e)
         # allure.attach(name="Speed Test logs: ", body=str("Launching Safari Failed"))
         # allure.attach(name="Speed Test logs: ", body=str("Error log: " + e))
 
@@ -620,7 +650,7 @@ def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMob
         # allure.attach(name="Speed Test logs: ", body=str("Search Run Speed Test not active..." + NoSuchElementException))
         return False
 
-    #Get upload/Download Speed
+    # Get upload/Download Speed
     try:
         print("Get Download Speed")
         report.step_start("Get upload/Download Speed")
@@ -634,13 +664,15 @@ def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMob
         UploadMbps = driver.find_element_by_xpath(connData["UploadMbps"])
         uploadSpeed = UploadMbps.text
         print("Upload: " + uploadSpeed + " Mbps")
-        allure.attach(name="Speed Test logs: ", body=str("Upload: " + uploadSpeed + " Mbps" + "  Download: " + downloadSpeed + " Mbps"))
+        allure.attach(name="Speed Test logs: ",
+                      body=str("Upload: " + uploadSpeed + " Mbps" + "  Download: " + downloadSpeed + " Mbps"))
         print("Access Point Verification Completed Successfully")
         currentResult = True
     except NoSuchElementException:
         print("Access Point Verification NOT Completed, checking Connection....")
 
     return currentResult
+
 
 def downloadInstallOpenRoamingProfile(request, profileDownloadURL, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
@@ -668,9 +700,10 @@ def downloadInstallOpenRoamingProfile(request, profileDownloadURL, setup_perfect
         print("Alert Accepted")
     except TimeoutException:
         print("no alert")
-        #//*[@resource-id="android:id/button1"]
-    #Open Settings Application
-    #openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+        # //*[@resource-id="android:id/button1"]
+    # Open Settings Application
+    # openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+
 
 def deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile, connData):
     print("\n-----------------------------")
@@ -685,18 +718,18 @@ def deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile
     driver.switch_to.context('NATIVE_APP')
     contexts = driver.contexts
 
-    #Open Settings Application
+    # Open Settings Application
     openApp(connData["appPackage-android"], setup_perfectoMobile)
 
     deviceModelName = getDeviceModelName(setup_perfectoMobile)
 
-    if deviceModelName!=("Pixel 4"):
-        #Not a pixel Device
-        print ("Selected Device Model: " + deviceModelName)
+    if deviceModelName != ("Pixel 4"):
+        # Not a pixel Device
+        print("Selected Device Model: " + deviceModelName)
         report.step_start("Forget Profile: " + profileName)
 
         # three dotss
-        #//*[@resource-id='com.android.settings:id/round_corner']
+        # //*[@resource-id='com.android.settings:id/round_corner']
         try:
             print("Click Connections")
             report.step_start("Click Connections")
@@ -713,7 +746,7 @@ def deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile
             print("Exception: Clicking Wi-Fi - Update/check Xpath for Click Wifi Connection ")
 
         try:
-            print ("Click Advanced Menu 3 Dot")
+            print("Click Advanced Menu 3 Dot")
             report.step_start("Click Advanced Menu 3 Dot")
             ThreeDotMenuBtn = driver.find_element_by_xpath("//*[@content-desc='More options']")
             ThreeDotMenuBtn.click()
@@ -723,53 +756,54 @@ def deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile
         # Click Advanced
         # //*[@text='Advanced']
         try:
-            print ("Click Advanced")
+            print("Click Advanced")
             report.step_start("Click Advanced")
             AdvBtn = driver.find_element_by_xpath("//*[@text='Advanced']")
             AdvBtn.click()
         except NoSuchElementException:
             print("Exception: Click Advanced")
 
-        #Scroll Down
+        # Scroll Down
         scrollDown(setup_perfectoMobile)
 
-        #Click HotSpot
-        #//*[@text="Hotspot 2.0"]
+        # Click HotSpot
+        # //*[@text="Hotspot 2.0"]
         try:
-            print ("Click HotSpot")
+            print("Click HotSpot")
             report.step_start("Click HotSpot")
             HotSpotBtn = driver.find_element_by_xpath("//*[@text='Hotspot 2.0']")
             HotSpotBtn.click()
         except NoSuchElementException:
             print("Exception: Click HotSpot")
 
-        #Click Ameriband
-        #//*[@text="Ameriband"]
+        # Click Ameriband
+        # //*[@text="Ameriband"]
         try:
-            print ("Click Ameriband")
+            print("Click Ameriband")
             report.step_start("Click Ameriband")
             AmeribandXpath = "//*[@text='Ameriband']"
-            AmeribandBtn = WebDriverWait(driver, 25).until(EC.presence_of_element_located((MobileBy.XPATH, AmeribandXpath)))
+            AmeribandBtn = WebDriverWait(driver, 25).until(
+                EC.presence_of_element_located((MobileBy.XPATH, AmeribandXpath)))
             AmeribandBtn.click()
 
         except NoSuchElementException and TimeoutException and Exception:
             report.step_start("Exception: Profile Don't Exist")
             print("Exception: Profile Don't Exist")
 
-        #Click Forget
-        #//*[@resource-id="com.android.settings:id/icon"]
+        # Click Forget
+        # //*[@resource-id="com.android.settings:id/icon"]
         try:
-            print ("Click Forget")
+            print("Click Forget")
             report.step_start("Click Forget")
             ForgetBTN = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/icon']")
             ForgetBTN.click()
         except NoSuchElementException:
             print("Exception: Click Forget")
 
-        #Click Forget Confirm
-        #//*[@resource-id="android:id/button1"]
+        # Click Forget Confirm
+        # //*[@resource-id="android:id/button1"]
         try:
-            print ("Click Forget Confirm")
+            print("Click Forget Confirm")
             report.step_start("Click Forget Confirm")
             ForgetConfirm = driver.find_element_by_xpath("//*[@resource-id='android:id/button1']")
             ForgetConfirm.click()
@@ -777,12 +811,13 @@ def deleteOpenRoamingInstalledProfile(request, profileName, setup_perfectoMobile
             print("Exception: Click Forget Confirm")
 
     else:
-        #Pixel Device
-        print ("Pixel Device Not supported: " + deviceModelName)
+        # Pixel Device
+        print("Pixel Device Not supported: " + deviceModelName)
         report.step_start("Pixel Device Not supported: ")
         assert False
 
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
+
 
 def verify_APconnMobileDevice_Android(request, profileNameSSID, setup_perfectoMobile, connData):
     print("\n-----------------------------")
@@ -797,14 +832,14 @@ def verify_APconnMobileDevice_Android(request, profileNameSSID, setup_perfectoMo
     driver.switch_to.context('NATIVE_APP')
     contexts = driver.contexts
 
-    #Open Settings Application
+    # Open Settings Application
     openApp(connData["appPackage-android"], setup_perfectoMobile)
 
     deviceModelName = getDeviceModelName(setup_perfectoMobile)
 
-    if deviceModelName!=("Pixel 4"):
-        #Not a pixel Device
-        print ("Selected Device Model: " + deviceModelName)
+    if deviceModelName != ("Pixel 4"):
+        # Not a pixel Device
+        print("Selected Device Model: " + deviceModelName)
 
         report.step_start("Click Connections")
         try:
@@ -823,8 +858,9 @@ def verify_APconnMobileDevice_Android(request, profileNameSSID, setup_perfectoMo
         try:
             print("Verify if Wifi is Connected to: " + profileNameSSID)
             report.step_start("Verify if Wifi is Connected: " + profileNameSSID)
-            #WifiInternetErrMsg = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + profileNameSSID + "']")
-            WifiInternetErrMsg = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='Ameriband']")
+            # WifiInternetErrMsg = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + profileNameSSID + "']")
+            WifiInternetErrMsg = driver.find_element_by_xpath(
+                "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='Ameriband']")
             print("Wifi Successfully Connected")
 
         except NoSuchElementException:
@@ -833,14 +869,15 @@ def verify_APconnMobileDevice_Android(request, profileNameSSID, setup_perfectoMo
             assert False
 
     else:
-        #Pixel Device
-        print ("Pixel Device Not supported: " + deviceModelName)
+        # Pixel Device
+        print("Pixel Device Not supported: " + deviceModelName)
         report.step_start("Pixel Device Not supported: ")
         assert False
 
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
     # Cache_clear Function
+
 
 def cache_clear_android(request, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
@@ -873,7 +910,8 @@ def cache_clear_android(request, setup_perfectoMobile, connData):
             driver.implicitly_wait(30)
             print("Entering Chrome in Search")
             report.step_start("Entering text Chrome")
-            search_ele = driver.find_element_by_xpath("//*[@resource-id='com.android.settings.intelligence:id/search_src_text']")
+            search_ele = driver.find_element_by_xpath(
+                "//*[@resource-id='com.android.settings.intelligence:id/search_src_text']")
             search_ele.send_keys("chrome")
         except Exception as e:
             print("Exception: Entering chrome failed")
@@ -1045,10 +1083,10 @@ def cache_clear_android(request, setup_perfectoMobile, connData):
         except NoSuchElementException:
             print("Exception: Verify Xpath - Update/check Xpath for Checking cache clear")
 
-
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-def check_if_no_internet_popup(driver):#To check and kill if any popups related to no internet
+
+def check_if_no_internet_popup(driver):  # To check and kill if any popups related to no internet
     time.sleep(1)
     driver.implicitly_wait(1)
     try:
@@ -1071,7 +1109,7 @@ def check_if_no_internet_popup(driver):#To check and kill if any popups related 
                     return False
             else:
                 print("Popup Text is: ", popup_text)
-                print("popup element is: ",popup)
+                print("popup element is: ", popup)
                 return False
         except:
             print("Popup Text is: ", popup_text)
@@ -1080,7 +1118,8 @@ def check_if_no_internet_popup(driver):#To check and kill if any popups related 
     except:
         pass
 
-#To get an IP address
+
+# To get an IP address
 def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     test_workflow_and_perfecto_connectivity()
     print("\n-------------------------------------")
@@ -1106,18 +1145,15 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     if deviceModelName != ("Pixel 4"):
         report.step_start("Set Wifi Network to 1105" + WifiName)
 
-
         # -----------------To Open Connections page-----------------------
         try:
             print("Verifying Connected Wifi Connection")
             report.step_start("Click Connections")
-            connElement = WebDriverWait(driver, 120).until(
-                            EC.presence_of_element_located((MobileBy.XPATH,"//*[@text='Connections']")))
-            print("Element value for (//*[@text='Connections']): ", connElement)
-            print("ele:   ",connElement)
-            time.sleep(10)
-            connElement.click()
-
+            element_connections = None
+            element_connections = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Connections']")))
+            print("Element value for (//*[@text='Connections']): ", element_connections)
+            print("ele:   ", element_connections)
+            element_connections.click()
 
             # ---------------------Open WIFI page-------------------------------
             try:
@@ -1125,22 +1161,23 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                 print("Clicking WIFI")
                 time.sleep(3)
                 wifiElement = WebDriverWait(driver, 10).until(
-                            EC.presence_of_element_located((MobileBy.XPATH,"//*[@text='Wi-Fi']")))
+                    EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Wi-Fi']")))
                 print("Element value for (//*[@text='Wi-Fi']): ", wifiElement)
                 wifiElement.click()
-
 
                 # --------------------To Turn on WIFi Switch if already OFF--------------------------------
                 try:
                     driver.implicitly_wait(1)
-                    get_switch_text_element = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/switch_text']")
+                    get_switch_text_element = driver.find_element_by_xpath(
+                        "//*[@resource-id='com.android.settings:id/switch_text']")
                     get_switch_text = get_switch_text_element.text
-                    print("get_switch_text: ",get_switch_text)
+                    print("get_switch_text: ", get_switch_text)
                     print("Find wifi switch")
-                    try: #To Turn on Wi-Fi Switch
+                    try:  # To Turn on Wi-Fi Switch
                         if get_switch_text == "Off":
                             # driver.implicitly_wait(3)
-                            get_switch_element = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/switch_widget']")
+                            get_switch_element = driver.find_element_by_xpath(
+                                "//*[@resource-id='com.android.settings:id/switch_widget']")
                             driver.implicitly_wait(1)
                             get_switch_element.click()
                             driver.implicitly_wait(1)
@@ -1171,12 +1208,12 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         return ip_address_element_text, ssid_with_internet
 
-                    #---------------------This is to Forget current connected SSID-------------------------------
-                    try: #To deal with already connected SSID
+                    # ---------------------This is to Forget current connected SSID-------------------------------
+                    try:  # To deal with already connected SSID
                         check_if_no_internet_popup(driver)
                         network_category = driver.find_element_by_xpath(
                             "//*[@resource-id='com.android.settings:id/connected_network_category']")
-                        try: #To forget exhisting ssid
+                        try:  # To forget exhisting ssid
                             print("To forget ssid")
                             check_if_no_internet_popup(driver)
                             additional_details_element = driver.find_element_by_xpath(
@@ -1196,15 +1233,15 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                             print("Couldn't get into additional details")
                     except:
                         print("No Connected SSIDS")
-                    #----------------------This is to Forget current connected SSID--------------------------------
+                    # ----------------------This is to Forget current connected SSID--------------------------------
 
                     time.sleep(2)
                     print("Selecting Wifi: " + WifiName)
-                   #allure.attach(name= body=str("Selecting Wifi: " + WifiName))
+                    # allure.attach(name= body=str("Selecting Wifi: " + WifiName))
                     ssid_found = False
                     available_ssids = False
-                    #This is To get all available ssids
-                    #------------------------------------------------------
+                    # This is To get all available ssids
+                    # ------------------------------------------------------
                     try:
                         for k in range(3):
                             available_ssids = get_all_available_ssids(driver)
@@ -1216,24 +1253,22 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                     time.sleep(2)
                                 else:
                                     ssid_found = True
-                                    print(WifiName+" : Found in Device")
-                                   #allure.attach(name= body=str(WifiName+" : Found in Device"))
+                                    print(WifiName + " : Found in Device")
+                                    # allure.attach(name= body=str(WifiName+" : Found in Device"))
                                     break
                             except:
                                 print("couldn't find wifi in available ssid")
                         if not ssid_found:
                             print("could not found " + WifiName + " in device")
-                           #allure.attach(name= body=str("could not found" + WifiName + " in device"))
+                            # allure.attach(name= body=str("could not found" + WifiName + " in device"))
                             closeApp(connData["appPackage-android"], setup_perfectoMobile)
                             return ip_address_element_text, ssid_with_internet
                     except:
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         return ip_address_element_text, ssid_with_internet
-                    #-------------------------------------------------------
+                    # -------------------------------------------------------
 
-
-
-                    #Selecting WIFI
+                    # Selecting WIFI
                     # -------------------------------------------------------
                     try:
                         report.step_start("Selecting Wifi: " + WifiName)
@@ -1248,8 +1283,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         return ip_address_element_text, ssid_with_internet
                     # -------------------------------------------------------
 
-
-                    #Set password if Needed
+                    # Set password if Needed
                     # -------------------------------------------------------
                     try:
                         check_if_no_internet_popup(driver)
@@ -1262,7 +1296,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     check_if_no_internet_popup(driver)
                     # -------------------------------------------------------
 
-                    #Click on connect button
+                    # Click on connect button
                     # -------------------------------------------------------
                     try:
                         report.step_start("Click Connect Button")
@@ -1273,13 +1307,13 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     check_if_no_internet_popup(driver)
                     # -------------------------------------------------------
 
-                    #Verify if WiFi is connected
+                    # Verify if WiFi is connected
                     # -------------------------------------------------------
                     try:
                         report.step_start("Verify if Wifi is Connected")
                         WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                             EC.presence_of_element_located((MobileBy.XPATH,
-                            "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                                                            "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                         ssid_with_internet = True
                         print("Wifi Successfully Connected")
                         # time.sleep(5)
@@ -1289,7 +1323,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                             check_if_no_internet_popup(driver)
                             WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                                 EC.presence_of_element_located((MobileBy.XPATH,
-                                "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='"
+                                                                "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='"
                                                                 + WifiName + "']")))
                             print("Wifi Successfully Connected without internet")
                             check_if_no_internet_popup(driver)
@@ -1307,10 +1341,10 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                 return ip_address_element_text, ssid_with_internet
                     # -------------------------------------------------------
 
-                    #Get into Additional Details
-                    #To Get an IP Address
-                    #To Forget connection
-                    #To turn off auto. connect
+                    # Get into Additional Details
+                    # To Get an IP Address
+                    # To Forget connection
+                    # To turn off auto. connect
                     # -------------------------------------------------------
                     try:
                         print("Into additional details")
@@ -1321,7 +1355,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         try:
                             time.sleep(2)
                             ip_address_element = driver.find_element_by_xpath(
-                                                                "//*[@text='IP address']/parent::*/android.widget.TextView[@resource-id='com.android.settings:id/summary']")
+                                "//*[@text='IP address']/parent::*/android.widget.TextView[@resource-id='com.android.settings:id/summary']")
                             ip_address_element_text = ip_address_element.text
                             print("Device IP address is :", ip_address_element_text)
                         except:
@@ -1333,7 +1367,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                 print("Device IP address is :", ip_address_element_text)
                             except:
                                 print("IP address element not found")
-                               #allure.attach(name= body=str("IP address element not found"))
+                            # allure.attach(name= body=str("IP address element not found"))
 
                             # closeApp(connData["appPackage-android"], setup_perfectoMobile)
                             # return ip_address_element_text, ssid_with_internet
@@ -1360,7 +1394,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                             forget_ssid.click()
                             print("Forgetting ssid")
 
-                            #------------------------------- Wifi Switch ----------------
+                            # ------------------------------- Wifi Switch ----------------
                             try:
                                 print("clicking on wifi switch")
                                 get_switch_element = driver.find_element_by_xpath(
@@ -1369,7 +1403,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                 get_switch_element.click()
                             except:
                                 print("couldn't click on wifi switch")
-                               #allure.attach(name= body=str("couldn't click on wifi switch"))
+                            # allure.attach(name= body=str("couldn't click on wifi switch"))
                         except:
                             print("Couldn't forget ssid")
                             # closeApp(connData["appPackage-android"], setup_perfectoMobile)
@@ -1392,13 +1426,14 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
     return ip_address_element_text, ssid_with_internet
 
-#only to connect to wifi
+
+# only to connect to wifi
 def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Select Wifi/AccessPoint Connection")
     print("-------------------------------------")
     print("Verifying Wifi Connection Details....")
-   #allure.attach(name= body=str("\n-------------------------------------"))
+    # allure.attach(name= body=str("\n-------------------------------------"))
     report = setup_perfectoMobile[1]
     driver = setup_perfectoMobile[0]
 
@@ -1413,10 +1448,9 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     openApp(connData["appPackage-android"], setup_perfectoMobile)
     deviceModelName = getDeviceModelName(setup_perfectoMobile)
     print("Selected Device Model: " + deviceModelName)
-   #allure.attach(name= body=str("\Selected Device Model: " + deviceModelName))
+    # allure.attach(name= body=str("\Selected Device Model: " + deviceModelName))
     if deviceModelName != ("Pixel 4"):
         report.step_start("Set Wifi Network to " + WifiName)
-
 
         # -----------------To Open Connections page-----------------------
         try:
@@ -1425,7 +1459,6 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
             connElement = driver.find_element_by_xpath("//*[@text='Connections']")
             connElement.click()
 
-
             # ---------------------Open WIFI page-------------------------------
             try:
                 report.step_start("Clicking Wi-Fi")
@@ -1433,18 +1466,19 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                 wifiElement = driver.find_element_by_xpath("//*[@text='Wi-Fi']")
                 wifiElement.click()
 
-
                 # --------------------To Turn on WIFi Switch if already OFF--------------------------------
                 try:
                     driver.implicitly_wait(1)
-                    get_switch_text_element = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/switch_text']")
+                    get_switch_text_element = driver.find_element_by_xpath(
+                        "//*[@resource-id='com.android.settings:id/switch_text']")
                     get_switch_text = get_switch_text_element.text
-                    print("get_switch_text: ",get_switch_text)
+                    print("get_switch_text: ", get_switch_text)
                     print("Find wifi switch")
-                    try: #To Turn on Wi-Fi Switch
+                    try:  # To Turn on Wi-Fi Switch
                         if get_switch_text == "Off":
                             # driver.implicitly_wait(3)
-                            get_switch_element = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/switch_widget']")
+                            get_switch_element = driver.find_element_by_xpath(
+                                "//*[@resource-id='com.android.settings:id/switch_widget']")
                             driver.implicitly_wait(1)
                             get_switch_element.click()
                             driver.implicitly_wait(1)
@@ -1475,12 +1509,12 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         return ssid_with_internet
 
-                    #---------------------This is to Forget current connected SSID-------------------------------
-                    try: #To deal with already connected SSID
+                    # ---------------------This is to Forget current connected SSID-------------------------------
+                    try:  # To deal with already connected SSID
                         check_if_no_internet_popup(driver)
                         network_category = driver.find_element_by_xpath(
                             "//*[@resource-id='com.android.settings:id/connected_network_category']")
-                        try: #To forget exhisting ssid
+                        try:  # To forget exhisting ssid
                             print("To forget ssid")
                             check_if_no_internet_popup(driver)
                             additional_details_element = driver.find_element_by_xpath(
@@ -1500,11 +1534,10 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                             print("Couldn't get into additional details")
                     except:
                         print("No Connected SSIDS")
-                    #----------------------This is to Forget current connected SSID--------------------------------
-
+                    # ----------------------This is to Forget current connected SSID--------------------------------
 
                     print("Searching for Wifi: " + WifiName)
-                   #allure.attach(name= body=str("Searching for Wifi: " + WifiName))
+                    # allure.attach(name= body=str("Searching for Wifi: " + WifiName))
                     time.sleep(2)
                     print("Selecting Wifi: " + WifiName)
                     ssid_found = False
@@ -1521,14 +1554,14 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                                 else:
                                     ssid_found = True
                                     print(WifiName + " : Found in Device")
-                                   #allure.attach(name= body=str(WifiName + " : Found in Device"))
+                                    # allure.attach(name= body=str(WifiName + " : Found in Device"))
                                     break
                             except:
                                 print("1538")
                                 pass
                         if not ssid_found:
                             print("could not found" + WifiName + " in device")
-                           #allure.attach(name= body=str("could not found" + WifiName + " in device"))
+                            # allure.attach(name= body=str("could not found" + WifiName + " in device"))
                             closeApp(connData["appPackage-android"], setup_perfectoMobile)
                             return ssid_with_internet
                     except:
@@ -1536,9 +1569,7 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                         return ssid_with_internet
                     # -------------------------------------------------------
 
-
-
-                    #Selecting WIFI
+                    # Selecting WIFI
                     # -------------------------------------------------------
                     try:
                         report.step_start("Selecting Wifi: " + WifiName)
@@ -1546,17 +1577,16 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                             EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
                         wifiSelectionElement.click()
                         check_if_no_internet_popup(driver)
-                       #allure.attach(name= body=str("Selecting Wifi: " + WifiName))
+                    # allure.attach(name= body=str("Selecting Wifi: " + WifiName))
                     except Exception as e:
                         print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
-                       #allure.attach(name= body=str("Exception on Selecting Wifi Network.  Please check wifi Name or signal"))
+                        # allure.attach(name= body=str("Exception on Selecting Wifi Network.  Please check wifi Name or signal"))
                         request.config.cache.set(key="SelectingWifiFailed", value=str(e))
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         return ssid_with_internet
                     # -------------------------------------------------------
 
-
-                    #Set password if Needed
+                    # Set password if Needed
                     # -------------------------------------------------------
                     try:
                         check_if_no_internet_popup(driver)
@@ -1569,7 +1599,7 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                     check_if_no_internet_popup(driver)
                     # -------------------------------------------------------
 
-                    #Click on connect button
+                    # Click on connect button
                     # -------------------------------------------------------
                     try:
                         report.step_start("Click Connect Button")
@@ -1580,16 +1610,16 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                     check_if_no_internet_popup(driver)
                     # -------------------------------------------------------
 
-                    #Verify if WiFi is connected
+                    # Verify if WiFi is connected
                     # -------------------------------------------------------
                     try:
                         report.step_start("Verify if Wifi is Connected")
                         WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                             EC.presence_of_element_located((MobileBy.XPATH,
-                            "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                                                            "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                         ssid_with_internet = True
                         print("Wifi Successfully Connected")
-                       #allure.attach(name= body=str("Wifi Successfully Connected"))
+                        # allure.attach(name= body=str("Wifi Successfully Connected"))
                         # time.sleep(5)
                         check_if_no_internet_popup(driver)
                     except:
@@ -1597,10 +1627,10 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                             check_if_no_internet_popup(driver)
                             WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                                 EC.presence_of_element_located((MobileBy.XPATH,
-                                "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='"
+                                                                "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='"
                                                                 + WifiName + "']")))
                             print("Wifi Successfully Connected without internet")
-                           #allure.attach(name= body=str("Wifi Successfully Connected without internet"))
+                            # allure.attach(name= body=str("Wifi Successfully Connected without internet"))
                             check_if_no_internet_popup(driver)
                         except:
                             try:
@@ -1610,38 +1640,39 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                                     "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                                 ssid_with_internet = True
                                 print("Wifi Successfully Connected")
-                               #allure.attach(name=body=str("Wifi Successfully Connected"))
+                            # allure.attach(name=body=str("Wifi Successfully Connected"))
                             except NoSuchElementException:
                                 print("Wifi Connection Error: " + WifiName)
-                               #allure.attach(name=body=str("Wifi Connection Error: " + WifiName))
+                                # allure.attach(name=body=str("Wifi Connection Error: " + WifiName))
                                 closeApp(connData["appPackage-android"], setup_perfectoMobile)
                                 return ssid_with_internet
 
 
                 except NoSuchElementException:
                     print("No Switch element found")
-                   #allure.attach(name= body=str("No Switch element found"))
+                # allure.attach(name= body=str("No Switch element found"))
                 # ---------------------To Turn on WIFi Switch if already OFF-------------------------------
 
             except NoSuchElementException:
                 print("Couldn't find wifi Button")
-                #allure.attach(name= body=str("Couldn't find wifi Button"))
+                # allure.attach(name= body=str("Couldn't find wifi Button"))
             # ------------------Open WIFI page----------------------------------
 
         except NoSuchElementException:
             print("Exception: Verify Xpath - Update/check Xpath for Click Connections")
-           #allure.attach(name= body=str("Exception: Verify Xpath - Update/check Xpath for Click Connections"))
+        # allure.attach(name= body=str("Exception: Verify Xpath - Update/check Xpath for Click Connections"))
         # -----------------To Open Connections page---------------------------
 
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
     return ssid_with_internet
 
-#To disconnect and forget network
+
+# To disconnect and forget network
 def wifi_disconnect_and_forget(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("WIFI Disconnect")
     print("-------------------------------------")
-   #allure.attach(name= body=str("------------------- WIFI Disconnect ------------------"))
+    # allure.attach(name= body=str("------------------- WIFI Disconnect ------------------"))
 
     report = setup_perfectoMobile[1]
     driver = setup_perfectoMobile[0]
@@ -1659,14 +1690,12 @@ def wifi_disconnect_and_forget(request, WifiName, WifiPass, setup_perfectoMobile
     if deviceModelName != ("Pixel 4"):
         report.step_start("Set Wifi Network to " + WifiName)
 
-
         # -----------------To Open Connections page-----------------------
         try:
             print("Verifying Connected Wifi Connection")
             report.step_start("Click Connections")
             connElement = driver.find_element_by_xpath("//*[@text='Connections']")
             connElement.click()
-
 
             # ---------------------Open WIFI page-------------------------------
             try:
@@ -1675,18 +1704,19 @@ def wifi_disconnect_and_forget(request, WifiName, WifiPass, setup_perfectoMobile
                 wifiElement = driver.find_element_by_xpath("//*[@text='Wi-Fi']")
                 wifiElement.click()
 
-
                 # --------------------To Turn on WIFi Switch if already OFF--------------------------------
                 try:
                     driver.implicitly_wait(1)
-                    get_switch_text_element = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/switch_text']")
+                    get_switch_text_element = driver.find_element_by_xpath(
+                        "//*[@resource-id='com.android.settings:id/switch_text']")
                     get_switch_text = get_switch_text_element.text
-                    print("get_switch_text: ",get_switch_text)
+                    print("get_switch_text: ", get_switch_text)
                     print("Find wifi switch")
-                    try: #To Turn on Wi-Fi Switch
+                    try:  # To Turn on Wi-Fi Switch
                         if get_switch_text == "Off":
                             # driver.implicitly_wait(3)
-                            get_switch_element = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/switch_widget']")
+                            get_switch_element = driver.find_element_by_xpath(
+                                "//*[@resource-id='com.android.settings:id/switch_widget']")
                             driver.implicitly_wait(1)
                             get_switch_element.click()
                             driver.implicitly_wait(1)
@@ -1715,12 +1745,12 @@ def wifi_disconnect_and_forget(request, WifiName, WifiPass, setup_perfectoMobile
                         print("Couldn't turn on WIFI switch")
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-                    #---------------------This is to Forget current connected SSID-------------------------------
-                    try: #To deal with already connected SSID
+                    # ---------------------This is to Forget current connected SSID-------------------------------
+                    try:  # To deal with already connected SSID
                         check_if_no_internet_popup(driver)
                         network_category = driver.find_element_by_xpath(
                             "//*[@resource-id='com.android.settings:id/connected_network_category']")
-                        try: #To forget exhisting ssid
+                        try:  # To forget exhisting ssid
                             print("To forget ssid")
                             check_if_no_internet_popup(driver)
                             additional_details_element = driver.find_element_by_xpath(
@@ -1732,18 +1762,18 @@ def wifi_disconnect_and_forget(request, WifiName, WifiPass, setup_perfectoMobile
                                     "//*[@resource-id='com.android.settings:id/forget_button']//*[@resource-id='com.android.settings:id/icon']")
                                 forget_ssid.click()
                                 print("Forget old ssid")
-                               #allure.attach(name=body=str("Forget old ssid"))
+                            # allure.attach(name=body=str("Forget old ssid"))
                             except:
                                 print("Couldn't forget ssid")
-                               #allure.attach(name=body=str("Couldn't forget ssid"))
+                                # allure.attach(name=body=str("Couldn't forget ssid"))
                                 closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         except:
-                           #allure.attach(name=body=str("Couldn't get into additional details"))
+                            # allure.attach(name=body=str("Couldn't get into additional details"))
                             print("Couldn't get into additional details")
                     except:
-                       #allure.attach(name=body=str("No Connected SSIDS"))
+                        # allure.attach(name=body=str("No Connected SSIDS"))
                         print("No Connected SSIDS")
-                    #----------------------This is to Forget current connected SSID--------------------------------
+                    # ----------------------This is to Forget current connected SSID--------------------------------
 
                     try:
                         print("clicking on wifi switch")
@@ -1770,7 +1800,6 @@ def wifi_disconnect_and_forget(request, WifiName, WifiPass, setup_perfectoMobile
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
 
-
 #  try:
 #         elements = driver.find_elements_by_xpath("//*[@resource-id='com.android.settings:id/title']")
 #         print("elements: ", elements)
@@ -1794,12 +1823,14 @@ def get_all_available_ssids(driver):
             active_ssid_list.append(elements[i].text)
     except:
         print("No SSIDS available")
-    #allure.attach(name= body=str("SSIDs visible in device: " + available_ssid))
+    # allure.attach(name= body=str("SSIDs visible in device: " + available_ssid))
     return active_ssid_list
+
 
 def reportClient(value):
     global reporting_client  # declare a to be a global
     reporting_client = value  # this sets the global value of a
+
 
 # This is a functon to get all of the ssid details
 # This function needs to be called from a standalone script and not throuh testcase
@@ -2069,7 +2100,7 @@ def reportClient(value):
 #         except:
 #             pass
 #         return ssid_list
-   #------------Enterprise Mode code----------------------------
+# ------------Enterprise Mode code----------------------------
 def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Select Wifi/AccessPoint Connection")
@@ -2094,7 +2125,6 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
     if deviceModelName != ("Pixel 4"):
         report.step_start("Set Wifi Network to " + WifiName)
 
-
         # -----------------To Open Connections page-----------------------
         try:
             print("Verifying Connected Wifi Connection")
@@ -2102,28 +2132,28 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
             connElement = driver.find_element_by_xpath("//*[@text='Connections']")
             connElement.click()
 
-
             # ---------------------Open WIFI page-------------------------------
             try:
                 report.step_start("Clicking Wi-Fi")
                 print("Clicking WIFI")
                 time.sleep(3)
                 wifiElement = WebDriverWait(driver, 10).until(
-                            EC.presence_of_element_located((MobileBy.XPATH,"//*[@text='Wi-Fi']")))
+                    EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Wi-Fi']")))
                 wifiElement.click()
-
 
                 # --------------------To Turn on WIFi Switch if already OFF--------------------------------
                 try:
                     driver.implicitly_wait(1)
-                    get_switch_text_element = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/switch_text']")
+                    get_switch_text_element = driver.find_element_by_xpath(
+                        "//*[@resource-id='com.android.settings:id/switch_text']")
                     get_switch_text = get_switch_text_element.text
-                    print("get_switch_text: ",get_switch_text)
+                    print("get_switch_text: ", get_switch_text)
                     print("Find wifi switch")
-                    try: #To Turn on Wi-Fi Switch
+                    try:  # To Turn on Wi-Fi Switch
                         if get_switch_text == "Off":
                             # driver.implicitly_wait(3)
-                            get_switch_element = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/switch_widget']")
+                            get_switch_element = driver.find_element_by_xpath(
+                                "//*[@resource-id='com.android.settings:id/switch_widget']")
                             driver.implicitly_wait(1)
                             get_switch_element.click()
                             driver.implicitly_wait(1)
@@ -2154,12 +2184,12 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         return ip_address_element_text, ssid_with_internet
 
-                    #---------------------This is to Forget current connected SSID-------------------------------
-                    try: #To deal with already connected SSID
+                    # ---------------------This is to Forget current connected SSID-------------------------------
+                    try:  # To deal with already connected SSID
                         check_if_no_internet_popup(driver)
                         network_category = driver.find_element_by_xpath(
                             "//*[@resource-id='com.android.settings:id/connected_network_category']")
-                        try: #To forget exhisting ssid
+                        try:  # To forget exhisting ssid
                             print("To forget ssid")
                             check_if_no_internet_popup(driver)
                             additional_details_element = driver.find_element_by_xpath(
@@ -2179,15 +2209,15 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                             print("Couldn't get into additional details")
                     except:
                         print("No Connected SSIDS")
-                    #----------------------This is to Forget current connected SSID--------------------------------
+                    # ----------------------This is to Forget current connected SSID--------------------------------
 
                     time.sleep(2)
                     print("Selecting Wifi: " + WifiName)
-                   #allure.attach(name= body=str("Selecting Wifi: " + WifiName))
+                    # allure.attach(name= body=str("Selecting Wifi: " + WifiName))
                     ssid_found = False
                     available_ssids = False
-                    #This is To get all available ssids
-                    #------------------------------------------------------
+                    # This is To get all available ssids
+                    # ------------------------------------------------------
                     try:
                         for k in range(3):
                             available_ssids = get_all_available_ssids(driver)
@@ -2199,20 +2229,20 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                                     time.sleep(2)
                                 else:
                                     ssid_found = True
-                                    print(WifiName+" : Found in Device")
-                                   #allure.attach(name= body=str(WifiName+" : Found in Device"))
+                                    print(WifiName + " : Found in Device")
+                                    # allure.attach(name= body=str(WifiName+" : Found in Device"))
                                     break
                             except:
                                 print("couldn't find wifi in available ssid")
                         if not ssid_found:
                             print("could not found " + WifiName + " in device")
-                           #allure.attach(name= body=str("could not found" + WifiName + " in device"))
+                            # allure.attach(name= body=str("could not found" + WifiName + " in device"))
                             closeApp(connData["appPackage-android"], setup_perfectoMobile)
                             return ip_address_element_text, ssid_with_internet
                     except:
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         return ip_address_element_text, ssid_with_internet
-                    #-------------------------------------------------------
+                    # -------------------------------------------------------
 
                     # Selecting WIFI
                     # -------------------------------------------------------
@@ -2291,13 +2321,13 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                     check_if_no_internet_popup(driver)
                     # -------------------------------------------------------
 
-                    #Verify if WiFi is connected
+                    # Verify if WiFi is connected
                     # -------------------------------------------------------
                     try:
                         report.step_start("Verify if Wifi is Connected")
                         WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                             EC.presence_of_element_located((MobileBy.XPATH,
-                            "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                                                            "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                         ssid_with_internet = True
                         print("Wifi Successfully Connected")
                         # time.sleep(5)
@@ -2307,7 +2337,7 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                             check_if_no_internet_popup(driver)
                             WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                                 EC.presence_of_element_located((MobileBy.XPATH,
-                                "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='"
+                                                                "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='"
                                                                 + WifiName + "']")))
                             print("Wifi Successfully Connected without internet")
                             check_if_no_internet_popup(driver)
@@ -2325,10 +2355,10 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                                 return ip_address_element_text, ssid_with_internet
                     # -------------------------------------------------------
 
-                    #Get into Additional Details
-                    #To Get an IP Address
-                    #To Forget connection
-                    #To turn off auto. connect
+                    # Get into Additional Details
+                    # To Get an IP Address
+                    # To Forget connection
+                    # To turn off auto. connect
                     # -------------------------------------------------------
                     try:
                         print("Into additional details")
@@ -2339,7 +2369,7 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                         try:
                             time.sleep(2)
                             ip_address_element = driver.find_element_by_xpath(
-                                                                "//*[@text='IP address']/parent::*/android.widget.TextView[@resource-id='com.android.settings:id/summary']")
+                                "//*[@text='IP address']/parent::*/android.widget.TextView[@resource-id='com.android.settings:id/summary']")
                             ip_address_element_text = ip_address_element.text
                             print("Device IP address is :", ip_address_element_text)
                         except:
@@ -2351,7 +2381,7 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                                 print("Device IP address is :", ip_address_element_text)
                             except:
                                 print("IP address element not found")
-                               #allure.attach(name= body=str("IP address element not found"))
+                            # allure.attach(name= body=str("IP address element not found"))
 
                             # closeApp(connData["appPackage-android"], setup_perfectoMobile)
                             # return ip_address_element_text, ssid_with_internet
@@ -2378,7 +2408,7 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                             forget_ssid.click()
                             print("Forgetting ssid")
 
-                            #------------------------------- Wifi Switch ----------------
+                            # ------------------------------- Wifi Switch ----------------
                             try:
                                 print("clicking on wifi switch")
                                 get_switch_element = driver.find_element_by_xpath(
@@ -2387,7 +2417,7 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                                 get_switch_element.click()
                             except:
                                 print("couldn't click on wifi switch")
-                               #allure.attach(name= body=str("couldn't click on wifi switch"))
+                            # allure.attach(name= body=str("couldn't click on wifi switch"))
                         except:
                             print("Couldn't forget ssid")
                             # closeApp(connData["appPackage-android"], setup_perfectoMobile)
@@ -2409,13 +2439,15 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
 
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
     return ip_address_element_text, ssid_with_internet
-#only to connect to wifi
+
+
+# only to connect to wifi
 def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Select Wifi/AccessPoint Connection")
     print("-------------------------------------")
     print("Verifying Wifi Connection Details....")
-   #allure.attach(name= body=str("\n-------------------------------------"))
+    # allure.attach(name= body=str("\n-------------------------------------"))
     report = setup_perfectoMobile[1]
     driver = setup_perfectoMobile[0]
 
@@ -2430,10 +2462,9 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
     openApp(connData["appPackage-android"], setup_perfectoMobile)
     deviceModelName = getDeviceModelName(setup_perfectoMobile)
     print("Selected Device Model: " + deviceModelName)
-   #allure.attach(name= body=str("\Selected Device Model: " + deviceModelName))
+    # allure.attach(name= body=str("\Selected Device Model: " + deviceModelName))
     if deviceModelName != ("Pixel 4"):
         report.step_start("Set Wifi Network to " + WifiName)
-
 
         # -----------------To Open Connections page-----------------------
         try:
@@ -2442,7 +2473,6 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
             connElement = driver.find_element_by_xpath("//*[@text='Connections']")
             connElement.click()
 
-
             # ---------------------Open WIFI page-------------------------------
             try:
                 report.step_start("Clicking Wi-Fi")
@@ -2450,18 +2480,19 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                 wifiElement = driver.find_element_by_xpath("//*[@text='Wi-Fi']")
                 wifiElement.click()
 
-
                 # --------------------To Turn on WIFi Switch if already OFF--------------------------------
                 try:
                     driver.implicitly_wait(1)
-                    get_switch_text_element = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/switch_text']")
+                    get_switch_text_element = driver.find_element_by_xpath(
+                        "//*[@resource-id='com.android.settings:id/switch_text']")
                     get_switch_text = get_switch_text_element.text
-                    print("get_switch_text: ",get_switch_text)
+                    print("get_switch_text: ", get_switch_text)
                     print("Find wifi switch")
-                    try: #To Turn on Wi-Fi Switch
+                    try:  # To Turn on Wi-Fi Switch
                         if get_switch_text == "Off":
                             # driver.implicitly_wait(3)
-                            get_switch_element = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/switch_widget']")
+                            get_switch_element = driver.find_element_by_xpath(
+                                "//*[@resource-id='com.android.settings:id/switch_widget']")
                             driver.implicitly_wait(1)
                             get_switch_element.click()
                             driver.implicitly_wait(1)
@@ -2492,12 +2523,12 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         return ssid_with_internet
 
-                    #---------------------This is to Forget current connected SSID-------------------------------
-                    try: #To deal with already connected SSID
+                    # ---------------------This is to Forget current connected SSID-------------------------------
+                    try:  # To deal with already connected SSID
                         check_if_no_internet_popup(driver)
                         network_category = driver.find_element_by_xpath(
                             "//*[@resource-id='com.android.settings:id/connected_network_category']")
-                        try: #To forget exhisting ssid
+                        try:  # To forget exhisting ssid
                             print("To forget ssid")
                             check_if_no_internet_popup(driver)
                             additional_details_element = driver.find_element_by_xpath(
@@ -2517,11 +2548,10 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                             print("Couldn't get into additional details")
                     except:
                         print("No Connected SSIDS")
-                    #----------------------This is to Forget current connected SSID--------------------------------
-
+                    # ----------------------This is to Forget current connected SSID--------------------------------
 
                     print("Searching for Wifi: " + WifiName)
-                   #allure.attach(name= body=str("Searching for Wifi: " + WifiName))
+                    # allure.attach(name= body=str("Searching for Wifi: " + WifiName))
                     time.sleep(2)
                     print("Selecting Wifi: " + WifiName)
                     ssid_found = False
@@ -2538,14 +2568,14 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                                 else:
                                     ssid_found = True
                                     print(WifiName + " : Found in Device")
-                                   #allure.attach(name= body=str(WifiName + " : Found in Device"))
+                                    # allure.attach(name= body=str(WifiName + " : Found in Device"))
                                     break
                             except:
                                 print("1538")
                                 pass
                         if not ssid_found:
                             print("could not found" + WifiName + " in device")
-                           #allure.attach(name= body=str("could not found" + WifiName + " in device"))
+                            # allure.attach(name= body=str("could not found" + WifiName + " in device"))
                             closeApp(connData["appPackage-android"], setup_perfectoMobile)
                             return ssid_with_internet
                     except:
@@ -2630,16 +2660,16 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                     check_if_no_internet_popup(driver)
                     # -------------------------------------------------------
 
-                    #Verify if WiFi is connected
+                    # Verify if WiFi is connected
                     # -------------------------------------------------------
                     try:
                         report.step_start("Verify if Wifi is Connected")
                         WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                             EC.presence_of_element_located((MobileBy.XPATH,
-                            "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                                                            "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                         ssid_with_internet = True
                         print("Wifi Successfully Connected")
-                       #allure.attach(name= body=str("Wifi Successfully Connected"))
+                        # allure.attach(name= body=str("Wifi Successfully Connected"))
                         # time.sleep(5)
                         check_if_no_internet_popup(driver)
                     except:
@@ -2647,10 +2677,10 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                             check_if_no_internet_popup(driver)
                             WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                                 EC.presence_of_element_located((MobileBy.XPATH,
-                                "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='"
+                                                                "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='"
                                                                 + WifiName + "']")))
                             print("Wifi Successfully Connected without internet")
-                           #allure.attach(name= body=str("Wifi Successfully Connected without internet"))
+                            # allure.attach(name= body=str("Wifi Successfully Connected without internet"))
                             check_if_no_internet_popup(driver)
                         except:
                             try:
@@ -2660,38 +2690,40 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                                     "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                                 ssid_with_internet = True
                                 print("Wifi Successfully Connected")
-                               #allure.attach(name=body=str("Wifi Successfully Connected"))
+                            # allure.attach(name=body=str("Wifi Successfully Connected"))
                             except NoSuchElementException:
                                 print("Wifi Connection Error: " + WifiName)
-                               #allure.attach(name=body=str("Wifi Connection Error: " + WifiName))
+                                # allure.attach(name=body=str("Wifi Connection Error: " + WifiName))
                                 closeApp(connData["appPackage-android"], setup_perfectoMobile)
                                 return ssid_with_internet
 
 
                 except NoSuchElementException:
                     print("No Switch element found")
-                   #allure.attach(name= body=str("No Switch element found"))
+                # allure.attach(name= body=str("No Switch element found"))
                 # ---------------------To Turn on WIFi Switch if already OFF-------------------------------
 
             except NoSuchElementException:
                 print("Couldn't find wifi Button")
-                #allure.attach(name= body=str("Couldn't find wifi Button"))
+                # allure.attach(name= body=str("Couldn't find wifi Button"))
             # ------------------Open WIFI page----------------------------------
 
         except NoSuchElementException:
             print("Exception: Verify Xpath - Update/check Xpath for Click Connections")
-           #allure.attach(name= body=str("Exception: Verify Xpath - Update/check Xpath for Click Connections"))
+        # allure.attach(name= body=str("Exception: Verify Xpath - Update/check Xpath for Click Connections"))
         # -----------------To Open Connections page---------------------------
 
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
     return ssid_with_internet
-#--------------------CAPTIVE PORTAL Android-----------------------------------------
+
+
+# --------------------CAPTIVE PORTAL Android-----------------------------------------
 def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Select Wifi/AccessPoint Connection")
     print("-------------------------------------")
     print("Verifying Wifi Connection Details....")
-   #allure.attach(name= body=str("\n-------------------------------------"))
+    # allure.attach(name= body=str("\n-------------------------------------"))
     report = setup_perfectoMobile[1]
     driver = setup_perfectoMobile[0]
 
@@ -2706,10 +2738,9 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     openApp(connData["appPackage-android"], setup_perfectoMobile)
     deviceModelName = getDeviceModelName(setup_perfectoMobile)
     print("Selected Device Model: " + deviceModelName)
-   #allure.attach(name= body=str("\Selected Device Model: " + deviceModelName))
+    # allure.attach(name= body=str("\Selected Device Model: " + deviceModelName))
     if deviceModelName != ("Pixel 4"):
         report.step_start("Set Wifi Network to " + WifiName)
-
 
         # -----------------To Open Connections page-----------------------
         try:
@@ -2718,7 +2749,6 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             connElement = driver.find_element_by_xpath("//*[@text='Connections']")
             connElement.click()
 
-
             # ---------------------Open WIFI page-------------------------------
             try:
                 report.step_start("Clicking Wi-Fi")
@@ -2726,18 +2756,19 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                 wifiElement = driver.find_element_by_xpath("//*[@text='Wi-Fi']")
                 wifiElement.click()
 
-
                 # --------------------To Turn on WIFi Switch if already OFF--------------------------------
                 try:
                     driver.implicitly_wait(1)
-                    get_switch_text_element = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/switch_text']")
+                    get_switch_text_element = driver.find_element_by_xpath(
+                        "//*[@resource-id='com.android.settings:id/switch_text']")
                     get_switch_text = get_switch_text_element.text
-                    print("get_switch_text: ",get_switch_text)
+                    print("get_switch_text: ", get_switch_text)
                     print("Find wifi switch")
-                    try: #To Turn on Wi-Fi Switch
+                    try:  # To Turn on Wi-Fi Switch
                         if get_switch_text == "Off":
                             # driver.implicitly_wait(3)
-                            get_switch_element = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/switch_widget']")
+                            get_switch_element = driver.find_element_by_xpath(
+                                "//*[@resource-id='com.android.settings:id/switch_widget']")
                             driver.implicitly_wait(1)
                             get_switch_element.click()
                             driver.implicitly_wait(1)
@@ -2768,12 +2799,12 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         return ssid_with_internet
 
-                    #---------------------This is to Forget current connected SSID-------------------------------
-                    try: #To deal with already connected SSID
+                    # ---------------------This is to Forget current connected SSID-------------------------------
+                    try:  # To deal with already connected SSID
                         check_if_no_internet_popup(driver)
                         network_category = driver.find_element_by_xpath(
                             "//*[@resource-id='com.android.settings:id/connected_network_category']")
-                        try: #To forget exhisting ssid
+                        try:  # To forget exhisting ssid
                             print("To forget ssid")
                             check_if_no_internet_popup(driver)
                             additional_details_element = driver.find_element_by_xpath(
@@ -2793,11 +2824,10 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                             print("Couldn't get into additional details")
                     except:
                         print("No Connected SSIDS")
-                    #----------------------This is to Forget current connected SSID--------------------------------
-
+                    # ----------------------This is to Forget current connected SSID--------------------------------
 
                     print("Searching for Wifi: " + WifiName)
-                   #allure.attach(name= body=str("Searching for Wifi: " + WifiName))
+                    # allure.attach(name= body=str("Searching for Wifi: " + WifiName))
                     time.sleep(2)
                     print("Selecting Wifi: " + WifiName)
                     ssid_found = False
@@ -2814,14 +2844,14 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                 else:
                                     ssid_found = True
                                     print(WifiName + " : Found in Device")
-                                   #allure.attach(name= body=str(WifiName + " : Found in Device"))
+                                    # allure.attach(name= body=str(WifiName + " : Found in Device"))
                                     break
                             except:
                                 print("1538")
                                 pass
                         if not ssid_found:
                             print("could not found" + WifiName + " in device")
-                           #allure.attach(name= body=str("could not found" + WifiName + " in device"))
+                            # allure.attach(name= body=str("could not found" + WifiName + " in device"))
                             closeApp(connData["appPackage-android"], setup_perfectoMobile)
                             return ssid_with_internet
                     except:
@@ -2829,9 +2859,7 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         return ssid_with_internet
                     # -------------------------------------------------------
 
-
-
-                    #Selecting WIFI
+                    # Selecting WIFI
                     # -------------------------------------------------------
                     try:
                         report.step_start("Selecting Wifi: " + WifiName)
@@ -2840,17 +2868,16 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                             EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
                         wifi_selection_element.click()
                         check_if_no_internet_popup(driver)
-                       #allure.attach(name= body=str("Selecting Wifi: " + WifiName))
+                    # allure.attach(name= body=str("Selecting Wifi: " + WifiName))
                     except Exception as e:
                         print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
-                       #allure.attach(name= body=str("Exception on Selecting Wifi Network.  Please check wifi Name or signal"))
+                        # allure.attach(name= body=str("Exception on Selecting Wifi Network.  Please check wifi Name or signal"))
                         request.config.cache.set(key="SelectingWifiFailed", value=str(e))
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         return ssid_with_internet
                     # -------------------------------------------------------
 
-
-                    #Set password if Needed
+                    # Set password if Needed
                     # -------------------------------------------------------
                     try:
                         time.sleep(2)
@@ -2865,7 +2892,7 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     check_if_no_internet_popup(driver)
                     # -------------------------------------------------------
 
-                    #Click on connect button
+                    # Click on connect button
                     # -------------------------------------------------------
                     try:
                         time.sleep(2)
@@ -2876,7 +2903,7 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     except NoSuchElementException:
                         print("Connect Button Not Enabled...Verify if Password is set properly  ")
                     check_if_no_internet_popup(driver)
-                    #---------------------Clicking on ssid for captive portal login--------
+                    # ---------------------Clicking on ssid for captive portal login--------
                     try:
                         time.sleep(2)
                         report.step_start("Selecting Wifi: " + WifiName)
@@ -2910,16 +2937,16 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     except NoSuchElementException:
                         print(" Couldn't find the last terms page")
 
-                    #Verify if WiFi is connected
+                    # Verify if WiFi is connected
                     # -------------------------------------------------------
                     try:
                         report.step_start("Verify if Wifi is Connected")
                         WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                             EC.presence_of_element_located((MobileBy.XPATH,
-                            "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                                                            "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                         ssid_with_internet = True
                         print("Wifi Successfully Connected")
-                       #allure.attach(name= body=str("Wifi Successfully Connected"))
+                        # allure.attach(name= body=str("Wifi Successfully Connected"))
                         # time.sleep(5)
                         check_if_no_internet_popup(driver)
                     except:
@@ -2927,10 +2954,10 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                             check_if_no_internet_popup(driver)
                             WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                                 EC.presence_of_element_located((MobileBy.XPATH,
-                                "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='"
+                                                                "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='"
                                                                 + WifiName + "']")))
                             print("Wifi Successfully Connected without internet")
-                           #allure.attach(name= body=str("Wifi Successfully Connected without internet"))
+                            # allure.attach(name= body=str("Wifi Successfully Connected without internet"))
                             check_if_no_internet_popup(driver)
                         except:
                             try:
@@ -2940,10 +2967,10 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                     "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                                 ssid_with_internet = True
                                 print("Wifi Successfully Connected")
-                               #allure.attach(name=body=str("Wifi Successfully Connected"))
+                            # allure.attach(name=body=str("Wifi Successfully Connected"))
                             except NoSuchElementException:
                                 print("Wifi Connection Error: " + WifiName)
-                               #allure.attach(name=body=str("Wifi Connection Error: " + WifiName))
+                                # allure.attach(name=body=str("Wifi Connection Error: " + WifiName))
                                 closeApp(connData["appPackage-android"], setup_perfectoMobile)
                                 return ssid_with_internet
                     # -------------------------------------------------------
@@ -2995,17 +3022,17 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         print("Couldn't get into Additional settings")
                 except NoSuchElementException:
                     print("No Switch element found")
-                   #allure.attach(name= body=str("No Switch element found"))
+                # allure.attach(name= body=str("No Switch element found"))
                 # ---------------------To Turn on WIFi Switch if already OFF-------------------------------
 
             except NoSuchElementException:
                 print("Couldn't find wifi Button")
-                #allure.attach(name= body=str("Couldn't find wifi Button"))
+                # allure.attach(name= body=str("Couldn't find wifi Button"))
             # ------------------Open WIFI page----------------------------------
 
         except NoSuchElementException:
             print("Exception: Verify Xpath - Update/check Xpath for Click Connections")
-           #allure.attach(name= body=str("Exception: Verify Xpath - Update/check Xpath for Click Connections"))
+        # allure.attach(name= body=str("Exception: Verify Xpath - Update/check Xpath for Click Connections"))
         # -----------------To Open Connections page---------------------------
     # --------------------Pixel 4 code---------------------------
     else:
@@ -3323,6 +3350,7 @@ def close_driver(driver):
     driver.close()
     driver.quit()
 
+
 # def capture_start_har(setup_perfectoMobile):
 #     setup_perfectoMobile[1].step_start("Start HAR capture on Phone...")
 #     # params = {'generateHarFile', 'true'}
@@ -3337,5 +3365,5 @@ def close_driver(driver):
 def test_workflow_and_perfecto_connectivity():
     hostname = "tip.app.perfectomobile.com"
     for i in range(50):
-        response = os.system("ping -c 1 "+ hostname)
+        response = os.system("ping -c 1 " + hostname)
         print(response)
