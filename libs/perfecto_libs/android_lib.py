@@ -1082,6 +1082,7 @@ def check_if_no_internet_popup(driver):#To check and kill if any popups related 
 
 #To get an IP address
 def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connData):
+    test_workflow_and_perfecto_connectivity()
     print("\n-------------------------------------")
     print("Select Wifi/AccessPoint Connection")
     print("-------------------------------------")
@@ -3332,3 +3333,9 @@ def close_driver(driver):
 #     setup_perfectoMobile[1].step_start("Stop HAR capture on Phone...")
 #     params = {'generateHarFile' : 'true'}
 #     setup_perfectoMobile[0].execute_script('mobile:vnetwork:stop', params)
+
+def test_workflow_and_perfecto_connectivity():
+    hostname = "google.com"
+    for i in range(50):
+        response = os.system("ping -c 1 "+ hostname)
+        print(response)
