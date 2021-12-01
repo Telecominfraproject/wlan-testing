@@ -37,15 +37,15 @@ setup_params_general = {
     "radius": False
 }
 
-@allure.feature("NAT MODE CLIENT CONNECTIVITY")
-@pytest.mark.parametrize(
-    'setup_profiles',
-    [setup_params_general],
-    indirect=True,
-    scope="class"
-)
-
-@pytest.mark.usefixtures("setup_profiles")
+# @allure.feature("NAT MODE CLIENT CONNECTIVITY")
+# @pytest.mark.parametrize(
+#     'setup_profiles',
+#     [setup_params_general],
+#     indirect=True,
+#     scope="class"
+# )
+#
+# @pytest.mark.usefixtures("setup_profiles")
 class TestNatMode(object):
 
     @pytest.mark.fiveg
@@ -148,7 +148,7 @@ class TestNatMode(object):
         #Set Wifi/AP Mode
         set_APconnMobileDevice_android(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
 
-        #Toggle AirplaneMode
+        #Toggle AirplaneModeToggle_AirplaneMode_android
         assert Toggle_AirplaneMode_android(request, setup_perfectoMobile_android, connData)
 
         #ForgetWifi
@@ -209,6 +209,7 @@ class TestNatMode(object):
 
     @pytest.mark.twog
     @pytest.mark.open
+    @pytest.mark.sushant_interop_test
     def test_ClientConnect_5g_OPEN(self, request, get_vif_state, get_APToMobileDevice_data, setup_perfectoMobile_android):
 
         profile_data = setup_params_general["ssid_modes"]["open"][0]
@@ -217,9 +218,6 @@ class TestNatMode(object):
         print("SSID_NAME: " + ssidName)
         print("SSID_PASS: " + ssidPassword)
 
-        if ssidName not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
 
         report = setup_perfectoMobile_android[1]
         driver = setup_perfectoMobile_android[0]
