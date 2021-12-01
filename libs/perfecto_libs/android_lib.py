@@ -1113,6 +1113,8 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             connElement = WebDriverWait(driver, 120).until(
                             EC.presence_of_element_located((MobileBy.XPATH,"//*[@text='Connections']")))
             print("Element value for (//*[@text='Connections']): ", connElement)
+            print("ele:   ",connElement)
+            time.sleep(10)
             connElement.click()
 
 
