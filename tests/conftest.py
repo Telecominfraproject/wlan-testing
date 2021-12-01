@@ -264,6 +264,11 @@ def get_sdk_version(fixtures_ver):
     version = fixtures_ver.get_sdk_version()
     yield version
 
+@pytest.fixture(scope="session")
+def get_uci_show(fixtures_ver, get_apnos, get_configuration):
+    uci_show = fixtures_ver.get_uci_show(get_apnos, get_configuration)
+    yield uci_show
+
 
 @pytest.fixture(scope="session")
 def skip_lf(request):
