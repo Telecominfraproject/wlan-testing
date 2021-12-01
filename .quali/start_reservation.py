@@ -7,6 +7,7 @@ import argparse
 from common import wait_for_provisioning_status, get_session
 
 run_id = os.environ.get('GITHUB_RUN_NUMBER', 1)
+marker_expression = os.environ.get('MARKER_EXPRESSION', 'sanity') 
 
 def main():
     parser = argparse.ArgumentParser()
@@ -17,15 +18,16 @@ def main():
     parser.add_argument('--openwifi-ui-version', default='main')
     parser.add_argument('--ap-model', default='[Any]')
     parser.add_argument('--wifi-type', default='[Any]')
+    parser.add_argument('--blueprint', default='Basic Lab')
     args = parser.parse_args()
 
     session = get_session()
 
     reservation = session.CreateImmediateTopologyReservation(
-        reservationName=f'sanity-{run_id}',
+        reservationName=f'{marker_expression}-{run_id}',
         owner=session.username,
         durationInMinutes=360,
-        topologyFullPath='Basic Lab',
+        topologyFullPath=args.blueprint,
         globalInputs=[
             UpdateTopologyGlobalInputsRequest('Chart Version', args.openwifi_version),
             UpdateTopologyGlobalInputsRequest('owgw Version', args.openwifi_gw_version),
