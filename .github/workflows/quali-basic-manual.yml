@@ -40,7 +40,7 @@ on:
         default: 'main'
         description: 'revision of the Open Wifi UI'
       ap_model:
-        description: 'AP model to test, one of ECW5410,EAP101,EC420,ECW5211,WF188N,EAP102,CIG194C'
+        description: 'AP model to test, one of edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4'
         required: true
       firmware:
         default: 'next-latest'
