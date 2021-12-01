@@ -582,6 +582,24 @@ class APNOS:
                 pass
         return vlan_list
 
+    def get_ap_uci_show_ucentral(self):
+        try:
+            client = self.ssh_cli_connect()
+            cmd = "uci show ucentral"
+            if self.mode:
+                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                      f"cmd --value \"{cmd}\" "
+            stdin, stdout, stderr = client.exec_command(cmd)
+            output = stdout.read()
+            status = output.decode('utf-8').splitlines()
+            for i in status:
+                if i.startswith("ucentral.config.server="):
+                    status = i.split("=")[1]
+            client.close()
+        except Exception as e:
+            print(e)
+            status = "Error"
+        return status
 
 if __name__ == '__main__':
     obj = {
