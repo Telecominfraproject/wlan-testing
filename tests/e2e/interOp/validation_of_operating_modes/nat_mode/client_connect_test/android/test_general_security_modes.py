@@ -37,17 +37,17 @@ setup_params_general = {
     "radius": False
 }
 
-@allure.suite(suite_name="interop sanity")
-@allure.sub_suite(sub_suite_name="Nat Mode Client Connect : Suite-A")
-@pytest.mark.InteropsuiteA
-@allure.feature("NAT MODE CLIENT CONNECT")
-@pytest.mark.parametrize(
-    'setup_profiles',
-    [setup_params_general],
-    indirect=True,
-    scope="class"
-)
-@pytest.mark.usefixtures("setup_profiles")
+# @allure.suite(suite_name="interop sanity")
+# @allure.sub_suite(sub_suite_name="Nat Mode Client Connect : Suite-A")
+# @pytest.mark.InteropsuiteA
+# @allure.feature("NAT MODE CLIENT CONNECT")
+# @pytest.mark.parametrize(
+#     'setup_profiles',
+#     [setup_params_general],
+#     indirect=True,
+#     scope="class"
+# )
+# @pytest.mark.usefixtures("setup_profiles")
 class TestNatModeConnectSuiteOne(object):
     """ Client Connect SuiteA
         pytest -m "client_connect and nat and InteropsuiteA"
