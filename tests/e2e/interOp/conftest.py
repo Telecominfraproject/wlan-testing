@@ -430,24 +430,24 @@ def setup_perfectoMobile_android(request):
     reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
     reportClient(reporting_client)
 
-    try:
-        params = {'property': 'model'}
-        deviceModel = driver.execute_script('mobile:handset:info', params)
-        device_name_list.append(deviceModel)
-    except:
-        pass
+    # try:
+    #     params = {'property': 'model'}
+    #     deviceModel = driver.execute_script('mobile:handset:info', params)
+    #     device_name_list.append(deviceModel)
+    # except:
+    #     pass
 
     def teardown():
         try:
             print("\n---------- Tear Down ----------")
-            try:
-                params = {'property': 'model'}
-                deviceModel = driver.execute_script('mobile:handset:info', params)
-                allure.dynamic.link(
-                    str(reporting_client.report_url()),
-                    name=str(deviceModel))
-            except:
-                print("fail to attach video link")
+            # try:
+            #     params = {'property': 'model'}
+            #     deviceModel = driver.execute_script('mobile:handset:info', params)
+            #     allure.dynamic.link(
+            #         str(reporting_client.report_url()),
+            #         name=str(deviceModel))
+            # except:
+            #     print("fail to attach video link")
 
             print('Report-Url: ' + reporting_client.report_url())
 
@@ -597,21 +597,22 @@ def setup_perfectoMobile_iOS(request):
     reporting_client = PerfectoReportiumClient(perfecto_execution_context)
     reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
     reportClient(reporting_client)
-    try:
-        params = {'property': 'model'}
-        deviceModel = driver.execute_script('mobile:handset:info', params)
-        device_name_list.append(deviceModel)
-    except:
-        pass
+    # try:
+    #     params = {'property': 'model'}
+    #     deviceModel = driver.execute_script('mobile:handset:info', params)
+    #     device_name_list.append(deviceModel)
+    # except:
+    #     pass
 
     def teardown():
         try:
             print("\n---------- Tear Down ----------")
             print('Report-Url: ' + reporting_client.report_url())
             try:
-                allure.dynamic.link(
-                    str(reporting_client.report_url()),
-                    name=str(deviceModel))
+                pass
+                # allure.dynamic.link(
+                #     str(reporting_client.report_url()),
+                #     name=str(deviceModel))
             except:
                 print("fail to attach video link")
             print("----------------------------------------------------------\n\n\n\n")
