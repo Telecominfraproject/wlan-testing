@@ -1102,14 +1102,15 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     print("Selected Device Model: " + deviceModelName)
 
     if deviceModelName != ("Pixel 4"):
-        report.step_start("Set Wifi Network to " + WifiName)
+        report.step_start("Set Wifi Network to 1105" + WifiName)
 
 
         # -----------------To Open Connections page-----------------------
         try:
             print("Verifying Connected Wifi Connection")
             report.step_start("Click Connections")
-            connElement = driver.find_element_by_xpath("//*[@text='Connections']")
+            connElement = WebDriverWait(driver, 120).until(
+                            EC.presence_of_element_located((MobileBy.XPATH,"//*[@text='Connections']")))
             print("Element value for (//*[@text='Connections']): ", connElement)
             connElement.click()
 
