@@ -109,7 +109,7 @@ def set_APconnMobileDevice_iOS(request, WifiNameSSID, WifiPass, setup_perfectoMo
             reportFlag = False
             assert reportFlag
 
-<
+
         print("Checking Internet Connection Error..")
         report.step_start("Checking Internet Connection Error..")
 
