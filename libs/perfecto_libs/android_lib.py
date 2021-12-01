@@ -3335,7 +3335,7 @@ def close_driver(driver):
 #     setup_perfectoMobile[0].execute_script('mobile:vnetwork:stop', params)
 
 def test_workflow_and_perfecto_connectivity():
-    hostname = "google.com"
+    hostname = "tip.app.perfectomobile.com"
     for i in range(50):
         response = os.system("ping -c 1 "+ hostname)
         print(response)
