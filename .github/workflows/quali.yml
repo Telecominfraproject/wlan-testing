@@ -71,8 +71,8 @@ jobs:
       - name: set variables
         id: vars
         run: |
-          echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'v2.4.0-RC2' }}")
-          echo ::set-output name=gw::$(echo "${{ github.event.inputs.openwifi_gw_revision || 'v2.4.0-RC2' }}")
+          echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'v2.4.0-RC3' }}")
+          echo ::set-output name=gw::$(echo "${{ github.event.inputs.openwifi_gw_revision || 'v2.4.0-RC3' }}")
           echo ::set-output name=sec::$(echo "${{ github.event.inputs.openwifi_sec_revision || 'v2.4.0-RC2' }}")
           echo ::set-output name=fms::$(echo "${{ github.event.inputs.openwifi_fms_revision || 'v2.4.0-RC2' }}")
           echo ::set-output name=ui::$(echo "${{ github.event.inputs.openwifi_ui_revision || 'v2.4.0-RC2' }}")
