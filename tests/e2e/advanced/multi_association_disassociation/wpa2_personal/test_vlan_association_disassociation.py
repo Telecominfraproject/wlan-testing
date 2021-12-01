@@ -5,7 +5,7 @@ import time
 import pandas as pd
 import threading
 
-pytestmark = [pytest.mark.advance, pytest.mark.multiassodisasso, pytest.mark.vlan]
+#pytestmark = [pytest.mark.advance, pytest.mark.multiassodisasso, pytest.mark.vlan]
 
 setup_params_general = {
     "mode": "VLAN",
