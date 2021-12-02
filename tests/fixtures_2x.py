@@ -318,13 +318,47 @@ class Fixtures_2x:
             version_list.append(version)
         return version_list
 
+    def get_uci_show(self, get_apnos, get_configuration):
+        version_list = []
+        for access_point_info in get_configuration['access_point']:
+            ap_ssh = get_apnos(access_point_info)
+            connectivity_data = ap_ssh.run_generic_command(cmd="uci show ucentral.config.server")
+            # connectivity_data.pop(0)
+            # connectivity_data.pop(1)
+            break
+            # version_list.append(connectivity_data)
+        return connectivity_data[1]
+
+    def get_ap_status_logs(self, get_configuration, get_apnos):
+        connected = 0
+        redirector_data = None
+        for access_point_info in get_configuration['access_point']:
+            ap_ssh = get_apnos(access_point_info, sdk="2.x")
+            # for i in range(15):
+            connectivity_data = ap_ssh.run_generic_command(cmd="ubus call ucentral status")
+            if "disconnected" in str(connectivity_data):
+                print("AP in disconnected state, sleeping for 30 sec")
+                # time.sleep(30)
+                connected = 0
+                # # if i == 10:
+                # print("rebooting AP")
+                # ap_ssh.reboot()
+                # print("sleep for 300 sec")
+                # time.sleep(300)
+            else:
+                connected = 1
+
+            redirector_data = ap_ssh.run_generic_command(cmd="cat /etc/ucentral/redirector.json")
+        return connected, redirector_data
+
     def get_sdk_version(self):
         version = self.controller_obj.get_sdk_version()
         return version
 
     def setup_profiles(self, request, param, setup_controller, testbed, get_equipment_ref,
                        instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
-                       get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
+                       get_security_flags, get_configuration, radius_info, get_apnos,
+                       radius_accounting_info, skip_lf=False):
 
         instantiate_profile_obj = instantiate_profile(sdk_client=setup_controller)
         print(1, instantiate_profile_obj.sdk_client)
@@ -666,8 +700,9 @@ class Fixtures_2x:
                                                ]
                 ssid_data.append(ssid)
                 lf_tools.ssid_list.append(ssid_info_sdk[interface][0])
-            lf_tools.dut_idx_mapping = idx_mapping
-            lf_tools.update_ssid(ssid_data=ssid_data)
+            if not skip_lf:
+                lf_tools.dut_idx_mapping = idx_mapping
+                lf_tools.update_ssid(ssid_data=ssid_data)
         except Exception as e:
             print(e)
             pass

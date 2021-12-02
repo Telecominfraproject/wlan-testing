@@ -25,6 +25,7 @@ usage () {
   echo "- OWGW_AUTH_PASSWORD - hashed password for OpenWIFI Security (details on this may be found in https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/#authenticationdefaultpassword)";
   echo "- OWFMS_S3_SECRET - secret key that is used for OpenWIFI Firmware access to firmwares S3 bucket";
   echo "- OWFMS_S3_KEY - access key that is used for OpenWIFI Firmware access to firmwares S3 bucket";
+  echo "- OWSEC_NEW_PASSWORD - password that should be set to default user instead of default password from properties";
   echo "- CERT_LOCATION - path to certificate in PEM format that will be used for securing all endpoint in all services";
   echo "- KEY_LOCATION - path to private key in PEM format that will be used for securing all endpoint in all services";
 }
@@ -48,6 +49,7 @@ usage () {
 [ -z ${OWGW_AUTH_PASSWORD+x} ] && echo "OWGW_AUTH_PASSWORD is unset" && usage && exit 1
 [ -z ${OWFMS_S3_SECRET+x} ] && echo "OWFMS_S3_SECRET is unset" && usage && exit 1
 [ -z ${OWFMS_S3_KEY+x} ] && echo "OWFMS_S3_KEY is unset" && usage && exit 1
+[ -z ${OWSEC_NEW_PASSWORD+x} ] && echo "OWSEC_NEW_PASSWORD is unset" && usage && exit 1
 [ -z ${CERT_LOCATION+x} ] && echo "CERT_LOCATION is unset" && usage && exit 1
 [ -z ${KEY_LOCATION+x} ] && echo "KEY_LOCATION is unset" && usage && exit 1
 
@@ -90,7 +92,7 @@ else
 fi
 
 # Run the deployment
-helm upgrade --install --create-namespace --wait --timeout 20m \
+helm upgrade --install --create-namespace --wait --timeout 60m \
   --namespace openwifi-${NAMESPACE} \
   -f $VALUES_FILE_LOCATION \
   --set owgw.configProperties."rtty\.token"=${RTTY_TOKEN} \
@@ -127,6 +129,8 @@ helm upgrade --install --create-namespace --wait --timeout 20m \
   --set owprovui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=provui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owprovui.ingresses.default.hosts={provui-${NAMESPACE}.cicd.lab.wlan.tip.build} \
   --set owprovui.public_env_variables.DEFAULT_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
+  --set clustersysteminfo.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
+  --set clustersysteminfo.secret_env_variables.OWSEC_NEW_PASSWORD=${OWSEC_NEW_PASSWORD} \
   --set-file owgw.certs."restapi-cert\.pem"=$CERT_LOCATION \
   --set-file owgw.certs."restapi-key\.pem"=$KEY_LOCATION \
   --set-file owgw.certs."websocket-cert\.pem"=$CERT_LOCATION \

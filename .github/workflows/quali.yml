@@ -1,4 +1,4 @@
-name: Quali example pipeline
+name: Quali sanity pipeline
 
 env:
   # thirdparties
@@ -41,13 +41,18 @@ on:
         description: 'revision of the Open Wifi UI'
       ap_models:
         required: true
-        #default: 'EC420,EAP101,ECW5211,ECW5410'
-        default: 'EC420,ECW5211'
+        default: 'edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4'
         description: 'the AP models to test'
       ap_version:
         required: true
-        default: 'latest'
-        description: 'revision of firmware to flash on AP, <branch>-<commit> | latest'
+        default: 'next-latest'
+        description: 'revision of firmware to flash on AP, <branch>-<commit>'
+      marker_expression:
+        required: true
+        default: 'uc_sanity'
+        description: 'Marker expression to select tests to execute'
+  schedule:
+  - cron: '30 20 * * *'
 
 jobs:
   vars:
@@ -60,18 +65,20 @@ jobs:
       openwifi_ui_revision: ${{ steps.vars.outputs.ui}}
       ap_models: ${{ steps.vars.outputs.ap_models}}
       ap_version: ${{ steps.vars.outputs.ap_version}}
+      marker_expression: ${{ steps.vars.outputs.marker_expression }}
 
     steps:
       - name: set variables
         id: vars
         run: |
-          echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'main' }}")
-          echo ::set-output name=gw::$(echo "${{ github.event.inputs.openwifi_gw_revision || 'master' }}")
-          echo ::set-output name=sec::$(echo "${{ github.event.inputs.openwifi_sec_revision || 'main' }}")
-          echo ::set-output name=fms::$(echo "${{ github.event.inputs.openwifi_fms_revision || 'main' }}")
-          echo ::set-output name=ui::$(echo "${{ github.event.inputs.openwifi_ui_revision || 'main' }}")
-          echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'EC420,EAP101,ECW5211,ECW5410' }}")
-          echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'latest' }}")
+          echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'v2.4.0-RC3' }}")
+          echo ::set-output name=gw::$(echo "${{ github.event.inputs.openwifi_gw_revision || 'v2.4.0-RC3' }}")
+          echo ::set-output name=sec::$(echo "${{ github.event.inputs.openwifi_sec_revision || 'v2.4.0-RC2' }}")
+          echo ::set-output name=fms::$(echo "${{ github.event.inputs.openwifi_fms_revision || 'v2.4.0-RC2' }}")
+          echo ::set-output name=ui::$(echo "${{ github.event.inputs.openwifi_ui_revision || 'v2.4.0-RC2' }}")
+          echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4' }}")
+          echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'next-latest' }}")
+          echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'uc_sanity' }}")
 
   generate-matrix:
     name: generate AP model matrix
@@ -124,7 +131,7 @@ jobs:
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
     env:
       CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-      CLOUDSHELL_USER: admin
+      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
       CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
     steps:
@@ -139,10 +146,13 @@ jobs:
 
     - name: start reservation
       id: start
-      run: echo ::set-output name=res_id::$(python .quali/start_reservation.py --openwifi-version "${{ needs.vars.outputs.openwifi_revision }}" --openwifi-gw-version "${{ needs.vars.outputs.openwifi_gw_revision }}" --openwifi-sec-version "${{ needs.vars.outputs.openwifi_sec_revision }}" --openwifi-fms-version "${{ needs.vars.outputs.openwifi_fms_revision }}" --openwifi-ui-version "${{ needs.vars.outputs.openwifi_ui_revision }}" --ap-model "${{ matrix.ap_model }}")
+      run: |
+        RES_ID=$(python .quali/start_reservation.py --openwifi-version "${{ needs.vars.outputs.openwifi_revision }}" --openwifi-gw-version "${{ needs.vars.outputs.openwifi_gw_revision }}" --openwifi-sec-version "${{ needs.vars.outputs.openwifi_sec_revision }}" --openwifi-fms-version "${{ needs.vars.outputs.openwifi_fms_revision }}" --openwifi-ui-version "${{ needs.vars.outputs.openwifi_ui_revision }}" --ap-model "${{ matrix.ap_model }}")
+        echo ::set-output name=res_id::"$RES_ID"
 
-    - name: wait for DNS to propagate
-      run: sleep 300
+    - name: set reservation identifier
+      id: reservation
+      run: echo ::set-output name=identifier::$(echo ${{ steps.start.outputs.res_id }} | cut -d "-" -f 1)
 
     - name: get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -174,7 +184,7 @@ jobs:
         }
 
         RADIUS_SERVER_DATA = {
-            "ip": "10.10.10.72",
+            "ip": "10.10.1.221",
             "port": 1812,
             "secret": "testing123",
             "user": "user",
@@ -183,8 +193,8 @@ jobs:
         }
 
         RADIUS_ACCOUNTING_DATA = {
-            "ip": "10.10.10.72",
-            "port": 1812,
+            "ip": "10.10.1.221",
+            "port": 1813,
             "secret": "testing123",
             "user": "user",
             "password": "password",
@@ -455,6 +465,8 @@ jobs:
         }
         EOF
 
+        cat configuration.py
+
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
 
     - name: run tests
@@ -466,18 +478,37 @@ jobs:
           name: "${{ steps.job.outputs.name }}"
         spec:
           template:
+            metadata:
+              annotations:
+                cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
             spec:
               containers:
               - name: tests
                 image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+                resources:
+                  requests:
+                    memory: "512Mi"
+                    cpu: "250m"
+                  limits:
+                    memory: "512Mi"
+                    cpu: "250m"
                 command:
                   - /bin/bash
                   - -x
                   - -c
                   - |
+                    HOSTS="sec-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build"
+                    for HOST in \$HOSTS; do
+                      HOST_ENTRY=""
+                      until [[ ! -z "\$HOST_ENTRY" ]]; do sleep 1; HOST_ENTRY=\$(getent hosts \$HOST); done;
+                      echo "\$HOST_ENTRY" >> /etc/hosts
+                      echo "DNS record for \$HOST resolved successfully!"
+                    done
+
+                    cat /etc/hosts
+
                     cd tests
-                    #pytest -m "uc_sanity" -s -vvv --testbed="basic" --alluredir=/tmp/allure-results -o firmware="${{ needs.vars.outputs.ap_version }}"
-                    pytest -m "sdk_restapi" -s -vvv --testbed="basic" --alluredir=/tmp/allure-results -o firmware="${{ needs.vars.outputs.ap_version }}"
+                    pytest -m "${{ needs.vars.outputs.marker_expression }}" -s -vvv --testbed="basic" --alluredir=/tmp/allure-results -o firmware="${{ needs.vars.outputs.ap_version }}"
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -487,6 +518,12 @@ jobs:
                   mountPath: "/wlan-testing/tests/configuration.py"
                   subPath: configuration
                   readOnly: true
+              nodeSelector:
+                env: tests
+              tolerations:
+              - key: "tests"
+                operator: "Exists"
+                effect: "NoSchedule"
               imagePullSecrets:
               - name: tip-docker-registry-key
               restartPolicy: Never
@@ -515,11 +552,27 @@ jobs:
         kubectl logs -f $podname >/dev/null 2>&1
         exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
 
+    - name: show gw logs
+      if: failure()
+      run: kubectl -n openwifi-${{ steps.reservation.outputs.identifier }} logs deployment/owgw
+
+    - name: show fms logs
+      if: failure()
+      run: kubectl -n openwifi-${{ steps.reservation.outputs.identifier }} logs deployment/owfms
+
+    - name: show prov logs
+      if: failure()
+      run: kubectl -n openwifi-${{ steps.reservation.outputs.identifier }} logs deployment/owprov
+
+    - name: show sec logs
+      if: failure()
+      run: kubectl -n openwifi-${{ steps.reservation.outputs.identifier }} logs deployment/owsec
+
     - name: upload Allure results as artifact
       if: always()
       uses: actions/upload-artifact@v2
       with:
-        name: allure-results
+        name: allure-results-${{ matrix.ap_model }}
         path: allure-results
 
     - name: cleanup
@@ -530,6 +583,101 @@ jobs:
     - name: stop reservation
       if: always()
       run: python .quali/stop_reservation.py ${{ steps.start.outputs.res_id }}
+
+  report:
+    runs-on: ubuntu-latest
+    needs: [ test, vars, generate-matrix ]
+    if: always()
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
+    steps:
+    - name: install Allure CLI tool
+      run: |
+        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+    - uses: actions/download-artifact@v2
+      with:
+        name: allure-results-${{ matrix.ap_model }}
+        path: allure-results
+
+    - name: checkout testing repo
+      uses: actions/checkout@v2
+      with:
+        path: wlan-testing
+
+    - name: get reports branch
+      uses: actions/checkout@v2
+      continue-on-error: true
+      with:
+        ref: gh-pages
+        path: reports
+
+    - name: copy history into results
+      run: |
+        if [ -e "reports/sanity/${{ matrix.ap_model }}/latest" ] ; then
+          cp -r reports/sanity/${{ matrix.ap_model }}/latest/history/ allure-results/history
+        fi
+    - name: add report metadata
+      run: |
+        cat << EOF >> allure-results/environment.properties
+        Ap.Model=${{ matrix.ap_model }}
+        Tests.CommitId=$(cd wlan-testing && git rev-parse --short HEAD)
+        CiRun.Id=${{ github.run_id }}
+        CiRun.Number=${{ github.run_number }}
+        CiRun.Url=https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
+        EOF
+    - name: generate Allure report
+      run: allure-${{ env.ALLURE_CLI_VERSION }}/bin/allure generate
+
+    - name: upload Allure report as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: allure-report-${{ matrix.ap_model }}
+        path: allure-report
+
+    # doing this to be able to aggregate multiple reports together later on
+    - name: copy results into report
+      run: cp -r allure-results allure-report/results
+
+    - name: copy new report
+      run: |
+        mkdir -p reports/sanity/${{ matrix.ap_model }}
+        cp -Tr allure-report reports/sanity/${{ matrix.ap_model }}/${{ github.run_number }}
+
+    - name: update latest symlink
+      working-directory: reports/sanity/${{ matrix.ap_model }}
+      run: ln -fns ${{ github.run_number }} latest
+
+    - name: generate new index.html
+      run: python wlan-testing/.github/tools/generate_directory_index.py -r reports
+
+    - name: commit reports update
+      working-directory: reports
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add .
+        git commit -m "Automated deployment: $(date -u)"
+
+    - name: push
+      if: github.ref == 'refs/heads/master' && needs.vars.outputs.marker_expression == 'uc_sanity'
+      uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: gh-pages
+        directory: reports
+
+    - name: upload to S3
+      if: github.ref == 'refs/heads/master' && needs.vars.outputs.marker_expression == 'uc_sanity'
+      uses: ./wlan-testing/.github/actions/allure-report-to-s3
+      with:
+        test_type: sanity
+        testbed: ${{ matrix.ap_model }}
+        report_path: allure-report
+        s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
+        s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
 
   cleanup:
     needs: [ test ]

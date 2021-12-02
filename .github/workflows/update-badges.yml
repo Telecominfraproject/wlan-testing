@@ -48,7 +48,7 @@ jobs:
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
         git add .
-        git commit -m "Updating test count badges: $(date -u)"
+        git diff-index --quiet HEAD || git commit -m "Updating test count badges: $(date -u)"
 
     - name: push changes
       uses: ad-m/github-push-action@v0.6.0

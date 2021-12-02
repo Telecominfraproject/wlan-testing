@@ -31,12 +31,12 @@ env:
     {
       "namespace": "dev01",
       "deploy_method": "git",
-      "chart_version": "main",
-      "owgw_version": "master",
-      "owsec_version": "main",
-      "owfms_version": "main",
+      "chart_version": "v2.4.0-RC3",
+      "owgw_version": "v2.4.0-RC3",
+      "owsec_version": "v2.4.0-RC2",
+      "owfms_version": "v2.4.0-RC2",
       "owprov_version": "main",
-      "owgwui_version": "main",
+      "owgwui_version": "v2.4.0-RC2",
       "owprovui_version": "main"
     }
   ]'
@@ -100,6 +100,7 @@ jobs:
         export OWFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
         export CERT_LOCATION=cert.pem
         export KEY_LOCATION=key.pem
+        export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
         ./deploy.sh
 
     - name: Show resource state on deployment failure

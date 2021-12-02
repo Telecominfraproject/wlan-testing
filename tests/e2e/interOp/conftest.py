@@ -10,6 +10,7 @@ from perfecto import (PerfectoExecutionContext, PerfectoReportiumClient, TestCon
 import pytest
 import logging
 import re
+import allure
 
 sys.path.append(
     os.path.dirname(
@@ -195,39 +196,40 @@ def setup_vlan():
 
 
 @pytest.fixture(scope="class")
-def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtures_ver,
+def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtures_ver, skip_lf,
                    instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                    get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
-    lf_tools.reset_scenario()
+
     param = dict(request.param)
-
+    if not skip_lf:
+        lf_tools.reset_scenario()
     # VLAN Setup
-    if request.param["mode"] == "VLAN":
+        if request.param["mode"] == "VLAN":
 
-        vlan_list = list()
-        refactored_vlan_list = list()
-        ssid_modes = request.param["ssid_modes"].keys()
-        for mode in ssid_modes:
-            for ssid in range(len(request.param["ssid_modes"][mode])):
-                if "vlan" in request.param["ssid_modes"][mode][ssid]:
-                    vlan_list.append(request.param["ssid_modes"][mode][ssid]["vlan"])
-                else:
-                    pass
-        if vlan_list:
-            [refactored_vlan_list.append(x) for x in vlan_list if x not in refactored_vlan_list]
-            vlan_list = refactored_vlan_list
-            for i in range(len(vlan_list)):
-                if vlan_list[i] > 4095 or vlan_list[i] < 1:
-                    vlan_list.pop(i)
-    if request.param["mode"] == "VLAN":
-        lf_tools.add_vlan(vlan_ids=vlan_list)
+            vlan_list = list()
+            refactored_vlan_list = list()
+            ssid_modes = request.param["ssid_modes"].keys()
+            for mode in ssid_modes:
+                for ssid in range(len(request.param["ssid_modes"][mode])):
+                    if "vlan" in request.param["ssid_modes"][mode][ssid]:
+                        vlan_list.append(request.param["ssid_modes"][mode][ssid]["vlan"])
+                    else:
+                        pass
+            if vlan_list:
+                [refactored_vlan_list.append(x) for x in vlan_list if x not in refactored_vlan_list]
+                vlan_list = refactored_vlan_list
+                for i in range(len(vlan_list)):
+                    if vlan_list[i] > 4095 or vlan_list[i] < 1:
+                        vlan_list.pop(i)
+        if request.param["mode"] == "VLAN":
+            lf_tools.add_vlan(vlan_ids=vlan_list)
 
     # call this, if 1.x
     return_var = fixtures_ver.setup_profiles(request, param, setup_controller, testbed, get_equipment_ref,
                                              instantiate_profile,
                                              get_markers, create_lanforge_chamberview_dut, lf_tools,
                                              get_security_flags, get_configuration, radius_info, get_apnos,
-                                             radius_accounting_info)
+                                             radius_accounting_info, skip_lf=skip_lf)
     yield return_var
 
 
@@ -256,16 +258,21 @@ def failure_tracking_fixture(request):
     yield tests_failed_during_module
 
 
-@pytest.fixture(scope="class")
-def get_vif_state(get_apnos, get_configuration, request, lf_tools):
-    if request.config.getoption("1.x"):
-        ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
-        vif_state = list(ap_ssh.get_vif_state_ssids())
-        vif_state.sort()
-        yield vif_state
-    else:
-        yield lf_tools.ssid_list
 
+empty_get_vif_state_list = []
+
+@pytest.fixture(scope="class")
+def get_vif_state(get_apnos, get_configuration, request, lf_tools, skip_lf):
+    if not skip_lf:
+        if request.config.getoption("1.x"):
+            ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
+            vif_state = list(ap_ssh.get_vif_state_ssids())
+            vif_state.sort()
+            yield vif_state
+        else:
+            yield lf_tools.ssid_list
+    else:
+        yield empty_get_vif_state_list
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
@@ -423,10 +430,26 @@ def setup_perfectoMobile_android(request):
     reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
     reportClient(reporting_client)
 
+    try:
+        params = {'property': 'model'}
+        deviceModel = driver.execute_script('mobile:handset:info', params)
+    except:
+        pass
+
     def teardown():
         try:
             print("\n---------- Tear Down ----------")
+            try:
+                params = {'property': 'model'}
+                deviceModel = driver.execute_script('mobile:handset:info', params)
+                allure.dynamic.link(
+                    str(reporting_client.report_url()),
+                    name=str(deviceModel))
+            except:
+                print("fail to attach video link")
+
             print('Report-Url: ' + reporting_client.report_url())
+
             print("----------------------------------------------------------\n\n\n\n")
             driver.close()
         except Exception as e:
@@ -573,11 +596,22 @@ def setup_perfectoMobile_iOS(request):
     reporting_client = PerfectoReportiumClient(perfecto_execution_context)
     reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
     reportClient(reporting_client)
+    try:
+        params = {'property': 'model'}
+        deviceModel = driver.execute_script('mobile:handset:info', params)
+    except:
+        pass
 
     def teardown():
         try:
             print("\n---------- Tear Down ----------")
             print('Report-Url: ' + reporting_client.report_url())
+            try:
+                allure.dynamic.link(
+                    str(reporting_client.report_url()),
+                    name=str(deviceModel))
+            except:
+                print("fail to attach video link")
             print("----------------------------------------------------------\n\n\n\n")
             driver.close()
         except Exception as e:
