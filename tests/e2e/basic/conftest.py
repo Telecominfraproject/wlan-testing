@@ -71,6 +71,7 @@ def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtur
                 if vlan_list[i] > 4095 or vlan_list[i] < 1:
                     vlan_list.pop(i)
     if request.param["mode"] == "VLAN":
+        lf_tools.reset_scenario()
         lf_tools.add_vlan(vlan_ids=vlan_list)
 
     # call this, if 1.x
