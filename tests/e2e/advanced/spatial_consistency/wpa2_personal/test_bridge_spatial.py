@@ -77,13 +77,13 @@ class Test_SpatialConsistency_Bridge(object):
             #print(val)
             #print(type(val))
             #print(val[5])
-            print(str(kpi_val[1])[1:-1])
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(str(kpi_val[1])[1:-1]) > float(60):
+                if float(str(kpi_val[0])[1:-1]) > float(60):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
