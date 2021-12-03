@@ -72,17 +72,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            #print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(60):
+                if float(str(kpi_val[0])[1:-1]) > float(60):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
@@ -141,17 +138,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            # print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(90):
+                if float(str(kpi_val[0])[1:-1]) > float(90):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
@@ -210,17 +204,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            # print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(45):
+                if float(str(kpi_val[0])[1:-1]) > float(45):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
@@ -279,17 +270,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            # print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(90):
+                if float(str(kpi_val[0])[1:-1]) > float(90):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
@@ -348,17 +336,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            # print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(250):
+                if float(str(kpi_val[0])[1:-1]) > float(250):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
@@ -417,17 +402,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            # print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(500):
+                if float(str(kpi_val[0])[1:-1]) > float(500):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
@@ -486,17 +468,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            # print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(250):
+                if float(str(kpi_val[0])[1:-1]) > float(250):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
@@ -555,17 +534,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            # print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(500):
+                if float(str(kpi_val[0])[1:-1]) > float(500):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
@@ -624,17 +600,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            # print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(45):
+                if float(str(kpi_val[0])[1:-1]) > float(45):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
@@ -693,17 +666,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            # print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(90):
+                if float(str(kpi_val[0])[1:-1]) > float(90):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
@@ -762,17 +732,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            # print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(45):
+                if float(str(kpi_val[0])[1:-1]) > float(45):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
@@ -831,17 +798,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            # print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(90):
+                if float(str(kpi_val[0])[1:-1]) > float(90):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
@@ -900,17 +864,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            # print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(250):
+                if float(str(kpi_val[0])[1:-1]) > float(250):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
@@ -969,17 +930,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            # print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(500):
+                if float(str(kpi_val[0])[1:-1]) > float(500):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
@@ -1038,17 +996,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            # print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(500):
+                if float(str(kpi_val[0])[1:-1]) > float(500):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
@@ -1107,17 +1062,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            # print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(45):
+                if float(str(kpi_val[0])[1:-1]) > float(45):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
@@ -1176,17 +1128,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            # print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(45):
+                if float(str(kpi_val[0])[1:-1]) > float(45):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
@@ -1245,17 +1194,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            # print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(250):
+                if float(str(kpi_val[0])[1:-1]) > float(250):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
@@ -1314,17 +1260,14 @@ class Test_SpatialConsistency_Bridge(object):
 
             kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
             print(type(kpi_val))
-            print(str(kpi_val))
-            val = kpi_val.split(" ")
-            print(val)
-            # print(type(val))
-            print(val[5])
+            print(kpi_val)
+            print(str(kpi_val[0])[1:-1])
             if str(kpi_val) == "empty":
                 print("kpi is empty, station did not got ip, Test failed")
                 allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
                 assert False
             else:
-                if float(val[5]) > float(500):
+                if float(str(kpi_val[0])[1:-1]) > float(500):
                     print("Test passed successfully")
                     allure.attach(name="Kpi Data", body=str(kpi_val))
                     assert True
