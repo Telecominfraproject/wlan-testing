@@ -164,7 +164,7 @@ class RunTest:
                     station_name=[], key_mgmt="WPA-EAP",
                     pairwise="NA", group="NA", wpa_psk="DEFAULT",
                     ttls_passwd="nolastart", ieee80211w=1,
-                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius"):
+                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius",d_vlan=False):
         self.eap_connect = TTLSTest(host=self.lanforge_ip, port=self.lanforge_port,
                                     sta_list=station_name, vap=False, _debug_on=self.debug)
 
@@ -208,15 +208,21 @@ class RunTest:
         self.eap_connect.sta_list = station_name
         self.eap_connect.build(extra_securities=extra_securities)
         self.eap_connect.start(station_name, True, True)
+        if d_vlan:
+           self.station_ip = {}
         for sta_name in station_name:
             # try:
             station_data_str = ""
             # sta_url = self.eap_connect.get_station_url(sta_name)
             # station_info = self.eap_connect.json_get(sta_url)
             station_info = self.eap_connect.json_get("port/1/1/" + sta_name)
+
             for i in station_info["interface"]:
                 try:
                     station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
+                    if d_vlan:
+                        if i == "ip":
+                            self.station_ip[sta_name] = station_info["interface"][i]
                 except Exception as e:
                     print(e)
             allure.attach(name=str(sta_name), body=str(station_data_str))
