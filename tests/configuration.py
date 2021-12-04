@@ -693,6 +693,24 @@ RADIUS_ACCOUNTING_DATA = {
     "pk_password": "whatever"
 }
 
+RATE_LIMITING_RADIUS_SERVER_DATA = {
+    "ip": "18.189.85.200",
+    "port": 1812,
+    "secret": "testing123",
+    "user": "user",
+    "password": "password",
+    "pk_password": "whatever"
+}
+
+RATE_LIMITING_RADIUS_ACCOUNTING_DATA = {
+    "ip": "18.189.85.200",
+    "port": 1813,
+    "secret": "testing123",
+    "user": "user",
+    "password": "password",
+    "pk_password": "whatever"
+}
+
 PASSPOINT_RADIUS_SERVER_DATA = {
     "ip": "52.234.179.191",
     "port": 11812,
