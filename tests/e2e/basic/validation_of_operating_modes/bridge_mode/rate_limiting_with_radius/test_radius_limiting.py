@@ -4,20 +4,26 @@ Rate LImiting with radius Bridge Mode Scenario
 
 import allure
 import pytest
+from configuration import RATE_LIMITING_RADIUS_SERVER_DATA
+from configuration import RATE_LIMITING_RADIUS_ACCOUNTING_DATA
 
 pytestmark = [pytest.mark.regression, pytest.mark.rate_limiting_with_radius, pytest.mark.bridge]
+
 
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_enterprise_rate": [
+        "wpa2_enterprise": [
             {"ssid_name": "ssid_wpa2_2g_br",
              "appliedRadios": ["2G"],
              "security_key": "something",
              "rate-limit": {
                  "ingress-rate": 50,
                  "egress-rate": 50
-             }
+             },
+             "radius_auth_data": RATE_LIMITING_RADIUS_SERVER_DATA,
+             "radius_acc_data" : RATE_LIMITING_RADIUS_ACCOUNTING_DATA
+
              },
             {"ssid_name": "ssid_wpa2_5g_br",
              "appliedRadios": ["5G"],
@@ -42,11 +48,11 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestRateLimitingWithRadiusBridge(object):
 
-    @pytest.mark.wpa2_enterprise_rate
+    @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5849", name="WIFI-5849")
-    def test_radius_server_2g_up(self, lf_test, lf_tools, rate_radius_info,rate_radius_accounting_info, station_names_twog):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise_rate"][0]
+    def test_radius_server_2g_up(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info, station_names_twog):
+        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         vlan = 1
@@ -72,4 +78,4 @@ class TestRateLimitingWithRadiusBridge(object):
 
             lf_tools.attach_report_graphs(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
-            assert True
+        assert True
