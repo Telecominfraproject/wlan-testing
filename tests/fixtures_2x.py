@@ -357,7 +357,7 @@ class Fixtures_2x:
 
     def setup_profiles(self, request, param, setup_controller, testbed, get_equipment_ref,
                        instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
-                       get_security_flags, get_configuration, radius_info, get_apnos,
+                       get_security_flags, get_configuration, radius_info, get_apnos,rate_radius_info, rate_radius_accounting_info,
                        radius_accounting_info, skip_lf=False):
 
         instantiate_profile_obj = instantiate_profile(sdk_client=setup_controller)
@@ -496,6 +496,25 @@ class Fixtures_2x:
                             j['security'] = 'wpa2'
                             RADIUS_SERVER_DATA = radius_info
                             RADIUS_ACCOUNTING_DATA = radius_accounting_info
+                            creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j, radius=True,
+                                                                               radius_auth_data=RADIUS_SERVER_DATA,
+                                                                               radius_accounting_data=RADIUS_ACCOUNTING_DATA)
+                            test_cases["wpa_2g"] = True
+                        except Exception as e:
+                            print(e)
+                            test_cases["wpa2_personal"] = False
+            if mode == "wpa2_enterprise_rate":
+                for j in profile_data["ssid"][mode]:
+                    if mode in get_markers.keys() and get_markers[mode]:
+                        try:
+                            if j["appliedRadios"].__contains__("2G"):
+                                lf_dut_data.append(j)
+                            if j["appliedRadios"].__contains__("5G"):
+                                lf_dut_data.append(j)
+                            j["appliedRadios"] = list(set(j["appliedRadios"]))
+                            j['security'] = 'wpa2'
+                            RADIUS_SERVER_DATA = rate_radius_accounting_info
+                            RADIUS_ACCOUNTING_DATA = rate_radius_info
                             creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j, radius=True,
                                                                                radius_auth_data=RADIUS_SERVER_DATA,
                                                                                radius_accounting_data=RADIUS_ACCOUNTING_DATA)
