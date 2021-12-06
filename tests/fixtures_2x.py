@@ -42,21 +42,25 @@ from configuration import RADIUS_ACCOUNTING_DATA
 
 class Fixtures_2x:
 
-    def __init__(self, configuration={}):
+    def __init__(self, configuration={}, run_lf=False):
         self.lab_info = configuration
         print(self.lab_info)
         print("2.X")
-        try:
-            self.controller_obj = Controller(controller_data=self.lab_info["controller"])
-            self.fw_client = FMSUtils(sdk_client=self.controller_obj)
-        except Exception as e:
-            print(e)
-            allure.attach(body=str(e), name="Controller Instantiation Failed: ")
-            sdk_client = False
-            pytest.exit("unable to communicate to Controller" + str(e))
+        self.run_lf = run_lf
+        self.controller_obj=""
+        if not run_lf:
+            try:
+                self.controller_obj = Controller(controller_data=self.lab_info["controller"])
+                self.fw_client = FMSUtils(sdk_client=self.controller_obj)
+            except Exception as e:
+                print(e)
+                allure.attach(body=str(e), name="Controller Instantiation Failed: ")
+                sdk_client = False
+                pytest.exit("unable to communicate to Controller" + str(e))
 
     def disconnect(self):
-        self.controller_obj.logout()
+        if not self.run_lf:
+            self.controller_obj.logout()
 
     def setup_firmware(self, get_apnos, get_configuration, request=""):
         # Query AP Firmware
@@ -311,11 +315,13 @@ class Fixtures_2x:
         return status_data
 
     def get_ap_version(self, get_apnos, get_configuration):
+
         version_list = []
-        for access_point_info in get_configuration['access_point']:
-            ap_ssh = get_apnos(access_point_info)
-            version = ap_ssh.get_ap_version_ucentral()
-            version_list.append(version)
+        if not self.run_lf:
+            for access_point_info in get_configuration['access_point']:
+                ap_ssh = get_apnos(access_point_info)
+                version = ap_ssh.get_ap_version_ucentral()
+                version_list.append(version)
         return version_list
 
     def get_uci_show(self, get_apnos, get_configuration):
@@ -358,8 +364,9 @@ class Fixtures_2x:
     def setup_profiles(self, request, param, setup_controller, testbed, get_equipment_ref,
                        instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                        get_security_flags, get_configuration, radius_info, get_apnos,
-                       radius_accounting_info, skip_lf=False):
-
+                       radius_accounting_info, skip_lf=False, run_lf=False):
+        if run_lf:
+           return 0
         instantiate_profile_obj = instantiate_profile(sdk_client=setup_controller)
         print(1, instantiate_profile_obj.sdk_client)
         vlan_id, mode = 0, 0
