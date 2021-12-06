@@ -151,7 +151,7 @@ class TestRateLimitingWithRadiusBridge(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
-    @pytest.mark.twog_download
+    @pytest.mark.fiveg_download
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5853", name="WIFI-5853")
     def test_radius_server_fiveg_download(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
                                                  station_names_fiveg):
@@ -176,6 +176,40 @@ class TestRateLimitingWithRadiusBridge(object):
             wct_obj = lf_test.wifi_capacity(instance_name="Test_Radius_5g_down", mode=mode, vlan_id=vlan,
                                             download_rate="1Gbps", batch_size="1",
                                             upload_rate="0bps", protocol="TCP-IPv4", duration="60000")
+
+            report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+
+            lf_tools.attach_report_graphs(report_name=report_name)
+            print("Test Completed... Cleaning up Stations")
+        assert True
+
+    @pytest.mark.wpa2_enterprise
+    @pytest.mark.fiveg
+    @pytest.mark.fiveg_upload
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5854", name="WIFI-5854")
+    def test_radius_server_fiveg_upload(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
+                                          station_names_fiveg):
+        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][1]
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        vlan = 1
+        security = "wpa2"
+        band = "fiveg"
+        eap = "TTLS"
+        print("authentication", rate_radius_info)
+        print("accounting", rate_radius_accounting_info)
+        ttls_passwd = rate_radius_info["password"]
+        identity = rate_radius_info['user']
+        allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+                                     mode=mode, band=band,
+                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     station_name=station_names_fiveg, ieee80211w=0, vlan_id=vlan, cleanup=False)
+        print(passes)
+        if passes:
+            wct_obj = lf_test.wifi_capacity(instance_name="Test_Radius_5g_up", mode=mode, vlan_id=vlan,
+                                            download_rate="0bps", batch_size="1",
+                                            upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000")
 
             report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
