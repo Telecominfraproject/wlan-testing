@@ -433,7 +433,6 @@ def setup_perfectoMobile_android(request):
     try:
         params = {'property': 'model'}
         deviceModel = driver.execute_script('mobile:handset:info', params)
-        device_name_list.append(deviceModel)
     except:
         pass
 
@@ -600,7 +599,6 @@ def setup_perfectoMobile_iOS(request):
     try:
         params = {'property': 'model'}
         deviceModel = driver.execute_script('mobile:handset:info', params)
-        device_name_list.append(deviceModel)
     except:
         pass
 

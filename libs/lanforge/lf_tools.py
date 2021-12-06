@@ -296,7 +296,7 @@ class ChamberView:
             if df.empty == True:
                 return "empty"
             else:
-                result = df.to_string(index=False)
+                result = df[column_name].values.tolist()
                 return result
 
     def attach_report_graphs(self, report_name=None, pdf_name="WIFI Capacity Test PDF Report"):
