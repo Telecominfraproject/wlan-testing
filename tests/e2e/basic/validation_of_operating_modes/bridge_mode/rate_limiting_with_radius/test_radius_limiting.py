@@ -148,3 +148,37 @@ class TestRateLimitingWithRadiusBridge(object):
             lf_tools.attach_report_graphs(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
         assert True
+
+    @pytest.mark.wpa2_enterprise
+    @pytest.mark.twog
+    @pytest.mark.twog_upload_download
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5852", name="WIFI-5852")
+    def test_radius_server_2g_upload_download(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
+                                                 station_names_twog):
+        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        vlan = 1
+        security = "wpa2"
+        band = "twog"
+        eap = "TTLS"
+        print("authentication", rate_radius_info)
+        print("accounting", rate_radius_accounting_info)
+        ttls_passwd = rate_radius_info["password"]
+        identity = rate_radius_info['user']
+        allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+                                     mode=mode, band=band,
+                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     station_name=station_names_twog, ieee80211w=0, vlan_id=vlan, cleanup=False)
+        print(passes)
+        if passes:
+            wct_obj = lf_test.wifi_capacity(instance_name="Test_Radius_2g_up_down", mode=mode, vlan_id=vlan,
+                                            download_rate="1Gbps", batch_size="1",
+                                            upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000")
+
+            report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+
+            lf_tools.attach_report_graphs(report_name=report_name)
+            print("Test Completed... Cleaning up Stations")
+        assert True
