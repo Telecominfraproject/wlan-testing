@@ -35,7 +35,8 @@ setup_params_general = {
              "radius_auth_data": RATE_LIMITING_RADIUS_SERVER_DATA,
              "radius_acc_data" : RATE_LIMITING_RADIUS_ACCOUNTING_DATA
              }
-        ]},
+        ]
+    },
     "rf": {},
     "radius": False
 }
