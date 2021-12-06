@@ -264,6 +264,11 @@ def get_sdk_version(fixtures_ver):
     version = fixtures_ver.get_sdk_version()
     yield version
 
+@pytest.fixture(scope="session")
+def get_uci_show(fixtures_ver, get_apnos, get_configuration):
+    uci_show = fixtures_ver.get_uci_show(get_apnos, get_configuration)
+    yield uci_show
+
 
 @pytest.fixture(scope="session")
 def skip_lf(request):
@@ -521,6 +526,12 @@ def test_access_point(fixtures_ver, request, get_configuration, get_apnos):
     request.addfinalizer(teardown_session)
     yield status
 
+
+@pytest.fixture(scope="session")
+def test_ap_connection_status(fixtures_ver, request, get_configuration, get_apnos):
+    """used to check the manager status of AP, should be used as a setup to verify if ap can reach cloud"""
+    connection, redirector_value = fixtures_ver.get_ap_status_logs(get_configuration, get_apnos)
+    yield connection, redirector_value
 
 @pytest.fixture(scope="session")
 def traffic_generator_connectivity(testbed, get_configuration):
