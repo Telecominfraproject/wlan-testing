@@ -31,7 +31,9 @@ setup_params_general = {
              "rate-limit": {
                  "ingress-rate": 50,
                  "egress-rate": 50
-             }
+             },
+             "radius_auth_data": RATE_LIMITING_RADIUS_SERVER_DATA,
+             "radius_acc_data" : RATE_LIMITING_RADIUS_ACCOUNTING_DATA
              }]},
     "rf": {},
     "radius": False
