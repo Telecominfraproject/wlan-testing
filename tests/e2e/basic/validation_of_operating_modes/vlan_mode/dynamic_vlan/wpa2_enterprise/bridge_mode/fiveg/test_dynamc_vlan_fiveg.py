@@ -12,7 +12,7 @@ import time
 from configuration import DYNAMIC_VLAN_RADIUS_SERVER_DATA
 from configuration import DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA
 
-pytestmark = [pytest.mark.regression, pytest.mark.dynamic_vlan, pytest.mark.wpa2_enterprise, pytest.mark.bridge,pytest.mark.]
+pytestmark = [pytest.mark.regression, pytest.mark.dynamic_vlan, pytest.mark.wpa2_enterprise, pytest.mark.bridge,pytest.mark.fiveg]
 
 setup_params_general = {
     "mode": "BRIDGE",

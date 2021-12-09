@@ -1,7 +1,7 @@
 """
 
-   Dynamic_Vlan: Bridge Mode
-    pytest -m "dynamic_vlan and wpa2_personal and bridge"
+   Dynamic_Vlan: VLAN Mode
+    pytest -m "dynamic_vlan and wpa2_enterprise and vlan"
 
 """
 
@@ -11,7 +11,7 @@ import pytest
 from configuration import DYNAMIC_VLAN_RADIUS_SERVER_DATA
 from configuration import DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA
 
-pytestmark = [pytest.mark.regression, pytest.mark.dynamic_vlan, pytest.mark.wpa2_enterprise, pytest.mark.vlan]
+pytestmark = [pytest.mark.regression, pytest.mark.dynamic_vlan, pytest.mark.wpa2_enterprise, pytest.mark.vlan,pytest.mark.fiveg]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -29,7 +29,7 @@ setup_params_general = {
 
 
 @allure.suite("regression")
-@allure.feature("BRIDGE MODE wpa2_enterprise Dynamic Vlan")
+@allure.feature("VLAN MODE wpa2_enterprise Dynamic Vlan")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -59,7 +59,7 @@ class TestDynamicVlan(object):
         print(upstream_port)
         port_resources = upstream_port.split(".")
         print(lf_tools.dut_idx_mapping)
-        #lf_tools.reset_scenario()
+        lf_tools.reset_scenario()
         lf_tools.add_vlan(vlan_ids=vlan)
 
         lf_test.EAP_Connect(ssid=ssid_5G, passkey="[BLANK]", security="wpa2", extra_securities=[],
