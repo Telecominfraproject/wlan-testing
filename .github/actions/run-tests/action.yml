@@ -77,7 +77,7 @@ runs:
                 - -c
                 - |
                   cd tests
-                  pytest -m "${{ inputs.marker_expression }}" -s -vvv --testbed=${{ inputs.testbed }} --alluredir=/tmp/allure-results "{{ inputs.additional_args }}"
+                  pytest -m "${{ inputs.marker_expression }}" -s -vvv --testbed=${{ inputs.testbed }} --alluredir=/tmp/allure-results "${{ inputs.additional_args }}"
                   ret=\$?
                   # sleep some time to be able to download the Allure results
                   sleep 60
