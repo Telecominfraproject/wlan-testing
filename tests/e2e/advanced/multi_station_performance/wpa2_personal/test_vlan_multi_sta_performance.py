@@ -29,8 +29,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5942", name="WIFI-5942")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_upload_short_dis_nss1_2g
-    def test_multi_station_VLAN_tcp_upload_short_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.tcp_upload_10dB_dis_nss1_2g
+    def test_multi_station_VLAN_tcp_upload_10dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -60,7 +60,7 @@ class TestMultiStaPerfVlan(object):
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_short_dis_nss1_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_10dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="3",
                                         upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -75,8 +75,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5944", name="WIFI-5944")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_upload_short_med_dis_nss1_2g
-    def test_multi_station_VLAN_tcp_upload_short_med_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.tcp_upload_10dB_40dB_dis_nss1_2g
+    def test_multi_station_VLAN_tcp_upload_10dB_40dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -121,7 +121,7 @@ class TestMultiStaPerfVlan(object):
             lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
             time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_short_med_dis_nss1_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_10dB_40dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="3,6",
                                         upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -136,8 +136,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5945", name="WIFI-5945")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_upload_short_med_far_dis_nss1_2g
-    def test_multi_station_VLAN_tcp_upload_short_med_far_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.tcp_upload_10dB_40dB_50dB_dis_nss1_2g
+    def test_multi_station_VLAN_tcp_upload_10dB_40dB_50dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -185,7 +185,7 @@ class TestMultiStaPerfVlan(object):
                 lf_test.attenuator_modify(int(atten_sr2[2]), i, 500)
                 time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_short_med_far_dis_nss1_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_10dB_40dB_50dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="3,6,9",
                                         upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -199,8 +199,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5946", name="WIFI-5946")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_download_short_dis_nss1_5g
-    def test_multi_station_VLAN_tcp_download_short_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.tcp_download_10dB_dis_nss1_5g
+    def test_multi_station_VLAN_tcp_download_10dB_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -231,7 +231,7 @@ class TestMultiStaPerfVlan(object):
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_short_dis_nss1_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_10dB_dis_nss1_5g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="3",
                                         upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -245,8 +245,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5947", name="WIFI-5947")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_download_short_med_dis_nss1_5g
-    def test_multi_station_VLAN_tcp_download_short_med_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.tcp_download_10dB_40dB_dis_nss1_5g
+    def test_multi_station_VLAN_tcp_download_10dB_40dB_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -292,7 +292,7 @@ class TestMultiStaPerfVlan(object):
             lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
             time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_short_med_dis_nss1_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_10dB_40dB_dis_nss1_5g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="3,6",
                                         upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -306,8 +306,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5948", name="WIFI-5948")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_download_short_med_far_dis_nss1_5g
-    def test_multi_station_VLAN_tcp_download_short_med_far_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.tcp_download_10dB_40dB_50dB_dis_nss1_5g
+    def test_multi_station_VLAN_tcp_download_10dB_40dB_50dB_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -355,7 +355,7 @@ class TestMultiStaPerfVlan(object):
                 lf_test.attenuator_modify(int(atten_sr2[2]), i, 500)
                 time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_short_med_far_dis_nss1_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_10dB_40dB_50dB_dis_nss1_5g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="3,6,9",
                                         upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -369,8 +369,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5949", name="WIFI-5949")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_download_short_dis_nss1_2g
-    def test_multi_station_VLAN_tcp_download_short_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.tcp_download_10dB_dis_nss1_2g
+    def test_multi_station_VLAN_tcp_download_10dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -401,7 +401,7 @@ class TestMultiStaPerfVlan(object):
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_short_dis_nss1_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_10dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="3",
                                         upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -415,8 +415,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5950", name="WIFI-5950")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_download_short_med_dis_nss1_2g
-    def test_multi_station_VLAN_tcp_download_short_med_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.tcp_download_10dB_40dB_dis_nss1_2g
+    def test_multi_station_VLAN_tcp_download_10dB_40dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -462,7 +462,7 @@ class TestMultiStaPerfVlan(object):
             lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
             time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_short_med_dis_nss1_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_10dB_40dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="3,6",
                                         upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -476,8 +476,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6085", name="WIFI-6085")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_download_short_med_far_dis_nss1_2g
-    def test_multi_station_VLAN_tcp_download_short_med_far_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.tcp_download_10dB_40dB_50dB_dis_nss1_2g
+    def test_multi_station_VLAN_tcp_download_10dB_40dB_50dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -525,7 +525,7 @@ class TestMultiStaPerfVlan(object):
                 lf_test.attenuator_modify(int(atten_sr2[2]), i, 500)
                 time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_short_med_far_dis_nss1_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_10dB_40dB_50dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="3,6,9",
                                         upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -539,8 +539,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6092", name="WIFI-6092")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_upload_short_dis_nss1_5g
-    def test_multi_station_VLAN_tcp_upload_short_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.tcp_upload_10dB_dis_nss1_5g
+    def test_multi_station_VLAN_tcp_upload_10dB_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -571,7 +571,7 @@ class TestMultiStaPerfVlan(object):
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_short_dis_nss1_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_10dB_dis_nss1_5g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="3",
                                         upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -585,8 +585,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6093", name="WIFI-6093")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_upload_short_med_dis_nss1_5g
-    def test_multi_station_VLAN_tcp_upload_short_med_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.tcp_upload_10dB_40dB_dis_nss1_5g
+    def test_multi_station_VLAN_tcp_upload_10dB_40dB_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -632,7 +632,7 @@ class TestMultiStaPerfVlan(object):
             lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
             time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_short_med_dis_nss1_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_10dB_40dB_dis_nss1_5g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="3,6",
                                         upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -646,8 +646,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6094", name="WIFI-6094")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_upload_short_med_far_dis_nss1_5g
-    def test_multi_station_VLAN_tcp_upload_short_med_far_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.tcp_upload_10dB_40dB_50dB_dis_nss1_5g
+    def test_multi_station_VLAN_tcp_upload_10dB_40dB_50dB_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -695,7 +695,7 @@ class TestMultiStaPerfVlan(object):
                 lf_test.attenuator_modify(int(atten_sr2[2]), i, 500)
                 time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_short_med_far_dis_nss1_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_10dB_40dB_50dB_dis_nss1_5g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="3,6,9",
                                         upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -709,8 +709,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5951", name="WIFI-5951")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_upload_short_dis_nss2_2g
-    def test_multi_station_VLAN_tcp_upload_short_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.tcp_upload_10dB_dis_nss2_2g
+    def test_multi_station_VLAN_tcp_upload_10dB_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -741,7 +741,7 @@ class TestMultiStaPerfVlan(object):
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_short_dis_nss2_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_10dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="3",
                                         upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -755,8 +755,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5966", name="WIFI-5966")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_upload_short_med_dis_nss2_2g
-    def test_multi_station_VLAN_tcp_upload_short_med_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.tcp_upload_10dB_40dB_dis_nss2_2g
+    def test_multi_station_VLAN_tcp_upload_10dB_40dB_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -802,7 +802,7 @@ class TestMultiStaPerfVlan(object):
             lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
             time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_short_med_dis_nss2_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_10dB_40dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="3,6",
                                         upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -816,8 +816,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5954", name="WIFI-5954")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_upload_short_med_far_dis_nss2_2g
-    def test_multi_station_VLAN_tcp_upload_short_med_far_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.tcp_upload_10dB_40dB_50dB_dis_nss2_2g
+    def test_multi_station_VLAN_tcp_upload_10dB_40dB_50dB_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -865,7 +865,7 @@ class TestMultiStaPerfVlan(object):
                 lf_test.attenuator_modify(int(atten_sr2[2]), i, 500)
                 time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_short_med_far_dis_nss2_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_10dB_40dB_50dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="3,6,9",
                                         upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -879,8 +879,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5971", name="WIFI-5971")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_download_short_dis_nss2_5g
-    def test_multi_station_VLAN_tcp_download_short_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.tcp_download_10dB_dis_nss2_5g
+    def test_multi_station_VLAN_tcp_download_10dB_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -911,7 +911,7 @@ class TestMultiStaPerfVlan(object):
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_short_dis_nss2_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_10dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="3",
                                         upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -925,8 +925,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5970", name="WIFI-5970")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_download_short_med_dis_nss2_5g
-    def test_multi_station_VLAN_tcp_download_short_med_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.tcp_download_10dB_40dB_dis_nss2_5g
+    def test_multi_station_VLAN_tcp_download_10dB_40dB_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -972,7 +972,7 @@ class TestMultiStaPerfVlan(object):
             lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
             time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_short_med_dis_nss2_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_10dB_40dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="3,6",
                                         upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -986,8 +986,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5972", name="WIFI-5972")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_download_short_med_far_dis_nss2_5g
-    def test_multi_station_VLAN_tcp_download_short_med_far_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.tcp_download_10dB_40dB_50dB_dis_nss2_5g
+    def test_multi_station_VLAN_tcp_download_10dB_40dB_50dB_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1035,7 +1035,7 @@ class TestMultiStaPerfVlan(object):
                 lf_test.attenuator_modify(int(atten_sr2[2]), i, 500)
                 time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_short_med_far_dis_nss2_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_10dB_40dB_50dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="3,6,9",
                                         upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -1049,8 +1049,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5969", name="WIFI-5969")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_download_short_dis_nss2_2g
-    def test_multi_station_VLAN_tcp_download_short_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.tcp_download_10dB_dis_nss2_2g
+    def test_multi_station_VLAN_tcp_download_10dB_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -1081,7 +1081,7 @@ class TestMultiStaPerfVlan(object):
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_short_dis_nss2_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_10dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="3",
                                         upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -1095,8 +1095,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5968", name="WIFI-5968")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_download_short_med_dis_nss2_2g
-    def test_multi_station_VLAN_tcp_download_short_med_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.tcp_download_10dB_40dB_dis_nss2_2g
+    def test_multi_station_VLAN_tcp_download_10dB_40dB_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -1142,7 +1142,7 @@ class TestMultiStaPerfVlan(object):
             lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
             time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_short_med_dis_nss2_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_10dB_40dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="3,6",
                                         upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -1156,8 +1156,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5967", name="WIFI-5967")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_download_short_med_far_dis_nss2_2g
-    def test_multi_station_VLAN_tcp_download_short_med_far_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.tcp_download_10dB_40dB_50dB_dis_nss2_2g
+    def test_multi_station_VLAN_tcp_download_10dB_40dB_50dB_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -1205,7 +1205,7 @@ class TestMultiStaPerfVlan(object):
                 lf_test.attenuator_modify(int(atten_sr2[2]), i, 500)
                 time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_short_med_far_dis_nss2_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_download_10dB_40dB_50dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="3,6,9",
                                         upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -1219,8 +1219,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5952", name="WIFI-5952")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_upload_short_dis_nss2_5g
-    def test_multi_station_VLAN_tcp_upload_short_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.tcp_upload_10dB_dis_nss2_5g
+    def test_multi_station_VLAN_tcp_upload_10dB_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1251,7 +1251,7 @@ class TestMultiStaPerfVlan(object):
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_short_dis_nss2_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_10dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="3",
                                         upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -1265,8 +1265,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5953", name="WIFI-5953")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_upload_short_med_dis_nss2_5g
-    def test_multi_station_VLAN_tcp_upload_short_med_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.tcp_upload_10dB_40dB_dis_nss2_5g
+    def test_multi_station_VLAN_tcp_upload_10dB_40dB_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1312,7 +1312,7 @@ class TestMultiStaPerfVlan(object):
             lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
             time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_short_med_dis_nss2_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_10dB_40dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="3,6",
                                         upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
@@ -1326,8 +1326,8 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5973", name="WIFI-5973")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_upload_short_med_far_dis_nss2_5g
-    def test_multi_station_VLAN_tcp_upload_short_med_far_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.tcp_upload_10dB_40dB_50dB_dis_nss2_5g
+    def test_multi_station_VLAN_tcp_upload_10dB_40dB_50dB_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1375,7 +1375,7 @@ class TestMultiStaPerfVlan(object):
                 lf_test.attenuator_modify(int(atten_sr2[2]), i, 500)
                 time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_short_med_far_dis_nss2_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="tcp_VLAN_upload_10dB_40dB_50dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="3,6,9",
                                         upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
 
