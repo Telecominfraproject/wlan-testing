@@ -396,6 +396,25 @@ class UProfileUtility:
             self.base_profile_config['services']['lldp']['describe'] = "OpenWiFi - expressWiFi"
             self.base_profile_config['services']['lldp']['location'] = "Hotspot"
 
+    def set_captive_portal(self):
+
+        if self.mode == "NAT":
+            max_client = {
+                "max-clients": 32
+            }
+            # sourceFile = open('captive_config.py', 'w')
+
+            self.base_profile_config["interfaces"][1]["name"] = "captive"
+            self.base_profile_config["interfaces"][1]["ipv4"]["subnet"] = "192.168.2.1/24"
+            self.base_profile_config["interfaces"][1]["captive"] = max_client
+            del self.base_profile_config["interfaces"][1]["ethernet"]
+            del self.base_profile_config["interfaces"][1]["services"]
+            del self.base_profile_config["metrics"]["wifi-frames"]
+            del self.base_profile_config["metrics"]["dhcp-snooping"]
+            # print(self.base_profile_config)
+            # print(self.base_profile_config, file=sourceFile)
+            # sourceFile.close()
+
 
 
     def encryption_lookup(self, encryption="psk"):

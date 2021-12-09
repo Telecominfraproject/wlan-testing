@@ -548,6 +548,13 @@ class Fixtures_2x:
         except:
             pass
 
+        try:
+            if parameter['captive_portal']:
+                instantiate_profile_obj.set_captive_portal()
+                # print(json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"')))
+        except:
+            pass
+
         ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="2.x")
 
         # Get ucentral status
