@@ -767,3 +767,4 @@ PASSPOINT_PROFILE_INFO = {
     }
 }
 
+open_flow = {}
