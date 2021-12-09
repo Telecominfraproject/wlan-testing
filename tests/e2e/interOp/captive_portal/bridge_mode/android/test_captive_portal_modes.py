@@ -274,3 +274,76 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5129", name="WIFI-5129")
+    @pytest.mark.twog
+    @pytest.mark.wpa3_personal
+    def test_Captive_Portal_WPA3_2g_Personal_NAT(self, request, get_vif_state, get_ap_logs,
+                                                    get_APToMobileDevice_data,
+                                                    setup_perfectoMobile_android):
+
+        profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
+        ssidName = profile_data["ssid_name"]
+        ssidPassword = profile_data["security_key"]
+        print("SSID_NAME: " + ssidName)
+        print("SSID_PASS: " + ssidPassword)
+        get_vif_state.append(ssidName)
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
+        report = setup_perfectoMobile_android[1]
+        driver = setup_perfectoMobile_android[0]
+        connData = get_APToMobileDevice_data
+
+        # Set Wifi/AP Mode
+        ip, is_internet = captive_portal_and(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+        if is_internet:
+            if ip:
+                text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
+            else:
+                text_body = ("connected to " + ssidName + "with Internet, couldn't get IP address")
+            print(text_body)
+            allure.attach(name="Connection Status: ", body=str(text_body))
+
+            assert verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+        else:
+            allure.attach(name="Connection Status: ", body=str("No Internet access"))
+            assert False
+
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5137", name="WIFI-5137")
+    @pytest.mark.fiveg
+    @pytest.mark.wpa3_personal
+    def test_Captive_Portal_WPA3_5g_Personal_NAT(self, request, get_vif_state, get_ap_logs,
+                                                    get_APToMobileDevice_data,
+                                                    setup_perfectoMobile_android):
+
+        profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][1]
+        ssidName = profile_data["ssid_name"]
+        ssidPassword = profile_data["security_key"]
+        print("SSID_NAME: " + ssidName)
+        print("SSID_PASS: " + ssidPassword)
+        get_vif_state.append(ssidName)
+        if ssidName not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
+        report = setup_perfectoMobile_android[1]
+        driver = setup_perfectoMobile_android[0]
+        connData = get_APToMobileDevice_data
+
+        # Set Wifi/AP Mode
+        ip, is_internet = captive_portal_and(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+        if is_internet:
+            if ip:
+                text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
+            else:
+                text_body = ("connected to " + ssidName + "with Internet, couldn't get IP address")
+            print(text_body)
+            allure.attach(name="Connection Status: ", body=str(text_body))
+
+            assert verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+        else:
+            allure.attach(name="Connection Status: ", body=str("No Internet access"))
+            assert False
