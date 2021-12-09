@@ -182,7 +182,9 @@ jobs:
         CONFIGURATION = {
           "basic": $(python .quali/get_configuration.py ${{ steps.start.outputs.res_id }})
         }
-
+        
+        open_flow = {}
+        
         RADIUS_SERVER_DATA = {
             "ip": "10.10.1.221",
             "port": 1812,
