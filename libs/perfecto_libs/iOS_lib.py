@@ -2300,11 +2300,11 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     # ---------------------Click on join-------------------------------
 
     try:
-        time.sleep(4)
-        driver.implicitly_wait(4)
+        time.sleep(8)
+        driver.implicitly_wait(12)
         try:
             time.sleep(8)
-            driver.implicitly_wait(2)
+            driver.implicitly_wait(8)
             print("Acceptiong terms and Services")
             report.step_start("loading Terms Page")
             element = driver.find_element_by_xpath("//*[@label='Accept Terms of Service']")
