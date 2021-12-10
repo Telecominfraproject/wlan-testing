@@ -25,7 +25,7 @@ jobs:
         registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     needs: [ build ]
     env:
       AWS_EKS_NAME: tip-wlan-main
@@ -43,6 +43,16 @@ jobs:
         - advanced-02
 
     steps:
+    - name: install aws CLI tool
+      run: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
     - name: get EKS access credentials
       run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
@@ -155,6 +165,7 @@ jobs:
       if: ${{ always() }}
       run: |
         kubectl delete ns "${{ steps.namespace.outputs.name }}" --wait=true
+
 
   report:
     needs: [ test ]
