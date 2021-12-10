@@ -49,6 +49,6 @@ runs:
 
   - name: generate Allure report
     shell: bash
-    run: allure-${{ inputs.allure_version }}/bin/allure generate "${{ inputs.results_path }}" -o "{{ inputs.report_path }}"
+    run: allure-${{ inputs.allure_version }}/bin/allure generate "${{ inputs.results_path }}" -o "${{ inputs.report_path }}"
 
 
