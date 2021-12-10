@@ -1015,7 +1015,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     available_ssids = False
 
     try:
-        for check_for_all_ssids in range(9):
+        for check_for_all_ssids in range(10):
             available_ssids = get_all_available_ssids(driver)
             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
             try:
