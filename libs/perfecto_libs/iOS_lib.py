@@ -38,9 +38,9 @@ def scrollDown(setup_perfectoMobile):
     params2["start"] = "50%,90%"
     params2["end"] = "50%,20%"
     params2["duration"] = "4"
-    # time.sleep(2)
+    time.sleep(5)
     setup_perfectoMobile[0].execute_script('mobile:touch:swipe', params2)
-    time.sleep(3)
+    time.sleep(5)
 
 
 def closeApp(appName, setup_perfectoMobile):
@@ -1015,7 +1015,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     available_ssids = False
 
     try:
-        for check_for_all_ssids in range(9):
+        for check_for_all_ssids in range(2):
             available_ssids = get_all_available_ssids(driver)
             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
             try:
@@ -1177,8 +1177,8 @@ def get_all_available_ssids(driver):
 
     active_ssid_list = []
     try:
-        time.sleep(2)
-        driver.implicitly_wait(2)
+        time.sleep(8)
+        driver.implicitly_wait(10)
         elements = driver.find_elements_by_xpath("(//*[@label='More Info']/parent::*/XCUIElementTypeStaticText)")
         print(len(elements))
         for i in range(len(elements)):
@@ -1730,7 +1730,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
     available_ssids = False
 
     try:
-        for check_for_all_ssids in range(9):
+        for check_for_all_ssids in range(2):
             available_ssids = get_all_available_ssids(driver)
             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
             try:

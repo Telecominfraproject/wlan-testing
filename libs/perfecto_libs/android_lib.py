@@ -60,9 +60,9 @@ def scrollDown(setup_perfectoMobile):
     params2["start"] = "50%,90%"
     params2["end"] = "50%,20%"
     params2["duration"] = "4"
-    # time.sleep(2)
+    time.sleep(2)
     setup_perfectoMobile[0].execute_script('mobile:touch:swipe', params2)
-    time.sleep(3)
+    time.sleep(1)
 
 
 def getDeviceID(setup_perfectoMobile):
@@ -1195,7 +1195,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         print("No Connected SSIDS")
                     #----------------------This is to Forget current connected SSID--------------------------------
 
-                    # time.sleep(2)
+                    time.sleep(2)
                     print("Selecting Wifi: " + WifiName)
                    #allure.attach(name= body=str("Selecting Wifi: " + WifiName))
                     ssid_found = False
@@ -1203,7 +1203,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     #This is To get all available ssids
                     #------------------------------------------------------
                     try:
-                        for k in range(9):
+                        for k in range(3):
                             available_ssids = get_all_available_ssids(driver)
                             print("active_ssid_list: ", available_ssids)
                             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
@@ -1785,8 +1785,8 @@ def wifi_disconnect_and_forget(request, WifiName, WifiPass, setup_perfectoMobile
 def get_all_available_ssids(driver):
     active_ssid_list = []
     try:
-        time.sleep(2)
-        driver.implicitly_wait(1)
+        time.sleep(5)
+        driver.implicitly_wait(5)
         elements = driver.find_elements_by_xpath("//*[@resource-id='com.android.settings:id/title']")
         # print("elements: ", elements)
         print(len(elements))
@@ -2191,7 +2191,7 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                     #This is To get all available ssids
                     #------------------------------------------------------
                     try:
-                        for k in range(10):
+                        for k in range(3):
                             available_ssids = get_all_available_ssids(driver)
                             print("active_ssid_list: ", available_ssids)
                             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))

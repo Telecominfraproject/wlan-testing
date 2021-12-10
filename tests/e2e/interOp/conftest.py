@@ -403,7 +403,7 @@ def setup_perfectoMobile_android(request):
     driver = webdriver.Remote(
         'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
         capabilities)
-    driver.implicitly_wait(2)
+    driver.implicitly_wait(35)
 
     TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
     nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
@@ -507,7 +507,7 @@ def setup_perfectoMobileWeb(request):
     rdriver = webdriver.Remote(
         'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
         capabilities)
-    rdriver.implicitly_wait(2)
+    rdriver.implicitly_wait(35)
 
     projectname = request.config.getini("projectName")
     projectversion = request.config.getini("projectVersion")
@@ -570,7 +570,7 @@ def setup_perfectoMobile_iOS(request):
     driver = webdriver.Remote(
         'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
         capabilities)
-    driver.implicitly_wait(2)
+    driver.implicitly_wait(35)
 
     TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
     nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
