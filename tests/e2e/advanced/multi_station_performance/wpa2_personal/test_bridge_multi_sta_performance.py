@@ -1378,11 +1378,9 @@ class TestMultiStaPerfBridge(object):
         wct_obj = lf_test.wifi_capacity(instance_name="tcp_upload_10dB_40dB_50dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="3,6,9",
                                         upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
-
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
         print("Test Completed... Cleaning up Stations")
         if pass_condn:
             assert True
-
