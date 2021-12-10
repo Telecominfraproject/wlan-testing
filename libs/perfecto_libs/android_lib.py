@@ -114,9 +114,6 @@ def set_APconnMobileDevice_android(request, WifiName, WifiPass, setup_perfectoMo
             connElement.click()
         except NoSuchElementException:
             print("Exception: Verify Xpath - Update/check Xpath for Click Connections")
-
-
-
         try:
             print("Get Connected Wifi Name if any")
             report.step_start("Get Connected Wifi Name if any")
@@ -1409,17 +1406,17 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                 try:
                     driver.implicitly_wait(1)
                     get_switch_text_element = driver.find_element_by_xpath(
-                        "//*[@resource-id='android:id/icon']")
-                    get_switch_text = get_switch_text_element.click()
-                    if get_switch_text is not None:
-                        switch_text = "Off"
-                    else:
-                        switch_text = "On"
-
+                        "//*[@resource-id='com.android.settings:id/switch_widget']")
+                    get_switch_text = get_switch_text_element.text
+                    # if get_switch_text is not None:
+                    #     switch_text = "OFF"
+                    # else:
+                    #     switch_text = "ON"
+                    switch_text = get_switch_text
                     print("get_switch_text: ", switch_text)
                     print("Find wifi switch")
                     try:  # To Turn on Wi-Fi Switch
-                        if switch_text == "Off":
+                        if switch_text == "OFF":
                             # driver.implicitly_wait(3)
                             get_switch_element = driver.find_element_by_xpath(
                                 "//*[@resource-id='com.android.settings:id/switch_widget']")
@@ -1428,7 +1425,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                             driver.implicitly_wait(1)
                             i = 0
                             for i in range(5):
-                                if switch_text == "On":
+                                if switch_text == "ON":
                                     print("WIFI Switch is ON")
                                     break
                                 else:
@@ -1437,9 +1434,9 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                             "//*[@text='Add network']")
                                         get_switch_text = get_switch_text_element.text
                                         if get_switch_text == "Add network":
-                                            switch_text = "On"
+                                            switch_text = "ON"
                                         else:
-                                            switch_text = "Off"
+                                            switch_text = "OFF"
                                     except NoSuchElementException:
                                         print("Exception: Verify Xpath")
                                     # Scroll Down
@@ -1447,7 +1444,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                     print("Sleeping for: ", i)
                                     time.sleep(i)
                                     pass
-                            if switch_text == "Off":
+                            if switch_text == "OFF":
                                 print("Switch is Still OFF")
                                 closeApp(connData["appPackage-android"], setup_perfectoMobile)
                                 return ip_address_element_text, ssid_with_internet
@@ -3087,17 +3084,17 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                 try:
                     driver.implicitly_wait(1)
                     get_switch_text_element = driver.find_element_by_xpath(
-                        "//*[@resource-id='android:id/icon']")
-                    get_switch_text = get_switch_text_element.click()
-                    if get_switch_text is not None:
-                        switch_text = "Off"
-                    else:
-                        switch_text = "On"
-
+                        "//*[@resource-id='com.android.settings:id/switch_widget']")
+                    get_switch_text = get_switch_text_element.text
+                    # if get_switch_text is not None:
+                    #     switch_text = "OFF"
+                    # else:
+                    #     switch_text = "ON"
+                    switch_text = get_switch_text
                     print("get_switch_text: ", switch_text)
                     print("Find wifi switch")
                     try:  # To Turn on Wi-Fi Switch
-                        if switch_text == "Off":
+                        if switch_text == "OFF":
                             # driver.implicitly_wait(3)
                             get_switch_element = driver.find_element_by_xpath(
                                 "//*[@resource-id='com.android.settings:id/switch_widget']")
@@ -3106,7 +3103,7 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                             driver.implicitly_wait(1)
                             i = 0
                             for i in range(5):
-                                if switch_text == "On":
+                                if switch_text == "ON":
                                     print("WIFI Switch is ON")
                                     break
                                 else:
@@ -3115,9 +3112,9 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                                             "//*[@text='Add network']")
                                         get_switch_text = get_switch_text_element.text
                                         if get_switch_text == "Add network":
-                                            switch_text = "On"
+                                            switch_text = "ON"
                                         else:
-                                            switch_text = "Off"
+                                            switch_text = "OFF"
                                     except NoSuchElementException:
                                         print("Exception: Verify Xpath")
                                     # Scroll Down
@@ -3125,7 +3122,7 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                                     print("Sleeping for: ", i)
                                     time.sleep(i)
                                     pass
-                            if switch_text == "Off":
+                            if switch_text == "OFF":
                                 print("Switch is Still OFF")
                                 closeApp(connData["appPackage-android"], setup_perfectoMobile)
                                 return ip_address_element_text, ssid_with_internet
@@ -3172,18 +3169,9 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                     # ------------------------------------------------------
                     try:
                         for k in range(3):
-
-                            # available_ssids = get_all_available_ssids(driver, deviceModelName)
-                            # print("active_ssid_list: ", available_ssids)
-                            # allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
-                            available_ssids = []
-                            try:
-                                elements = WebDriverWait(driver, 20).until(
-                                    EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
-                                available_ssids.append(elements.text)
-                            except:
-                                pass
-
+                            available_ssids = get_all_available_ssids(driver, deviceModelName)
+                            print("active_ssid_list: ", available_ssids)
+                            allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
                             try:
                                 if WifiName not in available_ssids:
                                     scrollDown(setup_perfectoMobile)
@@ -3256,22 +3244,20 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                         print("User name not Loaded")
                     # -------------------------------------------------------
                     # Scroll Down
-                    scrollDown(setup_perfectoMobile)
+                    scroll_down(setup_perfectoMobile)
                     time.sleep(2)
                     # Set Password
                     # -------------------------------------------------------
                     try:
-                        driver.implicitly_wait(6)
-                        report.step_start("Set Password")
-                        print("Set Password")
-                        time.sleep(5)
-                        wifi_password_element = driver.find_element_by_xpath(
+                        check_if_no_internet_popup(driver)
+                        report.step_start("Set Wifi Password")
+                        print("Entering password")
+                        wifiPasswordElement = driver.find_element_by_xpath(
                             "//*[@resource-id='com.android.settings:id/password']")
-                        print("Entered Password1")
-                        wifi_password_element.send_keys(ttls_passwd)
-                        print("Entered Password")
+                        wifiPasswordElement.send_keys(ttls_passwd)
                     except NoSuchElementException:
                         print("Password Page Not Loaded, password May be cached in the System")
+                    check_if_no_internet_popup(driver)
 
                     # -------------------------------------------------------
 
@@ -3706,17 +3692,17 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                 try:
                     driver.implicitly_wait(1)
                     get_switch_text_element = driver.find_element_by_xpath(
-                        "//*[@resource-id='android:id/icon']")
-                    get_switch_text = get_switch_text_element.click()
-                    if get_switch_text is not None:
-                        switch_text = "Off"
-                    else:
-                        switch_text = "On"
-
+                        "//*[@resource-id='com.android.settings:id/switch_widget']")
+                    get_switch_text = get_switch_text_element.text
+                    # if get_switch_text is not None:
+                    #     switch_text = "OFF"
+                    # else:
+                    #     switch_text = "ON"
+                    switch_text = get_switch_text
                     print("get_switch_text: ", switch_text)
                     print("Find wifi switch")
                     try:  # To Turn on Wi-Fi Switch
-                        if switch_text == "Off":
+                        if switch_text == "OFF":
                             # driver.implicitly_wait(3)
                             get_switch_element = driver.find_element_by_xpath(
                                 "//*[@resource-id='com.android.settings:id/switch_widget']")
@@ -3725,7 +3711,7 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                             driver.implicitly_wait(1)
                             i = 0
                             for i in range(5):
-                                if switch_text == "On":
+                                if switch_text == "ON":
                                     print("WIFI Switch is ON")
                                     break
                                 else:
@@ -3734,9 +3720,9 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                                             "//*[@text='Add network']")
                                         get_switch_text = get_switch_text_element.text
                                         if get_switch_text == "Add network":
-                                            switch_text = "On"
+                                            switch_text = "ON"
                                         else:
-                                            switch_text = "Off"
+                                            switch_text = "OFF"
                                     except NoSuchElementException:
                                         print("Exception: Verify Xpath")
                                     # Scroll Down
@@ -3744,7 +3730,7 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                                     print("Sleeping for: ", i)
                                     time.sleep(i)
                                     pass
-                            if switch_text == "Off":
+                            if switch_text == "OFF":
                                 print("Switch is Still OFF")
                                 closeApp(connData["appPackage-android"], setup_perfectoMobile)
                                 return ssid_with_internet
@@ -3791,16 +3777,9 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                     # ------------------------------------------------------
                     try:
                         for k in range(3):
-                            # available_ssids = get_all_available_ssids(driver, deviceModelName)
-                            # print("active_ssid_list: ", available_ssids)
-                            available_ssids = []
-                            try:
-                                elements = WebDriverWait(driver, 20).until(
-                                    EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
-                                available_ssids.append(elements.text)
-                            except:
-                                pass
-                            #allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
+                            available_ssids = get_all_available_ssids(driver, deviceModelName)
+                            print("active_ssid_list: ", available_ssids)
+                            allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
                             try:
                                 if WifiName not in available_ssids:
                                     scrollDown(setup_perfectoMobile)
@@ -3870,7 +3849,7 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                         print("User name not Loaded")
                     # -------------------------------------------------------
                     # Scroll Down
-                    scrollDown(setup_perfectoMobile)
+                    scroll_down(setup_perfectoMobile)
                     time.sleep(2)
                     # Set Password
                     # -------------------------------------------------------
@@ -4648,4 +4627,13 @@ def expressWifi(request, WifiName, setup_perfectoMobile, connData):
         print("Exception Verify Results")
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-
+def scroll_down(setup_perfectoMobile):
+    print("Scroll Down")
+    setup_perfectoMobile[1].step_start("Scroll Down")
+    params2 = {}
+    params2["start"] = "50%,50%"
+    params2["end"] = "50%,20%"
+    params2["duration"] = "4"
+    time.sleep(2)
+    setup_perfectoMobile[0].execute_script('mobile:touch:swipe', params2)
+    time.sleep(1)
