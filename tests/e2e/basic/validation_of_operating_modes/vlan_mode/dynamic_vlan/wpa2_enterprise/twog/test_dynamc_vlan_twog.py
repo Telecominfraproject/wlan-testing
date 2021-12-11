@@ -1,7 +1,7 @@
 """
 
    Dynamic_Vlan: Bridge Mode
-    pytest -m "dynamic_vlan and wpa2_enterprise and bridge"
+    pytest -m "dynamic_vlan and wpa2_enterprise and vlan"
 
 """
 
@@ -79,7 +79,7 @@ class TestDynamicVlan(object):
         print(sta_ip_1)
         eth_ip_1 = eth_ip.split('.')
         print("station ip...", lf_test.station_ip[station_names_twog[0]])
-        print("bridge ip...", eth_ip)
+        print("upstream ip...", eth_ip)
         for i, j in zip(sta_ip_1[0:2], eth_ip_1[0:2]):
             if i != j:
                 allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_twog[0]]))
@@ -134,11 +134,11 @@ class TestDynamicVlan(object):
                                    "/" + port_resources[2])["interface"]["ip"]
 
         sta_ip_1 = lf_test.station_ip[station_names_twog[0]].split('.')
-        eth_bridge_ip_1 = eth_ip.split('.')
+        eth_upstream_ip_1 = eth_ip.split('.')
         print("station ip...", lf_test.station_ip[station_names_twog[0]])
         print("vlan ip...", eth_vlan_ip)
-        print("eth_bridge_ip..", eth_ip)
-        for i, j in zip(sta_ip_1[0:2], eth_bridge_ip_1[0:2]):
+        print("eth_upstream_ip..", eth_ip)
+        for i, j in zip(sta_ip_1[0:2], eth_upstream_ip_1[0:2]):
             if i != j:
                 allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_twog[0]]))
                 allure.attach(name="ssid configured vlan..", body=str(port_resources[2] + "." + str(vlan)))
@@ -219,14 +219,14 @@ class TestDynamicVlan(object):
             allure.attach(name="ssid configured vlan ip..", body=str(eth_vlan_ip))
             allure.attach(name="upstream port....", body=str(port_resources[2]))
             allure.attach(name="upstream ip....", body=str(eth_ip))
-            print("Station ip assigned as per bridge")
+            print("Station ip assigned as per upstream")
         elif count == 0:
             allure.attach(name="station ip....", body=str(sta_ip))
             allure.attach(name="ssid configured vlan..", body=str(port_resources[2] + "." + str(vlan)))
             allure.attach(name="ssid configured vlan ip..", body=str(eth_vlan_ip))
             allure.attach(name="upstream port....", body=str(port_resources[2]))
             allure.attach(name="upstream ip....", body=str(eth_ip))
-            print("Station ip not assigned as per bridge")
+            print("Station ip not assigned as per upstream")
             assert False
 
     @pytest.mark.absenceofvlanid
@@ -265,11 +265,11 @@ class TestDynamicVlan(object):
                                    "/" + port_resources[2])["interface"]["ip"]
 
         sta_ip_1 = lf_test.station_ip[station_names_twog[0]].split('.')
-        eth_bridge_ip_1 = eth_ip.split('.')
+        eth_upstream_ip_1 = eth_ip.split('.')
         print("station ip...", lf_test.station_ip[station_names_twog[0]])
         print("vlan ip...", eth_vlan_ip)
-        print("eth_bridge_ip..", eth_ip)
-        for i, j in zip(sta_ip_1[0:2], eth_bridge_ip_1[0:2]):
+        print("eth_upstream_ip..", eth_ip)
+        for i, j in zip(sta_ip_1[0:2], eth_upstream_ip_1[0:2]):
             if i != j:
                 allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_twog[0]]))
                 allure.attach(name="upstream port....", body=str(port_resources[2]))
@@ -319,22 +319,22 @@ class TestDynamicVlan(object):
                                    "/" + port_resources[2])["interface"]["ip"]
 
         sta_ip_1 = lf_test.station_ip[station_names_twog[0]].split('.')
-        eth_bridge_ip_1 = eth_ip.split('.')
+        eth_upstream_ip_1 = eth_ip.split('.')
         print("station ip...", lf_test.station_ip[station_names_twog[0]])
         print("vlan ip...", eth_vlan_ip)
-        print("eth_bridge_ip..", eth_ip)
-        for i, j in zip(sta_ip_1[0:2], eth_bridge_ip_1[0:2]):
+        print("eth_upstream_ip..", eth_ip)
+        for i, j in zip(sta_ip_1[0:2], eth_upstream_ip_1[0:2]):
             if i != j:
                 allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_twog[0]]))
                 allure.attach(name="vlan ip....", body=str(eth_vlan_ip))
-                print("Station ip not assigned as per bridge")
+                print("Station ip not assigned as per upstream")
                 assert False
             else:
                 assert True
                 allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_twog[0]]))
                 allure.attach(name="vlan ip....", body=str(eth_vlan_ip))
-                allure.attach(name="bridge ip....", body=str(eth_ip))
-                print("Station ip assigned as per bridge")
+                allure.attach(name="upstream ip....", body=str(eth_ip))
+                print("Station ip assigned as per upstream")
     '''
     @pytest.mark.outofboundvlanid
     @pytest.mark.wpa2_enterprise
@@ -423,7 +423,7 @@ class TestDynamicVlan(object):
         eth_vlan_ip_1 = eth_radius_vlan_ip.split('.')
         print("station ip...", lf_test.station_ip[station_names_twog[0]])
         print("vlan ip...", eth_radius_vlan_ip)
-        print("eth_bridge_ip..", eth_ip)
+        print("eth_upstream_ip..", eth_ip)
         for i, j in zip(sta_ip_1[0:2], eth_vlan_ip_1[0:2]):
             if i != j:
                 allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_twog[0]]))
@@ -495,7 +495,7 @@ class TestDynamicVlan(object):
             sta_ip_1 = sta_ip[n].split('.')
             print("station ip...", sta_ip[n])
             print("vlan ip...", eth_vlan_ip)
-            print("eth_bridge_ip..", eth_ip)
+            print("eth_upstream_ip..", eth_ip)
             for i, j in zip(sta_ip_1[0:2], eth_vlan_ip_1[0:2]):
                 if i != j:
                     allure.attach(name="station ip....", body=str(sta_ip[n]))
@@ -564,7 +564,7 @@ class TestDynamicVlan(object):
             sta_ip_1 = sta_ip[sta].split('.')
             print("station ip...", lf_test.station_ip[station_list[sta]])
             print("vlan ip...", eth_vlan_ip)
-            print("eth_bridge_ip..", eth_ip)
+            print("eth_upstream_ip..", eth_ip)
             for i, j in zip(sta_ip_1[0:2], eth_vlan_ip_1[0:2]):
                 if i != j:
                     allure.attach(name="station ip....", body=str(sta_ip[sta]))

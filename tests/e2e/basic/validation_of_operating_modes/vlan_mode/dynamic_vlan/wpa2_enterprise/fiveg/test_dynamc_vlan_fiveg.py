@@ -431,7 +431,7 @@ class TestDynamicVlan(object):
         eth_vlan_ip_1 = eth_radius_vlan_ip.split('.')
         print("station ip...", lf_test.station_ip[station_names_fiveg[0]])
         print("vlan ip...", eth_radius_vlan_ip)
-        print("eth_bridge_ip..", eth_ip)
+        print("eth__ip..", eth_ip)
         for i, j in zip(sta_ip_1[0:2], eth_vlan_ip_1[0:2]):
             if i != j:
                 allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_fiveg[0]]))
@@ -439,7 +439,7 @@ class TestDynamicVlan(object):
                 allure.attach(name="ssid configured vlan ip....", body=str(eth_ssid_vlan_ip))
                 allure.attach(name="radius configured vlan..", body=str(port_resources[2] + "." + str(vlan[1])))
                 allure.attach(name="radius configured vlan ip....", body=str(eth_radius_vlan_ip))
-                allure.attach(name="bridge ip....", body=str(eth_ip))
+                allure.attach(name=" ip....", body=str(eth_ip))
                 print("Station ip not assigned as per vlan")
                 assert False
             else:
@@ -449,7 +449,7 @@ class TestDynamicVlan(object):
                 allure.attach(name="ssid configured vlan ip....", body=str(eth_ssid_vlan_ip))
                 allure.attach(name="ssid configured vlan..", body=str(port_resources[2] + "." + str(vlan[1])))
                 allure.attach(name="radius configured vlan ip....", body=str(eth_radius_vlan_ip))
-                allure.attach(name="bridge ip....", body=str(eth_ip))
+                allure.attach(name=" ip....", body=str(eth_ip))
                 print("Station ip assigned as per dynamic vlan")
 
     @pytest.mark.subsequent_user_for_same_user_account
