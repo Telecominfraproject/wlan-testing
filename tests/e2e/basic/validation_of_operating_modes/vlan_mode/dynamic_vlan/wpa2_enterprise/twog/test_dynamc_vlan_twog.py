@@ -177,7 +177,7 @@ class TestDynamicVlan(object):
         print(upstream_port)
         port_resources = upstream_port.split(".")
         print(lf_tools.dut_idx_mapping)
-        # lf_tools.reset_scenario()
+        lf_tools.reset_scenario()
         lf_tools.add_vlan(vlan_ids=[vlan])
 
         lf_test.EAP_Connect(ssid=ssid_2G, passkey="[BLANK]", security="wpa2", extra_securities=[],
@@ -272,6 +272,8 @@ class TestDynamicVlan(object):
         for i, j in zip(sta_ip_1[0:2], eth_upstream_ip_1[0:2]):
             if i != j:
                 allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_twog[0]]))
+                allure.attach(name="ssid configured vlan..", body=str(port_resources[2] + "." + str(vlan)))
+                allure.attach(name="ssid configured vlan ip..", body=str(eth_vlan_ip))
                 allure.attach(name="upstream port....", body=str(port_resources[2]))
                 allure.attach(name="upstream ip....", body=str(eth_ip))
                 print("Station ip not assigned as per ssid vlan")
@@ -279,6 +281,8 @@ class TestDynamicVlan(object):
             else:
                 assert True
                 allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_twog[0]]))
+                allure.attach(name="ssid configured vlan..", body=str(port_resources[2] + "." + str(vlan)))
+                allure.attach(name="ssid configured vlan ip..", body=str(eth_vlan_ip))
                 allure.attach(name="upstream port....", body=str(port_resources[2]))
                 allure.attach(name="upstream ip....", body=str(eth_ip))
                 print("Station ip assigned as per ssid vlan")
@@ -465,8 +469,9 @@ class TestDynamicVlan(object):
         print(upstream_port)
         port_resources = upstream_port.split(".")
         print(lf_tools.dut_idx_mapping)
-        lf_tools.add_vlan(vlan_ids=[vlan])
         lf_tools.reset_scenario()
+        lf_tools.add_vlan(vlan_ids=[vlan])
+
         station_list = []
         sta_ip = []
         for i in range(0, 2):
@@ -535,8 +540,9 @@ class TestDynamicVlan(object):
         print(upstream_port)
         port_resources = upstream_port.split(".")
         print(lf_tools.dut_idx_mapping)
-        lf_tools.add_vlan(vlan_ids=vlan)
         lf_tools.reset_scenario()
+        lf_tools.add_vlan(vlan_ids=vlan)
+
         station_list = []
         sta_ip = []
         dynamic_vlan_user = ["userA", "userB"]

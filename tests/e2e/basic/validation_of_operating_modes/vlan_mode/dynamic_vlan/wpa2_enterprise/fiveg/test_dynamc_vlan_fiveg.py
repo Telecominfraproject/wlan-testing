@@ -152,7 +152,7 @@ class TestDynamicVlan(object):
                 allure.attach(name="ssid configured vlan ip..", body=str(eth_vlan_ip))
                 allure.attach(name="upstream port....", body=str(port_resources[2]))
                 allure.attach(name="upstream ip....", body=str(eth_ip))
-            print("Station ip assigned as per vlan")
+                print("Station ip assigned as per vlan")
 
     @pytest.mark.periodic_reauthentication
     @pytest.mark.wpa2_enterprise
@@ -174,7 +174,7 @@ class TestDynamicVlan(object):
         print(upstream_port)
         port_resources = upstream_port.split(".")
         print(lf_tools.dut_idx_mapping)
-        # lf_tools.reset_scenario()
+        lf_tools.reset_scenario()
         lf_tools.add_vlan(vlan_ids=[vlan])
 
         lf_test.EAP_Connect(ssid=ssid_5G, passkey="[BLANK]", security="wpa2", extra_securities=[],
@@ -271,8 +271,8 @@ class TestDynamicVlan(object):
         sta_ip_1 = lf_test.station_ip[station_names_fiveg[0]].split('.')
         eth_vlan_ip_1 = eth_ip.split('.')
         print("station ip...", lf_test.station_ip[station_names_fiveg[0]])
-        print("vlan ip...", eth_vlan_ip)
-        print("eth_vlan_ip..", eth_ip)
+        print("ssid configured vlan ip...", eth_vlan_ip)
+        print("upstream ip..", eth_ip)
         for i, j in zip(sta_ip_1[0:2], eth_vlan_ip_1[0:2]):
             if i != j:
                 allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_fiveg[0]]))
@@ -289,7 +289,7 @@ class TestDynamicVlan(object):
                 allure.attach(name="ssid configured vlan ip..", body=str(eth_vlan_ip))
                 allure.attach(name="upstream port....", body=str(port_resources[2]))
                 allure.attach(name="upstream ip....", body=str(eth_ip))
-                print("Station ip assigned as per dynamic vlan")
+                print("Station ip assigned as per ssid configured vlan")
     '''
     @pytest.mark.unsupported
     @pytest.mark.wpa2_enterprise
@@ -430,8 +430,8 @@ class TestDynamicVlan(object):
         sta_ip_1 = lf_test.station_ip[station_names_fiveg[0]].split('.')
         eth_vlan_ip_1 = eth_radius_vlan_ip.split('.')
         print("station ip...", lf_test.station_ip[station_names_fiveg[0]])
-        print("vlan ip...", eth_radius_vlan_ip)
-        print("eth__ip..", eth_ip)
+        print("radius vlan ip...", eth_radius_vlan_ip)
+        print("eth_upstream_ip..", eth_ip)
         for i, j in zip(sta_ip_1[0:2], eth_vlan_ip_1[0:2]):
             if i != j:
                 allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_fiveg[0]]))
@@ -474,8 +474,9 @@ class TestDynamicVlan(object):
         print(upstream_port)
         port_resources = upstream_port.split(".")
         print(lf_tools.dut_idx_mapping)
-        lf_tools.add_vlan(vlan_ids=[vlan])
         lf_tools.reset_scenario()
+        lf_tools.add_vlan(vlan_ids=[vlan])
+
         station_list = []
         sta_ip = []
         for i in range(0, 2):
@@ -492,6 +493,9 @@ class TestDynamicVlan(object):
                                 wep_key="NA", ca_cert="NA", eap="TTLS", identity="userA", d_vlan=True, cleanup=True)
             lf_tools.admin_up_down([station_list[m]], option="up")
             sta_ip.append(lf_test.station_ip[station_list[m]])
+            if sta_ip[m]=="0.0.0.0":
+               allure.attach("station didnt recieved ip..")
+               assert False
             print(sta_ip)
             time.sleep(30)
 
@@ -545,8 +549,9 @@ class TestDynamicVlan(object):
         print(upstream_port)
         port_resources = upstream_port.split(".")
         print(lf_tools.dut_idx_mapping)
-        lf_tools.add_vlan(vlan_ids=vlan)
         lf_tools.reset_scenario()
+        lf_tools.add_vlan(vlan_ids=vlan)
+
         station_list = []
         sta_ip = []
         dynamic_vlan_user = ["userA", "userB"]
