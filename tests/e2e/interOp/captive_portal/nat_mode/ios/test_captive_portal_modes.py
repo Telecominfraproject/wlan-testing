@@ -63,7 +63,6 @@ class TestNatModeCaptivePortalSuiteOneNAT(object):
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5179", name="WIFI-5179")
-    @pytest.mark.sg12
     @pytest.mark.twog
     @pytest.mark.open
     def test_Captive_Portal_Open_2g_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
@@ -99,7 +98,6 @@ class TestNatModeCaptivePortalSuiteOneNAT(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5146", name="WIFI-5146")
-    @pytest.mark.sg12
     @pytest.mark.fiveg
     @pytest.mark.open
     def test_Captive_Portal_Open_5g_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
@@ -135,7 +133,6 @@ class TestNatModeCaptivePortalSuiteOneNAT(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5182", name="WIFI-5182")
-    @pytest.mark.sg567
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_Captive_Portal_WPA_2g_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
@@ -171,7 +168,6 @@ class TestNatModeCaptivePortalSuiteOneNAT(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5149", name="WIFI-5149")
-    @pytest.mark.sg12
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_Captive_Portal_WPA_5g_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
@@ -207,7 +203,6 @@ class TestNatModeCaptivePortalSuiteOneNAT(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5186", name="WIFI-5186")
-    @pytest.mark.sg1235
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_Captive_Portal_WPA2_2g_Personal_NAT(self, request, get_vif_state, get_ap_logs,
@@ -245,7 +240,6 @@ class TestNatModeCaptivePortalSuiteOneNAT(object):
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5153", name="WIFI-5153")
-    @pytest.mark.sg12356
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_Captive_Portal_WPA2_5g_Personal_NAT(self, request, get_vif_state, get_ap_logs,
@@ -283,7 +277,6 @@ class TestNatModeCaptivePortalSuiteOneNAT(object):
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5130", name="WIFI-5130")
-    @pytest.mark.smg
     @pytest.mark.twog
     @pytest.mark.wpa3_personal
     def test_Captive_Portal_WPA3_2g_Personal_NAT(self, request, get_vif_state, get_ap_logs,
@@ -321,7 +314,6 @@ class TestNatModeCaptivePortalSuiteOneNAT(object):
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5140", name="WIFI-5140")
-    @pytest.mark.smg
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal
     def test_Captive_Portal_WPA3_5g_Personal_NAT(self, request, get_vif_state, get_ap_logs,
