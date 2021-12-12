@@ -44,8 +44,7 @@ class TestDynamicVlan(object):
     @pytest.mark.twog
     @allure.testcase(name="test_dynamic_precedence_over_ssid_vlan",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5705")
-    def test_dynamic_precedence_over_ssid_vlan(self, get_vif_state, lf_tools,get_ap_logs,
-                                               get_lf_logs,
+    def test_dynamic_precedence_over_ssid_vlan(self, get_vif_state, lf_tools,get_ap_logs,get_lf_logs,
                                                     create_lanforge_chamberview_dut, lf_test, get_configuration,
                                                     station_names_twog):
         """
@@ -56,6 +55,7 @@ class TestDynamicVlan(object):
         ssid_2G = profile_data[0]["ssid_name"]
         mode = "VLAN"
         vlan = [100,200]
+        val = ""
         upstream_port = lf_tools.upstream_port
         print(upstream_port)
         port_resources = upstream_port.split(".")
@@ -83,22 +83,28 @@ class TestDynamicVlan(object):
         print("station ip...", lf_test.station_ip[station_names_twog[0]])
         print("vlan ip...", eth_radius_vlan_ip)
         print("eth_upstream_ip..", eth_ip)
+        if sta_ip_1[0] == "0":
+            print("station didnt received any ip")
+            allure.attach("station didnt recieved ip..")
+            assert False
+        elif eth_vlan_ip_1[0] == "0":
+            print("radius configured vlan didnt recieved ip")
+            assert False
         for i, j in zip(sta_ip_1[0:2], eth_vlan_ip_1[0:2]):
             if i != j:
-                allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_twog[0]]))
-                allure.attach(name="ssid configured vlan ..", body=str(port_resources[2] + "." + str(vlan[0])))
-                allure.attach(name="ssid configured vlan ip....", body=str(eth_ssid_vlan_ip))
-                allure.attach(name="radius configured vlan..", body=str(port_resources[2] + "." + str(vlan[1])))
-                allure.attach(name="radius configured vlan ip....", body=str(eth_radius_vlan_ip))
-                allure.attach(name="upstream ip....", body=str(eth_ip))
-                print("Station ip not assigned as per vlan")
-                assert False
+                val = False
             else:
-                assert True
-                allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_twog[0]]))
-                allure.attach(name="ssid configured vlan ..", body=str(port_resources[2] + "." + str(vlan[0])))
-                allure.attach(name="ssid configured vlan ip....", body=str(eth_ssid_vlan_ip))
-                allure.attach(name="radius configured vlan..", body=str(port_resources[2] + "." + str(vlan[1])))
-                allure.attach(name="radius configured vlan ip....", body=str(eth_radius_vlan_ip))
-                allure.attach(name="upstream ip....", body=str(eth_ip))
-                print("Station ip assigned as per dynamic vlan")
+                val = True
+
+        allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_twog[0]]))
+        allure.attach(name="ssid configured vlan..", body=str(port_resources[2] + "." + str(vlan[0])))
+        allure.attach(name="ssid configured vlan ip....", body=str(eth_ssid_vlan_ip))
+        allure.attach(name="radius configured vlan..", body=str(port_resources[2] + "." + str(vlan[1])))
+        allure.attach(name="radius configured vlan ip....", body=str(eth_radius_vlan_ip))
+        allure.attach(name="upstream ip....", body=str(eth_ip))
+        if val:
+            assert True
+            print("Station ip assigned as per dynamic vlan")
+        elif not val:
+            print("Station ip not assigned as per dynamic vlan")
+            assert False
