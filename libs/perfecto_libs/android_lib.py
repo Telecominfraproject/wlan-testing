@@ -1202,6 +1202,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     try:
                         for k in range(3):
                             available_ssids = get_all_available_ssids(driver, deviceModelName)
+                            print("No. of ssids in list:", len(available_ssids))
                             print("active_ssid_list: ", available_ssids)
                             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
                             try:
@@ -3170,6 +3171,7 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                     try:
                         for k in range(3):
                             available_ssids = get_all_available_ssids(driver, deviceModelName)
+                            print("No. of ssids in list:", len(available_ssids))
                             print("active_ssid_list: ", available_ssids)
                             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
                             try:
