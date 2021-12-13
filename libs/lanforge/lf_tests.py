@@ -22,12 +22,13 @@ for folder in 'py-json', 'py-scripts':
 sys.path.append(f"../lanforge/lanforge-scripts/py-scripts/tip-cicd-sanity")
 
 sys.path.append(f'../libs')
+sys.path.append(f'../tools')
 sys.path.append(f'../libs/lanforge/')
 from sta_connect2 import StaConnect2
 import time
 import string
 import random
-
+from scp_util import SCP_File
 S = 12
 # from eap_connect import EAPConnect
 from test_ipv4_ttls import TTLSTest
@@ -50,6 +51,7 @@ class RunTest:
     def __init__(self, lanforge_data=None, local_report_path="../reports/", influx_params=None, debug=False):
         self.lanforge_ip = lanforge_data["ip"]
         self.lanforge_port = lanforge_data["port"]
+        self.lanforge_ssh_port = lanforge_data["ssh_port"]
         self.twog_radios = lanforge_data["2.4G-Radio"]
         self.fiveg_radios = lanforge_data["5G-Radio"]
         self.ax_radios = lanforge_data["AX-Radio"]
@@ -129,6 +131,13 @@ class RunTest:
                     print("test result: " + result)
                 pytest.exit("Test Failed: Debug True")
         self.staConnect.cleanup()
+        supplicqant = "/home/lanforge/wifi/wpa_supplicant_log_" + self.staConnect.radio.split(".")[2] + ".txt"
+        obj = SCP_File(ip=self.lanforge_ip, port=self.lanforge_ssh_port, username="root", password="lanforge",
+                       remote_path=supplicqant,
+                       local_path=".")
+        obj.pull_file()
+        allure.attach.file(source="wpa_supplicant_log_" + self.staConnect.radio.split(".")[2] + ".txt",
+                           name="supplicant_log")
         for result in run_results:
             print("test result: " + result)
         result = True
@@ -215,6 +224,13 @@ class RunTest:
             #     print(e)
 
         self.eap_connect.stop()
+        supplicqant = "/home/lanforge/wifi/wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt"
+        obj = SCP_File(ip=self.lanforge_ip, port=self.lanforge_ssh_port, username="root", password="lanforge",
+                       remote_path=supplicqant,
+                       local_path=".")
+        obj.pull_file()
+        allure.attach.file(source="wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt",
+                           name="supplicant_log")
         if not self.eap_connect.passes():
             if self.debug:
                 print("test result: " + self.eap_connect.passes())
@@ -233,7 +249,7 @@ class RunTest:
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
                       instance_name="wct_instance", download_rate="1Gbps", influx_tags=[],
-                      upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", raw_lines=[]):
+                      upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", stations="", create_stations=True, raw_lines=[]):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         if mode == "BRIDGE":
             upstream_port = self.upstream_port
@@ -260,7 +276,8 @@ class RunTest:
                                             upload_rate=upload_rate,
                                             download_rate=download_rate,
                                             sort="interleave",
-                                            create_stations=True,
+                                            stations=stations,
+                                            create_stations=create_stations,
                                             radio=None,
                                             security=None,
                                             paswd=None,

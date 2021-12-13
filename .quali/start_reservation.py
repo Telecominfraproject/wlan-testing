@@ -1,7 +1,6 @@
-import json
 import os
 
-from cloudshell.api.cloudshell_api import UpdateTopologyGlobalInputsRequest, UpdateTopologyRequirementsInputsRequest
+from cloudshell.api.cloudshell_api import UpdateTopologyGlobalInputsRequest
 
 import argparse
 
@@ -16,8 +15,8 @@ def main():
     parser.add_argument('--openwifi-sec-version', default='main')
     parser.add_argument('--openwifi-fms-version', default='main')
     parser.add_argument('--openwifi-ui-version', default='main')
-    parser.add_argument('--ap-model', default='EC420')
-    parser.add_argument('--wifi-type', default='Wifi5')
+    parser.add_argument('--ap-model', default='[Any]')
+    parser.add_argument('--wifi-type', default='[Any]')
     args = parser.parse_args()
 
     session = get_session()

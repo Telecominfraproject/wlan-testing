@@ -48,7 +48,7 @@ class TestNATModeConnectivitySuiteA(object):
     @pytest.mark.open
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    def test_open_ssid_2g(self, get_vif_state, get_ap_logs,
+    def test_open_ssid_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
                           setup_profiles,  lf_test, update_report,
                           station_names_twog,
                           test_cases):
@@ -77,7 +77,7 @@ class TestNATModeConnectivitySuiteA(object):
     @pytest.mark.open
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
-    def test_open_ssid_5g(self, get_vif_state, get_ap_logs,
+    def test_open_ssid_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
                            lf_test, test_cases, station_names_fiveg,
                           update_report):
         """Client Connectivity open ssid 5G
@@ -104,7 +104,7 @@ class TestNATModeConnectivitySuiteA(object):
     @pytest.mark.wpa
     @pytest.mark.twog
     @allure.story('wpa 2.4 GHZ Band')
-    def test_wpa_ssid_2g(self, get_vif_state, get_ap_logs,  update_report,
+    def test_wpa_ssid_2g(self, get_vif_state, get_ap_logs,  update_report, get_lf_logs,
                          lf_test, test_cases, station_names_twog):
         """Client Connectivity wpa ssid 2.4G
            pytest -m "client_connectivity and NAT and general and wpa and twog"
@@ -129,7 +129,7 @@ class TestNATModeConnectivitySuiteA(object):
     @pytest.mark.wpa
     @pytest.mark.fiveg
     @allure.story('wpa 5 GHZ Band')
-    def test_wpa_ssid_5g(self, get_vif_state, get_ap_logs,
+    def test_wpa_ssid_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
                          lf_test, update_report, test_cases, station_names_fiveg):
         """Client Connectivity wpa ssid 5G
            pytest -m "client_connectivity and NAT and general and wpa and fiveg"
@@ -155,7 +155,7 @@ class TestNATModeConnectivitySuiteA(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    def test_wpa2_personal_ssid_2g(self, get_vif_state, get_ap_logs,
+    def test_wpa2_personal_ssid_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
                                     lf_test, update_report, test_cases,
                                    station_names_twog):
         """Client Connectivity wpa2_personal ssid 2.4G
@@ -182,7 +182,7 @@ class TestNATModeConnectivitySuiteA(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @allure.story('wpa2_personal 5 GHZ Band')
-    def test_wpa2_personal_ssid_5g(self, get_vif_state, get_ap_logs,
+    def test_wpa2_personal_ssid_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
                                     update_report, test_cases,
                                    station_names_fiveg,
                                    lf_test):
@@ -245,7 +245,7 @@ class TestNATModeConnectivitySuiteB(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    def test_wpa3_personal_ssid_2g(self, get_vif_state, get_ap_logs,
+    def test_wpa3_personal_ssid_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
                                    station_names_twog, setup_profiles,  lf_test,
                                    update_report,
                                    test_cases):
@@ -272,7 +272,7 @@ class TestNATModeConnectivitySuiteB(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
-    def test_wpa3_personal_ssid_5g(self, get_vif_state, get_ap_logs,
+    def test_wpa3_personal_ssid_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
                                    station_names_fiveg,  lf_test, test_cases,
                                    update_report):
         """Client Connectivity open ssid 2.4G
@@ -300,7 +300,7 @@ class TestNATModeConnectivitySuiteB(object):
     @allure.story('open 2.4 GHZ Band')
     def test_wpa3_personal_mixed_ssid_2g(self, get_vif_state, get_ap_logs,
                                          station_names_twog, setup_profiles, 
-                                         lf_test,
+                                         lf_test, get_lf_logs,
                                          update_report,
                                          test_cases):
         """Client Connectivity open ssid 2.4G
@@ -326,7 +326,7 @@ class TestNATModeConnectivitySuiteB(object):
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
-    def test_wpa3_personal_mixed_ssid_5g(self, get_vif_state, get_ap_logs,
+    def test_wpa3_personal_mixed_ssid_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
                                          station_names_fiveg,  lf_test,
                                          test_cases,
                                          update_report):
@@ -353,7 +353,7 @@ class TestNATModeConnectivitySuiteB(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
-    def test_wpa_wpa2_personal_ssid_2g(self, get_vif_state, get_ap_logs,
+    def test_wpa_wpa2_personal_ssid_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
                                        station_names_twog, setup_profiles, 
                                        lf_test,
                                        update_report,
@@ -382,7 +382,7 @@ class TestNATModeConnectivitySuiteB(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
-    def test_wpa_wpa2_personal_ssid_5g(self, get_vif_state, get_ap_logs,
+    def test_wpa_wpa2_personal_ssid_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
                                        station_names_fiveg,  lf_test, test_cases,
                                        update_report):
         """Client Connectivity open ssid 2.4G
