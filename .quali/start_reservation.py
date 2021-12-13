@@ -23,13 +23,15 @@ def main():
 
     session = get_session()
 
+    if marker_expression == 'advance':
+        reservation_duration = 1440
+    else
+        reservation_duration = 360
+
     reservation = session.CreateImmediateTopologyReservation(
         reservationName=f'{marker_expression}-{run_id}',
         owner=session.username,
-        if marker_expression == 'advance':
-          durationInMinutes=1440,
-        else:
-          durationInMinutes=360,
+        durationInMinutes=reservation_duration,
         topologyFullPath=args.blueprint,
         globalInputs=[
             UpdateTopologyGlobalInputsRequest('Chart Version', args.openwifi_version),
