@@ -50,6 +50,8 @@ from configuration import CONFIGURATION
 from configuration import open_flow
 from configuration import RADIUS_SERVER_DATA
 from configuration import RADIUS_ACCOUNTING_DATA
+from configuration import RATE_LIMITING_RADIUS_SERVER_DATA
+from configuration import RATE_LIMITING_RADIUS_ACCOUNTING_DATA
 from lanforge.scp_util import SCP_File
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
@@ -224,6 +226,16 @@ def radius_info():
 def radius_accounting_info():
     """yields the radius accounting information from lab info file"""
     yield RADIUS_ACCOUNTING_DATA
+
+@pytest.fixture(scope="session")
+def rate_radius_info():
+    """yields the radius server information from lab info file"""
+    yield RATE_LIMITING_RADIUS_SERVER_DATA
+
+@pytest.fixture(scope="session")
+def rate_radius_accounting_info():
+    """yields the radius accounting information from lab info file"""
+    yield RATE_LIMITING_RADIUS_ACCOUNTING_DATA
 
 
 @pytest.fixture(scope="session")
