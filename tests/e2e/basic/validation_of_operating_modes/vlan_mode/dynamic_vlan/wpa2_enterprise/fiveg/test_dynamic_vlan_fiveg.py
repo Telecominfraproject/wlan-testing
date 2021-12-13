@@ -99,7 +99,7 @@ class TestDynamicVlan(object):
                 val = True
         allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_fiveg[0]]))
         allure.attach(name="ssid configured vlan..", body=str(port_resources[2] + "." + str(vlan_id)))
-        allure.attach(name="ssid configured vlan ip..", body=str(vlan_id))
+        allure.attach(name="ssid configured vlan ip..", body=str(eth_vlan_ip))
         allure.attach(name="upstream port....", body=str(port_resources[2]))
         allure.attach(name="upstream ip....", body=str(eth_ip))
         if val:
@@ -164,7 +164,7 @@ class TestDynamicVlan(object):
                 val = True
         allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_fiveg[0]]))
         allure.attach(name="ssid configured vlan..", body=str(port_resources[2] + "." + str(vlan_id)))
-        allure.attach(name="ssid configured vlan ip..", body=str(vlan_id))
+        allure.attach(name="ssid configured vlan ip..", body=str(eth_vlan_ip))
         allure.attach(name="upstream port....", body=str(port_resources[2]))
         allure.attach(name="upstream ip....", body=str(eth_ip))
         if val:
@@ -314,7 +314,7 @@ class TestDynamicVlan(object):
                 val = True
         allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_fiveg[0]]))
         allure.attach(name="ssid configured vlan..", body=str(port_resources[2] + "." + str(vlan)))
-        allure.attach(name="ssid configured vlan ip..", body=str(vlan))
+        allure.attach(name="ssid configured vlan ip..", body=str(eth_vlan_ip))
         allure.attach(name="upstream port....", body=str(port_resources[2]))
         allure.attach(name="upstream ip....", body=str(eth_ip))
         if val:
@@ -384,7 +384,7 @@ class TestDynamicVlan(object):
     @pytest.mark.fiveg
     @allure.testcase(name="test_outof_bound_vlanid",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5711")
-    def test_outof_bound_vlanid(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
+    def test_out_of_bound_vlanid(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
                                 create_lanforge_chamberview_dut, lf_test, get_configuration,
                                 station_names_fiveg):
         """
@@ -485,7 +485,7 @@ class TestDynamicVlan(object):
         allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_fiveg[0]]))
         allure.attach(name="ssid configured vlan..", body=str(port_resources[2] + "." + str(vlan[0])))
         allure.attach(name="ssid configured vlan ip....", body=str(eth_ssid_vlan_ip))
-        allure.attach(name="ssid configured vlan..", body=str(port_resources[2] + "." + str(vlan[1])))
+        allure.attach(name="radius configured vlan..", body=str(port_resources[2] + "." + str(vlan[1])))
         allure.attach(name="radius configured vlan ip....", body=str(eth_radius_vlan_ip))
         allure.attach(name="Upstream ip....", body=str(eth_ip))
         if val:
@@ -499,12 +499,12 @@ class TestDynamicVlan(object):
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     @allure.testcase(name="test_subsequent_user_for_same_user_account",
-                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5705")
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5713")
     def test_subsequent_user_for_same_user_account(self, get_vif_state, lf_tools, get_lf_logs,
-                                                        get_ap_logs,
-                                                        create_lanforge_chamberview_dut, lf_test,
-                                                        get_configuration,
-                                                        station_names_fiveg):
+                                                   get_ap_logs,
+                                                   create_lanforge_chamberview_dut, lf_test,
+                                                   get_configuration,
+                                                   station_names_fiveg):
         """
                 pytest -m "subsequent_user_for_same_user_account and wpa2_enterprise and vlan"
         """
@@ -513,6 +513,7 @@ class TestDynamicVlan(object):
         ssid_5G = profile_data[0]["ssid_name"]
         mode = "VLAN"
         vlan = 100
+        val = ""
         upstream_port = lf_tools.upstream_port
         print(upstream_port)
         port_resources = upstream_port.split(".")
@@ -554,21 +555,20 @@ class TestDynamicVlan(object):
             print("eth_vlan_ip..", eth_ip)
             for i, j in zip(sta_ip_1[0:2], eth_vlan_ip_1[0:2]):
                 if i != j:
-                    allure.attach(name="station ip....", body=str(sta_ip[n]))
-                    allure.attach(name="ssid configured vlan..", body=str(port_resources[2] + "." + str(vlan)))
-                    allure.attach(name="ssid configured vlan ip..", body=str(eth_vlan_ip))
-                    allure.attach(name="upstream port....", body=str(port_resources[2]))
-                    allure.attach(name="upstream ip....", body=str(eth_ip))
-                    print("Station ip not assigned as per dynamic vlan")
-                    assert False
+                    val = False
                 else:
-                    assert True
-                    allure.attach(name="station ip....", body=str(sta_ip[n]))
-                    allure.attach(name="ssid configured vlan..", body=str(port_resources[2] + "." + str(vlan)))
-                    allure.attach(name="ssid configured vlan ip..", body=str(eth_vlan_ip))
-                    allure.attach(name="upstream port....", body=str(port_resources[2]))
-                    allure.attach(name="upstream ip....", body=str(eth_ip))
-                    print("Station ip assigned as per dynamic vlan")
+                    val = True
+            allure.attach(name="station ip....", body=str(sta_ip[n]))
+            allure.attach(name="radius configured vlan..", body=str(port_resources[2] + "." + str(vlan)))
+            allure.attach(name="radius configured vlan ip..", body=str(eth_vlan_ip))
+            allure.attach(name="upstream port....", body=str(port_resources[2]))
+            allure.attach(name="upstream ip....", body=str(eth_ip))
+            if val:
+                assert True
+                print("Station ip assigned as per radius vlan")
+            elif not val:
+                print("Station ip not assigned as per radius vlan")
+                assert False
 
     @pytest.mark.subsequent_user_for_different_user_account
     @pytest.mark.wpa2_enterprise
@@ -588,6 +588,7 @@ class TestDynamicVlan(object):
         ssid_5G = profile_data[0]["ssid_name"]
         mode = "VLAN"
         vlan = [100, 200]
+        val = ""
         upstream_port = lf_tools.upstream_port
         print(upstream_port)
         port_resources = upstream_port.split(".")
@@ -628,20 +629,20 @@ class TestDynamicVlan(object):
             print("eth_vlan_ip..", eth_ip)
             for i, j in zip(sta_ip_1[0:2], eth_vlan_ip_1[0:2]):
                 if i != j:
-                    allure.attach(name="station ip....", body=str(sta_ip[sta]))
-                    allure.attach(name="ssid configured vlan..", body=str(port_resources[2] + "." + str(vlan)))
-                    allure.attach(name="ssid configured vlan ip..", body=str(eth_vlan_ip))
-                    allure.attach(name="upstream port....", body=str(port_resources[2]))
-                    allure.attach(name="upstream ip....", body=str(eth_ip))
-                    print("Station ip not assigned as per dynamic vlan")
-                    assert False
+                    val = False
                 else:
-                    assert True
-                    allure.attach(name="station ip....", body=str(sta_ip[sta]))
-                    allure.attach(name="ssid configured vlan..", body=str(port_resources[2] + "." + str(vlan)))
-                    allure.attach(name="ssid configured vlan ip..", body=str(eth_vlan_ip))
-                    allure.attach(name="upstream port....", body=str(port_resources[2]))
-                    allure.attach(name="upstream ip....", body=str(eth_ip))
-                    print("Station ip assigned as per dynamic vlan")
+                    val = True
+            allure.attach(name="station ip....", body=str(sta_ip[sta]))
+            allure.attach(name="radius configured vlan..", body=str(port_resources[2] + "." + str(vlan[sta])))
+            allure.attach(name="radius configured vlan ip..", body=str(eth_vlan_ip))
+            allure.attach(name="upstream port....", body=str(port_resources[2]))
+            allure.attach(name="upstream ip....", body=str(eth_ip))
+            if val:
+                assert True
+                print(f"{station_list[sta]} ip assigned as per radius vlan")
+            elif not val:
+                print(f"{station_list[sta]} ip not assigned as per radius vlan")
+                assert False
             lf_tools.admin_up_down([station_list[sta]], option="up")
             time.sleep(5)
+
