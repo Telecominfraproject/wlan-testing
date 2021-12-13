@@ -1121,42 +1121,42 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             print("error on ssid element")
 
             # --------------------To Turn on WIFi Switch if already OFF--------------------------------
-        try:
-            get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
-            get_wifi_switch_element_text = get_wifi_switch_element.text
-            print("switch state is : ", get_wifi_switch_element_text)
-            try:
-                if get_wifi_switch_element_text == "1" or get_wifi_switch_element_text == 1:
-                    get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
-                    driver.implicitly_wait(1)
-                    get_wifi_switch_element.click()
-                    driver.implicitly_wait(1)
-                    i = 0
-                    for i in range(5):
-                        try:
-                            get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
-                            get_wifi_switch_element_text = get_wifi_switch_element.text
-                        except:
-                            print("switch is ON")
-
-                        if get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0:
-                            print("WIFI Switch is OFF")
-                            break
-                        else:
-                            try:
-                                get_wifi_switch_element = driver.find_element_by_xpath(
-                                    "//*[@label='Wi-Fi' and @value='1']")
-                                get_wifi_switch_element.click()
-                                get_wifi_switch_element_text = get_wifi_switch_element.text
-                            except:
-                                print("WIFi switch is OFF")
-
-                else:
-                    print("Switch is Still OFF")
-            except:
-                pass
-        except:
-            print("get_wifi_switch_element is ON")
+        # try:
+        #     get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
+        #     get_wifi_switch_element_text = get_wifi_switch_element.text
+        #     print("switch state is : ", get_wifi_switch_element_text)
+        #     try:
+        #         if get_wifi_switch_element_text == "1" or get_wifi_switch_element_text == 1:
+        #             get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
+        #             driver.implicitly_wait(1)
+        #             get_wifi_switch_element.click()
+        #             driver.implicitly_wait(1)
+        #             i = 0
+        #             for i in range(5):
+        #                 try:
+        #                     get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
+        #                     get_wifi_switch_element_text = get_wifi_switch_element.text
+        #                 except:
+        #                     print("switch is ON")
+        #
+        #                 if get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0:
+        #                     print("WIFI Switch is OFF")
+        #                     break
+        #                 else:
+        #                     try:
+        #                         get_wifi_switch_element = driver.find_element_by_xpath(
+        #                             "//*[@label='Wi-Fi' and @value='1']")
+        #                         get_wifi_switch_element.click()
+        #                         get_wifi_switch_element_text = get_wifi_switch_element.text
+        #                     except:
+        #                         print("WIFi switch is OFF")
+        #
+        #         else:
+        #             print("Switch is Still OFF")
+        #     except:
+        #         pass
+        # except:
+        #     print("get_wifi_switch_element is ON")
         # --------------------To Turn on WIFi Switch if already OFF--------------------------------
 
     except Exception as e:
@@ -1866,42 +1866,42 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
             print("error on ssid element")
 
             # --------------------To Turn on WIFi Switch if already OFF--------------------------------
-        try:
-            get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
-            get_wifi_switch_element_text = get_wifi_switch_element.text
-            print("switch state is : ", get_wifi_switch_element_text)
-            try:
-                if get_wifi_switch_element_text == "1" or get_wifi_switch_element_text == 1:
-                    get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
-                    driver.implicitly_wait(1)
-                    get_wifi_switch_element.click()
-                    driver.implicitly_wait(1)
-                    i = 0
-                    for i in range(5):
-                        try:
-                            get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
-                            get_wifi_switch_element_text = get_wifi_switch_element.text
-                        except:
-                            print("switch is ON")
-
-                        if get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0:
-                            print("WIFI Switch is OFF")
-                            break
-                        else:
-                            try:
-                                get_wifi_switch_element = driver.find_element_by_xpath(
-                                    "//*[@label='Wi-Fi' and @value='1']")
-                                get_wifi_switch_element.click()
-                                get_wifi_switch_element_text = get_wifi_switch_element.text
-                            except:
-                                print("WIFi switch is OFF")
-
-                else:
-                    print("Switch is Still OFF")
-            except:
-                pass
-        except:
-            print("get_wifi_switch_element is ON")
+        # try:
+        #     get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
+        #     get_wifi_switch_element_text = get_wifi_switch_element.text
+        #     print("switch state is : ", get_wifi_switch_element_text)
+        #     try:
+        #         if get_wifi_switch_element_text == "1" or get_wifi_switch_element_text == 1:
+        #             get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
+        #             driver.implicitly_wait(1)
+        #             get_wifi_switch_element.click()
+        #             driver.implicitly_wait(1)
+        #             i = 0
+        #             for i in range(5):
+        #                 try:
+        #                     get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
+        #                     get_wifi_switch_element_text = get_wifi_switch_element.text
+        #                 except:
+        #                     print("switch is ON")
+        #
+        #                 if get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0:
+        #                     print("WIFI Switch is OFF")
+        #                     break
+        #                 else:
+        #                     try:
+        #                         get_wifi_switch_element = driver.find_element_by_xpath(
+        #                             "//*[@label='Wi-Fi' and @value='1']")
+        #                         get_wifi_switch_element.click()
+        #                         get_wifi_switch_element_text = get_wifi_switch_element.text
+        #                     except:
+        #                         print("WIFi switch is OFF")
+        #
+        #         else:
+        #             print("Switch is Still OFF")
+        #     except:
+        #         pass
+        # except:
+        #     print("get_wifi_switch_element is ON")
         # --------------------To Turn on WIFi Switch if already OFF--------------------------------
 
     except Exception as e:
