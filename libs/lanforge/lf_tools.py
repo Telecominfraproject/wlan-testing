@@ -158,7 +158,7 @@ class ChamberView:
 
     def Chamber_View(self):
         if self.delete_old_scenario:
-            self.CreateChamberview.clean_cv_scenario(type="Network-Connectivity", scenario_name=self.scenario_name)
+            self.CreateChamberview.clean_cv_scenario(cv_type="Network-Connectivity", scenario_name=self.scenario_name)
         self.CreateChamberview.setup(create_scenario=self.scenario_name,
                                      raw_line=self.raw_line
                                      )
