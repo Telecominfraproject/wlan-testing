@@ -1358,15 +1358,15 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                             print("Forgetting ssid")
 
                             #------------------------------- Wifi Switch ----------------
-                            try:
-                                print("clicking on wifi switch")
-                                get_switch_element = driver.find_element_by_xpath(
-                                    "//*[@resource-id='com.android.settings:id/switch_widget']")
-                                driver.implicitly_wait(2)
-                                get_switch_element.click()
-                            except:
-                                print("couldn't click on wifi switch")
-                               #allure.attach(name= body=str("couldn't click on wifi switch"))
+                            # try:
+                            #     print("clicking on wifi switch")
+                            #     get_switch_element = driver.find_element_by_xpath(
+                            #         "//*[@resource-id='com.android.settings:id/switch_widget']")
+                            #     driver.implicitly_wait(2)
+                            #     get_switch_element.click()
+                            # except:
+                            #     print("couldn't click on wifi switch")
+                            #    #allure.attach(name= body=str("couldn't click on wifi switch"))
                         except:
                             print("Couldn't forget ssid")
                             # closeApp(connData["appPackage-android"], setup_perfectoMobile)
@@ -2381,15 +2381,15 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                             print("Forgetting ssid")
 
                             #------------------------------- Wifi Switch ----------------
-                            try:
-                                print("clicking on wifi switch")
-                                get_switch_element = driver.find_element_by_xpath(
-                                    "//*[@resource-id='com.android.settings:id/switch_widget']")
-                                driver.implicitly_wait(2)
-                                get_switch_element.click()
-                            except:
-                                print("couldn't click on wifi switch")
-                               #allure.attach(name= body=str("couldn't click on wifi switch"))
+                            # try:
+                            #     print("clicking on wifi switch")
+                            #     get_switch_element = driver.find_element_by_xpath(
+                            #         "//*[@resource-id='com.android.settings:id/switch_widget']")
+                            #     driver.implicitly_wait(2)
+                            #     get_switch_element.click()
+                            # except:
+                            #     print("couldn't click on wifi switch")
+                            #    #allure.attach(name= body=str("couldn't click on wifi switch"))
                         except:
                             print("Couldn't forget ssid")
                             # closeApp(connData["appPackage-android"], setup_perfectoMobile)
