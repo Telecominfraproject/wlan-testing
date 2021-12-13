@@ -250,7 +250,7 @@ class RunTest:
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
                       instance_name="wct_instance", download_rate="1Gbps", influx_tags=[],
-                      upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", sort="interleave", raw_lines=[]):
+                      upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", stations="", create_stations=True, sort="interleave", raw_lines=[]):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         if mode == "BRIDGE":
             upstream_port = self.upstream_port
@@ -277,7 +277,8 @@ class RunTest:
                                             upload_rate=upload_rate,
                                             download_rate=download_rate,
                                             sort=sort,
-                                            create_stations=True,
+                                            stations=stations,
+                                            create_stations=create_stations,
                                             radio=None,
                                             security=None,
                                             paswd=None,
@@ -287,7 +288,6 @@ class RunTest:
                                             raw_lines=raw_lines,
                                             raw_lines_file="",
                                             sets=[])
-
         wificapacity_obj.setup()
         wificapacity_obj.run()
         for tag in influx_tags:
