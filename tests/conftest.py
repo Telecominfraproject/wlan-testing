@@ -47,6 +47,7 @@ import pytest
 from lanforge.lf_tests import RunTest
 from cv_test_manager import cv_test
 from configuration import CONFIGURATION
+from configuration import open_flow
 from configuration import RADIUS_SERVER_DATA
 from configuration import RADIUS_ACCOUNTING_DATA
 from lanforge.scp_util import SCP_File
@@ -273,6 +274,10 @@ def get_uci_show(fixtures_ver, get_apnos, get_configuration):
 @pytest.fixture(scope="session")
 def skip_lf(request):
     yield request.config.getoption("--skip-lanforge")
+
+@pytest.fixture(scope="session")
+def get_openflow():
+    yield open_flow
 
 
 # Controller Fixture

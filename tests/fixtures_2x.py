@@ -358,7 +358,7 @@ class Fixtures_2x:
     def setup_profiles(self, request, param, setup_controller, testbed, get_equipment_ref,
                        instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                        get_security_flags, get_configuration, radius_info, get_apnos,
-                       radius_accounting_info, skip_lf=False):
+                       radius_accounting_info, skip_lf=False, open_flow=None):
 
         instantiate_profile_obj = instantiate_profile(sdk_client=setup_controller)
         print(1, instantiate_profile_obj.sdk_client)
@@ -544,8 +544,8 @@ class Fixtures_2x:
 
         try:
             if parameter['express-wifi']:
-                instantiate_profile_obj.set_express_wifi()
-        except:
+                instantiate_profile_obj.set_express_wifi(open_flow=open_flow)
+        except Exception as e:
             pass
 
         ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="2.x")
