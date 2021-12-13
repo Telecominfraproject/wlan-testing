@@ -1,5 +1,5 @@
 allure-pytest
-Appium-Python-Client
+Appium-Python-Client==1.2.0
 bs4
 influxdb
 influxdb-client

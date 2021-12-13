@@ -1,4 +1,11 @@
 owgw:
+  # https://telecominfraproject.atlassian.net/browse/WIFI-5840
+  checks:
+    owgw:
+      readiness:
+        exec:
+          command: ["true"]
+
   services:
     owgw:
       type: LoadBalancer
@@ -66,6 +73,13 @@ owgw:
       -----END CERTIFICATE-----
 
 owsec:
+  # https://telecominfraproject.atlassian.net/browse/WIFI-5840
+  checks:
+    owsec:
+      readiness:
+        exec:
+          command: ["true"]
+
   services:
     owsec:
       type: LoadBalancer
@@ -176,6 +190,13 @@ owgwui:
     cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
 
 owfms:
+  # https://telecominfraproject.atlassian.net/browse/WIFI-5840
+  checks:
+    owfms:
+      readiness:
+        exec:
+          command: ["true"]
+
   services:
     owfms:
       type: LoadBalancer
@@ -225,6 +246,12 @@ owfms:
       -----END CERTIFICATE-----
 
 owprov:
+  checks:
+    owprov:
+      readiness:
+        exec:
+          command: ["true"]
+ 
   services:
     owprov:
       type: LoadBalancer

@@ -1,29 +1,10 @@
-name: interop testing
+name: advanced testing
 
 env:
-  # thirdparties
-  DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
-  DOCKER_USER_NAME: wlan-testing-cicd
-  DOCKER_USER_PASSWORD: ${{ secrets.DOCKER_USER_PASSWORD }}
-  # AWS credentials
-  AWS_EKS_NAME: tip-wlan-main
-  AWS_DEFAULT_OUTPUT: json
-  AWS_DEFAULT_REGION: us-east-2
-  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
-  # Cloud SDK certs
-  CACERT: ${{ secrets.CACERT }}
-  CAKEY: ${{ secrets.CAKEY }}
   ALLURE_CLI_VERSION: 2.14.0
 
 on:
   workflow_dispatch:
-    inputs:
-      additional_markers:
-        default: ''
-        description: 'Pass additional markers that will be and-combined with the interop marker, e.g. "twog or fiveg" -> "interop and twog or fiveg"'
-        required: false
   schedule:
   - cron: '30 20 * * *'
 
@@ -35,45 +16,44 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    # checkout needed repositories
-    - name: Checkout Testing repo
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+    - name: build and push Docker image
+      uses: ./.github/actions/build-and-push-docker
       with:
-        path: wlan-testing
-
-    - name: Checkout LANforge scripts
-      uses: actions/checkout@v2
-      with:
-        path: wlan-lanforge-scripts
-        repository: Telecominfraproject/wlan-lanforge-scripts
-
-    - name: import LANforge scripts
-      working-directory: wlan-testing
-      run: ./sync_repos.bash
-
-    # build and push docker image
-    - name: docker login
-      run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
-    - name: build docker image
-      working-directory: wlan-testing
-      run: docker build -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }} -f docker/Dockerfile .
-    - name: push docker image
-      run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
-
+        registry: tip-tip-wlan-cloud-docker-repo.jfrog.io
+        registry_user: wlan-testing-cicd
+        registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     needs: [ build ]
+    timeout-minutes: 1440
+    env:
+      AWS_EKS_NAME: tip-wlan-main
+      AWS_DEFAULT_OUTPUT: json
+      AWS_DEFAULT_REGION: us-east-2
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+     
     strategy:
       fail-fast: false
-      max-parallel: 1
       matrix:
-        test_type: [android, ios]
-
-    outputs:
-      additional_markers: ${{ steps.marker.outputs.additional }}
+        testbed: 
+        - advanced-01
+        - advanced-02
 
     steps:
+    - name: install aws CLI tool
+      run: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
     - name: get EKS access credentials
       run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
@@ -84,7 +64,15 @@ jobs:
         
     - name: set job name
       id: job
-      run: echo "::set-output name=name::interop-ci-${{ github.run_number }}-${{ matrix.test_type }}"
+      run: echo "::set-output name=name::advanced-ci-${{ github.run_number }}"
+
+    - name: prepare namespace
+      id: namespace
+      run: |
+        NAMESPACE="testing-${{ github.run_number }}-${{ matrix.testbed }}"
+        kubectl create ns $NAMESPACE
+        kubectl config set-context --current --namespace=$NAMESPACE
+        echo "::set-output name=name::${NAMESPACE}"
 
     - name: create configuration.py secret
       run: |
@@ -93,24 +81,7 @@ jobs:
         EOF
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
 
-    - name: calculate marker expression
-      id: marker
-      run: |
-        if [ "${{ matrix.test_type }}" = "android" ]; then
-          MARKER_EXPRESSION="interop_and and interop_uc_sanity and client_connect"
-        else
-          MARKER_EXPRESSION="interop_ios and interop_uc_sanity and client_connect"
-        fi
-
-        ADDITIONAL_MARKERS="${{ github.event.inputs.additional_markers || '' }}"
-        if [ ! -z "$ADDITIONAL_MARKERS" ]; then
-          MARKER_EXPRESSION="$MARKER_EXPRESSION and ${ADDITIONAL_MARKERS}"
-        fi
-
-        echo "::set-output name=additional::${ADDITIONAL_MARKERS}"
-        echo "::set-output name=expression::${MARKER_EXPRESSION}"
-        
-    - name: run interop tests
+    - name: run tests
       run: |
         cat <<EOF | kubectl apply -f -
         apiVersion: batch/v1
@@ -125,7 +96,7 @@ jobs:
             spec:
               containers:
               - name: tests
-                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+                image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
                 resources:
                   requests:
                     memory: "512Mi"
@@ -139,7 +110,7 @@ jobs:
                   - -c
                   - |
                     cd tests
-                    pytest -m "${{ steps.marker.outputs.expression }}" -s -vvv --testbed=interop-03 -o 'jobName=Github-Interop-${{ matrix.test_type }}' -o 'jobNumber=${{ github.run_number }}' --alluredir=/tmp/allure-results --skip-lanforge
+                    pytest -m "advance" -s -vvv --testbed=${{ matrix.testbed }} --alluredir=/tmp/allure-results
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -188,19 +159,26 @@ jobs:
       if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
-        name: allure-results-${{ matrix.test_type }}
+        name: allure-results-${{ matrix.testbed }}
         path: allure-results
 
     - name: cleanup
       if: ${{ always() }}
       run: |
-        kubectl delete job "${{ steps.job.outputs.name }}" --wait=true --ignore-not-found=true
-        kubectl delete secret configuration --wait=true --ignore-not-found=true
+        kubectl delete ns "${{ steps.namespace.outputs.name }}" --wait=true
+
 
   report:
     needs: [ test ]
     if: always()
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        testbed:
+        - advanced-01
+        - advanced-02
     steps:
     - name: install Allure CLI tool
       run: |
@@ -209,13 +187,8 @@ jobs:
 
     - uses: actions/download-artifact@v2
       with:
-        name: allure-results-android
-        path: allure-results-android
-
-    - uses: actions/download-artifact@v2
-      with:
-        name: allure-results-ios
-        path: allure-results-ios
+        name: allure-results-${{ matrix.testbed }}
+        path: allure-results
 
     - name: checkout testing repo
       uses: actions/checkout@v2
@@ -231,15 +204,14 @@ jobs:
 
     - name: copy history into results
       run: |
-        if [ -e "reports/interop/interop/latest" ] ; then
-          cp -r reports/interop/interop/latest/history/ allure-results-ios/history
-          cp -r reports/interop/interop/latest/history/ allure-results-android/history
+        if [ -e "reports/advanced/${{ matrix.testbed }}/latest" ] ; then
+          cp -r reports/advanced/${{ matrix.testbed }}/latest/history/ allure-results/history
         fi
 
     - name: add report metadata
       run: |
-        cat << EOF >> allure-results-android/environment.properties
-        Testbed=interop
+        cat << EOF >> allure-results/environment.properties
+        Testbed=${{ matrix.testbed }}
         Tests.CommitId=$(cd wlan-testing && git rev-parse --short HEAD)
         CiRun.Id=${{ github.run_id }}
         CiRun.Number=${{ github.run_number }}
@@ -247,28 +219,27 @@ jobs:
         EOF
 
     - name: generate Allure report
-      run: allure-${{ env.ALLURE_CLI_VERSION }}/bin/allure generate allure-results-android allure-results-ios
+      run: allure-${{ env.ALLURE_CLI_VERSION }}/bin/allure generate allure-results
 
     - name: upload Allure report as artifact
       uses: actions/upload-artifact@v2
       with:
-        name: allure-report
+        name: allure-report-${{ matrix.testbed }}
         path: allure-report
 
     # doing this to be able to aggregate multiple reports together later on
     - name: copy results into report
       run: |
         mkdir -p allure-report/results
-        cp -r allure-results-android/* allure-report/results
-        cp -r allure-results-ios/* allure-report/results
+        cp -r allure-results/* allure-report/results
 
     - name: copy new report
       run: |
-        mkdir -p reports/interop/interop
-        cp -Tr allure-report reports/interop/interop/${{ github.run_number }}
+        mkdir -p reports/advanced/${{ matrix.testbed }}
+        cp -Tr allure-report reports/advanced/${{ matrix.testbed }}/${{ github.run_number }}
 
     - name: update latest symlink
-      working-directory: reports/interop/interop
+      working-directory: reports/advanced/${{ matrix.testbed }}
       run: ln -fns ${{ github.run_number }} latest
 
     - name: generate new index.html
@@ -284,7 +255,7 @@ jobs:
         git commit -m "Automated deployment: $(date -u)"
 
     - name: push
-      if: github.ref == 'refs/heads/master' && needs.test.outputs.additional_markers == ''
+      if: github.ref == 'refs/heads/master'
       uses: ad-m/github-push-action@v0.6.0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -292,11 +263,11 @@ jobs:
         directory: reports
 
     - name: upload to S3
-      if: github.ref == 'refs/heads/master' && needs.test.outputs.additional_markers == ''
+      if: github.ref == 'refs/heads/master'
       uses: ./wlan-testing/.github/actions/allure-report-to-s3
       with:
-        test_type: interop
-        testbed: interop
+        test_type: advanced
+        testbed: ${{ matrix.testbed }}
         report_path: allure-report
         s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
         s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
@@ -306,5 +277,9 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
+    - uses: actions/checkout@v2
     - name: cleanup Docker image
-      run: curl -u${{ env.DOCKER_USER_NAME }}:${{ env.DOCKER_USER_PASSWORD }} -X DELETE "https://tip.jfrog.io/artifactory/tip-wlan-cloud-docker-repo/cloud-sdk-nightly/${{ github.run_id }}"
+      uses: ./.github/actions/cleanup-docker
+      with:
+        registry_user: wlan-testing-cicd
+        registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}

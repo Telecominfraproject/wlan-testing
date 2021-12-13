@@ -1,0 +1,17 @@
+name: build and push Docker image
+description: build and push the wlan-testing Docker image
+
+inputs:
+  registry_user:
+    description: the user to authenticate against the registry
+    required: true
+  registry_password:
+    description: the password to authenticate against the registry
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+  - name: cleanup Docker image
+    shell: bash
+    run: curl -u ${{ inputs.registry_user }}:${{ inputs.registry_password }} -X DELETE "https://tip.jfrog.io/artifactory/tip-wlan-cloud-docker-repo/cloud-sdk-nightly/${{ github.run_id }}"
