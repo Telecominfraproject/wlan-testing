@@ -232,7 +232,24 @@ jobs:
             "osu_nai_shared": "anonymous@ameriband.com",
             "roaming_oi": []
         }
+        RATE_LIMITING_RADIUS_SERVER_DATA = {
+            "ip": "18.189.85.200",
+            "port": 1812,
+            "secret": "testing123",
+            "user": "user",
+            "password": "password",
+            "pk_password": "whatever"
+        }
 
+        RATE_LIMITING_RADIUS_ACCOUNTING_DATA = {
+            "ip": "18.189.85.200",
+            "port": 1813,
+            "secret": "testing123",
+            "user": "user",
+            "password": "password",
+            "pk_password": "whatever"
+        }
+        
         PASSPOINT_OPERATOR_INFO = {
             "osen": "Disabled",
             "domain_name_list": ["telecominfraproject.atlassian.net"],
@@ -595,10 +612,6 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
     steps:
-    - name: install Allure CLI tool
-      run: |
-        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
     - uses: actions/download-artifact@v2
       with:
         name: allure-results-${{ matrix.ap_model }}
@@ -616,22 +629,13 @@ jobs:
         ref: gh-pages
         path: reports
 
-    - name: copy history into results
-      run: |
-        if [ -e "reports/sanity/${{ matrix.ap_model }}/latest" ] ; then
-          cp -r reports/sanity/${{ matrix.ap_model }}/latest/history/ allure-results/history
-        fi
-    - name: add report metadata
-      run: |
-        cat << EOF >> allure-results/environment.properties
-        Ap.Model=${{ matrix.ap_model }}
-        Tests.CommitId=$(cd wlan-testing && git rev-parse --short HEAD)
-        CiRun.Id=${{ github.run_id }}
-        CiRun.Number=${{ github.run_number }}
-        CiRun.Url=https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
-        EOF
     - name: generate Allure report
-      run: allure-${{ env.ALLURE_CLI_VERSION }}/bin/allure generate
+      uses: ./wlan-testing/.github/actions/generate-allure-report
+      with:
+        results_path: ./allure-results
+        history_path: reports/sanity/${{ matrix.ap_model }}/latest/history
+        additional_metadata: |
+          Ap.Model=${{ matrix.ap_model }}
 
     - name: upload Allure report as artifact
       uses: actions/upload-artifact@v2
