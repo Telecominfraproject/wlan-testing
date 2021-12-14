@@ -920,12 +920,11 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
 
     try:
-        time.sleep(2)
-        driver.implicitly_wait(2)
+        time.sleep(1)
         try:
             print("Verifying Connected Wifi Connection")
             report.step_start("Loading Wifi Page")
-            element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']")
+            element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//XCUIElementTypeCell[@name='Wi-Fi']")))
             element.click()
         except NoSuchElementException:
             print("Exception: Verify Xpath - unable to click on Wifi")
@@ -948,7 +947,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                             get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
                             get_wifi_switch_element_text = get_wifi_switch_element.text
                         except:
-                            print("switch is OFF")
+                            print("Switch is OFF")
 
                         if get_wifi_switch_element_text == "1" or get_wifi_switch_element_text == 1:
                             print("WIFI Switch is ON")
@@ -983,17 +982,16 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     try:
         print("getting in to Additional details")
-        additional_details_element = driver.find_element_by_xpath(
-            "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")
+        additional_details_element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")))
         additional_details_element.click()
         try:
             print("Forget Connected Network")
-            forget_ssid = driver.find_element_by_xpath("//*[@label='Forget This Network']")
+            forget_ssid = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
             forget_ssid.click()
             print("Forget old ssid")
             try:
                 report.step_start("Forget SSID popup1")
-                forget_ssid_popup = driver.find_element_by_xpath("//*[@label='Forget']")
+                forget_ssid_popup = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
                 forget_ssid_popup.click()
 
                 print("**alert** Forget SSID popup killed **alert**")
@@ -1053,8 +1051,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------Set Password-------------------------------
     try:
-        driver.implicitly_wait(5)
-        wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
+        wifiPassword = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Password']")))
         wifiPassword.send_keys(WifiPass)
     except NoSuchElementException:
         print("Enter Password Page Not Loaded")
@@ -1062,8 +1059,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------Click on join-------------------------------
     try:
-        driver.implicitly_wait(5)
-        joinBTN = driver.find_element_by_xpath("//*[@label='Join']")
+        joinBTN = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Join']")))
         joinBTN.click()
     except Exception as e:
         print("Join Button Not Enabled...Password may not be needed")
@@ -1103,9 +1099,8 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
         try:
             time.sleep(2)
-            driver.implicitly_wait(2)
             report.step_start("Forget Network")
-            forget_ssid = driver.find_element_by_xpath("//*[@label='Forget This Network']")
+            forget_ssid = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
             forget_ssid.click()
             print("Forget old ssid")
             # time.sleep(2)
