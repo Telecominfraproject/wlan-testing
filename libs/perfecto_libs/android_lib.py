@@ -1248,8 +1248,8 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     try:
                         check_if_no_internet_popup(driver)
                         report.step_start("Set Wifi Password")
-                        wifiPasswordElement = driver.find_element_by_xpath(
-                            "//*[@resource-id='com.android.settings:id/edittext']")
+                        wifiPasswordElement = WebDriverWait(driver, 10).until(
+                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='com.android.settings:id/edittext']")))
                         wifiPasswordElement.send_keys(WifiPass)
                     except NoSuchElementException:
                         print("Password Page Not Loaded, password May be cached in the System")
@@ -1260,7 +1260,8 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     # -------------------------------------------------------
                     try:
                         report.step_start("Click Connect Button")
-                        joinBTNElement = driver.find_element_by_xpath("//*[@text='Connect']")
+                        joinBTNElement = WebDriverWait(driver, 10).until(
+                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Connect']")))
                         joinBTNElement.click()
                     except NoSuchElementException:
                         print("Connect Button Not Enabled...Verify if Password is set properly  ")
@@ -1552,8 +1553,8 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         check_if_no_internet_popup(driver)
                         report.step_start("Set Wifi Password")
                         print("Entering password")
-                        wifiPasswordElement = driver.find_element_by_xpath(
-                            "//*[@resource-id='com.android.settings:id/password']")
+                        wifiPasswordElement = WebDriverWait(driver, 10).until(
+                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='com.android.settings:id/password']")))
                         wifiPasswordElement.send_keys(WifiPass)
                     except NoSuchElementException:
                         print("Password Page Not Loaded, password May be cached in the System")
@@ -1564,7 +1565,8 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     # -------------------------------------------------------
                     try:
                         report.step_start("Click Connect Button")
-                        joinBTNElement = driver.find_element_by_xpath("//*[@text='Connect']")
+                        joinBTNElement = WebDriverWait(driver, 10).until(
+                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Connect']")))
                         joinBTNElement.click()
                     except NoSuchElementException:
                         print("Connect Button Not Enabled...Verify if Password is set properly  ")
@@ -3185,8 +3187,8 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                     # This is To get all available ssids
                     # ------------------------------------------------------
                     try:
-                        for k in range(10):
-                            available_ssids = get_all_available_ssids(driver)
+                        for k in range(3):
+                            available_ssids = get_all_available_ssids(driver, deviceModelName)
                             print("active_ssid_list: ", available_ssids)
                             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
                             try:
@@ -3206,7 +3208,8 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                                 try:
                                     report.step_start("Selecting Wifi: " + WifiName)
                                     wifi_selection_element = WebDriverWait(driver, 35).until(
-                                        EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
+                                        EC.presence_of_element_located(
+                                            (MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
                                     wifi_selection_element.click()
                                     ssid_not_found = False
                                     check_if_no_internet_popup(driver)
@@ -3223,6 +3226,7 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                     except:
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         return ip_address_element_text, ssid_with_internet
+                        # -------------------------------------------------------
                     # -------------------------------------------------------
 
                     # Selecting WIFI
