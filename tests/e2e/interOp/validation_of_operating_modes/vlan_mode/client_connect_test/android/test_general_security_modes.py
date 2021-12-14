@@ -39,9 +39,9 @@ setup_params_general = {
 }
 for sec_modes in setup_params_general['ssid_modes'].keys():
     for i in range(len(setup_params_general['ssid_modes'][sec_modes])):
-        N = 6
-        rand_string = ''.join(random.choices(string.ascii_uppercase +
-                                     string.digits, k=N))
+        N = 3
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                     string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 @allure.suite(suite_name="interop sanity")
@@ -291,9 +291,9 @@ setup_params_general_two = {
 }
 for sec_modes in setup_params_general_two['ssid_modes'].keys():
     for i in range(len(setup_params_general_two['ssid_modes'][sec_modes])):
-        N = 6
-        rand_string = ''.join(random.choices(string.ascii_uppercase +
-                                     string.digits, k=N))
+        N = 3
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                     string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 @allure.suite(suite_name="interop sanity")
