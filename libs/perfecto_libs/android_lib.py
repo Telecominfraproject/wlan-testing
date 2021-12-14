@@ -60,9 +60,9 @@ def scrollDown(setup_perfectoMobile):
     params2["start"] = "50%,90%"
     params2["end"] = "50%,20%"
     params2["duration"] = "4"
-    time.sleep(2)
+    # time.sleep(2)
     setup_perfectoMobile[0].execute_script('mobile:touch:swipe', params2)
-    time.sleep(1)
+    time.sleep(3)
 
 
 def getDeviceID(setup_perfectoMobile):
@@ -1192,7 +1192,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         print("No Connected SSIDS")
                     #----------------------This is to Forget current connected SSID--------------------------------
 
-                    time.sleep(2)
+                    # time.sleep(2)
                     print("Selecting Wifi: " + WifiName)
                    #allure.attach(name= body=str("Selecting Wifi: " + WifiName))
                     ssid_found = False
@@ -1200,9 +1200,8 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     #This is To get all available ssids
                     #------------------------------------------------------
                     try:
-                        for k in range(3):
-                            available_ssids = get_all_available_ssids(driver, deviceModelName)
-                            print("No. of ssids in list:", len(available_ssids))
+                        for k in range(9):
+                            available_ssids = get_all_available_ssids(driver)
                             print("active_ssid_list: ", available_ssids)
                             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
                             try:
@@ -1515,11 +1514,11 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                         EC.presence_of_element_located(
                                             (MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
                                     wifi_selection_element.click()
-                                    ssid_not_found == False
+                                    ssid_not_found = False
                                     check_if_no_internet_popup(driver)
                                     break
                                 except Exception as e:
-                                    ssid_not_found == True
+                                    ssid_not_found = True
                                     print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
                                 scroll_up_pixel(setup_perfectoMobile)
                             if ssid_not_found:
@@ -1971,7 +1970,6 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                         switch_text = "Off"
                     else:
                         switch_text = "On"
-
                     print("get_switch_text: ", switch_text)
                     print("Find wifi switch")
                     try:  # To Turn on Wi-Fi Switch
@@ -2014,7 +2012,6 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                         print("Couldn't turn on WIFI switch")
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         return ssid_with_internet
-
                     # ---------------------This is to Forget current connected SSID-------------------------------
                     try:  # To deal with already connected SSID
                         check_if_no_internet_popup(driver)
@@ -2073,11 +2070,11 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                                         EC.presence_of_element_located(
                                             (MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
                                     wifi_selection_element.click()
-                                    ssid_not_found == False
+                                    ssid_not_found = False
                                     check_if_no_internet_popup(driver)
                                     break
                                 except Exception as e:
-                                    ssid_not_found == True
+                                    ssid_not_found = True
                                     print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
                                 scroll_up_pixel(setup_perfectoMobile)
                             if ssid_not_found:
@@ -2470,19 +2467,6 @@ def get_all_available_ssids(driver, deviceModelName):
                 active_ssid_list.append(elements[i].text)
         except:
             print("No SSIDS available")
-    # try:
-    #     time.sleep(5)
-    #     driver.implicitly_wait(5)
-    #     elements = driver.find_elements_by_xpath("//*[@resource-id='com.android.settings:id/title']")
-    #     # print("elements: ", elements)
-    #     print(len(elements))
-    #     for i in range(len(elements)):
-    #         # print("elements[i]", elements[i])
-    #         # print("elements[i].text", elements[i].text)
-    #         active_ssid_list.append(elements[i].text)
-    # except:
-    #     print("No SSIDS available")
-    #allure.attach(name= body=str("SSIDs visible in device: " + available_ssid))
     return active_ssid_list
 
 def reportClient(value):
@@ -3201,9 +3185,8 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                     # This is To get all available ssids
                     # ------------------------------------------------------
                     try:
-                        for k in range(3):
-                            available_ssids = get_all_available_ssids(driver, deviceModelName)
-                            print("No. of ssids in list:", len(available_ssids))
+                        for k in range(10):
+                            available_ssids = get_all_available_ssids(driver)
                             print("active_ssid_list: ", available_ssids)
                             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
                             try:
@@ -3225,11 +3208,11 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                                     wifi_selection_element = WebDriverWait(driver, 35).until(
                                         EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
                                     wifi_selection_element.click()
-                                    ssid_not_found == False
+                                    ssid_not_found = False
                                     check_if_no_internet_popup(driver)
                                     break
                                 except Exception as e:
-                                    ssid_not_found == True
+                                    ssid_not_found = True
                                     print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
                                 scroll_up_pixel(setup_perfectoMobile)
                             if ssid_not_found:
@@ -3849,11 +3832,11 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                                         EC.presence_of_element_located(
                                             (MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
                                     wifi_selection_element.click()
-                                    ssid_not_found == False
+                                    ssid_not_found = False
                                     check_if_no_internet_popup(driver)
                                     break
                                 except Exception as e:
-                                    ssid_not_found == True
+                                    ssid_not_found = True
                                     print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
                                 scroll_up_pixel(setup_perfectoMobile)
                             if ssid_not_found:
