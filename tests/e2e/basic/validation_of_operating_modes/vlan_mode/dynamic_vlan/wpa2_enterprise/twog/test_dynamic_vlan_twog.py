@@ -204,7 +204,7 @@ class TestDynamicVlan(object):
                             station_name=station_names_twog, key_mgmt="WPA-EAP",
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordB", ieee80211w=0,
-                            wep_key="NA", ca_cert="NA", eap="TTLS", identity="userB", d_vlan=True, cleanup=True)
+                            wep_key="NA", ca_cert="NA", eap="TTLS", identity="userB", d_vlan=True, cleanup=False)
 
         eth_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
                                    "/" + port_resources[2])["interface"]["ip"]
@@ -534,7 +534,7 @@ class TestDynamicVlan(object):
                                 station_name=[station_list[m]], key_mgmt="WPA-EAP",
                                 pairwise="NA", group="NA", wpa_psk="DEFAULT",
                                 ttls_passwd="passwordA", ieee80211w=0,
-                                wep_key="NA", ca_cert="NA", eap="TTLS", identity="userA", d_vlan=True, cleanup=True)
+                                wep_key="NA", ca_cert="NA", eap="TTLS", identity="userA", d_vlan=True, cleanup=False)
             lf_tools.admin_up_down([station_list[m]], option="up")
             sta_ip.append(lf_test.station_ip[station_list[m]])
             if sta_ip[m] == "0.0.0.0":
@@ -609,7 +609,7 @@ class TestDynamicVlan(object):
                                 station_name=[station_list[sta]], key_mgmt="WPA-EAP",
                                 pairwise="NA", group="NA", wpa_psk="DEFAULT",
                                 ttls_passwd=user_pass, ieee80211w=0,
-                                wep_key="NA", ca_cert="NA", eap="TTLS", identity=user_id, d_vlan=True, cleanup=True)
+                                wep_key="NA", ca_cert="NA", eap="TTLS", identity=user_id, d_vlan=True, cleanup=False)
 
             sta_ip.append(lf_test.station_ip[station_list[sta]])
 
