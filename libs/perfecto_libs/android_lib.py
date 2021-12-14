@@ -1248,10 +1248,10 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     # -------------------------------------------------------
                     try:
                         check_if_no_internet_popup(driver)
+                        time.sleep(3)
                         report.step_start("Set Wifi Password")
                         print("Set Wifi password")
-                        wifiPasswordElement = WebDriverWait(driver, 10).until(
-                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='com.android.settings:id/edittext']")))
+                        wifiPasswordElement = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/edittext']")
                         wifiPasswordElement.send_keys(WifiPass)
                     except NoSuchElementException:
                         print("Password Page Not Loaded, password May be cached in the System")
@@ -1261,10 +1261,10 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     #Click on connect button
                     # -------------------------------------------------------
                     try:
+                        time.sleep(5)
                         report.step_start("Click Connect Button")
                         print("Click Connect")
-                        joinBTNElement = WebDriverWait(driver, 10).until(
-                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Connect']")))
+                        joinBTNElement = driver.find_element_by_xpath("//*[@text='Connect']")
                         joinBTNElement.click()
                     except NoSuchElementException:
                         print("Connect Button Not Enabled...Verify if Password is set properly  ")
