@@ -1201,7 +1201,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     #------------------------------------------------------
                     try:
                         for k in range(9):
-                            available_ssids = get_all_available_ssids(driver)
+                            available_ssids = get_all_available_ssids(driver, deviceModelName)
                             print("active_ssid_list: ", available_ssids)
                             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
                             try:
@@ -1231,6 +1231,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     # -------------------------------------------------------
                     try:
                         report.step_start("Selecting Wifi: " + WifiName)
+                        print(("Clicking WIFI"))
                         wifiSelectionElement = WebDriverWait(driver, 35).until(
                             EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
                         wifiSelectionElement.click()
@@ -1248,6 +1249,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     try:
                         check_if_no_internet_popup(driver)
                         report.step_start("Set Wifi Password")
+                        print("Set Wifi password")
                         wifiPasswordElement = WebDriverWait(driver, 10).until(
                             EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='com.android.settings:id/edittext']")))
                         wifiPasswordElement.send_keys(WifiPass)
@@ -1260,6 +1262,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     # -------------------------------------------------------
                     try:
                         report.step_start("Click Connect Button")
+                        print("Click Connect")
                         joinBTNElement = WebDriverWait(driver, 10).until(
                             EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Connect']")))
                         joinBTNElement.click()
