@@ -142,11 +142,21 @@ class TestResources(object):
         allure.attach(name="Exoected SDK: ", body=str(expected_sdk))
         print("SDK On AP: ", str(get_uci_show.split("=")[1]))
         allure.attach(name="SDK Pointed by AP: ", body=str(get_uci_show.split("=")[1]))
+        for ap in get_configuration["access_point"]:
+            out = setup_controller.get_device_by_serial_number(serial_number=ap["serial"])
+            if "ErrorCode" in out.keys():
+                print(out)
+                allure.attach(name="Error Device not found in Gateway: ", body=str(out))
+                pytest.exit("Error Device not found in Gateway:")
+            else:
+                print(out)
+                allure.attach(name="Device is available in Gateway: ", body=str(out))
         if expected_sdk not in get_uci_show:
             pytest.exit("AP has invalid Redirector")
         if test_ap_connection_status[0] == 0:
             pytest.exit("AP in Disconnected State")
         assert False not in data
+
 
     @pytest.mark.traffic_generator_connectivity
     @allure.testcase(name="test_traffic_generator_connectivity", url="")

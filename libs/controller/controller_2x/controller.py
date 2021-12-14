@@ -170,7 +170,6 @@ class Controller(ConfigureController):
     def get_device_by_serial_number(self, serial_number=None):
         uri = self.build_uri("device/" + serial_number)
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("GET", resp, self.make_headers(), "", uri)
         device = resp.json()
         # resp.close()()
         return device
@@ -219,7 +218,7 @@ class FMSUtils:
                       body=str(response.status_code) + "\n" +
                            str(response.json()) + "\n"
                       )
-        
+
         print(response)
 
     def ap_model_lookup(self, model=""):
@@ -284,7 +283,7 @@ class FMSUtils:
 
         return "error"
 
-    
+
 
 
 class UProfileUtility:
@@ -384,6 +383,18 @@ class UProfileUtility:
             }
         }
         self.mode = None
+
+    def set_express_wifi(self, open_flow=None):
+        if self.mode == "NAT":
+            self.base_profile_config["interfaces"][0]["services"] = ["lldp", "ssh"]
+            self.base_profile_config["interfaces"][1]["services"] = ["ssh", "lldp", "open-flow"]
+            self.base_profile_config["interfaces"][1]["ipv4"]["subnet"] = "192.168.97.1/24"
+            self.base_profile_config["interfaces"][1]["ipv4"]["dhcp"]["lease-count"] = 100
+            self.base_profile_config['services']["open-flow"] = open_flow
+            self.base_profile_config['services']['lldp']['describe'] = "OpenWiFi - expressWiFi"
+            self.base_profile_config['services']['lldp']['location'] = "Hotspot"
+
+
 
     def encryption_lookup(self, encryption="psk"):
         encryption_mapping = {
@@ -570,10 +581,10 @@ if __name__ == '__main__':
     controller = {
         'url': 'https://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
         'username': "tip@ucentral.com",
-        'password': 'openwifi',
+        'password': 'OpenWifi%123',
     }
     obj = Controller(controller_data=controller)
-    print(obj.get_system_fms())
+    print(obj.get_device_by_serial_number(serial_number="903cb36ae224"))
 
     # fms = FMSUtils(sdk_client=obj)
     # new = fms.get_firmwares(model='ecw5410')

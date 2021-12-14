@@ -31,10 +31,10 @@ env:
     {
       "namespace": "qa01",
       "deploy_method": "git",
-      "chart_version": "v2.4.0-RC3",
-      "owgw_version": "v2.4.0-RC3",
-      "owsec_version": "v2.4.0-RC2",
-      "owfms_version": "v2.4.0-RC2",
+      "chart_version": "v2.4.0-RC7",
+      "owgw_version": "v2.4.0-RC6",
+      "owsec_version": "v2.4.0-RC5",
+      "owfms_version": "v2.4.0-RC5",
       "owprov_version": "main",
       "owgwui_version": "v2.4.0-RC2",
       "owprovui_version": "main"

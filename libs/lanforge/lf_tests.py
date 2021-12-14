@@ -165,7 +165,7 @@ class RunTest:
                     station_name=[], key_mgmt="WPA-EAP",
                     pairwise="NA", group="NA", wpa_psk="DEFAULT",
                     ttls_passwd="nolastart", ieee80211w=1,
-                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius"):
+                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius",cleanup=True):
         self.eap_connect = TTLSTest(host=self.lanforge_ip, port=self.lanforge_port,
                                     sta_list=station_name, vap=False, _debug_on=self.debug)
 
@@ -245,7 +245,8 @@ class RunTest:
                 cx_data = cx_data + str(j) + " : " + str(i[j]) + "\n"
             cx_data = cx_data + "\n"
         allure.attach(name="cx_data", body=str(cx_data))
-        self.eap_connect.cleanup(station_name)
+        if cleanup:
+            self.eap_connect.cleanup(station_name)
         return self.eap_connect.passes()
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
