@@ -2863,7 +2863,7 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                     #This is To get all available ssids
                     #------------------------------------------------------
                     try:
-                        for k in range(3):
+                        for k in range(10):
                             available_ssids = get_all_available_ssids(driver, deviceModelName)
                             print("active_ssid_list: ", available_ssids)
                             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
@@ -2907,11 +2907,11 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                     # Set username
                     # -------------------------------------------------------
                     try:
-                        driver.implicitly_wait(3)
+                        # driver.implicitly_wait(3)
                         report.step_start("Set User name")
                         print("Set User name")
-                        wifiUserElement = driver.find_element_by_xpath(
-                            "//*[@resource-id='com.android.settings:id/edittext' and @password='false']")
+                        wifiUserElement = WebDriverWait(driver, 10).until(
+                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='com.android.settings:id/edittext' and @password='false']")))
                         wifiUserElement.send_keys(User)
                     except NoSuchElementException:
                         print("User name not Loaded")
@@ -2920,11 +2920,11 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                     # Set Password
                     # -------------------------------------------------------
                     try:
-                        driver.implicitly_wait(6)
+                        # driver.implicitly_wait(6)
                         report.step_start("Set Password")
                         print("Set Password")
-                        wifiPasswordElement = driver.find_element_by_xpath(
-                            "//*[@text='Enter password']")
+                        wifiPasswordElement = WebDriverWait(driver, 10).until(
+                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Enter password']")))
                         wifiPasswordElement.send_keys(ttls_passwd)
                         print("Entered Password")
                     except NoSuchElementException:
@@ -2933,10 +2933,11 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                     # Selecting certificate
                     # -------------------------------------------------------
                     try:
-                        driver.implicitly_wait(3)
+                        # driver.implicitly_wait(3)
                         report.step_start("Selecting CA Cert")
-                        certElement = driver.find_element_by_xpath(
-                            "//*[@text='Select certificate']")
+                        print("Selecting CA Cert")
+                        certElement = WebDriverWait(driver, 10).until(
+                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Select certificate']")))
                         certElement.click()
                     except NoSuchElementException:
                         print("Selecting certificate failed")
@@ -2944,21 +2945,26 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                     # Validating certificate
                     # -------------------------------------------------------
                     try:
-                        driver.implicitly_wait(3)
+                        # driver.implicitly_wait(3)
                         report.step_start("Validting CA Cert")
-                        certElement = driver.find_element_by_xpath(
-                            "//*[@text=\"Don't validate\"]")
+                        print("Validting CA Cert")
+                        certElement = WebDriverWait(driver, 10).until(
+                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@text=\"Don't validate\"]")))
                         certElement.click()
                     except NoSuchElementException:
                         print("validation failed")
                     # -------------------------------------------------------
-
+                    if (deviceModelName == "Galaxy S9"):
+                        driver.hide_keyboard()
+                        print("Hide keyboard")
                     # Click on connect button
                     # -------------------------------------------------------
                     try:
-                        driver.implicitly_wait(3)
+                        # driver.implicitly_wait(3)
                         report.step_start("Click Connect Button")
-                        joinBTNElement = driver.find_element_by_xpath("//*[@text='Connect']")
+                        print("Click Connect Button")
+                        joinBTNElement = WebDriverWait(driver, 10).until(
+                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Connect']")))
                         joinBTNElement.click()
                     except NoSuchElementException:
                         print("Connect Button Not Enabled...Verify if Password is set properly  ")
