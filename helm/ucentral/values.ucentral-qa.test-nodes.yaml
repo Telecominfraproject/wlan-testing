@@ -1,0 +1,86 @@
+owgw:
+  nodeSelector:
+    env: tests
+  tolerations:
+  - key: "tests"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+  postgresql:
+    primary:
+      nodeSelector:
+        env: tests
+      tolerations:
+      - key: "tests"
+        operator: "Exists"
+        effect: "NoSchedule"
+    readReplicas:
+      nodeSelector:
+        env: tests
+      tolerations:
+      - key: "tests"
+        operator: "Exists"
+        effect: "NoSchedule"
+
+owsec:
+  nodeSelector:
+    env: tests
+  tolerations:
+  - key: "tests"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+owgwui:
+  nodeSelector:
+    env: tests
+  tolerations:
+  - key: "tests"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+owfms:
+  nodeSelector:
+    env: tests
+  tolerations:
+  - key: "tests"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+owprov:
+  nodeSelector:
+    env: tests
+  tolerations:
+  - key: "tests"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+owprovui:
+  nodeSelector:
+    env: tests
+  tolerations:
+  - key: "tests"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+rttys:
+  nodeSelector:
+    env: tests
+  tolerations:
+  - key: "tests"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+kafka:
+  nodeSelector:
+    env: tests
+  tolerations:
+  - key: "tests"
+    operator: "Exists"
+    effect: "NoSchedule"
+  zookeeper:
+    nodeSelector:
+      env: tests
+    tolerations:
+    - key: "tests"
+      operator: "Exists"
+      effect: "NoSchedule"

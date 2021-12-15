@@ -19,9 +19,6 @@ owgw:
         external-dns.alpha.kubernetes.io/ttl: "60"
 
   configProperties:
-    # -> Public part
-    # File uploader
-    # rtty
     rtty.enabled: "true"
 
   resources:
