@@ -509,7 +509,7 @@ class RunTest:
         self.rvr_obj = RvrTest(lf_host=self.lanforge_ip,
                                lf_port=self.lanforge_port,
                                ssh_port=self.lf_ssh_port,
-                               local_path=self.local_report_path,
+                               local_lf_report_dir=self.local_report_path,
                                lf_user="lanforge",
                                lf_password="lanforge",
                                instance_name=instance_name,
