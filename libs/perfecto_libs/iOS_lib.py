@@ -2148,12 +2148,11 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
 
     try:
-        time.sleep(2)
-        driver.implicitly_wait(2)
+        time.sleep(1)
         try:
             print("Verifying Connected Wifi Connection")
             report.step_start("Loading Wifi Page")
-            element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']")
+            element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//XCUIElementTypeCell[@name='Wi-Fi']")))
             element.click()
         except NoSuchElementException:
             print("Exception: Verify Xpath - unable to click on Wifi")
@@ -2211,12 +2210,11 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     try:
         print("getting in to Additional details")
-        additional_details_element = driver.find_element_by_xpath(
-            "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")
+        additional_details_element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")))
         additional_details_element.click()
         try:
             print("Forget Connected Network")
-            forget_ssid = driver.find_element_by_xpath("//*[@label='Forget This Network']")
+            forget_ssid = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
             forget_ssid.click()
             print("Forget old ssid")
             try:
@@ -2280,7 +2278,7 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------Set Password-------------------------------
     try:
-        wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
+        wifiPassword = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Password']")))
         wifiPassword.send_keys(WifiPass)
     except NoSuchElementException:
         print("Enter Password Page Not Loaded")
@@ -2296,44 +2294,35 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     try:
         time.sleep(8)
-        driver.implicitly_wait(12)
         try:
             time.sleep(8)
-            driver.implicitly_wait(8)
             print("Acceptiong terms and Services")
             report.step_start("loading Terms Page")
-            element = driver.find_element_by_xpath("//*[@label='Accept Terms of Service']")
+            element = WebDriverWait(driver,40).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Accept Terms of Service']")))
             element.click()
         except NoSuchElementException:
             print("Exception: Accept Terms of Service Button Not Found")
             reportFlag = False
             assert reportFlag
         try:
-            time.sleep(2)
-            driver.implicitly_wait(2)
             print("Continue to connect the services")
             report.step_start("Continiue Terms and Services Page")
-            element = driver.find_element_by_xpath("//*[@label='Continue']")
+            element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Continue']")))
             element.click()
         except NoSuchElementException:
             print("Exception: Continue to connect Terms of Service Button Not Found")
         try:
-            time.sleep(2)
-            driver.implicitly_wait(2)
             print("Continue to the services")
             report.step_start("Continue to use captive portal services")
-            element = driver.find_element_by_xpath("//*[@label='Continue']")
+            element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Continue']")))
             element.click()
         except NoSuchElementException:
             print("Exception: Continue to use captive portal services not found")
         try:
             time.sleep(2)
-            driver.implicitly_wait(2)
             print("Final Result Page")
             report.step_start("Final Confirmation Page for Captive Portal Login")
-            time.sleep(2)
-            driver.implicitly_wait(2)
-            element = driver.find_element_by_xpath("//*[@label='Done']")
+            element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Done']")))
             element.click()
             # if element == driver.find_element_by_xpath("//XCUIElementTypeOther[@label='Success']"):
             #     element1 = driver.find_element_by_xpath("//*[@label='Done']")
