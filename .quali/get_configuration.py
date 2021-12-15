@@ -5,6 +5,7 @@ from cloudshell.api.cloudshell_api import UpdateTopologyGlobalInputsRequest, Upd
 
 from common import get_session
 
+
 def get_attribute_value(cloudshell_session, attribute):
     if attribute.Type == 'Boolean':
         return True if attribute.Value == 'True' else False
@@ -26,7 +27,7 @@ def main():
 
     config = {
         'controller': {},
-        'access_point':[],
+        'access_point': [],
         'traffic_generator': {}
     }
 
@@ -35,8 +36,9 @@ def main():
             continue
 
         config['controller']['url'] = f'https://sec-{res_id.split("-")[0]}.cicd.lab.wlan.tip.build:16001'
-        config['controller']['username'] = next(attr.Value for attr in service.Attributes if attr.Name == f'{service.ServiceName}.User')
-        #config['controller']['password'] = next(attr.Value for attr in service.Attributes if attr.Name == f'{service.ServiceName}.Password')
+        config['controller']['username'] = next(
+            attr.Value for attr in service.Attributes if attr.Name == f'{service.ServiceName}.User')
+        # config['controller']['password'] = next(attr.Value for attr in service.Attributes if attr.Name == f'{service.ServiceName}.Password')
         config['controller']['password'] = 'OpenWifi%123'
 
     for resource in resources_in_reservation:
@@ -67,8 +69,8 @@ def main():
                     'ip': tf_config['ip'],
                     'port': tf_config['port'],
                     'ssh_port': tf_config['ssh_port'],
-                    '2.4G-Radio': [tf_config['lf_2dot4G_Radio']],
-                    '5G-Radio': [tf_config['lf_5G_Radio']],
+                    '2.4G-Radio': tf_config['lf_2dot4G_Radio'].replace(' ', '').split(','),
+                    '5G-Radio': tf_config['lf_5G_Radio'].replace(' ', '').split(','),
                     'AX-Radio': tf_config['AX_Radio'].replace(' ', '').split(','),
                     'upstream': tf_config['Upstream'],
                     'upstream_subnet': tf_config['upstream_subnet'],
@@ -82,6 +84,7 @@ def main():
             continue
 
     print(repr(config))
+
 
 if __name__ == '__main__':
     main()
