@@ -1,4 +1,4 @@
-name: Quali sanity pipeline
+name: sanity testing
 
 env:
   # AWS credentials
