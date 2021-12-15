@@ -1261,11 +1261,10 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     #Click on connect button
                     # -------------------------------------------------------
                     try:
-                        # time.sleep(5)
+                        time.sleep(5)
                         report.step_start("Click Connect Button")
                         print("Click Connect")
-                        joinBTNElement =WebDriverWait(driver, 10).until(
-                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Connect']']")))
+                        joinBTNElement = driver.find_element_by_xpath("//*[@text='Connect']")
                         joinBTNElement.click()
                     except NoSuchElementException:
                         print("Connect Button Not Enabled...Verify if Password is set properly  ")
@@ -1569,9 +1568,8 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     # -------------------------------------------------------
                     try:
                         report.step_start("Click Connect Button")
-                        # time.sleep(5)
-                        joinBTNElement = WebDriverWait(driver, 10).until(
-                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Connect']']")))
+                        time.sleep(5)
+                        joinBTNElement = driver.find_element_by_xpath("//*[@text='Connect']")
                         joinBTNElement.click()
                     except NoSuchElementException:
                         print("Connect Button Not Enabled...Verify if Password is set properly  ")
