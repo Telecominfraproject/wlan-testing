@@ -38,9 +38,9 @@ def scrollDown(setup_perfectoMobile):
     params2["start"] = "50%,90%"
     params2["end"] = "50%,20%"
     params2["duration"] = "4"
-    time.sleep(5)
+    # time.sleep(2)
     setup_perfectoMobile[0].execute_script('mobile:touch:swipe', params2)
-    time.sleep(5)
+    time.sleep(3)
 
 
 def closeApp(appName, setup_perfectoMobile):
@@ -920,12 +920,11 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
 
     try:
-        time.sleep(2)
-        driver.implicitly_wait(2)
+        time.sleep(1)
         try:
             print("Verifying Connected Wifi Connection")
             report.step_start("Loading Wifi Page")
-            element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']")
+            element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//XCUIElementTypeCell[@name='Wi-Fi']")))
             element.click()
         except NoSuchElementException:
             print("Exception: Verify Xpath - unable to click on Wifi")
@@ -948,7 +947,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                             get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
                             get_wifi_switch_element_text = get_wifi_switch_element.text
                         except:
-                            print("switch is OFF")
+                            print("Switch is OFF")
 
                         if get_wifi_switch_element_text == "1" or get_wifi_switch_element_text == 1:
                             print("WIFI Switch is ON")
@@ -983,17 +982,16 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     try:
         print("getting in to Additional details")
-        additional_details_element = driver.find_element_by_xpath(
-            "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")
+        additional_details_element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")))
         additional_details_element.click()
         try:
             print("Forget Connected Network")
-            forget_ssid = driver.find_element_by_xpath("//*[@label='Forget This Network']")
+            forget_ssid = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
             forget_ssid.click()
             print("Forget old ssid")
             try:
                 report.step_start("Forget SSID popup1")
-                forget_ssid_popup = driver.find_element_by_xpath("//*[@label='Forget']")
+                forget_ssid_popup = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
                 forget_ssid_popup.click()
 
                 print("**alert** Forget SSID popup killed **alert**")
@@ -1015,7 +1013,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     available_ssids = False
 
     try:
-        for check_for_all_ssids in range(2):
+        for check_for_all_ssids in range(9):
             available_ssids = get_all_available_ssids(driver)
             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
             try:
@@ -1053,7 +1051,6 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------Set Password-------------------------------
     try:
-        driver.implicitly_wait(5)
         wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
         wifiPassword.send_keys(WifiPass)
     except NoSuchElementException:
@@ -1062,8 +1059,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------Click on join-------------------------------
     try:
-        driver.implicitly_wait(5)
-        joinBTN = driver.find_element_by_xpath("//*[@label='Join']")
+        joinBTN = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Join']")))
         joinBTN.click()
     except Exception as e:
         print("Join Button Not Enabled...Password may not be needed")
@@ -1103,9 +1099,8 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
         try:
             time.sleep(2)
-            driver.implicitly_wait(2)
             report.step_start("Forget Network")
-            forget_ssid = driver.find_element_by_xpath("//*[@label='Forget This Network']")
+            forget_ssid = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
             forget_ssid.click()
             print("Forget old ssid")
             # time.sleep(2)
@@ -1121,42 +1116,42 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             print("error on ssid element")
 
             # --------------------To Turn on WIFi Switch if already OFF--------------------------------
-        try:
-            get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
-            get_wifi_switch_element_text = get_wifi_switch_element.text
-            print("switch state is : ", get_wifi_switch_element_text)
-            try:
-                if get_wifi_switch_element_text == "1" or get_wifi_switch_element_text == 1:
-                    get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
-                    driver.implicitly_wait(1)
-                    get_wifi_switch_element.click()
-                    driver.implicitly_wait(1)
-                    i = 0
-                    for i in range(5):
-                        try:
-                            get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
-                            get_wifi_switch_element_text = get_wifi_switch_element.text
-                        except:
-                            print("switch is ON")
-
-                        if get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0:
-                            print("WIFI Switch is OFF")
-                            break
-                        else:
-                            try:
-                                get_wifi_switch_element = driver.find_element_by_xpath(
-                                    "//*[@label='Wi-Fi' and @value='1']")
-                                get_wifi_switch_element.click()
-                                get_wifi_switch_element_text = get_wifi_switch_element.text
-                            except:
-                                print("WIFi switch is OFF")
-
-                else:
-                    print("Switch is Still OFF")
-            except:
-                pass
-        except:
-            print("get_wifi_switch_element is ON")
+        # try:
+        #     get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
+        #     get_wifi_switch_element_text = get_wifi_switch_element.text
+        #     print("switch state is : ", get_wifi_switch_element_text)
+        #     try:
+        #         if get_wifi_switch_element_text == "1" or get_wifi_switch_element_text == 1:
+        #             get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
+        #             driver.implicitly_wait(1)
+        #             get_wifi_switch_element.click()
+        #             driver.implicitly_wait(1)
+        #             i = 0
+        #             for i in range(5):
+        #                 try:
+        #                     get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
+        #                     get_wifi_switch_element_text = get_wifi_switch_element.text
+        #                 except:
+        #                     print("switch is ON")
+        #
+        #                 if get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0:
+        #                     print("WIFI Switch is OFF")
+        #                     break
+        #                 else:
+        #                     try:
+        #                         get_wifi_switch_element = driver.find_element_by_xpath(
+        #                             "//*[@label='Wi-Fi' and @value='1']")
+        #                         get_wifi_switch_element.click()
+        #                         get_wifi_switch_element_text = get_wifi_switch_element.text
+        #                     except:
+        #                         print("WIFi switch is OFF")
+        #
+        #         else:
+        #             print("Switch is Still OFF")
+        #     except:
+        #         pass
+        # except:
+        #     print("get_wifi_switch_element is ON")
         # --------------------To Turn on WIFi Switch if already OFF--------------------------------
 
     except Exception as e:
@@ -1177,8 +1172,8 @@ def get_all_available_ssids(driver):
 
     active_ssid_list = []
     try:
-        time.sleep(8)
-        driver.implicitly_wait(10)
+        time.sleep(2)
+        driver.implicitly_wait(2)
         elements = driver.find_elements_by_xpath("(//*[@label='More Info']/parent::*/XCUIElementTypeStaticText)")
         print(len(elements))
         for i in range(len(elements)):
@@ -1730,7 +1725,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
     available_ssids = False
 
     try:
-        for check_for_all_ssids in range(2):
+        for check_for_all_ssids in range(9):
             available_ssids = get_all_available_ssids(driver)
             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
             try:
@@ -1866,42 +1861,42 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
             print("error on ssid element")
 
             # --------------------To Turn on WIFi Switch if already OFF--------------------------------
-        try:
-            get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
-            get_wifi_switch_element_text = get_wifi_switch_element.text
-            print("switch state is : ", get_wifi_switch_element_text)
-            try:
-                if get_wifi_switch_element_text == "1" or get_wifi_switch_element_text == 1:
-                    get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
-                    driver.implicitly_wait(1)
-                    get_wifi_switch_element.click()
-                    driver.implicitly_wait(1)
-                    i = 0
-                    for i in range(5):
-                        try:
-                            get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
-                            get_wifi_switch_element_text = get_wifi_switch_element.text
-                        except:
-                            print("switch is ON")
-
-                        if get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0:
-                            print("WIFI Switch is OFF")
-                            break
-                        else:
-                            try:
-                                get_wifi_switch_element = driver.find_element_by_xpath(
-                                    "//*[@label='Wi-Fi' and @value='1']")
-                                get_wifi_switch_element.click()
-                                get_wifi_switch_element_text = get_wifi_switch_element.text
-                            except:
-                                print("WIFi switch is OFF")
-
-                else:
-                    print("Switch is Still OFF")
-            except:
-                pass
-        except:
-            print("get_wifi_switch_element is ON")
+        # try:
+        #     get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
+        #     get_wifi_switch_element_text = get_wifi_switch_element.text
+        #     print("switch state is : ", get_wifi_switch_element_text)
+        #     try:
+        #         if get_wifi_switch_element_text == "1" or get_wifi_switch_element_text == 1:
+        #             get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
+        #             driver.implicitly_wait(1)
+        #             get_wifi_switch_element.click()
+        #             driver.implicitly_wait(1)
+        #             i = 0
+        #             for i in range(5):
+        #                 try:
+        #                     get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
+        #                     get_wifi_switch_element_text = get_wifi_switch_element.text
+        #                 except:
+        #                     print("switch is ON")
+        #
+        #                 if get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0:
+        #                     print("WIFI Switch is OFF")
+        #                     break
+        #                 else:
+        #                     try:
+        #                         get_wifi_switch_element = driver.find_element_by_xpath(
+        #                             "//*[@label='Wi-Fi' and @value='1']")
+        #                         get_wifi_switch_element.click()
+        #                         get_wifi_switch_element_text = get_wifi_switch_element.text
+        #                     except:
+        #                         print("WIFi switch is OFF")
+        #
+        #         else:
+        #             print("Switch is Still OFF")
+        #     except:
+        #         pass
+        # except:
+        #     print("get_wifi_switch_element is ON")
         # --------------------To Turn on WIFi Switch if already OFF--------------------------------
 
     except Exception as e:

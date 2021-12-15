@@ -135,9 +135,30 @@ class ChamberView:
         self.CreateDut.ssid = temp
         self.CreateDut.add_ssids()
 
+    def get_station_list(self):
+        realm_obj = self.staConnect.localrealm
+        sta = realm_obj.station_list()
+        sta_list = []
+        for i in sta:
+            for j in i:
+                sta_list.append(j)
+        return sta_list
+
+    def admin_up_down(self, sta_list=[], option="up"):
+        realm_obj = self.staConnect.localrealm
+        if option == "up":
+            for i in sta_list:
+                realm_obj.admin_up(i)
+                time.sleep(0.005)
+        elif option == "down":
+            for j in sta_list:
+                realm_obj.admin_down(j)
+                time.sleep(0.005)
+        time.sleep(2)
+
     def Chamber_View(self):
         if self.delete_old_scenario:
-            self.CreateChamberview.clean_cv_scenario(type="Network-Connectivity", scenario_name=self.scenario_name)
+            self.CreateChamberview.clean_cv_scenario(cv_type="Network-Connectivity", scenario_name=self.scenario_name)
         self.CreateChamberview.setup(create_scenario=self.scenario_name,
                                      raw_line=self.raw_line
                                      )
@@ -292,6 +313,32 @@ class ChamberView:
                 result = df[column_name].values.tolist()
                 return result
 
+    def read_csv_individual_station_throughput(self, dir_name, option):
+        try:
+            df = pd.read_csv("../reports/" + str(dir_name) + "/csv-data/data-Combined_bps__60_second_running_average-1.csv", sep=r'\t', engine='python')
+            print("csv file opened")
+        except FileNotFoundError:
+            print("csv file does not exist")
+            return False
+
+        dict_data = {}
+        if option == "download":
+            csv_sta_names = df.iloc[[0]].values.tolist()
+            csv_throughput_values = df.iloc[[1]].values.tolist()
+        elif option == "upload":
+            csv_sta_names = df.iloc[[0]].values.tolist()
+            csv_throughput_values = df.iloc[[2]].values.tolist()
+        else:
+            print("Provide proper option: download or upload")
+            return
+
+        sta_list = csv_sta_names[0][0][:-1].replace('"', '').split(",")
+        th_list = list(map(float, csv_throughput_values[0][0].split(",")))
+        for i in range(len(sta_list)):
+            dict_data[sta_list[i]] = th_list[i]
+
+        return dict_data
+
     def attach_report_graphs(self, report_name=None, pdf_name="WIFI Capacity Test PDF Report"):
         relevant_path = "../reports/" + report_name + "/"
         entries = os.listdir("../reports/" + report_name + '/')
@@ -358,6 +405,17 @@ class ChamberView:
                                  serial_num=self.serial
                                  )
             self.Create_Dut()
+
+    def set_radio_antenna(self, req_url, shelf, resources, radio, antenna):
+        data = {
+            "shelf": shelf,
+            "resource": resources,
+            "radio": radio,
+            "antenna": antenna
+        }
+        cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port, )
+        return cli_base.json_post(req_url, data)
+
 
 def main():
     # lanforge_data = {'ip': 'localhost', 'port': 8802, 'ssh_port': 8804, '2.4G-Radio': ['1.1.wiphy0', '1.1.wiphy2'], '5G-Radio': ['1.1.wiphy1', '1.1.wiphy3'], 'AX-Radio': ['1.1.wiphy4', '1.1.wiphy5', '1.1.wiphy6', '1.1.wiphy7'], 'upstream': '1.1.eth2', 'upstream_subnet': '10.28.2.1/24', 'uplink': '1.1.eth1', '2.4G-Station-Name': 'sta00', '5G-Station-Name': 'sta10', 'AX-Station-Name': 'ax'}

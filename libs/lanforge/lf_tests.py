@@ -44,6 +44,7 @@ from influx2 import RecordInflux
 from lf_multipsk import MultiPsk
 from lf_rvr_test import RvrTest
 from attenuator_serial import AttenuatorSerial
+from lf_atten_mod_test import CreateAttenuator
 
 
 class RunTest:
@@ -164,7 +165,7 @@ class RunTest:
                     station_name=[], key_mgmt="WPA-EAP",
                     pairwise="NA", group="NA", wpa_psk="DEFAULT",
                     ttls_passwd="nolastart", ieee80211w=1,
-                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius"):
+                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius",cleanup=True):
         self.eap_connect = TTLSTest(host=self.lanforge_ip, port=self.lanforge_port,
                                     sta_list=station_name, vap=False, _debug_on=self.debug)
 
@@ -244,12 +245,13 @@ class RunTest:
                 cx_data = cx_data + str(j) + " : " + str(i[j]) + "\n"
             cx_data = cx_data + "\n"
         allure.attach(name="cx_data", body=str(cx_data))
-        self.eap_connect.cleanup(station_name)
+        if cleanup:
+            self.eap_connect.cleanup(station_name)
         return self.eap_connect.passes()
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
                       instance_name="wct_instance", download_rate="1Gbps", influx_tags=[],
-                      upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", raw_lines=[]):
+                      upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", stations="", create_stations=True, sort="interleave", raw_lines=[]):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         if mode == "BRIDGE":
             upstream_port = self.upstream_port
@@ -275,8 +277,9 @@ class RunTest:
                                             load_old_cfg=False,
                                             upload_rate=upload_rate,
                                             download_rate=download_rate,
-                                            sort="interleave",
-                                            create_stations=True,
+                                            sort=sort,
+                                            stations=stations,
+                                            create_stations=create_stations,
                                             radio=None,
                                             security=None,
                                             paswd=None,
@@ -286,7 +289,6 @@ class RunTest:
                                             raw_lines=raw_lines,
                                             raw_lines_file="",
                                             sets=[])
-
         wificapacity_obj.setup()
         wificapacity_obj.run()
         for tag in influx_tags:
@@ -325,6 +327,31 @@ class RunTest:
             self.client_connect.radio = self.fiveg_radios[0]
         if band == "ax":
             self.client_connect.radio = self.ax_radios[0]
+        self.client_connect.build()
+        self.client_connect.wait_for_ip(station_name)
+        print(self.client_connect.wait_for_ip(station_name))
+        if self.client_connect.wait_for_ip(station_name):
+            self.client_connect._pass("ALL Stations got IP's", print_=True)
+            return self.client_connect
+        else:
+            return False
+
+    def Client_Connect_Using_Radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
+                                   vlan_id=100, radio=None, sta_mode=0,
+                                   station_name=[]):
+        self.client_connect = CreateStation(_host=self.lanforge_ip, _port=self.lanforge_port,
+                                            _sta_list=station_name, _password=passkey, _ssid=ssid, _security=security)
+
+        self.client_connect.station_profile.sta_mode = sta_mode
+        self.client_connect.upstream_resource = 1
+        if mode == "BRIDGE":
+            self.client_connect.upstream_port = self.upstream_port
+        elif mode == "NAT":
+            self.client_connect.upstream_port = self.upstream_port
+        else:
+            self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
+
+        self.client_connect.radio = radio
         self.client_connect.build()
         self.client_connect.wait_for_ip(station_name)
         print(self.client_connect.wait_for_ip(station_name))
@@ -776,6 +803,11 @@ class RunTest:
         )
         val = self.obj.show()
         return val
+
+    def attenuator_modify(self, serno, idx, val):
+        atten_obj = CreateAttenuator(self.lanforge_ip, self.lanforge_port, serno, idx, val)
+        atten_obj.build()
+
 
 
 if __name__ == '__main__':

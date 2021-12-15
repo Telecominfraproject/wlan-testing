@@ -27,6 +27,7 @@ jobs:
   test:
     runs-on: [ self-hosted, small ]
     needs: [ build ]
+    timeout-minutes: 1440
     env:
       AWS_EKS_NAME: tip-wlan-main
       AWS_DEFAULT_OUTPUT: json
