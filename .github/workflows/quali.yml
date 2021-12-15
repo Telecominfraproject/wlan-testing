@@ -588,7 +588,6 @@ jobs:
     needs: [ test, vars, generate-matrix ]
     if: always()
     strategy:
-      max-parallel: 1
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
     steps:

@@ -174,52 +174,32 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      max-parallel: 1
       matrix:
         testbed:
         - advanced-01
         - advanced-02
     steps:
-    - name: install Allure CLI tool
-      run: |
-        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+    - name: checkout testing repo
+      uses: actions/checkout@v2
 
     - uses: actions/download-artifact@v2
       with:
         name: allure-results-${{ matrix.testbed }}
         path: allure-results
 
-    - name: checkout testing repo
-      uses: actions/checkout@v2
-      with:
-        path: wlan-testing
-
-    - name: get reports branch
-      uses: actions/checkout@v2
+    - name: download history of previous run
       continue-on-error: true
-      with:
-        ref: gh-pages
-        path: reports
-
-    - name: copy history into results
       run: |
-        if [ -e "reports/advanced/${{ matrix.testbed }}/latest" ] ; then
-          cp -r reports/advanced/${{ matrix.testbed }}/latest/history/ allure-results/history
-        fi
-
-    - name: add report metadata
-      run: |
-        cat << EOF >> allure-results/environment.properties
-        Testbed=${{ matrix.testbed }}
-        Tests.CommitId=$(cd wlan-testing && git rev-parse --short HEAD)
-        CiRun.Id=${{ github.run_id }}
-        CiRun.Number=${{ github.run_number }}
-        CiRun.Url=https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
-        EOF
+        LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key advanced/${{ matrix.ap_model }}/latest/index.html | jq -r .Metadata.latest)
+        aws s3 cp --recursive s3://openwifi-allure-reports/advanced/${{ matrix.ap_model }}/$LAST_RUN_ID/history history
 
     - name: generate Allure report
-      run: allure-${{ env.ALLURE_CLI_VERSION }}/bin/allure generate allure-results
+      uses: ./.github/actions/generate-allure-report
+      with:
+        results_path: ./allure-results
+        history_path: ./history
+        additional_metadata: |
+          Testbed=${{ matrix.testbed }}
 
     - name: upload Allure report as artifact
       uses: actions/upload-artifact@v2
@@ -229,42 +209,11 @@ jobs:
 
     # doing this to be able to aggregate multiple reports together later on
     - name: copy results into report
-      run: |
-        mkdir -p allure-report/results
-        cp -r allure-results/* allure-report/results
-
-    - name: copy new report
-      run: |
-        mkdir -p reports/advanced/${{ matrix.testbed }}
-        cp -Tr allure-report reports/advanced/${{ matrix.testbed }}/${{ github.run_number }}
-
-    - name: update latest symlink
-      working-directory: reports/advanced/${{ matrix.testbed }}
-      run: ln -fns ${{ github.run_number }} latest
-
-    - name: generate new index.html
-      run: python wlan-testing/.github/tools/generate_directory_index.py -r reports
-
-    - name: commit reports update
-      working-directory: reports
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-        git add .
-        git commit -m "Automated deployment: $(date -u)"
-
-    - name: push
-      if: github.ref == 'refs/heads/master'
-      uses: ad-m/github-push-action@v0.6.0
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: gh-pages
-        directory: reports
+      run: cp -r allure-results allure-report/results
 
     - name: upload to S3
       if: github.ref == 'refs/heads/master'
-      uses: ./wlan-testing/.github/actions/allure-report-to-s3
+      uses: ./.github/actions/allure-report-to-s3
       with:
         test_type: advanced
         testbed: ${{ matrix.testbed }}

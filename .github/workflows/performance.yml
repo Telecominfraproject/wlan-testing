@@ -1,9 +1,5 @@
 name: performance testing
 env:
-  # thirdparties
-  DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
-  DOCKER_USER_NAME: wlan-testing-cicd
-  DOCKER_USER_PASSWORD: ${{ secrets.DOCKER_USER_PASSWORD }}
   # AWS credentials
   AWS_EKS_NAME: tip-wlan-main
   AWS_DEFAULT_OUTPUT: json
@@ -32,30 +28,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    # checkout needed repositories
-    - name: Checkout Testing repo
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+    - name: build and push Docker image
+      uses: ./.github/actions/build-and-push-docker
       with:
-        path: wlan-testing
-
-    - name: Checkout LANforge scripts
-      uses: actions/checkout@v2
-      with:
-        path: wlan-lanforge-scripts
-        repository: Telecominfraproject/wlan-lanforge-scripts
-
-    - name: import LANforge scripts
-      working-directory: wlan-testing
-      run: ./sync_repos.bash
-
-    # build and push docker image
-    - name: docker login
-      run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
-    - name: build docker image
-      working-directory: wlan-testing
-      run: docker build -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }} -f docker/Dockerfile .
-    - name: push docker image
-      run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+        registry: tip-tip-wlan-cloud-docker-repo.jfrog.io
+        registry_user: wlan-testing-cicd
+        registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   test:
     runs-on: [ self-hosted, small ]
@@ -131,7 +110,7 @@ jobs:
             spec:
               containers:
               - name: tests
-                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+                image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
                 resources:
                   requests:
                     memory: "512Mi"
@@ -316,5 +295,9 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
+    - uses: actions/checkout@v2
     - name: cleanup Docker image
-      run: curl -u${{ env.DOCKER_USER_NAME }}:${{ env.DOCKER_USER_PASSWORD }} -X DELETE "https://tip.jfrog.io/artifactory/tip-wlan-cloud-docker-repo/cloud-sdk-nightly/${{ github.run_id }}"
+      uses: ./.github/actions/cleanup-docker
+      with:
+        registry_user: wlan-testing-cicd
+        registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
