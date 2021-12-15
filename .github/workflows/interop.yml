@@ -1,10 +1,6 @@
 name: interop testing
 
 env:
-  # thirdparties
-  DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
-  DOCKER_USER_NAME: wlan-testing-cicd
-  DOCKER_USER_PASSWORD: ${{ secrets.DOCKER_USER_PASSWORD }}
   # AWS credentials
   AWS_EKS_NAME: tip-wlan-main
   AWS_DEFAULT_OUTPUT: json
@@ -19,11 +15,6 @@ env:
 
 on:
   workflow_dispatch:
-    inputs:
-      additional_markers:
-        default: ''
-        description: 'Pass additional markers that will be and-combined with the interop marker, e.g. "twog or fiveg" -> "interop and twog or fiveg"'
-        required: false
   schedule:
   - cron: '30 20 * * *'
 
@@ -35,172 +26,203 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    # checkout needed repositories
-    - name: Checkout Testing repo
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+    - name: build and push Docker image
+      uses: ./.github/actions/build-and-push-docker
       with:
-        path: wlan-testing
+        registry: tip-tip-wlan-cloud-docker-repo.jfrog.io
+        registry_user: wlan-testing-cicd
+        registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
-    - name: Checkout LANforge scripts
-      uses: actions/checkout@v2
-      with:
-        path: wlan-lanforge-scripts
-        repository: Telecominfraproject/wlan-lanforge-scripts
-
-    - name: import LANforge scripts
-      working-directory: wlan-testing
-      run: ./sync_repos.bash
-
-    # build and push docker image
-    - name: docker login
-      run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
-    - name: build docker image
-      working-directory: wlan-testing
-      run: docker build -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }} -f docker/Dockerfile .
-    - name: push docker image
-      run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
-
-
-  test:
+  # interop-01
+  test-galaxy-s9:
     runs-on: ubuntu-latest
     needs: [ build ]
-    strategy:
-      fail-fast: false
-      max-parallel: 1
-      matrix:
-        test_type: [android, ios]
-
-    outputs:
-      additional_markers: ${{ steps.marker.outputs.additional }}
-
+    continue-on-error: true
     steps:
+    - uses: actions/checkout@v2
+
     - name: get EKS access credentials
       run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-    - name: install Allure CLI tool
-      run: |
-        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-        
-    - name: set job name
-      id: job
-      run: echo "::set-output name=name::interop-ci-${{ github.run_number }}-${{ matrix.test_type }}"
-
-    - name: create configuration.py secret
-      run: |
-        cat << EOF > configuration.py
-        ${{ secrets.LAB_CONFIGURATION }}
-        EOF
-        kubectl create secret generic configuration --from-file=configuration=./configuration.py
-
-    - name: calculate marker expression
-      id: marker
-      run: |
-        if [ "${{ matrix.test_type }}" = "android" ]; then
-          MARKER_EXPRESSION="interop_and and interop_uc_sanity and client_connect"
-        else
-          MARKER_EXPRESSION="interop_ios and interop_uc_sanity and client_connect"
-        fi
-
-        ADDITIONAL_MARKERS="${{ github.event.inputs.additional_markers || '' }}"
-        if [ ! -z "$ADDITIONAL_MARKERS" ]; then
-          MARKER_EXPRESSION="$MARKER_EXPRESSION and ${ADDITIONAL_MARKERS}"
-        fi
-
-        echo "::set-output name=additional::${ADDITIONAL_MARKERS}"
-        echo "::set-output name=expression::${MARKER_EXPRESSION}"
-        
-    - name: run interop tests
-      run: |
-        cat <<EOF | kubectl apply -f -
-        apiVersion: batch/v1
-        kind: Job
-        metadata:
-          name: "${{ steps.job.outputs.name }}"
-        spec:
-          template:
-            metadata:
-              annotations:
-                cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
-            spec:
-              containers:
-              - name: tests
-                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
-                resources:
-                  requests:
-                    memory: "512Mi"
-                    cpu: "250m"
-                  limits:
-                    memory: "512Mi"
-                    cpu: "250m"
-                command:
-                  - /bin/bash
-                  - -x
-                  - -c
-                  - |
-                    cd tests
-                    pytest -m "${{ steps.marker.outputs.expression }}" -s -vvv --testbed=interop-03 -o 'jobName=Github-Interop-${{ matrix.test_type }}' -o 'jobNumber=${{ github.run_number }}' --alluredir=/tmp/allure-results --skip-lanforge
-                    ret=\$?
-                    # sleep some time to be able to download the Allure results
-                    sleep 60
-                    exit \$ret
-                volumeMounts:
-                - name: configuration
-                  mountPath: "/wlan-testing/tests/configuration.py"
-                  subPath: configuration
-                  readOnly: true
-              nodeSelector:
-                env: tests
-              tolerations:
-              - key: "tests"
-                operator: "Exists"
-                effect: "NoSchedule"
-              imagePullSecrets:
-              - name: tip-docker-registry-key
-              restartPolicy: Never
-              volumes:
-              - name: configuration
-                secret:
-                  secretName: configuration
-          backoffLimit: 0
-        EOF
-        # wait for pod to spawn
-        sleep 1
-
-        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-
-        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
-        kubectl logs -f $podname &
-
-        until [ -s test_everything.xml ]
-        do
-          sleep 10
-          kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
-        done
-        echo "tests completed"
-        echo "downloading allure results..."
-        kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
-        echo "waiting for pod to exit"
-        kubectl logs -f $podname >/dev/null 2>&1
-        exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
-
-    - name: upload Allure results as artifact
-      if: ${{ always() }}
-      uses: actions/upload-artifact@v2
+    - name: run tests
+      uses: ./.github/actions/run-tests
       with:
-        name: allure-results-${{ matrix.test_type }}
-        path: allure-results
+        namespace: interop-${{ github.run_id }}-galaxy-s9
+        testbed: interop-01
+        marker_expression: "interop_uc_sanity and client_connect and android"
+        configuration: "${{ secrets.LAB_CONFIGURATION }}"
+        testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+        additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+        allure_results_artifact_name: allure-results-galaxy-s9
 
-    - name: cleanup
-      if: ${{ always() }}
-      run: |
-        kubectl delete job "${{ steps.job.outputs.name }}" --wait=true --ignore-not-found=true
-        kubectl delete secret configuration --wait=true --ignore-not-found=true
+  test-iphone-12:
+    runs-on: ubuntu-latest
+    needs: [ test-galaxy-s9 ]
+    continue-on-error: true
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: get EKS access credentials
+      run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+    - name: run tests
+      uses: ./.github/actions/run-tests
+      with:
+        namespace: interop-${{ github.run_id }}-iphone-12
+        testbed: interop-01
+        marker_expression: "interop_uc_sanity and client_connect and ios"
+        configuration: "${{ secrets.LAB_CONFIGURATION }}"
+        testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+        additional_args: "-o model-iOS='iPhone-12' -o 'jobName=Github-Interop-iphone-12' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+        allure_results_artifact_name: allure-results-iphone-12
+
+  test-pixel-4:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-12 ]
+    continue-on-error: true
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: get EKS access credentials
+      run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+    - name: run tests
+      uses: ./.github/actions/run-tests
+      with:
+        namespace: interop-${{ github.run_id }}-pixel-4
+        testbed: interop-01
+        marker_expression: "interop_uc_sanity and client_connect and android"
+        configuration: "${{ secrets.LAB_CONFIGURATION }}"
+        testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+        additional_args: "-o model-android='Pixel 4' -o 'jobName=Github-Interop-pixel-4' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+        allure_results_artifact_name: allure-results-pixel-4
+
+  # interop-02
+  test-galaxy-s10:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    continue-on-error: true
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: get EKS access credentials
+      run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+    - name: run tests
+      uses: ./.github/actions/run-tests
+      with:
+        namespace: interop-${{ github.run_id }}-galaxy-s10
+        testbed: interop-02
+        marker_expression: "interop_uc_sanity and client_connect and android"
+        configuration: "${{ secrets.LAB_CONFIGURATION }}"
+        testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+        additional_args: "-o model-android='Galaxy S10.*' -o 'jobName=Github-Interop-galaxy-s10' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+        allure_results_artifact_name: allure-results-galaxy-s10
+
+  test-iphone-7:
+    runs-on: ubuntu-latest
+    needs: [ test-galaxy-s10 ]
+    continue-on-error: true
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: get EKS access credentials
+      run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+    - name: run tests
+      uses: ./.github/actions/run-tests
+      with:
+        namespace: interop-${{ github.run_id }}-iphone-7
+        testbed: interop-02
+        marker_expression: "interop_uc_sanity and client_connect and ios"
+        configuration: "${{ secrets.LAB_CONFIGURATION }}"
+        testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+        additional_args: "-o model-iOS='iPhone-7' -o 'jobName=Github-Interop-iphone-7' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+        allure_results_artifact_name: allure-results-iphone-7
+
+  test-iphone-11:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-7 ]
+    continue-on-error: true
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: get EKS access credentials
+      run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+    - name: run tests
+      uses: ./.github/actions/run-tests
+      with:
+        namespace: interop-${{ github.run_id }}-iphone-11
+        testbed: interop-02
+        marker_expression: "interop_uc_sanity and client_connect and ios"
+        configuration: "${{ secrets.LAB_CONFIGURATION }}"
+        testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+        additional_args: "-o model-iOS='iPhone-11' -o 'jobName=Github-Interop-iphone-11' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+        allure_results_artifact_name: allure-results-iphone-11
+
+  # interop-03
+  test-galaxy-s20:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    continue-on-error: true
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: get EKS access credentials
+      run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+    - name: run tests
+      uses: ./.github/actions/run-tests
+      with:
+        namespace: interop-${{ github.run_id }}-galaxy-s20
+        testbed: interop-03
+        marker_expression: "interop_uc_sanity and client_connect and android"
+        configuration: "${{ secrets.LAB_CONFIGURATION }}"
+        testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+        additional_args: "-o model-android='Galaxy S20' -o 'jobName=Github-Interop-galaxy-s20' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+        allure_results_artifact_name: allure-results-galaxy-s20
+
+  test-iphone-xr:
+    runs-on: ubuntu-latest
+    needs: [ test-galaxy-s20 ]
+    continue-on-error: true
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: get EKS access credentials
+      run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+    - name: run tests
+      uses: ./.github/actions/run-tests
+      with:
+        namespace: interop-${{ github.run_id }}-iphone-xr
+        testbed: interop-03
+        marker_expression: "interop_uc_sanity and client_connect and ios"
+        configuration: "${{ secrets.LAB_CONFIGURATION }}"
+        testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+        additional_args: "-o model-iOS='iPhone-XR' -o 'jobName=Github-Interop-iphone-xr' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+        allure_results_artifact_name: allure-results-iphone-xr
 
   report:
-    needs: [ test ]
+    needs: [ test-iphone-11, test-iphone-xr, test-pixel-4 ]
     if: always()
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        device:
+        - galaxy-s9
+        - galaxy-s10
+        - galaxy-s20
+        - pixel-4
+        - iphone-7
+        - iphone-xr
+        - iphone-11
+        - iphone-12
+      
     steps:
     - name: install Allure CLI tool
       run: |
@@ -209,13 +231,8 @@ jobs:
 
     - uses: actions/download-artifact@v2
       with:
-        name: allure-results-android
-        path: allure-results-android
-
-    - uses: actions/download-artifact@v2
-      with:
-        name: allure-results-ios
-        path: allure-results-ios
+        name: allure-results-${{ matrix.device }}
+        path: allure-results
 
     - name: checkout testing repo
       uses: actions/checkout@v2
@@ -231,14 +248,14 @@ jobs:
 
     - name: copy history into results
       run: |
-        if [ -e "reports/interop/interop/latest" ] ; then
-          cp -r reports/interop/interop/latest/history/ allure-results-ios/history
-          cp -r reports/interop/interop/latest/history/ allure-results-android/history
+        if [ -e "reports/interop/${{ matrix.device }}/latest" ] ; then
+          cp -r reports/interop/${{ matrix.device }}/latest/history/ allure-results/history
         fi
 
     - name: add report metadata
       run: |
-        cat << EOF >> allure-results-android/environment.properties
+        cat << EOF >> allure-results/environment.properties
+
         Testbed=interop
         Tests.CommitId=$(cd wlan-testing && git rev-parse --short HEAD)
         CiRun.Id=${{ github.run_id }}
@@ -247,28 +264,27 @@ jobs:
         EOF
 
     - name: generate Allure report
-      run: allure-${{ env.ALLURE_CLI_VERSION }}/bin/allure generate allure-results-android allure-results-ios
+      run: allure-${{ env.ALLURE_CLI_VERSION }}/bin/allure generate allure-results
 
     - name: upload Allure report as artifact
       uses: actions/upload-artifact@v2
       with:
-        name: allure-report
+        name: allure-report-${{ matrix.device }}
         path: allure-report
 
     # doing this to be able to aggregate multiple reports together later on
     - name: copy results into report
       run: |
         mkdir -p allure-report/results
-        cp -r allure-results-android/* allure-report/results
-        cp -r allure-results-ios/* allure-report/results
+        cp -r allure-results/* allure-report/results
 
     - name: copy new report
       run: |
-        mkdir -p reports/interop/interop
-        cp -Tr allure-report reports/interop/interop/${{ github.run_number }}
+        mkdir -p reports/interop/${{ matrix.device }}
+        cp -Tr allure-report reports/interop/${{ matrix.device }}/${{ github.run_number }}
 
     - name: update latest symlink
-      working-directory: reports/interop/interop
+      working-directory: reports/interop/${{ matrix.device }}
       run: ln -fns ${{ github.run_number }} latest
 
     - name: generate new index.html
@@ -296,15 +312,19 @@ jobs:
       uses: ./wlan-testing/.github/actions/allure-report-to-s3
       with:
         test_type: interop
-        testbed: interop
+        testbed: ${{ matrix.device }}
         report_path: allure-report
         s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
         s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
 
   cleanup:
-    needs: [ test ]
+    needs: [ test-iphone-11, test-iphone-xr, test-pixel-4 ]
     runs-on: ubuntu-latest
     if: always()
     steps:
+    - uses: actions/checkout@v2
     - name: cleanup Docker image
-      run: curl -u${{ env.DOCKER_USER_NAME }}:${{ env.DOCKER_USER_PASSWORD }} -X DELETE "https://tip.jfrog.io/artifactory/tip-wlan-cloud-docker-repo/cloud-sdk-nightly/${{ github.run_id }}"
+      uses: ./.github/actions/cleanup-docker
+      with:
+        registry_user: wlan-testing-cicd
+        registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}

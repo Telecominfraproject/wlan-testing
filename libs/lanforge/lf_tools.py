@@ -406,6 +406,17 @@ class ChamberView:
                                  )
             self.Create_Dut()
 
+    def set_radio_antenna(self, req_url, shelf, resources, radio, antenna):
+        data = {
+            "shelf": shelf,
+            "resource": resources,
+            "radio": radio,
+            "antenna": antenna
+        }
+        cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port, )
+        return cli_base.json_post(req_url, data)
+
+
 def main():
     # lanforge_data = {'ip': 'localhost', 'port': 8802, 'ssh_port': 8804, '2.4G-Radio': ['1.1.wiphy0', '1.1.wiphy2'], '5G-Radio': ['1.1.wiphy1', '1.1.wiphy3'], 'AX-Radio': ['1.1.wiphy4', '1.1.wiphy5', '1.1.wiphy6', '1.1.wiphy7'], 'upstream': '1.1.eth2', 'upstream_subnet': '10.28.2.1/24', 'uplink': '1.1.eth1', '2.4G-Station-Name': 'sta00', '5G-Station-Name': 'sta10', 'AX-Station-Name': 'ax'}
     lanforge_data = {
