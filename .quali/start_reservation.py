@@ -24,7 +24,7 @@ def main():
     session = get_session()
 
     if marker_expression == 'advance':
-        reservation_duration = 1440
+        reservation_duration = 720
     else
         reservation_duration = 360
 
