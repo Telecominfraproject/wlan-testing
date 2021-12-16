@@ -920,11 +920,12 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
 
     try:
-        time.sleep(1)
+        time.sleep(2)
+        driver.implicitly_wait(2)
         try:
             print("Verifying Connected Wifi Connection")
             report.step_start("Loading Wifi Page")
-            element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//XCUIElementTypeCell[@name='Wi-Fi']")))
+            element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']")
             element.click()
         except NoSuchElementException:
             print("Exception: Verify Xpath - unable to click on Wifi")
@@ -981,12 +982,13 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     # ---------------------This is to Forget current connected SSID-------------------------------
 
     try:
+        time.sleep(3)
         print("getting in to Additional details")
-        additional_details_element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")))
+        additional_details_element = driver.find_element_by_xpath("//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")
         additional_details_element.click()
         try:
             print("Forget Connected Network")
-            forget_ssid = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
+            forget_ssid = WebDriverWait(driver, 15).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
             forget_ssid.click()
             print("Forget old ssid")
             try:
@@ -1051,6 +1053,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------Set Password-------------------------------
     try:
+        time.sleep(3)
         wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
         wifiPassword.send_keys(WifiPass)
     except NoSuchElementException:
@@ -1059,7 +1062,8 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------Click on join-------------------------------
     try:
-        joinBTN = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Join']")))
+        time.sleep(2)
+        joinBTN = driver.find_element_by_xpath("//*[@label='Join']")
         joinBTN.click()
     except Exception as e:
         print("Join Button Not Enabled...Password may not be needed")
@@ -1098,16 +1102,15 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             request.config.cache.set(key="select IP failed", value=str(e))
 
         try:
-            time.sleep(2)
             report.step_start("Forget Network")
-            forget_ssid = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
+            forget_ssid = WebDriverWait(driver, 20).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
             forget_ssid.click()
             print("Forget old ssid")
             # time.sleep(2)
             # driver.implicitly_wait(3)
             try:
                 report.step_start("Forget Network popup")
-                forget_ssid_popup = driver.find_element_by_xpath("//*[@label='Forget']")
+                forget_ssid_popup = WebDriverWait(driver, 20).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
                 forget_ssid_popup.click()
             except:
                 print("in popup exception")
@@ -1692,6 +1695,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
     # ---------------------This is to Forget current connected SSID-------------------------------
 
     try:
+        time.sleep(2)
         print("getting in to Additional details")
         additional_details_element = driver.find_element_by_xpath(
             "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")
@@ -1786,10 +1790,9 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
 
     # ---------------------Click on join-------------------------------
     try:
-        driver.implicitly_wait(5)
         report.step_start("Clicking Join")
         print("Clicking Join")
-        joinBTN = driver.find_element_by_xpath("//*[@label='Join']")
+        joinBTN = WebDriverWait(driver, 20).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Join']")))
         joinBTN.click()
     except Exception as e:
         print("Join Button Not Enabled...Password may not be needed")
@@ -1797,10 +1800,9 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
     # Selecting certificate
     # -------------------------------------------------------
     try:
-        driver.implicitly_wait(3)
         report.step_start("Clicking Trust CA Cert")
         print("Clicking Trust CA Cert")
-        certElement = driver.find_element_by_xpath("//*[@label='Trust']")
+        certElement = WebDriverWait(driver, 20).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Trust']")))
         certElement.click()
     except NoSuchElementException:
         print("Password Page Not Loaded, password May be cached in the System")
