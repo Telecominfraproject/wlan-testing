@@ -189,6 +189,13 @@ jobs:
 
     - name: download history of previous run
       continue-on-error: true
+      env:
+        AWS_EKS_NAME: tip-wlan-main
+        AWS_DEFAULT_OUTPUT: json
+        AWS_DEFAULT_REGION: us-east-2
+        AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
       run: |
         LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key advanced/${{ matrix.ap_model }}/latest/index.html | jq -r .Metadata.latest)
         aws s3 cp --recursive s3://openwifi-allure-reports/advanced/${{ matrix.ap_model }}/$LAST_RUN_ID/history history
