@@ -1802,7 +1802,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
     try:
         report.step_start("Clicking Trust CA Cert")
         print("Clicking Trust CA Cert")
-        certElement = WebDriverWait(driver, 20).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Trust']")))
+        certElement = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Trust']")))
         certElement.click()
     except NoSuchElementException:
         print("Password Page Not Loaded, password May be cached in the System")
@@ -1821,7 +1821,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
 
     # ---------------------Additional INFO-------------------------------
     try:
-        driver.implicitly_wait(5)
+        driver.implicitly_wait(2)
         print("Selecting SSID: ", WifiName)
         report.step_start("Selecting SSID")
         additional_details_element = WebDriverWait(driver, 35).until(
