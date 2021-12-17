@@ -195,8 +195,8 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
       run: |
-        LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key advanced/${{ matrix.ap_model }}/latest/index.html | jq -r .Metadata.latest)
-        aws s3 cp --recursive s3://openwifi-allure-reports/advanced/${{ matrix.ap_model }}/$LAST_RUN_ID/history history
+        LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key advanced/${{ matrix.testbed }}/latest/index.html | jq -r .Metadata.latest)
+        aws s3 cp --recursive s3://openwifi-allure-reports/advanced/${{ matrix.testbed }}/$LAST_RUN_ID/history history
 
     - name: generate Allure report
       uses: ./.github/actions/generate-allure-report
