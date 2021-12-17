@@ -25,7 +25,7 @@ def main():
 
     if marker_expression == 'advance':
         reservation_duration = 720
-    else
+    else:
         reservation_duration = 360
 
     reservation = session.CreateImmediateTopologyReservation(
