@@ -19,6 +19,7 @@ def main():
     parser.add_argument('--ap-model', default='[Any]')
     parser.add_argument('--wifi-type', default='[Any]')
     parser.add_argument('--blueprint', default='Basic Lab')
+    parser.add_argument('--reservation-id-file', default='./reservation_id.txt')
     args = parser.parse_args()
 
     session = get_session()
@@ -44,7 +45,8 @@ def main():
         ]
     ).Reservation
 
-    print(reservation.Id)
+    with open(args.reservation_id_file, 'w') as f:
+        f.write(reservation.Id)
 
     wait_for_provisioning_status(session, reservation.Id, 'Ready')
 
