@@ -989,12 +989,12 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
         additional_details_element.click()
         try:
             print("Forget Connected Network")
-            forget_ssid = WebDriverWait(driver, 15).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
+            forget_ssid = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
             forget_ssid.click()
             print("Forget old ssid")
             try:
                 report.step_start("Forget SSID popup1")
-                forget_ssid_popup = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
+                forget_ssid_popup = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
                 forget_ssid_popup.click()
 
                 print("**alert** Forget SSID popup killed **alert**")
@@ -1042,6 +1042,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------This is to Select SSID-------------------------------
     try:
+        report.step_start("Selecting SSID To Connect")
         wifiSelectionElement = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
         wifiSelectionElement.click()
@@ -1089,7 +1090,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     # ---------------------Additional INFO-------------------------------
     try:
         print("Selecting SSID: ", WifiName)
-        report.step_start("Selecting SSID")
+        report.step_start("Additional details of SSID")
         additional_details_element = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((MobileBy.XPATH,
                                             "//*[@label='" + WifiName + "']")))
@@ -1097,6 +1098,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
         additional_details_element.click()
 
         try:
+            report.step_start("Checking IP Address")
             print("Checking IP address")
             # (//*[@label="IP Address"]/parent::*/XCUIElementTypeStaticText)[2]
             ip_address_element_text = driver.find_element_by_xpath(
@@ -1108,14 +1110,14 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
         try:
             report.step_start("Forget Network")
-            forget_ssid = WebDriverWait(driver, 20).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
+            forget_ssid = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
             forget_ssid.click()
             print("Forget old ssid")
             # time.sleep(2)
             # driver.implicitly_wait(3)
             try:
                 report.step_start("Forget Network popup")
-                forget_ssid_popup = WebDriverWait(driver, 20).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
+                forget_ssid_popup = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
                 forget_ssid_popup.click()
             except:
                 print("in popup exception")
@@ -1800,7 +1802,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
     try:
         report.step_start("Clicking Join")
         print("Clicking Join")
-        joinBTN = WebDriverWait(driver, 20).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Join']")))
+        joinBTN = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Join']")))
         joinBTN.click()
     except Exception as e:
         print("Join Button Not Enabled...Password may not be needed")
