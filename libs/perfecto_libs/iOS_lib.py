@@ -984,6 +984,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     try:
         time.sleep(3)
         print("getting in to Additional details")
+        report.step_start("Clicking More Info")
         additional_details_element = driver.find_element_by_xpath("//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")
         additional_details_element.click()
         try:
@@ -1010,6 +1011,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     print("Searching for Wifi: " + WifiName)
     # allure.attach(name= body=str("Searching for Wifi: " + WifiName))
     time.sleep(2)
+    report.step_start("Searching SSID")
     print("Selecting Wifi: " + WifiName)
     ssid_found = False
     available_ssids = False
@@ -1043,6 +1045,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
         wifiSelectionElement = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
         wifiSelectionElement.click()
+        wifiSelectionElement.click()
         print("Selecting SSID")
     except Exception as e:
         print("couldn't connect to " + WifiName)
@@ -1054,6 +1057,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     # ---------------------Set Password-------------------------------
     try:
         time.sleep(3)
+        report.step_start("Entering Password")
         wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
         wifiPassword.send_keys(WifiPass)
     except NoSuchElementException:
@@ -1063,6 +1067,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     # ---------------------Click on join-------------------------------
     try:
         time.sleep(2)
+        report.step_start("Clicking JOIN")
         joinBTN = driver.find_element_by_xpath("//*[@label='Join']")
         joinBTN.click()
     except Exception as e:
@@ -1696,12 +1701,14 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
 
     try:
         time.sleep(2)
+        report.step_start("Selecting Connected SSID Info")
         print("getting in to Additional details")
         additional_details_element = driver.find_element_by_xpath(
             "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")
         additional_details_element.click()
         try:
             print("Forget Connected Network")
+            report.step_start("Forget Connected SSID")
             forget_ssid = driver.find_element_by_xpath("//*[@label='Forget This Network']")
             forget_ssid.click()
             print("Forget old ssid")
@@ -1754,6 +1761,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
 
     # ---------------------This is to Select SSID-------------------------------
     try:
+        report.step_start("Selecting SSID To Connect")
         wifiSelectionElement = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
         wifiSelectionElement.click()
@@ -1823,7 +1831,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
     try:
         driver.implicitly_wait(2)
         print("Selecting SSID: ", WifiName)
-        report.step_start("Selecting SSID")
+        report.step_start("Selecting More Info")
         additional_details_element = WebDriverWait(driver, 35).until(
             EC.presence_of_element_located((MobileBy.XPATH,
                                             "//*[@label='" + WifiName + "']")))
