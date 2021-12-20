@@ -116,14 +116,15 @@ jobs:
       run: pip install -r wlan-testing/.quali/requirements.txt
 
     - name: start reservation
-      id: start
       run: |
-        RES_ID=$(python wlan-testing/.quali/start_reservation.py --openwifi-version "${{ needs.vars.outputs.openwifi_revision }}" --ap-model "${{ matrix.ap_model }}" --blueprint "Advance Lab")
-        echo ::set-output name=res_id::"$RES_ID"
+        python wlan-testing/.quali/start_reservation.py --openwifi-version "${{ needs.vars.outputs.openwifi_revision }}" --ap-model "${{ matrix.ap_model }}" --blueprint "Advance Lab"
 
-    - name: set reservation identifier
+    - name: set reservation outputs
+      if: always()
       id: reservation
-      run: echo ::set-output name=identifier::$(echo ${{ steps.start.outputs.res_id }} | cut -d "-" -f 1)
+      run: |
+        echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+        echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
 
     - name: get EKS access credentials
       run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -151,7 +152,7 @@ jobs:
         Customer = ""
         server = ""
         CONFIGURATION = {
-          "advanced": $(python wlan-testing/.quali/get_configuration.py ${{ steps.start.outputs.res_id }})
+          "advanced": $(python wlan-testing/.quali/get_configuration.py ${{ steps.reservation.outputs.identifier }})
         }
 
         open_flow = {}
@@ -470,7 +471,7 @@ jobs:
                   - -x
                   - -c
                   - |
-                    HOSTS="sec-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build"
+                    HOSTS="sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
                     for HOST in \$HOSTS; do
                       HOST_ENTRY=""
                       until [[ ! -z "\$HOST_ENTRY" ]]; do sleep 1; HOST_ENTRY=\$(getent hosts \$HOST); done;
@@ -527,19 +528,19 @@ jobs:
 
     - name: show gw logs
       if: failure()
-      run: kubectl -n openwifi-${{ steps.reservation.outputs.identifier }} logs deployment/owgw
+      run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
 
     - name: show fms logs
       if: failure()
-      run: kubectl -n openwifi-${{ steps.reservation.outputs.identifier }} logs deployment/owfms
+      run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
 
     - name: show prov logs
       if: failure()
-      run: kubectl -n openwifi-${{ steps.reservation.outputs.identifier }} logs deployment/owprov
+      run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
 
     - name: show sec logs
       if: failure()
-      run: kubectl -n openwifi-${{ steps.reservation.outputs.identifier }} logs deployment/owsec
+      run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
 
     - name: upload Allure results as artifact
       if: ${{ always() }}
@@ -555,7 +556,7 @@ jobs:
 
     - name: stop reservation
       if: always()
-      run: python wlan-testing/.quali/stop_reservation.py ${{ steps.start.outputs.res_id }}
+      run: python wlan-testing/.quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
   report:
     needs: [ vars, generate-matrix, test ]

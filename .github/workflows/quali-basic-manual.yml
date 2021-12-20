@@ -98,18 +98,19 @@ jobs:
       run: pip install -r .quali/requirements.txt
 
     - name: start reservation
-      id: start
       env:
         CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
         CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
         CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
       run: |
-        RES_ID=$(python .quali/start_reservation.py --openwifi-version "${{ github.event.inputs.openwifi_revision }}" --openwifi-gw-version "${{ github.event.inputs.openwifi_gw_revision }}" --openwifi-sec-version "${{ github.event.inputs.openwifi_sec_revision }}" --openwifi-fms-version "${{ github.event.inputs.openwifi_fms_revision }}" --openwifi-ui-version "${{ github.event.inputs.openwifi_ui_revision }}" --ap-model "${{ github.event.inputs.ap_model }}")
-        echo ::set-output name=res_id::"$RES_ID"
+        python .quali/start_reservation.py --openwifi-version "${{ github.event.inputs.openwifi_revision }}" --openwifi-gw-version "${{ github.event.inputs.openwifi_gw_revision }}" --openwifi-sec-version "${{ github.event.inputs.openwifi_sec_revision }}" --openwifi-fms-version "${{ github.event.inputs.openwifi_fms_revision }}" --openwifi-ui-version "${{ github.event.inputs.openwifi_ui_revision }}" --ap-model "${{ github.event.inputs.ap_model }}"
 
-    - name: set reservation identifier
+    - name: set reservation outputs
+      if: always()
       id: reservation
-      run: echo ::set-output name=identifier::$(echo ${{ steps.start.outputs.res_id }} | cut -d "-" -f 1)
+      run: |
+        echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+        echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
 
     - name: install JRE
       run: |
@@ -157,7 +158,7 @@ jobs:
         Customer = ""
         server = ""
         CONFIGURATION = {
-          "basic": $(python .quali/get_configuration.py ${{ steps.start.outputs.res_id }})
+          "basic": $(python .quali/get_configuration.py ${{ steps.reservation.outputs.identifier }})
         }
         
         open_flow = {}
@@ -474,7 +475,7 @@ jobs:
                   - -x
                   - -c
                   - |
-                    HOSTS="sec-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.identifier }}.cicd.lab.wlan.tip.build"
+                    HOSTS="sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
                     for HOST in \$HOSTS; do
                       HOST_ENTRY=""
                       until [[ ! -z "\$HOST_ENTRY" ]]; do sleep 1; HOST_ENTRY=\$(getent hosts \$HOST); done;
@@ -548,7 +549,7 @@ jobs:
 
     - name: stop reservation
       if: always()
-      run: python .quali/stop_reservation.py ${{ steps.start.outputs.res_id }}
+      run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
       env:
         CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
         CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
