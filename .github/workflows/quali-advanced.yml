@@ -204,6 +204,23 @@ jobs:
             "osu_nai_shared": "anonymous@ameriband.com",
             "roaming_oi": []
         }
+        RATE_LIMITING_RADIUS_SERVER_DATA = {
+            "ip": "18.189.85.200",
+            "port": 1812,
+            "secret": "testing123",
+            "user": "user",
+            "password": "password",
+            "pk_password": "whatever"
+        }
+
+        RATE_LIMITING_RADIUS_ACCOUNTING_DATA = {
+            "ip": "18.189.85.200",
+            "port": 1813,
+            "secret": "testing123",
+            "user": "user",
+            "password": "password",
+            "pk_password": "whatever"
+        }
 
         PASSPOINT_OPERATOR_INFO = {
             "osen": "Disabled",
