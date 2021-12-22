@@ -354,3 +354,4 @@ kafka:
 
 clustersysteminfo:
   enabled: true
+  delay: 60 # delaying to wait for AWS Route53 DNS propagation
