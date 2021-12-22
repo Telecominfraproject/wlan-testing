@@ -16,7 +16,6 @@ owgw:
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285"
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002,16003,17002"
-        external-dns.alpha.kubernetes.io/ttl: "60"
 
   configProperties:
     # -> Public part
@@ -90,7 +89,6 @@ owsec:
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285"
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16001,17001"
-        external-dns.alpha.kubernetes.io/ttl: "60"
 
   resources:
     requests:
@@ -141,7 +139,6 @@ rttys:
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285"
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "5912,5913"
-        external-dns.alpha.kubernetes.io/ttl: "60"
 
   resources:
     requests:
@@ -207,7 +204,6 @@ owfms:
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285"
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16004,17004"
-        external-dns.alpha.kubernetes.io/ttl: "60"
 
   resources:
     requests:
@@ -262,7 +258,6 @@ owprov:
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
         service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285"
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16005,17005"
-        external-dns.alpha.kubernetes.io/ttl: "60"
 
   resources:
     requests:
