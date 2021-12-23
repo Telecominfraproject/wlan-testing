@@ -1,9 +1,5 @@
 name: 2.x testing with Docker Compose deployment
 env:
-  # thirdparties
-  DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
-  DOCKER_USER_NAME: wlan-testing-cicd
-  DOCKER_USER_PASSWORD: ${{ secrets.DOCKER_USER_PASSWORD }}
   # AWS credentials
   AWS_EKS_NAME: tip-wlan-main
   AWS_DEFAULT_OUTPUT: json
@@ -59,30 +55,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    # checkout needed repositories
-    - name: Checkout Testing repo
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+    - name: build and push Docker image
+      uses: ./.github/actions/build-and-push-docker
       with:
-        path: wlan-testing
-
-    - name: Checkout LANforge scripts
-      uses: actions/checkout@v2
-      with:
-        path: wlan-lanforge-scripts
-        repository: Telecominfraproject/wlan-lanforge-scripts
-
-    - name: import LANforge scripts
-      working-directory: wlan-testing
-      run: ./sync_repos.bash
-
-    # build and push docker image
-    - name: docker login
-      run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
-    - name: build docker image
-      working-directory: wlan-testing
-      run: docker build -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }} -f docker/Dockerfile .
-    - name: push docker image
-      run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+        registry: tip-tip-wlan-cloud-docker-repo.jfrog.io
+        registry_user: wlan-testing-cicd
+        registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   deploy-controller:
     name: Deploy OpenWIFI Cloud SDK
@@ -479,7 +458,7 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v2
       with:
-        name: allure-results-${{ github.event.inputs.testbeds || 'basic-05' }}
+        name: allure-results-docker-compose-${{ github.event.inputs.marker_expression || 'sdk_restapi' }}
         path: allure-results
 
     - name: cleanup
@@ -492,92 +471,58 @@ jobs:
     needs: [ test ]
     if: always()
     steps:
-    - name: install Allure CLI tool
-      run: |
-        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+    - name: checkout testing repo
+      uses: actions/checkout@v2
 
     - uses: actions/download-artifact@v2
       with:
-        name: allure-results-${{ github.event.inputs.testbeds || 'basic-05' }}
+        name: allure-results-docker-compose-${{ github.event.inputs.marker_expression || 'sdk_restapi' }}
         path: allure-results
 
-    - name: checkout testing repo
-      uses: actions/checkout@v2
-      with:
-        path: wlan-testing
-
-    - name: get reports branch
-      uses: actions/checkout@v2
+    - name: download history of previous run
       continue-on-error: true
-      with:
-        ref: gh-pages
-        path: reports
-
-    - name: copy history into results
       run: |
-        if [ -e "reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ github.event.inputs.testbeds || 'basic-05' }} /latest" ] ; then
-          cp -r reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ github.event.inputs.testbeds || 'basic-05' }}/latest/history/ allure-results/history
-        fi
-
-    - name: add report metadata
-      run: |
-        cat << EOF >> allure-results/environment.properties
-        Testbed=${{ github.event.inputs.testbeds || 'basic-05' }}
-        Tests.CommitId=$(cd wlan-testing && git rev-parse --short HEAD)
-        CiRun.Id=${{ github.run_id }}
-        CiRun.Number=${{ github.run_number }}
-        CiRun.Url=https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
-        EOF
+        LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key docker-compose-${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/latest/index.html | jq -r .Metadata.latest)
+        aws s3 cp --recursive s3://openwifi-allure-reports/docker-compose-${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/$LAST_RUN_ID/history history
 
     - name: generate Allure report
-      run: allure-${{ env.ALLURE_CLI_VERSION }}/bin/allure generate
+      uses: ./.github/actions/generate-allure-report
+      with:
+        results_path: ./allure-results
+        history_path: ./history
 
     - name: upload Allure report as artifact
       uses: actions/upload-artifact@v2
       with:
-        name: allure-report-${{ github.event.inputs.testbeds || 'basic-05' }}
+        name: allure-report-docker-compose-${{ github.event.inputs.marker_expression || 'sdk_restapi' }}
         path: allure-report
 
     # doing this to be able to aggregate multiple reports together later on
     - name: copy results into report
-      run: cp -r allure-results allure-report/results
-
-    - name: copy new report
       run: |
-        mkdir -p reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ github.event.inputs.testbeds || 'basic-05' }}
-        cp -Tr allure-report reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ github.event.inputs.testbeds || 'basic-05' }}/${{ github.run_number }}
+        cp -r allure-results allure-report/results
 
-    - name: update latest symlink
-      working-directory: reports/docker-compose/${{ github.event.inputs.marker_expression || 'sdk_restapi' }}/${{ github.event.inputs.testbeds || 'basic-05' }}
-      run: ln -fns ${{ github.run_number }} latest
-
-    - name: generate new index.html
-      run: python wlan-testing/.github/tools/generate_directory_index.py -r reports
-
-    - name: commit reports update
-      working-directory: reports
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git add .
-        git commit -m "Automated deployment: $(date -u)"
-
-    - name: push
+    - name: upload to S3
       if: github.ref == 'refs/heads/master'
-      uses: ad-m/github-push-action@v0.6.0
+      uses: ./wlan-testing/.github/actions/allure-report-to-s3
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: gh-pages
-        directory: reports
+        test_type: docker-compose-${{ github.event.inputs.marker_expression || 'sdk_restapi' }}
+        testbed: ${{ github.event.inputs.testbeds || 'basic-05' }}
+        report_path: allure-report
+        s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
+        s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
 
   delete-docker-image:
     needs: [ test ]
     runs-on: ubuntu-latest
     if: always()
     steps:
+    - uses: actions/checkout@v2
     - name: cleanup Docker image
-      run: curl -u${{ env.DOCKER_USER_NAME }}:${{ env.DOCKER_USER_PASSWORD }} -X DELETE "https://tip.jfrog.io/artifactory/tip-wlan-cloud-docker-repo/cloud-sdk-nightly/${{ github.run_id }}"
+      uses: ./.github/actions/cleanup-docker
+      with:
+        registry_user: wlan-testing-cicd
+        registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
 #    - name: cleanup docker-compose-deployment image
 #      run: curl -u${{ env.DOCKER_USER_NAME }}:${{ env.DOCKER_USER_PASSWORD }} -X DELETE "https://tip.jfrog.io/artifactory/tip-wlan-cloud-docker-repo/docker-compose-deployment/${{ github.run_id }}"
