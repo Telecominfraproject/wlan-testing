@@ -1,16 +1,6 @@
-name: sanity testing
+name: Quali advanced testing
 
 env:
-  # AWS credentials
-  AWS_EKS_NAME: tip-wlan-main
-  AWS_DEFAULT_OUTPUT: json
-  AWS_DEFAULT_REGION: us-east-2
-  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
-  # Cloud SDK certs
-  CACERT: ${{ secrets.CACERT }}
-  CAKEY: ${{ secrets.CAKEY }}
   ALLURE_CLI_VERSION: 2.14.0
 
 on:
@@ -20,25 +10,9 @@ on:
         required: true
         default: 'main'
         description: 'revision of the Open Wifi Helm chart'
-      openwifi_gw_revision:
-        required: true
-        default: 'master'
-        description: 'revision of the Open Wifi gateway service'
-      openwifi_sec_revision:
-        required: true
-        default: 'main'
-        description: 'revision of the Open Wifi security service'
-      openwifi_fms_revision:
-        required: true
-        default: 'main'
-        description: 'revision of the Open Wifi fms service'
-      openwifi_ui_revision:
-        required: true
-        default: 'main'
-        description: 'revision of the Open Wifi UI'
       ap_models:
         required: true
-        default: 'edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4'
+        default: 'EAP102,cig_wf194c'
         description: 'the AP models to test'
       ap_version:
         required: true
@@ -46,20 +20,20 @@ on:
         description: 'revision of firmware to flash on AP, <branch>-<commit>'
       marker_expression:
         required: true
-        default: 'uc_sanity'
+        default: 'advance'
         description: 'Marker expression to select tests to execute'
   schedule:
   - cron: '30 20 * * *'
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   vars:
     runs-on: ubuntu-latest
     outputs:
       openwifi_revision: ${{ steps.vars.outputs.openwifi}}
-      openwifi_gw_revision: ${{ steps.vars.outputs.gw}}
-      openwifi_sec_revision: ${{ steps.vars.outputs.sec}}
-      openwifi_fms_revision: ${{ steps.vars.outputs.fms}}
-      openwifi_ui_revision: ${{ steps.vars.outputs.ui}}
       ap_models: ${{ steps.vars.outputs.ap_models}}
       ap_version: ${{ steps.vars.outputs.ap_version}}
       marker_expression: ${{ steps.vars.outputs.marker_expression }}
@@ -68,14 +42,10 @@ jobs:
       - name: set variables
         id: vars
         run: |
-          echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'v2.4.0-RC3' }}")
-          echo ::set-output name=gw::$(echo "${{ github.event.inputs.openwifi_gw_revision || 'v2.4.0-RC3' }}")
-          echo ::set-output name=sec::$(echo "${{ github.event.inputs.openwifi_sec_revision || 'v2.4.0-RC2' }}")
-          echo ::set-output name=fms::$(echo "${{ github.event.inputs.openwifi_fms_revision || 'v2.4.0-RC2' }}")
-          echo ::set-output name=ui::$(echo "${{ github.event.inputs.openwifi_ui_revision || 'v2.4.0-RC2' }}")
-          echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4' }}")
+          echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'main' }}")
+          echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'EAP102,cig_wf194c' }}")
           echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'next-latest' }}")
-          echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'uc_sanity' }}")
+          echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'advance' }}")
 
   generate-matrix:
     name: generate AP model matrix
@@ -104,29 +74,50 @@ jobs:
         registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   test:
-    needs: ['generate-matrix', 'build', 'vars']
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
+    needs: [ vars, generate-matrix, build ]
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
     env:
+      AWS_EKS_NAME: tip-wlan-main
+      AWS_DEFAULT_OUTPUT: json
+      AWS_DEFAULT_REGION: us-east-2
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
       CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
+      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER}}
       CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
+      MARKER_EXPRESSION: ${{ needs.vars.outputs.marker_expression }}
 
     steps:
-    - uses: actions/checkout@v2
+    - name: install aws CLI tool
+      run: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.8'
 
+    - name: checkout testing repo
+      uses: actions/checkout@v2
+      with:
+        path: wlan-testing
+
     - name: install dependencies
-      run: pip install -r .quali/requirements.txt
+      run: pip install -r wlan-testing/.quali/requirements.txt
 
     - name: start reservation
       run: |
-        python .quali/start_reservation.py --openwifi-version "${{ needs.vars.outputs.openwifi_revision }}" --openwifi-gw-version "${{ needs.vars.outputs.openwifi_gw_revision }}" --openwifi-sec-version "${{ needs.vars.outputs.openwifi_sec_revision }}" --openwifi-fms-version "${{ needs.vars.outputs.openwifi_fms_revision }}" --openwifi-ui-version "${{ needs.vars.outputs.openwifi_ui_revision }}" --ap-model "${{ matrix.ap_model }}"
+        python wlan-testing/.quali/start_reservation.py --openwifi-version "${{ needs.vars.outputs.openwifi_revision }}" --ap-model "${{ matrix.ap_model }}" --blueprint "Advance Lab"
 
     - name: set reservation outputs
       if: always()
@@ -136,16 +127,16 @@ jobs:
         echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
 
     - name: get EKS access credentials
-      run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+      run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
     - name: install Allure CLI tool
       run: |
         wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
         tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-
+        
     - name: set job name
       id: job
-      run: echo "::set-output name=name::testing-${{ github.run_number }}"
+      run: echo "::set-output name=name::advanced-ci-${{ github.run_number }}"
 
     - name: prepare namespace
       id: namespace
@@ -161,11 +152,11 @@ jobs:
         Customer = ""
         server = ""
         CONFIGURATION = {
-          "basic": $(python .quali/get_configuration.py ${{ steps.reservation.outputs.identifier }})
+          "advanced": $(python wlan-testing/.quali/get_configuration.py ${{ steps.reservation.outputs.identifier }})
         }
-        
+
         open_flow = {}
-        
+
         RADIUS_SERVER_DATA = {
             "ip": "10.10.1.221",
             "port": 1812,
@@ -230,7 +221,7 @@ jobs:
             "password": "password",
             "pk_password": "whatever"
         }
-        
+
         PASSPOINT_OPERATOR_INFO = {
             "osen": "Disabled",
             "domain_name_list": ["telecominfraproject.atlassian.net"],
@@ -508,7 +499,7 @@ jobs:
                     cat /etc/hosts
 
                     cd tests
-                    pytest -m "${{ needs.vars.outputs.marker_expression }}" -s -vvv --testbed="basic" --alluredir=/tmp/allure-results -o firmware="${{ needs.vars.outputs.ap_version }}"
+                    pytest -m "${{ needs.vars.outputs.marker_expression }}" -s -vvv --testbed="advanced" --alluredir=/tmp/allure-results -o firmware="${{ needs.vars.outputs.ap_version }}"
                     ret=\$?
                     # sleep some time to be able to download the Allure results
                     sleep 60
@@ -535,14 +526,14 @@ jobs:
         EOF
         # wait for pod to spawn
         sleep 1
+
         podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
         kubectl wait "pod/$podname" --for condition=ready --timeout=600s
         kubectl logs -f $podname &
-        #sleep 30 # wait for the pod to come up
+
         until [ -s test_everything.xml ]
         do
           sleep 10
-          #echo "waiting for tests to complete..."
           kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
         done
         echo "tests completed"
@@ -569,25 +560,25 @@ jobs:
       run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
 
     - name: upload Allure results as artifact
-      if: always()
+      if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
         name: allure-results-${{ matrix.ap_model }}
         path: allure-results
 
     - name: cleanup
-      if: always()
+      if: ${{ always() }}
       run: |
         kubectl delete ns "${{ steps.namespace.outputs.name }}" --wait=true
 
     - name: stop reservation
       if: always()
-      run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
+      run: python wlan-testing/.quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
   report:
-    runs-on: ubuntu-latest
-    needs: [ test, vars, generate-matrix ]
+    needs: [ vars, generate-matrix, test ]
     if: always()
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
@@ -603,8 +594,8 @@ jobs:
     - name: download history of previous run
       continue-on-error: true
       run: |
-        LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key sanity/${{ matrix.ap_model }}/latest/index.html | jq -r .Metadata.latest)
-        aws s3 cp --recursive s3://openwifi-allure-reports/sanity/${{ matrix.ap_model }}/$LAST_RUN_ID/history history
+        LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key advance/${{ matrix.ap_model }}/latest/index.html | jq -r .Metadata.latest)
+        aws s3 cp --recursive s3://openwifi-allure-reports/advance/${{ matrix.ap_model }}/$LAST_RUN_ID/history history
 
     - name: generate Allure report
       uses: ./.github/actions/generate-allure-report
@@ -622,13 +613,14 @@ jobs:
 
     # doing this to be able to aggregate multiple reports together later on
     - name: copy results into report
-      run: cp -r allure-results allure-report/results
+      run: |
+        cp -r allure-results allure-report/results
 
     - name: upload to S3
-      if: github.ref == 'refs/heads/master' && needs.vars.outputs.marker_expression == 'uc_sanity'
-      uses: ./.github/actions/allure-report-to-s3
+      if: github.ref == 'refs/heads/master' && needs.vars.outputs.marker_expression == 'advance'
+      uses: ./wlan-testing/.github/actions/allure-report-to-s3
       with:
-        test_type: sanity
+        test_type: advance
         testbed: ${{ matrix.ap_model }}
         report_path: allure-report
         s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
