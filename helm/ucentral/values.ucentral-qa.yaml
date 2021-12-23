@@ -18,9 +18,6 @@ owgw:
         service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002,16003,17002"
 
   configProperties:
-    # -> Public part
-    # File uploader
-    # rtty
     rtty.enabled: "true"
 
   resources:
