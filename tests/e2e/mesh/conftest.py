@@ -47,19 +47,31 @@ def create_lanforge_chamberview_dut(lf_tools):
     yield dut_name
 
 @pytest.fixture(scope="session")
-def setup_mesh(lf_tools):
-    mesh_obj  = lf_tools.create_mesh()
+def setup_mesh_scenario(lf_tools):
+    mesh_obj  = lf_tools.create_mesh_scenario()
     yield mesh_obj
 
+@pytest.fixture(scope="session")
+def create_lanforge_chamberview_dut(lf_tools, skip_lf):
+    dut_name = ""
+    if not skip_lf:
+        dut_object, dut_name = lf_tools.Create_Dut()
+    return dut_name
 
 @pytest.fixture(scope="session")
-def create_mesh_dut(lf_tools):
-    mesh_dut = lf_tools.create_mesh_dut()
-    yield True
+def create_mesh_dut(lf_tools, skip_lf):
+    dut_name = ""
+    if not skip_lf:
+        mesh_dut_object, dut_name = lf_tools.create_mesh_dut()
+    yield dut_name
 
 @pytest.fixture(scope="class")
-def setup_mesh_profile_fix(fixtures_ver, get_apnos, get_configuration):
-    ret_var = fixtures_ver.setup_mesh_profile(get_apnos, get_configuration)
+def setup_mesh_profile_fix(request, fixtures_ver, get_apnos, get_configuration, setup_controller, instantiate_profile,get_markers,  get_equipment_ref,
+                           lf_tools, ):
+    param = dict(request.param)
+    ret_var = fixtures_ver.setup_mesh_profile(request, param, get_apnos, get_configuration, setup_controller, instantiate_profile, get_markers, get_equipment_ref,
+                                              lf_tools, skip_lf=False, open_flow=None
+                                              )
     yield ret_var
 
 
