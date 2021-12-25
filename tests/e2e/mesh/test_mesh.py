@@ -15,15 +15,17 @@ setup_params_general = {
     "rf": {},
     "radius": False
 }
-# @allure.feature("MESH BASIC")
-# @pytest.mark.parametrize(
-#     'setup_profiles',
-#     [setup_params_general],
-#     indirect=True,
-#     scope="class"
-# )
+@allure.feature("MESH BASIC")
+@pytest.mark.parametrize(
+    'setup_mesh_profile_fix',
+    [setup_params_general],
+    indirect=True,
+    scope="class"
+)
 # @pytest.mark.usefixtures("setup_profiles")
 class TestMesh(object):
 
-    def testmesh(self, lf_tools):
-        lf_tools.create_mesh()
+    @pytest.mark.wpa2_personal
+    def testmesh(self, setup_mesh_profile_fix):
+        #setup_mesh_scenario):
+        pass
