@@ -389,7 +389,7 @@ class ChamberView:
         mesh = self.Chamber_View()
         return mesh
 
-    def create_mesh_dut(self):
+    def create_mesh_dut(self, ssid_data=None):
         for ap in self.access_point_data:
             print("ap", ap)
             self.dut_name = ap["type"]
@@ -405,7 +405,8 @@ class ChamberView:
                                  serial_num=self.serial
                                  )
             self.Create_Dut()
-            self.update_ssid(ssid_data=[['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58']])
+            # [['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58']]
+            self.update_ssid(ssid_data=ssid_data)
 
     def set_radio_antenna(self, req_url, shelf, resources, radio, antenna):
         data = {
