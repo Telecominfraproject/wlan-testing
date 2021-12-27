@@ -1331,11 +1331,35 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                 print("Device IP address is :", ip_address_element_text)
                             except:
                                 print("IP address element not found")
-                               #allure.attach(name= body=str("IP address element not found"))
-
+                           #allure.attach(name= body=str("IP address element not found"))
+                        #--------------------Added for ssid security check--------------------------
+                        try:
+                            time.sleep(2)
+                            security_name_element = driver.find_element_by_xpath(
+                                "//*[@text='Security']/parent::*/android.widget.TextView[@resource-id='com.android.settings:id/summary']")
+                            security_name_element_text = security_name_element.text
+                            print("Ssid security is :", security_name_element_text)
+                            allure.attach(name="Ssid Security:", body=str(security_name_element_text))
+                        except:
+                            print("Security is not available")
+                        # --------------------Added for ssid Name check--------------------------
+                        try:
+                            time.sleep(2)
+                            ssid_name_element = driver.find_element_by_xpath(
+                                "//*[@resource-id='com.android.settings:id/entity_header_title']")
+                            ssid_name_element_text = ssid_name_element.text
+                            print("Ssid Name is :", ssid_name_element_text)
+                            allure.attach(name="Ssid connected:", body=str(ssid_name_element_text))
+                        except:
+                            print("Ssid name not available")
                             # closeApp(connData["appPackage-android"], setup_perfectoMobile)
                             # return ip_address_element_text, ssid_with_internet
-
+                        if(ssid_name_element_text == WifiName):
+                            print("Wifi is connected to the expected ssid")
+                        else:
+                            print("Wifi is not connected to the expected ssid")
+                            closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                            assert False
                         try:
                             check_if_no_internet_popup(driver)
                             driver.implicitly_wait(3)
@@ -3035,7 +3059,34 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                             except:
                                 print("IP address element not found")
                                #allure.attach(name= body=str("IP address element not found"))
-
+                        # --------------------Added for ssid security check--------------------------
+                        try:
+                            time.sleep(2)
+                            security_name_element = driver.find_element_by_xpath(
+                                "//*[@text='Security']/parent::*/android.widget.TextView[@resource-id='com.android.settings:id/summary']")
+                            security_name_element_text = security_name_element.text
+                            print("Ssid security is :", security_name_element_text)
+                            allure.attach(name="Ssid Security:", body=str(security_name_element_text))
+                        except:
+                            print("Security is not available")
+                        # --------------------Added for ssid Name check--------------------------
+                        try:
+                            time.sleep(2)
+                            ssid_name_element = driver.find_element_by_xpath(
+                                "//*[@resource-id='com.android.settings:id/entity_header_title']")
+                            ssid_name_element_text = ssid_name_element.text
+                            print("Ssid Name is :", ssid_name_element_text)
+                            allure.attach(name="Ssid connected:", body=str(ssid_name_element_text))
+                        except:
+                            print("Ssid name not available")
+                            # closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                            # return ip_address_element_text, ssid_with_internet
+                        if (ssid_name_element_text == WifiName):
+                            print("Wifi is connected to the expected ssid")
+                        else:
+                            print("Wifi is not connected to the expected ssid")
+                            closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                            assert False
                             # closeApp(connData["appPackage-android"], setup_perfectoMobile)
                             # return ip_address_element_text, ssid_with_internet
 
@@ -3311,6 +3362,7 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                     try:
                         driver.implicitly_wait(3)
                         report.step_start("Click Connect Button")
+                        print("Click Connect Button")
                         join_element = driver.find_element_by_xpath("//*[@text='Connect']")
                         join_element.click()
                     except NoSuchElementException:
