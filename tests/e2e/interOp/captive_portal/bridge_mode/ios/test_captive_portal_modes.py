@@ -312,7 +312,6 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5140", name="WIFI-5140")
-    @pytest.mark.sg123
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal
     def test_Captive_Portal_WPA3_5g_Personal_Bridge(self, request, get_vif_state, get_ap_logs,
