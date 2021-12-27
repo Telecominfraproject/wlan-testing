@@ -1025,11 +1025,20 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     scrollDown(setup_perfectoMobile)
                     time.sleep(2)
                 else:
+                    report.step_start("Selecting SSID To Connect")
                     ssid_found = True
                     print(WifiName + " : Found in Device")
+                    wifiSelElement = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
+                    print(wifiSelElement)
+                    wifiSelElement.click()
+                    print("Selecting SSID")
                     # allure.attach(name= body=str(WifiName + " : Found in Device"))
                     break
             except:
+                print("couldn't connect to " + WifiName)
+                #request.config.cache.set(key="SelectingWifiFailed", value=str(e))
+                closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+                return ip_address_element_text, is_internet
                 pass
 
         if not ssid_found:
@@ -1041,23 +1050,12 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     # ---------------------To get all available SSID-------------------------------
 
     # ---------------------This is to Select SSID-------------------------------
-    try:
-        report.step_start("Selecting SSID To Connect")
-        wifiSelectionElement = WebDriverWait(driver, 30).until(
-            EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
-        wifiSelectionElement.click()
-        wifiSelectionElement.click()
-        print("Selecting SSID")
-    except Exception as e:
-        print("couldn't connect to " + WifiName)
-        request.config.cache.set(key="SelectingWifiFailed", value=str(e))
-        closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-        return ip_address_element_text, is_internet
-    # ---------------------This is to Select SSID-------------------------------
 
+    # ---------------------This is to Select SSID-------------------------------
     # ---------------------Set Password-------------------------------
     try:
         time.sleep(3)
+        print("Entering Password")
         report.step_start("Entering Password")
         wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
         wifiPassword.send_keys(WifiPass)
@@ -1068,6 +1066,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     # ---------------------Click on join-------------------------------
     try:
         time.sleep(2)
+        print("Selecting join")
         report.step_start("Clicking JOIN")
         joinBTN = driver.find_element_by_xpath("//*[@label='Join']")
         joinBTN.click()
@@ -1077,7 +1076,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------check if internet-------------------------------
     try:
-        WifiInternetErrMsg2 = WebDriverWait(driver, 30).until(
+        WifiInternetErrMsg2 = WebDriverWait(driver, 5).until(
             EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
         # = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
     except Exception as e:
@@ -1097,6 +1096,32 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
         # //*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']
         additional_details_element.click()
 
+        try:
+            report.step_start("Checking SSID Name as Expected")
+            print("Checking SSID Name")
+            ssidname_text = driver.find_element_by_xpath("//*[@label='" + WifiName + "']").text
+            print(ssidname_text)
+            if(ssidname_text == WifiName):
+                print("SSID Matched")
+                allure.attach(name="SSID Matched ", body=str(WifiName))
+            else:
+                print("SSID Not Matched")
+                allure.attach(name="SSID Not Matched ", body=str(WifiName))
+                reportFlag = False
+                assert reportFlag
+        except:
+            print("SSID is not Checked in more Info")
+
+        try:
+            report.step_start("Checking WiFi Address")
+            print("Checking IP address")
+            # (//*[@label="IP Address"]/parent::*/XCUIElementTypeStaticText)[2]
+            wifi_address_element_text = driver.find_element_by_xpath(
+                "(//*[@label='Wi-Fi Address']/parent::*/XCUIElementTypeStaticText)[2]").text
+            print("wifi_address_element_text: ", wifi_address_element_text)
+        except Exception as e:
+            print("IP Address not Found")
+            request.config.cache.set(key="select IP failed", value=str(e))
         try:
             report.step_start("Checking IP Address")
             print("Checking IP address")
@@ -1377,6 +1402,7 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
         # time.sleep(3)
     # ---------------------check if internet-------------------------------
 
+    # --------------------- close app-------------------------------
     # --------------------- close app-------------------------------
     closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
     return is_internet
