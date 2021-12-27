@@ -97,6 +97,9 @@ export OWFMS_VERSION_TAG=$(echo ${OWFMS_VERSION} | tr '/' '-')
 export OWPROV_VERSION_TAG=$(echo ${OWPROV_VERSION} | tr '/' '-')
 export OWPROVUI_VERSION_TAG=$(echo ${OWPROVUI_VERSION} | tr '/' '-')
 
+# Debug get bash version
+bash --version > /dev/stderr
+
 # Check deployment method that's required for this environment
 helm plugin install https://github.com/databus23/helm-diff || true
 if [[ "$DEPLOY_METHOD" == "git" ]]; then
