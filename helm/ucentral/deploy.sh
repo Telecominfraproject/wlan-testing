@@ -52,12 +52,6 @@ check_if_chart_version_is_release() {
   fi
 }
 
-split_comma_separated_envs() {
-  declare -n VARIABLE=$1
-  declare -n TARGET_VARIABLE=$1_SPLITTED
-  IFS=',' read -ra TARGET_VARIABLE <<< "$VARIABLE"
-}
-
 # Check if required environment variables were passed
 ## Deployment specifics
 [ -z ${DEPLOY_METHOD+x} ] && echo "DEPLOY_METHOD is unset" && usage && exit 1
@@ -132,13 +126,13 @@ else
   fi
 fi
 
-split_comma_separated_envs VALUES_FILE_LOCATION
 VALUES_FILES_FLAGS=()
+IFS=',' read -ra VALUES_FILE_LOCATION_SPLITTED <<< "$VALUES_FILE_LOCATION"
 for VALUE_FILE in ${VALUES_FILE_LOCATION_SPLITTED[*]}; do
   VALUES_FILES_FLAGS+=("-f" $VALUE_FILE)
 done
 EXTRA_VALUES_FLAGS=()
-split_comma_separated_envs EXTRA_VALUES_SPLITTED
+IFS=',' read -ra EXTRA_VALUES_SPLITTED <<< "$EXTRA_VALUES"
 for EXTRA_VALUE in ${EXTRA_VALUES_SPLITTED[*]}; do
   EXTRA_VALUES_FLAGS+=("--set" $EXTRA_VALUE)
 done
