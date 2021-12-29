@@ -59,10 +59,10 @@ def create_lanforge_chamberview_dut(lf_tools, skip_lf):
     return dut_name
 
 @pytest.fixture(scope="session")
-def create_mesh_dut(lf_tools, skip_lf):
+def create_mesh_dut(lf_tools, skip_lf, ssid_data):
     dut_name = ""
     if not skip_lf:
-        mesh_dut_object, dut_name = lf_tools.create_mesh_dut()
+        mesh_dut_object, dut_name = lf_tools.create_mesh_dut(ssid_data=ssid_data)
     yield dut_name
 
 @pytest.fixture(scope="class")
