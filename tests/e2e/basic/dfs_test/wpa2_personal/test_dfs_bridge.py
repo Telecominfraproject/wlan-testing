@@ -11,8 +11,8 @@ setup_params_general = {
         ]
     },
     "dfs":{
-        "channel":52,
-        "channel_bandwidth":80
+        "channel": 60,
+        "channel_bandwidth": 40
     },
     "rf": {},
     "radius": False
@@ -24,7 +24,8 @@ setup_params_general = {
     scope="class"
 )
 
-class DFSTest(object):
+class TestDFS(object):
 
+    @pytest.mark.wpa2_personal
     def test_dfs(self, setup_profiles):
         pass
