@@ -36,6 +36,7 @@ class APNOS:
         self.password = credentials['password']  # if mode=1, enter jumphost password else ap password
         self.port = credentials['port']  # if mode=1, enter jumphost ssh port else ap ssh port
         self.mode = credentials['jumphost']  # 1 for jumphost, 0 for direct ssh
+        self.model = credentials['mode']
         if self.mode:
             self.tty = credentials['jumphost_tty']  # /dev/ttyAP1
             # kill minicom instance
@@ -601,19 +602,41 @@ class APNOS:
             status = "Error"
         return status
 
+    def dfs(self):
+        if self.model == "wifi5":
+            cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && echo 1 > dfs_simulate_radar"
+            print("cmd: ", cmd)
+            client = self.ssh_cli_connect()
+            command = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                      f"cmd --value \"{cmd}\" "
+            stdin, stdout, stderr = client.exec_command(command)
+            output = stdout.read()
+            print("hey", output)
+            client.close()
+        else:
+            cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && echo 1 > dfs_simulate_radar '
+            print("cmd: ", cmd)
+            client = self.ssh_cli_connect()
+            command = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                      f"cmd --value \"{cmd}\" "
+            stdin, stdout, stderr = client.exec_command(command)
+            output = stdout.read()
+            print("hey", output)
+            client.close()
+
 if __name__ == '__main__':
     obj = {
-                'model': 'eap102',
-                'mode': 'wifi6',
-                'serial': '903cb30bcf12',
-                'jumphost': True,
-                'ip': "192.168.200.80",
-                'username': "lanforge",
-                'password': "lanforge",
-                'port': 22,
-                'jumphost_tty': '/dev/ttyAP1',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.1.0.tar.gz"
-            }
+        'model': 'eap102',
+        'mode': 'wifi6',
+        'serial': '903cb30bcf12',
+        'jumphost': True,
+        'ip': "192.168.200.80",
+        'username': "lanforge",
+        'password': "lanforge",
+        'port': 22,
+        'jumphost_tty': '/dev/ttyAP1',
+        'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.1.0.tar.gz"
+    }
     var = APNOS(credentials=obj, sdk="2.x")
     a = var.get_uc_latest_config()
     print(a)
