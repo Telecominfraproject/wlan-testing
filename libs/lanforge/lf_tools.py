@@ -390,6 +390,7 @@ class ChamberView:
         return mesh
 
     def create_mesh_scenario_dhcp_disable(self):
+
         upstream_list = []
         for data in range(0,len(self.access_point_data)):
             self.CreateDut = DUT(lfmgr=self.lanforge_ip,
