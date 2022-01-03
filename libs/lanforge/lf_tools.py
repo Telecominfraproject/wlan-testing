@@ -297,6 +297,19 @@ class ChamberView:
         cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port, )
         return cli_base.json_post(req_url, data)
 
+    def station_data_query(self, station_name="wlan0", query="channel"):
+        x = self.upstream_port.split(".")
+        print(x)
+        url = f"/port/{x[0]}/{x[1]}/{station_name}?fields={query}"
+        response = self.json_get(_req_url=url)
+        print("response: ", response)
+        if (response is None) or ("interface" not in response):
+            print("station_list: incomplete response:")
+            #pprint(response)
+            exit(1)
+        y = response["interface"][query]
+        return y
+
     def read_kpi_file(self, column_name, dir_name):
         if column_name == None:
             df = pd.read_csv("../reports/" + str(dir_name) + "/kpi.csv", sep=r'\t', engine='python')
