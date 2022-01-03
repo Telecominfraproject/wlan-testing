@@ -22,48 +22,50 @@ from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnecti
     verifyUploadDownloadSpeediOS, get_ip_address_ios, captive_portal_ios, wifi_connect, wifi_disconnect_and_forget
 
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
-              pytest.mark.captive_portal, pytest.mark.interop_uc_sanity, pytest.mark.bridge]
+              pytest.mark.captive_portal, pytest.mark.regression_interop, pytest.mark.nat]
 
 setup_params_general = {
-    "mode": "BRIDGE",
+    "mode": "NAT",
     "ssid_modes": {
-        "open": [{"ssid_name": "captive_open_2g", "appliedRadios": ["2G"]},
-                 {"ssid_name": "captive_open_5g", "appliedRadios": ["5G"]}],
-        "wpa": [{"ssid_name": "captive_wpa_2g", "appliedRadios": ["2G"], "security_key": "lanforge"},
-                {"ssid_name": "captive_wpa_5g", "appliedRadios": ["5G"],
+        "open": [{"ssid_name": "nat_captive_open_2g", "appliedRadios": ["2G"]},
+                 {"ssid_name": "nat_captive_open_5g", "appliedRadios": ["5G"]}],
+        "wpa": [{"ssid_name": "nat_captive_wpa_2g", "appliedRadios": ["2G"], "security_key": "lanforge"},
+                {"ssid_name": "nat_captive_wpa_5g", "appliedRadios": ["5G"],
                  "security_key": "lanforge"}],
-        "wpa2": [{"ssid_name": "captive_wpa2_2g", "appliedRadios": ["2G"], "security_key": "lanforge"},
-                {"ssid_name": "captive2_wpa_5g", "appliedRadios": ["5G"],
+        "wpa2_personal": [{"ssid_name": "nat_captive_wpa2_2g", "appliedRadios": ["2G"], "security_key": "lanforge"},
+                {"ssid_name": "nat_captive_wpa2_5g", "appliedRadios": ["5G"],
                  "security_key": "lanforge"}],
         "wpa3_personal": [
-            {"ssid_name": "captive_wpa3_2g", "appliedRadios": ["2G"], "security_key": "lanforge"},
-            {"ssid_name": "captive_wpa3_5g", "appliedRadios": ["5G"],
+            {"ssid_name": "nat_captive_wpa3_2g", "appliedRadios": ["2G"], "security_key": "lanforge"},
+            {"ssid_name": "nat_captive_wpa3_5g", "appliedRadios": ["5G"],
              "security_key": "lanforge"}]},
     "rf": {},
-    "radius": False
+    "radius": False,
+    "captive_portal": True
+
 }
 
 
 @allure.suite(suite_name="interop sanity")
-@allure.sub_suite(sub_suite_name="Bridge Mode Captive Portal : Suite-A")
+@allure.sub_suite(sub_suite_name="NAT Mode Captive Portal : Suite-A")
 @pytest.mark.InteropsuiteA
-@allure.feature("BRIDGE MODE CAPTIVE PORTAL")
-# @pytest.mark.parametrize(
-#     'setup_profiles',
-#     [setup_params_general],
-#     indirect=True,
-#     scope="class"
-# )
-#@pytest.mark.usefixtures("setup_profiles")
-class TestBridgeModeCaptivePortalSuiteOneBridge(object):
+@allure.feature("NAT MODE CAPTIVE PORTAL")
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestNatModeCaptivePortalSuiteOneNAT(object):
     """ Captive Portal SuiteA
-        pytest -m "captive portal and bridge and InteropsuiteA"
+        pytest -m "captive portal and nat and InteropsuiteA"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5179", name="WIFI-5179")
     @pytest.mark.twog
     @pytest.mark.open
-    def test_Captive_Portal_Open_2g_BRIDGE(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
+    def test_Captive_Portal_Open_2g_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
                                                setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["open"][0]
@@ -98,7 +100,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5146", name="WIFI-5146")
     @pytest.mark.fiveg
     @pytest.mark.open
-    def test_Captive_Portal_Open_5g_BRIDGE(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
+    def test_Captive_Portal_Open_5g_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
                                                setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["open"][1]
@@ -133,7 +135,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5182", name="WIFI-5182")
     @pytest.mark.twog
     @pytest.mark.wpa
-    def test_Captive_Portal_WPA_2g_Bridge(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
+    def test_Captive_Portal_WPA_2g_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
                                          setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
@@ -168,7 +170,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5149", name="WIFI-5149")
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    def test_Captive_Portal_WPA_5g_Bridge(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
+    def test_Captive_Portal_WPA_5g_NAT(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
                                          setup_perfectoMobile_iOS):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
@@ -203,7 +205,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5186", name="WIFI-5186")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_Captive_Portal_WPA2_2g_Personal_Bridge(self, request, get_vif_state, get_ap_logs,
+    def test_Captive_Portal_WPA2_2g_Personal_NAT(self, request, get_vif_state, get_ap_logs,
                                                    get_APToMobileDevice_data,
                                                    setup_perfectoMobile_iOS):
 
@@ -240,7 +242,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5153", name="WIFI-5153")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    def test_Captive_Portal_WPA2_5g_Personal_Bridge(self, request, get_vif_state, get_ap_logs,
+    def test_Captive_Portal_WPA2_5g_Personal_NAT(self, request, get_vif_state, get_ap_logs,
                                                     get_APToMobileDevice_data,
                                                     setup_perfectoMobile_iOS):
 
@@ -277,7 +279,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5130", name="WIFI-5130")
     @pytest.mark.twog
     @pytest.mark.wpa3_personal
-    def test_Captive_Portal_WPA3_2g_Personal_Bridge(self, request, get_vif_state, get_ap_logs,
+    def test_Captive_Portal_WPA3_2g_Personal_NAT(self, request, get_vif_state, get_ap_logs,
                                                    get_APToMobileDevice_data,
                                                    setup_perfectoMobile_iOS):
 
@@ -314,7 +316,7 @@ class TestBridgeModeCaptivePortalSuiteOneBridge(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5140", name="WIFI-5140")
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal
-    def test_Captive_Portal_WPA3_5g_Personal_Bridge(self, request, get_vif_state, get_ap_logs,
+    def test_Captive_Portal_WPA3_5g_Personal_NAT(self, request, get_vif_state, get_ap_logs,
                                                     get_APToMobileDevice_data,
                                                     setup_perfectoMobile_iOS):
 
