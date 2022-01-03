@@ -606,23 +606,49 @@ class APNOS:
         if self.model == "wifi5":
             cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && echo 1 > dfs_simulate_radar"
             print("cmd: ", cmd)
-            client = self.ssh_cli_connect()
-            command = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
-                      f"cmd --value \"{cmd}\" "
-            stdin, stdout, stderr = client.exec_command(command)
-            output = stdout.read()
-            print("hey", output)
-            client.close()
-        else:
-            cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && echo 1 > dfs_simulate_radar '
+            if self.mode:
+                command = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                          f"cmd --value \"{cmd}\" "
+        elif self.model == "wifi6":
+            cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && echo 1 > dfs_simulate_radar'
             print("cmd: ", cmd)
-            client = self.ssh_cli_connect()
-            command = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+            if self.mode:
+                command = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                          f"cmd --value \"{cmd}\" "
+        client = self.ssh_cli_connect()
+        stdin, stdout, stderr = client.exec_command(command)
+        output = stdout.read()
+        print("hey", output)
+        client.close()
+
+    def dfs_logread(self):
+        if self.model == "wifi5":
+            cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && logread | grep DFS"
+            print("cmd: ", cmd)
+            if self.mode:
+                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                       f"cmd --value \"{cmd}\" "
-            stdin, stdout, stderr = client.exec_command(command)
+        elif self.model == "wifi6":
+            cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && logread | grep DFS'
+            print("cmd: ", cmd)
+            if self.mode:
+                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                      f"cmd --value \"{cmd}\" "
+        try:
+            client = self.ssh_cli_connect()
+            stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
-            print("hey", output)
+            status = output.decode('utf-8').splitlines()
+            logread = status
+            logs = ""
+            for i in logread:
+                logs = logs + i + "\n"
             client.close()
+        except Exception as e:
+            print(e)
+            logs = ""
+        return logs
+
 
 if __name__ == '__main__':
     obj = {
