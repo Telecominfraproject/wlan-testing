@@ -2127,7 +2127,7 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
 #Captive Portal
 def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
-    print("CaptivePortal Connection iOS")
+    print("CaptivePortal Connection IOS")
     print("-------------------------------------")
 
     reportFlag = True
