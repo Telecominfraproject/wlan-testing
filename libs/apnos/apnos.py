@@ -601,26 +601,6 @@ class APNOS:
             status = "Error"
         return status
 
-    def get_iwinfo_maverick(self):
-        try:
-            # [['ssid_wpa2_2g', 'wpa', 'something', '2G'], ['ssid_wpa2_2g', 'wpa', 'something', '5G']]
-            # {'wlan0': ['"ssid_wpa3_p_5g"', '12:34:56:78:90:12', '5G'], 'wlan1': ['"ssid_wpa3_p_2g"','00:03:7F:12:34:56', '5G']}
-            client = self.ssh_cli_connect()
-            cmd = "iwinfo"
-            if self.mode:
-                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
-                      f"cmd --value \"{cmd}\" "
-            stdin, stdout, stderr = client.exec_command(cmd)
-            output = stdout.read().replace(b":~# iwinfo", b"").decode('utf-8')
-            o = output.split()
-            for i in range(len(o)):
-                if o[i].__contains__("ESSID"):
-                    ssid_n = o[i + 1]
-            client.close()
-        except Exception as e:
-            print(e)
-        return ssid_n
-
 if __name__ == '__main__':
     obj = {
                 'model': 'eap102',
