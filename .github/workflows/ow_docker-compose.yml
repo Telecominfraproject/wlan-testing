@@ -46,12 +46,22 @@ on:
         default: 'main'
         description: 'OpenWIFI Provisioning Web UI version to be deployed.'
         required: false
+      id:
+        description: 'run identifier'
+        required: false
 
 defaults:
   run:
     shell: bash
 
 jobs:
+  id:
+    name: Workflow ID Provider
+    runs-on: ubuntu-latest
+    steps:
+      - name: ${{github.event.inputs.id}}
+        run: echo run identifier ${{ inputs.id }}
+
   build:
     runs-on: ubuntu-latest
     steps:
