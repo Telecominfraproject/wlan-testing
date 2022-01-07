@@ -401,7 +401,7 @@ jobs:
             spec:
               containers:
               - name: tests
-                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+                image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
                 resources:
                   requests:
                     memory: "512Mi"
