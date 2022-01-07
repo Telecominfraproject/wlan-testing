@@ -148,7 +148,7 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set owgw.configProperties."openwifi\.system\.uri\.private"=https://gw-${NAMESPACE}.cicd.lab.wlan.tip.build:17002 \
   --set owgw.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owgw.configProperties."rtty\.token"=${RTTY_TOKEN} \
-  --set owgw.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
+  --set owgw.public_env_variables.OWSEC=owsec-pwsec:16001 \
   --set owsec.configProperties."authentication\.default\.username"=${OWGW_AUTH_USERNAME} \
   --set owsec.configProperties."authentication\.default\.password"=${OWGW_AUTH_PASSWORD} \
   --set owsec.services.owsec.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=sec-${NAMESPACE}.cicd.lab.wlan.tip.build \
@@ -161,7 +161,7 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set owfms.configProperties."openwifi\.system\.uri\.public"=https://fms-${NAMESPACE}.cicd.lab.wlan.tip.build:16004 \
   --set owfms.configProperties."openwifi\.system\.uri\.private"=https://fms-${NAMESPACE}.cicd.lab.wlan.tip.build:17004 \
   --set owfms.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owfms.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
+  --set owfms.public_env_variables.OWSEC=owsec-owsec:16001 \
   --set owgwui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owgwui.ingresses.default.hosts={webui-${NAMESPACE}.cicd.lab.wlan.tip.build} \
   --set owgwui.public_env_variables.DEFAULT_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
@@ -169,13 +169,13 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set owprov.configProperties."openwifi\.system\.uri\.public"=https://prov-${NAMESPACE}.cicd.lab.wlan.tip.build:16005 \
   --set owprov.configProperties."openwifi\.system\.uri\.private"=https://prov-${NAMESPACE}.cicd.lab.wlan.tip.build:17005 \
   --set owprov.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owprov.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
+  --set owprov.public_env_variables.OWSEC=owsec-owsec:16001 \
   --set owprovui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=provui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owprovui.ingresses.default.hosts={provui-${NAMESPACE}.cicd.lab.wlan.tip.build} \
   --set owprovui.public_env_variables.DEFAULT_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set rttys.config.token=${RTTY_TOKEN} \
   --set rttys.services.rttys.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=rtty-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set clustersysteminfo.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
+  --set clustersysteminfo.public_env_variables.OWSEC=owsec-owsec:16001 \
   --set clustersysteminfo.secret_env_variables.OWSEC_NEW_PASSWORD=${OWSEC_NEW_PASSWORD} \
   --set owls.services.owls.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=ls-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owls.configProperties."openwifi\.system\.uri\.public"=https://ls-${NAMESPACE}.cicd.lab.wlan.tip.build:16007 \
