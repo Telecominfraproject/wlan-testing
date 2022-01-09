@@ -420,7 +420,7 @@ class ChamberView:
             print("ap", ap)
             print(ssid)
             print(ssid_data[ssid])
-            self.dut_name = ap["type"]
+            self.dut_name = "tip-" + str(ap["type"])
             print(self.dut_name)
             self.ap_model = ap["model"]
             self.version = ap["version"].split("/")[-1]
