@@ -755,7 +755,7 @@ class Fixtures_2x:
         instantiate_profile_obj.set_radio_config()
         if parameter['mode'] == "NAT":
             mode = "NAT"
-            instantiate_profile_obj.set_mode(mode=mode)
+            instantiate_profile_obj.set_mode(mode=mode, mesh=True)
             vlan_id = 1
         if parameter['mode'] == "BRIDGE":
             mode = "BRIDGE"
@@ -763,7 +763,7 @@ class Fixtures_2x:
             vlan_id = 1
         if parameter['mode'] == "VLAN":
             mode = "VLAN"
-            instantiate_profile_obj.set_mode(mode=mode)
+            instantiate_profile_obj.set_mode(mode=mode, mesh=True)
 
         profile_data["ssid"] = {}
 
@@ -836,7 +836,10 @@ class Fixtures_2x:
             print("active", active)
             latest_old = latest
             if connected == False:
+                output = ap_ssh.run_generic_command(cmd="ubus call ucentral status")
+                allure.attach(name="ubus call ucentral status: ", body=str(output))
                 pytest.exit("AP is disconnected from UC Gateway")
+
             if latest != active:
                 allure.attach(name="FAIL : ubus call ucentral status: ",
                               body="connected: " + str(connected) + "\nlatest: " + str(latest) + "\nactive: " + str(
@@ -1014,6 +1017,8 @@ class Fixtures_2x:
             print("active", active)
             latest_old = latest
             if connected == False:
+                output = ap_ssh.run_generic_command(cmd="ubus call ucentral status")
+                allure.attach(name="ubus call ucentral status: ", body=str(output))
                 pytest.exit("AP is disconnected from UC Gateway")
             if latest != active:
                 allure.attach(name="FAIL : ubus call ucentral status: ",
