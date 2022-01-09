@@ -454,14 +454,22 @@ class UProfileUtility:
     def set_mode(self, mode, mesh=False):
         self.mode = mode
         if mode == "NAT":
+            if mesh:
+                self.base_profile_config['interfaces'][0]['tunnel'] = {
+                    "proto": "mesh"
+                }
             self.base_profile_config['interfaces'][1]['ssids'] = []
         elif mode == "BRIDGE":
-            if mesh :
+            if mesh:
                 self.base_profile_config['interfaces'][0]['tunnel'] = {
-                    "proto" : "mesh"
+                    "proto": "mesh"
                 }
             self.base_profile_config['interfaces'][0]['ssids'] = []
         elif mode == "VLAN":
+            if mesh:
+                self.base_profile_config['interfaces'][0]['tunnel'] = {
+                    "proto": "mesh"
+                }
             del self.base_profile_config['interfaces'][1]
             self.base_profile_config['interfaces'][0]['ssids'] = []
             self.base_profile_config['interfaces'] = []
