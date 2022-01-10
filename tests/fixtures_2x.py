@@ -376,7 +376,7 @@ class Fixtures_2x:
         list_key = list(parameter.keys())
 
         if "dfs" in list_key:
-            print("IN dfs")
+            print("In dfs")
             instantiate_profile_obj.set_radio_config(DFS=True, channel=parameter["dfs"]["channel"], bw=parameter["dfs"]["channel_bandwidth"])
         else:
             instantiate_profile_obj.set_radio_config()
