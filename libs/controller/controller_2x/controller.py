@@ -435,16 +435,9 @@ class UProfileUtility:
     def set_radio_config(self, radio_config=None, DFS = False, channel=None, bw=None):
         if DFS:
             self.base_profile_config["radios"].append({
-                "band": "2G",
-                "country": "US",
-                # "channel-mode": "HE",
-                "channel-width": 40,
-                 # "channel": 11
-            })
-            self.base_profile_config["radios"].append({
                 "band": "5G",
-                "country": "US",
-                # "channel-mode": "HE",
+                "country": "CA",
+                "channel-mode": "VHT",
                 "channel-width": bw,
                 "channel": channel
             })
