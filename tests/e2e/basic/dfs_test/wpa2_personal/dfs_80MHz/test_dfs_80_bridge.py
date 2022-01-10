@@ -4,13 +4,12 @@ import os
 import time
 import pandas as pd
 
-pytestmark = [pytest.mark.dfs, pytest.mark.bridge]
+pytestmark = [pytest.mark.regression, pytest.mark.dfs, pytest.mark.bridge]
 
 setup_params_general1 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
@@ -36,7 +35,7 @@ class TestDFSChannel52Bw40(object):
     @pytest.mark.dfs_channel_52_bw_40
     def test_dfs_channel_52_bw_40(self, lf_test, lf_tools, station_names_fiveg, dfs_start):
         lf_tools.reset_scenario()
-        profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         channel = setup_params_general1["dfs"]["channel"]
