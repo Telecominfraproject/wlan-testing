@@ -629,7 +629,7 @@ class APNOS:
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                       f"cmd --value \"{cmd}\" "
         elif self.model == "wifi6":
-            cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && logread | grep DFS'
+            cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && logread | grep DFS'
             print("cmd: ", cmd)
             if self.mode:
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
@@ -639,7 +639,7 @@ class APNOS:
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
             status = output.decode('utf-8').splitlines()
-            logread = status
+            logread = status[-6:]
             logs = ""
             for i in logread:
                 logs = logs + i + "\n"
