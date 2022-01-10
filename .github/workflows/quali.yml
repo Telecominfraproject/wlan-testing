@@ -437,7 +437,7 @@ jobs:
 
     - name: upload to S3
       if: github.ref == 'refs/heads/master' && needs.vars.outputs.marker_expression == 'uc_sanity'
-      uses: ./.github/actions/allure-report-to-s3
+      uses: ./wlan-testing/.github/actions/allure-report-to-s3
       with:
         test_type: sanity
         testbed: ${{ matrix.ap_model }}
