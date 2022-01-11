@@ -516,7 +516,7 @@ jobs:
 
     - name: upload to S3
       if: github.ref == 'refs/heads/master'
-      uses: ./wlan-testing/.github/actions/allure-report-to-s3
+      uses: ./.github/actions/allure-report-to-s3
       with:
         test_type: docker-compose-${{ github.event.inputs.marker_expression || 'sdk_restapi' }}
         testbed: ${{ github.event.inputs.testbeds || 'basic-05' }}
