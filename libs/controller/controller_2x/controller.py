@@ -385,6 +385,8 @@ class UProfileUtility:
         self.mode = None
 
     def set_mesh_services(self):
+        self.base_profile_config["interfaces"][1]["ipv4"]["subnet"] = "192.168.97.1/24"
+        self.base_profile_config["interfaces"][1]["ipv4"]["dhcp"]["lease-count"] = 100
         del self.base_profile_config['metrics']['wifi-frames']
         del self.base_profile_config['metrics']['dhcp-snooping']
         var = {
