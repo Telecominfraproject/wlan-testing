@@ -28,5 +28,4 @@ class TestMesh(object):
 
     @pytest.mark.wpa2_personal
     def testmesh(self, setup_mesh_profile_fix):
-        #setup_mesh_scenario):
         pass

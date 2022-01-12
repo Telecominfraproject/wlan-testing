@@ -45,38 +45,64 @@ from lf_multipsk import MultiPsk
 from lf_rvr_test import RvrTest
 from attenuator_serial import AttenuatorSerial
 from lf_atten_mod_test import CreateAttenuator
+from lf_mesh_test import MeshTest
 
 
 class RunTest:
 
     def __init__(self, lanforge_data=None, local_report_path="../reports/", influx_params=None, debug=False):
-        self.lanforge_ip = lanforge_data["ip"]
-        self.lanforge_port = lanforge_data["port"]
-        self.lanforge_ssh_port = lanforge_data["ssh_port"]
-        self.twog_radios = lanforge_data["2.4G-Radio"]
-        self.fiveg_radios = lanforge_data["5G-Radio"]
-        self.ax_radios = lanforge_data["AX-Radio"]
-        self.upstream_port = lanforge_data["upstream"].split(".")[2]
-        self.twog_prefix = lanforge_data["2.4G-Station-Name"]
-        self.fiveg_prefix = lanforge_data["5G-Station-Name"]
-        self.ax_prefix = lanforge_data["AX-Station-Name"]
-        self.debug = debug
-        self.lf_ssh_port = lanforge_data["ssh_port"]
-        self.staConnect = None
-        self.dataplane_obj = None
-        self.rx_sensitivity_obj = None
-        self.dualbandptest_obj = None
-        self.msthpt_obj = None
-        self.influx_params = influx_params
-        # self.influxdb = RecordInflux(_influx_host=influx_params["influx_host"],
-        #                              _influx_port=influx_params["influx_port"],
-        #                              _influx_org=influx_params["influx_org"],
-        #                              _influx_token=influx_params["influx_token"],
-        #                              _influx_bucket=influx_params["influx_bucket"])
-        self.local_report_path = local_report_path
-        if not os.path.exists(self.local_report_path):
-            os.mkdir(self.local_report_path)
-        # self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
+        print("lanforge data", lanforge_data)
+        if "type" in lanforge_data.keys():
+            if lanforge_data["type"] == "mesh":
+                self.lanforge_ip = lanforge_data["ip"]
+                self.lanforge_port = lanforge_data["port"]
+                self.ssh_port = lanforge_data["ssh_port"]
+                self.upstream_port_1 = lanforge_data["upstream-mobile-sta"]
+                self.upstream_port_2 = lanforge_data["upstream-root"]
+                self.upstream_port_3 = lanforge_data["upstream-node-1"]
+                self.upstream_port_4 = lanforge_data["upstream-node-2"]
+                self.uplink_port_1 = lanforge_data["uplink-mobile-sta"]
+                self.uplink_port_2 = lanforge_data["uplink-root"]
+                self.uplink_port_3 = lanforge_data["uplink--node-1"]
+                self.uplink_port_4 = lanforge_data["uplink--node-2"]
+                self.upstream_resource_1 = self.upstream_port_1.split(".")[0] + "." + self.upstream_port_1.split(".")[1]
+                self.upstream_resource_2 = self.upstream_port_2.split(".")[0] + "." + self.upstream_port_2.split(".")[1]
+                self.upstream_resource_3 = self.upstream_port_3.split(".")[0] + "." + self.upstream_port_3.split(".")[1]
+                self.upstream_resource_4 = self.upstream_port_4.split(".")[0] + "." + self.upstream_port_4.split(".")[1]
+                self.uplink_resource_1 = self.uplink_port_1.split(".")[0] + "." + self.uplink_port_1.split(".")[1]
+                self.uplink_resource_2 = self.uplink_port_2.split(".")[0] + "." + self.uplink_port_2.split(".")[1]
+                self.uplink_resource_3 = self.uplink_port_3.split(".")[0] + "." + self.uplink_port_3.split(".")[1]
+                self.uplink_resource_4 = self.uplink_port_4.split(".")[0] + "." + self.uplink_port_4.split(".")[1]
+                self.upstream_subnet = lanforge_data["upstream_subnet-mobile-sta"]
+                print("hi", self.lanforge_port)
+        else:
+            self.lanforge_ip = lanforge_data["ip"]
+            self.lanforge_port = lanforge_data["port"]
+            self.lanforge_ssh_port = lanforge_data["ssh_port"]
+            self.twog_radios = lanforge_data["2.4G-Radio"]
+            self.fiveg_radios = lanforge_data["5G-Radio"]
+            self.ax_radios = lanforge_data["AX-Radio"]
+            self.upstream_port = lanforge_data["upstream"].split(".")[2]
+            self.twog_prefix = lanforge_data["2.4G-Station-Name"]
+            self.fiveg_prefix = lanforge_data["5G-Station-Name"]
+            self.ax_prefix = lanforge_data["AX-Station-Name"]
+            self.debug = debug
+            self.lf_ssh_port = lanforge_data["ssh_port"]
+            self.staConnect = None
+            self.dataplane_obj = None
+            self.rx_sensitivity_obj = None
+            self.dualbandptest_obj = None
+            self.msthpt_obj = None
+            self.influx_params = influx_params
+            # self.influxdb = RecordInflux(_influx_host=influx_params["influx_host"],
+            #                              _influx_port=influx_params["influx_port"],
+            #                              _influx_org=influx_params["influx_org"],
+            #                              _influx_token=influx_params["influx_token"],
+            #                              _influx_bucket=influx_params["influx_bucket"])
+            self.local_report_path = local_report_path
+            if not os.path.exists(self.local_report_path):
+                os.mkdir(self.local_report_path)
+            # self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
 
 
 
@@ -807,6 +833,23 @@ class RunTest:
     def attenuator_modify(self, serno, idx, val):
         atten_obj = CreateAttenuator(self.lanforge_ip, self.lanforge_port, serno, idx, val)
         atten_obj.build()
+
+    def mesh_test(self, instance_name=None, raw_lines=None):
+        self.mesh_obj = MeshTest(
+                       lf_host=self.lanforge_ip,
+                       lf_port=self.lanforge_port,
+                       lf_user="lanforge",
+                       lf_password = "lanforge",
+                       instance_name = instance_name,
+                       config_name = "mesh_config",
+                       upstream = "1.2.eth2",
+                       pull_report = True,
+                       load_old_cfg = False,
+                       raw_lines = raw_lines,
+                       )
+        self.mesh_obj.setup()
+        self.mesh_obj.run()
+        return self.mesh_obj
 
 
 
