@@ -329,6 +329,11 @@ class Fixtures_2x:
             # version_list.append(connectivity_data)
         return connectivity_data[1]
 
+    def dfs(self, get_apnos, get_configuration):
+        for access_point_info in get_configuration['access_point']:
+            ap_ssh = get_apnos(access_point_info, sdk="2.x")
+        return ap_ssh
+
     def get_ap_status_logs(self, get_configuration, get_apnos):
         connected = 0
         redirector_data = None
@@ -368,12 +373,18 @@ class Fixtures_2x:
         test_cases = {}
         profile_data = {}
         var = ""
+        list_key = list(parameter.keys())
 
+        if "dfs" in list_key:
+            print("In dfs")
+            instantiate_profile_obj.set_radio_config(DFS=True, channel=parameter["dfs"]["channel"], bw=parameter["dfs"]["channel_bandwidth"])
+        else:
+            instantiate_profile_obj.set_radio_config()
         if parameter['mode'] not in ["BRIDGE", "NAT", "VLAN"]:
             print("Invalid Mode: ", parameter['mode'])
             return test_cases
 
-        instantiate_profile_obj.set_radio_config()
+
 
         if parameter['mode'] == "NAT":
             mode = "NAT"
