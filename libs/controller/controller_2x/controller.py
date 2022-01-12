@@ -384,6 +384,28 @@ class UProfileUtility:
         }
         self.mode = None
 
+    def set_mesh_services(self):
+        self.base_profile_config["interfaces"][1]["ipv4"]["subnet"] = "192.168.97.1/24"
+        self.base_profile_config["interfaces"][1]["ipv4"]["dhcp"]["lease-count"] = 100
+        del self.base_profile_config['metrics']['wifi-frames']
+        del self.base_profile_config['metrics']['dhcp-snooping']
+        var = {
+            "filters": ["probe",
+                        "auth"]
+                }
+        self.base_profile_config["metrics"]['wifi-frames'] = var
+        del self.base_profile_config['services']
+        var2 = {
+            "lldp":{
+                "describe": "uCentral",
+                "location": "universe"
+            },
+            "ssh" : {
+                "port" : 22
+            }
+        }
+        self.base_profile_config['services'] = var2
+
     def set_express_wifi(self, open_flow=None):
         if self.mode == "NAT":
             self.base_profile_config["interfaces"][0]["services"] = ["lldp", "ssh"]
@@ -479,13 +501,25 @@ class UProfileUtility:
         self.vlan_section["ssids"] = []
         self.vlan_ids = []
 
-    def set_mode(self, mode):
+    def set_mode(self, mode, mesh=False):
         self.mode = mode
         if mode == "NAT":
+            if mesh:
+                self.base_profile_config['interfaces'][0]['tunnel'] = {
+                    "proto": "mesh"
+                }
             self.base_profile_config['interfaces'][1]['ssids'] = []
         elif mode == "BRIDGE":
+            if mesh:
+                self.base_profile_config['interfaces'][0]['tunnel'] = {
+                    "proto": "mesh"
+                }
             self.base_profile_config['interfaces'][0]['ssids'] = []
         elif mode == "VLAN":
+            if mesh:
+                self.base_profile_config['interfaces'][0]['tunnel'] = {
+                    "proto": "mesh"
+                }
             del self.base_profile_config['interfaces'][1]
             self.base_profile_config['interfaces'][0]['ssids'] = []
             self.base_profile_config['interfaces'] = []
