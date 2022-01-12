@@ -366,24 +366,24 @@ class ChamberView:
                                attachment_type="image/png", extension=None)
 
     def create_mesh_scenario(self):
-        upstream_list = []
-        for data in range(0,len(self.access_point_data)):
-            self.CreateDut = DUT(lfmgr=self.lanforge_ip,
-                                 port=self.lanforge_port,
-                                 dut_name="upstream" + str(data))
-            self.CreateDut.lan_port = "10.28.2.1/24"
-            name = "upstream" + str(data)
-            upstream_list.append(name)
+        # upstream_list = []
+        # for data in range(0,len(self.access_point_data)):
+        self.CreateDut = DUT(lfmgr=self.lanforge_ip,
+                             port=self.lanforge_port,
+                             dut_name="upstream" )      # + str(data))
+        self.CreateDut.lan_port = "10.28.2.1/24"
+        # name = "upstream" + str(data)
+        # upstream_list.append(name)
 
-            self.CreateDut.setup()
-            data = data + 1
+        self.CreateDut.setup()
+        # data = data + 1
         self.raw_line = [
             ["profile_link " + self.upstream_resource_2 + " upstream-dhcp 1 NA NA " + self.upstream_port_2.split(".")[2] + ",AUTO -1 NA"],
-            ["profile_link " + self.uplink_resource_2 + " uplink-nat 1 'DUT: " + str(upstream_list[0]) + " LAN " + self.upstream_subnet + "' NA " + self.uplink_port_2.split(".")[2] + "," + self.upstream_port_2.split(".")[2] + " -1 NA"],
+            ["profile_link " + self.uplink_resource_2 + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet + "' NA " + self.uplink_port_2.split(".")[2] + "," + self.upstream_port_2.split(".")[2] + " -1 NA"],
             ["profile_link " + self.upstream_resource_3 + " upstream-dhcp 1 NA NA " + self.upstream_port_3.split(".")[2] + ",AUTO -1 NA"],
-            ["profile_link " + self.uplink_resource_3 + " uplink-nat 1 'DUT: " + str(upstream_list[1]) + " LAN " + self.upstream_subnet + "' NA " + self.uplink_port_3.split(".")[2] + "," + self.upstream_port_3.split(".")[2] + " -1 NA"],
+            ["profile_link " + self.uplink_resource_3 + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet + "' NA " + self.uplink_port_3.split(".")[2] + "," + self.upstream_port_3.split(".")[2] + " -1 NA"],
             ["profile_link " + self.upstream_resource_4 + " upstream-dhcp 1 NA NA " + self.upstream_port_4.split(".")[2] + ",AUTO -1 NA"],
-            ["profile_link " + self.uplink_resource_4 + " uplink-nat 1 'DUT: " + str(upstream_list[2]) + " LAN " + self.upstream_subnet + "' NA " + self.uplink_port_4.split(".")[2] + "," + self.upstream_port_4.split(".")[2] + " -1 NA"]
+            ["profile_link " + self.uplink_resource_4 + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet + "' NA " + self.uplink_port_4.split(".")[2] + "," + self.upstream_port_4.split(".")[2] + " -1 NA"]
         ]
         print(self.raw_line)
         mesh = self.Chamber_View()
@@ -391,24 +391,24 @@ class ChamberView:
 
     def create_mesh_scenario_dhcp_disable(self):
 
-        upstream_list = []
-        for data in range(0,len(self.access_point_data)):
-            self.CreateDut = DUT(lfmgr=self.lanforge_ip,
-                                 port=self.lanforge_port,
-                                 dut_name="upstream" + str(data))
-            self.CreateDut.lan_port = "10.28.2.1/24"
-            name = "upstream" + str(data)
-            upstream_list.append(name)
+        # upstream_list = []
+        # for data in range(0,len(self.access_point_data)):
+        self.CreateDut = DUT(lfmgr=self.lanforge_ip,
+                             port=self.lanforge_port,
+                             dut_name="upstream" )
+        self.CreateDut.lan_port = "10.28.2.1/24"
+        # name = "upstream" + str(data)
+        # upstream_list.append(name)
 
-            self.CreateDut.setup()
-            data = data + 1
+        self.CreateDut.setup()
+        # data = data + 1
         self.raw_line = [
             ["profile_link " + self.upstream_resource_2 + " upstream-dhcp 1 NA NA " + self.upstream_port_2.split(".")[2] + ",AUTO -1 NA"],
-            ["profile_link " + self.uplink_resource_2 + " uplink-nat 1 'DUT: " + str(upstream_list[0]) + " LAN " + self.upstream_subnet + "' NA " + self.uplink_port_2.split(".")[2] + "," + self.upstream_port_2.split(".")[2] + " -1 NA"],
+            ["profile_link " + self.uplink_resource_2 + " uplink-nat 1 'DUT:  upstream LAN " + self.upstream_subnet + "' NA " + self.uplink_port_2.split(".")[2] + "," + self.upstream_port_2.split(".")[2] + " -1 NA"],
             ["profile_link " + self.upstream_resource_3 + " upstream 1 NA NA " + self.upstream_port_3.split(".")[2] + ",AUTO -1 NA"],
-            ["profile_link " + self.uplink_resource_3 + " uplink-nat 1 'DUT: " + str(upstream_list[1]) + " LAN " + self.upstream_subnet + "' NA " + self.uplink_port_3.split(".")[2] + "," + self.upstream_port_3.split(".")[2] + " -1 NA"],
+            ["profile_link " + self.uplink_resource_3 + " uplink-nat 1 'DUT:  upstream LAN " + self.upstream_subnet + "' NA " + self.uplink_port_3.split(".")[2] + "," + self.upstream_port_3.split(".")[2] + " -1 NA"],
             ["profile_link " + self.upstream_resource_4 + " upstream 1 NA NA " + self.upstream_port_4.split(".")[2] + ",AUTO -1 NA"],
-            ["profile_link " + self.uplink_resource_4 + " uplink-nat 1 'DUT: " + str(upstream_list[2]) + " LAN " + self.upstream_subnet + "' NA " + self.uplink_port_4.split(".")[2] + "," + self.upstream_port_4.split(".")[2] + " -1 NA"]
+            ["profile_link " + self.uplink_resource_4 + " uplink-nat 1 'DUT:  upstream LAN " + self.upstream_subnet + "' NA " + self.uplink_port_4.split(".")[2] + "," + self.upstream_port_4.split(".")[2] + " -1 NA"]
         ]
         print(self.raw_line)
         mesh = self.Chamber_View()
