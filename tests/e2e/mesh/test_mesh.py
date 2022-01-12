@@ -12,6 +12,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ]
     },
+    "mesh": "yes",
     "rf": {},
     "radius": False
 }
