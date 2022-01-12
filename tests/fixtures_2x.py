@@ -822,6 +822,14 @@ class Fixtures_2x:
                             print(e)
                             test_cases["wpa2_personal"] = False
 
+        try:
+            if parameter['mesh']:
+                print("yes")
+                instantiate_profile_obj.set_mesh_services()
+        except Exception as e:
+            pass
+
+
         dut_data = []
         ssid_data = []
         # this will return configuration of your testbed from tests/conftest.py get_configuration fixtures
