@@ -75,6 +75,8 @@ class RunTest:
                 self.uplink_resource_4 = self.uplink_port_4.split(".")[0] + "." + self.uplink_port_4.split(".")[1]
                 self.upstream_subnet = lanforge_data["upstream_subnet-mobile-sta"]
                 print("hi", self.lanforge_port)
+                self.local_report_path = local_report_path
+
         else:
             self.lanforge_ip = lanforge_data["ip"]
             self.lanforge_port = lanforge_data["port"]
@@ -794,6 +796,7 @@ class RunTest:
         self.msthpt_obj = ApAutoTest(lf_host=self.lanforge_ip,
                                      lf_port=self.lanforge_port,
                                      ssh_port=self.lf_ssh_port,
+
                                      lf_user="lanforge",
                                      lf_password="lanforge",
                                      instance_name=instance_name,
@@ -838,6 +841,8 @@ class RunTest:
         self.mesh_obj = MeshTest(
                        lf_host=self.lanforge_ip,
                        lf_port=self.lanforge_port,
+                       ssh_port=self.lf_ssh_port,
+                       local_lf_report_dir=self.local_report_path,
                        lf_user="lanforge",
                        lf_password = "lanforge",
                        instance_name = instance_name,
