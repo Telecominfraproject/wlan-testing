@@ -34,7 +34,7 @@ class TestMesh(object):
                ['radios-2-3: 1.4.7 wiphy1'], ['ap_arrangements: Current Position'], ['sta_position: Current Position'],
                ['path: Orbit Current'], ['traffic_types: UDP;TCP'], ['direction: Both'], ['tests: Throughput'], ['traf_combo: N2']]
 
-        mesh_o = lf_test.mesh_test(instance_name="MESH-01-INSTANCE", raw_lines=raw_lines)
+        mesh_o = lf_test.mesh_test(instance_name="meshtest-01", raw_lines=raw_lines)
         report_name = mesh_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         print("report name ", report_name)
         entries = os.listdir("../reports/" + report_name + '/')
