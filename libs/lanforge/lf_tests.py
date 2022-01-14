@@ -74,6 +74,7 @@ class RunTest:
                 self.uplink_resource_3 = self.uplink_port_3.split(".")[0] + "." + self.uplink_port_3.split(".")[1]
                 self.uplink_resource_4 = self.uplink_port_4.split(".")[0] + "." + self.uplink_port_4.split(".")[1]
                 self.upstream_subnet = lanforge_data["upstream_subnet-mobile-sta"]
+                self.lf_ssh_port = lanforge_data["ssh_port"]
                 print("hi", self.lanforge_port)
                 self.local_report_path = local_report_path
 
@@ -101,9 +102,9 @@ class RunTest:
             #                              _influx_org=influx_params["influx_org"],
             #                              _influx_token=influx_params["influx_token"],
             #                              _influx_bucket=influx_params["influx_bucket"])
-            self.local_report_path = local_report_path
-            if not os.path.exists(self.local_report_path):
-                os.mkdir(self.local_report_path)
+        self.local_report_path = local_report_path
+        if not os.path.exists(self.local_report_path):
+            os.mkdir(self.local_report_path)
             # self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
 
 
