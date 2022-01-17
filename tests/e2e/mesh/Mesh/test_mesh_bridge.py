@@ -30,11 +30,12 @@ class TestMesh(object):
 
     @pytest.mark.wpa2_personal
     def testmesh_2g(self, setup_mesh_profile_fix, lf_test, lf_tools):
-        raw_lines = [['selected_dut2: tip-node2 OpenWifi123 90:3c>b3:9d:69:36(1)'], ['selected_dut5: tip-node2 OpenWifi 90:3c:b3:9d:69:2f(2)'], ['sta_amount-2: 2'], ['radios-2-0: 1.4.6 wiphy0'],
-               ['radios-2-3: 1.4.7 wiphy1'], ['ap_arrangements: Current Position'], ['sta_position: Current Position'],
-               ['path: Orbit Current'], ['traffic_types: UDP;TCP'], ['direction: Both'], ['tests: Throughput'], ['traf_combo: N2']]
+        raw_lines = [['selected_dut2: tip-node-2 ssid_wpa2_2g 90:3c:b3:9d:69:36(2)'], ['selected_dut5: tip-node-2 ssid_wpa2_5g 90:3c:b3:9d:69:2e(1)'], ['sta_amount-2: 5'], ['radios-2-0: 1.4.6 wiphy0'],
+               ['ap_arrangements: Current Position'], ['sta_position: Current Position'],
+               ['path: Orbit Current'], ['traffic_types: TCP'], ['direction: Both'], ['tests: Throughput'], ['traf_combo: N2'],
+                     ["skip_dhcp: 1"], ["skip_5: 1"], ]
 
-        mesh_o = lf_test.mesh_test(instance_name="meshtest-01", raw_lines=raw_lines)
+        mesh_o = lf_test.mesh_test(instance_name="test_mesh1", raw_lines=raw_lines)
         report_name = mesh_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         print("report name ", report_name)
         entries = os.listdir("../reports/" + report_name + '/')
