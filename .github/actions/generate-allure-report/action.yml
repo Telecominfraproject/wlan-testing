@@ -57,9 +57,6 @@ runs:
       cat << EOF >> "${{ inputs.results_path }}/environment.properties"
 
       Tests.CommitId=${{ github.sha }}
-      CiRun.Id=${{ github.run_id }}
-      CiRun.Number=${{ github.run_number }}
-      CiRun.Url=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
       EOF
 
   - name: generate Allure report

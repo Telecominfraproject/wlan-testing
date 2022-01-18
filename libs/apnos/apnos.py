@@ -36,8 +36,10 @@ class APNOS:
         self.password = credentials['password']  # if mode=1, enter jumphost password else ap password
         self.port = credentials['port']  # if mode=1, enter jumphost ssh port else ap ssh port
         self.mode = credentials['jumphost']  # 1 for jumphost, 0 for direct ssh
+
         if 'mode' in credentials:
             self.type = credentials['mode']
+
         if self.mode:
             self.tty = credentials['jumphost_tty']  # /dev/ttyAP1
             # kill minicom instance

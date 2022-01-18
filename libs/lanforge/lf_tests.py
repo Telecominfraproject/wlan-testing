@@ -165,7 +165,7 @@ class RunTest:
                     station_name=[], key_mgmt="WPA-EAP",
                     pairwise="NA", group="NA", wpa_psk="DEFAULT",
                     ttls_passwd="nolastart", ieee80211w=1,
-                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius",cleanup=True):
+                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius",d_vlan=False,cleanup=True):
         self.eap_connect = TTLSTest(host=self.lanforge_ip, port=self.lanforge_port,
                                     sta_list=station_name, vap=False, _debug_on=self.debug)
 
@@ -209,15 +209,21 @@ class RunTest:
         self.eap_connect.sta_list = station_name
         self.eap_connect.build(extra_securities=extra_securities)
         self.eap_connect.start(station_name, True, True)
+        if d_vlan:
+           self.station_ip = {}
         for sta_name in station_name:
             # try:
             station_data_str = ""
             # sta_url = self.eap_connect.get_station_url(sta_name)
             # station_info = self.eap_connect.json_get(sta_url)
             station_info = self.eap_connect.json_get("port/1/1/" + sta_name)
+
             for i in station_info["interface"]:
                 try:
                     station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
+                    if d_vlan:
+                        if i == "ip":
+                            self.station_ip[sta_name] = station_info["interface"][i]
                 except Exception as e:
                     print(e)
             allure.attach(name=str(sta_name), body=str(station_data_str))
@@ -246,7 +252,7 @@ class RunTest:
             cx_data = cx_data + "\n"
         allure.attach(name="cx_data", body=str(cx_data))
         if cleanup:
-            self.eap_connect.cleanup(station_name)
+           self.eap_connect.cleanup(station_name)
         return self.eap_connect.passes()
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
@@ -474,7 +480,7 @@ class RunTest:
 
         influx.glob()
         return self.dualbandptest_obj
-      
+
     def apstabilitytest(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
                         instance_name="test_demo", dut_5g="", dut_2g=""):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
