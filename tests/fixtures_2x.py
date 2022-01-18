@@ -507,7 +507,7 @@ class Fixtures_2x:
                     else:
                         print("no")
                         var = False
-
+                for j in profile_data["ssid"][mode]:
                     if mode in get_markers.keys() and get_markers[mode]:
                         try:
                             if j["appliedRadios"].__contains__("2G"):
@@ -516,6 +516,7 @@ class Fixtures_2x:
                                 lf_dut_data.append(j)
                             j["appliedRadios"] = list(set(j["appliedRadios"]))
                             j['security'] = 'wpa2'
+
                             if var :
                                 RADIUS_SERVER_DATA = j["radius_auth_data"]
                                 RADIUS_ACCOUNTING_DATA = j['radius_acc_data']
