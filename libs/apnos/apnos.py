@@ -36,7 +36,8 @@ class APNOS:
         self.password = credentials['password']  # if mode=1, enter jumphost password else ap password
         self.port = credentials['port']  # if mode=1, enter jumphost ssh port else ap ssh port
         self.mode = credentials['jumphost']  # 1 for jumphost, 0 for direct ssh
-        self.model = credentials['mode']
+        if 'mode' in credentials:
+            self.type = credentials['mode']
         if self.mode:
             self.tty = credentials['jumphost_tty']  # /dev/ttyAP1
             # kill minicom instance
@@ -603,13 +604,13 @@ class APNOS:
         return status
 
     def dfs(self):
-        if self.model == "wifi5":
+        if self.type == "wifi5":
             cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && echo 1 > dfs_simulate_radar"
             print("cmd: ", cmd)
             if self.mode:
                 command = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                           f"cmd --value \"{cmd}\" "
-        elif self.model == "wifi6":
+        elif self.type == "wifi6":
             cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && echo 1 > dfs_simulate_radar'
             print("cmd: ", cmd)
             if self.mode:
@@ -622,13 +623,13 @@ class APNOS:
         client.close()
 
     def dfs_logread(self):
-        if self.model == "wifi5":
+        if self.type == "wifi5":
             cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && logread | grep DFS"
             print("cmd: ", cmd)
             if self.mode:
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                       f"cmd --value \"{cmd}\" "
-        elif self.model == "wifi6":
+        elif self.type == "wifi6":
             cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && logread | grep DFS'
             print("cmd: ", cmd)
             if self.mode:
