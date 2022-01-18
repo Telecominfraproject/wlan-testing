@@ -814,6 +814,18 @@ class RunTest:
         atten_obj = CreateAttenuator(self.lanforge_ip, self.lanforge_port, serno, idx, val)
         atten_obj.build()
 
+    def attenuator_serial_2g_radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
+                                   vlan_id=100, sta_mode=0, station_name=[]):
+        radio = self.twog_radios[0]
+        atten_serial = self.attenuator_serial()
+        Client_Connect_Using_Radio(ssid=ssid, passkey=passkey, security=security, mode=mode,
+                                   vlan_id=vlan_id, radio=radio, sta_mode=sta_mode,
+                                   station_name=station_name)
+
+
+
+
+
 
 
 if __name__ == '__main__':
