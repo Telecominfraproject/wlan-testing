@@ -648,7 +648,6 @@ def response_device(request, model):
     securityToken = request.config.getini("securityToken")
     perfectoURL = request.config.getini("perfectoURL")
     url = f"https://{perfectoURL}.perfectomobile.com/services/handsets?operation=list&securityToken={securityToken}&model={model}"
-    print("URL:" + url)
     resp = requests.get(url=url)
     return ET.fromstring(resp.content)
 
@@ -695,5 +694,5 @@ def is_device_Available_timeout(request, model):
             print("Device is available and we can instantiate the driver")
             return True
 
-    print("Device was not available even after checking for 5 mins")
+    print(f"Device was not available even after checking for {(deviceRecheckingInterval * deviceRecheckingTotalInterations)} seconds")
     return False
