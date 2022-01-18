@@ -86,6 +86,7 @@ jobs:
   test:
     runs-on: [ self-hosted, small ]
     needs: [ build ]
+    timeout-minutes: 1440
 
     steps:
     - uses: actions/checkout@v2
