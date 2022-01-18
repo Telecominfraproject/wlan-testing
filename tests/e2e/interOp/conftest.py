@@ -11,6 +11,8 @@ import pytest
 import logging
 import re
 import allure
+import requests
+from xml.etree import ElementTree as ET
 
 sys.path.append(
     os.path.dirname(
@@ -400,6 +402,9 @@ def setup_perfectoMobile_android(request):
         # 'bundleId' : request.config.getini("appPackage-android"),
     }
 
+    if not is_device_Available_timeout(request, capabilities['model']):
+        assert False, "Unable to get device."
+
     driver = webdriver.Remote(
         'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
         capabilities)
@@ -504,6 +509,9 @@ def setup_perfectoMobileWeb(request):
         'securityToken': request.config.getini("securityToken"),
     }
 
+    if not is_device_Available_timeout(request, capabilities['model']):
+        assert False, "Unable to get device."
+
     rdriver = webdriver.Remote(
         'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
         capabilities)
@@ -566,6 +574,10 @@ def setup_perfectoMobile_iOS(request):
         # 'bundleId' : request.config.getini("bundleId-iOS"),
         'useAppiumForHybrid': 'false',
     }
+
+    # Check if the device is available
+    if not is_device_Available_timeout(request, capabilities['model']):
+        assert False, "Unable to get device."
 
     driver = webdriver.Remote(
         'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
@@ -631,3 +643,57 @@ def setup_perfectoMobile_iOS(request):
         yield -1
     else:
         yield driver, reporting_client
+# Does a HTTP GET request to Perfecto cloud and gets response and information related to a headset
+def response_device(request, model):
+    securityToken = request.config.getini("securityToken")
+    perfectoURL = request.config.getini("perfectoURL")
+    url = f"https://{perfectoURL}.perfectomobile.com/services/handsets?operation=list&securityToken={securityToken}&model={model}"
+    print("URL:" + url)
+    resp = requests.get(url=url)
+    return ET.fromstring(resp.content)
+
+# Get an attribute value from the handset response
+def get_attribute_device(responseXml, attribute):
+    try:
+        return responseXml.find('handset').find(attribute).text
+    except:
+        print(f"Unable to get value of {attribute} from response")
+        return ""
+
+# Checks to see if a particular handset is available
+def is_device_available(request, model):
+    try:
+        responseXml = response_device(request, model)
+    except:
+        print("Unable to get response.")
+        raise Exception("Unable to get response.")
+    device_available = get_attribute_device(responseXml, 'available')
+    print("Result:" + device_available)
+    if device_available == 'false':
+        allocated_to = get_attribute_device(responseXml, 'allocatedTo')
+        print("The device is currently allocated to:" + allocated_to)
+        return False
+    return True
+
+# Rechecking for a busy device. By default we are polling the device every 30 secs for 5 iterations for a total of 5x30=150sec(2.5 Mins)
+def is_device_Available_timeout(request, model):
+    counter_time = 0
+    deviceRecheckingInterval = 30
+    deviceRecheckingTotalInterations = 5
+    try:
+        device_available = is_device_available(request, model)
+    except:
+        print("Unable to get attributes from the response.")
+
+    while counter_time < deviceRecheckingTotalInterations:
+        if not device_available:
+            print(f"Device not available.Rechecking after {deviceRecheckingInterval} seconds")
+            time.sleep(deviceRecheckingInterval)         
+            counter_time = counter_time + 1
+            device_available = is_device_available(request, model)
+        else:
+            print("Device is available and we can instantiate the driver")
+            return True
+
+    print("Device was not available even after checking for 5 mins")
+    return False
