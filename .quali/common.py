@@ -21,6 +21,8 @@ def __wait_for_status(session, res_id, field, target_status):
         if status == target_status:
             break
 
+        print(f'current reservation status: {status}')
+
         if timer >= TIMEOUT:
             raise RuntimeError(f'waiting for reservation to reach status {target_status} timed out')
 

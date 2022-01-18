@@ -53,4 +53,5 @@ runs:
       </html>
       EOF
 
-      aws s3 cp --acl public-read index.html s3://${AWS_S3_BUCKET_NAME}/${{ inputs.test_type }}/${{ inputs.testbed }}/latest/index.html
+      # setting metadata to be able to easily determine latest run number
+      aws s3 cp --acl public-read --metadata latest=${{ github.run_number }} --content-type text/html index.html s3://${AWS_S3_BUCKET_NAME}/${{ inputs.test_type }}/${{ inputs.testbed }}/latest/index.html

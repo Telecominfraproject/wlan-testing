@@ -247,7 +247,9 @@ def get_configuration(testbed, request):
         version = request.config.getini("firmware")
         version_list = version.split(",")
         for i in range(len(CONFIGURATION[testbed]["access_point"])):
-            CONFIGURATION[testbed]["access_point"][i]["version"] = version_list[i]
+            print("i", i)
+            print(version_list)
+            CONFIGURATION[testbed]["access_point"][i]["version"] = version_list[0]
     yield CONFIGURATION[testbed]
 
 

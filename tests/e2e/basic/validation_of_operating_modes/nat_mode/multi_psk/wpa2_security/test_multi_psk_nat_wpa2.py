@@ -10,7 +10,7 @@ import time
 import pytest
 import allure
 
-pytestmark = [pytest.mark.multipsk, pytest.mark.nat, pytest.mark.regression, pytest.mark.regression_multipsk]
+pytestmark = [pytest.mark.regression, pytest.mark.multipsk, pytest.mark.nat, pytest.mark.regression, pytest.mark.regression_multipsk]
 # pytest.mark.usefixtures("setup_test_run")]
 
 

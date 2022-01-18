@@ -36,15 +36,27 @@ runs:
         cp -r "${{ inputs.history_path }}" "${{ inputs.results_path }}/history"
       fi
 
+  - name: create executor information
+    shell: bash
+    run: |
+      cat << EOF >> "${{ inputs.results_path }}/executor.json"
+      {
+          "reportName": "${{ github.repository }} ${{ github.workflow }} #${{ github.run_number }}",
+          "buildName": "${{ github.repository }} ${{ github.workflow }} #${{ github.run_number }}",
+          "buildOrder": ${{ github.run_number }},
+          "name": "Github runner",
+          "reportUrl": "../${{ github.run_number }}/index.html",
+          "buildUrl": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+          "type": "github"
+      }
+      EOF
+
   - name: add report metadata
     shell: bash
     run: |
       cat << EOF >> "${{ inputs.results_path }}/environment.properties"
 
       Tests.CommitId=${{ github.sha }}
-      CiRun.Id=${{ github.run_id }}
-      CiRun.Number=${{ github.run_number }}
-      CiRun.Url=https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
       EOF
 
   - name: generate Allure report
