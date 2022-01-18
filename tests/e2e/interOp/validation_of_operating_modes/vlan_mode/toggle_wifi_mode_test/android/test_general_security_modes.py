@@ -398,7 +398,7 @@ class TestToggleAirplaneModeAndroidVlanModeSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str(text_body))
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
-            Toggle_WifiMode_android(request, setup_perfectoMobile_android, connData)
+            Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
             ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, ssidPassword,
                                                                setup_perfectoMobile_android, connData)
             if (ip_check == ip):
@@ -442,7 +442,7 @@ class TestToggleAirplaneModeAndroidVlanModeSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str(text_body))
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
-            Toggle_WifiMode_android(request, setup_perfectoMobile_android, connData)
+            Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
             ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, ssidPassword,
                                                                setup_perfectoMobile_android, connData)
             if (ip_check == ip):
@@ -486,7 +486,7 @@ class TestToggleAirplaneModeAndroidVlanModeSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str(text_body))
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
-            Toggle_WifiMode_android(request, setup_perfectoMobile_android, connData)
+            Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
             ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, ssidPassword,
                                                                setup_perfectoMobile_android, connData)
             if (ip_check == ip):
@@ -530,7 +530,7 @@ class TestToggleAirplaneModeAndroidVlanModeSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str(text_body))
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
-            Toggle_WifiMode_android(request, setup_perfectoMobile_android, connData)
+            Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
             ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, ssidPassword,
                                                                setup_perfectoMobile_android, connData)
             if (ip_check == ip):
@@ -574,7 +574,7 @@ class TestToggleAirplaneModeAndroidVlanModeSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str(text_body))
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
-            Toggle_WifiMode_android(request, setup_perfectoMobile_android, connData)
+            Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
             ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, ssidPassword,
                                                                setup_perfectoMobile_android, connData)
             if (ip_check == ip):
@@ -618,7 +618,7 @@ class TestToggleAirplaneModeAndroidVlanModeSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str(text_body))
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
-            Toggle_WifiMode_android(request, setup_perfectoMobile_android, connData)
+            Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
             ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, ssidPassword,
                                                                setup_perfectoMobile_android, connData)
             if (ip_check == ip):
