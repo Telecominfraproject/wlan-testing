@@ -617,6 +617,23 @@ RATE_LIMITING_RADIUS_ACCOUNTING_DATA = {
     "password": "password",
     "pk_password": "whatever"
 }
+DYNAMIC_VLAN_RADIUS_SERVER_DATA = {
+    "ip": "3.20.165.131",
+    "port": 1812,
+    "secret": "testing123",
+    "user": "user",
+    "password": "password",
+    "pk_password": "whatever"
+}
+
+DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA = {
+    "ip": "3.20.165.131",
+    "port": 1813,
+    "secret": "testing123",
+    "user": "user",
+    "password": "password",
+    "pk_password": "whatever"
+}
 
 PASSPOINT_RADIUS_SERVER_DATA = {
     "ip": "52.234.179.191",
