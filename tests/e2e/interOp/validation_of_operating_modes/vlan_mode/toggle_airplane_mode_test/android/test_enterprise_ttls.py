@@ -18,7 +18,7 @@ if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.ToggleAirplaneMode,
-              pytest.mark.client_reconnect, pytest.mark.enterprise]
+              pytest.mark.client_reconnect, pytest.mark.enterprise, pytest.mark.vlan]
 
 from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp,\
     get_ip_add_check_and, verifyUploadDownloadSpeed_android, wifi_connect, wifi_disconnect_and_forget, get_ip_add_eap_and
@@ -27,14 +27,14 @@ setup_params_enterprise = {
     "mode": "VLAN",
     "ssid_modes": {
         "wpa_enterprise": [
-            {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["5G"]}],
+            {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["5G"], "vlan": 100}],
         "wpa2_enterprise": [
-            {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"]}],
+            {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"], "vlan": 100}],
         "wpa3_enterprise": [
-            {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"]}]},
+            {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "vlan": 100}]},
 
     "rf": {},
     "radius": True

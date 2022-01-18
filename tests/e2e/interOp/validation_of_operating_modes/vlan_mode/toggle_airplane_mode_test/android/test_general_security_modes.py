@@ -17,7 +17,8 @@ import allure
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.ToggleAirplaneMode, pytest.mark.client_reconnect]
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.ToggleAirplaneMode,
+              pytest.mark.client_reconnect, pytest.mark.vlan]
 
 from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp,\
     get_ip_add_check_and, verifyUploadDownloadSpeed_android, wifi_connect, wifi_disconnect_and_forget, get_ip_add_and
@@ -25,15 +26,15 @@ from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_Airplan
 setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
-        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
+        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
                 {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
-                 "security_key": "something"}],
-        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"]},
-                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"]}],
+                 "security_key": "something", "vlan": 100}],
+        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"], "vlan": 100},
+                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"], "vlan": 100}],
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"],
-             "security_key": "something"}]},
+             "security_key": "something", "vlan": 100}]},
     "rf": {},
     "radius": False
 }
