@@ -296,7 +296,6 @@ jobs:
                     cpu: "250m"
                 command:
                   - /bin/bash
-                  - -x
                   - -c
                   - |
                     HOSTS="sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
