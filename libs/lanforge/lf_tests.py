@@ -45,6 +45,7 @@ from lf_multipsk import MultiPsk
 from lf_rvr_test import RvrTest
 from attenuator_serial import AttenuatorSerial
 from lf_atten_mod_test import CreateAttenuator
+from lf_tools import ChamberView
 
 
 class RunTest:
@@ -817,10 +818,26 @@ class RunTest:
     def attenuator_serial_2g_radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
                                    vlan_id=100, sta_mode=0, station_name=[]):
         radio = self.twog_radios[0]
+        #index 0 of atten_serial_radio will ser no of 1st 2g radio and index 1 will ser no of 2nd and 3rd 2g radio
+        atten_serial_radio = []
         atten_serial = self.attenuator_serial()
+        obj = ChamberView()
         Client_Connect_Using_Radio(ssid=ssid, passkey=passkey, security=security, mode=mode,
                                    vlan_id=vlan_id, radio=radio, sta_mode=sta_mode,
                                    station_name=station_name)
+        signal1 = obj.station_data_query(station_name=station_name[0], query="signal")
+        atten_sr = atten_serial[0].split(".")
+        for i in range(4):
+            self.attenuator_modify(int(atten_sr[2]), i, 400)
+            time.sleep(0.5)
+        signal2 = obj.station_data_query(station_name=station_name[0], query="signal")
+        if abs(signal2) - abs(signal1) >= 5:
+            atten_serial_radio = atten_sr
+        else:
+            atten_serial_radio = atten_sr.reverse()
+        self.Client_disconnect(station_name=station_name)
+        return atten_serial_radio
+
 
 
 
