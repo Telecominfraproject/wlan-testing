@@ -300,6 +300,8 @@ jobs:
 
     - name: run tests
       run: |
+        set -x
+
         cat <<EOF | kubectl apply -f -
         apiVersion: batch/v1
         kind: Job
