@@ -29,6 +29,7 @@ class TestAtfBridge(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5733", name="WIFI-5733")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.atf
     def test_air_time_fairness_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
