@@ -1130,8 +1130,16 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                 "(//*[@label='IP Address']/parent::*/XCUIElementTypeStaticText)[2]").text
             print("ip_address_element_text: ", ip_address_element_text)
         except Exception as e:
-            print("IP Address not Found")
-            request.config.cache.set(key="select IP failed", value=str(e))
+            try:
+                scrollDown(setup_perfectoMobile)
+                print("Checking IP address")
+                # (//*[@label="IP Address"]/parent::*/XCUIElementTypeStaticText)[2]
+                ip_address_element_text = driver.find_element_by_xpath(
+                    "(//*[@label='IP Address']/parent::*/XCUIElementTypeStaticText)[2]").text
+                print("ip_address_element_text: ", ip_address_element_text)
+            except:
+                print("IP Address not Found")
+                request.config.cache.set(key="select IP failed", value=str(e))
 
         try:
             report.step_start("Forget Network")
@@ -1900,8 +1908,15 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
                 "(//*[@label='IP Address']/parent::*/XCUIElementTypeStaticText)[2]").text
             print("ip_address_element_text: ", ip_address_element_text)
         except Exception as e:
-            print("IP Address not Found")
-            request.config.cache.set(key="select IP failed", value=str(e))
+            try:
+                scrollDown(setup_perfectoMobile)
+                ip_address_element_text = driver.find_element_by_xpath(
+                    "(//*[@label='IP Address']/parent::*/XCUIElementTypeStaticText)[2]").text
+                print("ip_address_element_text: ", ip_address_element_text)
+            except:
+                print("IP Address not Found")
+                request.config.cache.set(key="select IP failed", value=str(e))
+
 
         try:
             time.sleep(2)
