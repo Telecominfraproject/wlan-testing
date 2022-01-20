@@ -2432,3 +2432,817 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     # --------------------- close app-------------------------------
     #closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
     return ip_address_element_text, is_internet
+#--------------------------------Gets ip address from ssid but it won't get disconnected from it------------------
+def get_ip_add_ios(request, WifiName, WifiPass, setup_perfectoMobile, connData):
+    print("\n-------------------------------------")
+    print("Select Wifi/Get IP Address IOS Connection")
+    print("-------------------------------------")
+
+    reportFlag = True
+    is_internet = False
+    ip_address_element_text = False
+
+    print("Verifying Wifi/AP Connection Details....")
+    report = setup_perfectoMobile[1]
+    driver = setup_perfectoMobile[0]
+
+    report.step_start("Switching Driver Context")
+    print("Switching Context to Native")
+    driver.switch_to.context('NATIVE_APP')
+    # driver.switch_to.context(contexts[0])
+
+    report.step_start("Set Wifi Network to " + WifiName)
+    # Open Settings Application
+    openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+
+    try:
+        time.sleep(2)
+        driver.implicitly_wait(2)
+        try:
+            print("Verifying Connected Wifi Connection")
+            report.step_start("Loading Wifi Page")
+            element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']")
+            element.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - unable to click on Wifi")
+
+        time.sleep(2)
+        driver.implicitly_wait(2)
+        # --------------------To Turn on WIFi Switch if already OFF--------------------------------
+        try:
+            get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
+            get_wifi_switch_element_text = get_wifi_switch_element.text
+            try:
+                if get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0:
+                    get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
+                    driver.implicitly_wait(1)
+                    get_wifi_switch_element.click()
+                    driver.implicitly_wait(1)
+                    i = 0
+                    for i in range(5):
+                        try:
+                            get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
+                            get_wifi_switch_element_text = get_wifi_switch_element.text
+                        except:
+                            print("Switch is OFF")
+
+                        if get_wifi_switch_element_text == "1" or get_wifi_switch_element_text == 1:
+                            print("WIFI Switch is ON")
+                            break
+                        else:
+                            try:
+                                get_wifi_switch_element = driver.find_element_by_xpath(
+                                    "//*[@label='Wi-Fi' and @value='0']")
+                                get_wifi_switch_element_text = get_wifi_switch_element.text
+                            except:
+                                print("WIFi switch is ON")
+                    if (get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0):
+                        print("switch is still OFF")
+                        closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+                        return ip_address_element_text, is_internet
+                else:
+                    print("Switch is Still OFF")
+                    closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+                    return ip_address_element_text, is_internet
+            except:
+                print("No switch element found")
+        except:
+            print("get_wifi_switch_element is ON")
+        # --------------------To Turn on WIFi Switch if already OFF--------------------------------
+
+    except:
+        print("Cannot find WIFI element")
+        closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+        return ip_address_element_text, is_internet
+
+    # ---------------------This is to Forget current connected SSID-------------------------------
+
+    try:
+        time.sleep(3)
+        print("getting in to Additional details")
+        report.step_start("Clicking More Info")
+        additional_details_element = driver.find_element_by_xpath("//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")
+        additional_details_element.click()
+        try:
+            print("Forget Connected Network")
+            forget_ssid = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
+            forget_ssid.click()
+            print("Forget old ssid")
+            try:
+                report.step_start("Forget SSID popup1")
+                forget_ssid_popup = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
+                forget_ssid_popup.click()
+
+                print("**alert** Forget SSID popup killed **alert**")
+            except:
+                print("Forget SSID popup not found")
+        except:
+            print("couldn't find forget ssid element")
+    except:
+        print("No connected SSID")
+
+    # ---------------------This is to Forget current connected SSID-------------------------------
+
+    # ---------------------To get all available SSID-------------------------------
+    print("Searching for Wifi: " + WifiName)
+    # allure.attach(name= body=str("Searching for Wifi: " + WifiName))
+    time.sleep(2)
+    report.step_start("Searching SSID")
+    print("Selecting Wifi: " + WifiName)
+    ssid_found = False
+    available_ssids = False
+
+    try:
+        for check_for_all_ssids in range(9):
+            available_ssids = get_all_available_ssids(driver)
+            allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
+            try:
+                if WifiName not in available_ssids:
+                    scrollDown(setup_perfectoMobile)
+                    time.sleep(2)
+                else:
+                    report.step_start("Selecting SSID To Connect")
+                    ssid_found = True
+                    print(WifiName + " : Found in Device")
+                    wifiSelElement = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
+                    print(wifiSelElement)
+                    wifiSelElement.click()
+                    print("Selecting SSID")
+                    # allure.attach(name= body=str(WifiName + " : Found in Device"))
+                    break
+            except:
+                print("couldn't connect to " + WifiName)
+                #request.config.cache.set(key="SelectingWifiFailed", value=str(e))
+                closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+                return ip_address_element_text, is_internet
+                pass
+
+        if not ssid_found:
+            print("could not found " + WifiName + " in device")
+            closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+            return ip_address_element_text, is_internet
+    except:
+        pass
+    # ---------------------To get all available SSID-------------------------------
+
+    # ---------------------This is to Select SSID-------------------------------
+
+    # ---------------------This is to Select SSID-------------------------------
+    # ---------------------Set Password-------------------------------
+    try:
+        time.sleep(3)
+        print("Entering Password")
+        report.step_start("Entering Password")
+        wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
+        wifiPassword.send_keys(WifiPass)
+    except NoSuchElementException:
+        print("Enter Password Page Not Loaded")
+    # ---------------------Set Password-------------------------------
+
+    # ---------------------Click on join-------------------------------
+    try:
+        time.sleep(2)
+        print("Selecting join")
+        report.step_start("Clicking JOIN")
+        joinBTN = driver.find_element_by_xpath("//*[@label='Join']")
+        joinBTN.click()
+    except Exception as e:
+        print("Join Button Not Enabled...Password may not be needed")
+    # ---------------------Click on join-------------------------------
+
+    # ---------------------check if internet-------------------------------
+    try:
+        WifiInternetErrMsg2 = WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
+        # = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
+    except Exception as e:
+        is_internet = True
+        print("No Wifi-AP Error Internet Error: " + WifiName)
+        # Need to add Wait for Selected Wifi Xpath
+        # time.sleep(3)
+    # ---------------------check if internet-------------------------------
+
+    # ---------------------Additional INFO-------------------------------
+    try:
+        print("Selecting SSID: ", WifiName)
+        report.step_start("Additional details of SSID")
+        additional_details_element = WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((MobileBy.XPATH,
+                                            "//*[@label='" + WifiName + "']")))
+        # //*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']
+        additional_details_element.click()
+
+        try:
+            report.step_start("Checking SSID Name as Expected")
+            print("Checking SSID Name")
+            ssidname_text = driver.find_element_by_xpath("//*[@label='" + WifiName + "']").text
+            print(ssidname_text)
+            if(ssidname_text == WifiName):
+                print("SSID Matched")
+                allure.attach(name="SSID Matched ", body=str(WifiName))
+            else:
+                print("SSID Not Matched")
+                allure.attach(name="SSID Not Matched ", body=str(WifiName))
+                reportFlag = False
+                assert reportFlag
+        except:
+            print("SSID is not Checked in more Info")
+
+        try:
+            report.step_start("Checking WiFi Address")
+            print("Checking WIFI address")
+            # (//*[@label="IP Address"]/parent::*/XCUIElementTypeStaticText)[2]
+            wifi_address_element_text = driver.find_element_by_xpath(
+                "(//*[@label='Wi-Fi Address']/parent::*/XCUIElementTypeStaticText)[2]").text
+            print("wifi_address_element_text: ", wifi_address_element_text)
+            allure.attach(name="Connected SSID WiFi-Address: ", body=str(wifi_address_element_text))
+        except Exception as e:
+            print("WiFi-Address not Found")
+        try:
+            report.step_start("Checking IP Address")
+            print("Checking IP address")
+            # (//*[@label="IP Address"]/parent::*/XCUIElementTypeStaticText)[2]
+            ip_address_element_text = driver.find_element_by_xpath(
+                "(//*[@label='IP Address']/parent::*/XCUIElementTypeStaticText)[2]").text
+            print("ip_address_element_text: ", ip_address_element_text)
+        except Exception as e:
+            print("IP Address not Found")
+            request.config.cache.set(key="select IP failed", value=str(e))
+
+        # try:
+        #     report.step_start("Forget Network")
+        #     forget_ssid = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
+        #     forget_ssid.click()
+        #     print("Forget old ssid")
+        #     # time.sleep(2)
+        #     # driver.implicitly_wait(3)
+        #     try:
+        #         report.step_start("Forget Network popup")
+        #         forget_ssid_popup = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
+        #         forget_ssid_popup.click()
+        #     except:
+        #         print("in popup exception")
+
+        # except:
+        #     print("error on ssid element")
+
+    except Exception as e:
+        request.config.cache.set(key="select additional info failed", value=str(e))
+    # ---------------------Additional INFO-------------------------------
+
+    # --------------------- close app-------------------------------
+    closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+    return ip_address_element_text, is_internet
+#----------------Gets ip address of Enterprise ssids and won't forget it---------------
+def get_ip_add_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoMobile, connData):
+    print("\n-------------------------------------")
+    print("Get IP Address Enterprise IOS Connection")
+    print("-------------------------------------")
+
+    reportFlag = True
+    is_internet = False
+    ip_address_element_text = False
+
+    print("Verifying Wifi/AP Connection Details....")
+    report = setup_perfectoMobile[1]
+    driver = setup_perfectoMobile[0]
+
+    report.step_start("Switching Driver Context")
+    print("Switching Context to Native")
+    driver.switch_to.context('NATIVE_APP')
+    # driver.switch_to.context(contexts[0])
+
+    report.step_start("Set Wifi Network to " + WifiName)
+    # Open Settings Application
+    openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+
+    try:
+        time.sleep(2)
+        driver.implicitly_wait(2)
+        try:
+            print("Verifying Connected Wifi Connection")
+            report.step_start("Loading Wifi Page")
+            element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']")
+            element.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - unable to click on Wifi")
+
+        time.sleep(2)
+        driver.implicitly_wait(2)
+        # --------------------To Turn on WIFi Switch if already OFF--------------------------------
+        try:
+            get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
+            get_wifi_switch_element_text = get_wifi_switch_element.text
+            try:
+                if get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0:
+                    get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
+                    driver.implicitly_wait(1)
+                    get_wifi_switch_element.click()
+                    driver.implicitly_wait(1)
+                    i = 0
+                    for i in range(5):
+                        try:
+                            get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
+                            get_wifi_switch_element_text = get_wifi_switch_element.text
+                        except:
+                            print("switch is OFF")
+
+                        if get_wifi_switch_element_text == "1" or get_wifi_switch_element_text == 1:
+                            print("WIFI Switch is ON")
+                            break
+                        else:
+                            try:
+                                get_wifi_switch_element = driver.find_element_by_xpath(
+                                    "//*[@label='Wi-Fi' and @value='0']")
+                                get_wifi_switch_element_text = get_wifi_switch_element.text
+                            except:
+                                print("WIFi switch is ON")
+                    if (get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0):
+                        print("switch is still OFF")
+                        closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+                        return ip_address_element_text, is_internet
+                else:
+                    print("Switch is Still OFF")
+                    closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+                    return ip_address_element_text, is_internet
+            except:
+                print("No switch element found")
+        except:
+            print("get_wifi_switch_element is ON")
+        # --------------------To Turn on WIFi Switch if already OFF--------------------------------
+
+    except:
+        print("Cannot find WIFI element")
+        closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+        return ip_address_element_text, is_internet
+
+    # ---------------------This is to Forget current connected SSID-------------------------------
+
+    try:
+        time.sleep(2)
+        report.step_start("Selecting Connected SSID Info")
+        print("getting in to Additional details")
+        additional_details_element = driver.find_element_by_xpath(
+            "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")
+        additional_details_element.click()
+        try:
+            print("Forget Connected Network")
+            report.step_start("Forget Connected SSID")
+            forget_ssid = driver.find_element_by_xpath("//*[@label='Forget This Network']")
+            forget_ssid.click()
+            print("Forget old ssid")
+            try:
+                report.step_start("Forget SSID popup1")
+                forget_ssid_popup = driver.find_element_by_xpath("//*[@label='Forget']")
+                forget_ssid_popup.click()
+
+                print("**alert** Forget SSID popup killed **alert**")
+            except:
+                print("Forget SSID popup not found")
+        except:
+            print("couldn't find forget ssid element")
+    except:
+        print("No connected SSID")
+
+    # ---------------------This is to Forget current connected SSID-------------------------------
+
+    # ---------------------To get all available SSID-------------------------------
+    print("Searching for Wifi: " + WifiName)
+    # allure.attach(name= body=str("Searching for Wifi: " + WifiName))
+    time.sleep(2)
+    print("Selecting Wifi: " + WifiName)
+    ssid_found = False
+    available_ssids = False
+
+    try:
+        for check_for_all_ssids in range(9):
+            available_ssids = get_all_available_ssids(driver)
+            allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
+            try:
+                if WifiName not in available_ssids:
+                    scrollDown(setup_perfectoMobile)
+                    time.sleep(2)
+                else:
+                    report.step_start("Selecting SSID To Connect")
+                    ssid_found = True
+                    print(WifiName + " : Found in Device")
+                    wifiSelElement = WebDriverWait(driver, 30).until(
+                        EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
+                    print(wifiSelElement)
+                    wifiSelElement.click()
+                    print("Selecting SSID")
+                    # allure.attach(name= body=str(WifiName + " : Found in Device"))
+                    break
+            except:
+                print("couldn't connect to " + WifiName)
+                # request.config.cache.set(key="SelectingWifiFailed", value=str(e))
+                closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+                return ip_address_element_text, is_internet
+                pass
+
+        if not ssid_found:
+            print("could not found " + WifiName + " in device")
+            closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+            return ip_address_element_text, is_internet
+    except:
+        pass
+    # ---------------------To get all available SSID-------------------------------
+
+    # Set username
+    # -------------------------------------------------------
+    try:
+        driver.implicitly_wait(5)
+        report.step_start("Entering User")
+        print("Entering User name")
+        wifiUserElement = driver.find_element_by_xpath("//*[@label='Username']")
+        wifiUserElement.send_keys(User)
+    except NoSuchElementException:
+        print("Password Page Not Loaded, password May be cached in the System")
+        # -------------------------------------------------------
+
+    # ---------------------Set Password-------------------------------
+    try:
+        driver.implicitly_wait(5)
+        report.step_start("Entering Password")
+        print("Entering password")
+        wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
+        wifiPassword.send_keys(ttls_passwd)
+    except NoSuchElementException:
+        print("Enter Password Page Not Loaded")
+    # ---------------------Set Password-------------------------------
+    # -------------------------------------------------------
+
+    # ---------------------Click on join-------------------------------
+    try:
+        report.step_start("Clicking Join")
+        print("Clicking Join")
+        joinBTN = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Join']")))
+        joinBTN.click()
+    except Exception as e:
+        print("Join Button Not Enabled...Password may not be needed")
+    # ---------------------Click on join-------------------------------
+    # Selecting certificate
+    # -------------------------------------------------------
+    try:
+        report.step_start("Clicking Trust CA Cert")
+        print("Clicking Trust CA Cert")
+        certElement = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Trust']")))
+        certElement.click()
+    except NoSuchElementException:
+        print("Password Page Not Loaded, password May be cached in the System")
+    # ---------------------check if internet-------------------------------
+    try:
+        report.step_start("Checking Internet connection")
+        WifiInternetErrMsg2 = WebDriverWait(driver, 35).until(
+            EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
+        # = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
+    except Exception as e:
+        is_internet = True
+        print("No Wifi-AP Error Internet Error: " + WifiName)
+        # Need to add Wait for Selected Wifi Xpath
+        # time.sleep(3)
+    # ---------------------check if internet-------------------------------
+
+    # ---------------------Additional INFO-------------------------------
+    try:
+        driver.implicitly_wait(2)
+        print("Selecting SSID: ", WifiName)
+        report.step_start("Selecting More Info")
+        additional_details_element = WebDriverWait(driver, 35).until(
+            EC.presence_of_element_located((MobileBy.XPATH,
+                                            "//*[@label='" + WifiName + "']")))
+        # //*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']
+        additional_details_element.click()
+
+        try:
+            report.step_start("Checking SSID Name as Expected")
+            print("Checking SSID Name")
+            ssidname_text = driver.find_element_by_xpath("//*[@label='" + WifiName + "']").text
+            print(ssidname_text)
+            if(ssidname_text == WifiName):
+                print("SSID Matched")
+                allure.attach(name="SSID Matched ", body=str(WifiName))
+            else:
+                print("SSID Not Matched")
+                allure.attach(name="SSID Not Matched ", body=str(WifiName))
+                reportFlag = False
+                assert reportFlag
+        except:
+            print("SSID is not Checked in more Info")
+
+        try:
+            report.step_start("Checking WiFi Address")
+            print("Checking WIFI address")
+            # (//*[@label="IP Address"]/parent::*/XCUIElementTypeStaticText)[2]
+            wifi_address_element_text = driver.find_element_by_xpath(
+                "(//*[@label='Wi-Fi Address']/parent::*/XCUIElementTypeStaticText)[2]").text
+            print("wifi_address_element_text: ", wifi_address_element_text)
+            allure.attach(name="Connected SSID WiFi-Address: ", body=str(wifi_address_element_text))
+        except Exception as e:
+            print("WiFi-Address not Found")
+            allure.attach(name="No Connected SSID WiFi-Address Found")
+        try:
+            driver.implicitly_wait(5)
+            print("Checking IP address")
+            report.step_start("Checking IP address")
+            time.sleep(4)
+            # (//*[@label="IP Address"]/parent::*/XCUIElementTypeStaticText)[2]
+            ip_address_element_text = driver.find_element_by_xpath(
+                "(//*[@label='IP Address']/parent::*/XCUIElementTypeStaticText)[2]").text
+            print("ip_address_element_text: ", ip_address_element_text)
+        except Exception as e:
+            print("IP Address not Found")
+            request.config.cache.set(key="select IP failed", value=str(e))
+
+        # try:
+        #     time.sleep(2)
+        #     driver.implicitly_wait(2)
+        #     report.step_start("Forget Network")
+        #     forget_ssid = driver.find_element_by_xpath("//*[@label='Forget This Network']")
+        #     forget_ssid.click()
+        #     print("Forget old ssid")
+        #     # time.sleep(2)
+        #     # driver.implicitly_wait(3)
+        #     try:
+        #         report.step_start("Forget Network popup")
+        #         forget_ssid_popup = driver.find_element_by_xpath("//*[@label='Forget']")
+        #         forget_ssid_popup.click()
+        #     except:
+        #         print("in popup exception")
+        #
+        # except:
+        #     print("error on ssid element")
+
+
+    except Exception as e:
+        request.config.cache.set(key="select additional info failed", value=str(e))
+    # ---------------------Additional INFO-------------------------------
+
+    # --------------------- close app-------------------------------
+    closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+    return ip_address_element_text, is_internet
+
+
+
+
+#------------------Gets the ip address of already connected ssid---------------------------------------
+def get_ip_add_check_ios(request, WifiName, WifiPass, setup_perfectoMobile, connData):
+    print("\n-------------------------------------")
+    print("Select Wifi/Get IP Address IOS Connection")
+    print("-------------------------------------")
+
+    reportFlag = True
+    is_internet = False
+    ip_address_element_text = False
+
+    print("Verifying Wifi/AP Connection Details....")
+    report = setup_perfectoMobile[1]
+    driver = setup_perfectoMobile[0]
+
+    report.step_start("Switching Driver Context")
+    print("Switching Context to Native")
+    driver.switch_to.context('NATIVE_APP')
+    # driver.switch_to.context(contexts[0])
+
+    report.step_start("Set Wifi Network to " + WifiName)
+    # Open Settings Application
+    openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+
+    try:
+        time.sleep(2)
+        driver.implicitly_wait(2)
+        try:
+            print("Verifying Connected Wifi Connection")
+            report.step_start("Loading Wifi Page")
+            element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']")
+            element.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - unable to click on Wifi")
+
+        time.sleep(2)
+        driver.implicitly_wait(2)
+        # --------------------To Turn on WIFi Switch if already OFF--------------------------------
+        try:
+            get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
+            get_wifi_switch_element_text = get_wifi_switch_element.text
+            try:
+                if get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0:
+                    get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
+                    driver.implicitly_wait(1)
+                    get_wifi_switch_element.click()
+                    driver.implicitly_wait(1)
+                    i = 0
+                    for i in range(5):
+                        try:
+                            get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
+                            get_wifi_switch_element_text = get_wifi_switch_element.text
+                        except:
+                            print("Switch is OFF")
+
+                        if get_wifi_switch_element_text == "1" or get_wifi_switch_element_text == 1:
+                            print("WIFI Switch is ON")
+                            break
+                        else:
+                            try:
+                                get_wifi_switch_element = driver.find_element_by_xpath(
+                                    "//*[@label='Wi-Fi' and @value='0']")
+                                get_wifi_switch_element_text = get_wifi_switch_element.text
+                            except:
+                                print("WIFi switch is ON")
+                    if (get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0):
+                        print("switch is still OFF")
+                        closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+                        return ip_address_element_text, is_internet
+                else:
+                    print("Switch is Still OFF")
+                    closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+                    return ip_address_element_text, is_internet
+            except:
+                print("No switch element found")
+        except:
+            print("get_wifi_switch_element is ON")
+        # --------------------To Turn on WIFi Switch if already OFF--------------------------------
+
+    except:
+        print("Cannot find WIFI element")
+        closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+        return ip_address_element_text, is_internet
+
+    # # ---------------------This is to Forget current connected SSID-------------------------------
+    #
+    # try:
+    #     time.sleep(3)
+    #     print("getting in to Additional details")
+    #     report.step_start("Clicking More Info")
+    #     additional_details_element = driver.find_element_by_xpath("//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")
+    #     additional_details_element.click()
+    #     try:
+    #         print("Forget Connected Network")
+    #         forget_ssid = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
+    #         forget_ssid.click()
+    #         print("Forget old ssid")
+    #         try:
+    #             report.step_start("Forget SSID popup1")
+    #             forget_ssid_popup = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
+    #             forget_ssid_popup.click()
+    #
+    #             print("**alert** Forget SSID popup killed **alert**")
+    #         except:
+    #             print("Forget SSID popup not found")
+    #     except:
+    #         print("couldn't find forget ssid element")
+    # except:
+    #     print("No connected SSID")
+    #
+    # # ---------------------This is to Forget current connected SSID-------------------------------
+    #
+    # # ---------------------To get all available SSID-------------------------------
+    # print("Searching for Wifi: " + WifiName)
+    # # allure.attach(name= body=str("Searching for Wifi: " + WifiName))
+    # time.sleep(2)
+    # report.step_start("Searching SSID")
+    # print("Selecting Wifi: " + WifiName)
+    # ssid_found = False
+    # available_ssids = False
+    #
+    # try:
+    #     for check_for_all_ssids in range(9):
+    #         available_ssids = get_all_available_ssids(driver)
+    #         allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
+    #         try:
+    #             if WifiName not in available_ssids:
+    #                 scrollDown(setup_perfectoMobile)
+    #                 time.sleep(2)
+    #             else:
+    #                 report.step_start("Selecting SSID To Connect")
+    #                 ssid_found = True
+    #                 print(WifiName + " : Found in Device")
+    #                 wifiSelElement = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
+    #                 print(wifiSelElement)
+    #                 wifiSelElement.click()
+    #                 print("Selecting SSID")
+    #                 # allure.attach(name= body=str(WifiName + " : Found in Device"))
+    #                 break
+    #         except:
+    #             print("couldn't connect to " + WifiName)
+    #             #request.config.cache.set(key="SelectingWifiFailed", value=str(e))
+    #             closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+    #             return ip_address_element_text, is_internet
+    #             pass
+    #
+    #     if not ssid_found:
+    #         print("could not found " + WifiName + " in device")
+    #         closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+    #         return ip_address_element_text, is_internet
+    # except:
+    #     pass
+    # # ---------------------To get all available SSID-------------------------------
+    #
+    # # ---------------------This is to Select SSID-------------------------------
+    #
+    # # ---------------------This is to Select SSID-------------------------------
+    # # ---------------------Set Password-------------------------------
+    # try:
+    #     time.sleep(3)
+    #     print("Entering Password")
+    #     report.step_start("Entering Password")
+    #     wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
+    #     wifiPassword.send_keys(WifiPass)
+    # except NoSuchElementException:
+    #     print("Enter Password Page Not Loaded")
+    # # ---------------------Set Password-------------------------------
+    #
+    # # ---------------------Click on join-------------------------------
+    # try:
+    #     time.sleep(2)
+    #     print("Selecting join")
+    #     report.step_start("Clicking JOIN")
+    #     joinBTN = driver.find_element_by_xpath("//*[@label='Join']")
+    #     joinBTN.click()
+    # except Exception as e:
+    #     print("Join Button Not Enabled...Password may not be needed")
+    # # ---------------------Click on join-------------------------------
+    #
+    # # ---------------------check if internet-------------------------------
+    # try:
+    #     WifiInternetErrMsg2 = WebDriverWait(driver, 5).until(
+    #         EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
+    #     # = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
+    # except Exception as e:
+    #     is_internet = True
+    #     print("No Wifi-AP Error Internet Error: " + WifiName)
+    #     # Need to add Wait for Selected Wifi Xpath
+    #     # time.sleep(3)
+    # ---------------------check if internet-------------------------------
+
+    # ---------------------Additional INFO-------------------------------
+    try:
+        print("Selecting SSID: ", WifiName)
+        report.step_start("Additional details of SSID")
+        additional_details_element = WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((MobileBy.XPATH,
+                                            "//*[@label='" + WifiName + "']")))
+        # //*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']
+        additional_details_element.click()
+
+        try:
+            report.step_start("Checking SSID Name as Expected")
+            print("Checking SSID Name")
+            ssidname_text = driver.find_element_by_xpath("//*[@label='" + WifiName + "']").text
+            print(ssidname_text)
+            if(ssidname_text == WifiName):
+                print("SSID Matched")
+                allure.attach(name="SSID Matched ", body=str(WifiName))
+            else:
+                print("SSID Not Matched")
+                allure.attach(name="SSID Not Matched ", body=str(WifiName))
+                reportFlag = False
+                assert reportFlag
+        except:
+            print("SSID is not Checked in more Info")
+
+        try:
+            report.step_start("Checking WiFi Address")
+            print("Checking WIFI address")
+            # (//*[@label="IP Address"]/parent::*/XCUIElementTypeStaticText)[2]
+            wifi_address_element_text = driver.find_element_by_xpath(
+                "(//*[@label='Wi-Fi Address']/parent::*/XCUIElementTypeStaticText)[2]").text
+            print("wifi_address_element_text: ", wifi_address_element_text)
+            allure.attach(name="Connected SSID WiFi-Address: ", body=str(wifi_address_element_text))
+        except Exception as e:
+            print("WiFi-Address not Found")
+        try:
+            report.step_start("Checking IP Address")
+            print("Checking IP address")
+            # (//*[@label="IP Address"]/parent::*/XCUIElementTypeStaticText)[2]
+            ip_address_element_text = driver.find_element_by_xpath(
+                "(//*[@label='IP Address']/parent::*/XCUIElementTypeStaticText)[2]").text
+            print("ip_address_element_text: ", ip_address_element_text)
+        except Exception as e:
+            print("IP Address not Found")
+            request.config.cache.set(key="select IP failed", value=str(e))
+
+        # try:
+        #     report.step_start("Forget Network")
+        #     forget_ssid = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
+        #     forget_ssid.click()
+        #     print("Forget old ssid")
+        #     # time.sleep(2)
+        #     # driver.implicitly_wait(3)
+        #     try:
+        #         report.step_start("Forget Network popup")
+        #         forget_ssid_popup = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
+        #         forget_ssid_popup.click()
+        #     except:
+        #         print("in popup exception")
+
+        # except:
+        #     print("error on ssid element")
+
+    except Exception as e:
+        request.config.cache.set(key="select additional info failed", value=str(e))
+    # ---------------------Additional INFO-------------------------------
+
+    # --------------------- close app-------------------------------
+    closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+    return ip_address_element_text, is_internet
