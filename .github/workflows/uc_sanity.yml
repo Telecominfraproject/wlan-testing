@@ -136,7 +136,6 @@ jobs:
                     cpu: "250m"
                 command:
                   - /bin/bash
-                  - -x
                   - -c
                   - |
                     cd tests
