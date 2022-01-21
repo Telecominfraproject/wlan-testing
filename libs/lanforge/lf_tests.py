@@ -345,10 +345,10 @@ class RunTest:
     def Client_Connect_Using_Radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
                                    vlan_id=100, radio=None, sta_mode=0,
                                    station_name=[]):
-        self.client_connect = CreateStation(_host=self.lanforge_ip, _port=self.lanforge_port,
+        self.client_connect = CreateStation(_host=self.lanforge_ip, _port=self.lanforge_port, _mode=sta_mode,
                                             _sta_list=station_name, _password=passkey, _ssid=ssid, _security=security)
 
-        self.client_connect.station_profile.sta_mode = sta_mode
+        # self.client_connect.station_profile.sta_mode = sta_mode
         self.client_connect.upstream_resource = 1
         if mode == "BRIDGE":
             self.client_connect.upstream_port = self.upstream_port
@@ -813,6 +813,55 @@ class RunTest:
     def attenuator_modify(self, serno, idx, val):
         atten_obj = CreateAttenuator(self.lanforge_ip, self.lanforge_port, serno, idx, val)
         atten_obj.build()
+
+    def attenuator_serial_2g_radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
+                                   vlan_id=100, sta_mode=0, station_name=[], lf_tools_obj=None):
+        radio = self.twog_radios[0]
+        #index 0 of atten_serial_radio will ser no of 1st 2g radio and index 1 will ser no of 2nd and 3rd 2g radio
+        atten_serial_radio = []
+        atten_serial = self.attenuator_serial()
+        self.Client_Connect_Using_Radio(ssid=ssid, passkey=passkey, security=security, mode=mode,
+                                   vlan_id=vlan_id, radio=radio, sta_mode=sta_mode,
+                                   station_name=station_name)
+        signal1 = lf_tools_obj.station_data_query(station_name=station_name[0], query="signal")
+        atten_sr = atten_serial[0].split(".")
+        for i in range(4):
+            self.attenuator_modify(int(atten_sr[2]), i, 400)
+            time.sleep(0.5)
+        signal2 = lf_tools_obj.station_data_query(station_name=station_name[0], query="signal")
+        if abs(int(signal2.split(" ")[0])) - abs(int(signal1.split(" ")[0])) >= 5:
+            atten_serial_radio = atten_serial
+        else:
+            atten_serial_radio = atten_serial[::-1]
+        self.Client_disconnect(station_name=station_name)
+        return atten_serial_radio
+
+    def attenuator_serial_5g_radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
+                                   vlan_id=100, sta_mode=0, station_name=[], lf_tools_obj=None):
+        radio = self.fiveg_radios[0]
+        #index 0 of atten_serial_radio will ser no of 1st 5g radio and index 1 will ser no of 2nd and 3rd 5g radio
+        atten_serial_radio = []
+        atten_serial = self.attenuator_serial()
+        self.Client_Connect_Using_Radio(ssid=ssid, passkey=passkey, security=security, mode=mode,
+                                   vlan_id=vlan_id, radio=radio, sta_mode=sta_mode,
+                                   station_name=station_name)
+        signal1 = lf_tools_obj.station_data_query(station_name=station_name[0], query="signal")
+        atten_sr = atten_serial[0].split(".")
+        for i in range(4):
+            self.attenuator_modify(int(atten_sr[2]), i, 400)
+            time.sleep(0.5)
+        signal2 = lf_tools_obj.station_data_query(station_name=station_name[0], query="signal")
+        if abs(int(signal2.split(" ")[0])) - abs(int(signal1.split(" ")[0])) >= 5:
+            atten_serial_radio = atten_serial
+        else:
+            atten_serial_radio = atten_serial[::-1]
+        self.Client_disconnect(station_name=station_name)
+        return atten_serial_radio
+
+
+
+
+
 
 
 
