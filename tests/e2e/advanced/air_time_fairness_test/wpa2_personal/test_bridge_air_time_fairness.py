@@ -97,7 +97,7 @@ class TestAtfBridge(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6396", name="WIFI-6396")
     @pytest.mark.wpa2_personal
-    @pytest.mark.twog
+    @pytest.mark.fiveg
     @pytest.mark.atf_sta1_greenfieldmode_sta2_atten30dB_5g
     def test_atf_sta1_greenfieldmode_sta2_atten30dB_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
@@ -136,7 +136,7 @@ class TestAtfBridge(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6397", name="WIFI-6397")
     @pytest.mark.wpa2_personal
-    @pytest.mark.twog
+    @pytest.mark.fiveg
     @pytest.mark.atf_sta1_greenfieldmode_sta2_legacymode_5g
     def test_atf_sta1_greenfieldmode_sta2_legacymode_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
