@@ -35,7 +35,7 @@ class TestMesh(object):
                ['path: Orbit Current'], ['traffic_types: TCP'], ['direction: Both'], ['tests: Throughput'], ['traf_combo: N2'],
                      ["skip_dhcp: 1"], ["skip_5: 1"], ]
 
-        mesh_o = lf_test.mesh_test(instance_name="test_mesh1", raw_lines=raw_lines)
+        mesh_o = lf_test.mesh_test(instance_name="test_mesh1", raw_lines=raw_lines,duration="5m")
         report_name = mesh_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         print("report name ", report_name)
         entries = os.listdir("../reports/" + report_name + '/')
