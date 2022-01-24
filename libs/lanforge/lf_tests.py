@@ -838,7 +838,7 @@ class RunTest:
         atten_obj = CreateAttenuator(self.lanforge_ip, self.lanforge_port, serno, idx, val)
         atten_obj.build()
 
-    def mesh_test(self, instance_name=None, raw_lines=None):
+    def mesh_test(self, instance_name=None, raw_lines=None, duration="60s"):
         self.mesh_obj = MeshTest(
                        lf_host=self.lanforge_ip,
                        lf_port=self.lanforge_port,
@@ -847,6 +847,7 @@ class RunTest:
                        lf_user="lanforge",
                        lf_password = "lanforge",
                        instance_name = instance_name,
+                       duration = duration,
                        config_name = "mesh_config",
                        upstream = "1.2.2 eth2",
                        upload_speed="85%",
