@@ -490,12 +490,6 @@ clustersysteminfo:
   enabled: true
   delay: 60 # delaying to wait for AWS Route53 DNS propagation
 
-  public_env_variables:
-    FLAGS: "-s --connect-timeout 3 -k"
-    OWGW_OVERRIDE: owgw-owgw:16002
-    OWFMS_OVERRIDE: owfms-owfms:16004
-    OWPROV_OVERRIDE: owprov-owprov:16005
-
 haproxy:
   enabled: true
   service:
