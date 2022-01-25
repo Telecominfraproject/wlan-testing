@@ -1,0 +1,157 @@
+name: OpenWifi 2.0 load simulation
+env:
+  # AWS credentials
+  AWS_EKS_NAME: tip-wlan-main
+  AWS_DEFAULT_OUTPUT: json
+  AWS_DEFAULT_REGION: us-east-2
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+
+on: 
+  workflow_dispatch:
+    inputs:
+      sdk_version:
+        default: 'main'
+        description: 'Version of Cloud SDK to test'
+        required: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  loadsim:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Testing repo
+      uses: actions/checkout@v2
+      with:
+        path: wlan-testing
+
+    - name: Get EKS access credentials
+      run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    - name: Prepare namespace
+      id: namespace
+      run: |
+        NAMESPACE="ls-${{ github.run_number }}"
+        kubectl create ns $NAMESPACE
+        kubectl config set-context --current --namespace=$NAMESPACE
+        echo "::set-output name=namespace::${NAMESPACE}"
+
+    - name: Set gateway URL output
+      id: gateway
+      run: echo "::set-output name=url::gw-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+    - name: Set sec service URL output
+      id: sec
+      run: echo "::set-output name=url::sec-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+    - name: Set ls service URL output
+      id: ls
+      run: echo "::set-output name=url::ls-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+    - name: Prepare certificates from secrets
+      working-directory: wlan-testing/helm/ucentral
+      run: |
+        echo "${{ secrets.DIGICERT_CERT }}" | base64 -d > cert.pem
+        echo "${{ secrets.DIGICERT_KEY }}" | base64 -d > key.pem
+        echo "${{ secrets.LOADSIM_DIGICERT_CERT }}" | base64 -d > device-cert.pem
+        echo "${{ secrets.LOADSIM_DIGICERT_KEY }}" | base64 -d > device-key.pem
+
+    - name: Deploy CloudSDK instance with load simulator
+      working-directory: wlan-testing/helm/ucentral
+      run: |
+        export NAMESPACE="${{ steps.namespace.outputs.namespace }}"
+        export DEPLOY_METHOD=git
+        export CHART_VERSION="${{ github.event.inputs.sdk_version }}"
+        export OWGW_VERSION=master
+        export OWGWUI_VERSION=main
+        export OWSEC_VERSION=main
+        export OWFMS_VERSION=main
+        export OWPROV_VERSION=main
+        export OWPROVUI_VERSION=main
+        export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.test-nodes.yaml,values.ucentral-qa.owls-enabled.yaml
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
+        export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
+        export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
+        export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
+        export OWFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
+        export CERT_LOCATION=cert.pem
+        export KEY_LOCATION=key.pem
+        export DEVICE_CERT_LOCATION=device-cert.pem
+        export DEVICE_KEY_LOCATION=device-key.pem
+        export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
+        ./deploy.sh
+
+    - name: Checkout OWLS for CLI tool
+      uses: actions/checkout@v2
+      with:
+        repository: Telecominfraproject/wlan-cloud-owls
+        path: wlan-cloud-owls
+
+    - name: Run simulation
+      working-directory: wlan-cloud-owls/test_scripts/curl
+      run: |
+        export OWGW="${{ steps.gateway.outputs.url }}:15002"
+        export OWSEC="${{ steps.sec.outputs.url }}:16001"
+        export OWLS="${{ steps.ls.outputs.url }}:16007"
+        echo "OWGW - $OWGW"
+        echo "OWSEC - $OWSEC"
+        echo "OWLS - $OWLS"
+        curl -s -X POST -H 'Content-Type: application/json' https://$OWSEC/api/v1/oauth2 -d '{"userId": "tip@ucentral.com", "password": "'${{ secrets.OWSEC_NEW_PASSWORD }}'"}' | jq '.access_token' -r > access_token
+        echo
+        echo "[Info] Creating simulation"
+        cat > input_sim_info.json <<EOF
+        {
+          "name":"${{ steps.namespace.outputs.namespace }}",
+          "deviceType":"edgecore_ecw5410",
+          "devices":5,
+          "gateway":"https://$OWGW",
+          "macPrefix":"030000",
+          "simulationLength":600
+        }
+        EOF
+        curl -s -X POST https://$OWLS/api/v1/simulation -H "Content-Type: application/json" -H "Authorization: Bearer $(cat access_token)" -d @input_sim_info.json | tee output_sim_info.json
+        echo
+        echo "[Info] Starting simulation"
+        export SIMULATION_ID=$(cat output_sim_info.json | jq '.id' -r)
+        curl -s -X POST "https://$OWLS/api/v1/operation?simulationId=$SIMULATION_ID&operation=start" -H "Content-Type: application/json" -H "Authorization: Bearer $(cat access_token)" | tee output_sim_start.json | jq .
+        echo
+        echo "[Info] Waiting for simulation to end"
+        curl -s -X GET "https://$OWLS/api/v1/status" -H "Content-Type: application/json" -H "Authorization: Bearer $(cat access_token)" | tee output_sim_status.json | jq .
+        export SIM_STATE=$(cat output_sim_status.json | jq '.state' -r)
+        until [[ "$SIM_STATE" == "completed" ]]; do
+          sleep 10
+          curl -s -X GET "https://$OWLS/api/v1/status" -H "Content-Type: application/json" -H "Authorization: Bearer $(cat access_token)" > output_sim_status.json
+          export SIM_STATE=$(cat output_sim_status.json | jq '.state' -r)
+        done
+        echo
+        echo "[Info] Final results:"
+        cat output_sim_status.json | jq .
+
+    - name: Show resource state on deployment failure
+      if: failure()
+      run: |
+        kubectl get pods --namespace openwifi-${{ steps.namespace.outputs.namespace }}
+        kubectl get services --namespace openwifi-${{ steps.namespace.outputs.namespace }}
+        kubectl get persistentvolumeclaims --namespace openwifi-${{ steps.namespace.outputs.namespace }}
+    - name: Describe pods on deployment failure
+      if: failure()
+      run: |
+        kubectl describe pods --namespace openwifi-${{ steps.namespace.outputs.namespace }}
+    - name: Describe services on deployment failure
+      if: failure()
+      run: |
+        kubectl describe services --namespace openwifi-${{ steps.namespace.outputs.namespace }}
+    - name: Describe persistentvolumeclaims on deployment failure
+      if: failure()
+      run: |
+        kubectl describe persistentvolumeclaims --namespace openwifi-${{ steps.namespace.outputs.namespace }}
+
+    - name: Cleanup
+      if: always()
+      run: |
+        helm delete -n openwifi-${{ steps.namespace.outputs.namespace }} tip-openwifi || true
+        kubectl delete ns openwifi-"${{ steps.namespace.outputs.namespace }}" --wait=true

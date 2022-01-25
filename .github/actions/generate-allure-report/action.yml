@@ -1,0 +1,66 @@
+name: generate Allure report
+description: Generates an Allure report from Allure results and includes metadata
+
+inputs:
+  results_path:
+    description: path to the Allure results folder
+    required: true
+  history_path:
+    description: path to the Allure history folder
+    required: false
+  allure_version:
+    description: version of Allure to use
+    required: false
+    default: "2.14.0"
+  report_path:
+    description: output path of the Allure report folder
+    required: false
+    default: ./allure-report
+  additional_metadata:
+    description: metadata that will be added to the environment.properties file
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+  - name: install Allure CLI tool
+    shell: bash
+    run: |
+      wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ inputs.allure_version }}/allure-commandline-${{ inputs.allure_version }}.tgz
+      tar -xzf allure-commandline-${{ inputs.allure_version }}.tgz
+
+  - name: copy history into results
+    shell: bash
+    run: |
+      if [ -e "${{ inputs.history_path }}" ] ; then
+        cp -r "${{ inputs.history_path }}" "${{ inputs.results_path }}/history"
+      fi
+
+  - name: create executor information
+    shell: bash
+    run: |
+      cat << EOF >> "${{ inputs.results_path }}/executor.json"
+      {
+          "reportName": "${{ github.repository }} ${{ github.workflow }} #${{ github.run_number }}",
+          "buildName": "${{ github.repository }} ${{ github.workflow }} #${{ github.run_number }}",
+          "buildOrder": ${{ github.run_number }},
+          "name": "Github runner",
+          "reportUrl": "../${{ github.run_number }}/index.html",
+          "buildUrl": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+          "type": "github"
+      }
+      EOF
+
+  - name: add report metadata
+    shell: bash
+    run: |
+      cat << EOF >> "${{ inputs.results_path }}/environment.properties"
+
+      Tests.CommitId=${{ github.sha }}
+      EOF
+
+  - name: generate Allure report
+    shell: bash
+    run: allure-${{ inputs.allure_version }}/bin/allure generate "${{ inputs.results_path }}" -o "${{ inputs.report_path }}"
+
+

@@ -44,6 +44,7 @@ from influx2 import RecordInflux
 from lf_multipsk import MultiPsk
 from lf_rvr_test import RvrTest
 from attenuator_serial import AttenuatorSerial
+from lf_atten_mod_test import CreateAttenuator
 
 
 class RunTest:
@@ -164,7 +165,7 @@ class RunTest:
                     station_name=[], key_mgmt="WPA-EAP",
                     pairwise="NA", group="NA", wpa_psk="DEFAULT",
                     ttls_passwd="nolastart", ieee80211w=1,
-                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius"):
+                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius",d_vlan=False,cleanup=True):
         self.eap_connect = TTLSTest(host=self.lanforge_ip, port=self.lanforge_port,
                                     sta_list=station_name, vap=False, _debug_on=self.debug)
 
@@ -208,15 +209,21 @@ class RunTest:
         self.eap_connect.sta_list = station_name
         self.eap_connect.build(extra_securities=extra_securities)
         self.eap_connect.start(station_name, True, True)
+        if d_vlan:
+           self.station_ip = {}
         for sta_name in station_name:
             # try:
             station_data_str = ""
             # sta_url = self.eap_connect.get_station_url(sta_name)
             # station_info = self.eap_connect.json_get(sta_url)
             station_info = self.eap_connect.json_get("port/1/1/" + sta_name)
+
             for i in station_info["interface"]:
                 try:
                     station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
+                    if d_vlan:
+                        if i == "ip":
+                            self.station_ip[sta_name] = station_info["interface"][i]
                 except Exception as e:
                     print(e)
             allure.attach(name=str(sta_name), body=str(station_data_str))
@@ -244,12 +251,13 @@ class RunTest:
                 cx_data = cx_data + str(j) + " : " + str(i[j]) + "\n"
             cx_data = cx_data + "\n"
         allure.attach(name="cx_data", body=str(cx_data))
-        self.eap_connect.cleanup(station_name)
+        if cleanup:
+           self.eap_connect.cleanup(station_name)
         return self.eap_connect.passes()
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
                       instance_name="wct_instance", download_rate="1Gbps", influx_tags=[],
-                      upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", raw_lines=[]):
+                      upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", stations="", create_stations=True, sort="interleave", raw_lines=[]):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         if mode == "BRIDGE":
             upstream_port = self.upstream_port
@@ -275,8 +283,9 @@ class RunTest:
                                             load_old_cfg=False,
                                             upload_rate=upload_rate,
                                             download_rate=download_rate,
-                                            sort="interleave",
-                                            create_stations=True,
+                                            sort=sort,
+                                            stations=stations,
+                                            create_stations=create_stations,
                                             radio=None,
                                             security=None,
                                             paswd=None,
@@ -286,7 +295,6 @@ class RunTest:
                                             raw_lines=raw_lines,
                                             raw_lines_file="",
                                             sets=[])
-
         wificapacity_obj.setup()
         wificapacity_obj.run()
         for tag in influx_tags:
@@ -325,6 +333,31 @@ class RunTest:
             self.client_connect.radio = self.fiveg_radios[0]
         if band == "ax":
             self.client_connect.radio = self.ax_radios[0]
+        self.client_connect.build()
+        self.client_connect.wait_for_ip(station_name)
+        print(self.client_connect.wait_for_ip(station_name))
+        if self.client_connect.wait_for_ip(station_name):
+            self.client_connect._pass("ALL Stations got IP's", print_=True)
+            return self.client_connect
+        else:
+            return False
+
+    def Client_Connect_Using_Radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
+                                   vlan_id=100, radio=None, sta_mode=0,
+                                   station_name=[]):
+        self.client_connect = CreateStation(_host=self.lanforge_ip, _port=self.lanforge_port, _mode=sta_mode,
+                                            _sta_list=station_name, _password=passkey, _ssid=ssid, _security=security)
+
+        # self.client_connect.station_profile.sta_mode = sta_mode
+        self.client_connect.upstream_resource = 1
+        if mode == "BRIDGE":
+            self.client_connect.upstream_port = self.upstream_port
+        elif mode == "NAT":
+            self.client_connect.upstream_port = self.upstream_port
+        else:
+            self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
+
+        self.client_connect.radio = radio
         self.client_connect.build()
         self.client_connect.wait_for_ip(station_name)
         print(self.client_connect.wait_for_ip(station_name))
@@ -447,7 +480,7 @@ class RunTest:
 
         influx.glob()
         return self.dualbandptest_obj
-      
+
     def apstabilitytest(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
                         instance_name="test_demo", dut_5g="", dut_2g=""):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
@@ -509,8 +542,8 @@ class RunTest:
         self.rvr_obj = RvrTest(lf_host=self.lanforge_ip,
                                lf_port=self.lanforge_port,
                                ssh_port=self.lf_ssh_port,
-                               local_path=self.local_report_path,
                                lf_user="lanforge",
+                               local_lf_report_dir=self.local_report_path,
                                lf_password="lanforge",
                                instance_name=instance_name,
                                config_name="rvr_config",
@@ -776,6 +809,60 @@ class RunTest:
         )
         val = self.obj.show()
         return val
+
+    def attenuator_modify(self, serno, idx, val):
+        atten_obj = CreateAttenuator(self.lanforge_ip, self.lanforge_port, serno, idx, val)
+        atten_obj.build()
+
+    def attenuator_serial_2g_radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
+                                   vlan_id=100, sta_mode=0, station_name=[], lf_tools_obj=None):
+        radio = self.twog_radios[0]
+        #index 0 of atten_serial_radio will ser no of 1st 2g radio and index 1 will ser no of 2nd and 3rd 2g radio
+        atten_serial_radio = []
+        atten_serial = self.attenuator_serial()
+        self.Client_Connect_Using_Radio(ssid=ssid, passkey=passkey, security=security, mode=mode,
+                                   vlan_id=vlan_id, radio=radio, sta_mode=sta_mode,
+                                   station_name=station_name)
+        signal1 = lf_tools_obj.station_data_query(station_name=station_name[0], query="signal")
+        atten_sr = atten_serial[0].split(".")
+        for i in range(4):
+            self.attenuator_modify(int(atten_sr[2]), i, 400)
+            time.sleep(0.5)
+        signal2 = lf_tools_obj.station_data_query(station_name=station_name[0], query="signal")
+        if abs(int(signal2.split(" ")[0])) - abs(int(signal1.split(" ")[0])) >= 5:
+            atten_serial_radio = atten_serial
+        else:
+            atten_serial_radio = atten_serial[::-1]
+        self.Client_disconnect(station_name=station_name)
+        return atten_serial_radio
+
+    def attenuator_serial_5g_radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
+                                   vlan_id=100, sta_mode=0, station_name=[], lf_tools_obj=None):
+        radio = self.fiveg_radios[0]
+        #index 0 of atten_serial_radio will ser no of 1st 5g radio and index 1 will ser no of 2nd and 3rd 5g radio
+        atten_serial_radio = []
+        atten_serial = self.attenuator_serial()
+        self.Client_Connect_Using_Radio(ssid=ssid, passkey=passkey, security=security, mode=mode,
+                                   vlan_id=vlan_id, radio=radio, sta_mode=sta_mode,
+                                   station_name=station_name)
+        signal1 = lf_tools_obj.station_data_query(station_name=station_name[0], query="signal")
+        atten_sr = atten_serial[0].split(".")
+        for i in range(4):
+            self.attenuator_modify(int(atten_sr[2]), i, 400)
+            time.sleep(0.5)
+        signal2 = lf_tools_obj.station_data_query(station_name=station_name[0], query="signal")
+        if abs(int(signal2.split(" ")[0])) - abs(int(signal1.split(" ")[0])) >= 5:
+            atten_serial_radio = atten_serial
+        else:
+            atten_serial_radio = atten_serial[::-1]
+        self.Client_disconnect(station_name=station_name)
+        return atten_serial_radio
+
+
+
+
+
+
 
 
 if __name__ == '__main__':

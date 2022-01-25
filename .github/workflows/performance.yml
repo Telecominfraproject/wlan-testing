@@ -1,9 +1,5 @@
 name: performance testing
 env:
-  # thirdparties
-  DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
-  DOCKER_USER_NAME: wlan-testing-cicd
-  DOCKER_USER_PASSWORD: ${{ secrets.DOCKER_USER_PASSWORD }}
   # AWS credentials
   AWS_EKS_NAME: tip-wlan-main
   AWS_DEFAULT_OUTPUT: json
@@ -14,7 +10,6 @@ env:
   # Cloud SDK certs
   CACERT: ${{ secrets.CACERT }}
   CAKEY: ${{ secrets.CAKEY }}
-  ALLURE_CLI_VERSION: 2.14.0
 
 on:
   workflow_dispatch:
@@ -32,30 +27,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    # checkout needed repositories
-    - name: Checkout Testing repo
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+    - name: build and push Docker image
+      uses: ./.github/actions/build-and-push-docker
       with:
-        path: wlan-testing
-
-    - name: Checkout LANforge scripts
-      uses: actions/checkout@v2
-      with:
-        path: wlan-lanforge-scripts
-        repository: Telecominfraproject/wlan-lanforge-scripts
-
-    - name: import LANforge scripts
-      working-directory: wlan-testing
-      run: ./sync_repos.bash
-
-    # build and push docker image
-    - name: docker login
-      run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
-    - name: build docker image
-      working-directory: wlan-testing
-      run: docker build -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }} -f docker/Dockerfile .
-    - name: push docker image
-      run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+        registry: tip-tip-wlan-cloud-docker-repo.jfrog.io
+        registry_user: wlan-testing-cicd
+        registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   test:
     runs-on: [ self-hosted, small ]
@@ -86,11 +64,6 @@ jobs:
 
     - name: get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
-
-    - name: install Allure CLI tool
-      run: |
-        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
 
     - name: set job name
       id: job
@@ -131,7 +104,7 @@ jobs:
             spec:
               containers:
               - name: tests
-                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+                image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
                 resources:
                   requests:
                     memory: "512Mi"
@@ -141,7 +114,6 @@ jobs:
                     cpu: "250m"
                 command:
                   - /bin/bash
-                  - -x
                   - -c
                   - |
                     cd tests
@@ -186,7 +158,9 @@ jobs:
         kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
         echo "waiting for pod to exit"
         kubectl logs -f $podname >/dev/null 2>&1
-        exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
+
+        until [[ ! -z "$EXIT_CODE" ]]; do EXIT_CODE=$(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}"); sleep 1; done;
+        exit $EXIT_CODE
 
     - name: print logs
       if: always()
@@ -210,10 +184,9 @@ jobs:
     needs: [ test ]
     if: always()
     steps:
-    - name: install Allure CLI tool
-      run: |
-        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+    - name: checkout testing repo
+      uses: actions/checkout@v2
+
     - uses: actions/download-artifact@v2
       with:
         name: allure-results-dataplane_throughput_test
@@ -229,37 +202,26 @@ jobs:
         name: allure-results-wifi_capacity_test
         path: allure-results-wifi_capacity_test
 
-    - name: checkout testing repo
-      uses: actions/checkout@v2
-      with:
-        path: wlan-testing
+    - name: merge results
+      run: |
+        mkdir allure-results
+        cp -r allure-results-dataplane_throughput_test/* allure-results/
+        cp -r allure-results-single_station_dual_band_throughput/* allure-results/
+        cp -r allure-results-wifi_capacity_test/* allure-results/
 
-    - name: get reports branch
-      uses: actions/checkout@v2
+    - name: download history of previous run
       continue-on-error: true
-      with:
-        ref: gh-pages
-        path: reports
-
-    - name: copy history into results
       run: |
-        if [ -e "reports/performance/${{ needs.test.outputs.testbed }}/latest" ] ; then
-          cp -r reports/performance/${{ needs.test.outputs.testbed }}/latest/history/ allure-results-dataplane_throughput_test/history
-          cp -r reports/performance/${{ needs.test.outputs.testbed }}/latest/history/ allure-results-single_station_dual_band_throughput/history
-          cp -r reports/performance/${{ needs.test.outputs.testbed }}/latest/history/ allure-results-wifi_capacity_test/history
-        fi
-    - name: add report metadata
-      run: |
-        cat << EOF >> allure-results-dataplane_throughput_test/environment.properties
+        LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key performance/${{ needs.test.outputs.testbed }}/latest/index.html | jq -r .Metadata.latest)
+        aws s3 cp --recursive s3://openwifi-allure-reports/performance/${{ needs.test.outputs.testbed }}/$LAST_RUN_ID/history history
 
-        Testbed=${{ needs.test.outputs.testbed }}
-        Tests.CommitId=$(cd wlan-testing && git rev-parse --short HEAD)
-        CiRun.Id=${{ github.run_id }}
-        CiRun.Number=${{ github.run_number }}
-        CiRun.Url=https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
-        EOF
     - name: generate Allure report
-      run: allure-${{ env.ALLURE_CLI_VERSION }}/bin/allure generate allure-results-dataplane_throughput_test allure-results-single_station_dual_band_throughput allure-results-wifi_capacity_test
+      uses: ./.github/actions/generate-allure-report
+      with:
+        results_path: ./allure-results
+        history_path: ./history
+        additional_metadata: |
+          Ap.Model=${{ needs.test.outputs.testbed }}
 
     - name: upload Allure report as artifact
       uses: actions/upload-artifact@v2
@@ -269,41 +231,11 @@ jobs:
 
     # doing this to be able to aggregate multiple reports together later on
     - name: copy results into report
-      run: |
-        mkdir -p allure-report/results
-        cp -r allure-results-dataplane_throughput_test allure-report/results
-        cp -r allure-results-single_station_dual_band_throughput allure-report/results
-        cp -r allure-results-wifi_capacity_test allure-report/results
-    - name: copy new report
-      run: |
-        mkdir -p reports/performance/${{ needs.test.outputs.testbed }}
-        cp -Tr allure-report reports/performance/${{ needs.test.outputs.testbed }}/${{ github.run_number }}
-    - name: update latest symlink
-      working-directory: reports/performance/${{ needs.test.outputs.testbed }}
-      run: ln -fns ${{ github.run_number }} latest
-
-    - name: generate new index.html
-      run: python wlan-testing/.github/tools/generate_directory_index.py -r reports
-
-    - name: commit reports update
-      working-directory: reports
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git add .
-        git commit -m "Automated deployment: $(date -u)"
-
-    - name: push
-      if: github.ref == 'refs/heads/master'
-      uses: ad-m/github-push-action@v0.6.0
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: gh-pages
-        directory: reports
+      run: cp -r allure-results allure-report/results
 
     - name: upload to S3
       if: github.ref == 'refs/heads/master'
-      uses: ./wlan-testing/.github/actions/allure-report-to-s3
+      uses: ./.github/actions/allure-report-to-s3
       with:
         test_type: performance
         testbed: ${{ needs.test.outputs.testbed }}
@@ -316,5 +248,9 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
+    - uses: actions/checkout@v2
     - name: cleanup Docker image
-      run: curl -u${{ env.DOCKER_USER_NAME }}:${{ env.DOCKER_USER_PASSWORD }} -X DELETE "https://tip.jfrog.io/artifactory/tip-wlan-cloud-docker-repo/cloud-sdk-nightly/${{ github.run_id }}"
+      uses: ./.github/actions/cleanup-docker
+      with:
+        registry_user: wlan-testing-cicd
+        registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
