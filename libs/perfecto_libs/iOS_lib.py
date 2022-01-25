@@ -1056,7 +1056,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     # ---------------------This is to Select SSID-------------------------------
     # ---------------------Set Password-------------------------------
     try:
-        driver.implicitly_wait(20)
+        driver.implicitly_wait(2)
         print("Entering Password")
         report.step_start("Entering Password")
         wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
@@ -1067,7 +1067,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------Click on join-------------------------------
     try:
-        driver.implicitly_wait(20)
+        driver.implicitly_wait(4)
         print("Selecting join")
         report.step_start("Clicking JOIN")
         joinBTN = driver.find_element_by_xpath("//*[@label='Join']")
@@ -1091,7 +1091,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------Additional INFO-------------------------------
     try:
-        driver.implicitly_wait(20)
+        driver.implicitly_wait(6)
         print("Selecting SSID: ", WifiName)
         report.step_start("Additional details of SSID")
         additional_details_element = WebDriverWait(driver, 30).until(
@@ -1101,7 +1101,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
         additional_details_element.click()
 
         try:
-            driver.implicitly_wait(20)
+            driver.implicitly_wait(6)
             report.step_start("Checking SSID Name as Expected")
             print("Checking SSID Name")
             ssidname_text = driver.find_element_by_xpath("//*[@label='" + WifiName + "']").text
@@ -1814,7 +1814,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
     # Set username
     # -------------------------------------------------------
     try:
-        driver.implicitly_wait(20)
+        driver.implicitly_wait(4)
         report.step_start("Entering User")
         print("Entering User name")
         wifiUserElement = driver.find_element_by_xpath("//*[@label='Username']")
@@ -1825,7 +1825,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
 
     # ---------------------Set Password-------------------------------
     try:
-        driver.implicitly_wait(20)
+        driver.implicitly_wait(2)
         report.step_start("Entering Password")
         print("Entering password")
         wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
@@ -1837,7 +1837,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
 
     # ---------------------Click on join-------------------------------
     try:
-        driver.implicitly_wait(20)
+        driver.implicitly_wait(4)
         report.step_start("Clicking Join")
         print("Clicking Join")
         joinBTN = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Join']")))
@@ -1848,7 +1848,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
     # Selecting certificate
     # -------------------------------------------------------
     try:
-        driver.implicitly_wait(20)
+        driver.implicitly_wait(5)
         report.step_start("Clicking Trust CA Cert")
         print("Clicking Trust CA Cert")
         certElement = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Trust']")))
@@ -1870,7 +1870,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
 
     # ---------------------Additional INFO-------------------------------
     try:
-        driver.implicitly_wait(20)
+        driver.implicitly_wait(6)
         print("Selecting SSID: ", WifiName)
         report.step_start("Selecting More Info")
         additional_details_element = WebDriverWait(driver, 35).until(
@@ -1880,7 +1880,6 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
         additional_details_element.click()
 
         try:
-            driver.implicitly_wait(5)
             report.step_start("Checking SSID Name as Expected")
             print("Checking SSID Name")
             ssidname_text = driver.find_element_by_xpath("//*[@label='" + WifiName + "']").text
@@ -1908,7 +1907,6 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
             print("WiFi-Address not Found")
             allure.attach(name="No Connected SSID WiFi-Address Found")
         try:
-            driver.implicitly_wait(5)
             print("Checking IP address")
             report.step_start("Checking IP address")
             time.sleep(4)
