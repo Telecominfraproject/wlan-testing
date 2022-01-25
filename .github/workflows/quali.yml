@@ -102,7 +102,7 @@ jobs:
 
     - name: start reservation
       run: |
-        python .quali/start_reservation.py --openwifi-version "${{ needs.vars.outputs.openwifi_revision }}" --ap-model "${{ matrix.ap_model }}"
+        python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}"}' "Basic Lab"
 
     - name: set reservation outputs
       if: always()

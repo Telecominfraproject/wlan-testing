@@ -88,7 +88,7 @@ jobs:
         CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
         CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
       run: |
-        python .quali/start_reservation.py --openwifi-version "${{ github.event.inputs.openwifi_revision }}" --ap-model "${{ github.event.inputs.ap_model }}"
+        python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ github.event.inputs.openwifi_revision }}","AP Model":"${{ github.event.inputs.ap_model }}"}' "Basic Lab"
 
     - name: set reservation outputs
       if: always()

@@ -117,7 +117,7 @@ jobs:
 
     - name: start reservation
       run: |
-        python wlan-testing/.quali/start_reservation.py --openwifi-version "${{ needs.vars.outputs.openwifi_revision }}" --ap-model "${{ matrix.ap_model }}" --blueprint "Advance Lab"
+        python wlan-testing/.quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}"}' --reservation-duration 720 "Advance Lab"
 
     - name: set reservation outputs
       if: always()
