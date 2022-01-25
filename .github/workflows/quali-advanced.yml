@@ -12,7 +12,7 @@ on:
         description: 'revision of the Open Wifi Helm chart'
       ap_models:
         required: true
-        default: 'EAP102,cig_wf194c'
+        default: 'edgecore_eap102,cig_wf194c4'
         description: 'the AP models to test'
       ap_version:
         required: true
@@ -43,7 +43,7 @@ jobs:
         id: vars
         run: |
           echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'main' }}")
-          echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'EAP102,cig_wf194c' }}")
+          echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'edgecore_eap102,cig_wf194c4' }}")
           echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'next-latest' }}")
           echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'advance' }}")
 
