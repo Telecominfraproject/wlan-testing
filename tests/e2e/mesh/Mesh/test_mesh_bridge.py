@@ -31,7 +31,8 @@ class TestMesh(object):
     @pytest.mark.wpa2_personal
     def testmesh_2g(self, setup_mesh_profile_fix, lf_test, lf_tools):
         raw_lines = [['selected_dut2: tip-node-2 ssid_wpa2_2g_1 90:3c:b3:9d:69:2f (2)'], ['selected_dut5: tip-node-2 ssid_wpa2_5g_1 90:3c:b3:9d:69:2e (1)'], ['sta_amount-2: 2'], ['radios-2-0: 1.4.6 wiphy0'],
-               ['ap_arrangements: Current Position'], ['sta_position: Current Position'],['chamber-2: Node2'],
+               ['ap_arrangements: Current Position'], ['sta_position: Current Position'],['chamber-0: RootAP'],['chamber-1: Node1'],
+               ['chamber-2: Node2'],['chamber-4: MobileStations'],
                ['path: Orbit Current'], ['traffic_types: TCP'], ['direction: Both'], ['tests: Throughput'], ['traf_combo: N2'],
                      ["skip_dhcp: 1"], ["skip_5: 1"] ]
 
