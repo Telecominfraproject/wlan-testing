@@ -32,6 +32,11 @@ on:
         required: true
         default: 'uc_sanity'
         description: 'Marker expression to select tests to execute'
+      use_qa01:
+        type: boolean
+        required: true
+        default: 'true'
+        description: 'Use ucentral-qa01 instead of dynamic cloud controller'
   schedule:
   - cron: '30 20 * * *'
 
@@ -43,6 +48,7 @@ jobs:
       ap_models: ${{ steps.vars.outputs.ap_models}}
       ap_version: ${{ steps.vars.outputs.ap_version}}
       marker_expression: ${{ steps.vars.outputs.marker_expression }}
+      use_qa01: ${{ steps.vars.outputs.use_qa01 }}
 
     steps:
       - name: set variables
@@ -52,6 +58,7 @@ jobs:
           echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4' }}")
           echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'next-latest' }}")
           echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'uc_sanity' }}")
+          echo ::set-output name=use_qa01::$(echo "${{ github.event.inputs.use_qa01 || 'true' }}")
 
   generate-matrix:
     name: generate AP model matrix
@@ -102,14 +109,24 @@ jobs:
 
     - name: start reservation
       run: |
-        python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}"}' "Basic Lab"
+        if [ ${{ needs.vars.outputs.use_qa01 }} == 'true' ]
+        then
+          python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}","Optional Existing SDK Namespace":"qa01"}' "Basic Lab"
+        else
+          python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}"}' "Basic Lab"
+        fi
 
     - name: set reservation outputs
       if: always()
       id: reservation
       run: |
         echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
-        echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+        if [ ${{ needs.vars.outputs.use_qa01 }} == 'true' ]
+        then
+          echo ::set-output name=namespace::"qa01"
+        else
+          echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+        fi
 
     - name: get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -269,6 +286,13 @@ jobs:
             }
         }
         EOF
+
+
+        # fix wrong configuration value from Quali
+        if [ ${{ needs.vars.outputs.use_qa01 }} == 'true' ]
+        then
+          sed -i "s/https:\/\/sec-.*\.cicd\.lab\.wlan\.tip\.build/https:\/\/sec-qa01.cicd.lab.wlan.tip.build/g" configuration.py
+        fi
 
         cat configuration.py
 
