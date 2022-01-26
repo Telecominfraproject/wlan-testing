@@ -36,7 +36,7 @@ on:
         type: boolean
         required: true
         default: 'true'
-        description: 'Use ucentral-qa01 instead of dynamic cloud controller'
+        description: 'Use openwifi-qa01 instead of dynamic cloud controller'
   schedule:
   - cron: '30 20 * * *'
 
