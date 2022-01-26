@@ -2,6 +2,9 @@ owgw:
   # https://telecominfraproject.atlassian.net/browse/WIFI-5840
   checks:
     owgw:
+      liveness:
+        exec:
+          command: ["true"]
       readiness:
         exec:
           command: ["true"]
