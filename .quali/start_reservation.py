@@ -8,7 +8,7 @@ import argparse
 from common import wait_for_provisioning_status, get_session
 
 run_number = os.environ.get('GITHUB_RUN_NUMBER', 1)
-run_id = os.environ.get('GITHUB_RUN_ID', 1)
+run_id = os.environ.get('GITHUB_JOB', 'job')
 workflow = os.environ.get('GITHUB_WORKFLOW', "workflow")
 marker_expression = os.environ.get('MARKER_EXPRESSION', 'sanity') 
 
