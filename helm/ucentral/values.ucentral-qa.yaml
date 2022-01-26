@@ -4,8 +4,6 @@ owgw:
     owgw:
       liveness:
         timeoutSeconds: 3
-        initialDelaySeconds: 5
-        failureThreshold: 10
       readiness:
         exec:
           command: ["true"]
