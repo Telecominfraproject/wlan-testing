@@ -294,8 +294,6 @@ jobs:
           sed -i "s/https:\/\/sec-.*\.cicd\.lab\.wlan\.tip\.build/https:\/\/sec-qa01.cicd.lab.wlan.tip.build/g" configuration.py
         fi
 
-        cat configuration.py
-
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
 
     - name: run tests

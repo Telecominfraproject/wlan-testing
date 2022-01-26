@@ -267,8 +267,6 @@ jobs:
         }
         EOF
 
-        cat configuration.py
-
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
 
     - name: run tests
