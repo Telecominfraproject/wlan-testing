@@ -1038,8 +1038,10 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         print("Selecting SSID")
                     except:
                         print("SSID unable to select")
-                        report.step_start("Selecting SSID To Connect")
-                        break
+                        report.step_start("Selecting Unable SSID To Connect")
+                        closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+                        return ip_address_element_text, is_internet
+
             except:
                 print("couldn't connect to " + WifiName)
                 #request.config.cache.set(key="SelectingWifiFailed", value=str(e))
@@ -1801,7 +1803,8 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
                     except:
                         print("SSID unable to select")
                         report.step_start("Selecting Unable SSID To Connect")
-                        break
+                        closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+                        return ip_address_element_text, is_internet
             except:
                 print("couldn't connect to " + WifiName)
                 # request.config.cache.set(key="SelectingWifiFailed", value=str(e))
