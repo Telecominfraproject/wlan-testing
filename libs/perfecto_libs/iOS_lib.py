@@ -1132,6 +1132,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
         except Exception as e:
             print("WiFi-Address not Found")
         try:
+            time.sleep(4)
             report.step_start("Checking IP Address")
             print("Checking IP address")
             # (//*[@label="IP Address"]/parent::*/XCUIElementTypeStaticText)[2]
@@ -1140,6 +1141,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             print("ip_address_element_text: ", ip_address_element_text)
         except Exception as e:
             try:
+                time.sleep(4)
                 print("Scrolling for checking ip address")
                 scrollDown(setup_perfectoMobile)
                 ip_address_element_text = driver.find_element_by_xpath(
@@ -2444,6 +2446,7 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
         additional_details_element.click()
 
         try:
+            time.sleep(5)
             print("Checking IP address")
             # (//*[@label="IP Address"]/parent::*/XCUIElementTypeStaticText)[2]
             ip_address_element_text = driver.find_element_by_xpath("(//*[@label='IP Address']/parent::*/XCUIElementTypeStaticText)[2]").text
