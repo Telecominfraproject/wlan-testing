@@ -9,7 +9,7 @@ import requests
 import json
 
 pytestmark = [pytest.mark.test_resources, pytest.mark.sanity, pytest.mark.uc_sanity,
-              pytest.mark.sanity_55]
+              pytest.mark.sanity_55, pytest.mark.interop_uc_sanity]
 
 
 @allure.testcase(name="Test Resources", url="")
@@ -18,6 +18,7 @@ class TestResources(object):
 
     @pytest.mark.test_cloud_controller
     @pytest.mark.uc_sanity
+    @pytest.mark.interop_uc_sanity
     @allure.testcase(name="test_controller_connectivity", url="")
     def test_controller_connectivity(self, setup_controller, get_configuration):
         """Test case to verify cloud Controller Connectivity"""
