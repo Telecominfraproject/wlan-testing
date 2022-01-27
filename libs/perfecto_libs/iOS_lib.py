@@ -114,9 +114,9 @@ def set_APconnMobileDevice_iOS(request, WifiNameSSID, WifiPass, setup_perfectoMo
         report.step_start("Checking Internet Connection Error..")
 
         try:
+            driver.implicitly_wait(5)
             # WifiInternetErrMsg = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
-            NoInternetConnectionMsg = WebDriverWait(driver, 30).until(
-                EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
+            NoInternetConnectionMsg = driver.find_element_by_xpath("//*[@label='No Internet Connection']")
         except Exception as e:
             print("No Error with Wifi-AP Connection: " + Wifi_AP_Name)
 
@@ -1079,6 +1079,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------check if internet-------------------------------
     try:
+        driver.implicitly_wait(5)
         WifiInternetErrMsg2 = WebDriverWait(driver, 5).until(
             EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
         # = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
@@ -1403,8 +1404,8 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
 
     # ---------------------check if internet-------------------------------
     try:
-        WifiInternetErrMsg2 = WebDriverWait(driver, 30).until(
-            EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
+        driver.implicitly_wait(5)
+        WifiInternetErrMsg2 = driver.find_element_by_xpath("//*[@label='No Internet Connection']")
         # = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
     except Exception as e:
         is_internet = True
@@ -1840,7 +1841,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
         driver.implicitly_wait(2)
         report.step_start("Clicking Join")
         print("Clicking Join")
-        joinBTN = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Join']")))
+        joinBTN = driver.find_element_by_xpath("//*[@label='Join']")
         joinBTN.click()
     except Exception as e:
         print("Join Button Not Enabled...Password may not be needed")
@@ -1851,15 +1852,15 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
         driver.implicitly_wait(4)
         report.step_start("Clicking Trust CA Cert")
         print("Clicking Trust CA Cert")
-        certElement = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Trust']")))
+        certElement = driver.find_element_by_xpath("//*[@label='Trust']")
         certElement.click()
     except NoSuchElementException:
         print("Password Page Not Loaded, password May be cached in the System")
     # ---------------------check if internet-------------------------------
     try:
+        driver.implicitly_wait(5)
         report.step_start("Checking Internet connection")
-        WifiInternetErrMsg2 = WebDriverWait(driver, 35).until(
-            EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
+        WifiInternetErrMsg2 = driver.find_element_by_xpath("//*[@label='No Internet Connection']")
         # = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
     except Exception as e:
         is_internet = True
@@ -2190,9 +2191,9 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
         print("Password Page Not Loaded, password May be cached in the System")
     # ---------------------check if internet-------------------------------
     try:
+        driver.implicitly_wait(5)
         report.step_start("Checking Internet connection")
-        WifiInternetErrMsg2 = WebDriverWait(driver, 35).until(
-            EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
+        WifiInternetErrMsg2 = driver.find_element_by_xpath("//*[@label='No Internet Connection']")
         # = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
     except Exception as e:
         is_internet = True
@@ -2441,8 +2442,8 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             print("IP Address not Found")
             request.config.cache.set(key="select IP failed", value=str(e))
         try:
-            WifiInternetErrMsg2 = WebDriverWait(driver, 30).until(
-                EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
+            driver.implicitly_wait(5)
+            WifiInternetErrMsg2 = driver.find_element_by_xpath("//*[@label='No Internet Connection']")
         except Exception as e:
             is_internet = True
             print("No Wifi-AP Error Internet Error: " + WifiName)
