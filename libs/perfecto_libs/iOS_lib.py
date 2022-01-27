@@ -1800,6 +1800,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
                         print(wifiSelElement)
                         wifiSelElement.click()
                         print("Selecting SSID")
+                        break
                     except:
                         print("SSID unable to select")
                         report.step_start("Selecting Unable SSID To Connect")
