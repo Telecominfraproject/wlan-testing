@@ -982,7 +982,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     # ---------------------This is to Forget current connected SSID-------------------------------
 
     try:
-        time.sleep(3)
+        time.sleep(4)
         print("getting in to Additional details")
         report.step_start("Clicking More Info")
         additional_details_element = driver.find_element_by_xpath("//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")
@@ -1027,10 +1027,11 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     scrollDown(setup_perfectoMobile)
                     time.sleep(2)
                 else:
+                    time.sleep(2)
                     report.step_start("Selecting SSID To Connect")
                     ssid_found = True
                     print(WifiName + " : Found in Device")
-                    wifiSelElement = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
+                    wifiSelElement = WebDriverWait(driver, 35).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
                     print(wifiSelElement)
                     wifiSelElement.click()
                     print("Selecting SSID")
@@ -1056,7 +1057,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     # ---------------------This is to Select SSID-------------------------------
     # ---------------------Set Password-------------------------------
     try:
-        driver.implicitly_wait(2)
+        driver.implicitly_wait(4)
         print("Entering Password")
         report.step_start("Entering Password")
         wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
@@ -1067,7 +1068,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------Click on join-------------------------------
     try:
-        driver.implicitly_wait(3)
+        driver.implicitly_wait(4)
         print("Selecting join")
         report.step_start("Clicking JOIN")
         joinBTN = driver.find_element_by_xpath("//*[@label='Join']")
@@ -1738,7 +1739,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
     # ---------------------This is to Forget current connected SSID-------------------------------
 
     try:
-        time.sleep(3)
+        time.sleep(4)
         report.step_start("Selecting Connected SSID Info")
         print("getting in to Additional details")
         additional_details_element = driver.find_element_by_xpath(
@@ -1784,10 +1785,11 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
                     scrollDown(setup_perfectoMobile)
                     time.sleep(2)
                 else:
+                    time.sleep(2)
                     report.step_start("Selecting SSID To Connect")
                     ssid_found = True
                     print(WifiName + " : Found in Device")
-                    wifiSelElement = WebDriverWait(driver, 30).until(
+                    wifiSelElement = WebDriverWait(driver, 35).until(
                         EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
                     print(wifiSelElement)
                     wifiSelElement.click()
@@ -1812,7 +1814,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
     # Set username
     # -------------------------------------------------------
     try:
-        driver.implicitly_wait(2)
+        driver.implicitly_wait(4)
         report.step_start("Entering User")
         print("Entering User name")
         wifiUserElement = driver.find_element_by_xpath("//*[@label='Username']")
@@ -1846,7 +1848,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
     # Selecting certificate
     # -------------------------------------------------------
     try:
-        driver.implicitly_wait(3)
+        driver.implicitly_wait(4)
         report.step_start("Clicking Trust CA Cert")
         print("Clicking Trust CA Cert")
         certElement = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Trust']")))
@@ -1924,8 +1926,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
                 print("IP Address not Found")
                 request.config.cache.set(key="select IP failed", value=str(e))
         try:
-            time.sleep(2)
-            driver.implicitly_wait(2)
+            driver.implicitly_wait(4)
             report.step_start("Forget Network")
             forget_ssid = driver.find_element_by_xpath("//*[@label='Forget This Network']")
             forget_ssid.click()
