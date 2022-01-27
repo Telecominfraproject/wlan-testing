@@ -1027,7 +1027,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     scrollDown(setup_perfectoMobile)
                     time.sleep(2)
                 else:
-                    time.sleep(2)
+                    driver.implicitly_wait(6)
                     report.step_start("Selecting SSID To Connect")
                     ssid_found = True
                     print(WifiName + " : Found in Device")
@@ -1785,7 +1785,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
                     scrollDown(setup_perfectoMobile)
                     time.sleep(2)
                 else:
-                    time.sleep(2)
+                    driver.implicitly_wait(6)
                     report.step_start("Selecting SSID To Connect")
                     ssid_found = True
                     print(WifiName + " : Found in Device")
