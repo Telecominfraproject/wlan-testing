@@ -1918,6 +1918,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
             print("WiFi-Address not Found")
             allure.attach(name="No Connected SSID WiFi-Address Found")
         try:
+            time.sleep(5)
             print("Checking IP address")
             report.step_start("Checking IP address")
             time.sleep(1)
@@ -1927,6 +1928,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
             print("ip_address_element_text: ", ip_address_element_text)
         except Exception as e:
             try:
+                time.sleep(4)
                 print("Scrolling for checking IP Address")
                 scrollDown(setup_perfectoMobile)
                 ip_address_element_text = driver.find_element_by_xpath(
