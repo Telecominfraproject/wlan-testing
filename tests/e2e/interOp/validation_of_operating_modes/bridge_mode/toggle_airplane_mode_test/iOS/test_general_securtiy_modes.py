@@ -57,8 +57,7 @@ class TestToggleAirplaneModeSuiteOneBridge(object):
         pytest -m "client_reconnect and bridge and InteropsuiteA"
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4557", name="WIFI-4557")
-    @pytest.mark.hari
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6531", name="WIFI-6531")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_ToggleAirplaneMode_5g_WPA2_Personal_BRIDGE(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
@@ -101,7 +100,7 @@ class TestToggleAirplaneModeSuiteOneBridge(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4556", name="WIFI-4556")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6532", name="WIFI-6532")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_ToggleAirplaneMode_2g_WPA2_Personal_BRIDGE(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -143,7 +142,7 @@ class TestToggleAirplaneModeSuiteOneBridge(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4555", name="WIFI-4555")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6533", name="WIFI-6533")
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_ToggleAirplaneMode_5g_WPA_BRIDGE(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -185,7 +184,7 @@ class TestToggleAirplaneModeSuiteOneBridge(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4554", name="WIFI-4554")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6534", name="WIFI-6534")
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_ToggleAirplaneMode_2g_WPA_BRIDGE(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -227,7 +226,7 @@ class TestToggleAirplaneModeSuiteOneBridge(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4553", name="WIFI-4553")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6537", name="WIFI-6537")
     @pytest.mark.fiveg
     @pytest.mark.open
     def test_ToggleAirplaneMode_5g_Open_BRIDGE(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -269,7 +268,7 @@ class TestToggleAirplaneModeSuiteOneBridge(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4552", name="WIFI-4552")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6538", name="WIFI-6538")
     @pytest.mark.twog
     @pytest.mark.open
     def test_ToggleAirplaneMode_2g_Open_BRIDGE(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -352,7 +351,7 @@ class TestToggleAirplaneModeSuiteBridgeTwo(object):
         pytest -m "client_reconnect and bridge and InteropsuiteB"
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4559", name="WIFI-4559")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6535", name="WIFI-6535")
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal
     def test_ToggleAirplaneMode_5g_wpa3_personal_BRIDGE(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -395,7 +394,7 @@ class TestToggleAirplaneModeSuiteBridgeTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4558", name="WIFI-4558")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6536", name="WIFI-6536")
     @pytest.mark.twog
     @pytest.mark.wpa3_personal
     def test_ToggleAirplaneMode_2g_wpa3_personal_BRIDGE(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -438,7 +437,7 @@ class TestToggleAirplaneModeSuiteBridgeTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4561", name="WIFI-4561")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6539", name="WIFI-6539")
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal_mixed
     def test_ToggleAirplaneMode_5g_wpa3_personal_mixed_BRIDGE(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -481,7 +480,7 @@ class TestToggleAirplaneModeSuiteBridgeTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4560", name="WIFI-4560")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6540", name="WIFI-6540")
     @pytest.mark.twog
     @pytest.mark.wpa3_personal_mixed
     def test_ToggleAirplaneMode_2g_wpa3_personal_mixed_BRIDGE(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -524,7 +523,7 @@ class TestToggleAirplaneModeSuiteBridgeTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4563", name="WIFI-4563")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6541", name="WIFI-6541")
     @pytest.mark.fiveg
     @pytest.mark.wpa_wpa2_personal_mixed
     def test_ToggleAirplaneMode_5g_wpa_wpa2_personal_mixed_BRIDGE(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -568,7 +567,7 @@ class TestToggleAirplaneModeSuiteBridgeTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4562", name="WIFI-4562")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6542", name="WIFI-6542")
     @pytest.mark.twog
     @pytest.mark.wpa_wpa2_personal_mixed
     def test_ToggleAirplaneMode_2g_wpa_wpa2_personal_mixed_BRIDGE(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
