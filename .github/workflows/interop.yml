@@ -50,7 +50,7 @@ jobs:
       with:
         namespace: interop-${{ github.run_id }}-galaxy-s9
         testbed: interop-01
-        marker_expression: "interop_uc_sanity and client_connect and android"
+        marker_expression: "interop_uc_sanity and client_connect and android and not wpa3_personal"
         configuration: "${{ secrets.LAB_CONFIGURATION }}"
         testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
         additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
