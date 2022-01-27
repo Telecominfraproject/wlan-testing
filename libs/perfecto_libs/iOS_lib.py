@@ -1080,8 +1080,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     # ---------------------check if internet-------------------------------
     try:
         driver.implicitly_wait(5)
-        WifiInternetErrMsg2 = WebDriverWait(driver, 5).until(
-            EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='No Internet Connection']")))
+        WifiInternetErrMsg2 = driver.find_element_by_xpath("//*[@label='No Internet Connection']")
         # = driver.find_element_by_xpath("//*[@label='No Internet Connection']").text
     except Exception as e:
         is_internet = True
