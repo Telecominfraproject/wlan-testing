@@ -21,8 +21,8 @@ from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnecti
     Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown,\
     verifyUploadDownloadSpeediOS, get_ip_add_eap_ios, get_ip_add_check_ios, wifi_connect_eap, wifi_disconnect_and_forget
 
-pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.client_reconnect
-              ,pytest.mark.interop_uc_sanity, pytest.mark.vlan, pytest.mark.enterprise]
+pytestmark = [pytest.mark.regression, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.client_reconnect
+              ,pytest.mark.ToggleAirplaneMode, pytest.mark.vlan, pytest.mark.enterprise]
 
 setup_params_enterprise = {
     "mode": "VLAN",
@@ -42,7 +42,7 @@ setup_params_enterprise = {
 }
 
 
-@allure.suite(suite_name="interop sanity")
+@allure.suite(suite_name="interop regression")
 @allure.sub_suite(sub_suite_name="VLAN Mode EAP Client ReConnect : Suite-A")
 @pytest.mark.suiteA
 @pytest.mark.parametrize(

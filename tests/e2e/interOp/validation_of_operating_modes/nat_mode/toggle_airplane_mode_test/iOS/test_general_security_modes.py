@@ -21,8 +21,8 @@ from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnecti
     Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown,\
     verifyUploadDownloadSpeediOS, get_ip_add_ios, get_ip_add_check_ios, wifi_connect, wifi_disconnect_and_forget
 
-pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
-              pytest.mark.client_reconnect, pytest.mark.interop_uc_sanity, pytest.mark.nat]
+pytestmark = [pytest.mark.regression, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
+              pytest.mark.client_reconnect, pytest.mark.ToggleAirplaneMode, pytest.mark.nat]
 
 setup_params_general = {
     "mode": "NAT",
@@ -41,7 +41,7 @@ setup_params_general = {
 }
 
 
-@allure.suite(suite_name="interop sanity")
+@allure.suite(suite_name="interop regression")
 @allure.sub_suite(sub_suite_name="Nat Mode Client Reconnect : Suite-A")
 @pytest.mark.InteropsuiteA
 @allure.feature("NAT MODE CLIENT RECONNECT")
@@ -335,7 +335,7 @@ setup_params_general_two = {
 }
 
 
-@allure.suite(suite_name="interop sanity")
+@allure.suite(suite_name="interop regression")
 @allure.sub_suite(sub_suite_name="NAT Mode Client Reconnect : Suite-B")
 @pytest.mark.InteropsuiteB
 @allure.feature("NAT MODE CLIENT Reconnect")
