@@ -17,7 +17,7 @@ import allure
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.ToggleWifiMode, pytest.mark.client_reconnect]
+pytestmark = [pytest.mark.regression, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.ToggleWifiMode, pytest.mark.client_reconnect]
 
 from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_WifiMode_android, ForgetWifiConnection, openApp,\
     get_ip_add_check_and, verifyUploadDownloadSpeed_android, wifi_connect, wifi_disconnect_and_forget, get_ip_add_and
@@ -45,7 +45,7 @@ for sec_modes in setup_params_general['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-@allure.suite(suite_name="interop sanity")
+@allure.suite(suite_name="interop regression")
 @allure.sub_suite(sub_suite_name="Bridge Mode Client ReConnect : Suite-A")
 @pytest.mark.InteropsuiteA
 @allure.feature("BRIDGE MODE CLIENT RECONNECT")
@@ -351,7 +351,7 @@ for sec_modes in setup_params_general_two['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'].replace("ssid_","") + "_"+ rand_string
 
-@allure.suite(suite_name="interop sanity")
+@allure.suite(suite_name="interop regression")
 @allure.sub_suite(sub_suite_name="Bridge Mode Client ReConnect : Suite-B")
 @pytest.mark.InteropsuiteB
 @allure.feature("BRIDGE MODE CLIENT RECONNECT")
