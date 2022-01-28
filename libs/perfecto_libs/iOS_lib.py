@@ -1363,6 +1363,14 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
 
     # ---------------------This is to Select SSID-------------------------------
     try:
+        counter_time = 0
+        while ((not ssid_Visible(driver, WifiName)) and counter_time < 5):
+            scrollDown(setup_perfectoMobile)
+            counter_time = counter_time + 1
+
+        if counter_time == 5:
+            print(f"Not able to get the {WifiName} to be visible")
+
         wifiSelectionElement = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
         wifiSelectionElement.click()
@@ -2432,3 +2440,14 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     # --------------------- close app-------------------------------
     #closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
     return ip_address_element_text, is_internet
+
+# Returns whether the ssid is currently visible
+def ssid_Visible(driver,WifiName):
+    wifiSelectionElement = WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
+    isVisible = wifiSelectionElement.get_attribute("visible")
+    print(f"Is ssid visible: {isVisible}")
+    if(isVisible == 'false'):
+        return False
+    else:
+        return True
