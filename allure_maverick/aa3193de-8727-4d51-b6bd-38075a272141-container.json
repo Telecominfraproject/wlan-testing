@@ -1,0 +1,1 @@
+{"uuid": "fbfe67f7-d8dd-42c8-9e3c-2aafe41466e6", "children": ["b5d36a5a-c962-48a7-9057-bde9494ab4dd"], "befores": [{"name": "set_maverick_mode_all", "status": "passed", "start": 1640759539228, "stop": 1640759572807}], "afters": [{"name": "set_maverick_mode_all::0", "status": "passed", "start": 1640759656908, "stop": 1640759656908}], "start": 1640759539228, "stop": 1640759656908}

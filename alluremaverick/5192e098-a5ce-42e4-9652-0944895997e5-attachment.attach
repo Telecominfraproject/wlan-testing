@@ -1,0 +1,86 @@
+
+wlan0     ESSID: "ssid_open_5g_vlan"
+          Access Point: 90:3C:B3:6A:E4:A5
+          Mode: Master  Channel: 132 (5.660 GHz)
+          Center Channel 1: 138 2: unknown
+          Tx-Power: 23 dBm  Link Quality: unknown/70
+          Signal: unknown  Noise: -107 dBm
+          Bit Rate: unknown
+          Encryption: none
+          Type: nl80211  HW Mode(s): 802.11nacax
+          Hardware: unknown [Generic MAC80211]
+          TX power offset: unknown
+          Frequency offset: unknown
+          Supports VAPs: yes  PHY name: phy0
+
+wlan0-1   ESSID: "ssid_wpa_5g_vlan"
+          Access Point: 90:3C:B3:6A:E4:A6
+          Mode: Master  Channel: 132 (5.660 GHz)
+          Center Channel 1: 138 2: unknown
+          Tx-Power: 23 dBm  Link Quality: unknown/70
+          Signal: unknown  Noise: -107 dBm
+          Bit Rate: unknown
+          Encryption: WPA PSK (CCMP)
+          Type: nl80211  HW Mode(s): 802.11nacax
+          Hardware: unknown [Generic MAC80211]
+          TX power offset: unknown
+          Frequency offset: unknown
+          Supports VAPs: yes  PHY name: phy0
+
+wlan0-2   ESSID: "ssid_wpa2_5g_vlan"
+          Access Point: 90:3C:B3:6A:E4:A7
+          Mode: Master  Channel: 132 (5.660 GHz)
+          Center Channel 1: 138 2: unknown
+          Tx-Power: 23 dBm  Link Quality: unknown/70
+          Signal: unknown  Noise: -107 dBm
+          Bit Rate: unknown
+          Encryption: WPA2 PSK (CCMP)
+          Type: nl80211  HW Mode(s): 802.11nacax
+          Hardware: unknown [Generic MAC80211]
+          TX power offset: unknown
+          Frequency offset: unknown
+          Supports VAPs: yes  PHY name: phy0
+
+wlan1     ESSID: "ssid_open_2g_vlan"
+          Access Point: 90:3C:B3:6A:E4:AD
+          Mode: Master  Channel: 1 (2.412 GHz)
+          Center Channel 1: 3 2: unknown
+          Tx-Power: 30 dBm  Link Quality: unknown/70
+          Signal: unknown  Noise: -98 dBm
+          Bit Rate: unknown
+          Encryption: none
+          Type: nl80211  HW Mode(s): 802.11bgnax
+          Hardware: unknown [Generic MAC80211]
+          TX power offset: unknown
+          Frequency offset: unknown
+          Supports VAPs: yes  PHY name: phy1
+
+wlan1-1   ESSID: "ssid_wpa_2g_vlan"
+          Access Point: 90:3C:B3:6A:E4:AE
+          Mode: Master  Channel: 1 (2.412 GHz)
+          Center Channel 1: 3 2: unknown
+          Tx-Power: 30 dBm  Link Quality: unknown/70
+          Signal: unknown  Noise: -98 dBm
+          Bit Rate: unknown
+          Encryption: WPA PSK (CCMP)
+          Type: nl80211  HW Mode(s): 802.11bgnax
+          Hardware: unknown [Generic MAC80211]
+          TX power offset: unknown
+          Frequency offset: unknown
+          Supports VAPs: yes  PHY name: phy1
+
+wlan1-2   ESSID: "ssid_wpa2_2g_vlan"
+          Access Point: 90:3C:B3:6A:E4:AF
+          Mode: Master  Channel: 1 (2.412 GHz)
+          Center Channel 1: 3 2: unknown
+          Tx-Power: 30 dBm  Link Quality: unknown/70
+          Signal: unknown  Noise: -98 dBm
+          Bit Rate: unknown
+          Encryption: WPA2 PSK (CCMP)
+          Type: nl80211  HW Mode(s): 802.11bgnax
+          Hardware: unknown [Generic MAC80211]
+          TX power offset: unknown
+          Frequency offset: unknown
+          Supports VAPs: yes  PHY name: phy1
+
+

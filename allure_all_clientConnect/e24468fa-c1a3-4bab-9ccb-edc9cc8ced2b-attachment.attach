@@ -1,0 +1,284 @@
+Tue Dec 14 13:14:19 2021 user.notice root: start testcase: LNOAE25447
+Tue Dec 14 13:14:20 2021 daemon.debug ucentral: RX: {"id":2265,"jsonrpc":"2.0","method":"configure","params":{"config":{"interfaces":[{"ethernet":[{"select-ports":["WAN*"]}],"ipv4":{"addressing":"dynamic"},"name":"WAN","role":"upstream","services":["ssh","lldp","dhcp-snooping"]},{"ethernet":[{"select-ports":["LAN*"]}],"ipv4":{"addressing":"static","dhcp":{"lease-count":10000,"lease-first":10,"lease-time":"6h"},"subnet":"192.168.1.1/16"},"name":"LAN","role":"downstream","services":["ssh","lldp","dhcp-snooping"],"ssids":[{"bss-mode":"ap","encryption":{"ieee80211w":"optional","key":"something","proto":"psk"},"name":"ssid_wpa_2g_HLY3950","services":["wifi-frames"],"wifi-bands":["2G"]},{"bss-mode":"ap","encryption":{"ieee80211w":"optional","key":"something","proto":"psk"},"name":"ssid_wpa_5g_0MY6382","services":["wifi-frames"],"wifi-bands":["5G"]}]}],"metrics":{"dhcp-snooping":{"filters":["ack","discover","offer","request","solicit","reply","renew"]},"health":{"interval":120},"statistics":{"interval":60,"types":["ssids","lldp","cl
+Tue Dec 14 13:14:20 2021 daemon.info ucentral: applying cfg:1639487660
+Tue Dec 14 13:14:20 2021 daemon.info ucentral: config_init latest:1639487660 active:1639486190
+Tue Dec 14 13:14:20 2021 daemon.info ucentral: running apply task
+Tue Dec 14 13:14:21 2021 daemon.info dnsmasq[14462]: exiting on receipt of SIGTERM
+Tue Dec 14 13:14:21 2021 user.notice dnsmasq: DNS rebinding protection is active, will discard upstream RFC1918 responses!
+Tue Dec 14 13:14:21 2021 user.notice dnsmasq: Allowing 127.0.0.0/8 responses
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: Connected to system UBus
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: started, version 2.85 cachesize 150
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: DNS service limited to local subnets
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack ipset auth cryptohash DNSSEC no-ID loop-detect inotify dumpfile
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: UBus support enabled: connected to system bus
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq-dhcp[15427]: DHCP, IP range 192.168.0.10 -- 192.168.39.25, lease time 6h
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: using only locally-known addresses for domain test
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: using only locally-known addresses for domain onion
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: using only locally-known addresses for domain localhost
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: using only locally-known addresses for domain local
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: using only locally-known addresses for domain invalid
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: using only locally-known addresses for domain bind
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: using only locally-known addresses for domain lan
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: reading /tmp/resolv.conf.d/resolv.conf.auto
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: using only locally-known addresses for domain test
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: using only locally-known addresses for domain onion
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: using only locally-known addresses for domain localhost
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: using only locally-known addresses for domain local
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: using only locally-known addresses for domain invalid
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: using only locally-known addresses for domain bind
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: using only locally-known addresses for domain lan
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: using nameserver 8.8.8.8#53
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: read /etc/hosts - 4 addresses
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: read /tmp/hosts/dhcp.cfg01411c - 1 addresses
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq-dhcp[15427]: read /etc/ethers - 0 addresses
+Tue Dec 14 13:14:24 2021 daemon.debug dnsmasq[15427]: UBus subscription callback: 1 subscriber(s)
+Tue Dec 14 13:14:24 2021 daemon.info dnsmasq[15427]: exiting on receipt of SIGTERM
+Tue Dec 14 13:14:24 2021 user.notice dnsmasq: DNS rebinding protection is active, will discard upstream RFC1918 responses!
+Tue Dec 14 13:14:24 2021 user.notice dnsmasq: Allowing 127.0.0.0/8 responses
+Tue Dec 14 13:14:25 2021 kern.info kernel: [ 4659.011774] device wlan1 left promiscuous mode
+Tue Dec 14 13:14:25 2021 kern.info kernel: [ 4659.011837] down: port 3(wlan1) entered disabled state
+Tue Dec 14 13:14:25 2021 kern.info kernel: [ 4659.058636] device wlan0 left promiscuous mode
+Tue Dec 14 13:14:25 2021 kern.info kernel: [ 4659.058704] down: port 4(wlan0) entered disabled state
+Tue Dec 14 13:14:25 2021 daemon.notice hostapd: Remove interface 'wlan1'
+Tue Dec 14 13:14:25 2021 daemon.notice hostapd: wlan1: interface state ENABLED->DISABLED
+Tue Dec 14 13:14:25 2021 daemon.notice hostapd: wlan1-2: AP-DISABLED
+Tue Dec 14 13:14:25 2021 daemon.notice hostapd: wlan1-2: CTRL-EVENT-TERMINATING
+Tue Dec 14 13:14:25 2021 kern.info kernel: [ 4659.119000] device wlan0-1 left promiscuous mode
+Tue Dec 14 13:14:25 2021 kern.info kernel: [ 4659.119161] down: port 7(wlan0-1) entered disabled state
+Tue Dec 14 13:14:25 2021 kern.info kernel: [ 4659.165890] down: port 6(wlan1-2) entered disabled state
+Tue Dec 14 13:14:25 2021 kern.info kernel: [ 4659.217972] device wlan1-2 left promiscuous mode
+Tue Dec 14 13:14:25 2021 kern.info kernel: [ 4659.218002] down: port 6(wlan1-2) entered disabled state
+Tue Dec 14 13:14:26 2021 kern.info kernel: [ 4659.258254] device wlan0-2 left promiscuous mode
+Tue Dec 14 13:14:26 2021 kern.info kernel: [ 4659.258326] down: port 8(wlan0-2) entered disabled state
+Tue Dec 14 13:14:26 2021 kern.info kernel: [ 4659.288125] device wlan1-1 left promiscuous mode
+Tue Dec 14 13:14:26 2021 kern.info kernel: [ 4659.288180] down: port 5(wlan1-1) entered disabled state
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: nl80211: Failed to remove interface wlan1-2 from bridge down: No such device
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: wlan1-1: AP-DISABLED
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: wlan1-1: CTRL-EVENT-TERMINATING
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: nl80211: Failed to remove interface wlan1-1 from bridge down: No such device
+Tue Dec 14 13:14:26 2021 daemon.info hostapd: wlan1: STA fa:06:67:cb:31:e3 RADIUS: stopped accounting session DD1C5472B91369A9
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: wlan1: AP-STA-DISCONNECTED fa:06:67:cb:31:e3 10 10
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: wlan1: AP-DISABLED
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: wlan1: CTRL-EVENT-TERMINATING
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: nl80211: deinit ifname=wlan1 disabled_11b_rates=0
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: nl80211: Failed to remove interface wlan1 from bridge down: Invalid argument
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: Remove interface 'wlan0'
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: wlan0: interface state ENABLED->DISABLED
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: wlan0-2: AP-DISABLED
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: wlan0-2: CTRL-EVENT-TERMINATING
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: nl80211: Failed to remove interface wlan0-2 from bridge down: No such device
+Tue Dec 14 13:14:26 2021 daemon.notice netifd: Wireless device 'radio1' is now down
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: wlan0-1: AP-DISABLED
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: wlan0-1: CTRL-EVENT-TERMINATING
+Tue Dec 14 13:14:26 2021 daemon.notice netifd: radio1 (15727): sh: acs_survey: out of range
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: nl80211: Failed to remove interface wlan0-1 from bridge down: No such device
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: wlan0: AP-DISABLED
+Tue Dec 14 13:14:26 2021 daemon.notice hostapd: wlan0: CTRL-EVENT-TERMINATING
+Tue Dec 14 13:14:27 2021 daemon.notice hostapd: nl80211: deinit ifname=wlan0 disabled_11b_rates=0
+Tue Dec 14 13:14:27 2021 daemon.notice netifd: bridge 'down' link is down
+Tue Dec 14 13:14:27 2021 daemon.notice hostapd: nl80211: Failed to remove interface wlan0 from bridge down: Invalid argument
+Tue Dec 14 13:14:27 2021 daemon.notice netifd: 8021q 'down1v0' link is down
+Tue Dec 14 13:14:27 2021 daemon.notice netifd: Interface 'down1v0' has link connectivity loss
+Tue Dec 14 13:14:27 2021 daemon.notice hostapd: Configuration file: /var/run/hostapd-phy1.conf (phy wlan1) --> new PHY
+Tue Dec 14 13:14:27 2021 kern.info kernel: [ 4660.399726] IPv6: ADDRCONF(NETDEV_UP): wlan1: link is not ready
+Tue Dec 14 13:14:27 2021 kern.info kernel: [ 4660.458778] device wlan1 entered promiscuous mode
+Tue Dec 14 13:14:27 2021 kern.info kernel: [ 4660.458890] down: port 3(wlan1) entered forwarding state
+Tue Dec 14 13:14:27 2021 kern.info kernel: [ 4660.462521] down: port 3(wlan1) entered forwarding state
+Tue Dec 14 13:14:27 2021 daemon.notice hostapd: wlan1: interface state UNINITIALIZED->COUNTRY_UPDATE
+Tue Dec 14 13:14:27 2021 daemon.notice hostapd: ACS: Automatic channel selection started, this may take a bit
+Tue Dec 14 13:14:27 2021 daemon.notice netifd: bridge 'down' link is up
+Tue Dec 14 13:14:27 2021 daemon.notice hostapd: wlan1: interface state COUNTRY_UPDATE->ACS
+Tue Dec 14 13:14:27 2021 daemon.notice hostapd: wlan1: ACS-STARTED
+Tue Dec 14 13:14:27 2021 daemon.notice netifd: 8021q 'down1v0' link is up
+Tue Dec 14 13:14:27 2021 daemon.notice netifd: Interface 'down1v0' has link connectivity
+Tue Dec 14 13:14:27 2021 daemon.notice netifd: Wireless device 'radio0' is now down
+Tue Dec 14 13:14:27 2021 daemon.notice hostapd: Configuration file: /var/run/hostapd-phy0.conf (phy wlan0) --> new PHY
+Tue Dec 14 13:14:27 2021 kern.info kernel: [ 4660.722273] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
+Tue Dec 14 13:14:27 2021 kern.info kernel: [ 4660.723935] device wlan0 entered promiscuous mode
+Tue Dec 14 13:14:27 2021 kern.info kernel: [ 4660.727160] down: port 4(wlan0) entered forwarding state
+Tue Dec 14 13:14:27 2021 kern.info kernel: [ 4660.731959] down: port 4(wlan0) entered forwarding state
+Tue Dec 14 13:14:27 2021 daemon.notice hostapd: wlan0: interface state UNINITIALIZED->COUNTRY_UPDATE
+Tue Dec 14 13:14:27 2021 daemon.notice hostapd: ACS: Automatic channel selection started, this may take a bit
+Tue Dec 14 13:14:27 2021 daemon.notice hostapd: wlan0: interface state COUNTRY_UPDATE->ACS
+Tue Dec 14 13:14:27 2021 daemon.notice hostapd: wlan0: ACS-STARTED
+Tue Dec 14 13:14:28 2021 kern.info kernel: [ 4661.257605] down: port 3(wlan1) entered disabled state
+Tue Dec 14 13:14:28 2021 kern.info kernel: [ 4661.257990] down: port 4(wlan0) entered disabled state
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: Connected to system UBus
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: started, version 2.85 cachesize 150
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: DNS service limited to local subnets
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack ipset auth cryptohash DNSSEC no-ID loop-detect inotify dumpfile
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: UBus support enabled: connected to system bus
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq-dhcp[16021]: DHCP, IP range 192.168.0.10 -- 192.168.39.25, lease time 6h
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: using only locally-known addresses for domain test
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: using only locally-known addresses for domain onion
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: using only locally-known addresses for domain localhost
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: using only locally-known addresses for domain local
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: using only locally-known addresses for domain invalid
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: using only locally-known addresses for domain bind
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: using only locally-known addresses for domain lan
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: reading /tmp/resolv.conf.d/resolv.conf.auto
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: using only locally-known addresses for domain test
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: using only locally-known addresses for domain onion
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: using only locally-known addresses for domain localhost
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: using only locally-known addresses for domain local
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: using only locally-known addresses for domain invalid
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: using only locally-known addresses for domain bind
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: using only locally-known addresses for domain lan
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: using nameserver 8.8.8.8#53
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: read /etc/hosts - 4 addresses
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: read /tmp/hosts/dhcp.cfg01411c - 1 addresses
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq-dhcp[16021]: read /etc/ethers - 0 addresses
+Tue Dec 14 13:14:28 2021 daemon.debug dnsmasq[16021]: UBus subscription callback: 1 subscriber(s)
+Tue Dec 14 13:14:28 2021 daemon.notice netifd: Wireless device 'radio1' is now up
+Tue Dec 14 13:14:28 2021 daemon.notice netifd: Wireless device 'radio0' is now up
+Tue Dec 14 13:14:28 2021 daemon.info dnsmasq[16021]: exiting on receipt of SIGTERM
+Tue Dec 14 13:14:28 2021 user.notice dnsmasq: DNS rebinding protection is active, will discard upstream RFC1918 responses!
+Tue Dec 14 13:14:28 2021 user.notice dnsmasq: Allowing 127.0.0.0/8 responses
+Tue Dec 14 13:14:28 2021 daemon.info lldpd[9417]: interface 31 does not have a name or an address, skip
+Tue Dec 14 13:14:29 2021 daemon.notice netifd: bridge 'down' link is down
+Tue Dec 14 13:14:29 2021 daemon.notice netifd: 8021q 'down1v0' link is down
+Tue Dec 14 13:14:29 2021 daemon.notice netifd: Interface 'down1v0' has link connectivity loss
+Tue Dec 14 13:14:29 2021 daemon.info lldpd[9417]: interface 32 does not have a name or an address, skip
+Tue Dec 14 13:14:30 2021 daemon.info lldpd[9417]: interface 31 does not have a name or an address, skip
+Tue Dec 14 13:14:31 2021 daemon.info lldpd[9417]: interface 32 does not have a name or an address, skip
+Tue Dec 14 13:14:31 2021 daemon.debug ucentral: TX: {"jsonrpc":"2.0","id":2265,"result":{"serial":"903cb36ae4a3","uuid":1639487660,"status":{"error":0,"text":"Success"}}}
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: Connected to system UBus
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: started, version 2.85 cachesize 150
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: DNS service limited to local subnets
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack ipset auth cryptohash DNSSEC no-ID loop-detect inotify dumpfile
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: UBus support enabled: connected to system bus
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq-dhcp[16547]: DHCP, IP range 192.168.0.10 -- 192.168.39.25, lease time 6h
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: using only locally-known addresses for domain test
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: using only locally-known addresses for domain onion
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: using only locally-known addresses for domain localhost
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: using only locally-known addresses for domain local
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: using only locally-known addresses for domain invalid
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: using only locally-known addresses for domain bind
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: using only locally-known addresses for domain lan
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: reading /tmp/resolv.conf.d/resolv.conf.auto
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: using only locally-known addresses for domain test
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: using only locally-known addresses for domain onion
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: using only locally-known addresses for domain localhost
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: using only locally-known addresses for domain local
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: using only locally-known addresses for domain invalid
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: using only locally-known addresses for domain bind
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: using only locally-known addresses for domain lan
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: using nameserver 8.8.8.8#53
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: read /etc/hosts - 4 addresses
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq[16547]: read /tmp/hosts/dhcp.cfg01411c - 1 addresses
+Tue Dec 14 13:14:31 2021 daemon.info dnsmasq-dhcp[16547]: read /etc/ethers - 0 addresses
+Tue Dec 14 13:14:31 2021 daemon.debug dnsmasq[16547]: UBus subscription callback: 1 subscriber(s)
+Tue Dec 14 13:14:31 2021 daemon.info ucentral: applied cfg:1639487660
+Tue Dec 14 13:14:32 2021 daemon.info lldpd[9417]: interface 31 does not have a name or an address, skip
+Tue Dec 14 13:14:33 2021 daemon.info lldpd[9417]: interface 32 does not have a name or an address, skip
+Tue Dec 14 13:14:34 2021 daemon.info lldpd[9417]: interface 31 does not have a name or an address, skip
+Tue Dec 14 13:14:35 2021 daemon.info lldpd[9417]: interface 32 does not have a name or an address, skip
+Tue Dec 14 13:14:35 2021 daemon.info lldpd[9417]: interface 31 does not have a name or an address, skip
+Tue Dec 14 13:14:35 2021 daemon.notice hostapd: wlan1: ACS-COMPLETED freq=2412 channel=1
+Tue Dec 14 13:14:35 2021 daemon.notice hostapd: wlan1: interface state ACS->HT_SCAN
+Tue Dec 14 13:14:36 2021 daemon.info lldpd[9417]: interface 32 does not have a name or an address, skip
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing noise floor
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing channel time
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: ACS: Survey is missing RX and busy time (at least one is required)
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: wlan0: ACS-COMPLETED freq=5660 channel=132
+Tue Dec 14 13:14:36 2021 daemon.notice hostapd: wlan0: interface state ACS->HT_SCAN
+Tue Dec 14 13:14:37 2021 daemon.info lldpd[9417]: interface 32 does not have a name or an address, skip
+Tue Dec 14 13:14:37 2021 daemon.notice hostapd: wlan0: interface state HT_SCAN->DFS
+Tue Dec 14 13:14:37 2021 daemon.notice hostapd: wlan0: DFS-CAC-START freq=5660 chan=132 sec_chan=1, width=1, seg0=138, seg1=0, cac_time=60s
+Tue Dec 14 13:14:37 2021 daemon.info lldpd[9417]: interface 31 does not have a name or an address, skip
+Tue Dec 14 13:14:37 2021 kern.info kernel: [ 4671.038540] ath11k c000000.wifi: bss color param 0x81000000 set on vdev 0
+Tue Dec 14 13:14:37 2021 kern.info kernel: [ 4671.038604] IPv6: ADDRCONF(NETDEV_CHANGE): wlan1: link becomes ready
+Tue Dec 14 13:14:37 2021 kern.info kernel: [ 4671.044426] down: port 3(wlan1) entered forwarding state
+Tue Dec 14 13:14:37 2021 kern.info kernel: [ 4671.050769] down: port 3(wlan1) entered forwarding state
+Tue Dec 14 13:14:37 2021 daemon.notice netifd: Network device 'wlan1' link is up
+Tue Dec 14 13:14:37 2021 daemon.notice netifd: bridge 'down' link is up
+Tue Dec 14 13:14:37 2021 daemon.notice netifd: 8021q 'down1v0' link is up
+Tue Dec 14 13:14:37 2021 daemon.notice netifd: Interface 'down1v0' has link connectivity
+Tue Dec 14 13:14:37 2021 daemon.notice dynamic-vlan: Subscribe to hostapd.wlan1 (4033878082)
+Tue Dec 14 13:14:37 2021 daemon.notice ucentral-event: Subscribe to hostapd.wlan1 (4033878082)
+Tue Dec 14 13:14:37 2021 daemon.notice hostapd: wlan1: interface state HT_SCAN->ENABLED
+Tue Dec 14 13:14:37 2021 daemon.notice hostapd: wlan1: AP-ENABLED
+Tue Dec 14 13:14:45 2021 kern.info kernel: [ 4679.067485] down: port 3(wlan1) entered forwarding state
+Tue Dec 14 13:14:51 2021 daemon.debug ucentral: TX: {"jsonrpc":"2.0","method":"state","params":{"compress_64":"eJy1VNtu2zAM/Rdtb3McXVzZ8hfsYT8wDEWgyPQi1LYMWU5aFPn3kXbaJsNa7KX2gyRSPDrkofTM5tk3rBZamaIqteYZmyB627GaGa7cXmkLhVUM7ckmYPUzmwefaOyhD/GJZikkijClEsoYXWWsjYB7K65KVWqOqM66A+BJ0hTmThqdsf3cthDJJrgsOH7njHXB2S75Ht44GZGxeVxtha7uaJPFqF88V6qqSpnxnBtRmoomisuyuEekaBsfJtz2zNzBDgMgQUS6zHcn36QDJllwTC097sZwgshqhVRTtMPU+7TrMbwsEQoc+CMsa07Ep6dlrrTKmHXpxSekMUhvCH5CrhskxMYDFoiNnU1tiP12Cm7r+PLlJ9/6b4JOh36EaNMcKUN1vs+YHxLE1jpYExgsJY9V4EeiS0VKPgxo2r7t3JLLj8eCFLFNE2GalngmSpkLnUspc8nVVmiGR3RgJ1irqpfSv9VYoTrNMO2wE44QF4gqX34KdJ2HIa3EeuuQBOcIUQOvK1FrWUu4ENn9iwXPBaGgX9/6W6h4vf5ygWvbGm0EiYgYMoa4HMsgHRCD6uTCTPlPlHJEEa17ANoj9Crqy1qiUOjfPyU6S8pSLf7LupB69UOMIa4ip5sV+poYxpG6dXVeL/sZW9bZKS0rF7rOTygPhZ7P2at8TTgN4iMBxbsCGipdlYtcLOrdqCUl3s3JN6siS9sTwNcILeJ/2a4XAcHP/9eOhIWbaNidRruTv3fff/xU5o6Y96GhVOyI8/1lp+G1cvVe1drWUNR4NzENygh9p84OBPqeUBtBNybdWAptrtXayKKQ5lqvjcBeEvLTJPugsYpbsuU1UVFV1yyF1PozKXZ+eNi8PspYZxqWq4GjszF6etDoZqNR/mVE6+k1gt848ZGcRljfZXq5m3ns4BG1bOeuY2
+Tue Dec 14 13:15:37 2021 daemon.notice hostapd: wlan0: DFS-CAC-COMPLETED success=1 freq=5660 ht_enabled=0 chan_offset=0 chan_width=3 cf1=5690 cf2=0
+Tue Dec 14 13:15:37 2021 kern.info kernel: [ 4730.802955] ath11k c000000.wifi: bss color param 0x81000000 set on vdev 1
+Tue Dec 14 13:15:37 2021 kern.info kernel: [ 4730.803009] IPv6: ADDRCONF(NETDEV_CHANGE): wlan0: link becomes ready
+Tue Dec 14 13:15:37 2021 daemon.notice netifd: Network device 'wlan0' link is up
+Tue Dec 14 13:15:37 2021 kern.info kernel: [ 4730.808938] down: port 4(wlan0) entered forwarding state
+Tue Dec 14 13:15:37 2021 kern.info kernel: [ 4730.815172] down: port 4(wlan0) entered forwarding state
+Tue Dec 14 13:15:37 2021 daemon.notice dynamic-vlan: Subscribe to hostapd.wlan0 (108538378)
+Tue Dec 14 13:15:37 2021 daemon.notice ucentral-event: Subscribe to hostapd.wlan0 (108538378)
+Tue Dec 14 13:15:37 2021 daemon.notice hostapd: wlan0: interface state DFS->ENABLED
+Tue Dec 14 13:15:37 2021 daemon.notice hostapd: wlan0: AP-ENABLED
+Tue Dec 14 13:15:45 2021 kern.info kernel: [ 4738.827240] down: port 4(wlan0) entered forwarding state
+Tue Dec 14 13:15:51 2021 daemon.debug ucentral: TX: {"jsonrpc":"2.0","method":"state","params":{"compress_64":"eJzNVUtu2zAQvQvbXRWZH4kSdYIu2gMERSDQFBUT0Q8UZScIfPfOSI5rO3XqTYBKC3I+HL6ZNyRfyTS5ihRMCpXkmZQ0IqP1TjekIIoKsxZS20QLAvqggyXFK5k6F3Bsbdv7F5yFPuAKlQkmlJJ5RGpvwTenCfwZTSJitNlY2ImrRDFOYZ/1VNfWo45RnlD49hFpeqOb4Fp7xJSlLCLTsOiSLEnRScOqXzQWSc5SGtGYCcmFgAlNJKTxAJG8rlw/gtsrMRvddRYAMsGjN6ncuSpsIM2cQnLhuRz6nfUAUIDkdTe2LpQtBEhhR2+NdVs7yzP08WWeA/KIaBPebIwrBe5d70ZAe8doFpFhAzUiQ6ND3ft2NfZmZej8xTtXO9zctoP1OkweU0z20Snk94CTc8CCXgAW/AIxP0Us03PIGVeZ/ANZqX8i/sbeYRb7h4i4Llhfa2OXqncaGQPq6BYBI7PB9R2oVn88V2hywzbBNtJV5e04zusJy3jMZMw5jzkVKyYJbNFYPdqlFeTcL8fGkAqSqLqxhPbdWj+HyOP5x4WmcbYLC7BWGwBBKYQoLC1yVkhecHsAUv4NBXQYRgG7PLfXNqfF8vM5XF0XoMOQEBGWDL2ftyU2bCAG1sn0E+Y/YsoeaNTmyaKPXFg9EcG6fgm4E8/z2XoQmcBOBrP1vvdLU4YzCWyV74cBz9diPBXbCQ6Z0WOYJdM3jRuBG1y6x/Y7cFf1u459xB67yp7CuuUxi9lM3RlVOWAfR1ctdMwHFQN89baG+F9Wy9GF1tjfcnowErjgUO4GXaaPJf15L0XOwdj2FSaiB5ivD56KFsIUa1FIXdik0CkmgfmAbdfoDvO9xhE95yg75YieMpTL5DMJulo0dkPR5gN8WTb+WH7/cS9USm8sW3VRNnZ72ejVstFPK9oHB+//QN
+Tue Dec 14 13:16:27 2021 user.notice root: stop testcase: LNOAE25447

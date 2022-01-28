@@ -1,0 +1,1 @@
+{"uuid": "7d4a272b-ac0d-4082-ac5e-983411230751", "children": ["f44dbe85-5e59-4985-9f29-77ecd98e937e"], "befores": [{"name": "get_vif_state", "status": "passed", "start": 1639050786310, "stop": 1639050786310}], "afters": [{"name": "get_vif_state::0", "status": "passed", "start": 1639050848800, "stop": 1639050848800}], "start": 1639050786310, "stop": 1639050848800}

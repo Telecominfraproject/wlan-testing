@@ -1,0 +1,6 @@
+Fri Dec 10 07:07:21 2021 user.notice root: start testcase: 1PCU0NQKA
+Fri Dec 10 07:07:26 2021 daemon.info dnsprobe: attempting to probe dns - telecominfraproject.com 8.8.8.8
+Fri Dec 10 07:07:26 2021 daemon.debug ucentral: TX: {"jsonrpc":"2.0","method":"healthcheck","params":{"serial":"903cb36ae4a3","uuid":1639119886,"sanity":67,"data":{"unit":{"memory":17},"interfaces":{"down1v0":{"dhcp":false,"location":"/interfaces/1"}}}}}
+Fri Dec 10 07:07:36 2021 daemon.notice netifd: up0v0 (5965): udhcpc: sending renew to 172.16.0.1
+Fri Dec 10 07:07:36 2021 daemon.notice netifd: up0v0 (5965): udhcpc: lease of 172.16.222.203 obtained, lease time 600
+Fri Dec 10 07:07:39 2021 user.notice root: stop testcase: 1PCU0NQKA

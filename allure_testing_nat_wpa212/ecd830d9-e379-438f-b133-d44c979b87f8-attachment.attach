@@ -1,0 +1,20 @@
+Fri Dec 10 17:55:04 2021 user.notice root: start testcase: AT5ZUBO5E
+Fri Dec 10 17:56:03 2021 daemon.info dnsmasq-dhcp[14265]: DHCPRELEASE(br-down2v0) 192.168.2.89 e2:ec:ed:62:d5:81
+Fri Dec 10 17:56:03 2021 daemon.err dnsmasq[14265]: Failed to send UBus event: Success
+Fri Dec 10 17:56:03 2021 daemon.notice hostapd: wlan1: AP-STA-DISCONNECTED e2:ec:ed:62:d5:81 0 0
+Fri Dec 10 17:56:03 2021 daemon.info hostapd: wlan1: STA e2:ec:ed:62:d5:81 IEEE 802.11: disassociated
+Fri Dec 10 17:56:04 2021 daemon.info hostapd: wlan1: STA e2:ec:ed:62:d5:81 IEEE 802.11: deauthenticated due to inactivity (timer DEAUTH/REMOVE)
+Fri Dec 10 17:56:29 2021 daemon.info hostapd: wlan1: STA e2:ec:ed:62:d5:81 IEEE 802.11: authenticated
+Fri Dec 10 17:56:29 2021 daemon.info hostapd: wlan1: STA e2:ec:ed:62:d5:81 IEEE 802.11: associated (aid 1)
+Fri Dec 10 17:56:29 2021 daemon.notice hostapd: wlan1: AP-STA-CONNECTED e2:ec:ed:62:d5:81 0 0
+Fri Dec 10 17:56:29 2021 daemon.info hostapd: wlan1: STA e2:ec:ed:62:d5:81 RADIUS: starting accounting session 08B2BF6F56D07116
+Fri Dec 10 17:56:29 2021 daemon.info hostapd: wlan1: STA e2:ec:ed:62:d5:81 WPA: pairwise key handshake completed (RSN)
+Fri Dec 10 17:56:32 2021 daemon.info dnsmasq-dhcp[14265]: DHCPDISCOVER(br-down2v0) e2:ec:ed:62:d5:81
+Fri Dec 10 17:56:32 2021 daemon.info dnsmasq-dhcp[14265]: DHCPOFFER(br-down2v0) 192.168.2.89 e2:ec:ed:62:d5:81
+Fri Dec 10 17:56:32 2021 daemon.info dnsmasq-dhcp[14265]: DHCPDISCOVER(br-down2v0) e2:ec:ed:62:d5:81
+Fri Dec 10 17:56:32 2021 daemon.info dnsmasq-dhcp[14265]: DHCPOFFER(br-down2v0) 192.168.2.89 e2:ec:ed:62:d5:81
+Fri Dec 10 17:56:33 2021 daemon.info dnsmasq-dhcp[14265]: DHCPREQUEST(br-down2v0) 192.168.2.89 e2:ec:ed:62:d5:81
+Fri Dec 10 17:56:33 2021 daemon.info dnsmasq-dhcp[14265]: DHCPACK(br-down2v0) 192.168.2.89 e2:ec:ed:62:d5:81 iPhone
+Fri Dec 10 17:56:33 2021 daemon.err dnsmasq[14265]: Failed to send UBus event: Success
+Fri Dec 10 17:57:03 2021 daemon.debug ucentral: TX: {"jsonrpc":"2.0","method":"state","params":{"compress_64":"eJy9V92SqzYMfhe3V21O4j+M4Sl639nJOMZsPIcAY8zm7Ozk3SsB2UA2yW5nuiUXwbIsf5I+WeaN9L0vSM6UyFiiOU9WpHPBm4rkJKPC7oQyThpBQB5NdCR/I33tI/4f3KEJr/gWm4grslQwkWVKr0gZHOhqmlHOpKQrYo3dO9iJpxlXCQeVXV+WLqCMUcp5xvhpRarGmir6gztjAgNiRfp2lEmRpqhkYNXfdE2HZwUvLGEiXZ0lT2ApmMI3Hai9Ebs3de0AIBN8dR5tj76Ie3BTU3Au/tq2zdEFAChhFEzdHXzcHsAA14g2OOv8ixskECmE370OoyRR4J+x8TydMpWmALpufAeYfzAKmNs9RIq0lYllEw6brrEbO4JdH33pEYI7tC6Y2Ad0lJ1Wc+DsI26+xC3oNe405Ve4xRw3YyKRS+DwoOgMPMs+xf0n+4Ccn55WxNfRhdJYN2agNpg9SCN9QdSY5eibGkSbi+YGp3z7IpFSpiiC67phPWEpXzO15pyvORUbpghsUTnTuZEWitLTnCRIuKLutkDlFxcGE3o9/HChrbyr4wjsYCyAoBRM5I7mmuWK59xNQLa3UNA1Qyswr5bzpdM0H398MFeWOcjQJFiEJW0Thm2Ji3uwgXGyTY/+d+hygFwa+9OhToKVGOcCpC5o7F4j7gY+KpkNKpNEK6lGFRdCgxbpMD0bwVwRmrbFmhsn58NDD4VnTReHkW2qyneQI1x6QjJOOSyaY80eZZHdzWKG8dNrtmYbLsnTImWc3Q8GXYaCzgNB5zGg/5P//JH//DP/+eT/ROGRiKbr/HONUMhw8GkqqARLI0GNyrWAis11BudiXmCMJ9u44N1wqmFi33RxAvsHQeQfbSeZeLfteO5s7gpkfpFACdyxrbOlbf/XvqkdOc3zmOr0Vn3dgn+jvuZufF
+Fri Dec 10 17:57:37 2021 user.notice root: stop testcase: AT5ZUBO5E

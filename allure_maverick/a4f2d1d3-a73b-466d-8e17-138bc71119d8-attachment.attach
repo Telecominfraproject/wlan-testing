@@ -1,0 +1,4 @@
+Wed Dec 29 12:51:31 2021 user.notice root: start testcase: WGI35XVML
+Wed Dec 29 12:54:45 2021 daemon.notice netifd: wan (6556): udhcpc: sending renew to 172.16.0.1
+Wed Dec 29 12:54:45 2021 daemon.notice netifd: wan (6556): udhcpc: lease of 172.16.222.203 obtained, lease time 600
+Wed Dec 29 12:55:15 2021 user.notice root: stop testcase: WGI35XVML

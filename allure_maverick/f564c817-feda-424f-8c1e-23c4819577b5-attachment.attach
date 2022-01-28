@@ -1,0 +1,19 @@
+Wed Dec 29 06:31:17 2021 user.notice root: start testcase: ANREFICHJ
+Wed Dec 29 06:31:23 2021 daemon.info hostapd: wlan1: STA 16:22:f9:1e:5f:d2 IEEE 802.11: authenticated
+Wed Dec 29 06:31:23 2021 daemon.info hostapd: wlan1: STA 16:22:f9:1e:5f:d2 IEEE 802.11: associated (aid 1)
+Wed Dec 29 06:31:23 2021 daemon.notice hostapd: wlan1: AP-STA-CONNECTED 16:22:f9:1e:5f:d2 0 0
+Wed Dec 29 06:31:23 2021 daemon.info hostapd: wlan1: STA 16:22:f9:1e:5f:d2 RADIUS: starting accounting session D3990E9C09A5FE54
+Wed Dec 29 06:31:27 2021 daemon.info dnsmasq-dhcp[10008]: DHCPDISCOVER(bridge.1) 16:22:f9:1e:5f:d2
+Wed Dec 29 06:31:27 2021 daemon.info dnsmasq-dhcp[10008]: DHCPOFFER(bridge.1) 192.168.1.248 16:22:f9:1e:5f:d2
+Wed Dec 29 06:31:27 2021 daemon.info dnsmasq-dhcp[10008]: DHCPDISCOVER(bridge.1) 16:22:f9:1e:5f:d2
+Wed Dec 29 06:31:27 2021 daemon.info dnsmasq-dhcp[10008]: DHCPOFFER(bridge.1) 192.168.1.248 16:22:f9:1e:5f:d2
+Wed Dec 29 06:31:28 2021 daemon.info dnsmasq-dhcp[10008]: DHCPREQUEST(bridge.1) 192.168.1.248 16:22:f9:1e:5f:d2
+Wed Dec 29 06:31:28 2021 daemon.info dnsmasq-dhcp[10008]: DHCPACK(bridge.1) 192.168.1.248 16:22:f9:1e:5f:d2
+Wed Dec 29 06:31:28 2021 daemon.err dnsmasq[10008]: Failed to send UBus event: Success
+Wed Dec 29 06:31:32 2021 daemon.info hostapd: wlan0: STA 16:22:f9:1e:5f:d2 IEEE 802.11: authenticated
+Wed Dec 29 06:31:32 2021 daemon.info hostapd: wlan0: STA 16:22:f9:1e:5f:d2 IEEE 802.11: associated (aid 1)
+Wed Dec 29 06:31:32 2021 daemon.notice hostapd: wlan0: AP-STA-CONNECTED 16:22:f9:1e:5f:d2 0 0
+Wed Dec 29 06:31:32 2021 daemon.notice hostapd: wlan1: Prune association for 16:22:f9:1e:5f:d2
+Wed Dec 29 06:31:32 2021 daemon.notice hostapd: wlan1: AP-STA-DISCONNECTED 16:22:f9:1e:5f:d2 0 0
+Wed Dec 29 06:31:32 2021 daemon.info hostapd: wlan0: STA 16:22:f9:1e:5f:d2 RADIUS: starting accounting session 9AEB4F4688BF062E
+Wed Dec 29 06:31:34 2021 user.notice root: stop testcase: ANREFICHJ

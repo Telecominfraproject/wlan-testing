@@ -1,0 +1,38 @@
+Fri Dec 10 09:20:06 2021 user.notice root: start testcase: 8G43IX6WQ
+Fri Dec 10 09:20:07 2021 daemon.info dnsprobe: attempting to probe dns - telecominfraproject.com 192.168.2.1
+Fri Dec 10 09:20:13 2021 daemon.info dnsprobe: attempting to probe dns - telecominfraproject.com 8.8.8.8
+Fri Dec 10 09:20:13 2021 daemon.debug ucentral: TX: {"jsonrpc":"2.0","method":"healthcheck","params":{"serial":"903cb36ae4a3","uuid":1639127858,"sanity":67,"data":{"unit":{"memory":18},"interfaces":{"down1v0":{"dhcp":false,"location":"/interfaces/1"}}}}}
+Fri Dec 10 09:20:47 2021 daemon.debug ucentral: TX: {"jsonrpc":"2.0","method":"state","params":{"compress_64":"eJzNVdtu2zAM/Rdtb3MdSb77V4YgUGR6EWpbhiQnLYr8+0g7aZN02fJSYDEQS6RIHvKQ8hubJtOwWuRJJWRRZmXEPDijOlaziid6m+QKUpUwlAcVgNVvbBpMoHcPvXWvtAo2kEVVJCKpqhydtA7wbMmzgid5ySOmld4BRpJFlVWyyiO2ndoWHMkE51Ji/GPEOqtVF0wPZ0wlT4uITeNJlvKkolMKzX7ymPOszKoIF5JjYFrMvzW6cqox1uOxN6Z3ahgAEYpERufd5mCasMM8S47ZhZfNaA/gEGGCO6cG35uw6dFBWgr0BhrMHmYBJ/D+dV5XBXpUOpx1QmByKBqs8Qj4SXCEP+6wTGzsVGit61fe6pVegMYH0xoKD/0IToXJoVGaHqML0PlnyOk15ITfQM6L9D7kjCe3oAtRpekH6Kr8J+Yf4hPq5LiOmBkCuFZpWCo/KKIN+eN7gkz0BmMHFK0+Tq5IZcZ9Sr2kmsaB97M9E4WMRR5LKWPJk5XIGYboQHlY+iHn/HjRHdh8SFUz+A028R7c7KOM54csdWdgCAuyXmlEwTn6qIHXpahzWUs4Idn8CQaPBXlBfX6tb6Hk9fLI2V3b1igjl+gRTUbr5rAMwo6zNRVK24kK4Clnh0wq/Qx0RvCF2fMeqUD19jVQKDHPUnjfy5TLWQ/OWbfwHK52qGucHUeas0V5ue0nHDatfJh32nad8UgPmR6pB0/0NfYwiL8RKO4SWFHlyhj/VzJl60u2Suw4702z8DGPK9l/d9Ci+2+rZYCxOY6PTBB5wiODChutxrm1D6OSm+wXKnvbUB5qxPX2dLLidaLrbVLnqoa0VhnlQOmg7tCpgdK9R9INR9klR1cECZGWX0nQ3aqJB6o2z/C9uslH69bc1E3893X7y/Q9DpBnXwqwM8Pz0/snF8tKL7w9BL
+Fri Dec 10 09:20:59 2021 daemon.info hostapd: wlan1: STA 9a:1d:4d:e7:de:41 IEEE 802.11: authenticated
+Fri Dec 10 09:20:59 2021 daemon.info hostapd: wlan1: STA 9a:1d:4d:e7:de:41 IEEE 802.11: associated (aid 1)
+Fri Dec 10 09:20:59 2021 daemon.notice hostapd: wlan1: AP-STA-CONNECTED 9a:1d:4d:e7:de:41 0 0
+Fri Dec 10 09:20:59 2021 daemon.info hostapd: wlan1: STA 9a:1d:4d:e7:de:41 RADIUS: starting accounting session 79FC6744C13B7352
+Fri Dec 10 09:20:59 2021 daemon.info hostapd: wlan1: STA 9a:1d:4d:e7:de:41 WPA: pairwise key handshake completed (RSN)
+Fri Dec 10 09:21:00 2021 daemon.info dnsmasq-dhcp[19172]: DHCPREQUEST(br-down1v0) 192.168.2.11 9a:1d:4d:e7:de:41
+Fri Dec 10 09:21:00 2021 daemon.info dnsmasq-dhcp[19172]: DHCPACK(br-down1v0) 192.168.2.11 9a:1d:4d:e7:de:41 iPhone
+Fri Dec 10 09:21:00 2021 daemon.err dnsmasq[19172]: Failed to send UBus event: Success
+Fri Dec 10 09:21:00 2021 daemon.notice opennds[9076]: Adding 192.168.2.11 9a:1d:4d:e7:de:41 token dfcd49fa to client list
+Fri Dec 10 09:21:47 2021 daemon.info hostapd: wlan1: STA 0e:c4:7a:b8:57:6c IEEE 802.11: authenticated
+Fri Dec 10 09:21:47 2021 daemon.info hostapd: wlan1: STA 0e:c4:7a:b8:57:6c IEEE 802.11: associated (aid 2)
+Fri Dec 10 09:21:47 2021 daemon.notice hostapd: wlan1: AP-STA-CONNECTED 0e:c4:7a:b8:57:6c 0 0
+Fri Dec 10 09:21:47 2021 daemon.info hostapd: wlan1: STA 0e:c4:7a:b8:57:6c RADIUS: starting accounting session 2241767E2A96E28E
+Fri Dec 10 09:21:47 2021 daemon.info hostapd: wlan1: STA 0e:c4:7a:b8:57:6c WPA: pairwise key handshake completed (RSN)
+Fri Dec 10 09:21:47 2021 daemon.info dnsmasq-dhcp[19172]: DHCPDISCOVER(br-down1v0) 0e:c4:7a:b8:57:6c
+Fri Dec 10 09:21:47 2021 daemon.info dnsmasq-dhcp[19172]: DHCPOFFER(br-down1v0) 192.168.2.97 0e:c4:7a:b8:57:6c
+Fri Dec 10 09:21:47 2021 daemon.debug ucentral: TX: {"jsonrpc":"2.0","method":"state","params":{"compress_64":"eJy1Vt2O4joMfpfsuTss5K9pk6c49yuEQpou0Za2StNhRyPe/dhtZ6AszIxWGpCgsRP7sz877gsZhlASw5TQjOdFVqxI72OwNTFEU+H2QlkvrSAgTzZ5Yl7I0ISE/0d/bOMzPqU24QmdCya0VmCkih72FjTLMs44CJx1Bw+eeK6VEJqvyH6oKh9RxijlHPyfV6Runa1TOPpXTAWj+YoM3SyTVGvcZeHYD7qm42cFDyxjIl+9SrZgKtoytD1seyHuYJvGA0ImwPG82p1CmQ4QZ0EhuvR717UnHwGhgFW0TX8MaXcEAzkYJtE7H578KKAIvn8en5nUsLQuvSpZzrUEE00bekD8nVGIvjtAnkhX21S18bjpW7dxE9L1KVQB/ftj56NNQ4RDUp5XV6jVn5jlErOgN5i10EvMTF+BVrkslqi5YJpnF9T6Y9D/sj9gi/N2RUKTfKys81PuG4vEAYP0CTEjwSm0DYg2l50bVIXuSWI12bKMvu/H8wTSuWZqzTlfcyo2TBFwUXvb+6kiFKXnRX1kbEXKpt9BGT/5ONoo1uMXT7o6+CZNyI7WAQpKwYbx1BTMKG64n5Hs7sGga4ZWQK+W+soX1ExfPpqrKgMyNAkW4UjXxtEt8elAyRYT5doBE9BjzBGotO6Xxz0jmTdr0O+fE/qSWaFG/bwWgstR72Ns41SdabECXRnbrsNWm5TXy+MA/eZsn8aVa+s69MAPHj1jFc78le2pYe8xyB4yqDF1xRp+N1y+0TdxYPs+/GwQChn7XWql0MnEjbaGlUaWxuem9Eaij9k2HrgYRsWh7dMMNvx3aBtPztur0uBS3qP/nos79F+7+qgACm9KyayR3kIxaPaAfoi8nJCMNxXm7Z/oK8D0bTPdXdAV58/cHWgJtjQ27Zztxp4+dZbvsp+YybbElNgOnvfzTk
+Fri Dec 10 09:21:48 2021 daemon.info dnsmasq-dhcp[19172]: DHCPREQUEST(br-down1v0) 192.168.2.97 0e:c4:7a:b8:57:6c
+Fri Dec 10 09:21:48 2021 daemon.info dnsmasq-dhcp[19172]: DHCPACK(br-down1v0) 192.168.2.97 0e:c4:7a:b8:57:6c iPhone
+Fri Dec 10 09:21:48 2021 daemon.err dnsmasq[19172]: Failed to send UBus event: Success
+Fri Dec 10 09:21:51 2021 daemon.notice opennds[9076]: Adding 192.168.2.97 0e:c4:7a:b8:57:6c token 7353ad65 to client list
+Fri Dec 10 09:22:21 2021 daemon.notice hostapd: wlan1: AP-STA-DISCONNECTED 0e:c4:7a:b8:57:6c 0 0
+Fri Dec 10 09:22:21 2021 daemon.info hostapd: wlan1: STA 0e:c4:7a:b8:57:6c IEEE 802.11: disassociated
+Fri Dec 10 09:22:22 2021 daemon.info hostapd: wlan1: STA 0e:c4:7a:b8:57:6c IEEE 802.11: deauthenticated due to inactivity (timer DEAUTH/REMOVE)
+Fri Dec 10 09:22:33 2021 daemon.notice hostapd: wlan1: AP-STA-DISCONNECTED 9a:1d:4d:e7:de:41 0 0
+Fri Dec 10 09:22:33 2021 daemon.info hostapd: wlan1: STA 9a:1d:4d:e7:de:41 IEEE 802.11: disassociated
+Fri Dec 10 09:22:34 2021 daemon.notice opennds[9076]: Timeout preauthenticated idle user: 192.168.2.125 46:9e:b3:c8:6b:ae, inactive: 1800s
+Fri Dec 10 09:22:34 2021 daemon.notice opennds[9076]: Deleting 192.168.2.125 46:9e:b3:c8:6b:ae token 364675b9 from client list
+Fri Dec 10 09:22:34 2021 daemon.info hostapd: wlan1: STA 9a:1d:4d:e7:de:41 IEEE 802.11: deauthenticated due to inactivity (timer DEAUTH/REMOVE)
+Fri Dec 10 09:22:37 2021 daemon.notice netifd: up0v0 (5965): udhcpc: sending renew to 172.16.0.1
+Fri Dec 10 09:22:37 2021 daemon.notice netifd: up0v0 (5965): udhcpc: lease of 172.16.222.203 obtained, lease time 600
+Fri Dec 10 09:22:47 2021 daemon.debug ucentral: TX: {"jsonrpc":"2.0","method":"state","params":{"compress_64":"eJy1Vdtu2zAM/Rdtb3MdXXyTf2UIAkWmF6G+QZaTFkX+faSdtHG6dn1pDMQSbzrkIeUXNk2uYqXIlBYyL9IiYiN4ZxpWMs2V3avMQGIUQ3kwAVj5wqbOBXq30Pb+mVahD+ShcyWU1hkGqT2gbcHTLNeCJxGzxh4AT5K5zvKkQJP9VNfgSSY4lxLPP0es6a1pgmvhiqkQWR6xabjIEpFqsjLo9pvHXOq8yCJaJAiXFvNvi6G8qVw/otkLswfTdYAIhZLRdbc7uSocMM+CY3bhaTf0J/CIUOHOm25sXdi1GEBrRODBgjvCLOAEfnye15KLLGLGhqtSKqkpRNe7ERE/CI65DgesExsaE+ret5uxtxu7II1PrnZ0PrQDeBMmj05Jco5uUGfvMSdrzIrfYRZS8DVopW9QF4lO0jVsLTRP32Dr/6P+Jd7hVudtxFwXwNfGwlL8zhBzSCE/EmhiOLi+Q9HmzXJDKjccE2onU1UexnH2ZyKXschiKWUsudqIjOERDZgRlpbIOD+vGkSIiFXduMM+PoKfYxTx/JCnbRx0YUHWGosoOMcYJfCyEGUmSwkXJLt/weCxoCioz9b6GgpeLo+cw9V1iTIKiRHRZej9fCyDcOBsS4Wy/UQFGClnj1wa+whkI9KF29s96vfPAeYG04v+us+1mvXgfe+X9gyrHeoq3w8DzdqivN22Ew6cNWOYd7ZvGjciP+R6pja88Ff1p058xqD4kEFNpSti/N/IhG1v6FJ0NYyjqxZC5pEl/58eagz/Y7MMMXbH+StDRJHQpDNhZ80w9/ZpMHKX/kFl21eUhxlwvb9Yal4qW+5VmZkSktKklAOlg7pTYzpK9yOW+JokecsRvyVISP6d/HxYNPGFos0z/FHZ5FfLVt2VTXxSNpHdFU5ofVs6keOVvupvrgouv62Cn83he6
+Fri Dec 10 09:22:53 2021 user.notice root: stop testcase: 8G43IX6WQ

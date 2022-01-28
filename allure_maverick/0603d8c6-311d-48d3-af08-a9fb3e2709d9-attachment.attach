@@ -1,0 +1,36 @@
+Wed Dec 29 10:13:55 2021 user.notice root: start testcase: C99PA0BD7
+Wed Dec 29 10:14:12 2021 daemon.info hostapd: wlan0: STA 52:23:28:cb:df:61 IEEE 802.11: authenticated
+Wed Dec 29 10:14:12 2021 daemon.info hostapd: wlan0: STA 52:23:28:cb:df:61 IEEE 802.11: associated (aid 3)
+Wed Dec 29 10:14:12 2021 daemon.notice hostapd: wlan0: AP-STA-CONNECTED 52:23:28:cb:df:61 0 0
+Wed Dec 29 10:14:12 2021 daemon.info hostapd: wlan0: STA 52:23:28:cb:df:61 RADIUS: starting accounting session 94FDD670E7846E64
+Wed Dec 29 10:14:15 2021 daemon.info dnsmasq-dhcp[12859]: DHCPDISCOVER(bridge.1) 52:23:28:cb:df:61
+Wed Dec 29 10:14:15 2021 daemon.info dnsmasq-dhcp[12859]: DHCPOFFER(bridge.1) 192.168.1.202 52:23:28:cb:df:61
+Wed Dec 29 10:14:15 2021 daemon.info dnsmasq-dhcp[12859]: DHCPDISCOVER(bridge.1) 52:23:28:cb:df:61
+Wed Dec 29 10:14:15 2021 daemon.info dnsmasq-dhcp[12859]: DHCPOFFER(bridge.1) 192.168.1.202 52:23:28:cb:df:61
+Wed Dec 29 10:14:15 2021 daemon.info dnsmasq-dhcp[12859]: DHCPDISCOVER(bridge.1) 52:23:28:cb:df:61
+Wed Dec 29 10:14:15 2021 daemon.info dnsmasq-dhcp[12859]: DHCPOFFER(bridge.1) 192.168.1.202 52:23:28:cb:df:61
+Wed Dec 29 10:14:15 2021 daemon.info dnsmasq-dhcp[12859]: DHCPREQUEST(bridge.1) 192.168.1.202 52:23:28:cb:df:61
+Wed Dec 29 10:14:15 2021 daemon.info dnsmasq-dhcp[12859]: DHCPACK(bridge.1) 192.168.1.202 52:23:28:cb:df:61 Galaxy-S9
+Wed Dec 29 10:14:15 2021 daemon.err dnsmasq[12859]: Failed to send UBus event: Success
+Wed Dec 29 10:15:15 2021 daemon.info hostapd: wlan1: STA 5e:70:97:9b:9e:64 IEEE 802.11: authenticated
+Wed Dec 29 10:15:15 2021 daemon.info hostapd: wlan1: STA 5e:70:97:9b:9e:64 IEEE 802.11: associated (aid 1)
+Wed Dec 29 10:15:15 2021 daemon.notice hostapd: wlan1: AP-STA-CONNECTED 5e:70:97:9b:9e:64 0 0
+Wed Dec 29 10:15:15 2021 daemon.info hostapd: wlan1: STA 5e:70:97:9b:9e:64 RADIUS: starting accounting session 227F89F3E79E791E
+Wed Dec 29 10:15:19 2021 daemon.info dnsmasq-dhcp[12859]: DHCPDISCOVER(bridge.1) 5e:70:97:9b:9e:64
+Wed Dec 29 10:15:19 2021 daemon.info dnsmasq-dhcp[12859]: DHCPOFFER(bridge.1) 192.168.1.108 5e:70:97:9b:9e:64
+Wed Dec 29 10:15:19 2021 daemon.info dnsmasq-dhcp[12859]: DHCPDISCOVER(bridge.1) 5e:70:97:9b:9e:64
+Wed Dec 29 10:15:19 2021 daemon.info dnsmasq-dhcp[12859]: DHCPOFFER(bridge.1) 192.168.1.108 5e:70:97:9b:9e:64
+Wed Dec 29 10:15:20 2021 daemon.info dnsmasq-dhcp[12859]: DHCPREQUEST(bridge.1) 192.168.1.108 5e:70:97:9b:9e:64
+Wed Dec 29 10:15:20 2021 daemon.info dnsmasq-dhcp[12859]: DHCPACK(bridge.1) 192.168.1.108 5e:70:97:9b:9e:64
+Wed Dec 29 10:15:20 2021 daemon.err dnsmasq[12859]: Failed to send UBus event: Success
+Wed Dec 29 10:15:48 2021 daemon.warn dnsmasq-dhcp[12859]: no address range available for DHCP request via bridge.2
+Wed Dec 29 10:17:08 2021 daemon.notice netifd: wan (12304): udhcpc: sending renew to 172.16.0.1
+Wed Dec 29 10:17:08 2021 daemon.notice netifd: wan (12304): udhcpc: lease of 172.16.222.203 obtained, lease time 600
+Wed Dec 29 10:17:23 2021 daemon.info dnsmasq-dhcp[12859]: DHCPRELEASE(bridge.1) 192.168.1.108 5e:70:97:9b:9e:64
+Wed Dec 29 10:17:23 2021 daemon.err dnsmasq[12859]: Failed to send UBus event: Success
+Wed Dec 29 10:17:23 2021 daemon.notice hostapd: wlan1: AP-STA-DISCONNECTED 5e:70:97:9b:9e:64 0 0
+Wed Dec 29 10:17:23 2021 daemon.info hostapd: wlan1: STA 5e:70:97:9b:9e:64 IEEE 802.11: disassociated
+Wed Dec 29 10:17:24 2021 daemon.info hostapd: wlan1: STA 5e:70:97:9b:9e:64 IEEE 802.11: deauthenticated due to inactivity (timer DEAUTH/REMOVE)
+Wed Dec 29 10:17:37 2021 daemon.warn dnsmasq-dhcp[12859]: no address range available for DHCP request via bridge.2
+Wed Dec 29 10:17:38 2021 daemon.warn dnsmasq-dhcp[12859]: no address range available for DHCP request via bridge.2
+Wed Dec 29 10:18:05 2021 user.notice root: stop testcase: C99PA0BD7

@@ -1,0 +1,9 @@
+Tue Jan 11 07:43:27 2022 user.notice root: start testcase: MWIZFNHRC
+Tue Jan 11 07:44:44 2022 daemon.info hostapd: wlan0: STA 62:89:62:d9:db:bb IEEE 802.11: authenticated
+Tue Jan 11 07:44:44 2022 daemon.info hostapd: wlan0: STA 62:89:62:d9:db:bb IEEE 802.11: associated (aid 1)
+Tue Jan 11 07:44:44 2022 daemon.notice hostapd: wlan0: AP-STA-CONNECTED 62:89:62:d9:db:bb 0 0
+Tue Jan 11 07:44:44 2022 daemon.info hostapd: wlan0: STA 62:89:62:d9:db:bb RADIUS: starting accounting session E7B9B6F708F84FD6
+Tue Jan 11 07:44:44 2022 daemon.info dnsmasq-dhcp[9365]: DHCPREQUEST(bridge.1) 192.168.1.238 62:89:62:d9:db:bb
+Tue Jan 11 07:44:44 2022 daemon.info dnsmasq-dhcp[9365]: DHCPACK(bridge.1) 192.168.1.238 62:89:62:d9:db:bb Galaxy-S20-5G
+Tue Jan 11 07:44:44 2022 daemon.err dnsmasq[9365]: Failed to send UBus event: Success
+Tue Jan 11 07:44:44 2022 user.notice root: stop testcase: MWIZFNHRC

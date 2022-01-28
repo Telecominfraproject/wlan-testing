@@ -1,0 +1,23 @@
+Fri Dec 10 17:47:07 2021 user.notice root: start testcase: V07FCNL7U
+Fri Dec 10 17:48:02 2021 daemon.info hostapd: wlan1: STA ca:98:e5:0f:eb:d3 IEEE 802.11: authenticated
+Fri Dec 10 17:48:02 2021 daemon.info hostapd: wlan1: STA ca:98:e5:0f:eb:d3 IEEE 802.11: associated (aid 1)
+Fri Dec 10 17:48:02 2021 daemon.notice hostapd: wlan1: AP-STA-POSSIBLE-PSK-MISMATCH ca:98:e5:0f:eb:d3
+Fri Dec 10 17:48:03 2021 daemon.notice hostapd: wlan1: AP-STA-POSSIBLE-PSK-MISMATCH ca:98:e5:0f:eb:d3
+Fri Dec 10 17:48:04 2021 daemon.notice hostapd: wlan1: AP-STA-POSSIBLE-PSK-MISMATCH ca:98:e5:0f:eb:d3
+Fri Dec 10 17:48:05 2021 daemon.notice hostapd: wlan1: AP-STA-POSSIBLE-PSK-MISMATCH ca:98:e5:0f:eb:d3
+Fri Dec 10 17:48:21 2021 daemon.info hostapd: wlan1: STA ca:98:e5:0f:eb:d3 IEEE 802.11: authenticated
+Fri Dec 10 17:48:21 2021 daemon.info hostapd: wlan1: STA ca:98:e5:0f:eb:d3 IEEE 802.11: associated (aid 1)
+Fri Dec 10 17:48:21 2021 daemon.notice hostapd: wlan1: AP-STA-POSSIBLE-PSK-MISMATCH ca:98:e5:0f:eb:d3
+Fri Dec 10 17:48:21 2021 daemon.notice hostapd: wlan1: AP-STA-POSSIBLE-PSK-MISMATCH ca:98:e5:0f:eb:d3
+Fri Dec 10 17:48:22 2021 daemon.notice hostapd: wlan1: AP-STA-POSSIBLE-PSK-MISMATCH ca:98:e5:0f:eb:d3
+Fri Dec 10 17:48:23 2021 daemon.notice hostapd: wlan1: AP-STA-POSSIBLE-PSK-MISMATCH ca:98:e5:0f:eb:d3
+Fri Dec 10 17:48:35 2021 daemon.info hostapd: wlan1: STA ca:98:e5:0f:eb:d3 IEEE 802.11: authenticated
+Fri Dec 10 17:48:35 2021 daemon.info hostapd: wlan1: STA ca:98:e5:0f:eb:d3 IEEE 802.11: associated (aid 1)
+Fri Dec 10 17:48:35 2021 daemon.notice hostapd: wlan1: AP-STA-POSSIBLE-PSK-MISMATCH ca:98:e5:0f:eb:d3
+Fri Dec 10 17:48:35 2021 daemon.notice hostapd: wlan1: AP-STA-POSSIBLE-PSK-MISMATCH ca:98:e5:0f:eb:d3
+Fri Dec 10 17:48:36 2021 daemon.notice hostapd: wlan1: AP-STA-POSSIBLE-PSK-MISMATCH ca:98:e5:0f:eb:d3
+Fri Dec 10 17:48:37 2021 daemon.notice hostapd: wlan1: AP-STA-POSSIBLE-PSK-MISMATCH ca:98:e5:0f:eb:d3
+Fri Dec 10 17:49:03 2021 daemon.debug ucentral: TX: {"jsonrpc":"2.0","method":"state","params":{"compress_64":"eJzNVttymzAQ/Re1byVYFywjfqWT8chC1JoAYiRhJ5Pxv3cXPC52Ejcv7QQeQLvao7NnpYVXMo6uJhWTQrF1yfk6I9EGp1tSEUWF2QmpbaEFAXvSyZLqlYy9S/jsbOfDC74lnzBCbQQTSskyI02wMLekqpAbRYuMGG32FlbiG6kEXcuM7MamsQFtjFLOFeOnjLTe6Da5zl44rQuekXGYbaJUG5ykIeonzSktN6XK4IVLAcuiBa9HQAq6dj7CtFdi9rrvLRBkArDOo+3R1WkPaZYUkkvP28EfbQCCQDYF3cfOpW0HAOVGAJo11h3sZODIPb5M72zDgZA26eIUUqGKvXcRCD8wCv5hDzKRodWp8aFbRW9WZmaaH13jcH3bDTboNAYIKtgpW7Jmb0nza9KC3pBWm/KaNKML1gVXN6wVVGnBWqm/kv7B3tDmp8eMuD7Z0GhjZ+17jXWDAtIDUsb6Jud7MK3+zFyhyw2HAjeTrutgY5ziCeibM5lzznNOxYpJAku0Vkc7bwhJ6Wm5PSSkWfdxC5v4YMMEUebTjYGmdbZPM7FOGyBBKUBUllYlqySvuD0T2b7HguYMUcAvr/2NLWk133yCa5oKbAgJiBAy+DAtS2zaAwbqZPyI+UdMOUAhtXmyOKec67oYgnf3knClgsnJex7CCZGT24bgEYlO3sUIfHXww4CnbHYuh90IR83omKaR8W3rItQGQ0+4A8+1q/2xZ/eqxz6snkLdypzlbMUL8nhVqoJ9LAK9FoEuRaBLCeh/yp/fy5//LX/+Tv7YF2J09bwbp26F8d+DbQD+22ruX3AyTp/pH4gEU46D5ls4kdH3ut2uf4Gn8zUmoQd4352nKVoJU+1EJXVli0qvMQHMBSFa3WOuX7s0H+rFPqHX1LreVYx/VrH6RjF2RzHGryXDcVgcYn4lGx
+Fri Dec 10 17:49:44 2021 daemon.notice netifd: up0v0 (3838): udhcpc: sending renew to 172.16.0.1
+Fri Dec 10 17:49:44 2021 daemon.notice netifd: up0v0 (3838): udhcpc: lease of 172.16.222.203 obtained, lease time 600
+Fri Dec 10 17:49:56 2021 user.notice root: stop testcase: V07FCNL7U

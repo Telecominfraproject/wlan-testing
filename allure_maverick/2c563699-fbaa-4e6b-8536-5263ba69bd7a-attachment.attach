@@ -1,0 +1,5 @@
+Wed Dec 29 13:12:38 2021 user.notice root: start testcase: AFNOJRJRC
+Wed Dec 29 13:12:39 2021 kern.info kernel: [ 2222.481270] bridge: port 4(wlan1) entered forwarding state
+Wed Dec 29 13:12:40 2021 kern.info kernel: [ 2223.241265] bridge: port 5(wlan0) entered forwarding state
+Wed Dec 29 13:12:42 2021 kern.info kernel: [ 2225.401262] bridge: port 3(eth0) entered forwarding state
+Wed Dec 29 13:16:27 2021 user.notice root: stop testcase: AFNOJRJRC

@@ -1,0 +1,31 @@
+Fri Dec 10 05:40:12 2021 user.notice root: start testcase: G8UFT591G
+Fri Dec 10 05:40:39 2021 daemon.debug ucentral: TX: {"jsonrpc":"2.0","method":"state","params":{"compress_64":"eJzlVttu4zgM/RfNvo2b6GLLsn5lUASKTG+E8Q2y3ExR5N+XtLNt0k7bPMwCs5gYiCVSJA8PKVlPbJ5DzazQqhIiz3WesQlicC2zrOLK75V2kDvFUJ5cAmaf2NyHRO8OuiE+0igNiSyqUglVVdpkrImAaw03hcq50Bnzzh8AI8my4qIqZMb2c9NAJJngXMpKyFPG2sG7NoUOnjEZVWVsHleZUYLWODT6xjc816bUGQ5kYcqKBlzmubhHR9HVYZhw2RPzB9f3gPhEjq7Os90x1OmAWRqOuaUfu3E4QmRWcZxF109dSLtuIoHEmBE8hAdYJIawT4/LOFdaZcz59K9SFdoYzLcfwoSA7wRHSscD0sTG1qVmiN12GvzW8+W3OYYmEADoRoguzRGNcmTiArZ+Czr/BLQ0vLwGXVyirrTKyw9hV+ZT1F/FG9zqdJ+x0CeIjfOwst87KhxWkD8QaCpwCkOPou3Lyi2pwviQUze5uo4wTYs9E6XcCL2RUm4kV1uhGYZowU2wdoTm/PTSH6XBatT9tMMmfoC4eDCb5SE73wbo04qrcx4xcI4eLHBrhNXSSjjj2P0MBN8I8oJ6fa1vwHC7PnJx1zQWZeQSPaLJOMQlLIN04OyeyrvGr7T1e7uvrRNWNdY37BP/oqml3ZccbMONtK7QPw1AyQ4z8TsRpRFbxfnvkNb2TddT1O4fE4UqOF+056koC72oIcaBPK3aixnq6jiMI23jVXk57Wbcy95NaZn5oW3DhLUn0xNxcO6Nejj24qPuEO92R0WFMRv838qciH1uBUXH0DSFei33ch6Q/V8RGnT/ZbueENh5p1s2KHnCJb1LO+/GZd8MI/S74m9UdkNNebgRx/vzyopb5e1eWe0s5FgoyoHSQd2xdT2l+16J+HWJ+GWJrgrE/8vq/HrK5O44utsp06
+Fri Dec 10 05:40:47 2021 daemon.info hostapd: wlan1-1: STA 9a:1d:4d:e7:de:41 IEEE 802.11: authenticated
+Fri Dec 10 05:40:47 2021 daemon.info hostapd: wlan1-1: STA 9a:1d:4d:e7:de:41 IEEE 802.11: associated (aid 1)
+Fri Dec 10 05:40:47 2021 daemon.notice hostapd: wlan1-1: AP-STA-CONNECTED 9a:1d:4d:e7:de:41 0 0
+Fri Dec 10 05:40:47 2021 daemon.info hostapd: wlan1-1: STA 9a:1d:4d:e7:de:41 RADIUS: starting accounting session 92737AAEB2C41DEE
+Fri Dec 10 05:40:47 2021 daemon.info hostapd: wlan1-1: STA 9a:1d:4d:e7:de:41 WPA: pairwise key handshake completed (RSN)
+Fri Dec 10 05:40:50 2021 daemon.info dnsmasq-dhcp[11785]: DHCPDISCOVER(br-down1v0) 9a:1d:4d:e7:de:41
+Fri Dec 10 05:40:50 2021 daemon.info dnsmasq-dhcp[11785]: DHCPOFFER(br-down1v0) 192.168.2.11 9a:1d:4d:e7:de:41
+Fri Dec 10 05:40:50 2021 daemon.info dnsmasq-dhcp[11785]: DHCPDISCOVER(br-down1v0) 9a:1d:4d:e7:de:41
+Fri Dec 10 05:40:50 2021 daemon.info dnsmasq-dhcp[11785]: DHCPOFFER(br-down1v0) 192.168.2.11 9a:1d:4d:e7:de:41
+Fri Dec 10 05:40:51 2021 daemon.info dnsmasq-dhcp[11785]: DHCPREQUEST(br-down1v0) 192.168.2.11 9a:1d:4d:e7:de:41
+Fri Dec 10 05:40:51 2021 daemon.info dnsmasq-dhcp[11785]: DHCPACK(br-down1v0) 192.168.2.11 9a:1d:4d:e7:de:41 iPhone
+Fri Dec 10 05:40:51 2021 daemon.err dnsmasq[11785]: Failed to send UBus event: Success
+Fri Dec 10 05:40:53 2021 daemon.notice opennds[9076]: Adding 192.168.2.11 9a:1d:4d:e7:de:41 token 80b43174 to client list
+Fri Dec 10 05:40:54 2021 daemon.notice hostapd: wlan1-1: AP-STA-DISCONNECTED 9a:1d:4d:e7:de:41 0 0
+Fri Dec 10 05:40:54 2021 daemon.info hostapd: wlan1-1: STA 9a:1d:4d:e7:de:41 IEEE 802.11: disassociated
+Fri Dec 10 05:40:55 2021 daemon.info hostapd: wlan1-1: STA 9a:1d:4d:e7:de:41 IEEE 802.11: deauthenticated due to inactivity (timer DEAUTH/REMOVE)
+Fri Dec 10 05:41:04 2021 daemon.info hostapd: wlan1-1: STA 0e:c4:7a:b8:57:6c IEEE 802.11: authenticated
+Fri Dec 10 05:41:04 2021 daemon.info hostapd: wlan1-1: STA 0e:c4:7a:b8:57:6c IEEE 802.11: associated (aid 1)
+Fri Dec 10 05:41:04 2021 daemon.notice hostapd: wlan1-1: AP-STA-CONNECTED 0e:c4:7a:b8:57:6c 0 0
+Fri Dec 10 05:41:04 2021 daemon.info hostapd: wlan1-1: STA 0e:c4:7a:b8:57:6c RADIUS: starting accounting session 6F5B9C77E8C446BF
+Fri Dec 10 05:41:04 2021 daemon.info hostapd: wlan1-1: STA 0e:c4:7a:b8:57:6c WPA: pairwise key handshake completed (RSN)
+Fri Dec 10 05:41:04 2021 daemon.info dnsmasq-dhcp[11785]: DHCPREQUEST(br-down1v0) 192.168.2.97 0e:c4:7a:b8:57:6c
+Fri Dec 10 05:41:04 2021 daemon.info dnsmasq-dhcp[11785]: DHCPACK(br-down1v0) 192.168.2.97 0e:c4:7a:b8:57:6c iPhone
+Fri Dec 10 05:41:04 2021 daemon.err dnsmasq[11785]: Failed to send UBus event: Success
+Fri Dec 10 05:41:39 2021 daemon.debug ucentral: TX: {"jsonrpc":"2.0","method":"state","params":{"compress_64":"eJzlV9tu4zYQ/Re2b1Vs3kRJ/Iq+F4FBUdSaWFkSKDreIPC/d4ZSHNvr2HnYfSgaA7E4Nx7OHI7Gb2S/9w3RTImKMSmVzMjkgjcd0aSiwtZCGSeNICCPJjqi38i+9xG/d243hFd8ikNEj6oQTFSVKjPSBge2JS1zqQSFqNbYrYOdeFFRRSWY1Pu2dQFljFLOK8aPGekGa7rod+6EqayqjOzHWVZWDG0MOP1DV5TlTBQZPHCIQPEh/T1DoGAaP0xg9kbs1vS9A3xMQqhltTn4Jm7hlCWFs8Ufm3E4uEC0oLAKpp92Pm52EEDkgkM4Z51/cUnCKIKfXtMip1WeEWPju1YyVaoiI/3gJ0D8xKjIyLiFPJGxM7Edwm49DXZtZ6yrg289InC70QUT9wGcpDxmZ7jVz6jlI9SCF9eo+RlsxiDjxV3gVfkQ91/sJ+Ti+JwR30cXWmPdXIDeYO2giPQFYWONox96EK0/LNeo8uOLREKZpglumpI/YQVfMbXinK84FWumCGzROTO5mRSK0uMZRSTku+mnDfD4xYUUoVylD/rZzrs+zrh2xgIGSiGCdlSXTCuuuVtwbG6BoCuGUUCvLvWtK6mePzyFa1sNMgwJEcFlHELalri4peQZCzzvXylta1032jAtWm1b8iA+axuu64I63dKSa5Or+xvUXJdCq0YLriuwd482qGmyTydIPubmBpjNYY8FnLBmAdho7HeHNmU5s/N9LeHagr5+jS5RkUmVDBaBFGWeDFwIA0ajSXu2Al0ThnHEdjErz5e7PfQMayZoS5Ijqq7zEzAMfY+YiIWBzXDo2T0Osk85WGH5yxX8X3N5IuDMIzNN/luPWEhqWkJBI4VIC7+ctlIXRtelzgutLGiW2OhwClwVoNgOU1zA+r+3Q+/I8fmM3JKXNyl8Y4sbFD7f6hGJLT
+Fri Dec 10 05:42:37 2021 daemon.notice netifd: up0v0 (5965): udhcpc: sending renew to 172.16.0.1
+Fri Dec 10 05:42:37 2021 daemon.notice netifd: up0v0 (5965): udhcpc: lease of 172.16.222.203 obtained, lease time 600
+Fri Dec 10 05:42:39 2021 daemon.debug ucentral: TX: {"jsonrpc":"2.0","method":"state","params":{"compress_64":"eJzlV1GP4ygM/i/cvV2mBZKShF9x76eqIoRs0aYhImS6o1H/+9kk00m7nbYPq5VO10pNsMH+sD+M+07G0dZEMpGWjGWZyBIyGG9VSyQpaaqrVCiTqZSAPKhgiHwnY2cDPg/m4PwbvgUXcEWZpywtS1EkpPEG5ha04PkmCrTSewOeeF5SQTOQVGPTGI8yRinnJeOnhLROqzbYgzljKjdlQsZ+kpUbhnMULPqHrihNwVgCLyxjguJL/GzBkFe1dQNMeyd6r7rOAD4wlnyMdkdbhz3ssqCwt/Bj17uj8USmFEZedcPBht0BDGQ0FWDOaGNfTZQwjuCHtzjYFByGSocPbZaLArfXOTsA4hdGIab9HuJE+laFxvnDenB6rSesq6NtLCIwh954FUYPi7LslCxwi59RZw9QpwVl16jZAjbjBSuKu8DL4iHuv9hPyNPTNiG2C8Y3SpspAZ3C3EES6SvCxhwH6zoQrT9nrlFl+9cMCaXq2pthiOsJy/mKiRXnfMVpumaCgIvWqMFMpBCUnhYUoWlC6m7YAY9fjY8WilX84jrdWtOFCddBacBAKViQhsqCScElNzOO3S0QdMXQCujFpb4xBZXTl0dzTSNBhibBIizpnY9uiQl7SraY4Ml/KaSuZFVLxWTaSN2QB/ZZU3NZ5dTIBs6XVBtx30HFZZFKUcuUyxLmm0cOKhrnxx3ENeqmA4ymGzGBA+bMAxuV/m7CfETCYgxUAnX1FtAXy7EghPOYp1kW9cZ7h7Zo1C5GoKu963ssFpNyOTyMUDG0GqAocYTUtnYAeuHSE0Zhpl/tjh27R0D2JQFLzH2xgt81z87sm0ikhsF+6xAKiRUrFVBFwdJMLiN1JnMlq0Jucik0aGbbuOBsuMxBsXdDmMHav/euM+S0XTA7wwN7g783XNzg79LVIwZroFVZMS
+Fri Dec 10 05:42:59 2021 user.notice root: stop testcase: G8UFT591G

@@ -57,7 +57,7 @@ class TestToggleWifiModeVLANModeEnterpriseTTLSSuiteA(object):
         pytest -m "client_reconnect and nat and enterprise and ttls and interop and suiteA"
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4711", name="WIFI-4711")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6639", name="WIFI-6639")
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     def test_ToggleWifiMode_5g_WPA2_Eap_VLAN(self, request, get_vif_state, get_ToggleAirplaneMode_data
@@ -101,7 +101,7 @@ class TestToggleWifiModeVLANModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4710", name="WIFI-4710")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6640", name="WIFI-6640")
     @pytest.mark.twog
     @pytest.mark.wpa2_enterprise
     def test_ToggleWifiMode_2g_WPA2_Eap_VLAN(self, request, get_vif_state, get_ToggleAirplaneMode_data
@@ -147,7 +147,7 @@ class TestToggleWifiModeVLANModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4715", name="WIFI-4715")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6641", name="WIFI-6641")
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
     def test_ToggleWifiMode_5g_WPA3_Eap_VLAN(self, request, get_vif_state, get_ToggleAirplaneMode_data
@@ -196,7 +196,7 @@ class TestToggleWifiModeVLANModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4714", name="WIFI-4714")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6642", name="WIFI-6642")
     @pytest.mark.twog
     @pytest.mark.wpa3_enterprise
     def test_ToggleWifiMode_2g_WPA3_Eap_VLAN(self, request, get_vif_state, get_ToggleAirplaneMode_data
@@ -242,7 +242,7 @@ class TestToggleWifiModeVLANModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4613", name="WIFI-4613")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6637", name="WIFI-6637")
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
     def test_ToggleWifiMode_5g_WPA_Eap_VLAN(self, request, get_vif_state, get_ToggleAirplaneMode_data
@@ -289,7 +289,7 @@ class TestToggleWifiModeVLANModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4612", name="WIFI-4612")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6638", name="WIFI-6638")
     @pytest.mark.twog
     @pytest.mark.wpa_enterprise
     def test_ToggleWifiMode_2g_WPA_Eap_VLAN(self, request, get_vif_state, get_ToggleAirplaneMode_data

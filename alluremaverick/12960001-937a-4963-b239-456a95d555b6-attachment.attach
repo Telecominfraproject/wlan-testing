@@ -1,0 +1,25 @@
+Tue Jan 11 07:46:17 2022 user.notice root: start testcase: CQUZX91NV
+Tue Jan 11 07:47:19 2022 daemon.info hostapd: wlan1: STA 16:22:f9:1e:5f:d2 IEEE 802.11: authenticated
+Tue Jan 11 07:47:19 2022 daemon.info hostapd: wlan1: STA 16:22:f9:1e:5f:d2 IEEE 802.11: associated (aid 1)
+Tue Jan 11 07:47:19 2022 daemon.notice hostapd: wlan1: AP-STA-CONNECTED 16:22:f9:1e:5f:d2 0 0
+Tue Jan 11 07:47:19 2022 daemon.info hostapd: wlan1: STA 16:22:f9:1e:5f:d2 RADIUS: starting accounting session 9392E8CB28D8DD6F
+Tue Jan 11 07:47:22 2022 daemon.info dnsmasq-dhcp[15843]: DHCPDISCOVER(bridge.1) 16:22:f9:1e:5f:d2
+Tue Jan 11 07:47:22 2022 daemon.info dnsmasq-dhcp[15843]: DHCPOFFER(bridge.1) 192.168.1.248 16:22:f9:1e:5f:d2
+Tue Jan 11 07:47:22 2022 daemon.info dnsmasq-dhcp[15843]: DHCPDISCOVER(bridge.1) 16:22:f9:1e:5f:d2
+Tue Jan 11 07:47:22 2022 daemon.info dnsmasq-dhcp[15843]: DHCPOFFER(bridge.1) 192.168.1.248 16:22:f9:1e:5f:d2
+Tue Jan 11 07:47:23 2022 daemon.info dnsmasq-dhcp[15843]: DHCPREQUEST(bridge.1) 192.168.1.248 16:22:f9:1e:5f:d2
+Tue Jan 11 07:47:23 2022 daemon.info dnsmasq-dhcp[15843]: DHCPACK(bridge.1) 192.168.1.248 16:22:f9:1e:5f:d2
+Tue Jan 11 07:47:23 2022 daemon.err dnsmasq[15843]: Failed to send UBus event: Success
+Tue Jan 11 07:47:27 2022 daemon.info hostapd: wlan0: STA 16:22:f9:1e:5f:d2 IEEE 802.11: authenticated
+Tue Jan 11 07:47:27 2022 daemon.info hostapd: wlan0: STA 16:22:f9:1e:5f:d2 IEEE 802.11: associated (aid 2)
+Tue Jan 11 07:47:27 2022 daemon.notice hostapd: wlan0: AP-STA-CONNECTED 16:22:f9:1e:5f:d2 0 0
+Tue Jan 11 07:47:27 2022 daemon.notice hostapd: wlan1: Prune association for 16:22:f9:1e:5f:d2
+Tue Jan 11 07:47:27 2022 daemon.notice hostapd: wlan1: AP-STA-DISCONNECTED 16:22:f9:1e:5f:d2 0 0
+Tue Jan 11 07:47:27 2022 daemon.info hostapd: wlan0: STA 16:22:f9:1e:5f:d2 RADIUS: starting accounting session 2A6EB3F7F596C935
+Tue Jan 11 07:47:57 2022 daemon.info hostapd: wlan1: STA 16:22:f9:1e:5f:d2 IEEE 802.11: deauthenticated due to inactivity (timer DEAUTH/REMOVE)
+Tue Jan 11 07:48:47 2022 daemon.info dnsmasq-dhcp[15843]: DHCPRELEASE(bridge.1) 192.168.1.248 16:22:f9:1e:5f:d2
+Tue Jan 11 07:48:47 2022 daemon.err dnsmasq[15843]: Failed to send UBus event: Success
+Tue Jan 11 07:48:47 2022 daemon.notice hostapd: wlan0: AP-STA-DISCONNECTED 16:22:f9:1e:5f:d2 0 0
+Tue Jan 11 07:48:47 2022 daemon.info hostapd: wlan0: STA 16:22:f9:1e:5f:d2 IEEE 802.11: disassociated
+Tue Jan 11 07:48:48 2022 daemon.info hostapd: wlan0: STA 16:22:f9:1e:5f:d2 IEEE 802.11: deauthenticated due to inactivity (timer DEAUTH/REMOVE)
+Tue Jan 11 07:49:24 2022 user.notice root: stop testcase: CQUZX91NV
