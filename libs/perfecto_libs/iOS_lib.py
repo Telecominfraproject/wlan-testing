@@ -1036,6 +1036,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         print(wifiSelElement)
                         wifiSelElement.click()
                         print("Selecting SSID")
+                        break
                     except:
                         print("SSID unable to select")
                         report.step_start("Selecting Unable SSID To Connect")
@@ -1062,7 +1063,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     # ---------------------This is to Select SSID-------------------------------
     # ---------------------Set Password-------------------------------
     try:
-        driver.implicitly_wait(8)
+        driver.implicitly_wait(5)
         print("Entering Password")
         report.step_start("Entering Password")
         wifiPassword = driver.find_element_by_xpath("//*[@label='Password']")
@@ -1096,6 +1097,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------Additional INFO-------------------------------
     try:
+        driver.implicitly_wait(5)
         print("Selecting SSID: ", WifiName)
         report.step_start("Additional details of SSID")
         additional_details_element = WebDriverWait(driver, 35).until(
