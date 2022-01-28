@@ -62,7 +62,7 @@ class TestToggleAirplaneModeAndroidVlanModeSuiteOne(object):
         pytest -m "client_reconnect and vlan and InteropsuiteA"
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4570", name="WIFI-4570")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6436", name="WIFI-6436")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_ToogleAirplaneMode_5g_WPA2_Personal_Vlan(self, request, get_vif_state, get_ap_logs,
@@ -105,7 +105,7 @@ class TestToggleAirplaneModeAndroidVlanModeSuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4569", name="WIFI-4569")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6437", name="WIFI-6437")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_ToogleAirplaneMode_2g_WPA2_Personal_Vlan(self, request, get_vif_state, get_ap_logs,
@@ -148,7 +148,7 @@ class TestToggleAirplaneModeAndroidVlanModeSuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4568", name="WIFI-4568")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6438", name="WIFI-6438")
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_ToogleAirplaneMode_5g_WPA_Personal_Vlan(self, request, get_vif_state, get_ap_logs,
@@ -192,7 +192,7 @@ class TestToggleAirplaneModeAndroidVlanModeSuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4567", name="WIFI-4567")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6439", name="WIFI-6439")
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_ToogleAirplaneMode_2g_WPA_Personal_Vlan(self, request, get_vif_state, get_ap_logs,
@@ -236,7 +236,7 @@ class TestToggleAirplaneModeAndroidVlanModeSuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4566", name="WIFI-4566")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6440", name="WIFI-6440")
     @pytest.mark.fiveg
     @pytest.mark.open
     def test_ToogleAirplaneMode_5g_Open_Vlan(self, request, get_vif_state, get_ap_logs,
@@ -280,7 +280,7 @@ class TestToggleAirplaneModeAndroidVlanModeSuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4565", name="WIFI-4565")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6441", name="WIFI-6441")
     @pytest.mark.twog
     @pytest.mark.open
     def test_ToogleAirplaneMode_2g_Open_Vlan(self, request, get_vif_state, get_ap_logs,
@@ -366,7 +366,7 @@ class TestToggleAirplaneModeAndroidVlanModeSuiteTwo(object):
     """ Client ReConnect SuiteA
         pytest -m "client_connect and Vlan and InteropsuiteB"
     """
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4572", name="WIFI-4572")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6442", name="WIFI-6442")
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal
     def test_ToogleAirplaneMode_5g_wpa3_personal_Vlan(self, request, get_vif_state, get_ap_logs,
@@ -410,7 +410,7 @@ class TestToggleAirplaneModeAndroidVlanModeSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4571", name="WIFI-4571")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6443", name="WIFI-6443")
     @pytest.mark.twog
     @pytest.mark.wpa3_personal
     def test_ToogleAirplaneMode_2g_wpa3_personal_Vlan(self, request, get_vif_state, get_ap_logs,
@@ -454,7 +454,7 @@ class TestToggleAirplaneModeAndroidVlanModeSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4574", name="WIFI-4574")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6444", name="WIFI-6444")
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal_mixed
     def test_ToogleAirplaneMode_5g_wpa3_personal_mixed_Vlan(self, request, get_vif_state, get_ap_logs,
@@ -498,7 +498,7 @@ class TestToggleAirplaneModeAndroidVlanModeSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4573", name="WIFI-4573")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6445", name="WIFI-6445")
     @pytest.mark.twog
     @pytest.mark.wpa3_personal_mixed
     def test_ToogleAirplaneMode_2g_wpa3_personal_mixed_Vlan(self, request, get_vif_state, get_ap_logs,
@@ -542,7 +542,7 @@ class TestToggleAirplaneModeAndroidVlanModeSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4576", name="WIFI-4576")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6446", name="WIFI-6446")
     @pytest.mark.fiveg
     @pytest.mark.wpa_wpa2_personal_mixed
     def test_ToogleAirplaneMode_5g_wpa_wpa2_personal_mixed_Vlan(self, request, get_vif_state, get_ap_logs,
@@ -586,7 +586,7 @@ class TestToggleAirplaneModeAndroidVlanModeSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4575", name="WIFI-4575")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6447", name="WIFI-6447")
     @pytest.mark.twog
     @pytest.mark.wpa_wpa2_personal_mixed
     def test_ToogleAirplaneMode_2g_wpa_wpa2_personal_mixed_Vlan(self, request, get_vif_state, get_ap_logs,
