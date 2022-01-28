@@ -6,13 +6,6 @@ owgw:
         exec:
           command: ["true"]
 
-  services:
-    owgw:
-      type: ClusterIP
-
-  configProperties:
-    rtty.enabled: "true"
-
   resources:
     requests:
       cpu: 100m
@@ -63,6 +56,7 @@ owgw:
 
   public_env_variables:
     SELFSIGNED_CERTS: "true"
+
   configProperties:
     openwifi.internal.restapi.host.0.rootca: $OWGW_ROOT/certs/restapi-certs/ca.crt
     openwifi.internal.restapi.host.0.cert: $OWGW_ROOT/certs/restapi-certs/tls.crt
@@ -70,6 +64,7 @@ owgw:
     openwifi.restapi.host.0.rootca: $OWGW_ROOT/certs/restapi-certs/ca.crt
     openwifi.restapi.host.0.cert: $OWGW_ROOT/certs/restapi-certs/tls.crt
     openwifi.restapi.host.0.key: $OWGW_ROOT/certs/restapi-certs/tls.key
+
   volumes:
     owgw:
       - name: config
@@ -115,10 +110,6 @@ owsec:
         exec:
           command: ["true"]
 
-  services:
-    owsec:
-      type: ClusterIP
-
   resources:
     requests:
       cpu: 10m
@@ -157,6 +148,7 @@ owsec:
 
   public_env_variables:
     SELFSIGNED_CERTS: "true"
+
   configProperties:
     openwifi.internal.restapi.host.0.rootca: $OWSEC_ROOT/certs/restapi-certs/ca.crt
     openwifi.internal.restapi.host.0.cert: $OWSEC_ROOT/certs/restapi-certs/tls.crt
@@ -164,6 +156,7 @@ owsec:
     openwifi.restapi.host.0.rootca: $OWSEC_ROOT/certs/restapi-certs/ca.crt
     openwifi.restapi.host.0.cert: $OWSEC_ROOT/certs/restapi-certs/tls.crt
     openwifi.restapi.host.0.key: $OWSEC_ROOT/certs/restapi-certs/tls.key
+
   volumes:
     owsec:
       - name: config
@@ -197,12 +190,6 @@ owsec:
             secretName: {{ include "owsec.fullname" . }}-owsec-restapi-tls
 
 rttys:
-  enabled: true
-
-  services:
-    rttys:
-      type: ClusterIP
-
   resources:
     requests:
       cpu: 10m
@@ -215,10 +202,6 @@ rttys:
     cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
 
 owgwui:
-  services:
-    owgwui:
-      type: NodePort
-
   ingresses:
     default:
       enabled: true
@@ -233,9 +216,6 @@ owgwui:
       - path: /*
         serviceName: owgwui
         servicePort: http
-
-  public_env_variables:
-    ALLOW_UCENTRALSEC_CHANGE: false
 
   resources:
     requests:
@@ -255,10 +235,6 @@ owfms:
       readiness:
         exec:
           command: ["true"]
-
-  services:
-    owfms:
-      type: ClusterIP
 
   resources:
     requests:
@@ -298,6 +274,7 @@ owfms:
 
   public_env_variables:
     SELFSIGNED_CERTS: "true"
+
   configProperties:
     openwifi.internal.restapi.host.0.rootca: $OWFMS_ROOT/certs/restapi-certs/ca.crt
     openwifi.internal.restapi.host.0.cert: $OWFMS_ROOT/certs/restapi-certs/tls.crt
@@ -305,6 +282,7 @@ owfms:
     openwifi.restapi.host.0.rootca: $OWFMS_ROOT/certs/restapi-certs/ca.crt
     openwifi.restapi.host.0.cert: $OWFMS_ROOT/certs/restapi-certs/tls.crt
     openwifi.restapi.host.0.key: $OWFMS_ROOT/certs/restapi-certs/tls.key
+
   volumes:
     owfms:
       - name: config
@@ -344,10 +322,6 @@ owprov:
         exec:
           command: ["true"]
  
-  services:
-    owprov:
-      type: ClusterIP
-
   resources:
     requests:
       cpu: 10m
@@ -386,6 +360,7 @@ owprov:
 
   public_env_variables:
     SELFSIGNED_CERTS: "true"
+
   configProperties:
     openwifi.internal.restapi.host.0.rootca: $OWPROV_ROOT/certs/restapi-certs/ca.crt
     openwifi.internal.restapi.host.0.cert: $OWPROV_ROOT/certs/restapi-certs/tls.crt
@@ -393,6 +368,7 @@ owprov:
     openwifi.restapi.host.0.rootca: $OWPROV_ROOT/certs/restapi-certs/ca.crt
     openwifi.restapi.host.0.cert: $OWPROV_ROOT/certs/restapi-certs/tls.crt
     openwifi.restapi.host.0.key: $OWPROV_ROOT/certs/restapi-certs/tls.key
+
   volumes:
     owprov:
       - name: config
@@ -426,10 +402,6 @@ owprov:
             secretName: {{ include "owprov.fullname" . }}-owprov-restapi-tls
 
 owprovui:
-  services:
-    owprovui:
-      type: NodePort
-
   ingresses:
     default:
       enabled: true
@@ -444,17 +416,6 @@ owprovui:
       - path: /*
         serviceName: owprovui
         servicePort: http
-
-  public_env_variables:
-    ALLOW_UCENTRALSEC_CHANGE: false
-
-#  resources:
-#    requests:
-#      cpu: 10m
-#      memory: 30m
-#    limits:
-#      cpu: 100m
-#      memory: 100m
 
   podAnnotations:
     cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
@@ -491,9 +452,7 @@ clustersysteminfo:
   delay: 60 # delaying to wait for AWS Route53 DNS propagation
 
 haproxy:
-  enabled: true
   service:
-    type: LoadBalancer
     annotations:
       service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
       service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "8080"
