@@ -132,13 +132,17 @@ class RunTest:
                     print("test result: " + result)
                 pytest.exit("Test Failed: Debug True")
         self.staConnect.cleanup()
-        supplicqant = "/home/lanforge/wifi/wpa_supplicant_log_" + self.staConnect.radio.split(".")[2] + ".txt"
-        obj = SCP_File(ip=self.lanforge_ip, port=self.lanforge_ssh_port, username="root", password="lanforge",
-                       remote_path=supplicqant,
-                       local_path=".")
-        obj.pull_file()
-        allure.attach.file(source="wpa_supplicant_log_" + self.staConnect.radio.split(".")[2] + ".txt",
-                           name="supplicant_log")
+        try:
+            supplicant = "/home/lanforge/wifi/wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt"
+            obj = SCP_File(ip=self.lanforge_ip, port=self.lanforge_ssh_port, username="root", password="lanforge",
+                           remote_path=supplicant,
+                           local_path=".")
+            obj.pull_file()
+            allure.attach.file(source="wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt",
+                               name="supplicant_log")
+        except Exception as e:
+            print(e)
+            
         for result in run_results:
             print("test result: " + result)
         result = True
@@ -231,13 +235,17 @@ class RunTest:
             #     print(e)
 
         self.eap_connect.stop()
-        supplicqant = "/home/lanforge/wifi/wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt"
-        obj = SCP_File(ip=self.lanforge_ip, port=self.lanforge_ssh_port, username="root", password="lanforge",
-                       remote_path=supplicqant,
-                       local_path=".")
-        obj.pull_file()
-        allure.attach.file(source="wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt",
-                           name="supplicant_log")
+        try:
+            supplicant = "/home/lanforge/wifi/wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt"
+            obj = SCP_File(ip=self.lanforge_ip, port=self.lanforge_ssh_port, username="root", password="lanforge",
+                           remote_path=supplicant,
+                           local_path=".")
+            obj.pull_file()
+            allure.attach.file(source="wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt",
+                               name="supplicant_log")
+        except Exception as e:
+            print(e)
+            
         if not self.eap_connect.passes():
             if self.debug:
                 print("test result: " + self.eap_connect.passes())
