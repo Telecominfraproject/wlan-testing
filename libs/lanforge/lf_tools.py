@@ -139,8 +139,8 @@ class ChamberView:
         self.CreateDut.add_ssids()
 
     def get_station_list(self):
-        realm_obj = self.staConnect.localrealm
-        sta = realm_obj.station_list()
+        #realm_obj = self.staConnect.localrealm
+        sta = self.staConnect.station_list()
         sta_list = []
         for i in sta:
             for j in i:
