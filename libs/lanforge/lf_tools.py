@@ -31,7 +31,7 @@ import pandas as pd
 class ChamberView:
 
     def __init__(self, lanforge_data=None, access_point_data=None, debug=True, testbed=None):
-        print("lanforge data",lanforge_data)
+        print("lanforge data", lanforge_data)
         print("access point data", access_point_data)
         self.access_point_data = access_point_data
         print("testbed", testbed)
@@ -62,9 +62,12 @@ class ChamberView:
                 self.testbed = "mesh"
                 self.scenario_name = "TIP-" + self.testbed
                 self.raw_line = [
-                    ["profile_link " + self.upstream_resource_1 + " upstream-dhcp 1 NA NA " + self.upstream_port_1.split(".")[2] + ",AUTO -1 NA"],
-                    ["profile_link " + self.uplink_resource_1 + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet + "' NA " + self.uplink_port_1.split(".")[2] + "," + self.upstream_port_1.split(".")[2] + " -1 NA"]
-                    ]
+                    ["profile_link " + self.upstream_resource_1 + " upstream-dhcp 1 NA NA " +
+                     self.upstream_port_1.split(".")[2] + ",AUTO -1 NA"],
+                    [
+                        "profile_link " + self.uplink_resource_1 + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet + "' NA " +
+                        self.uplink_port_1.split(".")[2] + "," + self.upstream_port_1.split(".")[2] + " -1 NA"]
+                ]
                 self.CreateChamberview = CreateChamberview(self.lanforge_ip, self.lanforge_port)
         else:
             self.lanforge_ip = lanforge_data["ip"]
@@ -90,10 +93,10 @@ class ChamberView:
             self.ssid_list = []
             self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
             self.raw_line = [
-            ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " + self.upstream_port.split(".")
-            [2] + ",AUTO -1 NA"],
-            ["profile_link " + self.uplink_resources + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
-             + "' NA " + self.uplink_port.split(".")[2] + "," + self.upstream_port.split(".")[2] + " -1 NA"]
+                ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " + self.upstream_port.split(".")
+                [2] + ",AUTO -1 NA"],
+                ["profile_link " + self.uplink_resources + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
+                 + "' NA " + self.uplink_port.split(".")[2] + "," + self.upstream_port.split(".")[2] + " -1 NA"]
             ]
 
             # This is for rawline input | see create_chamberview_dut.py for more details
@@ -328,7 +331,9 @@ class ChamberView:
 
     def read_csv_individual_station_throughput(self, dir_name, option):
         try:
-            df = pd.read_csv("../reports/" + str(dir_name) + "/csv-data/data-Combined_bps__60_second_running_average-1.csv", sep=r'\t', engine='python')
+            df = pd.read_csv(
+                "../reports/" + str(dir_name) + "/csv-data/data-Combined_bps__60_second_running_average-1.csv",
+                sep=r'\t', engine='python')
             print("csv file opened")
         except FileNotFoundError:
             print("csv file does not exist")
@@ -377,6 +382,7 @@ class ChamberView:
             allure.attach.file(source=relevant_path + i,
                                name=i,
                                attachment_type="image/png", extension=None)
+
 
     def create_mesh_scenario(self):
         # upstream_list = []
@@ -449,6 +455,7 @@ class ChamberView:
             # [['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58']]
             self.update_ssid(ssid_data=ssid_data[ssid])
 
+
     def set_radio_antenna(self, req_url, shelf, resources, radio, antenna):
         data = {
             "shelf": shelf,
@@ -463,84 +470,84 @@ class ChamberView:
 def main():
     # lanforge_data = {'ip': 'localhost', 'port': 8802, 'ssh_port': 8804, '2.4G-Radio': ['1.1.wiphy0', '1.1.wiphy2'], '5G-Radio': ['1.1.wiphy1', '1.1.wiphy3'], 'AX-Radio': ['1.1.wiphy4', '1.1.wiphy5', '1.1.wiphy6', '1.1.wiphy7'], 'upstream': '1.1.eth2', 'upstream_subnet': '10.28.2.1/24', 'uplink': '1.1.eth1', '2.4G-Station-Name': 'sta00', '5G-Station-Name': 'sta10', 'AX-Station-Name': 'ax'}
     lanforge_data = {
-                "type": "mesh",
-                "ip": "localhost",  # 10.28.3.14
-                "port": 8802,  # 8080
-                "ssh_port": 8804,
-                "2.4G-Radio-mobile-sta": ["1.1.wiphy0", "1.1.wiphy2"],
-                "5G-Radio-mobile-sta": ["1.1.wiphy1", "1.1.wiphy3"],
-                "AX-Radio-mobile-sta": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
-                "upstream-mobile-sta": "1.1.eth2",
-                "upstream_subnet-mobile-sta": "10.28.2.1/24",
-                "uplink-mobile-sta": "1.1.eth3",
-                "2.4G-Radio-root": ["1.2.wiphy0"],
-                "5G-Radio-root": ["1.2.wiphy1"],
-                "AX-Radio-root": [],
-                "upstream-root": "1.2.eth2",
-                "upstream_subnet-root": "10.28.2.1/24",
-                "uplink-root": "1.2.eth3",
-                "2.4G-Radio-node-1": ["1.3.wiphy0"],
-                "5G-Radio-node-1": ["1.3.wiphy1"],
-                "AX-Radio-node-1": [],
-                "upstream-node-1": "1.3.eth2",
-                "upstream_subnet-node-1": "10.28.2.1/24",
-                "uplink--node-1": "1.3.eth3",
-                "2.4G-Radio-node-2": ["1.4.wiphy0"],
-                "5G-Radio-node-2": ["1.4.wiphy1"],
-                "AX-Radio-node-2": [],
-                "upstream-node-2": "1.4.eth2",
-                "upstream_subnet-node-2": "10.28.2.1/24",
-                "uplink--node-2": "1.4.eth3",
-                "2.4G-Station-Name": "wlan0",
-                "5G-Station-Name": "wlan0",
-                "AX-Station-Name": "ax"
-            }
+        "type": "mesh",
+        "ip": "localhost",  # 10.28.3.14
+        "port": 8802,  # 8080
+        "ssh_port": 8804,
+        "2.4G-Radio-mobile-sta": ["1.1.wiphy0", "1.1.wiphy2"],
+        "5G-Radio-mobile-sta": ["1.1.wiphy1", "1.1.wiphy3"],
+        "AX-Radio-mobile-sta": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
+        "upstream-mobile-sta": "1.1.eth2",
+        "upstream_subnet-mobile-sta": "10.28.2.1/24",
+        "uplink-mobile-sta": "1.1.eth3",
+        "2.4G-Radio-root": ["1.2.wiphy0"],
+        "5G-Radio-root": ["1.2.wiphy1"],
+        "AX-Radio-root": [],
+        "upstream-root": "1.2.eth2",
+        "upstream_subnet-root": "10.28.2.1/24",
+        "uplink-root": "1.2.eth3",
+        "2.4G-Radio-node-1": ["1.3.wiphy0"],
+        "5G-Radio-node-1": ["1.3.wiphy1"],
+        "AX-Radio-node-1": [],
+        "upstream-node-1": "1.3.eth2",
+        "upstream_subnet-node-1": "10.28.2.1/24",
+        "uplink--node-1": "1.3.eth3",
+        "2.4G-Radio-node-2": ["1.4.wiphy0"],
+        "5G-Radio-node-2": ["1.4.wiphy1"],
+        "AX-Radio-node-2": [],
+        "upstream-node-2": "1.4.eth2",
+        "upstream_subnet-node-2": "10.28.2.1/24",
+        "uplink--node-2": "1.4.eth3",
+        "2.4G-Station-Name": "wlan0",
+        "5G-Station-Name": "wlan0",
+        "AX-Station-Name": "ax"
+    }
     # ap_data = [{'model': 'wf188n', 'mode': 'wifi6', 'serial': '0000c1018812', 'jumphost': True, 'ip': 'localhost', 'username': 'lanforge', 'password': 'pumpkin77', 'port': 8803, 'jumphost_tty': '/dev/ttyAP1', 'version': 'https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf188/20210729-cig_wf188-v2.0.0-rc2-ec3662e-upgrade.bin'}]
     ap_data = [
-            {
-                'type' : 'root',
-                'model': 'eap101',
-                'mode': 'wifi6',
-                'serial': '34efb6af4a7a',
-                'jumphost': True,
-                'ip': "localhost",  # 10\.28\.3\.101
-                'username': "lanforge",
-                'password': "pumpkin77",
-                'port': 8803,  # 22
-                'jumphost_tty': '/dev/ttyAP2',
-                'version': "latest"
-            },
-            {
-                'type': 'node-1',
-                'model': 'eap101',
-                'mode': 'wifi6',
-                'serial': '34efb6af4903',
-                'jumphost': True,
-                'ip': "localhost", #10\.28\.3\.101
-                'username': "lanforge",
-                'password': "pumpkin77",
-                'port': 8803,  # 22
-                'jumphost_tty': '/dev/ttyAP3',
-                'version': "latest"
-            },
-            {
-                'type' : 'node-2',
-                'model': 'eap102',
-                'mode': 'wifi6',
-                'serial': '34efb6af4a7a',
-                'jumphost': True,
-                'ip': "localhost",  # 10\.28\.3\.101
-                'username': "lanforge",
-                'password': "pumpkin77",
-                'port': 8803,  # 22
-                'jumphost_tty': '/dev/ttyAP4',
-                'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/eap101/trunk/eap101-1.1.0.tar.gz"
-            }
-        ]
+        {
+            'type': 'root',
+            'model': 'eap101',
+            'mode': 'wifi6',
+            'serial': '34efb6af4a7a',
+            'jumphost': True,
+            'ip': "localhost",  # 10\.28\.3\.101
+            'username': "lanforge",
+            'password': "pumpkin77",
+            'port': 8803,  # 22
+            'jumphost_tty': '/dev/ttyAP2',
+            'version': "latest"
+        },
+        {
+            'type': 'node-1',
+            'model': 'eap101',
+            'mode': 'wifi6',
+            'serial': '34efb6af4903',
+            'jumphost': True,
+            'ip': "localhost",  # 10\.28\.3\.101
+            'username': "lanforge",
+            'password': "pumpkin77",
+            'port': 8803,  # 22
+            'jumphost_tty': '/dev/ttyAP3',
+            'version': "latest"
+        },
+        {
+            'type': 'node-2',
+            'model': 'eap102',
+            'mode': 'wifi6',
+            'serial': '34efb6af4a7a',
+            'jumphost': True,
+            'ip': "localhost",  # 10\.28\.3\.101
+            'username': "lanforge",
+            'password': "pumpkin77",
+            'port': 8803,  # 22
+            'jumphost_tty': '/dev/ttyAP4',
+            'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/eap101/trunk/eap101-1.1.0.tar.gz"
+        }
+    ]
     testbed = "mesh"
     obj = ChamberView(lanforge_data=lanforge_data, access_point_data=ap_data, testbed="mesh")
     obj.create_mesh_dut()
-    obj.create_mesh()
+
 
 if __name__ == '__main__':
     main()

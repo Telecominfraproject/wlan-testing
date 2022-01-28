@@ -12,7 +12,7 @@ on:
         description: 'revision of the Open Wifi Helm chart'
       ap_models:
         required: true
-        default: 'EAP102,cig_wf194c'
+        default: 'edgecore_eap102,cig_wf194c4'
         description: 'the AP models to test'
       ap_version:
         required: true
@@ -43,7 +43,7 @@ jobs:
         id: vars
         run: |
           echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'main' }}")
-          echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'EAP102,cig_wf194c' }}")
+          echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'edgecore_eap102,cig_wf194c4' }}")
           echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'next-latest' }}")
           echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'advance' }}")
 
@@ -117,7 +117,7 @@ jobs:
 
     - name: start reservation
       run: |
-        python wlan-testing/.quali/start_reservation.py --openwifi-version "${{ needs.vars.outputs.openwifi_revision }}" --ap-model "${{ matrix.ap_model }}" --blueprint "Advance Lab"
+        python wlan-testing/.quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}"}' --reservation-duration 720 "Advance Lab"
 
     - name: set reservation outputs
       if: always()
@@ -267,8 +267,6 @@ jobs:
         }
         EOF
 
-        cat configuration.py
-
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
 
     - name: run tests
@@ -296,7 +294,6 @@ jobs:
                     cpu: "250m"
                 command:
                   - /bin/bash
-                  - -x
                   - -c
                   - |
                     HOSTS="sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
@@ -352,7 +349,9 @@ jobs:
         kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
         echo "waiting for pod to exit"
         kubectl logs -f $podname >/dev/null 2>&1
-        exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
+
+        until [[ ! -z "$EXIT_CODE" ]]; do EXIT_CODE=$(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}"); sleep 1; done;
+        exit $EXIT_CODE
 
     - name: show gw logs
       if: failure()
