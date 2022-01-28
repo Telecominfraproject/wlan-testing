@@ -2957,7 +2957,6 @@ def get_ip_add_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoMobil
             print("IP Address not Found")
             request.config.cache.set(key="select IP failed", value=str(e))
 
-
     except Exception as e:
         request.config.cache.set(key="select additional info failed", value=str(e))
     # ---------------------Additional INFO-------------------------------
@@ -3051,7 +3050,6 @@ def get_ip_add_check_ios(request, WifiName, WifiPass, setup_perfectoMobile, conn
         print("Cannot find WIFI element")
         closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
         return ip_address_element_text, is_internet
-
 
     # ---------------------Additional INFO-------------------------------
     try:
