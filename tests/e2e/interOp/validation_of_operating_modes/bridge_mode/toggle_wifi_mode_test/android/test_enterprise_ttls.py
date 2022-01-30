@@ -61,7 +61,7 @@ class TestToggleWifiModeAndroidBridgeModeEnterpriseTTLSSuiteA(object):
         pytest -m "client_reconnect and bridge and InteropsuiteA"
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4836", name="WIFI-4836")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6487", name="WIFI-6487")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_enterprise
     def test_ToogleWifiMode_5g_WPA2_enterprise_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data
@@ -96,7 +96,7 @@ class TestToggleWifiModeAndroidBridgeModeEnterpriseTTLSSuiteA(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
-            ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, ssidPassword,
+            ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, identity, ttls_passwd,
                                                                setup_perfectoMobile_android, connData)
             if (ip_check == ip):
                 assert True
@@ -106,7 +106,7 @@ class TestToggleWifiModeAndroidBridgeModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4835", name="WIFI-4835")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6488", name="WIFI-6488")
     @pytest.mark.twog
     @pytest.mark.wpa2_enterprise
     def test_ToogleWifiMode_2g_WPA2_enterprise_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data,
@@ -141,7 +141,7 @@ class TestToggleWifiModeAndroidBridgeModeEnterpriseTTLSSuiteA(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
-            ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, ssidPassword,
+            ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, identity, ttls_passwd,
                                                                setup_perfectoMobile_android, connData)
             if (ip_check == ip):
                 assert True
@@ -151,7 +151,7 @@ class TestToggleWifiModeAndroidBridgeModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4838", name="WIFI-4838")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6489", name="WIFI-6489")
     @pytest.mark.fiveg
     @pytest.mark.wpa3_enterprise
     def test_ToogleWifiMode_5g_WPA3_enterprise_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data,
@@ -186,7 +186,7 @@ class TestToggleWifiModeAndroidBridgeModeEnterpriseTTLSSuiteA(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
-            ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, ssidPassword,
+            ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, identity, ttls_passwd,
                                                                setup_perfectoMobile_android, connData)
             if (ip_check == ip):
                 assert True
@@ -196,7 +196,7 @@ class TestToggleWifiModeAndroidBridgeModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4837", name="WIFI-4837")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6490", name="WIFI-6490")
     @pytest.mark.twog
     @pytest.mark.wpa3_enterprise
     def test_ToogleWifiMode_2g_WPA3_enterprise_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data,
@@ -231,7 +231,7 @@ class TestToggleWifiModeAndroidBridgeModeEnterpriseTTLSSuiteA(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
-            ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, ssidPassword,
+            ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, identity, ttls_passwd,
                                                                setup_perfectoMobile_android, connData)
             if (ip_check == ip):
                 assert True
@@ -241,7 +241,7 @@ class TestToggleWifiModeAndroidBridgeModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4840", name="WIFI-4840")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6471", name="WIFI-6471")
     @pytest.mark.fiveg
     @pytest.mark.wpa_enterprise
     def test_ToogleWifiMode_5g_WPA_enterprise_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data,
@@ -276,7 +276,7 @@ class TestToggleWifiModeAndroidBridgeModeEnterpriseTTLSSuiteA(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
-            ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, ssidPassword,
+            ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, identity, ttls_passwd,
                                                                setup_perfectoMobile_android, connData)
             if (ip_check == ip):
                 assert True
@@ -286,7 +286,7 @@ class TestToggleWifiModeAndroidBridgeModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4839", name="WIFI-4839")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6486", name="WIFI-6486")
     @pytest.mark.twog
     @pytest.mark.wpa_enterprise
     def test_ToogleWifiMode_2g_WPA_enterprise_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data,
@@ -321,7 +321,7 @@ class TestToggleWifiModeAndroidBridgeModeEnterpriseTTLSSuiteA(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
-            ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, ssidPassword,
+            ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, identity, ttls_passwd,
                                                                setup_perfectoMobile_android, connData)
             if (ip_check == ip):
                 assert True
