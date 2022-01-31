@@ -1023,7 +1023,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             available_ssids = get_all_available_ssids(driver)
             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
             try:
-                if WifiName not in available_ssids:
+                if (WifiName not in available_ssids ) and (not ssid_Visible(driver, WifiName)):
                     scrollDown(setup_perfectoMobile)
                     time.sleep(2)
                 else:
@@ -1383,14 +1383,6 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
 
     # ---------------------This is to Select SSID-------------------------------
     try:
-        counter_time = 0
-        while ((not ssid_Visible(driver, WifiName)) and counter_time < 5):
-            scrollDown(setup_perfectoMobile)
-            counter_time = counter_time + 1
-
-        if counter_time == 5:
-            print(f"Not able to get the {WifiName} to be visible")
-
         wifiSelectionElement = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
         wifiSelectionElement.click()
@@ -1798,7 +1790,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
             available_ssids = get_all_available_ssids(driver)
             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
             try:
-                if WifiName not in available_ssids:
+                if (WifiName not in available_ssids ) and (not ssid_Visible(driver, WifiName)):
                     scrollDown(setup_perfectoMobile)
                     time.sleep(2)
                 else:
