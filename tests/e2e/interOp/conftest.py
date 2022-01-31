@@ -13,6 +13,7 @@ import re
 import allure
 import requests
 from xml.etree import ElementTree as ET
+from time import gmtime, strftime
 
 sys.path.append(
     os.path.dirname(
@@ -403,7 +404,8 @@ def setup_perfectoMobile_android(request):
     }
 
     if not is_device_Available_timeout(request, capabilities['model']):
-        assert False, "Unable to get device."
+        print("Unable to get device.")
+        pytest.exit("Exiting Pytest")
 
     driver = webdriver.Remote(
         'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
@@ -510,7 +512,8 @@ def setup_perfectoMobileWeb(request):
     }
 
     if not is_device_Available_timeout(request, capabilities['model']):
-        assert False, "Unable to get device."
+        print("Unable to get device.")
+        pytest.exit("Exiting Pytest")
 
     rdriver = webdriver.Remote(
         'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
@@ -577,7 +580,8 @@ def setup_perfectoMobile_iOS(request):
 
     # Check if the device is available
     if not is_device_Available_timeout(request, capabilities['model']):
-        assert False, "Unable to get device."
+        print("Unable to get device.")
+        pytest.exit("Exiting Pytest")
 
     driver = webdriver.Remote(
         'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
@@ -674,25 +678,27 @@ def is_device_available(request, model):
         return False
     return True
 
-# Rechecking for a busy device. By default we are polling the device every 30 secs for 5 iterations for a total of 5x30=150sec(2.5 Mins)
+# Checks whether the device is available or not.If the device is not available rechecks depending upon the 
+# 'timerValue' and 'timerThreshold' values.With the current parameters it will check after:10,20,40,80 mins.
 def is_device_Available_timeout(request, model):
-    counter_time = 0
-    deviceRecheckingInterval = 30
-    deviceRecheckingTotalInterations = 5
-    try:
-        device_available = is_device_available(request, model)
-    except:
-        print("Unable to get attributes from the response.")
-
-    while counter_time < deviceRecheckingTotalInterations:
-        if not device_available:
-            print(f"Device not available.Rechecking after {deviceRecheckingInterval} seconds")
-            time.sleep(deviceRecheckingInterval)         
-            counter_time = counter_time + 1
+    device_available = is_device_available(request, model)
+    timerValue = 10
+    timerThreshold = 80
+    if not device_available:
+        while(timerValue <= timerThreshold):
+            print("Last checked at:" + strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+            print(f"Waiting for: {timerValue} min(s)")
+            time.sleep(timerValue*60)
+            print("Checking now at:" + strftime("%Y-%m-%d %H:%M:%S", gmtime()))
             device_available = is_device_available(request, model)
+            if(device_available):
+                return True
+            else:
+                timerValue = 2 * timerValue
+        
+        if(timerValue > timerThreshold):
+            return False
         else:
-            print("Device is available and we can instantiate the driver")
             return True
-
-    print(f"Device was not available even after checking for {(deviceRecheckingInterval * deviceRecheckingTotalInterations)} seconds")
-    return False
+    else:
+        return True
