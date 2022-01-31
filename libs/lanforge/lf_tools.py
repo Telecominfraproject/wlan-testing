@@ -148,14 +148,14 @@ class ChamberView:
         return sta_list
 
     def admin_up_down(self, sta_list=[], option="up"):
-        realm_obj = self.staConnect.localrealm
+        #realm_obj = self.staConnect.localrealm
         if option == "up":
             for i in sta_list:
-                realm_obj.admin_up(i)
+                self.staConnect.admin_up(i)
                 time.sleep(0.005)
         elif option == "down":
             for j in sta_list:
-                realm_obj.admin_down(j)
+                self.staConnect.admin_down(j)
                 time.sleep(0.005)
         time.sleep(2)
 
