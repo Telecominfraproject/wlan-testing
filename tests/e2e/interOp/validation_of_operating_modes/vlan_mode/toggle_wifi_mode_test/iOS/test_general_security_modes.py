@@ -10,7 +10,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from appium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-
+import random
+import string
 import sys
 import allure
 
@@ -21,8 +22,8 @@ from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnecti
     Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown,\
     verifyUploadDownloadSpeediOS, get_ip_add_ios, get_ip_add_check_ios, wifi_connect, wifi_disconnect_and_forget
 
-pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
-              pytest.mark.client_reconnect, pytest.mark.interop_uc_sanity, pytest.mark.vlan, pytest.mark.ToggleWifiMode]
+pytestmark = [pytest.mark.regression, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
+              pytest.mark.client_reconnect, pytest.mark.vlan, pytest.mark.ToggleWifiMode]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -39,9 +40,15 @@ setup_params_general = {
     "rf": {},
     "radius": False
 }
+for sec_modes in setup_params_general['ssid_modes'].keys():
+    for i in range(len(setup_params_general['ssid_modes'][sec_modes])):
+        N = 3
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                     string.digits, k=N)))+str(int(time.time_ns())%10000)
+        setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 
-@allure.suite(suite_name="interop sanity")
+@allure.suite(suite_name="interop regression")
 @allure.sub_suite(sub_suite_name="Vlan Mode Client Reconnect : Suite-A")
 @pytest.mark.InteropsuiteA
 @allure.feature("VLAN MODE CLIENT RECONNECT")
@@ -57,7 +64,7 @@ class TestToggleWifiModeSuiteOneVLAN(object):
         pytest -m "client_reconnect and nat and InteropsuiteA"
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4557", name="WIFI-4557")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6627", name="WIFI-6627")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     def test_ToggleWifiMode_5g_WPA2_Personal_VLAN(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
@@ -100,7 +107,7 @@ class TestToggleWifiModeSuiteOneVLAN(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4556", name="WIFI-4556")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6628", name="WIFI-6628")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_ToggleWifiMode_2g_WPA2_Personal_VLAN(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -142,7 +149,7 @@ class TestToggleWifiModeSuiteOneVLAN(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4555", name="WIFI-4555")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6625", name="WIFI-6625")
     @pytest.mark.fiveg
     @pytest.mark.wpa
     def test_ToggleWifiMode_5g_WPA_VLAN(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -184,7 +191,7 @@ class TestToggleWifiModeSuiteOneVLAN(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4554", name="WIFI-4554")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6626", name="WIFI-6626")
     @pytest.mark.twog
     @pytest.mark.wpa
     def test_ToggleWifiMode_2g_WPA_VLAN(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -226,7 +233,7 @@ class TestToggleWifiModeSuiteOneVLAN(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4553", name="WIFI-4553")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6631", name="WIFI-6631")
     @pytest.mark.fiveg
     @pytest.mark.open
     def test_ToggleWifiMode_5g_Open_VLAN(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -268,7 +275,7 @@ class TestToggleWifiModeSuiteOneVLAN(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4552", name="WIFI-4552")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6632", name="WIFI-6632")
     @pytest.mark.twog
     @pytest.mark.open
     def test_ToggleWifiMode_2g_Open_VLAN(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -333,9 +340,15 @@ setup_params_general_two = {
     "rf": {},
     "radius": False
 }
+for sec_modes in setup_params_general_two['ssid_modes'].keys():
+    for i in range(len(setup_params_general_two['ssid_modes'][sec_modes])):
+        N = 2
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                     string.digits, k=N)))+str(int(time.time_ns())%10000)
+        setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'].replace("ssid_","") + "_"+ rand_string
 
 
-@allure.suite(suite_name="interop sanity")
+@allure.suite(suite_name="interop regression")
 @allure.sub_suite(sub_suite_name="VLAN Mode Client Reconnect : Suite-B")
 @pytest.mark.InteropsuiteB
 @allure.feature("VLAN MODE CLIENT Reconnect")
@@ -351,7 +364,7 @@ class TestToggleAirplaneModeSuiteVlanTwo(object):
         pytest -m "client_reconnect and bridge and InteropsuiteB"
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4559", name="WIFI-4559")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6629", name="WIFI-6629")
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal
     def test_ToggleWifiMode_5g_wpa3_personal_VLAN(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -394,7 +407,7 @@ class TestToggleAirplaneModeSuiteVlanTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4558", name="WIFI-4558")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6630", name="WIFI-6630")
     @pytest.mark.twog
     @pytest.mark.wpa3_personal
     def test_ToggleWifiMode_2g_wpa3_personal_VLAN(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -437,7 +450,7 @@ class TestToggleAirplaneModeSuiteVlanTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4561", name="WIFI-4561")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6633", name="WIFI-6633")
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal_mixed
     def test_ToggleWifiMode_5g_wpa3_personal_mixed_VLAN(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -480,7 +493,7 @@ class TestToggleAirplaneModeSuiteVlanTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4560", name="WIFI-4560")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6634", name="WIFI-6634")
     @pytest.mark.twog
     @pytest.mark.wpa3_personal_mixed
     def test_ToggleWifiMode_2g_wpa3_personal_mixed_VLAN(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -523,7 +536,7 @@ class TestToggleAirplaneModeSuiteVlanTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4563", name="WIFI-4563")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6635", name="WIFI-6635")
     @pytest.mark.fiveg
     @pytest.mark.wpa_wpa2_personal_mixed
     def test_ToggleWifiMode_5g_wpa_wpa2_personal_mixed_VLAN(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):
@@ -567,7 +580,7 @@ class TestToggleAirplaneModeSuiteVlanTwo(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4562", name="WIFI-4562")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6636", name="WIFI-6636")
     @pytest.mark.twog
     @pytest.mark.wpa_wpa2_personal_mixed
     def test_ToggleWifiMode_2g_wpa_wpa2_personal_mixed_VLAN(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data, setup_perfectoMobile_iOS):

@@ -10,7 +10,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from appium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-
+import random
+import string
 import sys
 import allure
 
@@ -21,8 +22,8 @@ from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnecti
     Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown,\
     verifyUploadDownloadSpeediOS, get_ip_add_eap_ios, get_ip_add_check_ios, wifi_connect_eap, wifi_disconnect_and_forget
 
-pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.client_reconnect
-              ,pytest.mark.interop_uc_sanity, pytest.mark.nat, pytest.mark.enterprise, pytest.mark.ToggleWifiMode]
+pytestmark = [pytest.mark.regression, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.client_reconnect
+              , pytest.mark.nat, pytest.mark.enterprise, pytest.mark.ToggleWifiMode]
 
 setup_params_enterprise = {
     "mode": "NAT",
@@ -40,9 +41,14 @@ setup_params_enterprise = {
     "rf": {},
     "radius": True
 }
+for sec_modes in setup_params_enterprise['ssid_modes'].keys():
+    for i in range(len(setup_params_enterprise['ssid_modes'][sec_modes])):
+        N = 3
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                     string.digits, k=N)))+str(int(time.time_ns())%10000)
+        setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-
-@allure.suite(suite_name="interop sanity")
+@allure.suite(suite_name="interop regression")
 @allure.sub_suite(sub_suite_name="NAT Mode EAP Client ReConnect : Suite-A")
 @pytest.mark.suiteA
 @pytest.mark.parametrize(
@@ -57,7 +63,7 @@ class TestToggleWifiModeNatModeEnterpriseTTLSSuiteA(object):
         pytest -m "client_reconnect and nat and enterprise and ttls and interop and suiteA"
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4711", name="WIFI-4711")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6619", name="WIFI-6619")
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     def test_ToggleWifiMode_5g_WPA2_Eap_Nat(self, request, get_vif_state, get_ToggleAirplaneMode_data
@@ -101,7 +107,7 @@ class TestToggleWifiModeNatModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4710", name="WIFI-4710")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6620", name="WIFI-6620")
     @pytest.mark.twog
     @pytest.mark.wpa2_enterprise
     def test_ToggleWifiMode_2g_WPA2_Eap_Nat(self, request, get_vif_state, get_ToggleAirplaneMode_data
@@ -147,7 +153,7 @@ class TestToggleWifiModeNatModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4715", name="WIFI-4715")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6623", name="WIFI-6623")
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
     def test_ToggleWifiMode_5g_WPA3_Eap_Nat(self, request, get_vif_state, get_ToggleAirplaneMode_data
@@ -196,7 +202,7 @@ class TestToggleWifiModeNatModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4714", name="WIFI-4714")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6624", name="WIFI-6624")
     @pytest.mark.twog
     @pytest.mark.wpa3_enterprise
     def test_ToggleWifiMode_2g_WPA3_Eap_Nat(self, request, get_vif_state, get_ToggleAirplaneMode_data
@@ -242,7 +248,7 @@ class TestToggleWifiModeNatModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4613", name="WIFI-4613")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6621", name="WIFI-6621")
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
     def test_ToggleWifiMode_5g_WPA_Eap_Nat(self, request, get_vif_state, get_ToggleAirplaneMode_data
@@ -289,7 +295,7 @@ class TestToggleWifiModeNatModeEnterpriseTTLSSuiteA(object):
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4612", name="WIFI-4612")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6622", name="WIFI-6622")
     @pytest.mark.twog
     @pytest.mark.wpa_enterprise
     def test_ToggleWifiMode_2g_WPA_Eap_Nat(self, request, get_vif_state, get_ToggleAirplaneMode_data
