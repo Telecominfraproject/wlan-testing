@@ -20,22 +20,6 @@ on:
         required: true
         default: 'main'
         description: 'revision of the Open Wifi Helm chart'
-      openwifi_gw_revision:
-        required: true
-        default: 'master'
-        description: 'revision of the Open Wifi gateway service'
-      openwifi_sec_revision:
-        required: true
-        default: 'main'
-        description: 'revision of the Open Wifi security service'
-      openwifi_fms_revision:
-        required: true
-        default: 'main'
-        description: 'revision of the Open Wifi fms service'
-      openwifi_ui_revision:
-        required: true
-        default: 'main'
-        description: 'revision of the Open Wifi UI'
       ap_models:
         required: true
         default: 'edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4'
@@ -48,6 +32,11 @@ on:
         required: true
         default: 'uc_sanity'
         description: 'Marker expression to select tests to execute'
+      use_qa01:
+        type: boolean
+        required: true
+        default: 'true'
+        description: 'Use openwifi-qa01 instead of dynamic cloud controller'
   schedule:
   - cron: '30 20 * * *'
 
@@ -56,26 +45,20 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       openwifi_revision: ${{ steps.vars.outputs.openwifi}}
-      openwifi_gw_revision: ${{ steps.vars.outputs.gw}}
-      openwifi_sec_revision: ${{ steps.vars.outputs.sec}}
-      openwifi_fms_revision: ${{ steps.vars.outputs.fms}}
-      openwifi_ui_revision: ${{ steps.vars.outputs.ui}}
       ap_models: ${{ steps.vars.outputs.ap_models}}
       ap_version: ${{ steps.vars.outputs.ap_version}}
       marker_expression: ${{ steps.vars.outputs.marker_expression }}
+      use_qa01: ${{ steps.vars.outputs.use_qa01 }}
 
     steps:
       - name: set variables
         id: vars
         run: |
-          echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'v2.4.0-RC3' }}")
-          echo ::set-output name=gw::$(echo "${{ github.event.inputs.openwifi_gw_revision || 'v2.4.0-RC3' }}")
-          echo ::set-output name=sec::$(echo "${{ github.event.inputs.openwifi_sec_revision || 'v2.4.0-RC2' }}")
-          echo ::set-output name=fms::$(echo "${{ github.event.inputs.openwifi_fms_revision || 'v2.4.0-RC2' }}")
-          echo ::set-output name=ui::$(echo "${{ github.event.inputs.openwifi_ui_revision || 'v2.4.0-RC2' }}")
+          echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'main' }}")
           echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4' }}")
           echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'next-latest' }}")
           echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'uc_sanity' }}")
+          echo ::set-output name=use_qa01::$(echo "${{ github.event.inputs.use_qa01 || 'true' }}")
 
   generate-matrix:
     name: generate AP model matrix
@@ -126,14 +109,24 @@ jobs:
 
     - name: start reservation
       run: |
-        python .quali/start_reservation.py --openwifi-version "${{ needs.vars.outputs.openwifi_revision }}" --openwifi-gw-version "${{ needs.vars.outputs.openwifi_gw_revision }}" --openwifi-sec-version "${{ needs.vars.outputs.openwifi_sec_revision }}" --openwifi-fms-version "${{ needs.vars.outputs.openwifi_fms_revision }}" --openwifi-ui-version "${{ needs.vars.outputs.openwifi_ui_revision }}" --ap-model "${{ matrix.ap_model }}"
+        if [ ${{ needs.vars.outputs.use_qa01 }} == 'true' ]
+        then
+          python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}","Optional Existing SDK Namespace":"qa01"}' "Basic Lab"
+        else
+          python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}"}' "Basic Lab"
+        fi
 
     - name: set reservation outputs
       if: always()
       id: reservation
       run: |
         echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
-        echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+        if [ ${{ needs.vars.outputs.use_qa01 }} == 'true' ]
+        then
+          echo ::set-output name=namespace::"qa01"
+        else
+          echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+        fi
 
     - name: get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -177,6 +170,24 @@ jobs:
 
         RADIUS_ACCOUNTING_DATA = {
             "ip": "10.10.1.221",
+            "port": 1813,
+            "secret": "testing123",
+            "user": "user",
+            "password": "password",
+            "pk_password": "whatever"
+        }
+        
+        DYNAMIC_VLAN_RADIUS_SERVER_DATA = {
+          "ip": "3.20.165.131",
+          "port": 1812,
+          "secret": "testing123",
+          "user": "user",
+          "password": "password",
+          "pk_password": "whatever"
+        }
+
+        DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA = {
+            "ip": "3.20.165.131",
             "port": 1813,
             "secret": "testing123",
             "user": "user",
@@ -276,12 +287,19 @@ jobs:
         }
         EOF
 
-        cat configuration.py
+
+        # fix wrong configuration value from Quali
+        if [ ${{ needs.vars.outputs.use_qa01 }} == 'true' ]
+        then
+          sed -i "s/https:\/\/sec-.*\.cicd\.lab\.wlan\.tip\.build/https:\/\/sec-qa01.cicd.lab.wlan.tip.build/g" configuration.py
+        fi
 
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
 
     - name: run tests
       run: |
+        set -x
+
         cat <<EOF | kubectl apply -f -
         apiVersion: batch/v1
         kind: Job
@@ -305,7 +323,6 @@ jobs:
                     cpu: "250m"
                 command:
                   - /bin/bash
-                  - -x
                   - -c
                   - |
                     HOSTS="sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
@@ -361,7 +378,9 @@ jobs:
         kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
         echo "waiting for pod to exit"
         kubectl logs -f $podname >/dev/null 2>&1
-        exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
+
+        until [[ ! -z "$EXIT_CODE" ]]; do EXIT_CODE=$(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}"); sleep 1; done;
+        exit $EXIT_CODE
 
     - name: show gw logs
       if: failure()

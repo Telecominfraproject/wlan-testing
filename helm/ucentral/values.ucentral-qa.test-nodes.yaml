@@ -62,6 +62,22 @@ owprovui:
     operator: "Exists"
     effect: "NoSchedule"
 
+owls:
+  nodeSelector:
+    env: tests
+  tolerations:
+  - key: "tests"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+owlsui:
+  nodeSelector:
+    env: tests
+  tolerations:
+  - key: "tests"
+    operator: "Exists"
+    effect: "NoSchedule"
+
 rttys:
   nodeSelector:
     env: tests
