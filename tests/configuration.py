@@ -33,11 +33,10 @@ ssh -C -L 8700:lf1:4002 -L 8701:lf1:5901 -L 8702:lf1:8080 -L 8703:lab-ctlr:22 -L
 """
 
 import json
-file = open('lab_info.json')
-data = json.load(file)
+with open('lab_info.json', 'r') as f:
+  data = json.load(f)
 
 CONFIGURATION = data["CONFIGURATION"]
-print(CONFIGURATION)
 
 RADIUS_SERVER_DATA = data["RADIUS_SERVER_DATA"]
 
