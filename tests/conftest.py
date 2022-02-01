@@ -47,8 +47,11 @@ import pytest
 from lanforge.lf_tests import RunTest
 from cv_test_manager import cv_test
 from configuration import CONFIGURATION
+from configuration import open_flow
 from configuration import RADIUS_SERVER_DATA
 from configuration import RADIUS_ACCOUNTING_DATA
+from configuration import RATE_LIMITING_RADIUS_SERVER_DATA
+from configuration import RATE_LIMITING_RADIUS_ACCOUNTING_DATA
 from lanforge.scp_util import SCP_File
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
@@ -237,6 +240,16 @@ def radius_accounting_info():
     """yields the radius accounting information from lab info file"""
     yield RADIUS_ACCOUNTING_DATA
 
+@pytest.fixture(scope="session")
+def rate_radius_info():
+    """yields the radius server information from lab info file"""
+    yield RATE_LIMITING_RADIUS_SERVER_DATA
+
+@pytest.fixture(scope="session")
+def rate_radius_accounting_info():
+    """yields the radius accounting information from lab info file"""
+    yield RATE_LIMITING_RADIUS_ACCOUNTING_DATA
+
 
 @pytest.fixture(scope="session")
 def get_configuration(testbed, request):
@@ -247,7 +260,9 @@ def get_configuration(testbed, request):
         version = request.config.getini("firmware")
         version_list = version.split(",")
         for i in range(len(CONFIGURATION[testbed]["access_point"])):
-            CONFIGURATION[testbed]["access_point"][i]["version"] = version_list[i]
+            print("i", i)
+            print(version_list)
+            CONFIGURATION[testbed]["access_point"][i]["version"] = version_list[0]
     yield CONFIGURATION[testbed]
 
 
@@ -289,6 +304,10 @@ def get_uci_show(fixtures_ver, get_apnos, get_configuration):
 @pytest.fixture(scope="session")
 def skip_lf(request):
     yield request.config.getoption("--skip-lanforge")
+
+@pytest.fixture(scope="session")
+def get_openflow():
+    yield open_flow
 
 
 # Controller Fixture

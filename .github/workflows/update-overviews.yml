@@ -1,0 +1,44 @@
+name: Update test report overview pages
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".allure-overview/**"
+
+jobs:
+  update_overview:
+    strategy:
+      fail-fast: false
+      matrix: 
+        test_type: ['sanity', 'interop', 'advanced', 'performance']
+
+    runs-on: ubuntu-latest
+    container: python:3.8
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: generate overview page
+      run: |
+        python .allure-overview/generate_overview.py ${{ matrix.test_type }} > index.html
+        cat index.html
+
+    - name: install aws CLI tool
+      if: github.ref == 'refs/heads/master'
+      run: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        ./aws/install
+
+    - name: upload overview page
+      if: github.ref == 'refs/heads/master'
+      env:
+        AWS_S3_BUCKET_NAME: openwifi-allure-reports
+        AWS_ACCOUNT_ID: "289708231103"
+        AWS_ACCESS_KEY_ID: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
+        AWS_DEFAULT_REGION: us-east-1
+        AWS_DEFAULT_OUTPUT: json
+      run: aws s3 cp --acl public-read --content-type text/html index.html s3://${AWS_S3_BUCKET_NAME}/${{ matrix.test_type }}/overview/index.html
+
+

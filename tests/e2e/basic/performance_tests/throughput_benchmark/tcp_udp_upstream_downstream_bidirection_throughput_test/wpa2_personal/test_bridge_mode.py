@@ -11,7 +11,8 @@ import time
 import pytest
 import allure
 
-pytestmark = [pytest.mark.throughput_benchmark_test, pytest.mark.bridge]
+
+pytestmark = [pytest.mark.performance, pytest.mark.throughput_benchmark_test, pytest.mark.bridge] # pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
     "mode": "BRIDGE",

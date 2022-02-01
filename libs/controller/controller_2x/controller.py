@@ -3,6 +3,7 @@
     Base Library for Ucentral
 
 """
+import datetime
 import json
 import ssl
 import sys
@@ -170,7 +171,6 @@ class Controller(ConfigureController):
     def get_device_by_serial_number(self, serial_number=None):
         uri = self.build_uri("device/" + serial_number)
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("GET", resp, self.make_headers(), "", uri)
         device = resp.json()
         # resp.close()()
         return device
@@ -219,7 +219,7 @@ class FMSUtils:
                       body=str(response.status_code) + "\n" +
                            str(response.json()) + "\n"
                       )
-        
+
         print(response)
 
     def ap_model_lookup(self, model=""):
@@ -284,7 +284,7 @@ class FMSUtils:
 
         return "error"
 
-    
+
 
 
 class UProfileUtility:
@@ -385,6 +385,59 @@ class UProfileUtility:
         }
         self.mode = None
 
+    def set_mesh_services(self):
+        self.base_profile_config["interfaces"][1]["ipv4"]["subnet"] = "192.168.97.1/24"
+        self.base_profile_config["interfaces"][1]["ipv4"]["dhcp"]["lease-count"] = 100
+        del self.base_profile_config['metrics']['wifi-frames']
+        del self.base_profile_config['metrics']['dhcp-snooping']
+        var = {
+            "filters": ["probe",
+                        "auth"]
+                }
+        self.base_profile_config["metrics"]['wifi-frames'] = var
+        del self.base_profile_config['services']
+        var2 = {
+            "lldp":{
+                "describe": "uCentral",
+                "location": "universe"
+            },
+            "ssh" : {
+                "port" : 22
+            }
+        }
+        self.base_profile_config['services'] = var2
+
+    def set_express_wifi(self, open_flow=None):
+        if self.mode == "NAT":
+            self.base_profile_config["interfaces"][0]["services"] = ["lldp", "ssh"]
+            self.base_profile_config["interfaces"][1]["services"] = ["ssh", "lldp", "open-flow"]
+            self.base_profile_config["interfaces"][1]["ipv4"]["subnet"] = "192.168.97.1/24"
+            self.base_profile_config["interfaces"][1]["ipv4"]["dhcp"]["lease-count"] = 100
+            self.base_profile_config['services']["open-flow"] = open_flow
+            self.base_profile_config['services']['lldp']['describe'] = "OpenWiFi - expressWiFi"
+            self.base_profile_config['services']['lldp']['location'] = "Hotspot"
+
+    def set_captive_portal(self):
+
+        if self.mode == "NAT":
+            max_client = {
+                "max-clients": 32
+            }
+            # sourceFile = open('captive_config.py', 'w')
+
+            self.base_profile_config["interfaces"][1]["name"] = "captive"
+            self.base_profile_config["interfaces"][1]["ipv4"]["subnet"] = "192.168.2.1/24"
+            self.base_profile_config["interfaces"][1]["captive"] = max_client
+            del self.base_profile_config["interfaces"][1]["ethernet"]
+            del self.base_profile_config["interfaces"][1]["services"]
+            del self.base_profile_config["metrics"]["wifi-frames"]
+            del self.base_profile_config["metrics"]["dhcp-snooping"]
+            # print(self.base_profile_config)
+            # print(self.base_profile_config, file=sourceFile)
+            # sourceFile.close()
+
+
+
     def encryption_lookup(self, encryption="psk"):
         encryption_mapping = {
             "none": "open",
@@ -421,32 +474,53 @@ class UProfileUtility:
                         ssid_info.append(temp)
         return ssid_info
 
-    def set_radio_config(self, radio_config=None):
-        self.base_profile_config["radios"].append({
-            "band": "2G",
-            "country": "US",
-            # "channel-mode": "HE",
-            "channel-width": 40,
-            # "channel": 11
-        })
-        self.base_profile_config["radios"].append({
-            "band": "5G",
-            "country": "US",
-            # "channel-mode": "HE",
-            "channel-width": 80,
-            # "channel": "auto"
-        })
+    def set_radio_config(self, radio_config=None, DFS = False, channel=None, bw=None):
+        if DFS:
+            self.base_profile_config["radios"].append({
+                "band": "5G",
+                "country": "CA",
+                "channel-mode": "VHT",
+                "channel-width": bw,
+                "channel": channel
+            })
+        else:
+            self.base_profile_config["radios"].append({
+                "band": "2G",
+                "country": "US",
+                # "channel-mode": "HE",
+                "channel-width": 40,
+                # "channel": 11
+            })
+            self.base_profile_config["radios"].append({
+                "band": "5G",
+                "country": "US",
+                # "channel-mode": "HE",
+                "channel-width": 80,
+                # "channel": "auto"
+            })
 
         self.vlan_section["ssids"] = []
         self.vlan_ids = []
 
-    def set_mode(self, mode):
+    def set_mode(self, mode, mesh=False):
         self.mode = mode
         if mode == "NAT":
+            if mesh:
+                self.base_profile_config['interfaces'][0]['tunnel'] = {
+                    "proto": "mesh"
+                }
             self.base_profile_config['interfaces'][1]['ssids'] = []
         elif mode == "BRIDGE":
+            if mesh:
+                self.base_profile_config['interfaces'][0]['tunnel'] = {
+                    "proto": "mesh"
+                }
             self.base_profile_config['interfaces'][0]['ssids'] = []
         elif mode == "VLAN":
+            if mesh:
+                self.base_profile_config['interfaces'][0]['tunnel'] = {
+                    "proto": "mesh"
+                }
             del self.base_profile_config['interfaces'][1]
             self.base_profile_config['interfaces'][0]['ssids'] = []
             self.base_profile_config['interfaces'] = []
@@ -554,6 +628,7 @@ class UProfileUtility:
                       body=str(self.base_profile_config).replace("'", '"'),
                       attachment_type=allure.attachment_type.JSON)
         print(self.base_profile_config)
+        print("Sending Configure Command: ", datetime.datetime.utcnow())
         resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
                              verify=False, timeout=100)
         print(resp.json())
@@ -570,11 +645,11 @@ if __name__ == '__main__':
     controller = {
         'url': 'https://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
         'username': "tip@ucentral.com",
-        'password': 'openwifi',
+        'password': 'OpenWifi%123',
     }
     obj = Controller(controller_data=controller)
-    print(obj.get_system_fms())
-
+    print(obj.get_device_by_serial_number(serial_number="903cb36ae224"))
+    # print(datetime.datetime.utcnow())
     # fms = FMSUtils(sdk_client=obj)
     # new = fms.get_firmwares(model='ecw5410')
     # for i in new:
@@ -584,4 +659,4 @@ if __name__ == '__main__':
 
     # print(profile.get_ssid_info())
     # # print(obj.get_devices())
-    obj.logout()
+    # obj.logout()

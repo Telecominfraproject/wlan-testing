@@ -23,7 +23,6 @@ from create_chamberview import CreateChamberview
 from create_chamberview_dut import DUT
 import time
 from LANforge.lfcli_base import LFCliBase
-from lf_cleanup import lf_clean
 import json
 import os
 import pandas as pd
@@ -31,11 +30,10 @@ import pandas as pd
 
 class ChamberView:
 
-    def __init__(self, lanforge_data=None, access_point_data=None, run_lf=False, debug=True, testbed=None):
+    def __init__(self, lanforge_data=None, access_point_data=None, debug=True, testbed=None):
         print("lanforge data", lanforge_data)
         print("access point data", access_point_data)
         self.access_point_data = access_point_data
-        self.run_lf = run_lf
         print("testbed", testbed)
         if "type" in lanforge_data.keys():
             if lanforge_data["type"] == "mesh":
@@ -111,9 +109,7 @@ class ChamberView:
                 self.ap_model = access_point_data[0]["model"]
                 self.version = access_point_data[0]["version"].split("/")[-1]
                 self.serial = access_point_data[0]["serial"]
-                self.ssid_data = None
-                if self.run_lf:
-                    self.ssid_data = access_point_data[0]['ssid']
+
                 self.CreateDut = DUT(lfmgr=self.lanforge_ip,
                                      port=self.lanforge_port,
                                      dut_name=self.testbed,
@@ -123,43 +119,15 @@ class ChamberView:
                                      serial_num=self.serial
                                      )
                 self.CreateDut.ssid = []
-                if self.ssid_data is not None:
-                    # ssid = ['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58']
-                    # ssid = ["ssid_idx=" + str(interface) +
-                    #         " ssid=" + ssid_info_sdk[interface][0] +
-                    #         " security=" + ssid_info_sdk[interface][1].upper() +
-                    #         " password=" + ssid_info_sdk[interface][2] +
-                    #         " bssid=" + ssid_info_sdk[interface][4].lower()
-                    #         ]
-                    self.twog_ssid = ["ssid_idx=0"
-                                      " ssid=" + self.ssid_data["2g-ssid"] +
-                                      " security=" + self.ssid_data["2g-encryption"].upper() +
-                                      " password=" + self.ssid_data["2g-password"] +
-                                      " bssid=" + self.ssid_data["2g-bssid"].lower().replace(" ", "")
-                                      ]
-
-                    self.fiveg_ssid = ["ssid_idx=1 ssid=" +
-                                       self.ssid_data["5g-ssid"] +
-                                       " security=" +
-                                       self.ssid_data["5g-encryption"].upper() +
-                                       " password=" +
-                                       self.ssid_data["5g-password"] +
-                                       " bssid=" +
-                                       self.ssid_data["5g-bssid"].lower().replace(" ", "")]
-                    self.CreateDut.ssid = [self.twog_ssid, self.fiveg_ssid]
-                    # print(self.CreateDut.ssid)
-                    self.Create_Dut()
 
     def reset_scenario(self):
-        self.layer3_cleanup()
-        if not self.run_lf:
-            self.raw_line = [
-                ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " + self.upstream_port.split(".")
-                [2] + ",AUTO -1 NA"],
-                ["profile_link " + self.uplink_resources + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
-                 + "' NA " + self.uplink_port.split(".")[2] + "," + self.upstream_port.split(".")[2] + " -1 NA"]
-            ]
-            print(self.raw_line)
+        self.raw_line = [
+            ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " + self.upstream_port.split(".")
+            [2] + ",AUTO -1 NA"],
+            ["profile_link " + self.uplink_resources + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
+             + "' NA " + self.uplink_port.split(".")[2] + "," + self.upstream_port.split(".")[2] + " -1 NA"]
+        ]
+        print(self.raw_line)
         self.Chamber_View()
 
     def reset_dut(self):
@@ -170,14 +138,30 @@ class ChamberView:
         self.CreateDut.ssid = temp
         self.CreateDut.add_ssids()
 
-    def layer3_cleanup(self):
-        self.clean = lf_clean(host=self.lanforge_ip, port=self.lanforge_port, clean_cxs=True)
-        self.clean.cxs_clean()
-        self.clean.endp_clean()
+    def get_station_list(self):
+        #realm_obj = self.staConnect.localrealm
+        sta = self.staConnect.station_list()
+        sta_list = []
+        for i in sta:
+            for j in i:
+                sta_list.append(j)
+        return sta_list
+
+    def admin_up_down(self, sta_list=[], option="up"):
+        #realm_obj = self.staConnect.localrealm
+        if option == "up":
+            for i in sta_list:
+                self.staConnect.admin_up(i)
+                time.sleep(0.005)
+        elif option == "down":
+            for j in sta_list:
+                self.staConnect.admin_down(j)
+                time.sleep(0.005)
+        time.sleep(2)
 
     def Chamber_View(self):
         if self.delete_old_scenario:
-            self.CreateChamberview.clean_cv_scenario(cv_type="Network-Connectivity", scenario_name=self.scenario_name)
+            self.CreateChamberview.clean_cv_scenario(scenario_name=self.scenario_name)
         self.CreateChamberview.setup(create_scenario=self.scenario_name,
                                      raw_line=self.raw_line
                                      )
@@ -201,14 +185,8 @@ class ChamberView:
                                       + " NA " + self.upstream_port.split(".")[2] + ",AUTO -1 " + str(vlans)])
             self.Chamber_View()
 
-    def add_stations(self, band="2G", num_stations="max", dut="NA", ssid_name=[], idx=0):
-        idx = idx
-        if self.run_lf:
-            if band == "2G":
-                idx = 0
-            if band == "5G":
-                idx = 1
-
+    def add_stations(self, band="2G", num_stations="max", dut="NA", ssid_name=[]):
+        idx = 0
         print(self.dut_idx_mapping)
         for i in self.dut_idx_mapping:
             if self.dut_idx_mapping[i][0] == ssid_name and self.dut_idx_mapping[i][3] == band:
@@ -244,7 +222,7 @@ class ChamberView:
                 if num_stations > 64:
                     num_stations = int(num_stations / len(self.fiveg_radios))
                     for radio in self.fiveg_radios:
-                        station_data = ["profile_link " + radio.split(".")[0] + "." + radio.split(".")[1] +
+                        station_dataupstream_port_1 = ["profile_link " + radio.split(".")[0] + "." + radio.split(".")[1] +
                                         " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
                                         str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
                         print(station_data)
@@ -322,6 +300,19 @@ class ChamberView:
         cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port, )
         return cli_base.json_post(req_url, data)
 
+    def station_data_query(self, station_name="wlan0", query="channel"):
+        x = self.upstream_port.split(".")
+        print(x)
+        url = f"/port/{x[0]}/{x[1]}/{station_name}?fields={query}"
+        response = self.json_get(_req_url=url)
+        print("response: ", response)
+        if (response is None) or ("interface" not in response):
+            print("station_list: incomplete response:")
+            #pprint(response)
+            exit(1)
+        y = response["interface"][query]
+        return y
+
     def read_kpi_file(self, column_name, dir_name):
         if column_name == None:
             df = pd.read_csv("../reports/" + str(dir_name) + "/kpi.csv", sep=r'\t', engine='python')
@@ -337,6 +328,34 @@ class ChamberView:
             else:
                 result = df[column_name].values.tolist()
                 return result
+
+    def read_csv_individual_station_throughput(self, dir_name, option):
+        try:
+            df = pd.read_csv(
+                "../reports/" + str(dir_name) + "/csv-data/data-Combined_bps__60_second_running_average-1.csv",
+                sep=r'\t', engine='python')
+            print("csv file opened")
+        except FileNotFoundError:
+            print("csv file does not exist")
+            return False
+
+        dict_data = {}
+        if option == "download":
+            csv_sta_names = df.iloc[[0]].values.tolist()
+            csv_throughput_values = df.iloc[[1]].values.tolist()
+        elif option == "upload":
+            csv_sta_names = df.iloc[[0]].values.tolist()
+            csv_throughput_values = df.iloc[[2]].values.tolist()
+        else:
+            print("Provide proper option: download or upload")
+            return
+
+        sta_list = csv_sta_names[0][0][:-1].replace('"', '').split(",")
+        th_list = list(map(float, csv_throughput_values[0][0].split(",")))
+        for i in range(len(sta_list)):
+            dict_data[sta_list[i]] = th_list[i]
+
+        return dict_data
 
     def attach_report_graphs(self, report_name=None, pdf_name="WIFI Capacity Test PDF Report"):
         relevant_path = "../reports/" + report_name + "/"
@@ -364,43 +383,63 @@ class ChamberView:
                                name=i,
                                attachment_type="image/png", extension=None)
 
-    def create_mesh(self):
-        upstream_list = []
-        for data in range(0, len(self.access_point_data)):
-            self.CreateDut = DUT(lfmgr=self.lanforge_ip,
-                                 port=self.lanforge_port,
-                                 dut_name="upstream" + str(data))
-            self.CreateDut.lan_port = "10.28.2.1/24"
-            name = "upstream" + str(data)
-            upstream_list.append(name)
 
-            self.CreateDut.setup()
-            data = data + 1
+    def create_mesh_scenario(self):
+        # upstream_list = []
+        # for data in range(0,len(self.access_point_data)):
+        self.CreateDut = DUT(lfmgr=self.lanforge_ip,
+                             port=self.lanforge_port,
+                             dut_name="upstream" )      # + str(data))
+        self.CreateDut.lan_port = "10.28.2.1/24"
+        # name = "upstream" + str(data)
+        # upstream_list.append(name)
+
+        self.CreateDut.setup()
+        # data = data + 1
         self.raw_line = [
-            ["profile_link " + self.upstream_resource_2 + " upstream-dhcp 1 NA NA " + self.upstream_port_2.split(".")[
-                2] + ",AUTO -1 NA"],
-            ["profile_link " + self.uplink_resource_2 + " uplink-nat 1 'DUT: " + str(
-                upstream_list[0]) + " LAN " + self.upstream_subnet + "' NA " + self.uplink_port_2.split(".")[2] + "," +
-             self.upstream_port_2.split(".")[2] + " -1 NA"],
-            ["profile_link " + self.upstream_resource_3 + " upstream-dhcp 1 NA NA " + self.upstream_port_3.split(".")[
-                2] + ",AUTO -1 NA"],
-            ["profile_link " + self.uplink_resource_3 + " uplink-nat 1 'DUT: " + str(
-                upstream_list[1]) + " LAN " + self.upstream_subnet + "' NA " + self.uplink_port_3.split(".")[2] + "," +
-             self.upstream_port_3.split(".")[2] + " -1 NA"],
-            ["profile_link " + self.upstream_resource_4 + " upstream-dhcp 1 NA NA " + self.upstream_port_4.split(".")[
-                2] + ",AUTO -1 NA"],
-            ["profile_link " + self.uplink_resource_4 + " uplink-nat 1 'DUT: " + str(
-                upstream_list[2]) + " LAN " + self.upstream_subnet + "' NA " + self.uplink_port_4.split(".")[2] + "," +
-             self.upstream_port_4.split(".")[2] + " -1 NA"]
+            ["profile_link " + self.upstream_resource_2 + " upstream-dhcp 1 NA NA " + self.upstream_port_2.split(".")[2] + ",AUTO -1 NA"],
+            ["profile_link " + self.uplink_resource_2 + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet + "' NA " + self.uplink_port_2.split(".")[2] + "," + self.upstream_port_2.split(".")[2] + " -1 NA"],
+            ["profile_link " + self.upstream_resource_3 + " upstream-dhcp 1 NA NA " + self.upstream_port_3.split(".")[2] + ",AUTO -1 NA"],
+            ["profile_link " + self.uplink_resource_3 + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet + "' NA " + self.uplink_port_3.split(".")[2] + "," + self.upstream_port_3.split(".")[2] + " -1 NA"],
+            ["profile_link " + self.upstream_resource_4 + " upstream-dhcp 1 NA NA " + self.upstream_port_4.split(".")[2] + ",AUTO -1 NA"],
+            ["profile_link " + self.uplink_resource_4 + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet + "' NA " + self.uplink_port_4.split(".")[2] + "," + self.upstream_port_4.split(".")[2] + " -1 NA"]
         ]
         print(self.raw_line)
         mesh = self.Chamber_View()
         return mesh
 
-    def create_mesh_dut(self):
-        for ap in self.access_point_data:
-            # print(ap)
-            self.dut_name = ap["type"]
+    def create_mesh_scenario_dhcp_disable(self):
+
+        # upstream_list = []
+        # for data in range(0,len(self.access_point_data)):
+        self.CreateDut = DUT(lfmgr=self.lanforge_ip,
+                             port=self.lanforge_port,
+                             dut_name="upstream" )
+        self.CreateDut.lan_port = "10.28.2.1/24"
+        # name = "upstream" + str(data)
+        # upstream_list.append(name)
+
+        self.CreateDut.setup()
+        # data = data + 1
+        self.raw_line = [
+            ["profile_link " + self.upstream_resource_2 + " upstream-dhcp 1 NA NA " + self.upstream_port_2.split(".")[2] + ",AUTO -1 NA"],
+            ["profile_link " + self.uplink_resource_2 + " uplink-nat 1 'DUT:  upstream LAN " + self.upstream_subnet + "' NA " + self.uplink_port_2.split(".")[2] + "," + self.upstream_port_2.split(".")[2] + " -1 NA"],
+            ["profile_link " + self.upstream_resource_3 + " upstream 1 NA NA " + self.upstream_port_3.split(".")[2] + ",AUTO -1 NA"],
+            ["profile_link " + self.uplink_resource_3 + " uplink-nat 1 'DUT:  upstream LAN " + self.upstream_subnet + "' NA " + self.uplink_port_3.split(".")[2] + "," + self.upstream_port_3.split(".")[2] + " -1 NA"],
+            ["profile_link " + self.upstream_resource_4 + " upstream 1 NA NA " + self.upstream_port_4.split(".")[2] + ",AUTO -1 NA"],
+            ["profile_link " + self.uplink_resource_4 + " uplink-nat 1 'DUT:  upstream LAN " + self.upstream_subnet + "' NA " + self.uplink_port_4.split(".")[2] + "," + self.upstream_port_4.split(".")[2] + " -1 NA"]
+        ]
+        print(self.raw_line)
+        mesh = self.Chamber_View()
+        return mesh
+
+    def create_mesh_dut(self, ssid_data=None):
+        print("hi ssid data", ssid_data)
+        for ap, ssid in zip(self.access_point_data, range(len(ssid_data))):
+            print("ap", ap)
+            print(ssid)
+            print(ssid_data[ssid])
+            self.dut_name = "tip-" + str(ap["type"])
             print(self.dut_name)
             self.ap_model = ap["model"]
             self.version = ap["version"].split("/")[-1]
@@ -413,6 +452,19 @@ class ChamberView:
                                  serial_num=self.serial
                                  )
             self.Create_Dut()
+            # [['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58']]
+            self.update_ssid(ssid_data=ssid_data[ssid])
+
+
+    def set_radio_antenna(self, req_url, shelf, resources, radio, antenna):
+        data = {
+            "shelf": shelf,
+            "resource": resources,
+            "radio": radio,
+            "antenna": antenna
+        }
+        cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port, )
+        return cli_base.json_post(req_url, data)
 
 
 def main():
@@ -495,7 +547,6 @@ def main():
     testbed = "mesh"
     obj = ChamberView(lanforge_data=lanforge_data, access_point_data=ap_data, testbed="mesh")
     obj.create_mesh_dut()
-    obj.create_mesh()
 
 
 if __name__ == '__main__':

@@ -81,9 +81,9 @@ CONFIGURATION = {
         },
         'access_point': [
             {
-                'model': 'eap101',
+                'model': 'hfcl_ion4',
                 'mode': 'wifi6',
-                'serial': '34efb6af48db',
+                'serial': '0006aee53b84',
                 'jumphost': True,
                 'ip': "localhost",
                 'username': "lanforge",
@@ -119,7 +119,7 @@ CONFIGURATION = {
         },
         'access_point': [
             {
-                'model': 'ec420',
+                'model': 'tp-link_ec420-g1',
                 'mode': 'wifi5',
                 'serial': '001122090801',
                 'jumphost': True,
@@ -149,7 +149,7 @@ CONFIGURATION = {
             }
         }
     },  # checked   2.x
-    "basic-04": {
+    "basic-03a": {
         "controller": {
             'url': 'https://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
             'username': "tip@ucentral.com",
@@ -157,7 +157,46 @@ CONFIGURATION = {
         },
         'access_point': [
             {
-                'model': 'ecw5211',
+                'model': 'indio_um-305ac',
+                'mode': 'wifi5',
+                'serial': '706dec0a8a79',
+                'jumphost': True,
+                'ip': "localhost",
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 8723,
+                'jumphost_tty': '/dev/ttyAP6',
+                'version': "release-latest"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "localhost",
+                "port": 8722,
+                "ssh_port": 8724,
+                "2.4G-Radio": ["1.1.wiphy4"],
+                "5G-Radio": ["1.1.wiphy5"],
+                "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "sta00",
+                "5G-Station-Name": "sta10",
+                "AX-Station-Name": "ax"
+            }
+        }
+      },  # checked   2.x
+
+   "basic-04": {
+        "controller": {
+            'url': 'https://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'OpenWifi%123',
+        },
+        'access_point': [
+            {
+                'model': 'edgecore_ecw5211',
                 'mode': 'wifi5',
                 "ssid": {
                     "2g-ssid": "OpenWifi",
@@ -205,7 +244,7 @@ CONFIGURATION = {
         },
         'access_point': [
             {
-                'model': 'wf188n',
+                'model': 'cig_wf188n',
                 'mode': 'wifi6',
                 'serial': '0000c1018812',
                 'jumphost': True,
@@ -220,7 +259,7 @@ CONFIGURATION = {
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "10.28.3.28",
+                "ip": "localhost",
                 "port": 8742,
                 "ssh_port": 8744,
                 "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
@@ -243,7 +282,7 @@ CONFIGURATION = {
         },
         'access_point': [
             {
-                'model': 'eap102',
+                'model': 'edgecore_eap102',
                 'mode': 'wifi6',
                 'serial': '903cb39d6918',
                 'jumphost': True,
@@ -281,7 +320,7 @@ CONFIGURATION = {
         },
         'access_point': [
             {
-                'model': 'eap101',
+                'model': 'edgecore_eap101',
                 'mode': 'wifi6',
                 'serial': '903cb36ae223',
                 'jumphost': True,
@@ -319,7 +358,7 @@ CONFIGURATION = {
         },
         'access_point': [
             {
-                'model': 'wf194c',
+                'model': 'cig_wf194c',
                 'mode': 'wifi6',
                 'serial': '089b4bb2f10c',
                 'jumphost': True,
@@ -571,6 +610,41 @@ RADIUS_ACCOUNTING_DATA = {
     "pk_password": "whatever"
 }
 
+RATE_LIMITING_RADIUS_SERVER_DATA = {
+    "ip": "18.189.85.200",
+    "port": 1812,
+    "secret": "testing123",
+    "user": "user",
+    "password": "password",
+    "pk_password": "whatever"
+}
+
+RATE_LIMITING_RADIUS_ACCOUNTING_DATA = {
+    "ip": "18.189.85.200",
+    "port": 1813,
+    "secret": "testing123",
+    "user": "user",
+    "password": "password",
+    "pk_password": "whatever"
+}
+DYNAMIC_VLAN_RADIUS_SERVER_DATA = {
+    "ip": "3.20.165.131",
+    "port": 1812,
+    "secret": "testing123",
+    "user": "user",
+    "password": "password",
+    "pk_password": "whatever"
+}
+
+DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA = {
+    "ip": "3.20.165.131",
+    "port": 1813,
+    "secret": "testing123",
+    "user": "user",
+    "password": "password",
+    "pk_password": "whatever"
+}
+
 PASSPOINT_RADIUS_SERVER_DATA = {
     "ip": "52.234.179.191",
     "port": 11812,
@@ -645,3 +719,4 @@ PASSPOINT_PROFILE_INFO = {
     }
 }
 
+open_flow = {}

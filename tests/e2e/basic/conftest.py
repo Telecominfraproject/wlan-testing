@@ -119,6 +119,12 @@ def get_vif_state(get_apnos, get_configuration, request, lf_tools, run_lf):
         yield lf_tools.ssid_list
 
 
+@pytest.fixture(scope="session")
+def dfs_start(fixtures_ver, get_apnos, get_configuration):
+    dfs_start = fixtures_ver.dfs(get_apnos, get_configuration)
+    yield dfs_start
+
+
 @pytest.fixture(scope="class")
 def get_vlan_list(get_apnos, get_configuration):
     ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/")

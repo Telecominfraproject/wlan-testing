@@ -1,0 +1,139 @@
+name: run tests on Kubernetes
+description: create Kubernetes job that executes pytest code
+
+inputs:
+  namespace:
+    description: a name for the Kubernetes namespace that will be used
+    required: true
+  testbed:
+    description: the testbed string that will be passed to the --testbed parameter
+    required: true
+  marker_expression:
+    description: the marker expression that will be passed to the -m parameter
+    required: true
+  configuration:
+    description: the configuration string that will be used to create the configuration secret
+    required: true
+  testing_docker_image:
+    description: Docker image to use when executing tests
+    required: true
+  additional_args:
+    description: additional arguments that will be passed to the pytest execution string
+    required: false
+  allure_results_artifact_name:
+    description: name of the artifact that the allure results will be uploaded to
+    required: false
+    default: allure-results
+
+runs:
+  using: "composite"
+  steps:
+  - name: create and select namespace
+    shell: bash
+    run: |
+      kubectl create ns ${{ inputs.namespace }}
+      kubectl config set-context --current --namespace=${{ inputs.namespace }}
+
+  - name: set job name
+    shell: bash
+    id: job
+    run: echo "::set-output name=name::testing"
+
+  - name: create configuration.py secret
+    shell: bash
+    run: |
+      cat << EOF > configuration.py
+      ${{ inputs.configuration }}
+      EOF
+      kubectl create secret generic configuration --from-file=configuration=./configuration.py
+     
+  - name: run tests
+    shell: bash
+    run: |
+      set -x
+
+      cat <<EOF | kubectl apply -f -
+      apiVersion: batch/v1
+      kind: Job
+      metadata:
+        name: "${{ steps.job.outputs.name }}"
+      spec:
+        template:
+          metadata:
+            annotations:
+              cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+          spec:
+            containers:
+            - name: tests
+              image: ${{ inputs.testing_docker_image }}
+              resources:
+                requests:
+                  memory: "512Mi"
+                  cpu: "250m"
+                limits:
+                  memory: "512Mi"
+                  cpu: "250m"
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  cd tests
+                  pytest -m "${{ inputs.marker_expression }}" -s -vvv --testbed=${{ inputs.testbed }} --alluredir=/tmp/allure-results ${{ inputs.additional_args }}
+                  ret=\$?
+                  # sleep some time to be able to download the Allure results
+                  sleep 60
+                  exit \$ret
+              volumeMounts:
+              - name: configuration
+                mountPath: "/wlan-testing/tests/configuration.py"
+                subPath: configuration
+                readOnly: true
+            nodeSelector:
+              env: tests
+            tolerations:
+            - key: "tests"
+              operator: "Exists"
+              effect: "NoSchedule"
+            imagePullSecrets:
+            - name: tip-docker-registry-key
+            restartPolicy: Never
+            volumes:
+            - name: configuration
+              secret:
+                secretName: configuration
+        backoffLimit: 0
+      EOF
+      # wait for pod to spawn
+      sleep 1
+
+      podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
+
+      kubectl wait "pod/$podname" --for condition=ready --timeout=600s
+      kubectl logs -f $podname &
+
+      until [ -s test_everything.xml ]
+      do
+        sleep 10
+        kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
+      done
+      echo "tests completed"
+      echo "downloading allure results..."
+      kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
+      echo "waiting for pod to exit"
+      kubectl logs -f $podname >/dev/null 2>&1
+
+      until [[ ! -z "$EXIT_CODE" ]]; do EXIT_CODE=$(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}"); sleep 1; done;
+      exit $EXIT_CODE
+
+  - name: upload Allure results as artifact
+    if: ${{ always() }}
+    uses: actions/upload-artifact@v2
+    with:
+      name: ${{ inputs.allure_results_artifact_name }}
+      path: allure-results
+
+  - name: cleanup
+    if: ${{ always() }}
+    shell: bash
+    run: |
+      kubectl delete ns "${{ inputs.namespace }}" --wait=true

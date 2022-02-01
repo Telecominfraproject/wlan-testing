@@ -10,7 +10,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from appium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-
+import random
+import string
 import sys
 import allure
 
@@ -40,6 +41,13 @@ setup_params_general = {
     "radius": False
 }
 
+for sec_modes in setup_params_general['ssid_modes'].keys():
+    for i in range(len(setup_params_general['ssid_modes'][sec_modes])):
+        N = 3
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                     string.digits, k=N)))+str(int(time.time_ns())%10000)
+
+        setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 @allure.suite(suite_name="interop sanity")
 @allure.sub_suite(sub_suite_name="Nat Mode Client Connect : Suite-A")
@@ -291,6 +299,12 @@ setup_params_general_two = {
     "radius": False
 }
 
+for sec_modes in setup_params_general_two['ssid_modes'].keys():
+    for i in range(len(setup_params_general_two['ssid_modes'][sec_modes])):
+        N = 3
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                     string.digits, k=N)))+str(int(time.time_ns())%10000)
+        setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 @allure.suite(suite_name="interop sanity")
 @allure.sub_suite(sub_suite_name="Nat Mode Client Connect : Suite-B")
