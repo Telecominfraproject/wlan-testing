@@ -22,6 +22,13 @@ jobs:
         python .allure-overview/generate_overview.py ${{ matrix.test_type }} > index.html
         cat index.html
 
+    - name: install aws CLI tool
+      if: github.ref == 'refs/heads/master'
+      run: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        ./aws/install
+
     - name: upload overview page
       if: github.ref == 'refs/heads/master'
       env:
