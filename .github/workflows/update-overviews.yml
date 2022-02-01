@@ -1,6 +1,7 @@
 name: Update test report overview pages
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - ".allure-overview/**"
