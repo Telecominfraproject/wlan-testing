@@ -23,7 +23,7 @@ from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnecti
     verifyUploadDownloadSpeediOS, get_ip_add_eap_ios, get_ip_add_check_ios, wifi_connect_eap, wifi_disconnect_and_forget
 
 pytestmark = [pytest.mark.regression, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.client_reconnect
-              ,pytest.mark.interop_uc_sanity, pytest.mark.vlan, pytest.mark.enterprise, pytest.mark.ToggleWifiMode]
+              , pytest.mark.vlan, pytest.mark.enterprise, pytest.mark.ToggleWifiMode]
 
 setup_params_enterprise = {
     "mode": "VLAN",
