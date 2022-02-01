@@ -161,13 +161,17 @@ class RunTest:
                     print("test result: " + result)
                 pytest.exit("Test Failed: Debug True")
         self.staConnect.cleanup()
-        supplicqant = "/home/lanforge/wifi/wpa_supplicant_log_" + self.staConnect.radio.split(".")[2] + ".txt"
-        obj = SCP_File(ip=self.lanforge_ip, port=self.lanforge_ssh_port, username="root", password="lanforge",
-                       remote_path=supplicqant,
-                       local_path=".")
-        obj.pull_file()
-        allure.attach.file(source="wpa_supplicant_log_" + self.staConnect.radio.split(".")[2] + ".txt",
-                           name="supplicant_log")
+        try:
+            supplicant = "/home/lanforge/wifi/wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt"
+            obj = SCP_File(ip=self.lanforge_ip, port=self.lanforge_ssh_port, username="root", password="lanforge",
+                           remote_path=supplicant,
+                           local_path=".")
+            obj.pull_file()
+            allure.attach.file(source="wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt",
+                               name="supplicant_log")
+        except Exception as e:
+            print(e)
+            
         for result in run_results:
             print("test result: " + result)
         result = True
@@ -194,7 +198,7 @@ class RunTest:
                     station_name=[], key_mgmt="WPA-EAP",
                     pairwise="NA", group="NA", wpa_psk="DEFAULT",
                     ttls_passwd="nolastart", ieee80211w=1,
-                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius",cleanup=True):
+                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius",d_vlan=False,cleanup=True):
         self.eap_connect = TTLSTest(host=self.lanforge_ip, port=self.lanforge_port,
                                     sta_list=station_name, vap=False, _debug_on=self.debug)
 
@@ -238,15 +242,21 @@ class RunTest:
         self.eap_connect.sta_list = station_name
         self.eap_connect.build(extra_securities=extra_securities)
         self.eap_connect.start(station_name, True, True)
+        if d_vlan:
+           self.station_ip = {}
         for sta_name in station_name:
             # try:
             station_data_str = ""
             # sta_url = self.eap_connect.get_station_url(sta_name)
             # station_info = self.eap_connect.json_get(sta_url)
             station_info = self.eap_connect.json_get("port/1/1/" + sta_name)
+
             for i in station_info["interface"]:
                 try:
                     station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
+                    if d_vlan:
+                        if i == "ip":
+                            self.station_ip[sta_name] = station_info["interface"][i]
                 except Exception as e:
                     print(e)
             allure.attach(name=str(sta_name), body=str(station_data_str))
@@ -254,13 +264,17 @@ class RunTest:
             #     print(e)
 
         self.eap_connect.stop()
-        supplicqant = "/home/lanforge/wifi/wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt"
-        obj = SCP_File(ip=self.lanforge_ip, port=self.lanforge_ssh_port, username="root", password="lanforge",
-                       remote_path=supplicqant,
-                       local_path=".")
-        obj.pull_file()
-        allure.attach.file(source="wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt",
-                           name="supplicant_log")
+        try:
+            supplicant = "/home/lanforge/wifi/wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt"
+            obj = SCP_File(ip=self.lanforge_ip, port=self.lanforge_ssh_port, username="root", password="lanforge",
+                           remote_path=supplicant,
+                           local_path=".")
+            obj.pull_file()
+            allure.attach.file(source="wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt",
+                               name="supplicant_log")
+        except Exception as e:
+            print(e)
+            
         if not self.eap_connect.passes():
             if self.debug:
                 print("test result: " + self.eap_connect.passes())
@@ -275,7 +289,7 @@ class RunTest:
             cx_data = cx_data + "\n"
         allure.attach(name="cx_data", body=str(cx_data))
         if cleanup:
-            self.eap_connect.cleanup(station_name)
+           self.eap_connect.cleanup(station_name)
         return self.eap_connect.passes()
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
@@ -368,10 +382,10 @@ class RunTest:
     def Client_Connect_Using_Radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
                                    vlan_id=100, radio=None, sta_mode=0,
                                    station_name=[]):
-        self.client_connect = CreateStation(_host=self.lanforge_ip, _port=self.lanforge_port,
+        self.client_connect = CreateStation(_host=self.lanforge_ip, _port=self.lanforge_port, _mode=sta_mode,
                                             _sta_list=station_name, _password=passkey, _ssid=ssid, _security=security)
 
-        self.client_connect.station_profile.sta_mode = sta_mode
+        # self.client_connect.station_profile.sta_mode = sta_mode
         self.client_connect.upstream_resource = 1
         if mode == "BRIDGE":
             self.client_connect.upstream_port = self.upstream_port
@@ -503,7 +517,7 @@ class RunTest:
 
         influx.glob()
         return self.dualbandptest_obj
-      
+
     def apstabilitytest(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
                         instance_name="test_demo", dut_5g="", dut_2g=""):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
@@ -838,6 +852,7 @@ class RunTest:
         atten_obj = CreateAttenuator(self.lanforge_ip, self.lanforge_port, serno, idx, val)
         atten_obj.build()
 
+
     def mesh_test(self, instance_name=None, raw_lines=None, duration="60s"):
         self.mesh_obj = MeshTest(
                        lf_host=self.lanforge_ip,
@@ -859,6 +874,50 @@ class RunTest:
         self.mesh_obj.setup()
         self.mesh_obj.run()
         return self.mesh_obj
+      
+    def attenuator_serial_2g_radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
+                                   vlan_id=100, sta_mode=0, station_name=[], lf_tools_obj=None):
+        radio = self.twog_radios[0]
+        #index 0 of atten_serial_radio will ser no of 1st 2g radio and index 1 will ser no of 2nd and 3rd 2g radio
+        atten_serial_radio = []
+        atten_serial = self.attenuator_serial()
+        self.Client_Connect_Using_Radio(ssid=ssid, passkey=passkey, security=security, mode=mode,
+                                   vlan_id=vlan_id, radio=radio, sta_mode=sta_mode,
+                                   station_name=station_name)
+        signal1 = lf_tools_obj.station_data_query(station_name=station_name[0], query="signal")
+        atten_sr = atten_serial[0].split(".")
+        for i in range(4):
+            self.attenuator_modify(int(atten_sr[2]), i, 400)
+            time.sleep(0.5)
+        signal2 = lf_tools_obj.station_data_query(station_name=station_name[0], query="signal")
+        if abs(int(signal2.split(" ")[0])) - abs(int(signal1.split(" ")[0])) >= 5:
+            atten_serial_radio = atten_serial
+        else:
+            atten_serial_radio = atten_serial[::-1]
+        self.Client_disconnect(station_name=station_name)
+        return atten_serial_radio
+
+    def attenuator_serial_5g_radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
+                                   vlan_id=100, sta_mode=0, station_name=[], lf_tools_obj=None):
+        radio = self.fiveg_radios[0]
+        #index 0 of atten_serial_radio will ser no of 1st 5g radio and index 1 will ser no of 2nd and 3rd 5g radio
+        atten_serial_radio = []
+        atten_serial = self.attenuator_serial()
+        self.Client_Connect_Using_Radio(ssid=ssid, passkey=passkey, security=security, mode=mode,
+                                   vlan_id=vlan_id, radio=radio, sta_mode=sta_mode,
+                                   station_name=station_name)
+        signal1 = lf_tools_obj.station_data_query(station_name=station_name[0], query="signal")
+        atten_sr = atten_serial[0].split(".")
+        for i in range(4):
+            self.attenuator_modify(int(atten_sr[2]), i, 400)
+            time.sleep(0.5)
+        signal2 = lf_tools_obj.station_data_query(station_name=station_name[0], query="signal")
+        if abs(int(signal2.split(" ")[0])) - abs(int(signal1.split(" ")[0])) >= 5:
+            atten_serial_radio = atten_serial
+        else:
+            atten_serial_radio = atten_serial[::-1]
+        self.Client_disconnect(station_name=station_name)
+        return atten_serial_radio
 
 
 

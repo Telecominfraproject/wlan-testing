@@ -3,6 +3,7 @@
     Base Library for Ucentral
 
 """
+import datetime
 import json
 import ssl
 import sys
@@ -627,6 +628,7 @@ class UProfileUtility:
                       body=str(self.base_profile_config).replace("'", '"'),
                       attachment_type=allure.attachment_type.JSON)
         print(self.base_profile_config)
+        print("Sending Configure Command: ", datetime.datetime.utcnow())
         resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
                              verify=False, timeout=100)
         print(resp.json())
@@ -647,7 +649,7 @@ if __name__ == '__main__':
     }
     obj = Controller(controller_data=controller)
     print(obj.get_device_by_serial_number(serial_number="903cb36ae224"))
-
+    # print(datetime.datetime.utcnow())
     # fms = FMSUtils(sdk_client=obj)
     # new = fms.get_firmwares(model='ecw5410')
     # for i in new:
@@ -657,4 +659,4 @@ if __name__ == '__main__':
 
     # print(profile.get_ssid_info())
     # # print(obj.get_devices())
-    obj.logout()
+    # obj.logout()

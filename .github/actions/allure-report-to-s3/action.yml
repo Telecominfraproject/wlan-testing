@@ -46,8 +46,10 @@ runs:
     shell: bash
     run: |
       cat <<EOF > index.html
+      <!DOCTYPE html>
       <html>
       <head>
+      <meta charset="UTF-8">
       <meta http-equiv="refresh" content="0; url=../${{ github.run_number }}/" />
       </head>
       </html>

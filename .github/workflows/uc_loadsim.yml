@@ -23,10 +23,6 @@ defaults:
 jobs:
   loadsim:
     runs-on: ubuntu-latest
-    outputs:
-      gateway_url: ${{ steps.gateway_url.outputs.value }}
-      sec_url: ${{ steps.sec_url.outputs.value }}
-      namespace: ${{ steps.namespace.outputs.value }}
     steps:
     - name: Checkout Testing repo
       uses: actions/checkout@v2
@@ -42,19 +38,19 @@ jobs:
         NAMESPACE="ls-${{ github.run_number }}"
         kubectl create ns $NAMESPACE
         kubectl config set-context --current --namespace=$NAMESPACE
-        echo "::set-output name=name::${NAMESPACE}"
+        echo "::set-output name=namespace::${NAMESPACE}"
 
     - name: Set gateway URL output
-      id: gateway_url
-      run: echo "::set-output name=name::gw-${{ steps.namespace.outputs.name }}.cicd.lab.wlan.tip.build"
+      id: gateway
+      run: echo "::set-output name=url::gw-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
     - name: Set sec service URL output
-      id: sec_url
-      run: echo "::set-output name=value::sec-${{ steps.namespace.outputs.name }}.cicd.lab.wlan.tip.build"
+      id: sec
+      run: echo "::set-output name=url::sec-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
     - name: Set ls service URL output
-      id: ls_url
-      run: echo "::set-output name=value::ls-${{ steps.namespace.outputs.name }}.cicd.lab.wlan.tip.build"
+      id: ls
+      run: echo "::set-output name=url::ls-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
     - name: Prepare certificates from secrets
       working-directory: wlan-testing/helm/ucentral
@@ -67,7 +63,7 @@ jobs:
     - name: Deploy CloudSDK instance with load simulator
       working-directory: wlan-testing/helm/ucentral
       run: |
-        export NAMESPACE="openwifi-${{ steps.namespace.outputs.name }}"
+        export NAMESPACE="${{ steps.namespace.outputs.namespace }}"
         export DEPLOY_METHOD=git
         export CHART_VERSION="${{ github.event.inputs.sdk_version }}"
         export OWGW_VERSION=master
@@ -89,9 +85,6 @@ jobs:
         export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
         ./deploy.sh
 
-    - name: Wait for DNS to propagate
-      run: sleep 300
-
     - name: Checkout OWLS for CLI tool
       uses: actions/checkout@v2
       with:
@@ -101,20 +94,21 @@ jobs:
     - name: Run simulation
       working-directory: wlan-cloud-owls/test_scripts/curl
       run: |
-        export OWGW="${{ steps.gw_url.ouputs.name }}:15002"
-        export OWSEC="${{ steps.sec_url.ouputs.name }}:16001"
-        export OWLS="${{ steps.ls_url.output.name }}:16007"
+        export OWGW="${{ steps.gateway.outputs.url }}:15002"
+        export OWSEC="${{ steps.sec.outputs.url }}:16001"
+        export OWLS="${{ steps.ls.outputs.url }}:16007"
+        echo "OWGW - $OWGW"
+        echo "OWSEC - $OWSEC"
+        echo "OWLS - $OWLS"
         curl -s -X POST -H 'Content-Type: application/json' https://$OWSEC/api/v1/oauth2 -d '{"userId": "tip@ucentral.com", "password": "'${{ secrets.OWSEC_NEW_PASSWORD }}'"}' | jq '.access_token' -r > access_token
         echo
         echo "[Info] Creating simulation"
         cat > input_sim_info.json <<EOF
         {
-          "name":"${{ steps.namespace.outputs.name }}",
+          "name":"${{ steps.namespace.outputs.namespace }}",
           "deviceType":"edgecore_ecw5410",
           "devices":5,
           "gateway":"https://$OWGW",
-          "certificate":"cert",
-          "key":"key",
           "macPrefix":"030000",
           "simulationLength":600
         }
@@ -140,24 +134,24 @@ jobs:
     - name: Show resource state on deployment failure
       if: failure()
       run: |
-        kubectl get pods --namespace openwifi-${{ steps.namespace.outputs.name }}
-        kubectl get services --namespace openwifi-${{ steps.namespace.outputs.name }}
-        kubectl get persistentvolumeclaims --namespace openwifi-${{ steps.namespace.outputs.name }}
+        kubectl get pods --namespace openwifi-${{ steps.namespace.outputs.namespace }}
+        kubectl get services --namespace openwifi-${{ steps.namespace.outputs.namespace }}
+        kubectl get persistentvolumeclaims --namespace openwifi-${{ steps.namespace.outputs.namespace }}
     - name: Describe pods on deployment failure
       if: failure()
       run: |
-        kubectl describe pods --namespace openwifi-${{ steps.namespace.outputs.name }}
+        kubectl describe pods --namespace openwifi-${{ steps.namespace.outputs.namespace }}
     - name: Describe services on deployment failure
       if: failure()
       run: |
-        kubectl describe services --namespace openwifi-${{ steps.namespace.outputs.name }}
+        kubectl describe services --namespace openwifi-${{ steps.namespace.outputs.namespace }}
     - name: Describe persistentvolumeclaims on deployment failure
       if: failure()
       run: |
-        kubectl describe persistentvolumeclaims --namespace openwifi-${{ steps.namespace.outputs.name }}
+        kubectl describe persistentvolumeclaims --namespace openwifi-${{ steps.namespace.outputs.namespace }}
 
     - name: Cleanup
       if: always()
       run: |
-        helm delete -n openwifi-${{ steps.namespace.outputs.name }} tip-openwifi || true
-        kubectl delete ns "${{ steps.namespace.outputs.name }}" --wait=true
+        helm delete -n openwifi-${{ steps.namespace.outputs.namespace }} tip-openwifi || true
+        kubectl delete ns openwifi-"${{ steps.namespace.outputs.namespace }}" --wait=true
