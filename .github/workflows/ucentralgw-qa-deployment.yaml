@@ -31,13 +31,13 @@ env:
     {
       "namespace": "qa01",
       "deploy_method": "git",
-      "chart_version": "main",
-      "owgw_version": "2.4.0",
-      "owsec_version": "2.4.0",
-      "owfms_version": "2.4.0",
-      "owprov_version": "2.4.0",
-      "owgwui_version": "2.4.0",
-      "owprovui_version": "2.4.0"
+      "chart_version": "v2.4.0",
+      "owgw_version": "v2.4.0",
+      "owsec_version": "v2.4.0",
+      "owfms_version": "v2.4.0",
+      "owprov_version": "main",
+      "owgwui_version": "v2.4.0",
+      "owprovui_version": "main"
     }
   ]'
 
