@@ -51,9 +51,9 @@ from lf_mesh_test import MeshTest
 
 class RunTest:
 
-    def __init__(self, lanforge_data=None, local_report_path="../reports/", influx_params=None, debug=False):
-        print("lanforge data", lanforge_data)
-        if "type" in lanforge_data.keys():
+    def __init__(self, configuration_data=None, local_report_path="../reports/", influx_params=None, run_lf=False, debug=False):
+        # print("lanforge data", lanforge_data)
+        if "type" in configuration_data['traffic_generator'].keys():
             if lanforge_data["type"] == "mesh":
                 self.lanforge_ip = lanforge_data["ip"]
                 self.lanforge_port = lanforge_data["port"]
@@ -80,18 +80,21 @@ class RunTest:
                 self.local_report_path = local_report_path
 
         else:
-            self.lanforge_ip = lanforge_data["ip"]
-            self.lanforge_port = lanforge_data["port"]
-            self.lanforge_ssh_port = lanforge_data["ssh_port"]
-            self.twog_radios = lanforge_data["2.4G-Radio"]
-            self.fiveg_radios = lanforge_data["5G-Radio"]
-            self.ax_radios = lanforge_data["AX-Radio"]
-            self.upstream_port = lanforge_data["upstream"].split(".")[2]
-            self.twog_prefix = lanforge_data["2.4G-Station-Name"]
-            self.fiveg_prefix = lanforge_data["5G-Station-Name"]
-            self.ax_prefix = lanforge_data["AX-Station-Name"]
+            self.lanforge_ip = configuration_data['traffic_generator']['details']["ip"]
+            self.lanforge_port = configuration_data['traffic_generator']['details']["port"]
+            self.lanforge_ssh_port = configuration_data['traffic_generator']['details']["ssh_port"]
+            self.twog_radios = configuration_data['traffic_generator']['details']["2.4G-Radio"]
+            self.fiveg_radios = configuration_data['traffic_generator']['details']["5G-Radio"]
+            self.ax_radios = configuration_data['traffic_generator']['details']["AX-Radio"]
+            self.upstream_port = configuration_data['traffic_generator']['details']["upstream"].split(".")[2]
+            self.twog_prefix = configuration_data['traffic_generator']['details']["2.4G-Station-Name"]
+            self.fiveg_prefix = configuration_data['traffic_generator']['details']["5G-Station-Name"]
+            self.ax_prefix = configuration_data['traffic_generator']['details']["AX-Station-Name"]
             self.debug = debug
-            self.lf_ssh_port = lanforge_data["ssh_port"]
+            self.run_lf = run_lf
+            if self.run_lf:
+                self.ssid_data = configuration_data['access_point'][0]['ssid']
+            self.lf_ssh_port = configuration_data['traffic_generator']['details']["ssh_port"]
             self.staConnect = None
             self.dataplane_obj = None
             self.rx_sensitivity_obj = None
@@ -103,9 +106,9 @@ class RunTest:
             #                              _influx_org=influx_params["influx_org"],
             #                              _influx_token=influx_params["influx_token"],
             #                              _influx_bucket=influx_params["influx_bucket"])
-        self.local_report_path = local_report_path
-        if not os.path.exists(self.local_report_path):
-            os.mkdir(self.local_report_path)
+            self.local_report_path = local_report_path
+            if not os.path.exists(self.local_report_path):
+                os.mkdir(self.local_report_path)
             # self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
 
     def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[],

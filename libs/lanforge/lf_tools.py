@@ -30,10 +30,12 @@ import pandas as pd
 
 class ChamberView:
 
-    def __init__(self, lanforge_data=None, access_point_data=None, debug=True, testbed=None):
+    def __init__(self, lanforge_data=None, access_point_data=None, run_lf=False, debug=True, testbed=None):
         print("lanforge data", lanforge_data)
         print("access point data", access_point_data)
         self.access_point_data = access_point_data
+        self.access_point_data = access_point_data
+        self.run_lf = run_lf
         print("testbed", testbed)
         if "type" in lanforge_data.keys():
             if lanforge_data["type"] == "mesh":
@@ -109,7 +111,9 @@ class ChamberView:
                 self.ap_model = access_point_data[0]["model"]
                 self.version = access_point_data[0]["version"].split("/")[-1]
                 self.serial = access_point_data[0]["serial"]
-
+                self.ssid_data = None
+                if self.run_lf:
+                    self.ssid_data = access_point_data[0]['ssid']
                 self.CreateDut = DUT(lfmgr=self.lanforge_ip,
                                      port=self.lanforge_port,
                                      dut_name=self.testbed,
@@ -119,15 +123,44 @@ class ChamberView:
                                      serial_num=self.serial
                                      )
                 self.CreateDut.ssid = []
+                if self.ssid_data is not None:
+                    # ssid = ['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58']
+                    # ssid = ["ssid_idx=" + str(interface) +
+                    #         " ssid=" + ssid_info_sdk[interface][0] +
+                    #         " security=" + ssid_info_sdk[interface][1].upper() +
+                    #         " password=" + ssid_info_sdk[interface][2] +
+                    #         " bssid=" + ssid_info_sdk[interface][4].lower()
+                    #         ]
+                    self.twog_ssid = ["ssid_idx=0"
+                                      " ssid=" + self.ssid_data["2g-ssid"] +
+                                      " security=" + self.ssid_data["2g-encryption"].upper() +
+                                      " password=" + self.ssid_data["2g-password"] +
+                                      " bssid=" + self.ssid_data["2g-bssid"].lower().replace(" ", "")
+                                      ]
+
+                    self.fiveg_ssid = ["ssid_idx=1 ssid=" +
+                                       self.ssid_data["5g-ssid"] +
+                                       " security=" +
+                                       self.ssid_data["5g-encryption"].upper() +
+                                       " password=" +
+                                       self.ssid_data["5g-password"] +
+                                       " bssid=" +
+                                       self.ssid_data["5g-bssid"].lower().replace(" ", "")]
+                    self.CreateDut.ssid = [self.twog_ssid, self.fiveg_ssid]
+                    # print(self.CreateDut.ssid)
+                    self.Create_Dut()
 
     def reset_scenario(self):
-        self.raw_line = [
-            ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " + self.upstream_port.split(".")
-            [2] + ",AUTO -1 NA"],
-            ["profile_link " + self.uplink_resources + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
-             + "' NA " + self.uplink_port.split(".")[2] + "," + self.upstream_port.split(".")[2] + " -1 NA"]
-        ]
-        print(self.raw_line)
+        # self.layer3_cleanup()
+        # self.Create_Dut()
+        if not self.run_lf:
+            self.raw_line = [
+                ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " + self.upstream_port.split(".")
+                [2] + ",AUTO -1 NA"],
+                ["profile_link " + self.uplink_resources + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
+                 + "' NA " + self.uplink_port.split(".")[2] + "," + self.upstream_port.split(".")[2] + " -1 NA"]
+            ]
+            print(self.raw_line)
         self.Chamber_View()
 
     def reset_dut(self):
@@ -185,8 +218,13 @@ class ChamberView:
                                       + " NA " + self.upstream_port.split(".")[2] + ",AUTO -1 " + str(vlans)])
             self.Chamber_View()
 
-    def add_stations(self, band="2G", num_stations="max", dut="NA", ssid_name=[]):
-        idx = 0
+    def add_stations(self, band="2G", num_stations="max", dut="NA", ssid_name=[], idx=0):
+        idx = idx
+        if self.run_lf:
+            if band == "2G":
+                idx = 0
+            if band == "5G":
+                idx = 1
         print(self.dut_idx_mapping)
         for i in self.dut_idx_mapping:
             if self.dut_idx_mapping[i][0] == ssid_name and self.dut_idx_mapping[i][3] == band:
