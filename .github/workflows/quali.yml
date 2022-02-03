@@ -32,11 +32,10 @@ on:
         required: true
         default: 'uc_sanity'
         description: 'Marker expression to select tests to execute'
-      use_qa01:
-        type: boolean
-        required: true
-        default: 'true'
-        description: 'Use openwifi-qa01 instead of dynamic cloud controller'
+      existing_controller:
+        required: false
+        default: ''
+        description: 'Use an existing cloud controller, e.g. like qa01 instead of dynamic one'
   schedule:
   - cron: '30 20 * * *'
 
@@ -48,7 +47,7 @@ jobs:
       ap_models: ${{ steps.vars.outputs.ap_models}}
       ap_version: ${{ steps.vars.outputs.ap_version}}
       marker_expression: ${{ steps.vars.outputs.marker_expression }}
-      use_qa01: ${{ steps.vars.outputs.use_qa01 }}
+      existing_controller: ${{ steps.vars.outputs.existing_controller }}
 
     steps:
       - name: set variables
@@ -58,7 +57,7 @@ jobs:
           echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4' }}")
           echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'next-latest' }}")
           echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'uc_sanity' }}")
-          echo ::set-output name=use_qa01::$(echo "${{ github.event.inputs.use_qa01 || 'true' }}")
+          echo ::set-output name=existing_controller::$(echo "${{ github.event.inputs.existing_controller || 'qa01' }}")
 
   generate-matrix:
     name: generate AP model matrix
@@ -109,9 +108,9 @@ jobs:
 
     - name: start reservation
       run: |
-        if [ ${{ needs.vars.outputs.use_qa01 }} == 'true' ]
+        if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
         then
-          python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}","Optional Existing SDK Namespace":"qa01"}' "Basic Lab"
+          python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' "Basic Lab"
         else
           python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}"}' "Basic Lab"
         fi
@@ -121,9 +120,9 @@ jobs:
       id: reservation
       run: |
         echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
-        if [ ${{ needs.vars.outputs.use_qa01 }} == 'true' ]
+        if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
         then
-          echo ::set-output name=namespace::"qa01"
+          echo ::set-output name=namespace::"${{ needs.vars.outputs.existing_controller }}"
         else
           echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
         fi
@@ -287,11 +286,10 @@ jobs:
         }
         EOF
 
-
-        # fix wrong configuration value from Quali
-        if [ ${{ needs.vars.outputs.use_qa01 }} == 'true' ]
+        # overwrite configuration value from Quali
+        if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
         then
-          sed -i "s/https:\/\/sec-.*\.cicd\.lab\.wlan\.tip\.build/https:\/\/sec-qa01.cicd.lab.wlan.tip.build/g" configuration.py
+          sed -i "s/https:\/\/sec-.*\.cicd\.lab\.wlan\.tip\.build/https:\/\/sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build/g" configuration.py
         fi
 
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
