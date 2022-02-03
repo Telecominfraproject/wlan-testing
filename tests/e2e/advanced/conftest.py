@@ -27,12 +27,6 @@ def instantiate_profile(request):
 
 
 
-@pytest.fixture(scope="session")
-def lf_tools(get_configuration, testbed):
-    lf_tools_obj = ChamberView(lanforge_data=get_configuration['traffic_generator']['details'],
-                               access_point_data=get_configuration['access_point'],
-                               testbed=testbed)
-    yield lf_tools_obj
 
 
 @pytest.fixture(scope="session")
@@ -91,14 +85,6 @@ def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtur
                                              radius_accounting_info)
 
     yield return_var
-
-
-@pytest.fixture(scope="session")
-def lf_test(get_configuration, setup_influx):
-    # print(get_configuration)
-    obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'], influx_params=setup_influx)
-    # pytest.exit("")
-    yield obj
 
 
 @pytest.fixture(scope="session")
