@@ -26,7 +26,7 @@ on:
         description: 'the AP models to test'
       ap_version:
         required: true
-        default: 'main-latest'
+        default: 'release-latest'
         description: 'revision of firmware to flash on AP, <branch>-<commit>'
       marker_expression:
         required: true
