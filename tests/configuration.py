@@ -18,17 +18,16 @@ ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 -L 8803:lab-ctlr:22 \	
 ubuntu@3.130.51.163
 
 
-Run the below command to open tunnel to all labs:
 
-ssh -C -L 8700:lf1:4002 -L 8701:lf1:5901 -L 8702:lf1:8080 -L 8703:lab-ctlr:22 -L 8704:lf1:22 -L 3389:lf1:3389\
- -L 8710:lf2:4002 -L 8711:lf2:5901 -L 8712:lf2:8080 -L 8713:lab-ctlr:22 -L 8714:lf2:22 -L 3390:lf2:3389\
- -L 8720:lf3:4002 -L 8721:lf3:5901 -L 8722:lf3:8080 -L 8723:lab-ctlr:22 -L 8724:lf3:22 -L 3391:lf3:3389\
- -L 8730:lf4:4002 -L 8731:lf4:5901 -L 8732:lf4:8080 -L 8733:lab-ctlr:22 -L 8734:lf4:22 -L 3392:lf4:3389\
- -L 8740:lf12:4002 -L 8741:lf12:5901 -L 8742:lf12:8080 -L 8743:lab-ctlr4:22 -L 8744:lf12:22 -L 3393:lf12:3389\
- -L 8750:lf13:4002 -L 8751:lf13:5901 -L 8752:lf13:8080 -L 8753:lab-ctlr4:22 -L 8754:lf13:22 -L 3394:lf13:3389\
- -L 8760:lf14:4002 -L 8761:lf14:5901 -L 8762:lf14:8080 -L 8763:lab-ctlr4:22 -L 8764:lf14:22 -L 3395:lf14:3389\
- -L 8770:lf15:4002 -L 8771:lf15:5901 -L 8772:lf15:8080 -L 8773:lab-ctlr4:22 -L 8774:lf15:22 -L 3396:lf15:3389\
- ubuntu@3.130.51.163
+ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 -L 8803:lab-ctlr:22 \
+-L 8720:lf2:4002 -L 8721:lf2:5901 -L 8722:lf2:8080 -L 8723:lab-ctlr:22 \
+-L 8830:lf3:4002 -L 8831:lf3:5901 -L 8832:lf3:8080 -L 8833:lab-ctlr:22 \
+-L 8810:lf4:4002 -L 8811:lf4:5901 -L 8812:lf4:8080 -L 8813:lab-ctlr:22 \
+-L 8850:lf12:4002 -L 8851:lf12:5901 -L 8852:lf12:8080 -L 8853:lab-ctlr4:22 \
+-L 8860:lf13:4002 -L 8861:lf13:5901 -L 8862:lf13:8080 -L 8863:lab-ctlr4:22 \
+-L 8870:lf14:4002 -L 8871:lf14:5901 -L 8872:lf14:8080 -L 8873:lab-ctlr4:22 \
+-L 8880:lf15:4002 -L 8881:lf15:5901 -L 8882:lf15:8080 -L 8883:lab-ctlr4:22 \
+ubuntu@3.130.51.163
 
 """
 
@@ -47,20 +46,20 @@ CONFIGURATION = {
                 'mode': 'wifi5',
                 'serial': '3c2c99f44e77',
                 'jumphost': True,
-                'ip': "localhost",
+                'ip': "10.28.3.100",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 8703,
+                'port': 22,
                 'jumphost_tty': '/dev/ttyAP1',
-                'version': "next-latest"
+                'version': "release-latest"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "localhost",
-                "port": 8702,
-                "ssh_port": 8704,
+                "ip": "10.28.3.6",
+                "port": 8080,
+                "ssh_port": 22,
                 "2.4G-Radio": ["1.1.wiphy4"],
                 "5G-Radio": ["1.1.wiphy5"],
                 "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
@@ -82,23 +81,23 @@ CONFIGURATION = {
         'access_point': [
             {
                 'model': 'hfcl_ion4',
-                'mode': 'wifi6',
+                'mode': 'wifi5',
                 'serial': '0006aee53b84',
                 'jumphost': True,
-                'ip': "localhost",
+                'ip': "10.28.3.100",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 8713,
+                'port': 22,
                 'jumphost_tty': '/dev/ttyAP2',
-                'version': "next-latest"
+                'version': "release-latest"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "localhost",
-                "port": 8712,
-                "ssh_port": 8714,
+                "ip": "10.28.3.8",
+                "port": 8080,
+                "ssh_port": 22,
                 "2.4G-Radio": ["1.1.wiphy4"],
                 "5G-Radio": ["1.1.wiphy5"],
                 "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
@@ -123,20 +122,20 @@ CONFIGURATION = {
                 'mode': 'wifi5',
                 'serial': '001122090801',
                 'jumphost': True,
-                'ip': "localhost",
+                'ip': "10.28.3.100",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 8723,
+                'port': 22,
                 'jumphost_tty': '/dev/ttyAP3',
-                'version': "next-latest"
+                'version': "release-latest"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "localhost",
-                "port": 8722,
-                "ssh_port": 8724,
+                "ip": "10.28.3.10",
+                "port": 8080,
+                "ssh_port": 22,
                 "2.4G-Radio": ["1.1.wiphy4"],
                 "5G-Radio": ["1.1.wiphy5"],
                 "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
@@ -161,10 +160,10 @@ CONFIGURATION = {
                 'mode': 'wifi5',
                 'serial': '706dec0a8a79',
                 'jumphost': True,
-                'ip': "localhost",
+                'ip': "10.28.3.100",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 8723,
+                'port': 22,
                 'jumphost_tty': '/dev/ttyAP6',
                 'version': "release-latest"
             }
@@ -172,9 +171,9 @@ CONFIGURATION = {
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "localhost",
-                "port": 8722,
-                "ssh_port": 8724,
+                "ip": "10.28.3.10",
+                "port": 8080,
+                "ssh_port": 22,
                 "2.4G-Radio": ["1.1.wiphy4"],
                 "5G-Radio": ["1.1.wiphy5"],
                 "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
@@ -186,9 +185,8 @@ CONFIGURATION = {
                 "AX-Station-Name": "ax"
             }
         }
-      },  # checked   2.x
-
-   "basic-04": {
+    },
+    "basic-04": {
         "controller": {
             'url': 'https://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
             'username': "tip@ucentral.com",
@@ -200,20 +198,20 @@ CONFIGURATION = {
                 'mode': 'wifi5',
                 'serial': '68215fda456d',
                 'jumphost': True,
-                'ip': "localhost",
+                'ip': "10.28.3.100",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 8733,
+                'port': 22,
                 'jumphost_tty': "/dev/ttyAP5",
-                'version': "next-latest"
+                'version': "release-latest"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "localhost",
-                "port": 8732,
-                "ssh_port": 8734,
+                "ip": "10.28.3.12",
+                "port": 8080,
+                "ssh_port": 22,
                 "2.4G-Radio": ["1.1.wiphy4"],
                 "5G-Radio": ["1.1.wiphy5"],
                 "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
@@ -238,20 +236,20 @@ CONFIGURATION = {
                 'mode': 'wifi6',
                 'serial': '0000c1018812',
                 'jumphost': True,
-                'ip': "localhost",
+                'ip': "10.28.3.103",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 8743,
+                'port': 22,
                 'jumphost_tty': '/dev/ttyAP1',
-                'version': "next-latest"
+                'version': "release-latest"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "localhost",
-                "port": 8742,
-                "ssh_port": 8744,
+                "ip": "10.28.3.28",
+                "port": 8080,
+                "ssh_port": 22,
                 "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
                 "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
                 "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
@@ -276,20 +274,20 @@ CONFIGURATION = {
                 'mode': 'wifi6',
                 'serial': '903cb39d6918',
                 'jumphost': True,
-                'ip': "localhost",  # 10.28.3.103
+                'ip': "10.28.3.103",  # 10.28.3.103
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 8753,  # 22
+                'port': 22,  # 22
                 'jumphost_tty': '/dev/ttyAP2',
-                'version': "next-latest"
+                'version': "release-latest"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "localhost",  # 10.28.3.30
-                "port": 8752,  # 8080
-                "ssh_port": 8754,
+                "ip": "10.28.3.30",  # 10.28.3.30
+                "port": 8080,  # 8080
+                "ssh_port": 22,
                 "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
                 "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
                 "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
@@ -314,20 +312,20 @@ CONFIGURATION = {
                 'mode': 'wifi6',
                 'serial': '903cb36ae223',
                 'jumphost': True,
-                'ip': "localhost",  # 10.28.3.103
+                'ip': "10.28.3.103",  # 10.28.3.103
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 8763,  # 22
+                'port': 22,  # 22
                 'jumphost_tty': '/dev/ttyAP3',
-                'version': "next-latest"
+                'version': "release-latest"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "localhost",  # 10.28.3.32
-                "port": 8762,  # 8080
-                "ssh_port": 8764,
+                "ip": "10.28.3.32",  # 10.28.3.32
+                "port": 8080,  # 8080
+                "ssh_port": 22,
                 "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
                 "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
                 "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
@@ -352,20 +350,20 @@ CONFIGURATION = {
                 'mode': 'wifi6',
                 'serial': '089b4bb2f10c',
                 'jumphost': True,
-                'ip': "localhost",  # 10.28.3.103
+                'ip': "10.28.3.103",  # 10.28.3.103
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 8773,  # 22
+                'port': 22,  # 22
                 'jumphost_tty': '/dev/ttyAP5',
-                'version': "next-650adaf"
+                'version': "release-latest"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "localhost",  # 10.28.3.34
-                "port": 8772,  # 8080
-                "ssh_port": 8774,
+                "ip": "10.28.3.34",  # 10.28.3.34
+                "port": 8080,  # 8080
+                "ssh_port": 22,
                 "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
                 "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
                 "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
@@ -378,38 +376,37 @@ CONFIGURATION = {
             }
         }
     },  # checked   2.x
-    "mesh": {
+
+    "advanced-01": {
         "controller": {
-            'url': "http://wlan-portal-svc-digicert.cicd.lab.wlan.tip.build",  # API base url for the controller
-            'username': 'support@example.com',
-            'password': 'support',
-            'version': '1.1.0-SNAPSHOT',
-            'commit_date': "2021-06-01"
+            'url':'https://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'OpenWifi%123',
         },
         'access_point': [
             {
-                'model': 'eap101',
+                'model': 'cig_wf194c4',
                 'mode': 'wifi6',
-                'serial': '34efb6af4a7a',
+                'serial': 'f40b9fe78e03',
                 'jumphost': True,
-                'ip': "10.28.3.101",  # 10.28.3.103
+                'ip': "10.28.3.102",
                 'username': "lanforge",
                 'password': "pumpkin77",
-                'port': 22,  # 22
+                'port': 22,
                 'jumphost_tty': '/dev/ttyAP2',
-                'version': "next-650adaf"
+                'version': "release-latest"
             }
         ],
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "10.28.3.14",  # 10.28.3.34
+                "ip": "10.28.3.24",
                 "port": 8080,  # 8080
                 "ssh_port": 22,
-                "2.4G-Radio": ["wiphy0", "wiphy2"],
-                "5G-Radio": ["wiphy1", "wiphy3"],
-                "AX-Radio": ["wiphy4", "wiphy5", "wiphy6", "wiphy7"],
-                "upstream": "1.1.eth2",
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2","1.1.wiphy4"],
+                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3", "1.1.wiphy5"],
+                "AX-Radio": [],
+                "upstream": "1.1.eth1",
                 "upstream_subnet": "10.28.2.1/24",
                 "uplink": "1.1.eth3",
                 "2.4G-Station-Name": "wlan0",
@@ -417,27 +414,237 @@ CONFIGURATION = {
                 "AX-Station-Name": "ax"
             }
         }
-    },  # checked
-    "interop-01": {
+
+    },
+    "advanced-02": {
         "controller": {
-            'url': "https://wlan-portal-svc-nola-02.cicd.lab.wlan.tip.build",  # API base url for the controller
-            'username': 'support@example.com',
-            'password': 'support',
-            'version': '19.07-SNAPSHOT',
-            'commit_date': '2021-06-01'
+            'url':'https://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'OpenWifi%123',
         },
         'access_point': [
             {
-                'model': 'ecw5410',
-                'mode': 'wifi5',
-                'serial': '68215fd2f78c',
+                'model': 'edgecore_eap102',
+                'mode': 'wifi6',
+                'serial': '903cb39d6958',
+                'jumphost': True,
+                'ip': "10.28.3.102",  # 10.28.3.103
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22 ,# 8803,  # 22
+                'jumphost_tty': '/dev/ttyAP3',
+                'version': "release-latest"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "10.28.3.26",  # 10.28.3.34
+                "port": 8080, #8802,  # 8080
+                "ssh_port": 22, #8804,
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2","1.1.wiphy4"],
+                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3", "1.1.wiphy5"],
+                "AX-Radio": [],
+                "upstream": "1.1.eth1",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            }
+        }
+
+    },
+    "mesh-01": {
+        "controller": {
+            'url': 'https://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'OpenWifi%123',
+        },
+        'access_point': [
+            {
+                'type' : 'root',
+                'model': 'edgecore_eap101',
+                'mode': 'wifi6',
+                'serial': '34efb6af4a7a',
+                'jumphost': True,
+                'ip': "10.28.3.101",
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22,  # 8803
+                'jumphost_tty': '/dev/ttyAP2',
+                'version': "next-latest"
+            },
+            {
+                'type': 'node1',
+                'model': 'edgecore_eap101',
+                'mode': 'wifi6',
+                'serial': '34efb6af4903',
+                'jumphost': True,
+                'ip': "10.28.3.101",
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22,  # 8803
+                'jumphost_tty': '/dev/ttyAP3',
+                'version': "next-latest"
+            },
+            {
+                'type': 'node2',
+                'model': 'edgecore_eap102',
+                'mode': 'wifi6',
+                'serial': '903cb39d692c',
+                'jumphost': True,
+                'ip': "10.28.3.101",
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22,  # 8803
+                'jumphost_tty': '/dev/ttyAP4',
+                'version': "next-latest"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge-mesh",
+            "details": {
+                "type": "mesh",
+                "ip": "10.28.3.14",  # 10.28.3.14
+                "port": 8080,  # 8802
+                "ssh_port": 22, #8804
+                "2.4G-Radio-mobile-sta": ["1.1.wiphy0", "1.1.wiphy2"],
+                "5G-Radio-mobile-sta": ["1.1.wiphy1", "1.1.wiphy3"],
+                "AX-Radio-mobile-sta": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
+                "upstream-mobile-sta": "1.1.eth2",
+                "upstream_subnet-mobile-sta": "10.28.2.1/24",
+                "uplink-mobile-sta": "1.1.eth3",
+                "2.4G-Radio-root": ["1.2.wiphy0"],
+                "5G-Radio-root": ["1.2.wiphy1"],
+                "AX-Radio-root": [],
+                "upstream-root": "1.2.eth2",
+                "upstream_subnet-root": "10.28.2.1/24",
+                "uplink-root": "1.2.eth3",
+                "2.4G-Radio-node-1": ["1.3.wiphy0"],
+                "5G-Radio-node-1": ["1.3.wiphy1"],
+                "AX-Radio-node-1": [],
+                "upstream-node-1": "1.3.eth2",
+                "upstream_subnet-node-1": "10.28.2.1/24",
+                "uplink--node-1": "1.3.eth3",
+                "2.4G-Radio-node-2": ["1.4.wiphy0"],
+                "5G-Radio-node-2": ["1.4.wiphy1"],
+                "AX-Radio-node-2": [],
+                "upstream-node-2": "1.4.eth2",
+                "upstream_subnet-node-2": "10.28.2.1/24",
+                "uplink--node-2": "1.4.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            },
+
+        }
+    },
+    "mesh-02": {
+        "controller": {
+            'url': 'https://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'OpenWifi%123',
+        },
+        'access_point': [
+            {
+                'type' : 'root',
+                'model': 'edgecore_eap102',
+                'mode': 'wifi6',
+                'serial': '903cb3bd72dd',
+                'jumphost': True,
+                'ip': "10.28.3.104",
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22,
+                'jumphost_tty': '/dev/ttyAP2',
+                'version': "next-latest"
+            },
+            {
+                'type': 'node-1',
+                'model': 'edgecore_eap102',
+                'mode': 'wifi6',
+                'serial': '903cb3bd72fd',
+                'jumphost': True,
+                'ip': "10.28.3.104",
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22,
+                'jumphost_tty': '/dev/ttyAP3',
+                'version': "next-latest"
+            },
+            {
+                'type': 'node-2',
+                'model': 'edgecore_eap102',
+                'mode': 'wifi6',
+                'serial': '903cb3bd732d',
+                'jumphost': True,
+                'ip': "10.28.3.104",
+                'username': "lanforge",
+                'password': "pumpkin77",
+                'port': 22,
+                'jumphost_tty': '/dev/ttyAP4',
+                'version': "next-latest"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge-mesh",
+            "details": {
+                "type": "mesh",
+                "ip": "10.28.3.36",  # 10.28.3.14
+                "port": 8080,  # 8080
+                "ssh_port": 22,
+                "2.4G-Radio-mobile-sta": ["1.1.wiphy0", "1.1.wiphy2"],
+                "5G-Radio-mobile-sta": ["1.1.wiphy1", "1.1.wiphy3"],
+                "AX-Radio-mobile-sta": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
+                "upstream-mobile-sta": "1.1.eth2",
+                "upstream_subnet-mobile-sta": "10.28.2.1/24",
+                "uplink-mobile-sta": "1.1.eth3",
+                "2.4G-Radio-root": ["1.2.wiphy0"],
+                "5G-Radio-root": ["1.2.wiphy1"],
+                "AX-Radio-root": [],
+                "upstream-root": "1.2.eth2",
+                "upstream_subnet-root": "10.28.2.1/24",
+                "uplink-root": "1.2.eth3",
+                "2.4G-Radio-node-1": ["1.3.wiphy0"],
+                "5G-Radio-node-1": ["1.3.wiphy1"],
+                "AX-Radio-node-1": [],
+                "upstream-node-1": "1.3.eth2",
+                "upstream_subnet-node-1": "10.28.2.1/24",
+                "uplink--node-1": "1.3.eth3",
+                "2.4G-Radio-node-2": ["1.4.wiphy0"],
+                "5G-Radio-node-2": ["1.4.wiphy1"],
+                "AX-Radio-node-2": [],
+                "upstream-node-2": "1.4.eth2",
+                "upstream_subnet-node-2": "10.28.2.1/24",
+                "uplink--node-2": "1.4.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            },
+
+        }
+    },
+
+
+    "interop-01": {
+        "controller": {
+            'url': 'https://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'username': "tip@ucentral.com",
+            'password': 'OpenWifi%123',
+        },
+        'access_point': [
+            {
+                'model': 'edgecore_eap102',
+                'mode': 'wifi6',
+                'serial': '903cb39d69c0',
                 'jumphost': True,
                 'ip': "10.28.3.102",
                 'username': "lanforge",
                 'password': "pumpkin77",
                 'port': 22,
                 'jumphost_tty': '/dev/ttyAP1',
-                'version': "next-650adaf"
+                'version': "release-latest"
             }
         ],
         "traffic_generator": {
@@ -460,16 +667,17 @@ CONFIGURATION = {
             }
         }
     },
-    "interop-03": {
+
+    "interop-02": {
         "controller": {
-            'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'url': 'https://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
             'username': "tip@ucentral.com",
             'password': 'OpenWifi%123',
         },
         'access_point': [
             {
-                'model': 'eap101',
-                'mode': 'wifi5',
+                'model': 'edgecore_eap101',
+                'mode': 'wifi6',
                 'serial': '903cb36ae4a3',
                 'jumphost': True,
                 'ip': "10.28.3.102",
@@ -477,7 +685,7 @@ CONFIGURATION = {
                 'password': "pumpkin77",
                 'port': 22,
                 'jumphost_tty': '/dev/ttyAP4',
-                'version': "next-650adaf"
+                'version': "main-latest"
             }
         ],
         "traffic_generator": {
@@ -500,16 +708,17 @@ CONFIGURATION = {
             }
         }
     },
-    "interop-02": {
+
+    "interop-03": {
         "controller": {
-            'url': 'https://sec-ucentral-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
+            'url': 'https://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
             'username': "tip@ucentral.com",
             'password': 'OpenWifi%123',
         },
         'access_point': [
             {
-                'model': 'eap101',
-                'mode': 'wifi5',
+                'model': 'edgecore_eap101',
+                'mode': 'wifi6',
                 'serial': '903cb36ae255',
                 'jumphost': True,
                 'ip': "10.28.3.102",
@@ -517,7 +726,7 @@ CONFIGURATION = {
                 'password': "pumpkin77",
                 'port': 22,
                 'jumphost_tty': '/dev/ttyAP5',
-                'version': "next-650adaf"
+                'version': "main-latest"
             }
         ],
         "traffic_generator": {
@@ -540,6 +749,7 @@ CONFIGURATION = {
             }
         }
     },
+
     "basic-ext-03-03": {
         "controller": {
             'url': "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  # API base url for the controller
@@ -559,7 +769,7 @@ CONFIGURATION = {
                 'password': "lanforge",
                 'port': 22,
                 'jumphost_tty': '/dev/ttyAP1',
-                'version': "next-650adaf"
+                'version': "main-latest"
             }
         ],
         "traffic_generator": {
@@ -599,6 +809,23 @@ RADIUS_ACCOUNTING_DATA = {
     "password": "password",
     "pk_password": "whatever"
 }
+DYNAMIC_VLAN_RADIUS_SERVER_DATA = {
+    "ip": "3.20.165.131",
+    "port": 1812,
+    "secret": "testing123",
+    "user": "user",
+    "password": "password",
+    "pk_password": "whatever"
+}
+
+DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA = {
+    "ip": "3.20.165.131",
+    "port": 1813,
+    "secret": "testing123",
+    "user": "user",
+    "password": "password",
+    "pk_password": "whatever"
+}
 
 RATE_LIMITING_RADIUS_SERVER_DATA = {
     "ip": "18.189.85.200",
@@ -611,23 +838,6 @@ RATE_LIMITING_RADIUS_SERVER_DATA = {
 
 RATE_LIMITING_RADIUS_ACCOUNTING_DATA = {
     "ip": "18.189.85.200",
-    "port": 1813,
-    "secret": "testing123",
-    "user": "user",
-    "password": "password",
-    "pk_password": "whatever"
-}
-DYNAMIC_VLAN_RADIUS_SERVER_DATA = {
-    "ip": "3.20.165.131",
-    "port": 1812,
-    "secret": "testing123",
-    "user": "user",
-    "password": "password",
-    "pk_password": "whatever"
-}
-
-DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA = {
-    "ip": "3.20.165.131",
     "port": 1813,
     "secret": "testing123",
     "user": "user",
@@ -708,5 +918,4 @@ PASSPOINT_PROFILE_INFO = {
         "Disable DGAF": False
     }
 }
-
-open_flow = {}
+open_flow={}

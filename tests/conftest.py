@@ -227,10 +227,12 @@ def radius_accounting_info():
     """yields the radius accounting information from lab info file"""
     yield RADIUS_ACCOUNTING_DATA
 
+
 @pytest.fixture(scope="session")
 def rate_radius_info():
     """yields the radius server information from lab info file"""
     yield RATE_LIMITING_RADIUS_SERVER_DATA
+
 
 @pytest.fixture(scope="session")
 def rate_radius_accounting_info():
@@ -279,6 +281,7 @@ def get_sdk_version(fixtures_ver):
     version = fixtures_ver.get_sdk_version()
     yield version
 
+
 @pytest.fixture(scope="session")
 def get_uci_show(fixtures_ver, get_apnos, get_configuration):
     uci_show = fixtures_ver.get_uci_show(get_apnos, get_configuration)
@@ -288,6 +291,7 @@ def get_uci_show(fixtures_ver, get_apnos, get_configuration):
 @pytest.fixture(scope="session")
 def skip_lf(request):
     yield request.config.getoption("--skip-lanforge")
+
 
 @pytest.fixture(scope="session")
 def get_openflow():
@@ -552,6 +556,7 @@ def test_ap_connection_status(fixtures_ver, request, get_configuration, get_apno
     connection, redirector_value = fixtures_ver.get_ap_status_logs(get_configuration, get_apnos)
     yield connection, redirector_value
 
+
 @pytest.fixture(scope="session")
 def traffic_generator_connectivity(testbed, get_configuration):
     """Verify if traffic generator is reachable"""
@@ -667,6 +672,17 @@ def add_env_properties(get_configuration, get_sdk_version, get_apnos, fixtures_v
     add_allure_environment_property('AP-Serial-Number', get_configuration["access_point"][0]["serial"] + "\n")
 
 
+@fixture(scope="session")
+def add_firmware_property_after_upgrade(add_allure_environment_property, fixtures_ver, get_apnos,
+                                        get_configuration):
+    # try:
+    add_allure_environment_property('Access-Point-Firmware-Version',
+                                        fixtures_ver.get_ap_version(get_apnos, get_configuration)[0].split("\n")[1])
+    # except Exception as e:
+    #     print(e)
+    #     pass
+
+
 @pytest.fixture(scope="session")
 def fixtures_ver(request, get_configuration):
     if request.config.getoption("1.x") is False:
@@ -729,3 +745,13 @@ def get_lf_logs(request, get_apnos, get_configuration):
                            name="lanforge_log_1")
 
     request.addfinalizer(collect_logs_lf)
+
+
+@pytest.fixture(scope="function")
+def get_apnos_logs(get_apnos, get_configuration):
+    all_logs = []
+    for ap in get_configuration['access_point']:
+        ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
+        logs = ap_ssh.logread()
+        all_logs.append(logs)
+    yield all_logs

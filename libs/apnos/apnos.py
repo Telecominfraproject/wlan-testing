@@ -334,7 +334,7 @@ class APNOS:
                 return connected, latest, active
             else:
                 connected = False
-                if "connected" in output.decode('utf-8').splitlines()[2]:
+                if "\"connected" in output.decode('utf-8').splitlines()[2]:
                     connected = True
                 # connected = output.decode('utf-8').splitlines()[2]
                 latest = output.decode('utf-8').splitlines()[3].split(":")[1].replace(" ", "").replace(",", "")
