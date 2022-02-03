@@ -1023,7 +1023,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             available_ssids = get_all_available_ssids(driver)
             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
             try:
-                if (not ssid_Visible(driver, WifiName)) and (WifiName not in available_ssids):
+                if (not ssid_Visible(driver, WifiName)) or (WifiName not in available_ssids):
                     scrollDown(setup_perfectoMobile)
                     time.sleep(2)
                 else:
@@ -1790,7 +1790,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
             available_ssids = get_all_available_ssids(driver)
             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
             try:
-                if (not ssid_Visible(driver, WifiName)) and (WifiName not in available_ssids):
+                if (not ssid_Visible(driver, WifiName)) or (WifiName not in available_ssids):
                     scrollDown(setup_perfectoMobile)
                     time.sleep(2)
                 else:
