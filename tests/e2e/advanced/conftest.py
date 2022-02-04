@@ -36,12 +36,6 @@ def create_lanforge_chamberview(lf_tools):
 
 
 @pytest.fixture(scope="session")
-def create_lanforge_chamberview_dut(lf_tools):
-    dut_object, dut_name = lf_tools.Create_Dut()
-    return dut_name
-
-
-@pytest.fixture(scope="session")
 def setup_vlan():
     vlan_id = [100]
     allure.attach(body=str(vlan_id), name="VLAN Created: ")
@@ -52,7 +46,7 @@ def setup_vlan():
 @pytest.fixture(scope="class")
 def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtures_ver,
                    instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
-                   get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
+                   get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info, run_lf):
     lf_tools.reset_scenario()
     param = dict(request.param)
 
@@ -82,7 +76,7 @@ def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtur
                                              instantiate_profile,
                                              get_markers, create_lanforge_chamberview_dut, lf_tools,
                                              get_security_flags, get_configuration, radius_info, get_apnos,
-                                             radius_accounting_info)
+                                             radius_accounting_info, run_lf=run_lf)
 
     yield return_var
 
