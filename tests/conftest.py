@@ -599,9 +599,9 @@ def traffic_generator_connectivity(testbed, get_configuration):
 
 
 @pytest.fixture(scope="session")
-def create_lanforge_chamberview_dut(lf_tools, skip_lf):
+def create_lanforge_chamberview_dut(lf_tools, skip_lf, run_lf):
     dut_name = ""
-    if not skip_lf:
+    if (not run_lf ) and (not skip_lf):
         dut_object, dut_name = lf_tools.Create_Dut()
     return dut_name
 
