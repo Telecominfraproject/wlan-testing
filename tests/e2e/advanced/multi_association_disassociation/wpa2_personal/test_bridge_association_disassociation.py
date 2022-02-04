@@ -227,10 +227,10 @@ class TestMultiAssoDisassoBridge(object):
     @pytest.mark.udp_download_5g
     def test_multi_station_udp_download_5g(self, lf_test, lf_tools, create_lanforge_chamberview_dut):
         allure.attach(name="Definition", body="")
-        allure.attach(name="Procedure", body="The test case definition states that we Create 16 stations on 5Ghz radio and all of these 16 stations should be on same radio."
-                                              " Run Wifi-capacity test for first 8 stations. "
-                                              "8 stations are picked for sending/receiving packets while the other 8 STAs are picked to do a dis-association/re-association process during the test"
-                                              " Enable downlink 8 Mbps UDP flow from DUT to each of the 8 traffic stations"
+        allure.attach(name="Procedure", body="This test case definition states that we Create 16 stations on 5Ghz radio and all of these 16 stations should be on same radio." \
+                                              " Run Wifi-capacity test for first 8 stations. " \
+                                              "8 stations are picked for sending/receiving packets while the other 8 STAs are picked to do a dis-association/re-association process during the test" \
+                                              " Enable downlink 8 Mbps UDP flow from DUT to each of the 8 traffic stations" \
                                               "Disassociate the other 8 stations. Wait for 30 seconds, after that Re-associate the 8 stations.")
 
         # run wifi capacity test here
@@ -273,7 +273,7 @@ class TestMultiAssoDisassoBridge(object):
         pass_value = 8 * 0.99
         print("pass value ", pass_value)
         pass_fail = []
-        allure.attach(name="Pass Fail Criteria", body="UDP traffic rate is at least 99% of the configured rate for each station. Here configured "
+        allure.attach(name="Pass Fail Criteria", body="UDP traffic rate is at least 99% of the configured rate for each station. Here configured " \
                                                       "traffic rate is 8 Mbps so traffic for each station should be 7.92 Mbps ")
         if not csv_val:
             print("csv file does not exist, station did not got ip, Test failed")
