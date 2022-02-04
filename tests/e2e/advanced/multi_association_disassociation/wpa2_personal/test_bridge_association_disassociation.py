@@ -31,7 +31,7 @@ class TestMultiAssoDisassoBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.udp_upload_2g
-    def test_multi_station_udp_upload_2g(self, lf_test, lf_tools, create_lanforge_chamberview_dut):
+    def test_multi_station_udp_upload_2g(self, lf_test, lf_tools):
         # run wifi capacity test here
         def thread_fun(station_list):
             print(station_list)
@@ -95,7 +95,7 @@ class TestMultiAssoDisassoBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.udp_download_2g
-    def test_multi_station_udp_download_2g(self, lf_test, lf_tools, create_lanforge_chamberview_dut):
+    def test_multi_station_udp_download_2g(self, lf_test, lf_tools):
         # run wifi capacity test here
         def thread_fun(station_list):
             print(station_list)
@@ -160,7 +160,7 @@ class TestMultiAssoDisassoBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.udp_upload_5g
-    def test_multi_station_udp_upload_5g(self, lf_test, lf_tools, create_lanforge_chamberview_dut):
+    def test_multi_station_udp_upload_5g(self, lf_test, lf_tools):
         # run wifi capacity test here
         def thread_fun(station_list):
             print(station_list)
@@ -225,7 +225,7 @@ class TestMultiAssoDisassoBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.udp_download_5g
-    def test_multi_station_udp_download_5g(self, lf_test, lf_tools, create_lanforge_chamberview_dut):
+    def test_multi_station_udp_download_5g(self, lf_test, lf_tools):
         # run wifi capacity test here
         def thread_fun(station_list):
             print(station_list)
