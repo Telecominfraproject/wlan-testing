@@ -169,7 +169,7 @@ class Fixtures_2x:
                         self.fw_client.upgrade_firmware(serial=ap['serial'], url=str(firmware['uri']))
                         # wait for 300 seconds after firmware upgrade
                         print("waiting for 300 Sec for Firmware Upgrade")
-                        time.sleep(300)
+                        time.sleep(500)
 
                         # check the current AP Revision again
                         ap_version = ap_ssh.get_ap_version_ucentral()
