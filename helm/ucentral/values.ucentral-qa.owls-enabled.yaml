@@ -1,6 +1,25 @@
 owgw:
+  services:
+    owgw:
+      type: LoadBalancer
+      annotations:
+        service.beta.kubernetes.io/aws-load-balancer-type: "nlb-ip"
+        service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+        service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "16102"
+        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
+        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285"
+        service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002,16003,17002"
+
   configProperties:
     simulatorid: 53494D020202
+
+  resources:
+    requests:
+      cpu: 2000m
+      memory: 3000Mi
+    limits:
+      cpu: 2000m
+      memory: 3000Mi
 
 owls:
   enabled: true
@@ -18,6 +37,27 @@ owls:
 
   podAnnotations:
     cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+
+  resources:
+    requests:
+      cpu: 3000m
+      memory: 8000Mi
+    limits:
+      cpu: 3000m
+      memory: 8000Mi
+
+  checks:
+    owls:
+      liveness:
+        httpGet:
+          path: /
+          port: 16107
+        failureThreshold: 900
+      readiness:
+        httpGet:
+          path: /
+          port: 16107
+        failureThreshold: 900
 
   certs:
     restapi-ca.pem: |
@@ -43,6 +83,55 @@ owls:
       L+/DtiR5fDVMNdBSGU89UNTi0wHY9+RFuNlIuvZC+x/swF0V9R5mN+ywquTPtDLA
       5IOM7ItsRmen6u3qu+JXros54e4juQ==
       -----END CERTIFICATE-----
+
+  public_env_variables:
+    SELFSIGNED_CERTS: "true"
+
+  configProperties:
+    openwifi.internal.restapi.host.0.rootca: $OWLS_ROOT/certs/restapi-certs/ca.crt
+    openwifi.internal.restapi.host.0.cert: $OWLS_ROOT/certs/restapi-certs/tls.crt
+    openwifi.internal.restapi.host.0.key: $OWLS_ROOT/certs/restapi-certs/tls.key
+    openwifi.restapi.host.0.rootca: $OWLS_ROOT/certs/restapi-certs/ca.crt
+    openwifi.restapi.host.0.cert: $OWLS_ROOT/certs/restapi-certs/tls.crt
+    openwifi.restapi.host.0.key: $OWLS_ROOT/certs/restapi-certs/tls.key
+
+  volumes:
+    owls:
+      - name: config
+        mountPath: /owls-data/owls.properties
+        subPath: owls.properties
+        # Template below will be rendered in template
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owls.fullname" . }}-config
+      - name: certs
+        mountPath: /owls-data/certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owls.fullname" . }}-certs
+      - name: certs-cas
+        mountPath: /owls-data/certs/cas
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owls.fullname" . }}-certs-cas
+      # Change this if you want to use another volume type
+      - name: persist
+        mountPath: /owls-data/persist
+        volumeDefinition: |
+          persistentVolumeClaim:
+            claimName: {{ template "owls.fullname" . }}-pvc
+
+      - name: restapi-certs
+        mountPath: /owls-data/certs/restapi-certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owls.fullname" . }}-owls-restapi-tls
+      - name: restapi-ca
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.pem
+        subPath: ca.crt
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owls.fullname" . }}-owls-restapi-tls
 
 owlsui:
   enabled: true
