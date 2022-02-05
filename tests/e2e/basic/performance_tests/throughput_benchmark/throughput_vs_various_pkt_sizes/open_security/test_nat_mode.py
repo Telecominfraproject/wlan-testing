@@ -8,8 +8,8 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.throughput_vs_pkt, pytest.mark.nat, pytest.mark.open,
-              pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.throughput_vs_pkt, pytest.mark.nat, pytest.mark.open,]
+              # pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
     "mode": "NAT",
@@ -37,8 +37,7 @@ class TestThroughputVsPktNatOpen2G(object):
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.pkt60
-    def test_client_open_pkt_60_2g(self, get_vif_state,
-                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
+    def test_client_open_pkt_60_2g(self, lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                    get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and open and twog"
@@ -54,9 +53,9 @@ class TestThroughputVsPktNatOpen2G(object):
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
         dut_name = create_lanforge_chamberview_dut
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssid_name not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -84,8 +83,7 @@ class TestThroughputVsPktNatOpen2G(object):
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.pkt142
-    def test_client_open_pkt_142_2g(self, get_vif_state,
-                                    lf_test, station_names_twog, create_lanforge_chamberview_dut,
+    def test_client_open_pkt_142_2g(self, lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                     get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and open and twog"
@@ -101,9 +99,9 @@ class TestThroughputVsPktNatOpen2G(object):
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssid_name not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -131,8 +129,7 @@ class TestThroughputVsPktNatOpen2G(object):
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.pkt256
-    def test_client_open_pkt_256_2g(self, get_vif_state,
-                                    lf_test, station_names_twog, create_lanforge_chamberview_dut,
+    def test_client_open_pkt_256_2g(self, lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                     get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and open and twog"
@@ -148,9 +145,9 @@ class TestThroughputVsPktNatOpen2G(object):
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssid_name not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -178,8 +175,7 @@ class TestThroughputVsPktNatOpen2G(object):
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.pkt512
-    def test_client_open_pkt_512_2g(self, get_vif_state,
-                                    lf_test, station_names_twog, create_lanforge_chamberview_dut,
+    def test_client_open_pkt_512_2g(self, lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                     get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and open and twog"
@@ -195,9 +191,9 @@ class TestThroughputVsPktNatOpen2G(object):
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssid_name not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -225,8 +221,7 @@ class TestThroughputVsPktNatOpen2G(object):
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.pkt1024
-    def test_client_open_pkt_1024_2g(self, get_vif_state,
-                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
+    def test_client_open_pkt_1024_2g(self, lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and open and twog"
@@ -242,9 +237,9 @@ class TestThroughputVsPktNatOpen2G(object):
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssid_name not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -272,8 +267,7 @@ class TestThroughputVsPktNatOpen2G(object):
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.pktMTU
-    def test_client_open_pkt_MTU_2g(self, get_vif_state,
-                                    lf_test, station_names_twog, create_lanforge_chamberview_dut,
+    def test_client_open_pkt_MTU_2g(self, lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                     get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and open and twog"
@@ -289,9 +283,9 @@ class TestThroughputVsPktNatOpen2G(object):
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssid_name not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -341,8 +335,7 @@ class TestThroughputVsPktNatOpen5G(object):
     @pytest.mark.open
     @pytest.mark.fiveg
     @pytest.mark.pkt60
-    def test_client_open_pkt_60_5g(self, get_vif_state,
-                                   lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_open_pkt_60_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                    get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and open and fiveg"
@@ -358,9 +351,9 @@ class TestThroughputVsPktNatOpen5G(object):
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssid_name not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -388,8 +381,7 @@ class TestThroughputVsPktNatOpen5G(object):
     @pytest.mark.open
     @pytest.mark.fiveg
     @pytest.mark.pkt142
-    def test_client_open_pkt_142_5g(self, get_vif_state,
-                                    lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_open_pkt_142_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                     get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and open and fiveg"
@@ -409,9 +401,9 @@ class TestThroughputVsPktNatOpen5G(object):
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssid_name not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -439,8 +431,7 @@ class TestThroughputVsPktNatOpen5G(object):
     @pytest.mark.open
     @pytest.mark.fiveg
     @pytest.mark.pkt256
-    def test_client_open_pkt_256_5g(self, get_vif_state,
-                                    lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_open_pkt_256_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                     get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and open and fiveg"
@@ -456,9 +447,9 @@ class TestThroughputVsPktNatOpen5G(object):
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssid_name not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -486,8 +477,7 @@ class TestThroughputVsPktNatOpen5G(object):
     @pytest.mark.open
     @pytest.mark.fiveg
     @pytest.mark.pkt512
-    def test_client_open_pkt_512_5g(self, get_vif_state,
-                                    lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_open_pkt_512_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                     get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and open and fiveg"
@@ -503,9 +493,9 @@ class TestThroughputVsPktNatOpen5G(object):
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssid_name not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -533,8 +523,7 @@ class TestThroughputVsPktNatOpen5G(object):
     @pytest.mark.open
     @pytest.mark.fiveg
     @pytest.mark.pkt1024
-    def test_client_open_pkt_1024_5g(self, get_vif_state,
-                                     lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_open_pkt_1024_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                      get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and open and fiveg"
@@ -550,9 +539,9 @@ class TestThroughputVsPktNatOpen5G(object):
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssid_name not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -580,8 +569,7 @@ class TestThroughputVsPktNatOpen5G(object):
     @pytest.mark.open
     @pytest.mark.fiveg
     @pytest.mark.pktMTU
-    def test_client_open_pkt_MTU_5g(self, get_vif_state,
-                                    lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_open_pkt_MTU_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                     get_configuration):
         """Throughput Vs Pkt Sizes nat Mode
            pytest -m "throughput_vs_pkt and nat and open and fiveg"
@@ -597,9 +585,9 @@ class TestThroughputVsPktNatOpen5G(object):
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        # if ssid_name not in get_vif_state:
+        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
