@@ -226,7 +226,8 @@ class TestMultiAssoDisassoBridge(object):
     @pytest.mark.fiveg
     @pytest.mark.udp_download_5g
     def test_multi_station_udp_download_5g(self, lf_test, lf_tools, create_lanforge_chamberview_dut):
-        allure.attach(name="Definition", body="")
+        allure.attach(name="Definition", body="Multiple association/disassociation stability test intends to measure stability of Wi-Fi device " \
+                                              "under a dynamic environment with frequent change of connection status.")
         allure.attach(name="Procedure", body="This test case definition states that we Create 16 stations on 5Ghz radio and all of these 16 stations should be on same radio." \
                                               " Run Wifi-capacity test for first 8 stations. " \
                                               "8 stations are picked for sending/receiving packets while the other 8 STAs are picked to do a dis-association/re-association process during the test" \
