@@ -20,34 +20,22 @@ on:
         required: true
         default: 'main'
         description: 'revision of the Open Wifi Helm chart'
-      openwifi_gw_revision:
-        required: true
-        default: 'master'
-        description: 'revision of the Open Wifi gateway service'
-      openwifi_sec_revision:
-        required: true
-        default: 'main'
-        description: 'revision of the Open Wifi security service'
-      openwifi_fms_revision:
-        required: true
-        default: 'main'
-        description: 'revision of the Open Wifi fms service'
-      openwifi_ui_revision:
-        required: true
-        default: 'main'
-        description: 'revision of the Open Wifi UI'
       ap_models:
         required: true
         default: 'edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4'
         description: 'the AP models to test'
       ap_version:
         required: true
-        default: 'next-latest'
+        default: 'release-latest'
         description: 'revision of firmware to flash on AP, <branch>-<commit>'
       marker_expression:
         required: true
         default: 'uc_sanity'
         description: 'Marker expression to select tests to execute'
+      existing_controller:
+        required: false
+        default: ''
+        description: 'Use an existing cloud controller, e.g. like qa01 instead of dynamic one'
   schedule:
   - cron: '30 20 * * *'
 
@@ -56,26 +44,20 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       openwifi_revision: ${{ steps.vars.outputs.openwifi}}
-      openwifi_gw_revision: ${{ steps.vars.outputs.gw}}
-      openwifi_sec_revision: ${{ steps.vars.outputs.sec}}
-      openwifi_fms_revision: ${{ steps.vars.outputs.fms}}
-      openwifi_ui_revision: ${{ steps.vars.outputs.ui}}
       ap_models: ${{ steps.vars.outputs.ap_models}}
       ap_version: ${{ steps.vars.outputs.ap_version}}
       marker_expression: ${{ steps.vars.outputs.marker_expression }}
+      existing_controller: ${{ steps.vars.outputs.existing_controller }}
 
     steps:
       - name: set variables
         id: vars
         run: |
           echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'main' }}")
-          echo ::set-output name=gw::$(echo "${{ github.event.inputs.openwifi_gw_revision || 'master' }}")
-          echo ::set-output name=sec::$(echo "${{ github.event.inputs.openwifi_sec_revision || 'main' }}")
-          echo ::set-output name=fms::$(echo "${{ github.event.inputs.openwifi_fms_revision || 'main' }}")
-          echo ::set-output name=ui::$(echo "${{ github.event.inputs.openwifi_ui_revision || 'main' }}")
           echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4' }}")
-          echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'next-latest' }}")
+          echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'release-latest' }}")
           echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'uc_sanity' }}")
+          echo ::set-output name=existing_controller::$(echo "${{ github.event.inputs.existing_controller || 'qa01' }}")
 
   generate-matrix:
     name: generate AP model matrix
@@ -126,14 +108,24 @@ jobs:
 
     - name: start reservation
       run: |
-        python .quali/start_reservation.py --openwifi-version "${{ needs.vars.outputs.openwifi_revision }}" --openwifi-gw-version "${{ needs.vars.outputs.openwifi_gw_revision }}" --openwifi-sec-version "${{ needs.vars.outputs.openwifi_sec_revision }}" --openwifi-fms-version "${{ needs.vars.outputs.openwifi_fms_revision }}" --openwifi-ui-version "${{ needs.vars.outputs.openwifi_ui_revision }}" --ap-model "${{ matrix.ap_model }}"
+        if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
+        then
+          python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' "Basic Lab"
+        else
+          python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}"}' "Basic Lab"
+        fi
 
     - name: set reservation outputs
       if: always()
       id: reservation
       run: |
         echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
-        echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+        if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
+        then
+          echo ::set-output name=namespace::"${{ needs.vars.outputs.existing_controller }}"
+        else
+          echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+        fi
 
     - name: get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -294,7 +286,11 @@ jobs:
         }
         EOF
 
-        cat configuration.py
+        # overwrite configuration value from Quali
+        if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
+        then
+          sed -i "s/https:\/\/sec-.*\.cicd\.lab\.wlan\.tip\.build/https:\/\/sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build/g" configuration.py
+        fi
 
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
 

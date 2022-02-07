@@ -23,22 +23,6 @@ on:
         required: true
         default: 'main'
         description: 'revision of the Open Wifi Helm chart'
-      openwifi_gw_revision:
-        required: true
-        default: 'master'
-        description: 'revision of the Open Wifi gateway service'
-      openwifi_sec_revision:
-        required: true
-        default: 'main'
-        description: 'revision of the Open Wifi security service'
-      openwifi_fms_revision:
-        required: true
-        default: 'main'
-        description: 'revision of the Open Wifi fms service'
-      openwifi_ui_revision:
-        required: true
-        default: 'main'
-        description: 'revision of the Open Wifi UI'
       ap_model:
         description: 'AP model to test, one of edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4'
         required: true
@@ -104,7 +88,7 @@ jobs:
         CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
         CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
       run: |
-        python .quali/start_reservation.py --openwifi-version "${{ github.event.inputs.openwifi_revision }}" --openwifi-gw-version "${{ github.event.inputs.openwifi_gw_revision }}" --openwifi-sec-version "${{ github.event.inputs.openwifi_sec_revision }}" --openwifi-fms-version "${{ github.event.inputs.openwifi_fms_revision }}" --openwifi-ui-version "${{ github.event.inputs.openwifi_ui_revision }}" --ap-model "${{ github.event.inputs.ap_model }}"
+        python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ github.event.inputs.openwifi_revision }}","AP Model":"${{ github.event.inputs.ap_model }}"}' "Basic Lab"
 
     - name: set reservation outputs
       if: always()

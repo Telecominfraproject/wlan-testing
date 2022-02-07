@@ -18,17 +18,16 @@ ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 -L 8803:lab-ctlr:22 \	
 ubuntu@3.130.51.163
 
 
-Run the below command to open tunnel to all labs:
 
-ssh -C -L 8700:lf1:4002 -L 8701:lf1:5901 -L 8702:lf1:8080 -L 8703:lab-ctlr:22 -L 8704:lf1:22 -L 3389:lf1:3389\
- -L 8710:lf2:4002 -L 8711:lf2:5901 -L 8712:lf2:8080 -L 8713:lab-ctlr:22 -L 8714:lf2:22 -L 3390:lf2:3389\
- -L 8720:lf3:4002 -L 8721:lf3:5901 -L 8722:lf3:8080 -L 8723:lab-ctlr:22 -L 8724:lf3:22 -L 3391:lf3:3389\
- -L 8730:lf4:4002 -L 8731:lf4:5901 -L 8732:lf4:8080 -L 8733:lab-ctlr:22 -L 8734:lf4:22 -L 3392:lf4:3389\
- -L 8740:lf12:4002 -L 8741:lf12:5901 -L 8742:lf12:8080 -L 8743:lab-ctlr4:22 -L 8744:lf12:22 -L 3393:lf12:3389\
- -L 8750:lf13:4002 -L 8751:lf13:5901 -L 8752:lf13:8080 -L 8753:lab-ctlr4:22 -L 8754:lf13:22 -L 3394:lf13:3389\
- -L 8760:lf14:4002 -L 8761:lf14:5901 -L 8762:lf14:8080 -L 8763:lab-ctlr4:22 -L 8764:lf14:22 -L 3395:lf14:3389\
- -L 8770:lf15:4002 -L 8771:lf15:5901 -L 8772:lf15:8080 -L 8773:lab-ctlr4:22 -L 8774:lf15:22 -L 3396:lf15:3389\
- ubuntu@3.130.51.163
+ssh -C -L 8800:lf1:4002 -L 8801:lf1:5901 -L 8802:lf1:8080 -L 8803:lab-ctlr:22 \
+-L 8720:lf2:4002 -L 8721:lf2:5901 -L 8722:lf2:8080 -L 8723:lab-ctlr:22 \
+-L 8830:lf3:4002 -L 8831:lf3:5901 -L 8832:lf3:8080 -L 8833:lab-ctlr:22 \
+-L 8810:lf4:4002 -L 8811:lf4:5901 -L 8812:lf4:8080 -L 8813:lab-ctlr:22 \
+-L 8850:lf12:4002 -L 8851:lf12:5901 -L 8852:lf12:8080 -L 8853:lab-ctlr4:22 \
+-L 8860:lf13:4002 -L 8861:lf13:5901 -L 8862:lf13:8080 -L 8863:lab-ctlr4:22 \
+-L 8870:lf14:4002 -L 8871:lf14:5901 -L 8872:lf14:8080 -L 8873:lab-ctlr4:22 \
+-L 8880:lf15:4002 -L 8881:lf15:5901 -L 8882:lf15:8080 -L 8883:lab-ctlr4:22 \
+ubuntu@3.130.51.163
 
 """
 
@@ -38,7 +37,9 @@ with open('lab_info.json', 'r') as f:
 
 CONFIGURATION = data["CONFIGURATION"]
 
+
 RADIUS_SERVER_DATA = data["RADIUS_SERVER_DATA"]
+
 
 RADIUS_ACCOUNTING_DATA = data["RADIUS_ACCOUNTING_DATA"]
 

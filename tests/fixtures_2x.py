@@ -169,7 +169,7 @@ class Fixtures_2x:
                         self.fw_client.upgrade_firmware(serial=ap['serial'], url=str(firmware['uri']))
                         # wait for 300 seconds after firmware upgrade
                         print("waiting for 300 Sec for Firmware Upgrade")
-                        time.sleep(300)
+                        time.sleep(500)
 
                         # check the current AP Revision again
                         ap_version = ap_ssh.get_ap_version_ucentral()
@@ -594,7 +594,7 @@ class Fixtures_2x:
         if connected == False:
             output = ap_ssh.run_generic_command(cmd="ubus call ucentral status")
             allure.attach(name="ubus call ucentral status: ", body=str(output))
-            pytest.exit("AP is disconnected from UC Gateway")
+            # pytest.exit("AP is disconnected from UC Gateway")
 
         connected, latest, active = ap_ssh.get_ucentral_status()
         latest_old = latest

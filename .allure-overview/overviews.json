@@ -1,0 +1,20 @@
+{
+    "sanity": {
+        "OVERVIEW_TITLE": "'OpenWifi sanity results'",
+        "OVERVIEW_TESTBEDS": ["hfcl_ion4","tp-link_ec420-g1","edgecore_ecw5410","edgecore_ecw5211","edgecore_eap101","edgecore_eap102","cig_wf194c","cig_wf188n","indio_um-305ac"]
+    },
+    "interop": {
+        "OVERVIEW_TITLE": "'OpenWifi interop results'",
+        "OVERVIEW_TESTBEDS": ["pixel-4","galaxy-s9","galaxy-s10","galaxy-s20","iphone-xr","iphone-7","iphone-11","iphone-12"]
+    },
+
+    "advanced": {
+        "OVERVIEW_TITLE": "'OpenWifi advanced results'",
+        "OVERVIEW_TESTBEDS": ["advanced-01","advanced-02"]
+    },
+
+    "performance": {
+        "OVERVIEW_TITLE": "'OpenWifi performance results'",
+        "OVERVIEW_TESTBEDS": ["basic-01","basic-02","basic-03","basic-04","basic-05","basic-06","basic-07","basic-08"]
+    }
+}

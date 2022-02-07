@@ -4,7 +4,6 @@ owgw:
       type: LoadBalancer
       annotations:
         service.beta.kubernetes.io/aws-load-balancer-type: "nlb-ip"
-        service.beta.kubernetes.io/aws-load-balancer-type: "none"
         service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
         service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "16102"
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
