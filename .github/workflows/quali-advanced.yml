@@ -152,11 +152,9 @@ jobs:
         Customer = ""
         server = ""
         CONFIGURATION = {
-          "basic": $(python .quali/get_configuration.py ${{ steps.reservation.outputs.identifier }})
+          "advanced": $(python .quali/get_configuration.py ${{ steps.reservation.outputs.identifier }})
         }
-        
         open_flow = {}
-        
         RADIUS_SERVER_DATA = {
             "ip": "10.10.1.221",
             "port": 1812,
@@ -174,7 +172,7 @@ jobs:
             "password": "password",
             "pk_password": "whatever"
         }
-        
+
         DYNAMIC_VLAN_RADIUS_SERVER_DATA = {
           "ip": "3.20.165.131",
           "port": 1812,
@@ -239,7 +237,7 @@ jobs:
             "password": "password",
             "pk_password": "whatever"
         }
-        
+
         PASSPOINT_OPERATOR_INFO = {
             "osen": "Disabled",
             "domain_name_list": ["telecominfraproject.atlassian.net"],
