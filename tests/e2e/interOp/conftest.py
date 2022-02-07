@@ -682,7 +682,7 @@ def is_device_available(request, model):
 # 'timerValue' and 'timerThreshold' values.With the current parameters it will check after:10,20,40,80 mins.
 def is_device_Available_timeout(request, model):
     device_available = is_device_available(request, model)
-    timerValue = 10
+    timerValue = 5
     timerThreshold = 80
     if not device_available:
         while(timerValue <= timerThreshold):
@@ -694,7 +694,7 @@ def is_device_Available_timeout(request, model):
             if(device_available):
                 return True
             else:
-                timerValue = 2 * timerValue
+                timerValue = timerValue + 5
         
         if(timerValue > timerThreshold):
             return False
