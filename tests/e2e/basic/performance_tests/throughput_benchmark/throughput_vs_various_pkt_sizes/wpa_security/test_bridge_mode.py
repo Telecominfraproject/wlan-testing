@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.wifi_capacity_test, pytest.mark.Bridge, pytest.mark.wpa]
+pytestmark = [pytest.mark.throughput_vs_pkt, pytest.mark.Bridge, pytest.mark.wpa]
 
 
 setup_params_general = {
