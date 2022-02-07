@@ -380,7 +380,7 @@ class TestThroughputVsPktWpa2Bridge5G(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
                                        instance_name="TIP_PERF_DPT_WPA2_5G",
-                                       vlan_id=vlan, dut_name=dut_name, praw_lines=raw_lines)
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
             # pdf = False
