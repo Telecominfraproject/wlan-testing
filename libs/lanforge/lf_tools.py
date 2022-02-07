@@ -38,6 +38,88 @@ class ChamberView:
         self.run_lf = run_lf
         print("testbed", testbed)
         if "type" in lanforge_data.keys():
+            if lanforge_data["type"] == "Non-mesh":
+                self.lanforge_ip = lanforge_data["ip"]
+                self.lanforge_port = lanforge_data["port"]
+                self.ssh_port = lanforge_data["ssh_port"]
+                self.upstream_port = lanforge_data["upstream"]
+                self.uplink_port = lanforge_data["uplink"]
+                self.upstream_subnet = lanforge_data["upstream_subnet"]
+                self.upstream_resources = self.upstream_port.split(".")[0] + "." + self.upstream_port.split(".")[1]
+                self.uplink_resources = self.uplink_port.split(".")[0] + "." + self.uplink_port.split(".")[1]
+                self.scenario_name = testbed
+                self.debug = debug
+                self.exit_on_error = False
+                self.dut_idx_mapping = {}
+                self.ssid_list = []
+                self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
+                self.raw_line = [
+                    ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " +
+                     self.upstream_port.split(".")
+                     [2] + ",AUTO -1 NA"],
+                    [
+                        "profile_link " + self.uplink_resources + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
+                        + "' NA " + self.uplink_port.split(".")[2] + "," + self.upstream_port.split(".")[2] + " -1 NA"]
+                ]
+                self.CreateChamberview = CreateChamberview(self.lanforge_ip, self.lanforge_port)
+
+                self.delete_old_scenario = True
+                if access_point_data:
+                    print(len(access_point_data))
+                    for ap in range(len(access_point_data)):
+                        print(access_point_data[ap])
+                        self.dut_name = access_point_data[ap]["model"]
+                        print(self.dut_name)
+                        self.ap_model = access_point_data[ap]["model"]
+                        self.version = access_point_data[ap]["version"].split("/")[-1]
+                        self.serial = access_point_data[ap]["serial"]
+                        self.ssid_data = None
+                        if self.run_lf:
+                            self.ssid_data = access_point_data[ap]['ssid']
+                            print(self.ssid_data)
+
+                        self.CreateDut = DUT(lfmgr=self.lanforge_ip,
+                                             port=self.lanforge_port,
+                                             dut_name=self.dut_name,
+                                             sw_version=self.version,
+                                             hw_version=self.ap_model,
+                                             model_num=self.ap_model,
+                                             serial_num=self.serial
+                                             )
+                        self.CreateDut.ssid = []
+                        if self.ssid_data is not None:
+                            self.twog_ssid = ["ssid_idx=0"
+                                              " ssid=" + self.ssid_data["2g-ssid"] +
+                                              " security=" + self.ssid_data["2g-encryption"].upper() +
+                                              " password=" + self.ssid_data["2g-password"] +
+                                              " bssid=" + self.ssid_data["2g-bssid"].lower().replace(" ", "")
+                                              ]
+
+                            self.fiveg_ssid = ["ssid_idx=1 ssid=" +
+                                               self.ssid_data["5g-ssid"] +
+                                               " security=" +
+                                               self.ssid_data["5g-encryption"].upper() +
+                                               " password=" +
+                                               self.ssid_data["5g-password"] +
+                                               " bssid=" +
+                                               self.ssid_data["5g-bssid"].lower().replace(" ", "")]
+                            if "6g-ssid" in self.ssid_data.keys():
+                                print("yes")
+                                self.sixg_ssid = ["ssid_idx=2 ssid=" +
+                                                   self.ssid_data["6g-ssid"] +
+                                                   " security=" +
+                                                   self.ssid_data["6g-encryption"].upper() +
+                                                   " password=" +
+                                                   self.ssid_data["6g-password"] +
+                                                   " bssid=" +
+                                                   self.ssid_data["6g-bssid"].lower().replace(" ", "")]
+                                ssid_var = [self.twog_ssid, self.fiveg_ssid, self.sixg_ssid]
+                            else :
+                                ssid_var = [self.twog_ssid, self.fiveg_ssid]
+                            self.CreateDut.ssid = ssid_var
+                            # print(self.CreateDut.ssid)
+                            self.Create_Dut()
+
             if lanforge_data["type"] == "mesh":
                 self.lanforge_ip = lanforge_data["ip"]
                 self.lanforge_port = lanforge_data["port"]
@@ -149,6 +231,7 @@ class ChamberView:
                     self.CreateDut.ssid = [self.twog_ssid, self.fiveg_ssid]
                     # print(self.CreateDut.ssid)
                     self.Create_Dut()
+
 
     def reset_scenario(self):
         # self.layer3_cleanup()
@@ -340,8 +423,8 @@ class ChamberView:
 
     def station_data_query(self, station_name="wlan0", query="channel"):
         x = self.upstream_port.split(".")
-        print(x)
         url = f"/port/{x[0]}/{x[1]}/{station_name}?fields={query}"
+        print("url//////", url)
         response = self.json_get(_req_url=url)
         print("response: ", response)
         if (response is None) or ("interface" not in response):
