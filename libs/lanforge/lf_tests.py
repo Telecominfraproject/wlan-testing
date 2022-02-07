@@ -30,6 +30,7 @@ import string
 import random
 from scp_util import SCP_File
 
+
 S = 12
 # from eap_connect import EAPConnect
 from test_ipv4_ttls import TTLSTest
@@ -47,12 +48,12 @@ from lf_rvr_test import RvrTest
 from attenuator_serial import AttenuatorSerial
 from lf_atten_mod_test import CreateAttenuator
 from lf_mesh_test import MeshTest
+from LANforge.lfcli_base import LFCliBase
 
 
 class RunTest:
 
     def __init__(self, configuration_data=None, local_report_path="../reports/", influx_params=None, run_lf=False, debug=False):
-        # print("lanforge data", lanforge_data)
         if "type" in configuration_data['traffic_generator'].keys():
             if lanforge_data["type"] == "mesh":
                 self.lanforge_ip = lanforge_data["ip"]
@@ -128,6 +129,7 @@ class RunTest:
                 ssid = self.ssid_data["2g-ssid"]
                 passkey = self.ssid_data["2g-password"]
                 security = self.ssid_data["2g-encryption"].lower()
+                print(ssid)
             self.staConnect.radio = self.twog_radios[0]
             self.staConnect.sta_prefix = self.twog_prefix
         if band == "fiveg":
@@ -403,6 +405,34 @@ class RunTest:
             return self.client_connect
         else:
             return False
+
+    def attach_stationdata_to_allure(self, station_name=[], name=""):
+        self.sta_url_map = None
+        for sta_name_ in station_name:
+            if sta_name_ is None:
+                raise ValueError("get_station_url wants a station name")
+            if self.sta_url_map is None:
+                self.sta_url_map = {}
+                for sta_name in station_name:
+                    self.sta_url_map[sta_name] = "port/1/%s/%s" % (str(1), sta_name)
+                    print(self.sta_url_map)
+
+        for sta_name in station_name:
+            try:
+                station_data_str = ""
+                # sta_url = self.staConnect.get_station_url(sta_name)
+                cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port, )
+                station_info = cli_base.json_get(_req_url=self.sta_url_map[sta_name])
+                print("station info", station_info)
+                for i in station_info["interface"]:
+                    try:
+                        station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
+                    except Exception as e:
+                        print(e)
+                print("sta name", sta_name)
+                allure.attach(name=name, body=str(station_data_str))
+            except Exception as e:
+                print(e)
 
     def Client_Connect_Using_Radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
                                    vlan_id=100, radio=None, sta_mode=0,
