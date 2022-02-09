@@ -105,14 +105,15 @@ class RunTest:
         self.local_report_path = local_report_path
         if not os.path.exists(self.local_report_path):
             os.mkdir(self.local_report_path)
-            # self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
-
-
+        # self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
+        # self.eap_connect = TTLSTest(host=self.lanforge_ip, port=self.lanforge_port,
+        #                             sta_list="station_name", vap=False, _debug_on=self.debug)
 
     def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[],
                             station_name=[], mode="BRIDGE", vlan_id=1, band="twog"):
         """SINGLE CLIENT CONNECTIVITY using test_connect2.py"""
         self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
+
         self.staConnect.sta_mode = 0
         self.staConnect.upstream_resource = 1
         if mode == "BRIDGE":
@@ -123,9 +124,12 @@ class RunTest:
             self.staConnect.upstream_port = self.upstream_port + "." + str(vlan_id)
         if band == "twog":
             self.staConnect.radio = self.twog_radios[0]
+            self.staConnect.admin_down(self.staConnect.radio)
+            self.staConnect.admin_up(self.staConnect.radio)
             self.staConnect.sta_prefix = self.twog_prefix
         if band == "fiveg":
             self.staConnect.radio = self.fiveg_radios[0]
+            self.staConnect.reset_port(self.staConnect.radio)
             self.staConnect.sta_prefix = self.fiveg_prefix
         self.staConnect.resource = 1
         self.staConnect.dut_ssid = ssid
@@ -215,9 +219,13 @@ class RunTest:
             self.eap_connect.l3_cx_obj_tcp.upstream = self.upstream_port + "." + str(vlan_id)
         if band == "twog":
             self.eap_connect.radio = self.twog_radios[0]
+            self.eap_connect.admin_down(self.eap_connect.radio)
+            self.eap_connect.admin_up(self.eap_connect.radio)
             # self.eap_connect.sta_prefix = self.twog_prefix
         if band == "fiveg":
             self.eap_connect.radio = self.fiveg_radios[0]
+            self.eap_connect.admin_down(self.eap_connect.radio)
+            self.eap_connect.admin_up(self.eap_connect.radio)
             # self.eap_connect.sta_prefix = self.fiveg_prefix
         # self.eap_connect.resource = 1
         if eap == "TTLS":
@@ -936,25 +944,24 @@ if __name__ == '__main__':
         "influx_tag": ["basic-03", "ec420"],
     }
     lanforge_data = {
-                "ip": "192.168.200.10",
+                "ip": "10.28.3.6",
                 "port": 8080,
                 "ssh_port": 22,
-                "2.4G-Radio": ["wiphy0"],
-                "5G-Radio": ["wiphy1"],
-                "AX-Radio": [],
-                "upstream": "1.1.eth1",
-                "upstream_subnet": "192.168.200.1/24",
-                "uplink": "1.1.eth2",
+                "2.4G-Radio": ["1.1.wiphy4"],
+                "5G-Radio": ["1.1.wiphy5"],
+                "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
                 "2.4G-Station-Name": "wlan0",
-                "5G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan1",
                 "AX-Station-Name": "ax"
             }
     obj = RunTest(lanforge_data=lanforge_data, debug=False, influx_params=influx_params)
     upstream = lanforge_data['upstream']
-    data = obj.staConnect.json_get("/port/all")
-    for i in data["interfaces"]:
-        if list(i.keys())[0] == "1.1.eth1.10":
-            print(i)
+    # data = obj.staConnect.json_get("/port/all")
+    obj.eap_connect.admin_down("1.1.wiphy4")
+    obj.eap_connect.admin_up("1.1.wiphy4")
     # print(dict(list(data['interfaces'])).keys())
     # print(obj.staConnect.json_get("/port/" + upstream.split(".")[0] +
     #                         "/" + upstream.split(".")[1] +

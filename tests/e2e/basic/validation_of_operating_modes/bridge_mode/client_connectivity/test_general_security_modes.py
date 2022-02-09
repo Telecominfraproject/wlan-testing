@@ -50,7 +50,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @pytest.mark.open
     @pytest.mark.twog
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
-    def test_open_ssid_2g(self, get_vif_state, get_ap_logs, get_lf_logs, setup_profiles, lf_test,
+    def test_open_ssid_2g(self, get_vif_state, get_ap_logs, get_lf_logs, lf_test,
                           update_report,
                           station_names_twog,
                           test_cases):
@@ -247,7 +247,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    def test_wpa3_personal_ssid_2g(self, get_vif_state, get_ap_logs, station_names_twog, setup_profiles,  lf_test,
+    def test_wpa3_personal_ssid_2g(self, get_vif_state, get_ap_logs, station_names_twog,  lf_test,
                                    update_report,
                                    test_cases):
         """Client Connectivity open ssid 2.4G
@@ -299,7 +299,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    def test_wpa3_personal_mixed_ssid_2g(self, get_vif_state, get_ap_logs, station_names_twog, setup_profiles, 
+    def test_wpa3_personal_mixed_ssid_2g(self, get_vif_state, get_ap_logs, station_names_twog,
                                          lf_test, get_lf_logs,
                                          update_report,
                                          test_cases):
@@ -352,7 +352,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
-    def test_wpa_wpa2_personal_ssid_2g(self, get_vif_state, get_ap_logs, station_names_twog, setup_profiles, 
+    def test_wpa_wpa2_personal_ssid_2g(self, get_vif_state, get_ap_logs, station_names_twog,
                                        lf_test, get_lf_logs,
                                        update_report,
                                        test_cases):
