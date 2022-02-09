@@ -109,15 +109,13 @@ jobs:
 
     - name: checkout testing repo
       uses: actions/checkout@v2
-      with:
-        path: wlan-testing
 
     - name: install dependencies
-      run: pip install -r wlan-testing/.quali/requirements.txt
+      run: pip install -r .quali/requirements.txt
 
     - name: start reservation
       run: |
-        python wlan-testing/.quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}"}' --reservation-duration 720 "Advance Lab"
+        python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}"}' --reservation-duration 720 "Advance Lab"
 
     - name: set reservation outputs
       if: always()
@@ -399,7 +397,7 @@ jobs:
 
     - name: stop reservation
       if: always()
-      run: python wlan-testing/.quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
+      run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
   report:
     needs: [ vars, generate-matrix, test ]
