@@ -11,6 +11,9 @@ import pytest
 import logging
 import re
 import allure
+import requests
+from xml.etree import ElementTree as ET
+from time import gmtime, strftime
 
 sys.path.append(
     os.path.dirname(
@@ -400,6 +403,10 @@ def setup_perfectoMobile_android(request):
         # 'bundleId' : request.config.getini("appPackage-android"),
     }
 
+    if not is_device_Available_timeout(request, capabilities['model']):
+        print("Unable to get device.")
+        pytest.exit("Exiting Pytest")
+
     driver = webdriver.Remote(
         'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
         capabilities)
@@ -504,6 +511,10 @@ def setup_perfectoMobileWeb(request):
         'securityToken': request.config.getini("securityToken"),
     }
 
+    if not is_device_Available_timeout(request, capabilities['model']):
+        print("Unable to get device.")
+        pytest.exit("Exiting Pytest")
+
     rdriver = webdriver.Remote(
         'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
         capabilities)
@@ -566,6 +577,11 @@ def setup_perfectoMobile_iOS(request):
         # 'bundleId' : request.config.getini("bundleId-iOS"),
         'useAppiumForHybrid': 'false',
     }
+
+    # Check if the device is available
+    if not is_device_Available_timeout(request, capabilities['model']):
+        print("Unable to get device.")
+        pytest.exit("Exiting Pytest")
 
     driver = webdriver.Remote(
         'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
@@ -631,3 +647,58 @@ def setup_perfectoMobile_iOS(request):
         yield -1
     else:
         yield driver, reporting_client
+# Does a HTTP GET request to Perfecto cloud and gets response and information related to a headset
+def response_device(request, model):
+    securityToken = request.config.getini("securityToken")
+    perfectoURL = request.config.getini("perfectoURL")
+    url = f"https://{perfectoURL}.perfectomobile.com/services/handsets?operation=list&securityToken={securityToken}&model={model}"
+    resp = requests.get(url=url)
+    return ET.fromstring(resp.content)
+
+# Get an attribute value from the handset response
+def get_attribute_device(responseXml, attribute):
+    try:
+        return responseXml.find('handset').find(attribute).text
+    except:
+        print(f"Unable to get value of {attribute} from response")
+        return ""
+
+# Checks to see if a particular handset is available
+def is_device_available(request, model):
+    try:
+        responseXml = response_device(request, model)
+    except:
+        print("Unable to get response.")
+        raise Exception("Unable to get response.")
+    device_available = get_attribute_device(responseXml, 'available')
+    print("Result:" + device_available)
+    if device_available == 'false':
+        allocated_to = get_attribute_device(responseXml, 'allocatedTo')
+        print("The device is currently allocated to:" + allocated_to)
+        return False
+    return True
+
+# Checks whether the device is available or not.If the device is not available rechecks depending upon the 
+# 'timerValue' and 'timerThreshold' values.With the current parameters it will check after:10,20,40,80 mins.
+def is_device_Available_timeout(request, model):
+    device_available = is_device_available(request, model)
+    timerValue = 5
+    timerThreshold = 80
+    if not device_available:
+        while(timerValue <= timerThreshold):
+            print("Last checked at:" + strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+            print(f"Waiting for: {timerValue} min(s)")
+            time.sleep(timerValue*60)
+            print("Checking now at:" + strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+            device_available = is_device_available(request, model)
+            if(device_available):
+                return True
+            else:
+                timerValue = timerValue + 5
+        
+        if(timerValue > timerThreshold):
+            return False
+        else:
+            return True
+    else:
+        return True
