@@ -14,7 +14,7 @@ pytestmark = [pytest.mark.throughput_vs_pkt, pytest.mark.Bridge, pytest.mark.wpa
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa_personal": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
+        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
                          {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
                           "security_key": "something"}]},
     "rf": {},
@@ -44,7 +44,7 @@ class TestThroughputVsPktWpaBridge2G(object):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and twog and pkt60"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa_personal"][0]
+        profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -93,7 +93,7 @@ class TestThroughputVsPktWpaBridge2G(object):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and twog and pkt142"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa_personal"][0]
+        profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -142,7 +142,7 @@ class TestThroughputVsPktWpaBridge2G(object):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa_personal"][0]
+        profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -191,7 +191,7 @@ class TestThroughputVsPktWpaBridge2G(object):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa_personal"][0]
+        profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -240,7 +240,7 @@ class TestThroughputVsPktWpaBridge2G(object):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa_personal"][0]
+        profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -289,7 +289,7 @@ class TestThroughputVsPktWpaBridge2G(object):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa_personal"][0]
+        profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -332,7 +332,7 @@ class TestThroughputVsPktWpaBridge2G(object):
 setup_params_5g = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa_personal": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
+        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
                          {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
                           "security_key": "something"}]},
 
@@ -363,7 +363,7 @@ class TestThroughputVsPktWpaBridge5G(object):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and fiveg"
         """
-        profile_data = setup_params_5g["ssid_modes"]["wpa_personal"][1]
+        profile_data = setup_params_5g["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -412,7 +412,7 @@ class TestThroughputVsPktWpaBridge5G(object):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and fiveg"
         """
-        profile_data = setup_params_5g["ssid_modes"]["wpa_personal"][1]
+        profile_data = setup_params_5g["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -461,7 +461,7 @@ class TestThroughputVsPktWpaBridge5G(object):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and fiveg"
         """
-        profile_data = setup_params_5g["ssid_modes"]["wpa_personal"][1]
+        profile_data = setup_params_5g["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -510,7 +510,7 @@ class TestThroughputVsPktWpaBridge5G(object):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and fiveg"
         """
-        profile_data = setup_params_5g["ssid_modes"]["wpa_personal"][1]
+        profile_data = setup_params_5g["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -559,7 +559,7 @@ class TestThroughputVsPktWpaBridge5G(object):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and fiveg"
         """
-        profile_data = setup_params_5g["ssid_modes"]["wpa_personal"][1]
+        profile_data = setup_params_5g["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -608,7 +608,7 @@ class TestThroughputVsPktWpaBridge5G(object):
         """Throughput Vs Pkt Sizes BRIDGE MODE
            pytest -m "throughput_vs_pkt and Bridge and wpa_personal and fiveg"
         """
-        profile_data = setup_params_5g["ssid_modes"]["wpa_personal"][1]
+        profile_data = setup_params_5g["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"

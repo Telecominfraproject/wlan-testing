@@ -14,7 +14,7 @@ pytestmark = [pytest.mark.throughput_vs_pkt, pytest.mark.vlan, pytest.mark.wpa,]
 setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
-        "wpa_personal": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
+        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
                 {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
                  "security_key": "something"}]},
 
@@ -46,7 +46,7 @@ class TestThroughputVsPktVlanWpa2G(object):
         """Throughput Vs Pkt Sizes VLAN MODE
            pytest -m "throughput_vs_pkt and vlan and wpa_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa_personal"][0]
+        profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa_personal"
@@ -95,7 +95,7 @@ class TestThroughputVsPktVlanWpa2G(object):
         """Throughput Vs Pkt Sizes VLAN MODE
            pytest -m "throughput_vs_pkt and vlan and wpa_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa_personal"][0]
+        profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa_personal"
@@ -144,7 +144,7 @@ class TestThroughputVsPktVlanWpa2G(object):
         """Throughput Vs Pkt Sizes VLAN MODE
            pytest -m "throughput_vs_pkt and vlan and wpa_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa_personal"][0]
+        profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa_personal"
@@ -193,7 +193,7 @@ class TestThroughputVsPktVlanWpa2G(object):
         """Throughput Vs Pkt Sizes VLAN MODE
            pytest -m "throughput_vs_pkt and vlan and wpa_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa_personal"][0]
+        profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa_personal"
@@ -242,7 +242,7 @@ class TestThroughputVsPktVlanWpa2G(object):
         """Throughput Vs Pkt Sizes VLAN MODE
            pytest -m "throughput_vs_pkt and vlan and wpa_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa_personal"][0]
+        profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa_personal"
@@ -291,7 +291,7 @@ class TestThroughputVsPktVlanWpa2G(object):
         """Throughput Vs Pkt Sizes VLAN MODE
            pytest -m "throughput_vs_pkt and vlan and wpa_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa_personal"][0]
+        profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa_personal"
@@ -365,7 +365,7 @@ class TestThroughputVsPktVlan5G(object):
         """Throughput Vs Pkt Sizes VLAN MODE
            pytest -m "throughput_vs_pkt and vlan and wpa_personal and fiveg"
         """
-        profile_data = setup_params_5g["ssid_modes"]["wpa_personal"][1]
+        profile_data = setup_params_5g["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa_personal"
@@ -414,7 +414,7 @@ class TestThroughputVsPktVlan5G(object):
         """Throughput Vs Pkt Sizes VLAN MODE
            pytest -m "throughput_vs_pkt and vlan and wpa_personal and fiveg"
         """
-        profile_data = setup_params_5g["ssid_modes"]["wpa_personal"][1]
+        profile_data = setup_params_5g["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa_personal"
@@ -463,7 +463,7 @@ class TestThroughputVsPktVlan5G(object):
         """Throughput Vs Pkt Sizes VLAN MODE
            pytest -m "throughput_vs_pkt and vlan and wpa_personal and fiveg"
         """
-        profile_data = setup_params_5g["ssid_modes"]["wpa_personal"][1]
+        profile_data = setup_params_5g["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa_personal"
@@ -512,7 +512,7 @@ class TestThroughputVsPktVlan5G(object):
         """Throughput Vs Pkt Sizes VLAN MODE
            pytest -m "throughput_vs_pkt and vlan and wpa_personal and fiveg"
         """
-        profile_data = setup_params_5g["ssid_modes"]["wpa_personal"][1]
+        profile_data = setup_params_5g["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa_personal"
@@ -561,7 +561,7 @@ class TestThroughputVsPktVlan5G(object):
         """Throughput Vs Pkt Sizes VLAN MODE
            pytest -m "throughput_vs_pkt and vlan and wpa_personal and fiveg"
         """
-        profile_data = setup_params_5g["ssid_modes"]["wpa_personal"][1]
+        profile_data = setup_params_5g["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa_personal"
@@ -610,7 +610,7 @@ class TestThroughputVsPktVlan5G(object):
         """Throughput Vs Pkt Sizes VLAN MODE
            pytest -m "throughput_vs_pkt and vlan and wpa_personal and fiveg"
         """
-        profile_data = setup_params_5g["ssid_modes"]["wpa_personal"][1]
+        profile_data = setup_params_5g["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa_personal"
