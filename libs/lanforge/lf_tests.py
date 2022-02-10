@@ -7,6 +7,7 @@ import os
 
 import allure
 import pytest
+import importlib
 
 sys.path.append(
     os.path.dirname(
@@ -49,7 +50,8 @@ from attenuator_serial import AttenuatorSerial
 from lf_atten_mod_test import CreateAttenuator
 from lf_mesh_test import MeshTest
 from LANforge.lfcli_base import LFCliBase
-
+realm = importlib.import_module("py-json.realm")
+Realm = realm.Realm
 
 class RunTest:
 
@@ -456,6 +458,15 @@ class RunTest:
         if self.client_connect.wait_for_ip(station_name):
             self.client_connect._pass("ALL Stations got IP's", print_=True)
             return self.client_connect
+        else:
+            return False
+
+    def wait_for_ip(self, station=[]):
+        self.local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
+        print(station)
+        if self.local_realm.wait_for_ip(station_list=station):
+            self.local_realm._pass("ALL Stations got IP's", print_=True)
+            return True
         else:
             return False
 
@@ -905,7 +916,6 @@ class RunTest:
     def attenuator_modify(self, serno, idx, val):
         atten_obj = CreateAttenuator(self.lanforge_ip, self.lanforge_port, serno, idx, val)
         atten_obj.build()
-
 
     def mesh_test(self, instance_name=None, raw_lines=None, duration="60s"):
         self.mesh_obj = MeshTest(
