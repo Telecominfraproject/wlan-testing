@@ -1,6 +1,7 @@
 import re
 import sys
 import os
+import  importlib
 
 sys.path.append(
     os.path.dirname(
@@ -19,6 +20,7 @@ sys.path.append(f'../libs')
 sys.path.append(f'../libs/lanforge/')
 import allure
 from sta_connect2 import StaConnect2
+
 from create_chamberview import CreateChamberview
 from create_chamberview_dut import DUT
 import time
@@ -26,6 +28,8 @@ from LANforge.lfcli_base import LFCliBase
 import json
 import os
 import pandas as pd
+realm = importlib.import_module("py-json.realm")
+Realm = realm.Realm
 
 
 class ChamberView:
@@ -42,6 +46,9 @@ class ChamberView:
                 self.lanforge_ip = lanforge_data["ip"]
                 self.lanforge_port = lanforge_data["port"]
                 self.ssh_port = lanforge_data["ssh_port"]
+                self.twog_radios = lanforge_data["2.4G-Radio"]
+                self.fiveg_radios = lanforge_data["5G-Radio"]
+                self.ax_radios = lanforge_data["AX-Radio"]
                 self.upstream_port = lanforge_data["upstream"]
                 self.uplink_port = lanforge_data["uplink"]
                 self.upstream_subnet = lanforge_data["upstream_subnet"]
@@ -53,6 +60,7 @@ class ChamberView:
                 self.dut_idx_mapping = {}
                 self.ssid_list = []
                 self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
+                self.local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
                 self.raw_line = [
                     ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " +
                      self.upstream_port.split(".")
@@ -263,6 +271,7 @@ class ChamberView:
                 sta_list.append(j)
         return sta_list
 
+
     def admin_up_down(self, sta_list=[], option="up"):
         #realm_obj = self.staConnect.localrealm
         if option == "up":
@@ -424,7 +433,7 @@ class ChamberView:
     def station_data_query(self, station_name="wlan0", query="channel"):
         x = self.upstream_port.split(".")
         url = f"/port/{x[0]}/{x[1]}/{station_name}?fields={query}"
-        print("url//////", url)
+        # print("url//////", url)
         response = self.json_get(_req_url=url)
         print("response: ", response)
         if (response is None) or ("interface" not in response):
