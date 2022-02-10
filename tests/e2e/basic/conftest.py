@@ -144,7 +144,11 @@ def reset_scenario_lf(request, lf_tools):
     lf_tools.reset_scenario()
 
     def teardown_session():
-        lf_tools.reset_scenario()
+        if request.config.getoption("--exit-on-fail"):
+            pass
+        else:
+            lf_tools.reset_scenario()
 
     request.addfinalizer(teardown_session)
     yield ""
+
