@@ -9,6 +9,7 @@ import pytest
 import allure
 
 pytestmark = [pytest.mark.performance, pytest.mark.bridge, pytest.mark.wifi_capacity_ax]
+
 setup_params_general_5G = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -32,11 +33,11 @@ setup_params_general_5G = {
 @pytest.mark.wpa2_personal
 @pytest.mark.fiveg
 @pytest.mark.fiveg_band
+
 class TestWifiCapacityBRIDGEModeAX5G(object):
     """ Wifi Capacity Test BRIDGE mode
            pytest -m "wifi_capacity_test and BRIDGE"
     """
-
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
     def test_client_wpa2_BRIDGE_tcp_dl(self, lf_tools, setup_profiles,
