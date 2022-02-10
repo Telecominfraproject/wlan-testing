@@ -62,6 +62,7 @@ class TestMultiAssoDisassoBridge(object):
         sta_list = lf_tools.get_station_list()
         print(sta_list)
         lf_tools.admin_up_down(sta_list=sta_list, option="up")
+
         sel_stations = ",".join(sta_list[0:8])
         val = [['ul_rate_sel: Per-Station Upload Rate:']]
         thr1 = threading.Thread(target=thread_fun, args=(sta_list[8:16],))
@@ -135,8 +136,8 @@ class TestMultiAssoDisassoBridge(object):
         vlan = 1
         lf_tools.add_stations(band="2G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
+        time.sleep(10)
         sta_list = lf_tools.get_station_list()
-        print(sta_list)
         lf_tools.admin_up_down(sta_list=sta_list, option="up")
         sel_stations = ",".join(sta_list[0:8])
         val = [['dl_rate_sel: Per-Station Download Rate:']]
