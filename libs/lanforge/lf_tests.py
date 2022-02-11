@@ -229,11 +229,15 @@ class RunTest:
             self.eap_connect.pairwise = pairwise
             self.eap_connect.group = group
         if eap == "TLS":
-            self.eap_connect.key_mgmt = "WPA-EAP-SUITE-B"
+            self.eap_connect.key_mgmt = key_mgmt
             self.eap_connect.station_profile.set_command_flag("add_sta", "80211u_enable", 0)
-            self.eap_connect.pairwise = "TKIP"
-            self.eap_connect.group = "TKIP"
-            self.eap_connect.eap = "EAP-TLS"
+            self.eap_connect.eap = eap
+            self.eap_connect.identity = "user"
+            self.eap_connect.ttls_passwd = "password"
+            self.eap_connect.private_key = "/home/lanforge/client.p12"
+            self.eap_connect.ca_cert = "/home/lanforge/ca.pem"
+            self.eap_connect.pk_passwd = "whatever"
+            self.eap_connect.ieee80211w = 1
 
         # self.eap_connect.hs20_enable = False
         self.eap_connect.ssid = ssid
