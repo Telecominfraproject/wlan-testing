@@ -3,8 +3,7 @@
 
     interop_tools : Tools for Interop
                 reboot
-    ./interop_tools --device "{\"Galaxy S9\":\"Android\"}"
-    ./interop_tools --device "{\"Galaxy S9\":\"Android\"}"
+    ./interop_tools --all_devices "{\"Galaxy S9\":\"Android\",\"Galaxy S20\":\"Android\"}""
 """
 
 import sys
@@ -99,7 +98,7 @@ def main():
 
     parser.add_argument('--all_devices', type=str,
                         help=' --all_devices : device you want to reboot '
-                             'ex. --all_devices "{\"Galaxy S9\":\"Android\",\"Galaxy S20\":\"Android\"}"',
+                             'ex. --all_devices "{\"Galaxy S9\":\"Android\",\"Galaxy S20\":\"Android\"}" ',
                         default="{\"Galaxy S20\": 'Android', \"Galaxy S10.*\": 'Android', \"Galaxy S9\": 'Android', \"Pixel 4\": 'Android',\"iPhone-12\": 'iOS', \"iPhone-11\": 'iOS', \"iPhone-7\" : 'iOS', \"iPhone-XR\" : 'iOS'}")
 
     args = parser.parse_args()
