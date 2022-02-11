@@ -6,6 +6,7 @@ import argparse
 
 ananda_api = 'https://api.ananda.net'
 
+
 def get_bearer_token():
     authHeader = {"Authorization": args.token}
     r = requests.post(
@@ -17,9 +18,9 @@ def get_bearer_token():
 
     try:
         return org_id, token
-    except:
-        print('Error: could not get bearer token'
-        exit(1))
+    except Exception:
+        print('Error: could not get bearer token')
+        exit(1)
 
 
 def logout():
@@ -38,12 +39,12 @@ def get_user_id():
     for key in r.json():
         user_data = key
         if user_data['email'] == args.user or user_data['name'] == args.user:
-            user_id = user_data['userId'] 
+            user_id = user_data['userId']
             break
 
     try:
         return user_id
-    except:
+    except Exception:
         print('Error: user was not found')
         exit(1)
 
@@ -57,11 +58,11 @@ def get_group_id():
     for key in r.json():
         group_data = key
         if group_data['name'] == args.group:
-            group_id = group_data['groupId'] 
+            group_id = group_data['groupId']
             break
     try:
         return group_id
-    except:
+    except Exception:
         print('Error: group was not found')
         exit(1)
 
@@ -78,7 +79,7 @@ def get_user_groups():
 
     try:
         return user_groups
-    except:
+    except Exception:
         print('Error: user was not found')
         exit(1)
 
@@ -95,7 +96,7 @@ def list_resource(resource):
 def set_user_groups():
     user_id = get_user_id()
     group_id = get_group_id()
-    user_groups = get_user_groups() 
+    user_groups = get_user_groups()
 
     authHeader = {"Authorization": f"Bearer {token}"}
 
@@ -104,7 +105,7 @@ def set_user_groups():
     elif args.api_call == 'remove_user_from_group':
         try:
             user_groups.remove(group_id)
-        except:
+        except Exception:
             print('Error: user is not in group')
             exit(1)
         data = user_groups
@@ -114,6 +115,7 @@ def set_user_groups():
         json=data,
         headers=authHeader)
 
+
 def main():
     if args.api_call == 'list_users':
         list_resource('users')
@@ -122,14 +124,21 @@ def main():
     if args.api_call == 'add_user_to_group' or args.api_call == 'remove_user_from_group':
         set_user_groups()
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('api_call')
-    parser.add_argument('--token')
-    parser.add_argument('--user')
-    parser.add_argument('--group')
+    parser.add_argument(
+        'api_call',
+        help='The API call you want to make, currently supported are: '
+             'list_users, '
+             'list_groups, '
+             'add_user_to_group, '
+             'remove_user_from_group')
+    parser.add_argument('--token', help='your Ananda API token')
+    parser.add_argument('--user', help='user you want to add to or remove from group')
+    parser.add_argument('--group', help='group you want to add or remove a user from')
     args = parser.parse_args()
 
-    org_id, token = get_bearer_token() 
+    org_id, token = get_bearer_token()
     main()
     logout()
