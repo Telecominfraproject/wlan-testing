@@ -37,7 +37,6 @@ from android_lib import *
 from iOS_lib import *
 import json
 import ast
-import threading
 
 # device = iPhone-12, iPhone-11, iPhone-7 ,platform_name=iOS
 # device =  Galaxy S20, Galaxy S10.*, Galaxy S9, Pixel 4, platform_name = Android
