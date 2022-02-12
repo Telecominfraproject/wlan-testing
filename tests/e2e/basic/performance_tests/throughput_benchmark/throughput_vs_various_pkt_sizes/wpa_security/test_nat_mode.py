@@ -352,7 +352,7 @@ setup_params_5g = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 @pytest.mark.wpa
-class TestThroughputVsPktNatOpen5G(object):
+class TestThroughputVsPktWpaNat5G(object):
     """Throughput vs Various Pkt Size Test nat mode
        pytest -m "throughput_vs_pkt and nat"
     """
