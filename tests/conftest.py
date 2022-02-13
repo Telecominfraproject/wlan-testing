@@ -622,7 +622,7 @@ def lf_tools(get_configuration, testbed, skip_lf, run_lf):
 
 
 @pytest.fixture(scope="session")
-def lf_test(get_configuration, setup_influx, request, skip_lf):
+def lf_test(get_configuration, setup_influx, request, skip_lf, run_lf):
     if not skip_lf:
         if request.config.getoption("--exit-on-fail"):
             obj = RunTest(configuration_data=get_configuration, influx_params=setup_influx,
