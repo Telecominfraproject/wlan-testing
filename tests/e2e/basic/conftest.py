@@ -27,28 +27,22 @@ def instantiate_profile(request):
 
 
 @pytest.fixture(scope="session")
-def lf_tools(get_configuration, testbed):
-    lf_tools_obj = ChamberView(lanforge_data=get_configuration['traffic_generator']['details'],
-                               access_point_data=get_configuration['access_point'],
-                               testbed=testbed)
-    yield lf_tools_obj
-
-
-@pytest.fixture(scope="session")
 def create_lanforge_chamberview(lf_tools):
     scenario_object, scenario_name = lf_tools.Chamber_View()
     return scenario_name
 
 
 @pytest.fixture(scope="session")
-def create_lanforge_chamberview_dut(lf_tools):
-    dut_object, dut_name = lf_tools.Create_Dut()
-    return dut_name
+def create_lanforge_chamberview_dut(lf_tools, run_lf):
+    if not run_lf:
+        dut_object, dut_name = lf_tools.Create_Dut()
+        return dut_name
+    return ""
 
 
 @pytest.fixture(scope="class")
 def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtures_ver, reset_scenario_lf,
-                   instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
+                   instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools, run_lf,
                    get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
     param = dict(request.param)
 
@@ -79,7 +73,7 @@ def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtur
                                              instantiate_profile,
                                              get_markers, create_lanforge_chamberview_dut, lf_tools,
                                              get_security_flags, get_configuration, radius_info, get_apnos,
-                                             radius_accounting_info)
+                                             radius_accounting_info, run_lf=run_lf)
 
     yield return_var
 
@@ -115,7 +109,7 @@ def num_stations(request):
 
 
 @pytest.fixture(scope="class")
-def get_vif_state(get_apnos, get_configuration, request, lf_tools):
+def get_vif_state(get_apnos, get_configuration, request, lf_tools, run_lf):
     if request.config.getoption("1.x"):
         ap_ssh = get_apnos(get_configuration['access_point'][0], pwd="../libs/apnos/", sdk="1.x")
         vif_state = list(ap_ssh.get_vif_state_ssids())
@@ -140,15 +134,12 @@ def get_vlan_list(get_apnos, get_configuration):
 
 
 @pytest.fixture(scope="session")
-def reset_scenario_lf(request, lf_tools):
-    lf_tools.reset_scenario()
-
-    def teardown_session():
-        if request.config.getoption("--exit-on-fail"):
-            pass
-        else:
+def reset_scenario_lf(request, lf_tools, run_lf):
+    if not run_lf:
+        lf_tools.reset_scenario()
+        def teardown_session():
             lf_tools.reset_scenario()
 
-    request.addfinalizer(teardown_session)
+        request.addfinalizer(teardown_session)
     yield ""
 

@@ -1,7 +1,7 @@
 """
 
-    Performance Test: Throughput vs Various Pkt Size Test: VLAN MODE
-    pytest -m "throughput_vs_pkt and vlan"
+    Performance Test: Throughput vs Various Pkt Size Test: VLAN Mode
+    pytest -m "throughput_vs_pkt and VLAN"
 
 """
 import os
@@ -32,19 +32,19 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestThroughputVsPktVlanWpa32G(object):
-    """Throughput vs Various Pkt Size Test vlan mode
-       pytest -m "throughput_vs_pkt and vlan"
+class TestThroughputVsPktVLANWpa32G(object):
+    """Throughput vs Various Pkt Size Test VLAN mode
+       pytest -m "throughput_vs_pkt and VLAN"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2549", name="WIFI-2549")
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.pkt60
-    def test_client_wpa3_personal_pkt_vlan_60_2g(self, get_vif_state,
+    def test_client_wpa3_personal_pkt_VLAN_60_2g(self, 
                                             lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                             get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and twog"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -52,22 +52,19 @@ class TestThroughputVsPktVlanWpa32G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "twog"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 60'],
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_2G_60",
+                                       instance_name="TIP_PERF_DPT_WPA3_2G_60",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -88,11 +85,11 @@ class TestThroughputVsPktVlanWpa32G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.pkt142
-    def test_client_wpa3_personal_pkt_vlan_142_2g(self, get_vif_state,
+    def test_client_wpa3_personal_pkt_VLAN_142_2g(self, 
                                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                              get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and twog"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -100,22 +97,19 @@ class TestThroughputVsPktVlanWpa32G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "twog"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 142'],
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_2G_142",
+                                       instance_name="TIP_PERF_DPT_WPA3_2G_142",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -136,11 +130,11 @@ class TestThroughputVsPktVlanWpa32G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.pkt256
-    def test_client_wpa3_personal_pkt_vlan_256_2g(self, get_vif_state,
+    def test_client_wpa3_personal_pkt_VLAN_256_2g(self, 
                                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                              get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and twog"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -148,22 +142,19 @@ class TestThroughputVsPktVlanWpa32G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "twog"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 256'],
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_2G_256",
+                                       instance_name="TIP_PERF_DPT_WPA3_2G_256",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -184,11 +175,11 @@ class TestThroughputVsPktVlanWpa32G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.pkt512
-    def test_client_wpa3_personal_pkt_vlan_512_2g(self, get_vif_state,
+    def test_client_wpa3_personal_pkt_VLAN_512_2g(self, 
                                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                              get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and twog"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -196,22 +187,19 @@ class TestThroughputVsPktVlanWpa32G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "twog"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 512'],
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_2G_1024",
+                                       instance_name="TIP_PERF_DPT_WPA3_2G_512",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -232,11 +220,11 @@ class TestThroughputVsPktVlanWpa32G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.pkt1024
-    def test_client_wpa3_personal_pkt_vlan_1024_2g(self, get_vif_state,
+    def test_client_wpa3_personal_pkt_VLAN_1024_2g(self, 
                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                               get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and twog"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -244,22 +232,19 @@ class TestThroughputVsPktVlanWpa32G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "twog"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 1024'],
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_2G_MTU",
+                                       instance_name="TIP_PERF_DPT_WPA3_2G_1024",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -280,11 +265,11 @@ class TestThroughputVsPktVlanWpa32G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.pktMTU
-    def test_client_wpa3_personal_pkt_vlan_MTU_2g(self, get_vif_state,
+    def test_client_wpa3_personal_pkt_VLAN_MTU_2g(self, 
                                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                              get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and twog"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -292,22 +277,19 @@ class TestThroughputVsPktVlanWpa32G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "twog"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: MTU'],
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_2G_MTU",
+                                       instance_name="TIP_PERF_DPT_WPA3_2G_MTU",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -323,6 +305,7 @@ class TestThroughputVsPktVlanWpa32G(object):
             assert station
         else:
             assert False
+
 
 setup_params_5g = {
     "mode": "VLAN",
@@ -344,19 +327,19 @@ setup_params_5g = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestThroughputVsPktVlanWpa35G(object):
-    """Throughput vs Various Pkt Size Test vlan mode
-       pytest -m "throughput_vs_pkt and vlan"
+class TestThroughputVsPktVLANWpa35G(object):
+    """Throughput vs Various Pkt Size Test VLAN mode
+       pytest -m "throughput_vs_pkt and VLAN"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2549", name="WIFI-2549")
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt60
-    def test_client_wpa3_personal_pkt_vlan_60_5g(self, get_vif_state,
+    def test_client_wpa3_personal_pkt_VLAN_60_5g(self, 
                                             lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                             get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and fiveg"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and fiveg"
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -364,22 +347,19 @@ class TestThroughputVsPktVlanWpa35G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 60'],
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_5G",
+                                       instance_name="TIP_PERF_THRU_PKT_WPA3_5G_60",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -400,11 +380,11 @@ class TestThroughputVsPktVlanWpa35G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt142
-    def test_client_wpa3_personal_pkt_vlan_142_5g(self, get_vif_state,
+    def test_client_wpa3_personal_pkt_VLAN_142_5g(self, 
                                              lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                              get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and fiveg"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and fiveg"
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -412,22 +392,19 @@ class TestThroughputVsPktVlanWpa35G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 142'],
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_5G_142",
+                                       instance_name="TIP_PERF_THRU_PKT_WPA3_5G_142",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -448,11 +425,11 @@ class TestThroughputVsPktVlanWpa35G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt256
-    def test_client_wpa3_personal_pkt_vlan_256_5g(self, get_vif_state,
+    def test_client_wpa3_personal_pkt_VLAN_256_5g(self, 
                                              lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                              get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and fiveg"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and fiveg"
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -460,22 +437,19 @@ class TestThroughputVsPktVlanWpa35G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 256'],
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_5G_256",
+                                       instance_name="TIP_PERF_THRU_PKT_WPA3_5G_256",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -496,11 +470,11 @@ class TestThroughputVsPktVlanWpa35G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt512
-    def test_client_wpa3_personal_pkt_vlan_512_5g(self, get_vif_state,
+    def test_client_wpa3_personal_pkt_VLAN_512_5g(self, 
                                              lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                              get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and fiveg"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and fiveg"
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -508,22 +482,19 @@ class TestThroughputVsPktVlanWpa35G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 512'],
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_5G_512",
+                                       instance_name="TIP_PERF_THRU_PKT_WPA3_5G_512",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -544,11 +515,11 @@ class TestThroughputVsPktVlanWpa35G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @pytest.mark.pkt1024
-    def test_client_wpa3_personal_pkt_vlan_1024_5g(self, get_vif_state,
+    def test_client_wpa3_personal_pkt_VLAN_1024_5g(self, 
                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                               get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and fiveg"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and fiveg"
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -556,22 +527,19 @@ class TestThroughputVsPktVlanWpa35G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 1024'],
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_5G_1024",
+                                       instance_name="TIP_PERF_THRU_PKT_WPA3_5G_1024",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -592,11 +560,11 @@ class TestThroughputVsPktVlanWpa35G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @pytest.mark.pktMTU
-    def test_client_wpa3_personal_pkt_vlan_MTU_5g(self, get_vif_state,
+    def test_client_wpa3_personal_pkt_VLAN_MTU_5g(self, 
                                              lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                              get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and fiveg"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and fiveg"
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -604,22 +572,19 @@ class TestThroughputVsPktVlanWpa35G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: MTU'],
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_5G_MTU",
+                                       instance_name="TIP_PERF_THRU_PKT_WPA3_5G_MTU",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -635,4 +600,3 @@ class TestThroughputVsPktVlanWpa35G(object):
             assert station
         else:
             assert False
-

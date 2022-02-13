@@ -27,24 +27,12 @@ def instantiate_profile(request):
 
 
 
-@pytest.fixture(scope="session")
-def lf_tools(get_configuration, testbed):
-    lf_tools_obj = ChamberView(lanforge_data=get_configuration['traffic_generator']['details'],
-                               access_point_data=get_configuration['access_point'],
-                               testbed=testbed)
-    yield lf_tools_obj
 
 
 @pytest.fixture(scope="session")
 def create_lanforge_chamberview(lf_tools):
     scenario_object, scenario_name = lf_tools.Chamber_View()
     return scenario_name
-
-
-@pytest.fixture(scope="session")
-def create_lanforge_chamberview_dut(lf_tools):
-    dut_object, dut_name = lf_tools.Create_Dut()
-    return dut_name
 
 
 @pytest.fixture(scope="session")
@@ -58,7 +46,7 @@ def setup_vlan():
 @pytest.fixture(scope="class")
 def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtures_ver,
                    instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
-                   get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
+                   get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info, run_lf):
     lf_tools.reset_scenario()
     param = dict(request.param)
 
@@ -88,17 +76,9 @@ def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtur
                                              instantiate_profile,
                                              get_markers, create_lanforge_chamberview_dut, lf_tools,
                                              get_security_flags, get_configuration, radius_info, get_apnos,
-                                             radius_accounting_info)
+                                             radius_accounting_info, run_lf=run_lf)
 
     yield return_var
-
-
-@pytest.fixture(scope="session")
-def lf_test(get_configuration, setup_influx):
-    # print(get_configuration)
-    obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'], influx_params=setup_influx)
-    # pytest.exit("")
-    yield obj
 
 
 @pytest.fixture(scope="session")
