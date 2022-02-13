@@ -66,6 +66,7 @@ import fixtures_1x
 from fixtures_1x import Fixtures_1x
 import fixtures_2x
 from fixtures_2x import Fixtures_2x
+from fixtures_3x import Fixtures_3x
 
 ALLURE_ENVIRONMENT_PROPERTIES_FILE = 'environment.properties'
 ALLUREDIR_OPTION = '--alluredir'
@@ -154,6 +155,13 @@ def pytest_addoption(parser):
         default=False,
         help="skip cloud controller and AP, run only lanforge tests on a ssid preconfigured"
     )
+    parser.addoption(
+        "--cc.1",
+        action="store_true",
+        default=False,
+        help="Option to run Test Cases on cc version 1"
+
+    )
 
     # Perfecto Parameters
     parser.addini("perfectoURL", "Cloud URL")
@@ -215,6 +223,13 @@ def run_lf(request):
     """yields the --run-lf option for skipping configuration on AP and using Cloud controller"""
     var = request.config.getoption("--run-lf")
     yield var
+
+@pytest.fixture(scope="session")
+def cc_1(request):
+    """yields the --cc.1 option for skipping configuration on AP and using Cloud controller of available framework"""
+    var = request.config.getoption("--cc.1")
+    yield var
+
 
 
 @pytest.fixture(scope="session")
@@ -294,6 +309,7 @@ def get_sdk_version(fixtures_ver, run_lf):
     version = ""
     if not run_lf:
         version = fixtures_ver.get_sdk_version()
+        print(version)
     yield version
 
 
@@ -701,12 +717,15 @@ def add_firmware_property_after_upgrade(add_allure_environment_property, fixture
 
 @pytest.fixture(scope="session")
 def fixtures_ver(request, get_configuration, run_lf):
-    if request.config.getoption("1.x") is False:
+    if request.config.getoption("1.x") is False and request.config.getoption("cc.1") is False:
         print("2.x")
         obj = Fixtures_2x(configuration=get_configuration, run_lf=run_lf)
     if request.config.getoption("1.x"):
         print("1.x")
         obj = Fixtures_1x(configuration=get_configuration)
+    if request.config.getoption("cc.1"):
+        print("cc.1")
+        obj = Fixtures_3x(configuration=get_configuration, run_lf=run_lf)
     yield obj
 
 
