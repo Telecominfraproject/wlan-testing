@@ -58,7 +58,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         vlan = 1
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         influx_tags = ["tcp", "download", "2.4G-5G Combined"]
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_dl", mode=mode, vlan_id=vlan,
@@ -87,7 +87,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         vlan = 1
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         influx_tags = ["udp", "download", "2.4G-5G Combined"]
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_dl", mode=mode, vlan_id=vlan,
@@ -116,7 +116,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         vlan = 1
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         influx_tags = ["tcp", "bidirectional", "2.4G-5G Combined"]
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_bi", mode=mode, vlan_id=vlan,
@@ -145,7 +145,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         vlan = 1
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         influx_tags = ["udp", "bidirectional", "2.4G-5G Combined"]
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_bi", mode=mode, vlan_id=vlan,
@@ -240,7 +240,11 @@ class TestWifiCapacityBRIDGEMode2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3934", name="WIFI-3934")
     @pytest.mark.tcp_bidirectional
+<<<<<<< HEAD
     def test_client_wpa2_BRIDGE_tcp_bidirectional(self,  lf_tools,
+=======
+    def test_client_wpa2_bridge_tcp_bidirectional(self, get_vif_state, lf_tools,
+>>>>>>> f1af689d5238d4fde3194efd9b91e432bdf9d567
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                   get_configuration):
         """ Wifi Capacity Test BRIDGE mode

@@ -3,6 +3,8 @@ import sys
 import os
 import  importlib
 
+import pytest
+
 sys.path.append(
     os.path.dirname(
         os.path.realpath(__file__)
@@ -341,7 +343,7 @@ class ChamberView:
                     self.raw_line.append(station_data)
             if num_stations == "max":
                 for radio in self.twog_radios:
-                    num_stations = 64
+                    num_stations = self.get_max_sta(radio)
                     station_data = ["profile_link " + radio.split(".")[0] + "." + radio.split(".")[1] +
                                     " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
                                     str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
@@ -367,7 +369,7 @@ class ChamberView:
                     self.raw_line.append(station_data)
             if num_stations == "max":
                 for radio in self.fiveg_radios:
-                    num_stations = 64
+                    num_stations = self.get_max_sta(radio)
                     station_data = ["profile_link " + radio.split(".")[0] + "." + radio.split(".")[1] +
                                     " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
                                     str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
@@ -375,10 +377,19 @@ class ChamberView:
                     self.raw_line.append(station_data)
 
         if band == "ax":
+
             if num_stations != "max":
+                max_possible = 0
+                for radio in self.ax_radios:
+                    max_possible = max_possible + self.get_max_sta(radio)
                 if num_stations > 1:
+                    if num_stations > max_possible:
+                        pytest.exit("Error: Can't Create " + num_stations + ", only " + max_possible + " Stations can be created")
+
                     num_stations = int(num_stations / len(self.ax_radios))
                     for radio in self.ax_radios:
+                        max = self.get_max_sta(radio)
+                        num_stations = num_stations - max
                         station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
                                         str(int(idx) + 1) + "'" + " NA " + radio]
                         self.raw_line.append(station_data)
@@ -389,7 +400,7 @@ class ChamberView:
                     self.raw_line.append(station_data)
             if num_stations == "max":
                 for radio in self.ax_radios:
-                    num_stations = 1
+                    num_stations = self.get_max_sta(radio)
                     station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
                                     str(int(idx) + 1) + "'" + " NA " + radio]
                     self.raw_line.append(station_data)
@@ -596,87 +607,119 @@ class ChamberView:
         cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port, )
         return cli_base.json_post(req_url, data)
 
+    def get_max_sta(self, radio=""):
+        data = self.json_get("/radiostatus/all")
+        return data[radio]["max_sta"]
+
 
 def main():
-    # lanforge_data = {'ip': 'localhost', 'port': 8802, 'ssh_port': 8804, '2.4G-Radio': ['1.1.wiphy0', '1.1.wiphy2'], '5G-Radio': ['1.1.wiphy1', '1.1.wiphy3'], 'AX-Radio': ['1.1.wiphy4', '1.1.wiphy5', '1.1.wiphy6', '1.1.wiphy7'], 'upstream': '1.1.eth2', 'upstream_subnet': '10.28.2.1/24', 'uplink': '1.1.eth1', '2.4G-Station-Name': 'sta00', '5G-Station-Name': 'sta10', 'AX-Station-Name': 'ax'}
+    # # lanforge_data = {'ip': 'localhost', 'port': 8802, 'ssh_port': 8804, '2.4G-Radio': ['1.1.wiphy0', '1.1.wiphy2'], '5G-Radio': ['1.1.wiphy1', '1.1.wiphy3'], 'AX-Radio': ['1.1.wiphy4', '1.1.wiphy5', '1.1.wiphy6', '1.1.wiphy7'], 'upstream': '1.1.eth2', 'upstream_subnet': '10.28.2.1/24', 'uplink': '1.1.eth1', '2.4G-Station-Name': 'sta00', '5G-Station-Name': 'sta10', 'AX-Station-Name': 'ax'}
+    # lanforge_data = {
+    #     "type": "mesh",
+    #     "ip": "localhost",  # 10.28.3.14
+    #     "port": 8802,  # 8080
+    #     "ssh_port": 8804,
+    #     "2.4G-Radio-mobile-sta": ["1.1.wiphy0", "1.1.wiphy2"],
+    #     "5G-Radio-mobile-sta": ["1.1.wiphy1", "1.1.wiphy3"],
+    #     "AX-Radio-mobile-sta": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
+    #     "upstream-mobile-sta": "1.1.eth2",
+    #     "upstream_subnet-mobile-sta": "10.28.2.1/24",
+    #     "uplink-mobile-sta": "1.1.eth3",
+    #     "2.4G-Radio-root": ["1.2.wiphy0"],
+    #     "5G-Radio-root": ["1.2.wiphy1"],
+    #     "AX-Radio-root": [],
+    #     "upstream-root": "1.2.eth2",
+    #     "upstream_subnet-root": "10.28.2.1/24",
+    #     "uplink-root": "1.2.eth3",
+    #     "2.4G-Radio-node-1": ["1.3.wiphy0"],
+    #     "5G-Radio-node-1": ["1.3.wiphy1"],
+    #     "AX-Radio-node-1": [],
+    #     "upstream-node-1": "1.3.eth2",
+    #     "upstream_subnet-node-1": "10.28.2.1/24",
+    #     "uplink--node-1": "1.3.eth3",
+    #     "2.4G-Radio-node-2": ["1.4.wiphy0"],
+    #     "5G-Radio-node-2": ["1.4.wiphy1"],
+    #     "AX-Radio-node-2": [],
+    #     "upstream-node-2": "1.4.eth2",
+    #     "upstream_subnet-node-2": "10.28.2.1/24",
+    #     "uplink--node-2": "1.4.eth3",
+    #     "2.4G-Station-Name": "wlan0",
+    #     "5G-Station-Name": "wlan0",
+    #     "AX-Station-Name": "ax"
+    # }
+    # # ap_data = [{'model': 'wf188n', 'mode': 'wifi6', 'serial': '0000c1018812', 'jumphost': True, 'ip': 'localhost', 'username': 'lanforge', 'password': 'pumpkin77', 'port': 8803, 'jumphost_tty': '/dev/ttyAP1', 'version': 'https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf188/20210729-cig_wf188-v2.0.0-rc2-ec3662e-upgrade.bin'}]
+    # ap_data = [
+    #     {
+    #         'type': 'root',
+    #         'model': 'eap101',
+    #         'mode': 'wifi6',
+    #         'serial': '34efb6af4a7a',
+    #         'jumphost': True,
+    #         'ip': "localhost",  # 10\.28\.3\.101
+    #         'username': "lanforge",
+    #         'password': "pumpkin77",
+    #         'port': 8803,  # 22
+    #         'jumphost_tty': '/dev/ttyAP2',
+    #         'version': "latest"
+    #     },
+    #     {
+    #         'type': 'node-1',
+    #         'model': 'eap101',
+    #         'mode': 'wifi6',
+    #         'serial': '34efb6af4903',
+    #         'jumphost': True,
+    #         'ip': "localhost",  # 10\.28\.3\.101
+    #         'username': "lanforge",
+    #         'password': "pumpkin77",
+    #         'port': 8803,  # 22
+    #         'jumphost_tty': '/dev/ttyAP3',
+    #         'version': "latest"
+    #     },
+    #     {
+    #         'type': 'node-2',
+    #         'model': 'eap102',
+    #         'mode': 'wifi6',
+    #         'serial': '34efb6af4a7a',
+    #         'jumphost': True,
+    #         'ip': "localhost",  # 10\.28\.3\.101
+    #         'username': "lanforge",
+    #         'password': "pumpkin77",
+    #         'port': 8803,  # 22
+    #         'jumphost_tty': '/dev/ttyAP4',
+    #         'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/eap101/trunk/eap101-1.1.0.tar.gz"
+    #     }
+    # ]
+    # testbed = "mesh"
     lanforge_data = {
-        "type": "mesh",
-        "ip": "localhost",  # 10.28.3.14
-        "port": 8802,  # 8080
-        "ssh_port": 8804,
-        "2.4G-Radio-mobile-sta": ["1.1.wiphy0", "1.1.wiphy2"],
-        "5G-Radio-mobile-sta": ["1.1.wiphy1", "1.1.wiphy3"],
-        "AX-Radio-mobile-sta": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
-        "upstream-mobile-sta": "1.1.eth2",
-        "upstream_subnet-mobile-sta": "10.28.2.1/24",
-        "uplink-mobile-sta": "1.1.eth3",
-        "2.4G-Radio-root": ["1.2.wiphy0"],
-        "5G-Radio-root": ["1.2.wiphy1"],
-        "AX-Radio-root": [],
-        "upstream-root": "1.2.eth2",
-        "upstream_subnet-root": "10.28.2.1/24",
-        "uplink-root": "1.2.eth3",
-        "2.4G-Radio-node-1": ["1.3.wiphy0"],
-        "5G-Radio-node-1": ["1.3.wiphy1"],
-        "AX-Radio-node-1": [],
-        "upstream-node-1": "1.3.eth2",
-        "upstream_subnet-node-1": "10.28.2.1/24",
-        "uplink--node-1": "1.3.eth3",
-        "2.4G-Radio-node-2": ["1.4.wiphy0"],
-        "5G-Radio-node-2": ["1.4.wiphy1"],
-        "AX-Radio-node-2": [],
-        "upstream-node-2": "1.4.eth2",
-        "upstream_subnet-node-2": "10.28.2.1/24",
-        "uplink--node-2": "1.4.eth3",
+        "ip": "10.28.3.6",
+        "port": 8080,
+        "ssh_port": 22,
+        "2.4G-Radio": ["1.1.wiphy4"],
+        "5G-Radio": ["1.1.wiphy5"],
+        "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
+        "upstream": "1.1.eth2",
+        "upstream_subnet": "10.28.2.1/24",
+        "uplink": "1.1.eth3",
         "2.4G-Station-Name": "wlan0",
-        "5G-Station-Name": "wlan0",
+        "5G-Station-Name": "wlan1",
         "AX-Station-Name": "ax"
     }
-    # ap_data = [{'model': 'wf188n', 'mode': 'wifi6', 'serial': '0000c1018812', 'jumphost': True, 'ip': 'localhost', 'username': 'lanforge', 'password': 'pumpkin77', 'port': 8803, 'jumphost_tty': '/dev/ttyAP1', 'version': 'https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf188/20210729-cig_wf188-v2.0.0-rc2-ec3662e-upgrade.bin'}]
-    ap_data = [
-        {
-            'type': 'root',
-            'model': 'eap101',
-            'mode': 'wifi6',
-            'serial': '34efb6af4a7a',
-            'jumphost': True,
-            'ip': "localhost",  # 10\.28\.3\.101
-            'username': "lanforge",
-            'password': "pumpkin77",
-            'port': 8803,  # 22
-            'jumphost_tty': '/dev/ttyAP2',
-            'version': "latest"
-        },
-        {
-            'type': 'node-1',
-            'model': 'eap101',
-            'mode': 'wifi6',
-            'serial': '34efb6af4903',
-            'jumphost': True,
-            'ip': "localhost",  # 10\.28\.3\.101
-            'username': "lanforge",
-            'password': "pumpkin77",
-            'port': 8803,  # 22
-            'jumphost_tty': '/dev/ttyAP3',
-            'version': "latest"
-        },
-        {
-            'type': 'node-2',
-            'model': 'eap102',
-            'mode': 'wifi6',
-            'serial': '34efb6af4a7a',
-            'jumphost': True,
-            'ip': "localhost",  # 10\.28\.3\.101
-            'username': "lanforge",
-            'password': "pumpkin77",
-            'port': 8803,  # 22
-            'jumphost_tty': '/dev/ttyAP4',
-            'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/eap101/trunk/eap101-1.1.0.tar.gz"
-        }
-    ]
-    testbed = "mesh"
-    obj = ChamberView(lanforge_data=lanforge_data, access_point_data=ap_data, testbed="mesh")
-    obj.create_mesh_dut()
+    ap_data = [{
+        "model": "edgecore_ecw5410",
+        "mode": "wifi5",
+        "serial": "3c2c99f44e77",
+        "jumphost": True,
+        "ip": "10.28.3.100",
+        "username": "lanforge",
+        "password": "pumpkin77",
+        "port": 22,
+        "jumphost_tty": "/dev/ttyAP1",
+        "version": "release-latest"
+    }]
+    obj = ChamberView(lanforge_data=lanforge_data, access_point_data=ap_data, testbed="basic")
+    a = obj.get_max_sta("1.1.wiphy0")
+    print(a)
+    # obj.create_mesh_dut()
 
 
 if __name__ == '__main__':

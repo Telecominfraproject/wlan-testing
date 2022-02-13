@@ -1,9 +1,8 @@
 #!/usr/bin/python3.9
 """
-
-    interop_tools : Tools for Interop
-                reboot
-    ./interop_tools --all_devices "{\"Galaxy S9\":\"Android\",\"Galaxy S20\":\"Android\"}""
+Note: Run this file as it is to reboot all devices at same time from interop lab
+    interop_tools : To reboot
+   ./interop_tools --all_devices "{\"Galaxy S9\":\"Android\",\"Galaxy S20\":\"Android\"}"
 """
 
 import sys
@@ -37,6 +36,7 @@ from android_lib import *
 from iOS_lib import *
 import json
 import ast
+import threading
 
 # device = iPhone-12, iPhone-11, iPhone-7 ,platform_name=iOS
 # device =  Galaxy S20, Galaxy S10.*, Galaxy S9, Pixel 4, platform_name = Android
@@ -97,7 +97,7 @@ def main():
 
     parser.add_argument('--all_devices', type=str,
                         help=' --all_devices : device you want to reboot '
-                             'ex. --all_devices "{\"Galaxy S9\":\"Android\",\"Galaxy S20\":\"Android\"}" ',
+                             'ex. --all_devices "{\"Galaxy S9\":\"Android\",\"Galaxy S20\":\"Android\"}"',
                         default="{\"Galaxy S20\": 'Android', \"Galaxy S10.*\": 'Android', \"Galaxy S9\": 'Android', \"Pixel 4\": 'Android',\"iPhone-12\": 'iOS', \"iPhone-11\": 'iOS', \"iPhone-7\" : 'iOS', \"iPhone-XR\" : 'iOS'}")
 
     args = parser.parse_args()
@@ -119,8 +119,9 @@ def main():
             perfecto_tool.close_driver(driver=driver,device_model_name=device_name)
 
     for device_name, platform in all_devices.items():
-        rebool_all(platform=platform,device_name=device_name)
+        device_name = threading.Thread(target=rebool_all, args=(platform,device_name))
         print(device_name)
+        device_name.start()
 
 if __name__ == '__main__':
     main()

@@ -50,8 +50,6 @@ runs:
   - name: run tests
     shell: bash
     run: |
-      set -x
-
       cat <<EOF | kubectl apply -f -
       apiVersion: batch/v1
       kind: Job

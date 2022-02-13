@@ -112,12 +112,13 @@ class RunTest:
             self.local_report_path = local_report_path
             if not os.path.exists(self.local_report_path):
                 os.mkdir(self.local_report_path)
-            # self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
+
 
     def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[],
                             station_name=[], mode="BRIDGE", vlan_id=1, band="twog"):
         """SINGLE CLIENT CONNECTIVITY using test_connect2.py"""
         self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
+
         self.staConnect.sta_mode = 0
         self.staConnect.upstream_resource = 1
         if mode == "BRIDGE":
@@ -133,6 +134,8 @@ class RunTest:
                 security = self.ssid_data["2g-encryption"].lower()
                 print(ssid)
             self.staConnect.radio = self.twog_radios[0]
+            self.staConnect.admin_down(self.staConnect.radio)
+            self.staConnect.admin_up(self.staConnect.radio)
             self.staConnect.sta_prefix = self.twog_prefix
         if band == "fiveg":
             if self.run_lf:
@@ -140,6 +143,7 @@ class RunTest:
                 passkey = self.ssid_data["5g-password"]
                 security = self.ssid_data["5g-encryption"].lower()
             self.staConnect.radio = self.fiveg_radios[0]
+            self.staConnect.reset_port(self.staConnect.radio)
             self.staConnect.sta_prefix = self.fiveg_prefix
         self.staConnect.resource = 1
         self.staConnect.dut_ssid = ssid
@@ -176,12 +180,12 @@ class RunTest:
                 pytest.exit("Test Failed: Debug True")
         self.staConnect.cleanup()
         try:
-            supplicant = "/home/lanforge/wifi/wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt"
+            supplicant = "/home/lanforge/wifi/wpa_supplicant_log_" + self.staConnect.radio.split(".")[2] + ".txt"
             obj = SCP_File(ip=self.lanforge_ip, port=self.lanforge_ssh_port, username="root", password="lanforge",
                            remote_path=supplicant,
                            local_path=".")
             obj.pull_file()
-            allure.attach.file(source="wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt",
+            allure.attach.file(source="wpa_supplicant_log_" + self.staConnect.radio.split(".")[2] + ".txt",
                                name="supplicant_log")
         except Exception as e:
             print(e)
@@ -233,6 +237,8 @@ class RunTest:
                 passkey = self.ssid_data["2g-password"]
                 security = self.ssid_data["2g-encryption"]
             self.eap_connect.radio = self.twog_radios[0]
+            self.eap_connect.admin_down(self.eap_connect.radio)
+            self.eap_connect.admin_up(self.eap_connect.radio)
             # self.eap_connect.sta_prefix = self.twog_prefix
         if band == "fiveg":
             if self.run_lf:
@@ -240,6 +246,8 @@ class RunTest:
                 passkey = self.ssid_data["5g-password"]
                 security = self.ssid_data["5g-encryption"]
             self.eap_connect.radio = self.fiveg_radios[0]
+            self.eap_connect.admin_down(self.eap_connect.radio)
+            self.eap_connect.admin_up(self.eap_connect.radio)
             # self.eap_connect.sta_prefix = self.fiveg_prefix
         # self.eap_connect.resource = 1
         if eap == "TTLS":
@@ -1015,10 +1023,9 @@ if __name__ == '__main__':
     }
     obj = RunTest(lanforge_data=lanforge_data, debug=False, influx_params=influx_params)
     upstream = lanforge_data['upstream']
-    data = obj.staConnect.json_get("/port/all")
-    for i in data["interfaces"]:
-        if list(i.keys())[0] == "1.1.eth1.10":
-            print(i)
+    # data = obj.staConnect.json_get("/port/all")
+    obj.eap_connect.admin_down("1.1.wiphy4")
+    obj.eap_connect.admin_up("1.1.wiphy4")
     # print(dict(list(data['interfaces'])).keys())
     # print(obj.staConnect.json_get("/port/" + upstream.split(".")[0] +
     #                         "/" + upstream.split(".")[1] +

@@ -137,9 +137,9 @@ def get_vlan_list(get_apnos, get_configuration):
 def reset_scenario_lf(request, lf_tools, run_lf):
     if not run_lf:
         lf_tools.reset_scenario()
-
         def teardown_session():
             lf_tools.reset_scenario()
 
         request.addfinalizer(teardown_session)
     yield ""
+

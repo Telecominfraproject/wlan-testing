@@ -1,9 +1,5 @@
 name: manual pytest execution
 env:
-  # thirdparties
-  DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
-  DOCKER_USER_NAME: wlan-testing-cicd
-  DOCKER_USER_PASSWORD: ${{ secrets.DOCKER_USER_PASSWORD }}
   # AWS credentials
   AWS_EKS_NAME: tip-wlan-main
   AWS_DEFAULT_OUTPUT: json
@@ -11,29 +7,30 @@ env:
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
-  # Cloud SDK certs
-  CACERT: ${{ secrets.CACERT }}
-  CAKEY: ${{ secrets.CAKEY }}
-  ALLURE_CLI_VERSION: 2.14.0
 
 on:
   workflow_dispatch:
     inputs:
       testbed:
-        default: 'basic-01'
-        description: 'testbed to execute tests against'
+        default: "basic-01"
+        description: "testbed to execute tests against"
         required: false
       firmware:
-        default: 'next-latest'
-        description: 'Target firmware version to be specified <branch>-<commit | latest>'
+        default: "next-latest"
+        description: "target firmware version to be specified <branch>-<commit | latest>"
         required: false
       marker_expression:
-        default: ''
+        default: ""
         description: "marker expression that will be passed to pytest's -m"
         required: false
       additional_args:
-        default: ''
-        description: 'additional arguments that will be passed to the pytest execution'
+        default: ""
+        description: "additional arguments that will be passed to the pytest execution"
+        required: false
+      upload_report:
+        type: boolean
+        default: "false"
+        description: "check if the report should be uploaded to S3"
         required: false
 
 defaults:
@@ -44,178 +41,87 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    # checkout needed repositories
-    - name: Checkout Testing repo
-      uses: actions/checkout@v2
-      with:
-        path: wlan-testing
-
-    - name: Checkout LANforge scripts
-      uses: actions/checkout@v2
-      with:
-        path: wlan-lanforge-scripts
-        repository: Telecominfraproject/wlan-lanforge-scripts
-
-    - name: import LANforge scripts
-      working-directory: wlan-testing
-      run: ./sync_repos.bash
-
-    # build and push docker image
-    - name: docker login
-      run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
-    - name: build docker image
-      working-directory: wlan-testing
-      run: docker build -t ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }} -f docker/Dockerfile .
-    - name: push docker image
-      run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
+      - uses: actions/checkout@v2
+      - name: build and push Docker image
+        uses: ./.github/actions/build-and-push-docker
+        with:
+          registry: tip-tip-wlan-cloud-docker-repo.jfrog.io
+          registry_user: wlan-testing-cicd
+          registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   test:
-    runs-on: [ self-hosted, small ]
-    needs: [ build ]
+    runs-on: [self-hosted, small]
+    needs: [build]
     timeout-minutes: 1440
 
     steps:
-    - name: install JRE
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y default-jre
+      - uses: actions/checkout@v2
+      - name: install JRE
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y default-jre
 
-    - name: install aws CLI tool
-      run: |
-        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-        unzip awscliv2.zip
-        sudo ./aws/install
+      - name: install aws CLI tool
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
 
-    - name: get EKS access credentials
-      run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
-    - name: install kubectl
-      run: |
-        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
-    - name: install Allure CLI tool
-      run: |
-        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: "manual-${{ github.run_id }}-${{ github.event.inputs.testbed }}"
+          testbed: "${{ github.event.inputs.testbed }}"
+          marker_expression: "${{ github.event.inputs.marker_expression }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o firmware=${{ github.event.inputs.firmware }} ${{ github.event.inputs.additional_args }}"
+          allure_results_artifact_name: allure-results
 
-    - name: set job name
-      id: job
-      run: echo "::set-output name=name::manual-${{ github.run_id }}"
+      - name: upload Allure results as artifact
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: allure-results
+          path: allure-results
 
-    - name: prepare namespace
-      id: namespace
-      run: |
-        NAMESPACE="testing-${{ github.run_id }}-${{ github.event.inputs.testbed }}"
-        kubectl create ns $NAMESPACE
-        kubectl config set-context --current --namespace=$NAMESPACE
-        echo "::set-output name=name::${NAMESPACE}"
+      - name: generate Allure report
+        uses: ./.github/actions/generate-allure-report
+        with:
+          results_path: ./allure-results
 
-    - name: create configuration.py secret
-      run: |
-        cat << EOF > configuration.py
-        ${{ secrets.LAB_CONFIGURATION }}
-        EOF
-        sed -i -r "s/'password': ('|\")openwifi('|\")/'password': '"${{ secrets.OWSEC_NEW_PASSWORD }}"'/" configuration.py
-        kubectl create secret generic configuration --from-file=configuration=./configuration.py
+      - name: upload Allure report as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: allure-report
+          path: allure-report
 
-    - name: run tests
-      run: |
-        cat <<EOF | kubectl apply -f -
-        apiVersion: batch/v1
-        kind: Job
-        metadata:
-          name: "${{ steps.job.outputs.name }}"
-        spec:
-          template:
-            metadata:
-              annotations:
-                cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
-            spec:
-              containers:
-              - name: tests
-                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
-                resources:
-                  requests:
-                    memory: "512Mi"
-                    cpu: "250m"
-                  limits:
-                    memory: "512Mi"
-                    cpu: "250m"
-                command:
-                  - /bin/bash
-                  - -c
-                  - |
-                    cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression }}" -s -vvv --testbed="${{ github.event.inputs.testbed }}" -o firmware="${{ github.event.inputs.firmware }}" --alluredir=/tmp/allure-results ${{ github.event.inputs.additional_args }}
-                    ret=\$?
-                    # sleep some time to be able to download the Allure results
-                    sleep 60
-                    exit \$ret
-                volumeMounts:
-                - name: configuration
-                  mountPath: "/wlan-testing/tests/configuration.py"
-                  subPath: configuration
-                  readOnly: true
-              nodeSelector:
-                env: tests
-              tolerations:
-              - key: "tests"
-                operator: "Exists"
-                effect: "NoSchedule"
-              imagePullSecrets:
-              - name: tip-docker-registry-key
-              restartPolicy: Never
-              volumes:
-              - name: configuration
-                secret:
-                  secretName: configuration
-          backoffLimit: 0
-        EOF
-        # wait for pod to spawn
-        sleep 1
-        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
-        kubectl logs -f $podname &
-        until [ -s test_everything.xml ]
-        do
-          sleep 10
-          kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
-        done
-        echo "tests completed"
-        echo "downloading allure results..."
-        kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
-        echo "waiting for pod to exit"
-        kubectl logs -f $podname >/dev/null 2>&1
-
-        until [[ ! -z "$EXIT_CODE" ]]; do EXIT_CODE=$(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}"); sleep 1; done;
-        exit $EXIT_CODE
-
-    - name: upload Allure results as artifact
-      if: always()
-      uses: actions/upload-artifact@v2
-      with:
-        name: allure-results
-        path: allure-results
-
-    - name: generate Allure report
-      run: allure-${{ env.ALLURE_CLI_VERSION }}/bin/allure generate allure-results
-
-    - name: upload Allure report as artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: allure-report
-        path: allure-report
-
-    - name: cleanup
-      if: always()
-      run: |
-        kubectl delete ns "${{ steps.namespace.outputs.name }}" --wait=true
+      - name: upload to S3
+        if: github.event.inputs.upload_report
+        uses: ./.github/actions/allure-report-to-s3
+        with:
+          test_type: manual
+          testbed: "${{ github.event.inputs.testbed }}"
+          report_path: allure-report
+          s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
+          s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
 
   cleanup:
-    needs: [ test ]
+    needs: [test]
     runs-on: ubuntu-latest
     if: always()
     steps:
-    - name: cleanup Docker image
-      run: curl -u${{ env.DOCKER_USER_NAME }}:${{ env.DOCKER_USER_PASSWORD }} -X DELETE "https://tip.jfrog.io/artifactory/tip-wlan-cloud-docker-repo/cloud-sdk-nightly/${{ github.run_id }}"
+      - uses: actions/checkout@v2
+      - name: cleanup Docker image
+        uses: ./.github/actions/cleanup-docker
+        with:
+          registry_user: wlan-testing-cicd
+          registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}

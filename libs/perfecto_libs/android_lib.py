@@ -2495,7 +2495,10 @@ def get_all_available_ssids(driver, deviceModelName):
             for i in range(len(elements)):
                 # print("elements[i]", elements[i])
                 # print("elements[i].text", elements[i].text)
-                active_ssid_list.append(elements[i].text)
+                try:
+                    active_ssid_list.append(elements[i].text)
+                except:
+                    print("Encountered a cache SSID which is no longer in the DOM.Moving to next SSID.")
         except:
             print("No SSIDS available")
     return active_ssid_list
