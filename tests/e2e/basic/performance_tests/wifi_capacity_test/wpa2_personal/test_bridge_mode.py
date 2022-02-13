@@ -240,11 +240,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3934", name="WIFI-3934")
     @pytest.mark.tcp_bidirectional
-<<<<<<< HEAD
     def test_client_wpa2_BRIDGE_tcp_bidirectional(self,  lf_tools,
-=======
-    def test_client_wpa2_bridge_tcp_bidirectional(self, get_vif_state, lf_tools,
->>>>>>> f1af689d5238d4fde3194efd9b91e432bdf9d567
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                   get_configuration):
         """ Wifi Capacity Test BRIDGE mode
