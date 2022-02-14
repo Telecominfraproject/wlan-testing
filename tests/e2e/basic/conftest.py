@@ -12,6 +12,7 @@ if "libs" not in sys.path:
 
 from controller.controller_1x.controller import ProfileUtility
 from controller.controller_2x.controller import UProfileUtility
+from controller.controller_3x.controller import CController
 import time
 from lanforge.lf_tools import ChamberView
 import pytest
@@ -22,6 +23,8 @@ import allure
 def instantiate_profile(request):
     if request.config.getoption("1.x"):
         yield ProfileUtility
+    elif request.config.getoption("cc.1"):
+        yield CController
     else:
         yield UProfileUtility
 
@@ -43,7 +46,7 @@ def create_lanforge_chamberview_dut(lf_tools, run_lf):
 @pytest.fixture(scope="class")
 def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtures_ver, reset_scenario_lf,
                    instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools, run_lf,
-                   get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
+                   get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info, cc_1):
     param = dict(request.param)
 
     # VLAN Setup
@@ -69,7 +72,11 @@ def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtur
         lf_tools.add_vlan(vlan_ids=vlan_list)
 
     # call this, if 1.x
-    return_var = fixtures_ver.setup_profiles(request, param, setup_controller, testbed, get_equipment_ref,
+    print("fixture version nikita", fixtures_ver)
+    if cc_1:
+        return_var = fixtures_ver.setup_profiles( request, param, run_lf, instantiate_profile, get_configuration, get_markers)
+    else:
+        return_var = fixtures_ver.setup_profiles(request, param, setup_controller, testbed, get_equipment_ref,
                                              instantiate_profile,
                                              get_markers, create_lanforge_chamberview_dut, lf_tools,
                                              get_security_flags, get_configuration, radius_info, get_apnos,
