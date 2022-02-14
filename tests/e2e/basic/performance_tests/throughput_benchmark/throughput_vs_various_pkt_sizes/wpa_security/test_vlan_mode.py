@@ -14,9 +14,8 @@ pytestmark = [pytest.mark.throughput_vs_pkt, pytest.mark.vlan, pytest.mark.wpa,]
 setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
-        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
-                 "security_key": "something"}]},
+        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
+                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 100}]},
 
     "rf": {},
     "radius": False
@@ -334,9 +333,8 @@ class TestThroughputVsPktVlanWpa2G(object):
 setup_params_5g = {
     "mode": "VLAN",
     "ssid_modes": {
-        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
-                 "security_key": "something"}]},
+        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
+                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 100}]},
     "rf": {},
     "radius": False
 }

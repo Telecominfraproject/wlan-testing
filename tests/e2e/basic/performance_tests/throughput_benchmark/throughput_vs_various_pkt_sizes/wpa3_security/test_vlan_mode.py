@@ -15,9 +15,8 @@ setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
         "wpa3_personal": [
-            {"ssid_name": "ssid_wpa3_p_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa3_p_5g", "appliedRadios": ["5G"],
-             "security_key": "something"}]},
+            {"ssid_name": "ssid_wpa3_p_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
+            {"ssid_name": "ssid_wpa3_p_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 100}]},
 
     "rf": {},
     "radius": False
@@ -334,9 +333,8 @@ setup_params_5g = {
     "mode": "VLAN",
     "ssid_modes": {
         "wpa3_personal": [
-            {"ssid_name": "ssid_wpa3_p_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa3_p_5g", "appliedRadios": ["5G"],
-             "security_key": "something"}]},
+            {"ssid_name": "ssid_wpa3_p_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
+            {"ssid_name": "ssid_wpa3_p_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 100}]},
     "rf": {},
     "radius": False
 }

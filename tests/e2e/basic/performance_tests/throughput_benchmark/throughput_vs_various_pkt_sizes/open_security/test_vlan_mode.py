@@ -14,8 +14,8 @@ pytestmark = [pytest.mark.throughput_vs_pkt, pytest.mark.vlan, pytest.mark.open,
 setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
-        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"]},
-                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"]}]},
+        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"], "vlan": 100},
+                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"], "vlan": 100}]},
         
     "rf": {},
     "radius": False
@@ -321,8 +321,8 @@ class TestThroughputVsPktVlanOpen2G(object):
 setup_params_5g = {
     "mode": "VLAN",
     "ssid_modes": {
-        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"]},
-                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"]}]},
+        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"], "vlan": 100},
+                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"], "vlan": 100}]},
     "rf": {},
     "radius": False
 }
