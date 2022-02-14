@@ -1,0 +1,60 @@
+{
+    "ct_wifi_capacity_test":{
+        "Notes":[
+            "This json file describes tests to be run by LANforge system"
+        ]  
+    },
+    "test_suites":{
+        "suite_wc":{
+            "create_chamberview_dut_wc":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview_dut.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --dut_name USE_DUT_NAME",
+                    " --ssid 'ssid_idx=0 ssid=SSID_USED security=SECURITY_USED password=SSID_PW_USED bssid=BSSID_TO_USE'",
+                    " --ssid 'ssid_idx=1 ssid=SSID_USED security=SECURITY_USED password=SSID_PW_USED bssid=BSSID_TO_USE'",
+                    " --sw_version DUT_SW --hw_version DUT_HW --serial_num DUT_SERIAL --model_num USE_DUT_NAME"
+                ]
+            },
+            "create_chamberview_wc":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --delete_scenario",
+                    " --create_scenario scenario_wpa2_wc",
+                    " --raw_line \"profile_link 1.1 STA-AC 19 'DUT: USE_DUT_NAME Radio-2' NA wiphy7,AUTO -1 NA\" ",
+                    " --raw_line \"profile_link 1.1 upstream-dhcp 1 NA NA UPSTREAM_ALIAS,AUTO -1 NA\""
+                ]
+            },
+            "wifi_capacity":{
+                "enabled":"TRUE",
+                "timeout":"600",
+                "iterations":"1",
+                "load_db":"skip",
+                "command":"lf_wifi_capacity_test.py",
+                "args":"",
+                "args_list":[
+                    " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user LF_MGR_USER --lf_password LF_MGR_PASS --instance_name scenario_wpa2_wc",
+                    " --upstream UPSTREAM_PORT --batch_size 1,10,19 --loop_iter 1 --protocol UDP-IPv4 --duration 6000",
+                    " --pull_report --local_lf_report_dir REPORT_PATH --test_tag 'wpa2_wc'",
+                    " --test_rig TEST_RIG",
+                    " --set DUT_SET_NAME"
+                ]
+            },
+            "lf_qa":{
+                "enabled":"TRUE",
+                "timeout":"600",
+                "load_db":"skip",
+                "command":"./tools/lf_qa.py",
+                "args":"",
+                "args_list":[
+                    " --server TEST_SERVER --path REPORT_PATH --store --png --database DATABASE_SQLITE"
+                ]
+            }
+        }
+    }
+}

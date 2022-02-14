@@ -1,0 +1,7 @@
+mock
+cloudshell-shell-core>=5.0.3,<6.0.0
+cloudshell-automation-api
+cloudshell-orch-core
+requests
+paramiko
+scp

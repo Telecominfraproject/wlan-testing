@@ -1,0 +1,24 @@
+{
+    "ct_AX88U_dut":{
+        "Notes":[
+            "This json file describes the device undertest used as input to ./lf_check.py",
+            "The variables that are capitalize are used for configuration",
+            "The dut related configuration is contained in this file",
+            "DUT_SET_NAME is an input to wifi capacity, dataplane and ap_auto tests, for --set parameter",
+            "The DUT_NAME must be part of DUT_SET_NAME"
+        ]  
+    },
+    "test_dut":{
+        "DUT_SET_NAME": "DUT_NAME ASUSRT-AX88U",
+        "USE_DUT_NAME": "ASUSRT-AX88U",
+        "DUT_SW": "3.0.0.4.386_44266",
+        "wireless_network_dict":{
+            "ssid_idx=0":{"ssid_idx":"0","SSID_USED":"asus11ax-2","SSID_PW_USED":"hello123","BSSID_TO_USE":"d4:5d:64:a0:7f:78","SECURITY_USED":"wpa2"},
+            "ssid_idx=1":{"ssid_idx":"1","SSID_USED":"asus11ax-5","SSID_PW_USED":"hello123","BSSID_TO_USE":"d4:5d:64:a0:7f:7c","SECURITY_USED":"wpa2"}
+        }    
+    }
+}
+
+
+
+			

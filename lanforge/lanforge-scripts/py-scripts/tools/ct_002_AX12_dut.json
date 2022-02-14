@@ -1,0 +1,22 @@
+{
+    "ct_AX12_dut":{
+        "Notes":[
+            "This json file describes the device undertest as input to ./lf_check.py",
+            "The variables that are capitalize are used for configuration",
+            "The dut related configuration is contained in this file",
+            "DUT_SET_NAME is an input to wifi capacity, dataplane and ap_auto tests, for --set parameter",
+            "The DUT_NAME must be part of DUT_SET_NAME"
+        ]  
+    },
+    "test_dut":{
+        "DUT_SET_NAME": "DUT_NAME Netgear-AX12",
+        "USE_DUT_NAME": "Netgear-AX12",
+        "DUT_SW": "3.0.0.4.386_44266",
+        "wireless_network_dict":{
+            "ssid_idx=0":{"ssid_idx":"0","SSID_USED":"NETGEAR59","SSID_PW_USED":"crispynest798","BSSID_TO_USE":"94:a6:7e:54:d4:31","SECURITY_USED":"wpa2"},
+            "ssid_idx=1":{"ssid_idx":"1","SSID_USED":"NETGEAR59-5G","SSID_PW_USED":"crispynest798","BSSID_TO_USE":"94:a6:7e:54:d4:33","SECURITY_USED":"wpa2"}
+        }    
+
+    }
+}
+			

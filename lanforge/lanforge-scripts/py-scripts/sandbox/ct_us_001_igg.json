@@ -1,0 +1,126 @@
+{
+    "ct_us_001":{
+        "Notes":[
+            "The json is used to orchastrate the tests to be run on testbed ct_us_001",
+            "This json file is used as an input to the ./lf_check.py file",
+            "The variables that are all capitalized below are replaced with configuration",
+            "from the json file. so LF_MGR_IP in the test below is replaced by the json lf_mgr_ip",
+            "The replacement is loosely coupled so the upper and lower case convention is used",
+            "to identify replaced strings in the lf_check.py code."  
+        ]  
+    },
+    "test_suites":{
+        "suite_wc_dp_short":{
+            "CT-US-001_create_chamberview_dut_for_ATH10K":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview_dut.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --dut_name DUT_NAME",
+                    " --ssid 'ssid_idx=0 ssid=asus11ax-5 security=WPA2 password=hello123 bssid=DUT_BSSID_5G'",
+                    " --ssid 'ssid_idx=1 ssid=asus11ax-5 security=WPA2 password=hello123 bssid=DUT_BSSID_5G'",
+                    " --sw_version DUT_SW --hw_version DUT_HW --serial_num DUT_SERIAL --model_num DUT_NAME"
+                ]
+            },
+            "CT-US-001_create_chamberview_ATH10K(9984)_sta50":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --delete_scenario",
+                    " --create_scenario ct-us-001-scenario ",
+                    " --raw_line \"profile_link 1.1 STA-AC 50 'DUT: DUT_NAME Radio-1' NA wiphy1,AUTO -1 NA\" ",
+                    " --raw_line \"profile_link 1.1 upstream-dhcp 1 NA NA UPSTREAM_PORT,AUTO -1 NA\""                    
+                ]
+            },
+            "CT-US-001_wifi_capacity_ATH10K(9984)":{
+                "enabled":"TRUE",
+                "timeout":"600",
+                "load_db":"skip",
+                "command":"lf_wifi_capacity_test.py",
+                "args":"",
+                "args_list":[
+                    " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge --instance_name cicd-wct",
+                    " --upstream 1.1.eth2 --batch_size 1,5,25 --loop_iter 1 --protocol UDP-IPv4 --duration 6000",
+                    " --pull_report --local_lf_report_dir REPORT_PATH --test_tag 'ATH10K(9984)'",
+                    " --test_rig TEST_RIG "
+                ]
+            },
+            "CT-US-001_QA":{
+                "enabled":"TRUE",
+                "timeout":"600",
+                "load_db":"skip",
+                "command":"./tools/lf_qa.py",
+                "args":"",
+                "args_list":[
+                    " --path REPORT_PATH --store --png --database ./tools/qa_test_db"
+                ]
+            }
+        },
+        "suite_wc_dp_short_igg":{
+            "CT-US-001_create_chamberview_dut_for_ATH10K":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview_dut.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --dut_name DUT_NAME",
+                    " --ssid 'ssid_idx=0 ssid=asus11ax-5 security=WPA2 password=hello123 bssid=DUT_BSSID_5G'",
+                    " --ssid 'ssid_idx=1 ssid=asus11ax-5 security=WPA2 password=hello123 bssid=DUT_BSSID_5G'",
+                    " --sw_version DUT_SW --hw_version DUT_HW --serial_num DUT_SERIAL --model_num DUT_NAME"
+                ]
+            },
+            "CT-US-001_create_chamberview_ATH10K(9984)_sta50":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --delete_scenario",
+                    " --create_scenario ct-us-001-scenario ",
+                    " --raw_line \"profile_link 1.1 STA-AC 50 'DUT: DUT_NAME Radio-1' NA wiphy1,AUTO -1 NA\" ",
+                    " --raw_line \"profile_link 1.1 upstream-dhcp 1 NA NA UPSTREAM_PORT,AUTO -1 NA\""                    
+                ]
+            },
+            "CT-US-001_wifi_capacity_ATH10K(9984)":{
+                "enabled":"TRUE",
+                "timeout":"600",
+                "load_db":"skip",
+                "command":"lf_wifi_capacity_test.py",
+                "args":"",
+                "args_list":[
+                    " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge --instance_name cicd-wct",
+                    " --upstream 1.1.eth2 --batch_size 1,5,25 --loop_iter 1 --protocol UDP-IPv4 --duration 6000",
+                    " --pull_report --local_lf_report_dir REPORT_PATH --test_tag 'ATH10K(9984)'",
+                    " --test_rig TEST_RIG --influx_host DATABASE_HOST --influx_port DATABASE_PORT --influx_org DATABASE_ORG",
+                    " --influx_token=DATABASE_TOKEN --influx_bucket DATABASE_BUCKET --influx_tag DATABASE_TAG --set DUT_SET_NAME"
+                ]
+            },
+            "CT-US-001_QA":{
+                "enabled":"TRUE",
+                "timeout":"600",
+                "load_db":"skip",
+                "command":"./tools/lf_qa.py",
+                "args":"",
+                "args_list":[
+                    " --path REPORT_PATH --store --png --database ./tools/qa_001_test_db"
+                ]
+            },
+            "GHOST":{"enabled":"TRUE","load_db":"skip","command":"ghost_profile.py","args":"",
+                "args_list":[
+                    " --ghost_token BLOG_TOKEN --ghost_host BLOG_HOST --authors BLOG_AUTHORS --customer BLOG_CUSTOMER",
+                    " --user_push BLOG_USER_PUSH --password BLOG_PASSWORD_PUSH BLOG_FLAG --grafana_token DASHBOARD_TOKEN",
+                    " --grafana_host DASHBOARD_HOST --grafana_bucket DATABASE_BUCKET --parent_folder REPORT_PATH",
+                    " --influx_host DATABASE_HOST --influx_org DATABASE_ORG --influx_token=DATABASE_TOKEN --influx_bucket DATABASE_BUCKET",
+                    " --influx_tag DATABASE_TAG "
+                ]
+            }
+        }
+    }
+}
+			
+	
+		
+	

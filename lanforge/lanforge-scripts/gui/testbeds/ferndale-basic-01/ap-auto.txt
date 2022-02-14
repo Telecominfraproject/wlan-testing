@@ -1,0 +1,107 @@
+[BLANK]
+sel_port-0: 1.1.sta00500
+show_events: 1
+show_log: 0
+port_sorting: 0
+kpi_id: AP Auto
+bg: 0xE0ECF8
+test_rig:
+show_scan: 1
+auto_helper: 1
+skip_2: 1
+skip_5: 1
+dut5-0: ea8300 OpenWrt-5lo
+dut2-0: ea8300 OpenWrt-2
+dut5-1: NA
+dut2-1: NA
+dut5-2: ea8300 OpenWrt-2
+dut2-2: NA
+spatial_streams: AUTO
+bandw_options: AUTO
+modes: Auto
+upstream_port: 1.1.2 eth2
+operator:
+mconn: 1
+tos: 0
+vid_buf: 1000000
+vid_speed: 700000
+reset_stall_thresh_udp_dl: 9600
+reset_stall_thresh_udp_ul: 9600
+reset_stall_thresh_tcp_dl: 9600
+reset_stall_thresh_tcp_ul: 9600
+reset_stall_thresh_l4: 100000
+reset_stall_thresh_voip: 20000
+stab_udp_dl_min: 56000
+stab_udp_dl_max: 0
+stab_udp_ul_min: 56000
+stab_udp_ul_max: 0
+stab_tcp_dl_min: 500000
+stab_tcp_dl_max: 0
+stab_tcp_ul_min: 500000
+stab_tcp_ul_max: 0
+dl_speed: 85%
+ul_speed: 85%
+max_stations_2: 128
+max_stations_5: 132
+max_stations_dual: 260
+lt_sta: 2
+voip_calls: 0
+lt_dur: 3600
+reset_dur: 600
+lt_gi: 30
+dur20: 20
+hunt_retries: 1
+cap_dl: 1
+cap_ul: 0
+cap_use_pkt_sizes: 0
+stability_reset_radios: 0
+pkt_loss_thresh: 10000
+frame_sizes: 200, 512, 1024, MTU
+capacities: 1, 2, 5, 10, 20, 40, 64, 128, 256, 512, 1024, MAX
+radio2-0: 1.1.4 wiphy0
+radio2-1: 1.1.6 wiphy2
+radio5-0: 1.1.5 wiphy1
+radio5-1: 1.1.7 wiphy3
+radio5-2: 1.1.8 wiphy4
+radio5-3: 1.1.9 wiphy5
+radio5-4: 1.1.10 wiphy6
+radio5-5: 1.1.11 wiphy7
+basic_cx: 1
+tput: 0
+dual_band_tput: 0
+capacity: 0
+longterm: 0
+mix_stability: 0
+loop_iter: 1
+reset_batch_size: 1
+reset_duration_min: 10000
+reset_duration_max: 60000
+
+# Configure pass/fail metrics for this testbed.
+pf_text0: 2.4 DL 200 70Mbps
+pf_text1: 2.4 DL 512 110Mbps
+pf_text2: 2.4 DL 1024 115Mbps
+pf_text3: 2.4 DL MTU 120Mbps
+pf_text4:
+pf_text5: 2.4 UL 200 88Mbps
+pf_text6: 2.4 UL 512 106Mbps
+pf_text7: 2.4 UL 1024 115Mbps
+pf_text8: 2.4 UL MTU 120Mbps
+pf_text9:
+pf_text10: 5 DL 200 72Mbps
+pf_text11: 5 DL 512 185Mbps
+pf_text12: 5 DL 1024 370Mbps
+pf_text13: 5 DL MTU 525Mbps
+pf_text14:
+pf_text15: 5 UL 200 90Mbps
+pf_text16: 5 UL 512 230Mbps
+pf_text17: 5 UL 1024 450Mbps
+pf_text18: 5 UL MTU 630Mbps
+
+# Tune connect-time thresholds.
+cx_prcnt: 950000
+cx_open_thresh: 35
+cx_psk_thresh: 75
+cx_1x_thresh: 130
+
+

@@ -1,0 +1,39 @@
+{
+    "ct_igg":{
+        "Notes":[
+            "This json file is used as an input to the ./lf_check.py file",
+            "The variables that are all capitalized below are replaced with configuration",
+            "from the json file. so LF_MGR_IP in the test below is replaced by the json lf_mgr_ip",
+            "The replacement is loosely coupled so the upper and lower case convention is used",
+            "to identify replaced strings in the lf_check.py code.",
+            "this file contains the Influx, Grafana and Ghost configuration",  
+            "Influx, Ghost, and Grafana are up and running on v-centos8s 192.168.100.153"
+        ]  
+    },
+    "test_database":{
+        "database_config_influx": "True",
+        "database_host_influx": "192.168.100.153",
+        "database_port_influx": "8086",
+        "database_token_influx": "PwYwrDjUSpLyUa8-0QeJGuf9p6KgPgmTVs0Zz0BZiyele74pNasBMJR-dKiF3LE8Qft5tADHtPSIS0WcVXHc_g==",
+        "database_org_influx": "Candela",
+        "database_bucket_influx": "candela",
+        "database_tag_influx": "testbed CT-US-001",
+        "test_rig_influx": "CT-US-001"
+    },
+    "test_dashboard":{
+        "dashboard_config_grafana": "True",
+        "dashboard_host_grafana": "192.168.100.153",
+        "dashboard_token_grafana": "eyJrIjoid1hpM0pwZFRSc3c0bGU2TEpITEVscHh4T0pPMVdZRzEiLCJuIjoiY2h1Y2siLCJpZCI6MX0="
+    },
+    "test_blog":{
+        "blog_config_ghost": "True",
+        "blog_host_ghost": "192.168.100.153",
+        "blog_token_ghost": "60df4b0175953f400cd30650:d50e1fabf9a9b5d3d30fe97bc3bf04971d05496a89e92a169a0d72357c81f742",
+        "blog_authors_ghost": "Matthew",
+        "blog_customer_ghost": "candela",
+        "blog_user_push_ghost": "lanforge",
+        "blog_password_push_ghost": "lanforge",
+        "blog_flag_ghost": "--kpi_to_ghost"
+    }
+}
+			

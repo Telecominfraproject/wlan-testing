@@ -1,0 +1,61 @@
+{
+    "test_parameters":{
+        "test_timeout": 200,
+        "load_blank_db": false,
+        "load_factory_default_db": true,
+        "load_custom_db": false,
+        "custom_db": "DFLT_ETH1_GEN",
+        "email_list_production": "chuck.rekiere@candelatech.com",
+        "host_ip_production": "192.168.95.6",
+        "email_list_test": "chuck.rekiere@candelatech.com",
+        "host_ip_test": "192.168.95.6",
+        "lf_mgr": "192.168.100.116",
+        "email_title_txt": "Dataplane Test",
+        "email_txt": "Dataplane Regression testing "
+    },
+    "test_network":{
+        "http_test_ip": "10.40.0.10",
+        "ftp_test_ip": "10.40.0.10",
+        "test_ip": "192.168.0.104"
+    },
+    "test_generic":{
+        "radio_used": "wiphy1",
+        "ssid_used": "ct523c-vap",
+        "ssid_pw_used": "ct523c-vap",
+        "security_used": "wpa2",
+        "num_sta": 4,
+        "col_names": "name,tx_byptes,rx_bytes,dropped",
+        "upstream_port": "eth1"
+    },
+    "radio_dict":{
+        "RADIO_0_CFG":{"KEY":"RADIO_0_CFG","RADIO":"wiphy0","STATIONS":"4","SSID":"ct523c-vap","PASSWD":"ct523c-vap","SECURITY":"wpa2"},
+        "RADIO_1_CFG":{"KEY":"RADIO_1_CFG","RADIO":"wiphy1","STATIONS":"4","SSID":"ct523c-vap","PASSWD":"ct523c-vap","SECURITY":"wpa2"}        
+    },
+    "test_suites":{
+        "suite_one":{
+            "create_l3":{"enabled":"TRUE","command":"create_l4.py","args":"--radio RADIO_USED --ssid SSID_USED --passwd SSID_PW_USED --security SECURITY_USED --debug"},
+            "create_l4":{"enabled":"TRUE","command":"create_l4.py","args":"RADIO_1_CFG --debug"},
+            "create_l4_2":{"enabled":"TRUE","command":"create_l4.py","args":"--radio wiphy1 --ssid ct523c-vap --passwd ct523c-vap --security wpa2 --debug"}
+        },
+        "suite_two":{
+                "test_l3_longevity":{"enabled":"TRUE","command":"test_l3_longevity.py","args":"--test_duration 15s --polling_interval 5s --upstream_port eth1 --radio 'radio==wiphy1,stations==4,ssid==ct523c-vap,ssid_pw==ct523c-vap,security==wpa2' --endp_type lf_udp --rates_are_totals --side_a_min_bps=20000 --side_b_min_bps=300000000"}
+        },
+        "suite_dp":{
+            "create_station":{"enabled":"TRUE","command":"create_station.py","args":"--radio RADIO_USED --start_id 2 --num_stations 1 --ssid SSID_USED --passwd SSID_PW_USED --security SECURITY_USED --debug"},
+            "data_plane_0":{"enabled":"TRUE","load_db":"skip","command":"lf_dataplane_test.py","args":"--json lf_dp.json --influx_json lf_influx_db.json"},
+            "data_plane_1":{"enabled":"TRUE","load_db":"skip","command":"lf_dataplane_test.py","args":"--json lf_dp.json --influx_json lf_influx_db.json"},
+            "data_plane_2":{"enabled":"TRUE","load_db":"skip","command":"lf_dataplane_test.py","args":"--json lf_dp.json --influx_json lf_influx_db.json"}
+        },
+        "TEST_DICTIONARY":{
+            "create_station":{"enabled":"TRUE","command":"create_station.py","args":"--radio RADIO_USED --start_id 2 --num_stations 1 --ssid SSID_USED --passwd SSID_PW_USED --security SECURITY_USED --debug"},
+            "data_plane_0":{"enabled":"TRUE","load_db":"skip","command":"lf_dataplane_test.py","args":"--json lf_dp.json --influx_json lf_influx_db.json"},
+            "data_plane_1":{"enabled":"TRUE","load_db":"skip","command":"lf_dataplane_test.py","args":"--json lf_dp.json --influx_json lf_influx_db.json"},
+            "data_plane_2":{"enabled":"TRUE","load_db":"skip","command":"lf_dataplane_test.py","args":"--json lf_dp.json --influx_json lf_influx_db.json"},
+            "lf_ap_auto_test": {"enabled":"True","command":"lf_ap_auto_test.py","args": "--instance_name ap-auto-instance --config_name test_con --upstream 1.1.eth1 --dut5_0 'linksys-8450 lanforge 04:f0:21:2c:41:84 (1)' --dut2_0 'linksys-8450 lanforge 04:f0:21:2c:41:84 (1)' --max_stations_2 32 --max_stations_5 32 --max_stations_dual 100 --radio2 1.1.wiphy1 --radio5 1.1.wiphy2 --set 'Basic Client Connectivity' 1 --set 'Multi Band Performance' 1 --set 'Skip 2.4 Ghz Tests' 1 –set ‘Stability’ 0 --set ‘Multi-Station Throughput vs Pkt Size’ 0 --set ‘Throughput vs Pkt Size’ 0 --set ‘Capacity’ 0 --set ‘Band-Steering’ 0 –pull_report"}
+        }
+    }
+}
+			
+	
+		
+	

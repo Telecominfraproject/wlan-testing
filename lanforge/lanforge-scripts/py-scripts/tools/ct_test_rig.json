@@ -1,0 +1,24 @@
+{
+    "test_rig":{
+        "Notes":[
+            "This json file describes LANforge system and test run configuration"
+        ]  
+    },
+    "test_rig_parameters":{
+        "TEST_BED": "CT-TEST-001",
+        "TEST_RIG": "CT-TEST-001",
+        "TEST_SERVER": "http://127.0.0.1/",
+        "DATABASE_SQLITE": "./tools/qa_sqlite3.db",
+        "LF_MGR_IP": "192.168.100.116",
+        "LF_MGR_PORT": "8080",
+        "LF_MGR_USER": "lanforge",
+        "LF_MGR_PASS": "lanforge",
+        "UPSTREAM_PORT": "1.1.eth2",
+        "UPSTREAM_ALIAS": "eth2",
+        "TEST_TIMEOUT": 600,
+        "EMAIL_LIST_PRODUCTION": "support@candelatech.com",
+        "EMAIL_LIST_TEST": "support@candelatech.com",
+        "EMAIL_TITLE_TXT": "Lanforge QA Testing",
+        "EMAIL_TXT": "Lanforge QA Testing"
+    }
+}

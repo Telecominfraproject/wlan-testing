@@ -1,0 +1,189 @@
+<Driver Description="Describe the purpose of your CloudShell shell" MainClass="driver.LanforgeResourceDriver" Name="LanforgeResourceDriver" Version="1.0.0" PythonVersion="3">
+    <Layout>
+	<Category Name="Hidden Commands">
+		<Command Description="" 
+			 DisplayName="Orchestration Save" 
+			 Name="orchestration_save" />
+		<Command Description="" 
+			 DisplayName="Orchestration Restore" 
+			 Name="orchestration_restore" />
+	  <Command Description="Send Command to Resource"
+		   DisplayName="Scenario"
+		   Name="send_command">
+	    <Parameters>
+	      <Parameter Name="cmd"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue=""
+			 Description="The command to send"/>
+	    </Parameters>
+	  </Command>
+	  <Command Description="Pull Reports from LANforge"
+		   DisplayName="Pull Reports"
+		   Name="pull_reports">
+	    <Parameters>
+	      <Parameter Name="hostname"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue=""
+			 Description="hostname"/>
+	      <Parameter Name="port"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue=""
+			 Description="port"/>
+	      <Parameter Name="username"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue=""
+			 Description="username"/>
+	      <Parameter Name="password"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue=""
+			 Description="password"/>
+	      <Parameter Name="report_location"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue=""
+			 Description="report location"/>
+	      <Parameter Name="report_dir"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue=""
+			 Description="report dir"/>
+	    </Parameters>
+	  </Command>
+	</Category>
+	<Category Name="Example Commands">
+		<Command Description="Example Command from Demo"
+			 DisplayName="Example Command"
+			 Name="example_command"/>
+	</Category>
+	<Category Name="Scenario">
+	  <Command Description="Load or start a scenario"
+		   DisplayName="Scenario"
+		   Name="scenario">
+	    <Parameters>
+	      <Parameter Name="load"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue="BLANK"
+			 Description="The name of the database to load"/>
+	    </Parameters>
+	  </Command>
+	</Category>
+	<Category Name="ICE">
+		<Command Description="Create a virtual wanlink with custom impairments."
+			 DisplayName="Create Wanlink"
+			 Name="create_wanlink">
+			<Parameters>
+				<Parameter Name="name"
+				 Type="String" 
+				 Mandatory="False" 
+				 DefaultValue="wl_eg1" 
+				 Description="Enter a name for the wanlink."/>
+				<Parameter Name="latency"
+				 Type="String"
+				 Mandatory="False"
+				 DefaultValue="20"
+				 Description="Latency of both endpoints"/>
+				<Parameter Name="rate"
+				 Type="String"
+				 Mandatory="False"
+				 DefaultValue="1000000"
+				 Description="The total throughput capacity of the wanlink."/>
+			</Parameters>
+		</Command>	
+	</Category>
+	<Category Name="FIRE">
+	  <Command Description="Generate traffic between two existing ports"
+		   DisplayName="Create Layer-3"
+		   Name="create_l3">
+	    <Parameters>
+	      <Parameter Name="name"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue="scr-test-1"
+			 Description="Enter a name for the connection"/>
+	      <Parameter Name="min_rate_a"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue="56000"
+			 Description="Minimum transfer rate of side a"/>
+	      <Parameter Name="min_rate_b"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue="56000"
+			 Description="Minimum transfer rate of side b"/>
+	      <Parameter Name="endp_a"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue="eth1"
+			 Description="Station list"/>
+	      <Parameter Name="endp_b"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue="eth2"
+			 Description="Upstream port"/>
+	    </Parameters>
+	  </Command>
+	  <Command Description="Initialize a dataplane test"
+		   DisplayName="Dataplane Test"
+		   Name="dataplane_test">
+	    <Parameters>
+	      <Parameter Name="instance_name"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue="dataplane-instance"
+			 Description="The name for the dataplane test"/>
+	      <Parameter Name="upstream"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue="1.1.eth1"
+			 Description="The upstream port"/>
+	      <Parameter Name="station"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue="1.1.eth2"
+			 Description="The downstream port"/>
+	      <Parameter Name="duration"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue="2s"
+			 Description="The duration of the test (append 's' for seconds)"/>
+	      <Parameter Name="download_speed"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue="10Mbps"
+			 Description="The rate of upstream port (append Mbps/Bps)"/>
+	      <Parameter Name="upload_speed"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue="0"
+			 Description="The rate of downstream port (append Mbps/Bps)"/>
+	      <Parameter Name="traffic_types"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue="UDP"
+			 Description="The type of traffic (TCP/UDP)"/>
+	      <Parameter Name="local_lf_report_dir"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue="tmp/my_report/"
+			 Description="The LANforge directory to save generated reports"/>   
+	      <Parameter Name="output_report_dir"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue=""
+			 Description="The server directory to save generated reports"/>   
+	      <Parameter Name="mgr"
+			 Type="String"
+			 Mandatory="False"
+			 DefaultValue="localhost"
+			 Description="The IP address to run the test on"/>   
+	    </Parameters>
+	  </Command>
+	</Category>
+    </Layout>
+</Driver>
