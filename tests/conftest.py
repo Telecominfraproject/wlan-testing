@@ -305,9 +305,9 @@ def get_equipment_ref(request, setup_controller, testbed, get_configuration):
 
 
 @pytest.fixture(scope="session")
-def get_sdk_version(fixtures_ver, run_lf):
+def get_sdk_version(fixtures_ver, run_lf, cc_1):
     version = ""
-    if not run_lf:
+    if not run_lf and not cc_1:
         version = fixtures_ver.get_sdk_version()
         print(version)
     yield version
@@ -334,7 +334,8 @@ def get_openflow():
 def setup_controller(request, get_configuration, add_env_properties, fixtures_ver):
     """sets up the controller connection and yields the sdk_client object"""
     sdk_client = fixtures_ver.controller_obj
-    request.addfinalizer(fixtures_ver.disconnect)
+    if not cc_1:
+        request.addfinalizer(fixtures_ver.disconnect)
     yield sdk_client
 
 
@@ -716,7 +717,7 @@ def add_firmware_property_after_upgrade(add_allure_environment_property, fixture
 
 
 @pytest.fixture(scope="session")
-def fixtures_ver(request, get_configuration, run_lf):
+def fixtures_ver(request, get_configuration, run_lf, cc_1):
     if request.config.getoption("1.x") is False and request.config.getoption("cc.1") is False:
         print("2.x")
         obj = Fixtures_2x(configuration=get_configuration, run_lf=run_lf)
@@ -724,8 +725,8 @@ def fixtures_ver(request, get_configuration, run_lf):
         print("1.x")
         obj = Fixtures_1x(configuration=get_configuration)
     if request.config.getoption("cc.1"):
-        print("cc.1")
-        obj = Fixtures_3x(configuration=get_configuration, run_lf=run_lf)
+        print(" fixture version cc.1")
+        obj = Fixtures_3x(configuration=get_configuration, run_lf=run_lf, cc_1=cc_1)
     yield obj
 
 
