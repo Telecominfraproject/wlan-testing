@@ -16,10 +16,11 @@ lf_logger_config = importlib.import_module("py-scripts.lf_logger_config")
 class CController:
     def __init__(self, controller_data, timeout):
         self.controller_data = controller_data
+        print("hi", self.controller_data)
         self.ip = self.controller_data["ip"]
         self.user = self.controller_data["username"]
         self.password = self.controller_data["password"]
-        self.port = self.controller_data["port"]
+        self.port = self.controller_data["ssh_port"]
         self.type = self.controller_data["series"]
         self.prompt = self.controller_data["prompt"]
         self.ap_name = self.controller_data["ap_name"]
@@ -40,8 +41,18 @@ class CController:
                     band=self.band,
                     timeout=self.timeout)
 
-    def create_wlan_wpa2(self):
-        ssid = self.cc.config_wlan_open()
+
+    def delete_wlan(self):
+        wlan = self.cc.config_no_wlan()
+        return wlan
+
+
+    def create_wlan_wpa2(self, wlan, wlanID, wlanSSID):
+        self.cc.wlan = wlan
+        self.cc.wlanID = wlanID
+        self.cc.wlanSSID = wlanSSID
+        print(self.cc.wlanSSID)
+        ssid = self.cc.config_wlan_wpa2()
         return ssid
 
     def no_logging_console(self):
@@ -68,23 +79,30 @@ class CController:
         return number
         # do some formatting here and return actual data
 
+    def show_5ghz_summary(self):
+        pass
+
+
 
 if __name__ == '__main__':
     controller = {
         'ip': "localhost",                  # '172.16.0.2'
         'username': "admin",
         'password': 'xyz',
-        'port': "8888",   # 22
+        'ssh_port': "8888",   # 22
         'series': "9800",
         'prompt': "WLC2",
         'ap_name': "AP2C57.4152.385C",
         'band': "5g",
         'scheme': "ssh"
         }
-    obj = CController(controller_data=controller, timeout="20")
+    obj = CController(controller_data=controller, timeout="10")
     # obj.no_logging_console()
-    # obj.get_ssids()
-    obj.get_number_of_wlan_present()
+    # obj.line_console()
+    # obj.delete_wlan()
+    # obj.no_logging_console()
+    obj.get_ssids()
+    # obj.get_number_of_wlan_present()
 
 
 # if __name__ == '__main__':
@@ -94,7 +112,7 @@ if __name__ == '__main__':
 #             scheme="ssh",
 #             dest="localhost",
 #             user="admin",
-#             passwd="Cisco123",
+#             passwd="xyz",
 #             prompt="WLC2",
 #             series="9800",
 #             ap="AP2C57.4152.385C",
