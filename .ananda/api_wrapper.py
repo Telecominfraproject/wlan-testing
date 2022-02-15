@@ -13,14 +13,14 @@ def get_bearer_token():
         f'{ananda_api}/login-accounts/v1.2/auths/apis/oauth/token',
         headers=authHeader)
 
-    org_id = r.json()['meta']['orgId']
-    token = r.json()['access_token']
-
     try:
-        return org_id, token
+        org_id = r.json()['meta']['orgId']
+        token = r.json()['access_token']
     except Exception:
-        print('Error: could not get bearer token')
+        print('Error: could not get bearer token.')
         exit(1)
+
+    return org_id, token
 
 
 def logout():
@@ -36,17 +36,17 @@ def get_user_id():
         f'{ananda_api}/manage-accounts/v1.2/api/orgs/{org_id}/users',
         headers=authHeader)
 
-    for key in r.json():
-        user_data = key
-        if user_data['email'] == args.user or user_data['name'] == args.user:
-            user_id = user_data['userId']
-            break
-
     try:
-        return user_id
+        for key in r.json():
+            user_data = key
+            if user_data['email'] == args.user or user_data['name'] == args.user:
+                user_id = user_data['userId']
+                break
     except Exception:
         print('Error: user was not found')
         exit(1)
+
+    return user_id
 
 
 def get_group_id():
@@ -55,16 +55,17 @@ def get_group_id():
         f'{ananda_api}/manage-accounts/v1.2/api/orgs/{org_id}/groups',
         headers=authHeader)
 
-    for key in r.json():
-        group_data = key
-        if group_data['name'] == args.group:
-            group_id = group_data['groupId']
-            break
     try:
-        return group_id
+        for key in r.json():
+            group_data = key
+            if group_data['name'] == args.group:
+                group_id = group_data['groupId']
+                break
     except Exception:
         print('Error: group was not found')
         exit(1)
+
+    return group_id
 
 
 def get_user_groups():
@@ -75,13 +76,13 @@ def get_user_groups():
         f'{ananda_api}/manage-accounts/v1.2/api/orgs/{org_id}/users/{user_id}',
         headers=authHeader)
 
-    user_groups = r.json()['groupIds']
-
     try:
-        return user_groups
+        user_groups = r.json()['groupIds']
     except Exception:
         print('Error: user was not found')
         exit(1)
+
+    return user_groups
 
 
 def list_resource(resource):
@@ -135,8 +136,11 @@ if __name__ == '__main__':
              'add_user_to_group, '
              'remove_user_from_group')
     parser.add_argument('--token', help='your Ananda API token')
-    parser.add_argument('--user', help='user you want to add to or remove from group')
-    parser.add_argument('--group', help='group you want to add or remove a user from')
+    parser.add_argument(
+        '--user',
+        help='user you want to add to or remove from group, '
+             'you can either specify email address or first and last name')
+    parser.add_argument('--group', help='name of the group you want to add or remove a user from')
     args = parser.parse_args()
 
     org_id, token = get_bearer_token()
