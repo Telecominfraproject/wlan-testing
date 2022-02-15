@@ -270,9 +270,11 @@ class ChamberView:
                     self.raw_line.append(station_data)
             if num_stations == "max":
                 for radio in self.ax_radios:
+                    print("radio", radio)
                     num_stations = self.get_max_sta(radio)
+                    print("num_stations", num_stations)
                     station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
-                                    str(int(idx) + 1) + "'" + " NA " + radio]
+                                    str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
                     self.raw_line.append(station_data)
 
     def Create_Dut(self):
