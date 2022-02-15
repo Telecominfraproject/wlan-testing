@@ -2161,7 +2161,14 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                     # -------------------------------------------------------
                     try:
                         report.step_start("Verify if Wifi is Connected")
-                        WifiInternetErrMsg = WebDriverWait(driver, 35).until(
+                        try:
+                            WifiInternetErrMsg = WebDriverWait(driver, 35).until(
+                            EC.presence_of_element_located((MobileBy.XPATH,
+                                                            "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                        except:
+                            print("Not able to verify the connected WiFi. Scrolling up.")
+                            scroll_up_pixel(setup_perfectoMobile)
+                            WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                             EC.presence_of_element_located((MobileBy.XPATH,
                                                             "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                         ssid_with_internet = True
