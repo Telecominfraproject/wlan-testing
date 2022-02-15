@@ -83,7 +83,7 @@ jobs:
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.markers), 'dfs')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'dfs')"
         with:
           namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-dfs
           testbed: "${{ matrix.testbed }}"
@@ -94,7 +94,7 @@ jobs:
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.markers), 'multipsk')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'multipsk')"
         with:
           namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-multipsk
           testbed: "${{ matrix.testbed }}"
@@ -105,7 +105,7 @@ jobs:
 
       - name: run rate_limiting tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.markers), 'rate_limiting')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'rate_limiting')"
         with:
           namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-rate_limiting
           testbed: "${{ matrix.testbed }}"
@@ -116,7 +116,7 @@ jobs:
 
       - name: run rate_limiting_with_radius tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.markers), 'rate_limiting_with_radius')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'rate_limiting_with_radius')"
         with:
           namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-rate_limiting_with_radius
           testbed: "${{ matrix.testbed }}"
@@ -127,7 +127,7 @@ jobs:
 
       - name: run dynamic_vlan tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.markers), 'dynamic_vlan')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'dynamic_vlan')"
         with:
           namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-dynamic_vlan
           testbed: "${{ matrix.testbed }}"
