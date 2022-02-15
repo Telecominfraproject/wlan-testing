@@ -18,26 +18,26 @@ on:
     inputs:
       openwifi_revision:
         required: true
-        default: 'main'
-        description: 'revision of the Open Wifi Helm chart'
+        default: "main"
+        description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: 'edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4'
-        description: 'the AP models to test'
+        default: "edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4"
+        description: "the AP models to test"
       ap_version:
         required: true
-        default: 'release-latest'
-        description: 'revision of firmware to flash on AP, <branch>-<commit>'
+        default: "release-latest"
+        description: "revision of firmware to flash on AP, <branch>-<commit>"
       marker_expression:
         required: true
-        default: 'uc_sanity'
-        description: 'Marker expression to select tests to execute'
+        default: "uc_sanity"
+        description: "Marker expression to select tests to execute"
       existing_controller:
         required: false
-        default: ''
-        description: 'Use an existing cloud controller, e.g. like qa01 instead of dynamic one'
+        default: ""
+        description: "Use an existing cloud controller, e.g. like qa01 instead of dynamic one"
   schedule:
-  - cron: '30 20 * * *'
+    - cron: "30 20 * * *"
 
 jobs:
   vars:
@@ -66,27 +66,27 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-    - name: generate-matrix
-      id: set-matrix
-      run: |
-        AP_MODELS="${{ needs.vars.outputs.ap_models }}"
-        AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
-        AP_MODELS=$(echo "$AP_MODELS" | jq -c 'map({"ap_model":.})')
-        echo "::set-output name=matrix::{\"include\":${AP_MODELS}}"
+      - name: generate-matrix
+        id: set-matrix
+        run: |
+          AP_MODELS="${{ needs.vars.outputs.ap_models }}"
+          AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
+          AP_MODELS=$(echo "$AP_MODELS" | jq -c 'map({"ap_model":.})')
+          echo "::set-output name=matrix::{\"include\":${AP_MODELS}}"
 
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: build and push Docker image
-      uses: ./.github/actions/build-and-push-docker
-      with:
-        registry: tip-tip-wlan-cloud-docker-repo.jfrog.io
-        registry_user: wlan-testing-cicd
-        registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
+      - uses: actions/checkout@v2
+      - name: build and push Docker image
+        uses: ./.github/actions/build-and-push-docker
+        with:
+          registry: tip-tip-wlan-cloud-docker-repo.jfrog.io
+          registry_user: wlan-testing-cicd
+          registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   test:
-    needs: ['generate-matrix', 'build', 'vars']
+    needs: ["generate-matrix", "build", "vars"]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -97,377 +97,283 @@ jobs:
       CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.8'
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
 
-    - name: install dependencies
-      run: pip install -r .quali/requirements.txt
+      - name: install dependencies
+        run: pip install -r .quali/requirements.txt
 
-    - name: start reservation
-      run: |
-        if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-        then
-          python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' "Basic Lab"
-        else
-          python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}"}' "Basic Lab"
-        fi
+      - name: start reservation
+        run: |
+          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
+          then
+            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' "Basic Lab"
+          else
+            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}"}' "Basic Lab"
+          fi
 
-    - name: set reservation outputs
-      if: always()
-      id: reservation
-      run: |
-        echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
-        if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-        then
-          echo ::set-output name=namespace::"${{ needs.vars.outputs.existing_controller }}"
-        else
-          echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
-        fi
+      - name: set reservation outputs
+        if: always()
+        id: reservation
+        run: |
+          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
+          then
+            echo ::set-output name=namespace::"${{ needs.vars.outputs.existing_controller }}"
+          else
+            echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+          fi
 
-    - name: get EKS access credentials
-      run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
-    - name: install Allure CLI tool
-      run: |
-        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
+      - name: prepare namespace name
+        id: namespace
+        run: |
+          NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ matrix.ap_model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
+          echo "::set-output name=name::${NAMESPACE}"
 
-    - name: set job name
-      id: job
-      run: echo "::set-output name=name::testing-${{ github.run_number }}"
+      - name: prepare configuration
+        id: configuration
+        run: |
+          cat << EOF > configuration.py
+          Customer = ""
+          server = ""
+          CONFIGURATION = {
+            "basic": $(python .quali/get_configuration.py ${{ steps.reservation.outputs.identifier }})
+          }
 
-    - name: prepare namespace
-      id: namespace
-      run: |
-        NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ matrix.ap_model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-        kubectl create ns $NAMESPACE
-        kubectl config set-context --current --namespace=$NAMESPACE
-        echo "::set-output name=name::${NAMESPACE}"
+          open_flow = {}
 
-    - name: prepare configuration
-      run: |
-        cat << EOF > configuration.py
-        Customer = ""
-        server = ""
-        CONFIGURATION = {
-          "basic": $(python .quali/get_configuration.py ${{ steps.reservation.outputs.identifier }})
-        }
-        
-        open_flow = {}
-        
-        RADIUS_SERVER_DATA = {
-            "ip": "10.10.1.221",
-            "port": 1812,
-            "secret": "testing123",
-            "user": "user",
-            "password": "password",
-            "pk_password": "whatever"
-        }
+          RADIUS_SERVER_DATA = {
+              "ip": "10.10.1.221",
+              "port": 1812,
+              "secret": "testing123",
+              "user": "user",
+              "password": "password",
+              "pk_password": "whatever"
+          }
 
-        RADIUS_ACCOUNTING_DATA = {
-            "ip": "10.10.1.221",
-            "port": 1813,
-            "secret": "testing123",
-            "user": "user",
-            "password": "password",
-            "pk_password": "whatever"
-        }
-        
-        DYNAMIC_VLAN_RADIUS_SERVER_DATA = {
-          "ip": "3.20.165.131",
-          "port": 1812,
-          "secret": "testing123",
-          "user": "user",
-          "password": "password",
-          "pk_password": "whatever"
-        }
+          RADIUS_ACCOUNTING_DATA = {
+              "ip": "10.10.1.221",
+              "port": 1813,
+              "secret": "testing123",
+              "user": "user",
+              "password": "password",
+              "pk_password": "whatever"
+          }
 
-        DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA = {
+          DYNAMIC_VLAN_RADIUS_SERVER_DATA = {
             "ip": "3.20.165.131",
-            "port": 1813,
-            "secret": "testing123",
-            "user": "user",
-            "password": "password",
-            "pk_password": "whatever"
-        }
-
-        PASSPOINT_RADIUS_SERVER_DATA = {
-            "ip": "52.234.179.191",
-            "port": 11812,
-            "secret": "yeababy20!",
-            "user": "nolaradius",
-            "password": "nolastart",
-            "pk_password": "whatever"
-        }
-
-        PASSPOINT_RADIUS_ACCOUNTING_SERVER_DATA = {
-            "ip": "52.234.179.191",
-            "port": 11813,
-            "secret": "yeababy20!"
-        }
-
-        PASSPOINT_PROVIDER_INFO = {
-            "mcc": None,
-            "mnc": None,
-            "network": None,
-            "nai_realms": {
-                "domain": "oss.ameriband.com",
-                "encoding": 0,
-                "eap_map": {"EAP-TTLS with username/password": ["Credential Type:username/password",
-                                                                "Non-EAP Inner Authentication Type:MSCHAPV2"]}
-            },
-            "osu_nai_standalone": "anonymous@ameriband.com",
-            "osu_nai_shared": "anonymous@ameriband.com",
-            "roaming_oi": []
-        }
-        RATE_LIMITING_RADIUS_SERVER_DATA = {
-            "ip": "18.189.85.200",
             "port": 1812,
             "secret": "testing123",
             "user": "user",
             "password": "password",
             "pk_password": "whatever"
-        }
+          }
 
-        RATE_LIMITING_RADIUS_ACCOUNTING_DATA = {
-            "ip": "18.189.85.200",
-            "port": 1813,
-            "secret": "testing123",
-            "user": "user",
-            "password": "password",
-            "pk_password": "whatever"
-        }
-        
-        PASSPOINT_OPERATOR_INFO = {
-            "osen": "Disabled",
-            "domain_name_list": ["telecominfraproject.atlassian.net"],
-            "operator_names": [
-                {"locale": "eng", "name": "Default friendly passpoint_operator name"},
-                {"locale": "fra", "name": "Nom de l'opérateur convivial par défaut"}
-            ]
-        }
+          DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA = {
+              "ip": "3.20.165.131",
+              "port": 1813,
+              "secret": "testing123",
+              "user": "user",
+              "password": "password",
+              "pk_password": "whatever"
+          }
 
-        PASSPOINT_VENUE_INFO = {
-            "venue_type": {"group": "Business", "type": "Police Station"},
-            "venue_names": [
-                {"locale": "eng", "name": "Example passpoint_venue", "url": "http://www.example.com/info-eng"},
-                {"locale": "fra", "name": "Exemple de lieu", "url": "http://www.example.com/info-fra"}
-            ]
-        }
+          PASSPOINT_RADIUS_SERVER_DATA = {
+              "ip": "52.234.179.191",
+              "port": 11812,
+              "secret": "yeababy20!",
+              "user": "nolaradius",
+              "password": "nolastart",
+              "pk_password": "whatever"
+          }
 
-        PASSPOINT_PROFILE_INFO = {
-            "profile_download_url_ios": "https://onboard.almondlabs.net/ttls/AmeriBand-Profile.mobileconfig",
-            "profile_download_url_android": "https://onboard.almondlabs.net/ttls/androidconfig.cfg",
-            "profile_name_on_device": "AmeriBand",
-            "radius_configuration": {
-                "user_defined_nas_id": "FB001AP001",
-                "operator_id": "AmeribandTIP",
-                "radius_acounting_service_interval": 60
-            },
-            "interworking_hs2dot0": "Enabled",
-            "hessid": None,
-            "access_network": {
-                "Access Network Type": "Free Public Network",
-                "Authentication Type": "Acceptance of Terms & Conditions",
-                "Emergency Services Reachable": "Enabled",
-                "Unauthenticated Emergency Service": "Disabled",
-            },
-            "ip_connectivity": {
-                "Internet Connectivity": "Enabled",
-                "IP Address Type": "Public IPv4 Address Available",
-                "Connection Capability": [{"status": "open", "protocol": "TCP", "port": 8888}],
-                "ANQP Domain ID": 1234,
-                "GAS Address 3 Behaviour": "P2P Spec Workaround From Request",
-                "Disable DGAF": False
-            }
-        }
-        EOF
+          PASSPOINT_RADIUS_ACCOUNTING_SERVER_DATA = {
+              "ip": "52.234.179.191",
+              "port": 11813,
+              "secret": "yeababy20!"
+          }
 
-        # overwrite configuration value from Quali
-        if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-        then
-          sed -i "s/https:\/\/sec-.*\.cicd\.lab\.wlan\.tip\.build/https:\/\/sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build/g" configuration.py
-        fi
+          PASSPOINT_PROVIDER_INFO = {
+              "mcc": None,
+              "mnc": None,
+              "network": None,
+              "nai_realms": {
+                  "domain": "oss.ameriband.com",
+                  "encoding": 0,
+                  "eap_map": {"EAP-TTLS with username/password": ["Credential Type:username/password",
+                                                                  "Non-EAP Inner Authentication Type:MSCHAPV2"]}
+              },
+              "osu_nai_standalone": "anonymous@ameriband.com",
+              "osu_nai_shared": "anonymous@ameriband.com",
+              "roaming_oi": []
+          }
+          RATE_LIMITING_RADIUS_SERVER_DATA = {
+              "ip": "18.189.85.200",
+              "port": 1812,
+              "secret": "testing123",
+              "user": "user",
+              "password": "password",
+              "pk_password": "whatever"
+          }
 
-        kubectl create secret generic configuration --from-file=configuration=./configuration.py
+          RATE_LIMITING_RADIUS_ACCOUNTING_DATA = {
+              "ip": "18.189.85.200",
+              "port": 1813,
+              "secret": "testing123",
+              "user": "user",
+              "password": "password",
+              "pk_password": "whatever"
+          }
 
-    - name: run tests
-      run: |
-        cat <<EOF | kubectl apply -f -
-        apiVersion: batch/v1
-        kind: Job
-        metadata:
-          name: "${{ steps.job.outputs.name }}"
-        spec:
-          template:
-            metadata:
-              annotations:
-                cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
-            spec:
-              containers:
-              - name: tests
-                image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-                resources:
-                  requests:
-                    memory: "512Mi"
-                    cpu: "250m"
-                  limits:
-                    memory: "512Mi"
-                    cpu: "250m"
-                command:
-                  - /bin/bash
-                  - -c
-                  - |
-                    HOSTS="sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
-                    for HOST in \$HOSTS; do
-                      HOST_ENTRY=""
-                      until [[ ! -z "\$HOST_ENTRY" ]]; do sleep 1; HOST_ENTRY=\$(getent hosts \$HOST); done;
-                      echo "\$HOST_ENTRY" >> /etc/hosts
-                      echo "DNS record for \$HOST resolved successfully!"
-                    done
+          PASSPOINT_OPERATOR_INFO = {
+              "osen": "Disabled",
+              "domain_name_list": ["telecominfraproject.atlassian.net"],
+              "operator_names": [
+                  {"locale": "eng", "name": "Default friendly passpoint_operator name"},
+                  {"locale": "fra", "name": "Nom de l'opérateur convivial par défaut"}
+              ]
+          }
 
-                    cat /etc/hosts
+          PASSPOINT_VENUE_INFO = {
+              "venue_type": {"group": "Business", "type": "Police Station"},
+              "venue_names": [
+                  {"locale": "eng", "name": "Example passpoint_venue", "url": "http://www.example.com/info-eng"},
+                  {"locale": "fra", "name": "Exemple de lieu", "url": "http://www.example.com/info-fra"}
+              ]
+          }
 
-                    cd tests
-                    pytest -m "${{ needs.vars.outputs.marker_expression }}" -s -vvv --testbed="basic" --alluredir=/tmp/allure-results -o firmware="${{ needs.vars.outputs.ap_version }}"
-                    ret=\$?
-                    # sleep some time to be able to download the Allure results
-                    sleep 60
-                    exit \$ret
-                volumeMounts:
-                - name: configuration
-                  mountPath: "/wlan-testing/tests/configuration.py"
-                  subPath: configuration
-                  readOnly: true
-              nodeSelector:
-                env: tests
-              tolerations:
-              - key: "tests"
-                operator: "Exists"
-                effect: "NoSchedule"
-              imagePullSecrets:
-              - name: tip-docker-registry-key
-              restartPolicy: Never
-              volumes:
-              - name: configuration
-                secret:
-                  secretName: configuration
-          backoffLimit: 0
-        EOF
-        # wait for pod to spawn
-        sleep 1
-        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
-        kubectl logs -f $podname &
-        #sleep 30 # wait for the pod to come up
-        until [ -s test_everything.xml ]
-        do
-          sleep 10
-          #echo "waiting for tests to complete..."
-          kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
-        done
-        echo "tests completed"
-        echo "downloading allure results..."
-        kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
-        echo "waiting for pod to exit"
-        kubectl logs -f $podname >/dev/null 2>&1
+          PASSPOINT_PROFILE_INFO = {
+              "profile_download_url_ios": "https://onboard.almondlabs.net/ttls/AmeriBand-Profile.mobileconfig",
+              "profile_download_url_android": "https://onboard.almondlabs.net/ttls/androidconfig.cfg",
+              "profile_name_on_device": "AmeriBand",
+              "radius_configuration": {
+                  "user_defined_nas_id": "FB001AP001",
+                  "operator_id": "AmeribandTIP",
+                  "radius_acounting_service_interval": 60
+              },
+              "interworking_hs2dot0": "Enabled",
+              "hessid": None,
+              "access_network": {
+                  "Access Network Type": "Free Public Network",
+                  "Authentication Type": "Acceptance of Terms & Conditions",
+                  "Emergency Services Reachable": "Enabled",
+                  "Unauthenticated Emergency Service": "Disabled",
+              },
+              "ip_connectivity": {
+                  "Internet Connectivity": "Enabled",
+                  "IP Address Type": "Public IPv4 Address Available",
+                  "Connection Capability": [{"status": "open", "protocol": "TCP", "port": 8888}],
+                  "ANQP Domain ID": 1234,
+                  "GAS Address 3 Behaviour": "P2P Spec Workaround From Request",
+                  "Disable DGAF": False
+              }
+          }
+          EOF
 
-        until [[ ! -z "$EXIT_CODE" ]]; do EXIT_CODE=$(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}"); sleep 1; done;
-        exit $EXIT_CODE
+          # overwrite configuration value from Quali
+          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
+          then
+            sed -i "s/https:\/\/sec-.*\.cicd\.lab\.wlan\.tip\.build/https:\/\/sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build/g" configuration.py
+          fi
 
-    - name: show gw logs
-      if: failure()
-      run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+          echo "::set-output name=value::$(cat ./configuration.py)"
 
-    - name: show fms logs
-      if: failure()
-      run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}
+          testbed: basic
+          marker_expression: "${{ needs.vars.outputs.marker_expression }}"
+          configuration: "${{ steps.configuration.outputs.value }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          allure_results_artifact_name: allure-results-${{ matrix.ap_model }}
+          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
-    - name: show prov logs
-      if: failure()
-      run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+      - name: show gw logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
 
-    - name: show sec logs
-      if: failure()
-      run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+      - name: show fms logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
 
-    - name: upload Allure results as artifact
-      if: always()
-      uses: actions/upload-artifact@v2
-      with:
-        name: allure-results-${{ matrix.ap_model }}
-        path: allure-results
+      - name: show prov logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
 
-    - name: cleanup
-      if: always()
-      run: |
-        kubectl delete ns "${{ steps.namespace.outputs.name }}" --wait=true
+      - name: show sec logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
 
-    - name: stop reservation
-      if: always()
-      run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
+      - name: stop reservation
+        if: always()
+        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
   report:
     runs-on: ubuntu-latest
-    needs: [ test, vars, generate-matrix ]
+    needs: [test, vars, generate-matrix]
     if: always()
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
     steps:
-    - name: checkout testing repo
-      uses: actions/checkout@v2
+      - name: checkout testing repo
+        uses: actions/checkout@v2
 
-    - uses: actions/download-artifact@v2
-      with:
-        name: allure-results-${{ matrix.ap_model }}
-        path: allure-results
+      - uses: actions/download-artifact@v2
+        with:
+          name: allure-results-${{ matrix.ap_model }}
+          path: allure-results
 
-    - name: download history of previous run
-      continue-on-error: true
-      run: |
-        LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key sanity/${{ matrix.ap_model }}/latest/index.html | jq -r .Metadata.latest)
-        aws s3 cp --recursive s3://openwifi-allure-reports/sanity/${{ matrix.ap_model }}/$LAST_RUN_ID/history history
+      - name: download history of previous run
+        continue-on-error: true
+        run: |
+          LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key sanity/${{ matrix.ap_model }}/latest/index.html | jq -r .Metadata.latest)
+          aws s3 cp --recursive s3://openwifi-allure-reports/sanity/${{ matrix.ap_model }}/$LAST_RUN_ID/history history
 
-    - name: generate Allure report
-      uses: ./.github/actions/generate-allure-report
-      with:
-        results_path: ./allure-results
-        history_path: ./history
-        additional_metadata: |
-          Ap.Model=${{ matrix.ap_model }}
+      - name: generate Allure report
+        uses: ./.github/actions/generate-allure-report
+        with:
+          results_path: ./allure-results
+          history_path: ./history
+          additional_metadata: |
+            Ap.Model=${{ matrix.ap_model }}
 
-    - name: upload Allure report as artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: allure-report-${{ matrix.ap_model }}
-        path: allure-report
+      - name: upload Allure report as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: allure-report-${{ matrix.ap_model }}
+          path: allure-report
 
-    # doing this to be able to aggregate multiple reports together later on
-    - name: copy results into report
-      run: cp -r allure-results allure-report/results
+      # doing this to be able to aggregate multiple reports together later on
+      - name: copy results into report
+        run: cp -r allure-results allure-report/results
 
-    - name: upload to S3
-      if: github.ref == 'refs/heads/master' && needs.vars.outputs.marker_expression == 'uc_sanity'
-      uses: ./.github/actions/allure-report-to-s3
-      with:
-        test_type: sanity
-        testbed: ${{ matrix.ap_model }}
-        report_path: allure-report
-        s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
-        s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
+      - name: upload to S3
+        if: github.ref == 'refs/heads/master' && needs.vars.outputs.marker_expression == 'uc_sanity'
+        uses: ./.github/actions/allure-report-to-s3
+        with:
+          test_type: sanity
+          testbed: ${{ matrix.ap_model }}
+          report_path: allure-report
+          s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
+          s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
 
   cleanup:
-    needs: [ test ]
+    needs: [test]
     runs-on: ubuntu-latest
     if: always()
     steps:
-    - uses: actions/checkout@v2
-    - name: cleanup Docker image
-      uses: ./.github/actions/cleanup-docker
-      with:
-        registry_user: wlan-testing-cicd
-        registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
+      - uses: actions/checkout@v2
+      - name: cleanup Docker image
+        uses: ./.github/actions/cleanup-docker
+        with:
+          registry_user: wlan-testing-cicd
+          registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
