@@ -67,6 +67,7 @@ from fixtures_1x import Fixtures_1x
 import fixtures_2x
 from fixtures_2x import Fixtures_2x
 from fixtures_3x import Fixtures_3x
+from controller.controller_3x.controller import CController
 
 ALLURE_ENVIRONMENT_PROPERTIES_FILE = 'environment.properties'
 ALLUREDIR_OPTION = '--alluredir'
@@ -693,16 +694,28 @@ def add_allure_environment_property(request: SubRequest) -> Optional[Callable]:
 @fixture(scope='session')
 def add_env_properties(get_configuration, get_sdk_version, get_apnos, fixtures_ver,
                        add_allure_environment_property: Callable) -> None:
-    add_allure_environment_property('Access-Point-Model', get_configuration["access_point"][0]["model"])
-    add_allure_environment_property('SDK-Version', get_sdk_version)
+    if cc_1:
+        for i in range(len(get_configuration["access_point"])):
+            add_allure_environment_property(str('Access-Point-Model'+ str(i+1)), get_configuration["access_point"][i]["model"])
+    else:
+        add_allure_environment_property('Access-Point-Model', get_configuration["access_point"][0]["model"])
+        add_allure_environment_property('SDK-Version', get_sdk_version)
     try:
-        add_allure_environment_property('Access-Point-Firmware-Version',
+        if not cc_1:
+            add_allure_environment_property('Access-Point-Firmware-Version',
                                         fixtures_ver.get_ap_version(get_apnos, get_configuration)[0].split("\n")[1])
     except Exception as e:
         print(e)
         pass
-    add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
-    add_allure_environment_property('AP-Serial-Number', get_configuration["access_point"][0]["serial"] + "\n")
+    if cc_1:
+        add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
+        for i in range(len(get_configuration["controller"]["ap_name"])):
+            add_allure_environment_property(str('AP-Name-' + str(i+1)), get_configuration["controller"]["ap_name"][i]["ap_name"] )
+        for i in range(len(get_configuration["access_point"])):
+            add_allure_environment_property(str('AP-Serial-Number-'+str(i+1)), get_configuration["access_point"][i]["serial"])
+    else:
+        add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
+        add_allure_environment_property('AP-Serial-Number', get_configuration["access_point"][0]["serial"] + "\n")
 
 
 @fixture(scope="session")
@@ -792,3 +805,19 @@ def get_apnos_logs(get_apnos, get_configuration):
         logs = ap_ssh.logread()
         all_logs.append(logs)
     yield all_logs
+
+@pytest.fixture(scope="function")
+def get_controller_logs(get_configuration, ):
+    print("hi")
+    obj = CController(controller_data=get_configuration['controller'])
+    summary = obj.show_ap_summary()
+    print(summary)
+    allure.attach(name='controller_log', body=str(summary))
+
+
+@pytest.fixture(scope="function")
+def get_ap_config_slots(get_configuration):
+    obj = CController(controller_data=get_configuration['controller'])
+    slot = obj.show_ap_config_slots()
+    # print(slot)
+    allure.attach(name="ap_slots", body=str(slot))
