@@ -14,7 +14,7 @@ lf_logger_config = importlib.import_module("py-scripts.lf_logger_config")
 
 
 class CController:
-    def __init__(self, controller_data, timeout, ssid_data=None):
+    def __init__(self, controller_data, timeout=None, ssid_data=None):
         self.controller_data = controller_data
         self.ip = self.controller_data["ip"]
         self.user = self.controller_data["username"]
@@ -22,13 +22,17 @@ class CController:
         self.port = self.controller_data["ssh_port"]
         self.type = self.controller_data["series"]
         self.prompt = self.controller_data["prompt"]
-        self.ap_name = self.controller_data["ap_name"]
-        self.band = self.controller_data["band"]
+        # for i in range(controller_data["ap_name"]):
+        #     self.ap_name = self.controller_data["ap_name"][i]
+        # for band in range(controller_data["band"]):
+        #     self.band = self.controller_data["band"][i]
+        self.ap_name = self.controller_data["ap_name"][1]["ap_name"]  # hard coded
+        self.band = self.controller_data["band"][0]
+
         self.scheme = self.controller_data["scheme"]
         self.timeout = timeout
         self.ssid_data= ssid_data
         print("ssid data", self.ssid_data)
-
 
         series = importlib.import_module("cc_module_9800_3504")
         self.cc = series.create_controller_series_object(
@@ -49,13 +53,29 @@ class CController:
             self.cc.wlanSSID = None
             self.cc.security_key = None
         else:
-            self.cc.wlan = ssid_data[1]['ssid_name']
-            self.cc.wlanID = "1"
-            self.cc.wlanSSID = ssid_data[1]['ssid_name']
-            self.cc.security_key = ssid_data[1]['security_key']
+            for i in range(len(ssid_data)):
+                print(i)
+                if ssid_data[i]["appliedRadios"] == ["2G"]:
+                    self.cc.wlan = ssid_data[i]['ssid_name']
+                    self.cc.wlanID = "1"
+                    self.cc.wlanSSID = ssid_data[i]['ssid_name']
+                    self.cc.security_key = ssid_data[i]['security_key']
+                    print("ss", self.cc.wlan)
+                elif ssid_data[i]["appliedRadios"] == ["5G"]:
+                    self.cc.wlan = ssid_data[i]['ssid_name']
+                    self.cc.wlanID = "2"  # hard coded
+                    self.cc.wlanSSID = ssid_data[i]['ssid_name']
+                    self.cc.security_key = ssid_data[i]['security_key']
+                    print("ss", self.cc.wlan)
+                elif ssid_data[i]["appliedRadios"] == ["6G"]:
+                    self.cc.wlan = ssid_data[i]['ssid_name']
+                    self.cc.wlanID = "3"
+                    self.cc.wlanSSID = ssid_data[i]['ssid_name']
+                    self.cc.security_key = ssid_data[i]['security_key']
+
         self.cc.wlanpw = None
-        self.cc.tag_policy = 'RM204-TB2'
-        self.cc.policy_profile = 'default-policy-profile'
+        self.cc.tag_policy = self.controller_data['tag_policy']
+        self.cc.policy_profile = self.controller_data['policy_profile']
         self.cc.tx_power = None
         self.cc.channel = None
         self.cc.bandwidth = None
@@ -80,11 +100,17 @@ class CController:
         fiveghz = self.cc.show_ap_dot11_5gz_shutdown()
         return fiveghz
 
-    def disable_wlan(self):
+    def disable_wlan(self, id , wlan, wlanssid):
+        self.cc.wlan = wlan
+        self.cc.wlanID = id
+        self.cc.wlanSSID = wlanssid
         wlan = self.cc.wlan_shutdown()
         return wlan
 
-    def ap_5ghz_shutdown(self):
+    def ap_5ghz_shutdown(self,id, wlan, wlanssid):
+        self.cc.wlan = wlan
+        self.cc.wlanID = id
+        self.cc.wlanSSID = wlanssid
         shut = self.cc.ap_dot11_5ghz_shutdown()
         return shut
 
@@ -93,23 +119,35 @@ class CController:
         print(wlan_summary)
         return wlan_summary
 
-    def delete_wlan(self):
+    def delete_wlan(self, ssid):
+        self.cc.wlan = ssid
         wlan = self.cc.config_no_wlan()
         return wlan
 
-    def create_wlan_wpa2(self):
+    def create_wlan_wpa2(self,id, wlan, wlanssid, key):
+        self.cc.wlan = wlan
+        self.cc.wlanID = id
+        self.cc.wlanSSID = wlanssid
+        self.cc.security_key = key
         ssid = self.cc.config_wlan_wpa2()
         return ssid
 
-    def config_wireless_tag_policy_and_policy_profile(self):
+    def config_wireless_tag_policy_and_policy_profile(self, wlan):
+        self.cc.wlan = wlan
         policy = self.cc.config_wireless_tag_policy_and_policy_profile()
         return policy
 
-    def enable_wlan(self):
+    def enable_wlan(self, id, wlan, wlanssid, key):
+        self.cc.wlan = wlan
+        self.cc.wlanID = id
+        self.cc.wlanSSID = wlanssid
         enable = self.cc.config_enable_wlan_send_no_shutdown()
         return enable
 
-    def enable_5ghz_netwrk(self):
+    def enable_5ghz_netwrk(self, id, wlan, wlanssid, key):
+        self.cc.wlan = wlan
+        self.cc.wlanID = id
+        self.cc.wlanSSID = wlanssid
         en_net = self.cc.config_no_ap_dot11_5ghz_shutdown()
         return en_net
 
@@ -138,24 +176,68 @@ class CController:
     def show_5ghz_summary(self):
         pass
 
-    def get_all_ssids_from_controller(self):
-        wlan_summary = self.cc.show_wlan_summary()
-        # print(wlan_summary)
-        ele_list = [y for y in (x.strip() for x in wlan_summary.splitlines()) if y]
+    def calculate_data(self, place):
+        wlan_number = self.get_number_of_wlan_present()
+        print(wlan_number)
+        for number in range(len(wlan_number)):
+            pass
+        wlan_sumry = self.get_ssids()
+        ele_list = [y for y in (x.strip() for x in wlan_sumry.splitlines()) if y]
         indices = [i for i, s in enumerate(ele_list) if 'Profile Name' in s]
-        print(indices)
-        main_idx = indices[1]
-        idx = main_idx + 2
-        print(idx)
-        print(ele_list[idx])
-        ssid_count = self.get_number_of_wlan_present()
-        print(ssid_count)
-        ssid_list =[]
-        count = 0
-        for id in ssid_count:
-            print(id)
-        print(ele_list[int(indices[1])])
-        return wlan_summary
+        # print(indices)
+        data = indices[1]
+        data2 = data + 1
+        data3 = data + 2
+        data4 = data + 3
+        data5 = data + 4
+        acc_data = ele_list[int(data)]
+        acc_data2 = ele_list[int(data2)]
+        acc_data3 = ele_list[int(data3)]
+        acc_data4 = ele_list[int(data4)]
+        acc_data5 = ele_list[int(data5)]
+        print(acc_data4)
+        ident_list = []
+        if acc_data == 'ID   Profile Name                     SSID                             Status Security':
+            if acc_data2 == "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------":
+                id_list = acc_data3.split()
+                print(id_list)
+                if id_list[0] == "1":
+                    ident_list.append(id_list[int(place)])
+                else:
+                    ident_list.append("0")
+                id_list2 = acc_data4.split()
+                print(id_list2)
+                if id_list2[0] == "2":
+                    ident_list.append(id_list2[int(place)])
+                else:
+                    ident_list.append("0")
+                id_list3 = acc_data5.split()
+                print(id_list3)
+                if id_list3[0] == "3":
+                    ident_list.append(id_list3[int(place)])
+                else:
+                    ident_list.append("0")
+        else:
+            print("There is no Profile name")
+        # print(ident_list)
+        return ident_list
+
+    def get_slot_id_wlan(self):
+        id = self.calculate_data(place=0)
+        return id
+
+    def get_ssid_name_on_id(self):
+        ssid = self.calculate_data(place=1)
+        return ssid
+
+
+    def show_ap_summary(self):
+        summary = self.cc.show_ap_summary()
+        return summary
+
+    def show_ap_config_slots(self):
+        slot = self.cc.show_ap_config_slots()
+        return slot
 
 
 
