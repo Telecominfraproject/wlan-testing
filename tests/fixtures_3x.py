@@ -97,14 +97,27 @@ class Fixtures_3x:
                                 lf_dut_data.append(j)
                             j["appliedRadios"] = list(set(j["appliedRadios"]))
                             j['security'] = 'psk2'
-                            print("dut data", lf_dut_data)
+                            # print("dut data", lf_dut_data)
                             test_cases["wpa_2g"] = True
                         except Exception as e:
                             print(e)
                             test_cases["wpa2_personal"] = False
 
         print("lf dut data", lf_dut_data)
-        # delete wlan
+        instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'], timeout="10",
+                                                      ssid_data=lf_dut_data)
+        instantiate_profile_obj.no_logging_console()
+        instantiate_profile_obj.line_console()
+        instantiate_profile_obj.show_shutdown_5ghz_ap()
+        instantiate_profile_obj.disable_wlan()
+        instantiate_profile_obj.ap_5ghz_shutdown()
         instantiate_profile_obj.get_ssids()
-        # for i in lf_dut_data:
-        #     creates_wlan = instantiate_profile_obj.create_wlan_wpa2(wlan=i['ssid_name'], wlanID=1, wlanSSID=i['ssid_name'])
+        instantiate_profile_obj.delete_wlan()
+        instantiate_profile_obj.get_ssids()
+        instantiate_profile_obj.create_wlan_wpa2()
+        instantiate_profile_obj.config_wireless_tag_policy_and_policy_profile()
+        instantiate_profile_obj.enable_wlan()
+        instantiate_profile_obj.enable_5ghz_netwrk()
+        instantiate_profile_obj.enable_ap_5ghz()
+        instantiate_profile_obj.show_5ghz_summary()
+        instantiate_profile_obj.get_ssids()
