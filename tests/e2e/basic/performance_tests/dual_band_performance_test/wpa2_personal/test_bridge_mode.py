@@ -39,7 +39,7 @@ class TestDualbandPerformanceBRIDGE(object):
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3918", name="WIFI-3918")
     @pytest.mark.wpa2_personal
-    @pytest.mark.twog
+    @pytest.mark.twogp
     @pytest.mark.fiveg
     def test_client_wpa2_personal_bridge(self, get_vif_state, lf_tools,
                                   create_lanforge_chamberview_dut, lf_test, get_configuration):
@@ -59,9 +59,6 @@ class TestDualbandPerformanceBRIDGE(object):
             if lf_tools.dut_idx_mapping[i][3] == "2G":
                 dut_2g = dut_name + ' ' + lf_tools.dut_idx_mapping[i][0] + ' ' + lf_tools.dut_idx_mapping[i][4]
                 print(dut_2g)
-        if ssid_2G and ssid_5G not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID's NOT AVAILABLE IN VIF STATE")
 
         dbpt_obj = lf_test.dualbandperformancetest(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
                                                    instance_name="dbp_instance_wpa2p_BRIDGE_p",

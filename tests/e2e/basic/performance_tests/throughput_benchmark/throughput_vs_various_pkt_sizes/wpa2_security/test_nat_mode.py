@@ -44,7 +44,7 @@ class TestThroughputVsPktWpa2Nat2G(object):
         """Throughput Vs Pkt Sizes Nat Mode
            pytest -m "throughput_vs_pkt and Nat and wpa2_personal and twog and pkt60"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_5g["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"

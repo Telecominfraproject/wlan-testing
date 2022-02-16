@@ -42,7 +42,7 @@ class TestWifiCapacityNATModeDualBand(object):
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3926", name="WIFI-3926")
     @pytest.mark.tcp_download
-    def test_client_wpa2_NAT_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
+    def test_client_wpa2_NAT_tcp_dl(self, lf_tools, setup_profiles,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -52,9 +52,6 @@ class TestWifiCapacityNATModeDualBand(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
@@ -71,7 +68,7 @@ class TestWifiCapacityNATModeDualBand(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3927", name="WIFI-3927")
     @pytest.mark.udp_download
-    def test_client_wpa2_NAT_udp_dl(self, get_vif_state, lf_tools,
+    def test_client_wpa2_NAT_udp_dl(self, lf_tools,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -81,9 +78,6 @@ class TestWifiCapacityNATModeDualBand(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
@@ -110,9 +104,6 @@ class TestWifiCapacityNATModeDualBand(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
@@ -139,9 +130,6 @@ class TestWifiCapacityNATModeDualBand(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
@@ -196,9 +184,6 @@ class TestWifiCapacityNATMode2G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
@@ -224,9 +209,6 @@ class TestWifiCapacityNATMode2G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
@@ -252,9 +234,6 @@ class TestWifiCapacityNATMode2G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
@@ -280,9 +259,6 @@ class TestWifiCapacityNATMode2G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
@@ -336,9 +312,6 @@ class TestWifiCapacityNATMode5G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
@@ -364,9 +337,6 @@ class TestWifiCapacityNATMode5G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
@@ -392,9 +362,6 @@ class TestWifiCapacityNATMode5G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
@@ -420,9 +387,6 @@ class TestWifiCapacityNATMode5G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()

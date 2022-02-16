@@ -148,6 +148,12 @@ def pytest_addoption(parser):
         default=True,
         help="Stop using Testrails"
     )
+    parser.addoption(
+        "--run-lf",
+        action="store_true",
+        default=False,
+        help="skip cloud controller and AP, run only lanforge tests on a ssid preconfigured"
+    )
 
     # Perfecto Parameters
     parser.addini("perfectoURL", "Cloud URL")
@@ -202,6 +208,13 @@ def testbed(request):
 def should_upload_firmware(request):
     """yields the --force-upload option for firmware upload selection"""
     yield request.config.getoption("--force-upload")
+
+
+@pytest.fixture(scope="session")
+def run_lf(request):
+    """yields the --run-lf option for skipping configuration on AP and using Cloud controller"""
+    var = request.config.getoption("--run-lf")
+    yield var
 
 
 @pytest.fixture(scope="session")
@@ -277,8 +290,10 @@ def get_equipment_ref(request, setup_controller, testbed, get_configuration):
 
 
 @pytest.fixture(scope="session")
-def get_sdk_version(fixtures_ver):
-    version = fixtures_ver.get_sdk_version()
+def get_sdk_version(fixtures_ver, run_lf):
+    version = ""
+    if not run_lf:
+        version = fixtures_ver.get_sdk_version()
     yield version
 
 
@@ -587,33 +602,34 @@ def traffic_generator_connectivity(testbed, get_configuration):
 
 
 @pytest.fixture(scope="session")
-def create_lanforge_chamberview_dut(lf_tools, skip_lf):
+def create_lanforge_chamberview_dut(lf_tools, skip_lf, run_lf):
     dut_name = ""
-    if not skip_lf:
+    if (not run_lf ) and (not skip_lf):
         dut_object, dut_name = lf_tools.Create_Dut()
     return dut_name
 
 
 @pytest.fixture(scope="session")
-def lf_tools(get_configuration, testbed, skip_lf):
+def lf_tools(get_configuration, testbed, skip_lf, run_lf):
     """ Create a DUT on LANforge"""
     if not skip_lf:
         obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
-                          testbed=testbed, access_point_data=get_configuration["access_point"])
+                          testbed=testbed, run_lf=run_lf,
+                          access_point_data=get_configuration["access_point"])
     else:
         obj = False
     yield obj
 
 
 @pytest.fixture(scope="session")
-def lf_test(get_configuration, setup_influx, request, skip_lf):
+def lf_test(get_configuration, setup_influx, request, skip_lf, run_lf):
     if not skip_lf:
         if request.config.getoption("--exit-on-fail"):
-            obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'], influx_params=setup_influx,
-                          debug=True)
+            obj = RunTest(configuration_data=get_configuration, influx_params=setup_influx,
+                          debug=True, run_lf=run_lf)
         if request.config.getoption("--exit-on-fail") is False:
-            obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'], influx_params=setup_influx,
-                          debug=False)
+            obj = RunTest(configuration_data=get_configuration, influx_params=setup_influx,
+                          debug=False, run_lf=run_lf)
     yield obj
 
 
@@ -684,10 +700,10 @@ def add_firmware_property_after_upgrade(add_allure_environment_property, fixture
 
 
 @pytest.fixture(scope="session")
-def fixtures_ver(request, get_configuration):
+def fixtures_ver(request, get_configuration, run_lf):
     if request.config.getoption("1.x") is False:
         print("2.x")
-        obj = Fixtures_2x(configuration=get_configuration)
+        obj = Fixtures_2x(configuration=get_configuration, run_lf=run_lf)
     if request.config.getoption("1.x"):
         print("1.x")
         obj = Fixtures_1x(configuration=get_configuration)
@@ -706,23 +722,24 @@ Logs related Fixtures
 
 
 @pytest.fixture(scope="function")
-def get_ap_logs(request, get_apnos, get_configuration):
-    S = 9
-    instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
-    for ap in get_configuration['access_point']:
-        ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
-        ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
-
-    def collect_logs():
+def get_ap_logs(request, get_apnos, get_configuration, run_lf):
+    if not run_lf:
+        S = 9
+        instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         for ap in get_configuration['access_point']:
             ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
-            ap_ssh.run_generic_command(cmd="logger stop testcase: " + instance_name)
-            ap_logs = ap_ssh.get_logread(start_ref="start testcase: " + instance_name,
-                                         stop_ref="stop testcase: " + instance_name)
-            allure.attach(name='logread', body=str(ap_logs))
-        pass
+            ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
 
-    request.addfinalizer(collect_logs)
+        def collect_logs():
+            for ap in get_configuration['access_point']:
+                ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
+                ap_ssh.run_generic_command(cmd="logger stop testcase: " + instance_name)
+                ap_logs = ap_ssh.get_logread(start_ref="start testcase: " + instance_name,
+                                             stop_ref="stop testcase: " + instance_name)
+                allure.attach(name='logread', body=str(ap_logs))
+            pass
+
+        request.addfinalizer(collect_logs)
 
 
 @pytest.fixture(scope="function")

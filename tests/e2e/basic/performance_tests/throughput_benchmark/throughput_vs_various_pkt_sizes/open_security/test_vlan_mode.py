@@ -1,7 +1,7 @@
 """
 
-    Performance Test: Throughput vs Various Pkt Size Test: VLAN MODE
-    pytest -m "throughput_vs_pkt and vlan"
+    Performance Test: Throughput vs Various Pkt Size Test: VLAN Mode
+    pytest -m "throughput_vs_pkt and VLAN"
 
 """
 import os
@@ -16,7 +16,6 @@ setup_params_general = {
     "ssid_modes": {
         "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"], "vlan": 100},
                  {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"], "vlan": 100}]},
-        
     "rf": {},
     "radius": False
 }
@@ -30,10 +29,9 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-@pytest.mark.open
-class TestThroughputVsPktVlanOpen2G(object):
-    """Throughput vs Various Pkt Size Test vlan mode
-       pytest -m "throughput_vs_pkt and vlan"
+class TestThroughputVsPktVLAN2G(object):
+    """Throughput vs Various Pkt Size Test VLAN mode
+       pytest -m "throughput_vs_pkt and VLAN"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-2546")
     @pytest.mark.open
@@ -49,7 +47,7 @@ class TestThroughputVsPktVlanOpen2G(object):
         security = "open"
         mode = "VLAN"
         band = "twog"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 60'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -93,10 +91,11 @@ class TestThroughputVsPktVlanOpen2G(object):
         """
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssid_name = profile_data["ssid_name"]
+
         security = "open"
         mode = "VLAN"
         band = "twog"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 142'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -140,10 +139,11 @@ class TestThroughputVsPktVlanOpen2G(object):
         """
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssid_name = profile_data["ssid_name"]
+
         security = "open"
         mode = "VLAN"
         band = "twog"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 256'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -187,10 +187,11 @@ class TestThroughputVsPktVlanOpen2G(object):
         """
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssid_name = profile_data["ssid_name"]
+
         security = "open"
         mode = "VLAN"
         band = "twog"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 512'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -234,10 +235,11 @@ class TestThroughputVsPktVlanOpen2G(object):
         """
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssid_name = profile_data["ssid_name"]
+
         security = "open"
         mode = "VLAN"
         band = "twog"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 1024'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -281,10 +283,11 @@ class TestThroughputVsPktVlanOpen2G(object):
         """
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssid_name = profile_data["ssid_name"]
+
         security = "open"
         mode = "VLAN"
         band = "twog"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: MTU'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -316,8 +319,8 @@ class TestThroughputVsPktVlanOpen2G(object):
             assert station
         else:
             assert False
-            
-            
+
+
 setup_params_5g = {
     "mode": "VLAN",
     "ssid_modes": {
@@ -336,10 +339,9 @@ setup_params_5g = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-@pytest.mark.open
-class TestThroughputVsPktVlanOpen5G(object):
-    """Throughput vs Various Pkt Size Test vlan mode
-       pytest -m "throughput_vs_pkt and vlan"
+class TestThroughputVsPktVLAN5G(object):
+    """Throughput vs Various Pkt Size Test VLAN mode
+       pytest -m "throughput_vs_pkt and VLAN"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-2546")
     @pytest.mark.open
@@ -352,10 +354,11 @@ class TestThroughputVsPktVlanOpen5G(object):
         """
         profile_data = setup_params_5g["ssid_modes"]["open"][1]
         ssid_name = profile_data["ssid_name"]
+
         security = "open"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 60'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -370,7 +373,7 @@ class TestThroughputVsPktVlanOpen5G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_5G",
+                                       instance_name="TIP_PERF_PKT_60_OPEN_5G",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -399,10 +402,11 @@ class TestThroughputVsPktVlanOpen5G(object):
         """
         profile_data = setup_params_5g["ssid_modes"]["open"][1]
         ssid_name = profile_data["ssid_name"]
+
         security = "open"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 142'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -417,7 +421,7 @@ class TestThroughputVsPktVlanOpen5G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_5G",
+                                       instance_name="TIP_PERF_PKT_142_OPEN_5G",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -450,7 +454,7 @@ class TestThroughputVsPktVlanOpen5G(object):
         security = "open"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 256'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -465,7 +469,7 @@ class TestThroughputVsPktVlanOpen5G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_5G",
+                                       instance_name="TIP_PERF_PKT_256_OPEN_5G",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -494,10 +498,11 @@ class TestThroughputVsPktVlanOpen5G(object):
         """
         profile_data = setup_params_5g["ssid_modes"]["open"][1]
         ssid_name = profile_data["ssid_name"]
+
         security = "open"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 512'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -512,7 +517,7 @@ class TestThroughputVsPktVlanOpen5G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_5G",
+                                       instance_name="TIP_PERF_PKT_512_OPEN_5G",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -536,15 +541,16 @@ class TestThroughputVsPktVlanOpen5G(object):
     @pytest.mark.pkt1024
     def test_client_open_pkt_1024_5g(self, lf_tools, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                      get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and open and fiveg"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and open and fiveg"
         """
         profile_data = setup_params_5g["ssid_modes"]["open"][1]
         ssid_name = profile_data["ssid_name"]
+
         security = "open"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 1024'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -559,7 +565,7 @@ class TestThroughputVsPktVlanOpen5G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_5G",
+                                       instance_name="TIP_PERF_PKT_1024_OPEN_5G",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -583,15 +589,16 @@ class TestThroughputVsPktVlanOpen5G(object):
     @pytest.mark.pktMTU
     def test_client_open_pkt_MTU_5g(self, lf_tools, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                     get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and open and fiveg"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and open and fiveg"
         """
         profile_data = setup_params_5g["ssid_modes"]["open"][1]
         ssid_name = profile_data["ssid_name"]
+
         security = "open"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: MTU'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -606,7 +613,7 @@ class TestThroughputVsPktVlanOpen5G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_5G",
+                                       instance_name="TIP_PERF_PKT_MTU_OPEN_5G",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -623,4 +630,3 @@ class TestThroughputVsPktVlanOpen5G(object):
             assert station
         else:
             assert False
-

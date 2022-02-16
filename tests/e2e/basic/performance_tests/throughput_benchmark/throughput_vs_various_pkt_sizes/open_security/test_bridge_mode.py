@@ -37,8 +37,9 @@ class TestThroughputVsPktBridge2G(object):
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.pkt60
+
     def test_client_open_pkt_60_2g(self, lf_tools, lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                   get_configuration):
+
         """Throughput Vs Pkt Sizes Bridge Mode
            pytest -m "throughput_vs_pkt and Bridge and open and twog and pkt60"
         """
@@ -53,9 +54,11 @@ class TestThroughputVsPktBridge2G(object):
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
+
         # if ssid_name not in get_vif_state:
         #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
         #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -104,6 +107,7 @@ class TestThroughputVsPktBridge2G(object):
         # if ssid_name not in get_vif_state:
         #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
         #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -152,6 +156,7 @@ class TestThroughputVsPktBridge2G(object):
         # if ssid_name not in get_vif_state:
         #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
         #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -200,6 +205,7 @@ class TestThroughputVsPktBridge2G(object):
         # if ssid_name not in get_vif_state:
         #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
         #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -296,6 +302,7 @@ class TestThroughputVsPktBridge2G(object):
         # if ssid_name not in get_vif_state:
         #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
         #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -367,6 +374,7 @@ class TestThroughputVsPktBridge5G(object):
         # if ssid_name not in get_vif_state:
         #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
         #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -415,6 +423,7 @@ class TestThroughputVsPktBridge5G(object):
         # if ssid_name not in get_vif_state:
         #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
         #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -463,6 +472,7 @@ class TestThroughputVsPktBridge5G(object):
         # if ssid_name not in get_vif_state:
         #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
         #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)

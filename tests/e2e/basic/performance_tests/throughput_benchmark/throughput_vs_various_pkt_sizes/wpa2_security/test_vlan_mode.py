@@ -8,8 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.wifi_capacity_test, pytest.mark.vlan, pytest.mark.wpa2]
-
+pytestmark = [pytest.mark.throughput_vs_pkt, pytest.mark.vlan, pytest.mark.wpa2]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -44,7 +43,7 @@ class TestThroughputVsPktWpa2Vlan2G(object):
         """Throughput Vs Pkt Sizes Vlan Mode
            pytest -m "throughput_vs_pkt and Vlan and wpa2 and twog and pkt60"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_5g["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"

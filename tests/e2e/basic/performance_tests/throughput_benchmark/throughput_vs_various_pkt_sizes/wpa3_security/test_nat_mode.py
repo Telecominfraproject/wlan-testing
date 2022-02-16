@@ -1,7 +1,7 @@
 """
 
-    Performance Test: Throughput vs Various Pkt Size Test: nat Mode
-    pytest -m "throughput_vs_pkt and nat"
+    Performance Test: Throughput vs Various Pkt Size Test: NAT Mode
+    pytest -m "throughput_vs_pkt and NAT"
 
 """
 import os
@@ -66,7 +66,7 @@ class TestThroughputVsPktWpa3Nat2G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_2G_60",
+                                       instance_name="TIP_PERF_DPT_WPA3_2G_60",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -115,7 +115,7 @@ class TestThroughputVsPktWpa3Nat2G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_2G_142",
+                                       instance_name="TIP_PERF_DPT_WPA3_2G_142",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -164,7 +164,7 @@ class TestThroughputVsPktWpa3Nat2G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_2G_256",
+                                       instance_name="TIP_PERF_DPT_WPA3_2G_256",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -213,7 +213,7 @@ class TestThroughputVsPktWpa3Nat2G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_2G_512",
+                                       instance_name="TIP_PERF_DPT_WPA3_2G_512",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -262,7 +262,7 @@ class TestThroughputVsPktWpa3Nat2G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_2G_1024",
+                                       instance_name="TIP_PERF_DPT_WPA3_2G_1024",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -311,7 +311,7 @@ class TestThroughputVsPktWpa3Nat2G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_2G_MTU",
+                                       instance_name="TIP_PERF_DPT_WPA3_2G_MTU",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -354,7 +354,6 @@ class TestThroughputVsPktWpa3Nat5G(object):
     """Throughput vs Various Pkt Size Test nat mode
        pytest -m "throughput_vs_pkt and nat"
     """
-
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2549", name="WIFI-2549")
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
@@ -386,7 +385,7 @@ class TestThroughputVsPktWpa3Nat5G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_5G_60",
+                                       instance_name="TIP_PERF_THRU_PKT_WPA3_5G_60",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -435,7 +434,7 @@ class TestThroughputVsPktWpa3Nat5G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_5G_142",
+                                       instance_name="TIP_PERF_THRU_PKT_WPA3_5G_142",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -484,7 +483,7 @@ class TestThroughputVsPktWpa3Nat5G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_5G_256",
+                                       instance_name="TIP_PERF_THRU_PKT_WPA3_5G_256",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -582,7 +581,7 @@ class TestThroughputVsPktWpa3Nat5G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_5G_1024",
+                                       instance_name="TIP_PERF_THRU_PKT_WPA3_5G_1024",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -631,7 +630,7 @@ class TestThroughputVsPktWpa3Nat5G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_5G_MTU",
+                                       instance_name="TIP_PERF_THRU_PKT_WPA3_5G_MTU",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')

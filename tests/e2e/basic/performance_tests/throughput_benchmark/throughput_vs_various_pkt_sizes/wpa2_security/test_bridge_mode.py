@@ -86,7 +86,7 @@ class TestThroughputVsPktWpa2Bridge2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2547", name="WIFI-2547")
     @pytest.mark.wpa2_personal
-    @pytest.mark.twog
+    @pytest.mark.twogr
     @pytest.mark.pkt142
     def test_client_wpa2_personal_bridge_pkt_142_2g(self, lf_tools, lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                              get_configuration):

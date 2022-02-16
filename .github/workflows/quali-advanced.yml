@@ -109,15 +109,13 @@ jobs:
 
     - name: checkout testing repo
       uses: actions/checkout@v2
-      with:
-        path: wlan-testing
 
     - name: install dependencies
-      run: pip install -r wlan-testing/.quali/requirements.txt
+      run: pip install -r .quali/requirements.txt
 
     - name: start reservation
       run: |
-        python wlan-testing/.quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}"}' --reservation-duration 720 "Advance Lab"
+        python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ matrix.ap_model }}"}' --reservation-duration 720 "Advance Lab"
 
     - name: set reservation outputs
       if: always()
@@ -152,11 +150,9 @@ jobs:
         Customer = ""
         server = ""
         CONFIGURATION = {
-          "basic": $(python .quali/get_configuration.py ${{ steps.reservation.outputs.identifier }})
+          "advanced": $(python .quali/get_configuration.py ${{ steps.reservation.outputs.identifier }})
         }
-        
         open_flow = {}
-        
         RADIUS_SERVER_DATA = {
             "ip": "10.10.1.221",
             "port": 1812,
@@ -174,7 +170,7 @@ jobs:
             "password": "password",
             "pk_password": "whatever"
         }
-        
+
         DYNAMIC_VLAN_RADIUS_SERVER_DATA = {
           "ip": "3.20.165.131",
           "port": 1812,
@@ -239,7 +235,7 @@ jobs:
             "password": "password",
             "pk_password": "whatever"
         }
-        
+
         PASSPOINT_OPERATOR_INFO = {
             "osen": "Disabled",
             "domain_name_list": ["telecominfraproject.atlassian.net"],
@@ -401,7 +397,7 @@ jobs:
 
     - name: stop reservation
       if: always()
-      run: python wlan-testing/.quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
+      run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
   report:
     needs: [ vars, generate-matrix, test ]

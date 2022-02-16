@@ -1,7 +1,7 @@
 """
 
-    Performance Test: Throughput vs Various Pkt Size Test: VLAN MODE
-    pytest -m "throughput_vs_pkt and vlan"
+    Performance Test: Throughput vs Various Pkt Size Test: VLAN Mode
+    pytest -m "throughput_vs_pkt and VLAN"
 
 """
 import os
@@ -42,8 +42,8 @@ class TestThroughputVsPktWpa3Vlan2G(object):
     def test_client_wpa3_personal_pkt_vlan_60_2g(self, lf_tools,
                                             lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                             get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and twog"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -51,7 +51,7 @@ class TestThroughputVsPktWpa3Vlan2G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "twog"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 60'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -66,7 +66,7 @@ class TestThroughputVsPktWpa3Vlan2G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_2G_60",
+                                       instance_name="TIP_PERF_DPT_WPA3_2G_60",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -91,8 +91,8 @@ class TestThroughputVsPktWpa3Vlan2G(object):
     def test_client_wpa3_personal_pkt_vlan_142_2g(self, lf_tools,
                                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                              get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and twog"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -100,7 +100,7 @@ class TestThroughputVsPktWpa3Vlan2G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "twog"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 142'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -115,7 +115,7 @@ class TestThroughputVsPktWpa3Vlan2G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_2G_142",
+                                       instance_name="TIP_PERF_DPT_WPA3_2G_142",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -140,8 +140,8 @@ class TestThroughputVsPktWpa3Vlan2G(object):
     def test_client_wpa3_personal_pkt_vlan_256_2g(self, lf_tools,
                                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                              get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and twog"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -149,7 +149,7 @@ class TestThroughputVsPktWpa3Vlan2G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "twog"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 256'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -164,7 +164,7 @@ class TestThroughputVsPktWpa3Vlan2G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_2G_256",
+                                       instance_name="TIP_PERF_DPT_WPA3_2G_256",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -189,8 +189,8 @@ class TestThroughputVsPktWpa3Vlan2G(object):
     def test_client_wpa3_personal_pkt_vlan_512_2g(self, lf_tools,
                                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                              get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and twog"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -198,7 +198,7 @@ class TestThroughputVsPktWpa3Vlan2G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "twog"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 512'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -213,7 +213,7 @@ class TestThroughputVsPktWpa3Vlan2G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_2G_1024",
+                                       instance_name="TIP_PERF_DPT_WPA3_2G_512",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -238,8 +238,8 @@ class TestThroughputVsPktWpa3Vlan2G(object):
     def test_client_wpa3_personal_pkt_vlan_1024_2g(self, lf_tools,
                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                               get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and twog"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -247,7 +247,7 @@ class TestThroughputVsPktWpa3Vlan2G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "twog"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 1024'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -262,7 +262,7 @@ class TestThroughputVsPktWpa3Vlan2G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_2G_MTU",
+                                       instance_name="TIP_PERF_DPT_WPA3_2G_1024",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -287,8 +287,8 @@ class TestThroughputVsPktWpa3Vlan2G(object):
     def test_client_wpa3_personal_pkt_vlan_MTU_2g(self, lf_tools,
                                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                              get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and twog"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -296,7 +296,7 @@ class TestThroughputVsPktWpa3Vlan2G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "twog"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: MTU'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -311,7 +311,7 @@ class TestThroughputVsPktWpa3Vlan2G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_2G_MTU",
+                                       instance_name="TIP_PERF_DPT_WPA3_2G_MTU",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -328,6 +328,7 @@ class TestThroughputVsPktWpa3Vlan2G(object):
             assert station
         else:
             assert False
+
 
 setup_params_5g = {
     "mode": "VLAN",
@@ -359,8 +360,8 @@ class TestThroughputVsPktWpa3Vlan5G(object):
     def test_client_wpa3_personal_pkt_vlan_60_5g(self, lf_tools,
                                             lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                             get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and fiveg"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and fiveg"
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -368,7 +369,7 @@ class TestThroughputVsPktWpa3Vlan5G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 60'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -383,7 +384,7 @@ class TestThroughputVsPktWpa3Vlan5G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_5G",
+                                       instance_name="TIP_PERF_THRU_PKT_WPA3_5G_60",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -408,8 +409,8 @@ class TestThroughputVsPktWpa3Vlan5G(object):
     def test_client_wpa3_personal_pkt_vlan_142_5g(self, lf_tools,
                                              lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                              get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and fiveg"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and fiveg"
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -417,7 +418,7 @@ class TestThroughputVsPktWpa3Vlan5G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 142'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -432,7 +433,7 @@ class TestThroughputVsPktWpa3Vlan5G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_5G_142",
+                                       instance_name="TIP_PERF_THRU_PKT_WPA3_5G_142",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -457,8 +458,8 @@ class TestThroughputVsPktWpa3Vlan5G(object):
     def test_client_wpa3_personal_pkt_vlan_256_5g(self, lf_tools,
                                              lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                              get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and fiveg"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and fiveg"
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -466,7 +467,7 @@ class TestThroughputVsPktWpa3Vlan5G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 256'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -481,7 +482,7 @@ class TestThroughputVsPktWpa3Vlan5G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_5G_256",
+                                       instance_name="TIP_PERF_THRU_PKT_WPA3_5G_256",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -506,8 +507,8 @@ class TestThroughputVsPktWpa3Vlan5G(object):
     def test_client_wpa3_personal_pkt_vlan_512_5g(self, lf_tools,
                                              lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                              get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and fiveg"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and fiveg"
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -515,7 +516,7 @@ class TestThroughputVsPktWpa3Vlan5G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 512'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -530,7 +531,7 @@ class TestThroughputVsPktWpa3Vlan5G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_5G_512",
+                                       instance_name="TIP_PERF_THRU_PKT_WPA3_5G_512",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -555,8 +556,8 @@ class TestThroughputVsPktWpa3Vlan5G(object):
     def test_client_wpa3_personal_pkt_vlan_1024_5g(self, lf_tools,
                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                               get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and fiveg"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and fiveg"
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -564,7 +565,7 @@ class TestThroughputVsPktWpa3Vlan5G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 1024'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -579,7 +580,7 @@ class TestThroughputVsPktWpa3Vlan5G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_5G_1024",
+                                       instance_name="TIP_PERF_THRU_PKT_WPA3_5G_1024",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -604,8 +605,8 @@ class TestThroughputVsPktWpa3Vlan5G(object):
     def test_client_wpa3_personal_pkt_vlan_MTU_5g(self, lf_tools,
                                              lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                              get_configuration):
-        """Throughput Vs Pkt Sizes VLAN MODE
-           pytest -m "throughput_vs_pkt and vlan and wpa3_personal and fiveg"
+        """Throughput Vs Pkt Sizes VLAN Mode
+           pytest -m "throughput_vs_pkt and VLAN and wpa3_personal and fiveg"
         """
         profile_data = setup_params_5g["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -613,7 +614,7 @@ class TestThroughputVsPktWpa3Vlan5G(object):
         security = "wpa3"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: MTU'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -628,7 +629,7 @@ class TestThroughputVsPktWpa3Vlan5G(object):
 
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_THRU_PKT_WPA3_NAT_5G_MTU",
+                                       instance_name="TIP_PERF_THRU_PKT_WPA3_5G_MTU",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             # entries = os.listdir("../reports/" + report_name + '/')
@@ -645,4 +646,3 @@ class TestThroughputVsPktWpa3Vlan5G(object):
             assert station
         else:
             assert False
-
