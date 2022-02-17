@@ -108,7 +108,7 @@ class TestMultiAssoDisassoBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.udp_download_2g
-    def test_multi_station_udp_download_2g(self, lf_test, lf_tools):
+    def test_multi_station_udp_download_2g(self, lf_test, lf_tools, get_controller_logs, get_ap_config_slots, get_lf_logs):
         allure.attach(name="Definition",
                       body="Multiple association/disassociation stability test intends to measure stability of Wi-Fi device " \
                            "under a dynamic environment with frequent change of connection status.")
@@ -262,7 +262,7 @@ class TestMultiAssoDisassoBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.udp_download_5g
-    def test_multi_station_udp_download_5g(self, lf_test, lf_tools):
+    def test_multi_station_udp_download_5g(self, lf_test, lf_tools, get_controller_logs, get_ap_config_slots, get_lf_logs):
         allure.attach(name="Definition",
                       body="Multiple association/disassociation stability test intends to measure stability of Wi-Fi device " \
                            "under a dynamic environment with frequent change of connection status.")
