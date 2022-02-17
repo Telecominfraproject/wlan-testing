@@ -36,12 +36,13 @@ Realm = realm.Realm
 
 class ChamberView:
 
-    def __init__(self, lanforge_data=None, access_point_data=None, run_lf=False, debug=True, testbed=None):
+    def __init__(self, lanforge_data=None, access_point_data=None, run_lf=False, debug=True, testbed=None, cc_1=False):
         print("lanforge data", lanforge_data)
         print("access point data", access_point_data)
         self.access_point_data = access_point_data
         self.access_point_data = access_point_data
         self.run_lf = run_lf
+        self.cc_1 = cc_1
         print("testbed", testbed)
         if "type" in lanforge_data.keys():
             if lanforge_data["type"] == "Non-mesh":
@@ -314,11 +315,13 @@ class ChamberView:
 
     def add_stations(self, band="2G", num_stations="max", dut="NA", ssid_name=[], idx=0):
         idx = idx
-        if self.run_lf:
+        if self.run_lf or self.cc_1:
             if band == "2G":
                 idx = 0
             if band == "5G":
                 idx = 1
+
+
         print(self.dut_idx_mapping)
         for i in self.dut_idx_mapping:
             if self.dut_idx_mapping[i][0] == ssid_name and self.dut_idx_mapping[i][3] == band:
