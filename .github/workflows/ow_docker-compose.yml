@@ -7,7 +7,6 @@ env:
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
-  ALLURE_CLI_VERSION: 2.14.0
 
 on:
   repository_dispatch:
@@ -88,15 +87,6 @@ jobs:
       with:
         path: wlan-testing
 
-    # build and push docker-compose-deployment image
-#    - name: docker login
-#      run: docker login ${{ env.DOCKER_SERVER }} -u ${{ env.DOCKER_USER_NAME }} -p ${{ env.DOCKER_USER_PASSWORD }}
-#    - name: build docker image
-#      working-directory: wlan-testing/docker-compose/openwifi
-#      run: docker build -t ${{ env.DOCKER_SERVER }}/docker-compose-deployment:${{ github.run_id }} .
-#    - name: push docker image
-#      run: docker push ${{ env.DOCKER_SERVER }}/docker-compose-deployment:${{ github.run_id }}
-#
     - name: Prepare certificates from secrets
       working-directory: wlan-testing/docker-compose/openwifi
       run: |
@@ -361,122 +351,32 @@ jobs:
     - name: get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
-    - name: install Allure CLI tool
-      run: |
-        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-
-    - name: set job name
-      id: job
-      run: echo "::set-output name=name::testing-${{ github.run_number }}"
-
     - name: prepare namespace
       id: namespace
       run: |
         NAMESPACE="testing-${{ github.run_id }}"
-        kubectl create ns $NAMESPACE
-        kubectl config set-context --current --namespace=$NAMESPACE
         echo "::set-output name=name::${NAMESPACE}"
 
     - name: create configuration.py secret
+      id: configuration
       run: |
         cat << EOF > configuration.py
         ${{ secrets.LAB_CONFIGURATION }}
         EOF
         sed -i -r "s/'url': ('|\").*('|\")/'url': 'https:\/\/${{ needs.deploy-controller.outputs.sec_url }}:16001'/" configuration.py
         sed -i -r "s/'password': ('|\")openwifi('|\")/'password': '"${{ secrets.OWSEC_NEW_PASSWORD }}"'/" configuration.py
-        kubectl create secret generic configuration --from-file=configuration=./configuration.py
+
+        echo "::set-output name=value::$(cat ./configuration.py)"
 
     - name: run tests
-      run: |
-        cat <<EOF | kubectl apply -f -
-        apiVersion: batch/v1
-        kind: Job
-        metadata:
-          name: "${{ steps.job.outputs.name }}"
-        spec:
-          template:
-            metadata:
-              annotations:
-                cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
-            spec:
-              containers:
-              - name: tests
-                image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-                resources:
-                  requests:
-                    memory: "512Mi"
-                    cpu: "250m"
-                  limits:
-                    memory: "512Mi"
-                    cpu: "250m"
-                command:
-                  - /bin/bash
-                  - -c
-                  - |
-                    cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression || 'sdk_restapi' }}" -s -vvv --testbed="${{ github.event.inputs.testbeds || 'basic-05' }}" --alluredir=/tmp/allure-results
-                    ret=\$?
-                    # sleep some time to be able to download the Allure results
-                    sleep 60
-                    exit \$ret
-                volumeMounts:
-                - name: configuration
-                  mountPath: "/wlan-testing/tests/configuration.py"
-                  subPath: configuration
-                  readOnly: true
-              nodeSelector:
-                env: tests
-              tolerations:
-              - key: "tests"
-                operator: "Exists"
-                effect: "NoSchedule"
-              imagePullSecrets:
-              - name: tip-docker-registry-key
-              restartPolicy: Never
-              volumes:
-              - name: configuration
-                secret:
-                  secretName: configuration
-          backoffLimit: 0
-        EOF
-        # wait for pod to spawn
-        sleep 1
-        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
-        kubectl logs -f $podname &
-        #sleep 30 # wait for the pod to come up
-        until [ -s test_everything.xml ]
-        do
-          sleep 10
-          kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
-        done
-        echo "tests completed"
-        echo "downloading allure results..."
-        kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
-        echo "waiting for pod to exit"
-        kubectl logs -f $podname >/dev/null 2>&1
-
-        until [[ ! -z "$EXIT_CODE" ]]; do EXIT_CODE=$(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}"); sleep 1; done;
-        exit $EXIT_CODE
-
-    - name: print logs
-      if: always()
-      run: |
-        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-        kubectl logs $podname
-
-    - name: upload Allure results as artifact
-      if: always()
-      uses: actions/upload-artifact@v2
+      uses: ./.github/actions/run-tests
       with:
-        name: allure-results-docker-compose-${{ github.event.inputs.marker_expression || 'sdk_restapi' }}
-        path: allure-results
-
-    - name: cleanup
-      if: always()
-      run: |
-        kubectl delete ns "${{ steps.namespace.outputs.name }}" --wait=true
+        namespace: ${{ steps.namespace.outputs.name }}
+        testbed: "${{ github.event.inputs.testbeds || 'basic-05' }}"
+        marker_expression: "${{ github.event.inputs.marker_expression || 'sdk_restapi' }}"
+        configuration: "${{ steps.configuration.outputs.value }}"
+        testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+        allure_results_artifact_name: allure-results-docker-compose-${{ github.event.inputs.marker_expression || 'sdk_restapi' }}
 
   report:
     runs-on: ubuntu-latest
@@ -535,9 +435,6 @@ jobs:
       with:
         registry_user: wlan-testing-cicd
         registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
-
-#    - name: cleanup docker-compose-deployment image
-#      run: curl -u${{ env.DOCKER_USER_NAME }}:${{ env.DOCKER_USER_PASSWORD }} -X DELETE "https://tip.jfrog.io/artifactory/tip-wlan-cloud-docker-repo/docker-compose-deployment/${{ github.run_id }}"
 
   destroy-controller:
     needs: [ test ]
