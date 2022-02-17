@@ -29,6 +29,7 @@ import time
 import string
 import random
 from scp_util import SCP_File
+
 S = 12
 # from eap_connect import EAPConnect
 from test_ipv4_ttls import TTLSTest
@@ -46,6 +47,7 @@ from lf_rvr_test import RvrTest
 from attenuator_serial import AttenuatorSerial
 from lf_atten_mod_test import CreateAttenuator
 from lf_mesh_test import MeshTest
+from lf_tr398_test import TR398Test
 
 
 class RunTest:
@@ -96,6 +98,7 @@ class RunTest:
             self.rx_sensitivity_obj = None
             self.dualbandptest_obj = None
             self.msthpt_obj = None
+            self.cvtest_obj = None
             self.influx_params = influx_params
             # self.influxdb = RecordInflux(_influx_host=influx_params["influx_host"],
             #                              _influx_port=influx_params["influx_port"],
@@ -175,7 +178,7 @@ class RunTest:
                                name="supplicant_log")
         except Exception as e:
             print(e)
-            
+
         for result in run_results:
             print("test result: " + result)
         result = True
@@ -202,7 +205,7 @@ class RunTest:
                     station_name=[], key_mgmt="WPA-EAP",
                     pairwise="NA", group="NA", wpa_psk="DEFAULT",
                     ttls_passwd="nolastart", ieee80211w=1,
-                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius",d_vlan=False,cleanup=True):
+                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius", d_vlan=False, cleanup=True):
         self.eap_connect = TTLSTest(host=self.lanforge_ip, port=self.lanforge_port,
                                     sta_list=station_name, vap=False, _debug_on=self.debug)
 
@@ -251,7 +254,7 @@ class RunTest:
         self.eap_connect.build(extra_securities=extra_securities)
         self.eap_connect.start(station_name, True, True)
         if d_vlan:
-           self.station_ip = {}
+            self.station_ip = {}
         for sta_name in station_name:
             # try:
             station_data_str = ""
@@ -282,7 +285,7 @@ class RunTest:
                                name="supplicant_log")
         except Exception as e:
             print(e)
-            
+
         if not self.eap_connect.passes():
             if self.debug:
                 print("test result: " + self.eap_connect.passes())
@@ -297,12 +300,13 @@ class RunTest:
             cx_data = cx_data + "\n"
         allure.attach(name="cx_data", body=str(cx_data))
         if cleanup:
-           self.eap_connect.cleanup(station_name)
+            self.eap_connect.cleanup(station_name)
         return self.eap_connect.passes()
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
                       instance_name="wct_instance", download_rate="1Gbps", influx_tags=[],
-                      upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", stations="", create_stations=True, sort="interleave", raw_lines=[]):
+                      upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", stations="", create_stations=True,
+                      sort="interleave", raw_lines=[]):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         if mode == "BRIDGE":
             upstream_port = self.upstream_port
@@ -354,7 +358,6 @@ class RunTest:
 
         influx.glob()
         return wificapacity_obj
-
 
     def Client_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog",
                        vlan_id=100,
@@ -466,11 +469,11 @@ class RunTest:
         report_name = self.dataplane_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
-                                     influx_port=self.influx_params["influx_port"],
-                                     influx_org=self.influx_params["influx_org"],
-                                     influx_token=self.influx_params["influx_token"],
-                                     influx_bucket=self.influx_params["influx_bucket"],
-                                     path=report_name)
+                             influx_port=self.influx_params["influx_port"],
+                             influx_org=self.influx_params["influx_org"],
+                             influx_token=self.influx_params["influx_token"],
+                             influx_bucket=self.influx_params["influx_bucket"],
+                             path=report_name)
 
         influx.glob()
 
@@ -559,7 +562,7 @@ class RunTest:
                                            ['Stability', '1'],
                                            ['Band-Steering', '0'], ['Multi-Station Throughput vs Pkt Size', '0'],
                                            ['Long-Term', '0']],
-                                     raw_lines=[['reset_dur:300'],['reset_batch_size:2']]
+                                     raw_lines=[['reset_dur:300'], ['reset_batch_size:2']]
                                      )
         self.apstab_obj.setup()
         self.apstab_obj.run()
@@ -573,7 +576,6 @@ class RunTest:
 
         influx.glob()
         return self.apstab_obj
-
 
     def ratevsrange(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
                     upload_rate="0", duration="1m", instance_name="test_demo", raw_lines=None):
@@ -711,13 +713,13 @@ class RunTest:
                     "radio": str(radio)
                 },
             ]
-        print("station name",station_name)
+        print("station name", station_name)
 
         self.multi_obj = MultiPsk(host=self.lanforge_ip,
                                   port=self.lanforge_port,
                                   ssid=ssid,
                                   input=input_data,
-                                  security=security,)
+                                  security=security, )
         self.sta_url_map = None
         self.multi_obj.build()
         self.multi_obj.start()
@@ -860,38 +862,37 @@ class RunTest:
         atten_obj = CreateAttenuator(self.lanforge_ip, self.lanforge_port, serno, idx, val)
         atten_obj.build()
 
-
     def mesh_test(self, instance_name=None, raw_lines=None, duration="60s"):
         self.mesh_obj = MeshTest(
-                       lf_host=self.lanforge_ip,
-                       lf_port=self.lanforge_port,
-                       ssh_port=self.lf_ssh_port,
-                       local_lf_report_dir=self.local_report_path,
-                       lf_user="lanforge",
-                       lf_password = "lanforge",
-                       instance_name = instance_name,
-                       duration = duration,
-                       config_name = "mesh_config",
-                       upstream = "1.2.2 eth2",
-                       upload_speed="85%",
-                       download_speed="85%",
-                       pull_report = True,
-                       load_old_cfg = False,
-                       raw_lines = raw_lines,
-                       )
+            lf_host=self.lanforge_ip,
+            lf_port=self.lanforge_port,
+            ssh_port=self.lf_ssh_port,
+            local_lf_report_dir=self.local_report_path,
+            lf_user="lanforge",
+            lf_password="lanforge",
+            instance_name=instance_name,
+            duration=duration,
+            config_name="mesh_config",
+            upstream="1.2.2 eth2",
+            upload_speed="85%",
+            download_speed="85%",
+            pull_report=True,
+            load_old_cfg=False,
+            raw_lines=raw_lines,
+        )
         self.mesh_obj.setup()
         self.mesh_obj.run()
         return self.mesh_obj
-      
+
     def attenuator_serial_2g_radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
                                    vlan_id=100, sta_mode=0, station_name=[], lf_tools_obj=None):
         radio = self.twog_radios[0]
-        #index 0 of atten_serial_radio will ser no of 1st 2g radio and index 1 will ser no of 2nd and 3rd 2g radio
+        # index 0 of atten_serial_radio will ser no of 1st 2g radio and index 1 will ser no of 2nd and 3rd 2g radio
         atten_serial_radio = []
         atten_serial = self.attenuator_serial()
         self.Client_Connect_Using_Radio(ssid=ssid, passkey=passkey, security=security, mode=mode,
-                                   vlan_id=vlan_id, radio=radio, sta_mode=sta_mode,
-                                   station_name=station_name)
+                                        vlan_id=vlan_id, radio=radio, sta_mode=sta_mode,
+                                        station_name=station_name)
         signal1 = lf_tools_obj.station_data_query(station_name=station_name[0], query="signal")
         atten_sr = atten_serial[0].split(".")
         for i in range(4):
@@ -908,12 +909,12 @@ class RunTest:
     def attenuator_serial_5g_radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
                                    vlan_id=100, sta_mode=0, station_name=[], lf_tools_obj=None):
         radio = self.fiveg_radios[0]
-        #index 0 of atten_serial_radio will ser no of 1st 5g radio and index 1 will ser no of 2nd and 3rd 5g radio
+        # index 0 of atten_serial_radio will ser no of 1st 5g radio and index 1 will ser no of 2nd and 3rd 5g radio
         atten_serial_radio = []
         atten_serial = self.attenuator_serial()
         self.Client_Connect_Using_Radio(ssid=ssid, passkey=passkey, security=security, mode=mode,
-                                   vlan_id=vlan_id, radio=radio, sta_mode=sta_mode,
-                                   station_name=station_name)
+                                        vlan_id=vlan_id, radio=radio, sta_mode=sta_mode,
+                                        station_name=station_name)
         signal1 = lf_tools_obj.station_data_query(station_name=station_name[0], query="signal")
         atten_sr = atten_serial[0].split(".")
         for i in range(4):
@@ -927,6 +928,61 @@ class RunTest:
         self.Client_disconnect(station_name=station_name)
         return atten_serial_radio
 
+    def tr398Test(self, dut_name="TIP", upstream_port="", dut_5g="", dut_2g="", config_name="", raw_line=[], radios_2g=[], radios_5g=[]):
+        if len(radios_2g) !=0 and len(radios_5g) != 0:
+            radios_2g = self.twog_radios
+            radios_5g = self.fiveg_radios
+        sets = [['Calibrate Attenuators', '0'], ['Receiver Sensitivity', '0'], ['Maximum Connection', '0'],
+                ['Maximum Throughput', '0'], ['Airtime Fairness', '0'], ['Range Versus Rate', '0'],
+                ['Spatial Consistency', '0'],
+                ['Multiple STAs Performance', '0'], ['Multiple Assoc Stability', '0'], ['Downlink MU-MIMO', '1'],
+                ['AP Coexistence', '0'], ['Long Term Stability', '0'], ['Skip 2.4Ghz Tests', '1'], ]
+        if len(raw_line) == 0:
+            raw_line = [['radio-0: 1.1.4 wiphy1'], ['radio-1: 1.1.5 wiphy0'],['radio-2: 1.1.6 wiphy3'],
+                        ['radio-3: 1.1.7 wiphy2'], ['radio-4: 1.1.8 wiphy4'], ['radio-5: 1.1.9 wiphy5']]
+        instance_name = "tr398-instance-{}".format(str(random.randint(0, 1000)))
+        print("Upstream Port: ", upstream_port)
+
+        if not os.path.exists("mu-mimo-config.txt"):
+            with open("mu-mimo-config.txt", "wt") as f:
+                for i in raw_line:
+                    f.write(str(i[0]) + "\n")
+                f.close()
+
+        self.cvtest_obj = TR398Test(lf_host=self.lanforge_ip,
+                                    lf_port=self.lanforge_port,
+                                    lf_user="lanforge",
+                                    lf_password="lanforge",
+                                    instance_name=instance_name,
+                                    config_name=config_name,
+                                    upstream=upstream_port,
+                                    pull_report=True,
+                                    local_lf_report_dir=self.local_report_path,
+                                    load_old_cfg=False,
+                                    dut2=dut_2g,
+                                    dut5=dut_5g,
+                                    raw_lines_file="mu-mimo-config.txt",
+                                    enables=[],
+                                    disables=[],
+                                    raw_lines=[],
+                                    sets=sets,
+                                    test_rig=dut_name
+                                    )
+        self.cvtest_obj.setup()
+        self.cvtest_obj.run()
+        if os.path.exists("mu-mimo-config.txt"):
+            os.remove("mu-mimo-config.txt")
+
+        report_name = self.cvtest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                             influx_port=self.influx_params["influx_port"],
+                             influx_org=self.influx_params["influx_org"],
+                             influx_token=self.influx_params["influx_token"],
+                             influx_bucket=self.influx_params["influx_bucket"],
+                             path=report_name)
+
+        influx.glob()
+        return self.cvtest_obj
 
 
 if __name__ == '__main__':
@@ -944,19 +1000,19 @@ if __name__ == '__main__':
         "influx_tag": ["basic-03", "ec420"],
     }
     lanforge_data = {
-                "ip": "10.28.3.6",
-                "port": 8080,
-                "ssh_port": 22,
-                "2.4G-Radio": ["1.1.wiphy4"],
-                "5G-Radio": ["1.1.wiphy5"],
-                "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
-                "upstream": "1.1.eth2",
-                "upstream_subnet": "10.28.2.1/24",
-                "uplink": "1.1.eth3",
-                "2.4G-Station-Name": "wlan0",
-                "5G-Station-Name": "wlan1",
-                "AX-Station-Name": "ax"
-            }
+        "ip": "10.28.3.6",
+        "port": 8080,
+        "ssh_port": 22,
+        "2.4G-Radio": ["1.1.wiphy4"],
+        "5G-Radio": ["1.1.wiphy5"],
+        "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
+        "upstream": "1.1.eth2",
+        "upstream_subnet": "10.28.2.1/24",
+        "uplink": "1.1.eth3",
+        "2.4G-Station-Name": "wlan0",
+        "5G-Station-Name": "wlan1",
+        "AX-Station-Name": "ax"
+    }
     obj = RunTest(lanforge_data=lanforge_data, debug=False, influx_params=influx_params)
     upstream = lanforge_data['upstream']
     # data = obj.staConnect.json_get("/port/all")
