@@ -26,7 +26,7 @@ class CController:
         #     self.ap_name = self.controller_data["ap_name"][i]
         # for band in range(controller_data["band"]):
         #     self.band = self.controller_data["band"][i]
-        self.ap_name = self.controller_data["ap_name"][1]["ap_name"]  # hard coded
+        self.ap_name = self.controller_data["ap_name"][0]["ap_name"]  # hard coded
         self.band = self.controller_data["band"][0]
 
         self.scheme = self.controller_data["scheme"]
@@ -100,6 +100,11 @@ class CController:
         fiveghz = self.cc.show_ap_dot11_5gz_shutdown()
         return fiveghz
 
+    def show_shutdown_2ghz_ap(self):
+        fiveghz = self.cc.show_ap_dot11_24gz_shutdown()
+        return fiveghz
+
+
     def disable_wlan(self, id , wlan, wlanssid):
         self.cc.wlan = wlan
         self.cc.wlanID = id
@@ -113,6 +118,14 @@ class CController:
         self.cc.wlanSSID = wlanssid
         shut = self.cc.ap_dot11_5ghz_shutdown()
         return shut
+
+    def ap_2ghz_shutdown(self,id, wlan, wlanssid):
+        self.cc.wlan = wlan
+        self.cc.wlanID = id
+        self.cc.wlanSSID = wlanssid
+        shut = self.cc.ap_dot11_24ghz_shutdown()
+        return shut
+
 
     def get_ssids(self):
         wlan_summary = self.cc.show_wlan_summary()
@@ -137,7 +150,7 @@ class CController:
         policy = self.cc.config_wireless_tag_policy_and_policy_profile()
         return policy
 
-    def enable_wlan(self, id, wlan, wlanssid, key):
+    def enable_wlan(self, id, wlan, wlanssid):
         self.cc.wlan = wlan
         self.cc.wlanID = id
         self.cc.wlanSSID = wlanssid
@@ -148,11 +161,24 @@ class CController:
         self.cc.wlan = wlan
         self.cc.wlanID = id
         self.cc.wlanSSID = wlanssid
+        self.cc.security_key = key
         en_net = self.cc.config_no_ap_dot11_5ghz_shutdown()
+        return en_net
+
+    def enable_2ghz_netwrk(self, id, wlan, wlanssid, key):
+        self.cc.wlan = wlan
+        self.cc.wlanID = id
+        self.cc.wlanSSID = wlanssid
+        self.cc.security_key = key
+        en_net = self.cc.config_no_ap_dot11_24ghz_shutdown()
         return en_net
 
     def enable_ap_5ghz(self):
         ap = self.cc.config_ap_no_dot11_5ghz_shutdown()
+        return ap
+
+    def enable_ap_2ghz(self):
+        ap = self.cc.config_ap_no_dot11_24ghz_shutdown()
         return ap
 
     def show_5ghz_summary(self):
@@ -239,6 +265,14 @@ class CController:
         slot = self.cc.show_ap_config_slots()
         return slot
 
+    # gives info of ap wlan bssid and state
+    def show_ap_wlan_summary(self):
+        w_sum = self.cc.show_ap_wlan_summary()
+        print(w_sum)
+        return w_sum
+
+    def get_ap_ssid_state(self):
+        pass
 
 
 
