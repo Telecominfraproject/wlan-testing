@@ -329,40 +329,43 @@ class csv_sql:
         # NOTE: html links to png do not like spaces
         png_server_img = self.server + png_path.replace(self.cut, '')
         # generate png image
+        png_present = True
         try:
             kpi_fig.write_image(png_path, scale=1, width=1200, height=300)
         except ValueError as err:
-            print("{msg}".format(msg=err))
-            print("exiting")
-            exit(1)
+            print("ValueError kpi_fig.write_image {msg}".format(msg=err))
+            png_present = False
+            # exit(1)
         except BaseException as err:
-            print("{msg}".format(msg=err))
-            print("exiting")
-            exit(1)
+            print("BaseException kpi_fig.write_image{msg}".format(msg=err))
+            png_present = False
+            # exit(1)
         # generate html image (interactive)
-        kpi_fig.write_html(html_path)
-        img_kpi_html_path = self.server + html_path
-        img_kpi_html_path = img_kpi_html_path.replace(self.cut, '')
-        self.html_results += """
-        <a href={img_kpi_html_path} target="_blank">
-            <img src={png_server_img}>
-        </a>
-        """.format(img_kpi_html_path=img_kpi_html_path, png_server_img=png_server_img)
-        # link to interactive results
-        kpi_html_path = self.server + html_path
-        kpi_html_path = kpi_html_path.replace(self.cut, '')
-        # self.html_results +="""<br>"""
-        # link to full test results
-        report_index_html_path = self.server + kpi_path_list[-1] + "index.html"
-        report_index_html_path = report_index_html_path.replace(self.cut, '')
-        self.html_results += """<a href={report_index_html_path} target="_blank">{test_id}_{group}_{test_tag}_{test_rig}_Report </a>
-        """.format(report_index_html_path=report_index_html_path, test_id=test_id_list[-1], group=group, test_tag=test_tag, test_rig=test_rig)
-        self.html_results += """<br>"""
-        self.html_results += """<br>"""
-        self.html_results += """<br>"""
-        self.html_results += """<br>"""
-        self.html_results += """<br>"""
-
+        # TODO Do not crash if a PNG is not present
+        if png_present:
+            kpi_fig.write_html(html_path)
+            img_kpi_html_path = self.server + html_path
+            img_kpi_html_path = img_kpi_html_path.replace(self.cut, '')
+            self.html_results += """
+            <a href={img_kpi_html_path} target="_blank">
+                <img src={png_server_img}>
+            </a>
+            """.format(img_kpi_html_path=img_kpi_html_path, png_server_img=png_server_img)
+            # link to interactive results
+            kpi_html_path = self.server + html_path
+            kpi_html_path = kpi_html_path.replace(self.cut, '')
+            # self.html_results +="""<br>"""
+            # link to full test results
+            report_index_html_path = self.server + kpi_path_list[-1] + "index.html"
+            report_index_html_path = report_index_html_path.replace(self.cut, '')
+            self.html_results += """<a href={report_index_html_path} target="_blank">{test_id}_{group}_{test_tag}_{test_rig}_Report </a>
+            """.format(report_index_html_path=report_index_html_path, test_id=test_id_list[-1], group=group, test_tag=test_tag, test_rig=test_rig)
+            self.html_results += """<br>"""
+            self.html_results += """<br>"""
+            self.html_results += """<br>"""
+            self.html_results += """<br>"""
+            self.html_results += """<br>"""
+    
     # TODO determin the subtest pass and fail graph
     # df is sorted by date oldest to newest
     # get the test_run for last run

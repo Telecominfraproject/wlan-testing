@@ -1,0 +1,5 @@
+Date	test-rig	test-tag	dut-hw-version	dut-sw-version	dut-model-num	dut-serial-num	test-priority	test-id	short-description	pass/fail	numeric-score	test details	Units	Graph-Group	Subtest-Pass	Subtest-Fail
+1645082692449			NA	NA	NA	NA	90	WiFi Capacity	Max Stations Associated		0.0	Maximum concurrent stations associated with DUT	Stations	Station-Totals	0	0
+1645082692449			NA	NA	NA	NA	90	WiFi Capacity	Max Stations IP		0.0	Maximum concurrent stations associated with DUT and having IP address	Stations	Station-Totals	0	0
+1645082692449			NA	NA	NA	NA	90	WiFi Capacity	Stations Failed Association		8.0	Stations that failed to associate	Stations	Station-Totals	0	0
+1645082692449			NA	NA	NA	NA	90	WiFi Capacity	Stations Failed IP		8.0	Stations that failed to acquire DHCP lease	Stations	Station-Totals	0	0

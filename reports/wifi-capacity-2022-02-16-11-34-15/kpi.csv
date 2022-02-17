@@ -1,0 +1,8 @@
+Date	test-rig	test-tag	dut-hw-version	dut-sw-version	dut-model-num	dut-serial-num	test-priority	test-id	short-description	pass/fail	numeric-score	test details	Units	Graph-Group	Subtest-Pass	Subtest-Fail
+1645083244638			NA	NA	NA	NA	90	WiFi Capacity	DL Mbps - 8 STA		63.707576	Total download Mbps speed for the duration of this iteration	Mbps	Per Stations Rate DL	0	0
+1645083244639			NA	NA	NA	NA	90	WiFi Capacity	UL Mbps - 8 STA		0.0	Total upload Mbps speed for the duration of this iteration	Mbps	Per Stations Rate UL	0	0
+1645083244639			NA	NA	NA	NA	95	WiFi Capacity	UL+DL Mbps - 8 STA		63.707576	Total upload + download Mbps speed for the duration of this iteration	Mbps	Per Stations Rate UL+DL	0	0
+1645083245206			NA	NA	NA	NA	90	WiFi Capacity	Max Stations Associated		8.0	Maximum concurrent stations associated with DUT	Stations	Station-Totals	0	0
+1645083245206			NA	NA	NA	NA	90	WiFi Capacity	Max Stations IP		8.0	Maximum concurrent stations associated with DUT and having IP address	Stations	Station-Totals	0	0
+1645083245206			NA	NA	NA	NA	90	WiFi Capacity	Stations Failed Association		0.0	Stations that failed to associate	Stations	Station-Totals	0	0
+1645083245206			NA	NA	NA	NA	90	WiFi Capacity	Stations Failed IP		0.0	Stations that failed to acquire DHCP lease	Stations	Station-Totals	0	0

@@ -548,6 +548,8 @@ def main():
     parser.add_argument("--scenario", default="")
     parser.add_argument("--graph_groups", help="File to save graph groups to", default=None)
     parser.add_argument("--local_lf_report_dir", help="--local_lf_report_dir <where to pull reports to>  default '' put where dataplane script run from", default="")
+    parser.add_argument("--lf_logger_config_json", help="--lf_logger_config_json <json file> , json configuration of logger")
+
 
     args = parser.parse_args()
 

@@ -1,0 +1,1404 @@
+False
+cisco series 9800
+scheme ssh
+1645098911.543661 INFO     Spawn: ssh -p8888 -o PubkeyAuthentication=no admin@localhost
+ wifi_ctl_9800_3504.py 257
+logg <Logger __main__ (INFO)>
+1645098914.365978 INFO     b'Password:' wifi_ctl_9800_3504.py 114
+1645098914.366838 INFO     9800 received password prompt will send password: Cisco123 i:4 before b'\r' after b'Password:' wifi_ctl_9800_3504.py 472
+1645098914.417234 INFO     b'Cisco123' wifi_ctl_9800_3504.py 114
+1645098915.399684 INFO     b'WLC2#' wifi_ctl_9800_3504.py 114
+1645098915.400175 INFO     9800 SSH Successfully received # prompt i:4 j:0 before b' \r\n\r\n\r\n' after b'WLC2#' wifi_ctl_9800_3504.py 477
+1645098915.600760 INFO     Command to Process :: Ap[AP2C57.4152.385C] Action[cmd] Value[show ap config slots]  wifi_ctl_9800_3504.py 991
+Ap[AP2C57.4152.385C] Action[cmd] Value[show ap config slots]
+1645098915.601041 INFO     action cmd series 9800 wifi_ctl_9800_3504.py 1487
+1645098915.601202 INFO     Command[show ap config slots] wifi_ctl_9800_3504.py 1559
+1645098915.651560 INFO     b'show ap config slots' wifi_ctl_9800_3504.py 114
+1645098916.152512 INFO     command sent show ap config slots wifi_ctl_9800_3504.py 1562
+1645098916.153007 INFO     b'show ap co' wifi_ctl_9800_3504.py 114
+1645098916.422512 INFO     b'nfig slots' wifi_ctl_9800_3504.py 114
+1645098916.495299 INFO     b'============================================================\r\nCisco AP Identifier                             : 1416.9d53.58c0\r\nCisco AP Name                                   : AP2C57.4152.385C\r\nAP Country Code                                 : US \r\nMAC Address                                     : 2c57.4152.385c\r\nIP Address Configuration                        : DHCP\r\nIP Address                                      : Disabled\r\nTelnet State                                    : Disabled\r\nSSH State                                       : Enabled\r\nCisco AP Location                               : default location\r\nSite Tag Name                                   : default-site-tag\r\nAdministrative State                            : Enabled\r\nOperation State                                 : Registered\r\nAP Mode                                         : Local\r\nAP Submode                                      : Not Configured\r\nRemote AP Debug                                 : Disabled\r\nLogging Trap Severity Level                     : information\r\nSoftware Version                                : 17.7.1k\r\nBoot Version                                    : 1.1.2.4\r\nMini IOS Version                                : 0.0.0.0\r\nStats Reporting Period                          : 180\r\nprimary_discovery_timer                         : 120\r\nLED State                                       : Enabled\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098916.496047 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+show ap config slots
+============================================================
+Cisco AP Identifier                             : 1416.9d53.58c0
+Cisco AP Name                                   : AP2C57.4152.385C
+AP Country Code                                 : US 
+MAC Address                                     : 2c57.4152.385c
+IP Address Configuration                        : DHCP
+IP Address                                      : Disabled
+Telnet State                                    : Disabled
+SSH State                                       : Enabled
+Cisco AP Location                               : default location
+Site Tag Name                                   : default-site-tag
+Administrative State                            : Enabled
+Operation State                                 : Registered
+AP Mode                                         : Local
+AP Submode                                      : Not Configured
+Remote AP Debug                                 : Disabled
+Logging Trap Severity Level                     : information
+Software Version                                : 17.7.1k
+Boot Version                                    : 1.1.2.4
+Mini IOS Version                                : 0.0.0.0
+Stats Reporting Period                          : 180
+primary_discovery_timer                         : 120
+LED State                                       : Enabled
+ 
+1645098916.496217 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098916.933271 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08LED Flash State                                 : Enabled\r\nLED Flash Timer                                 : 0\r\nPoE Pre-Standard Switch                         : Disabled\r\nPoE Power Injector MAC Address                  : Disabled\r\nPower Type/Mode                                 : PoE/Full Power\r\nNumber of Slots                                 : 3\r\nAP Model                                        : C9130AXE-B\r\nIOS Version                                     : 17.7.1.11\r\nReset Button                                    : Disabled\r\nAP Serial Number                                : FJC2428146G\r\nAP Certificate Type                             : Manufacturer Installed Certificate\r\nAP Certificate Expiry-time                      : 08/09/2099 20:58:26\r\nAP Certificate issuer common-name               : High Assurance SUDI CA\r\nAP Certificate Policy                           : Default\r\nAP CAPWAP-DTLS LSC Status\r\n    Certificate status        : Not Available\r\nAP 802.1x LSC Status\r\n    Certificate status        : Not Available\r\nAP User Name                                    : admin\r\nAP 802.1X User Mode                             : Global\r\nAP 802.1X User Name                             : Not Configured\r\nCisco AP System Logging Host                    : 255.255.255.255\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098916.933841 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+         LED Flash State                                 : Enabled
+LED Flash Timer                                 : 0
+PoE Pre-Standard Switch                         : Disabled
+PoE Power Injector MAC Address                  : Disabled
+Power Type/Mode                                 : PoE/Full Power
+Number of Slots                                 : 3
+AP Model                                        : C9130AXE-B
+IOS Version                                     : 17.7.1.11
+Reset Button                                    : Disabled
+AP Serial Number                                : FJC2428146G
+AP Certificate Type                             : Manufacturer Installed Certificate
+AP Certificate Expiry-time                      : 08/09/2099 20:58:26
+AP Certificate issuer common-name               : High Assurance SUDI CA
+AP Certificate Policy                           : Default
+AP CAPWAP-DTLS LSC Status
+    Certificate status        : Not Available
+AP 802.1x LSC Status
+    Certificate status        : Not Available
+AP User Name                                    : admin
+AP 802.1X User Mode                             : Global
+AP 802.1X User Name                             : Not Configured
+Cisco AP System Logging Host                    : 255.255.255.255
+ 
+1645098916.934008 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098917.343366 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08AP Up Time                                      : 15 days 16 hours 34 minutes 30 seconds \r\nAP CAPWAP Up Time                               : 17 hours 47 minutes 9 seconds \r\nJoin Date and Time                              : 02/16/2022 10:09:16\r\nAttributes for Slot 0\r\n  AP Regulatory Domain                          : -A\r\n  ATF Mode                                      : Disable\r\n  ATE Optimization                              : N/A\r\n  Radio Type                                    : 802.11ax - 2.4 GHz\r\n  Radio Mode                                    : Local\r\n  Radio Role                                    : Client Serving\r\n  Radio Role Op                                 : Manual\r\n  Radio SubType                                 : Main\r\n  Administrative State                          : Enabled\r\n  Operation State                               : Up\r\n\r\n  Station Configuration\r\n    Configuration                               : Automatic\r\n    Medium Occupancy Limit                      : 0\r\n    CFP Period                                  : 0\r\n    CFP Maximum Duration                        : 0\r\n    BSSID                                       : 1416.9d53.58c0\r\n    Operation Rate Set\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098917.343942 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+         AP Up Time                                      : 15 days 16 hours 34 minutes 30 seconds 
+AP CAPWAP Up Time                               : 17 hours 47 minutes 9 seconds 
+Join Date and Time                              : 02/16/2022 10:09:16
+Attributes for Slot 0
+  AP Regulatory Domain                          : -A
+  ATF Mode                                      : Disable
+  ATE Optimization                              : N/A
+  Radio Type                                    : 802.11ax - 2.4 GHz
+  Radio Mode                                    : Local
+  Radio Role                                    : Client Serving
+  Radio Role Op                                 : Manual
+  Radio SubType                                 : Main
+  Administrative State                          : Enabled
+  Operation State                               : Up
+
+  Station Configuration
+    Configuration                               : Automatic
+    Medium Occupancy Limit                      : 0
+    CFP Period                                  : 0
+    CFP Maximum Duration                        : 0
+    BSSID                                       : 1416.9d53.58c0
+    Operation Rate Set
+ 
+1645098917.344088 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098917.753726 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08      802.11b 1M Rate                           : Mandatory \r\n      802.11b 2M Rate                           : Mandatory \r\n      802.11b 5.5M Rate                         : Mandatory \r\n      802.11b 11M Rate                          : Mandatory \r\n      802.11b 6M Rate                           : Supported\r\n      802.11b 9M Rate                           : Supported\r\n      802.11b 12M Rate                          : Supported\r\n      802.11b 18M Rate                          : Supported\r\n      802.11b 24M Rate                          : Supported\r\n      802.11b 36M Rate                          : Supported\r\n      802.11b 48M Rate                          : Supported\r\n      802.11b 54M Rate                          : Supported\r\n\r\n    MCS Set\r\n      MCS 0                                     : SUPPORTED\r\n      MCS 1                                     : SUPPORTED\r\n      MCS 2                                     : SUPPORTED\r\n      MCS 3                                     : SUPPORTED\r\n      MCS 4                                     : SUPPORTED\r\n      MCS 5                                     : SUPPORTED\r\n      MCS 6                                     : SUPPORTED\r\n      MCS 7                                     : SUPPORTED\r\n      MCS 8                                     : SUPPORTED\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098917.754383 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+               802.11b 1M Rate                           : Mandatory 
+      802.11b 2M Rate                           : Mandatory 
+      802.11b 5.5M Rate                         : Mandatory 
+      802.11b 11M Rate                          : Mandatory 
+      802.11b 6M Rate                           : Supported
+      802.11b 9M Rate                           : Supported
+      802.11b 12M Rate                          : Supported
+      802.11b 18M Rate                          : Supported
+      802.11b 24M Rate                          : Supported
+      802.11b 36M Rate                          : Supported
+      802.11b 48M Rate                          : Supported
+      802.11b 54M Rate                          : Supported
+
+    MCS Set
+      MCS 0                                     : SUPPORTED
+      MCS 1                                     : SUPPORTED
+      MCS 2                                     : SUPPORTED
+      MCS 3                                     : SUPPORTED
+      MCS 4                                     : SUPPORTED
+      MCS 5                                     : SUPPORTED
+      MCS 6                                     : SUPPORTED
+      MCS 7                                     : SUPPORTED
+      MCS 8                                     : SUPPORTED
+ 
+1645098917.754553 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098918.110529 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08      MCS 9                                     : SUPPORTED\r\n      MCS 10                                    : SUPPORTED\r\n      MCS 11                                    : SUPPORTED\r\n      MCS 12                                    : SUPPORTED\r\n      MCS 13                                    : SUPPORTED\r\n      MCS 14                                    : SUPPORTED\r\n      MCS 15                                    : SUPPORTED\r\n      MCS 16                                    : SUPPORTED\r\n      MCS 17                                    : SUPPORTED\r\n      MCS 18                                    : SUPPORTED\r\n      MCS 19                                    : SUPPORTED\r\n      MCS 20                                    : SUPPORTED\r\n      MCS 21                                    : SUPPORTED\r\n      MCS 22                                    : SUPPORTED\r\n      MCS 23                                    : SUPPORTED\r\n      MCS 24                                    : SUPPORTED\r\n      MCS 25                                    : SUPPORTED\r\n      MCS 26                                    : SUPPORTED\r\n      MCS 27                                    : SUPPORTED\r\n      MCS 28                                    : SUPPORTED\r\n      MCS 29                                    : SUPPORTED\r\n      MCS 30                                    : SUPPORTED\r\n      MCS 31                                    : SUPPORTED\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098918.110862 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+               MCS 9                                     : SUPPORTED
+      MCS 10                                    : SUPPORTED
+      MCS 11                                    : SUPPORTED
+      MCS 12                                    : SUPPORTED
+      MCS 13                                    : SUPPORTED
+      MCS 14                                    : SUPPORTED
+      MCS 15                                    : SUPPORTED
+      MCS 16                                    : SUPPORTED
+      MCS 17                                    : SUPPORTED
+      MCS 18                                    : SUPPORTED
+      MCS 19                                    : SUPPORTED
+      MCS 20                                    : SUPPORTED
+      MCS 21                                    : SUPPORTED
+      MCS 22                                    : SUPPORTED
+      MCS 23                                    : SUPPORTED
+      MCS 24                                    : SUPPORTED
+      MCS 25                                    : SUPPORTED
+      MCS 26                                    : SUPPORTED
+      MCS 27                                    : SUPPORTED
+      MCS 28                                    : SUPPORTED
+      MCS 29                                    : SUPPORTED
+      MCS 30                                    : SUPPORTED
+      MCS 31                                    : SUPPORTED
+ 
+1645098918.110926 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098918.470950 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08\r\n    802.11ax Parameters\r\n      HE Capable                                : Yes\r\n      BSS Color Capable                         : Yes\r\n      BSS Color Configuration                   : Automatic\r\n      Current BSS Color                         : 28\r\n      OBSS PD Capable                           : Yes\r\n      OBSS PD SRG Capable                       : No\r\n\r\n    Beacon Period                               : 100\r\n    Fragmentation Threshold                     : 2346\r\n    Multi Domain Capability Implemented         : False\r\n    Multi Domain Capability Enabled             : False\r\n    Country String                              : US \r\n\r\n  Multi Domain Capability\r\n    Configuration                               : Automatic\r\n    First Channel                               : 0\r\n    Number of Channels                          : 0\r\n\r\n  MAC Operation Parameters\r\n    Configuration                               : Automatic\r\n    Fragmentation Threshold                     : 2346\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098918.471547 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+         
+    802.11ax Parameters
+      HE Capable                                : Yes
+      BSS Color Capable                         : Yes
+      BSS Color Configuration                   : Automatic
+      Current BSS Color                         : 28
+      OBSS PD Capable                           : Yes
+      OBSS PD SRG Capable                       : No
+
+    Beacon Period                               : 100
+    Fragmentation Threshold                     : 2346
+    Multi Domain Capability Implemented         : False
+    Multi Domain Capability Enabled             : False
+    Country String                              : US 
+
+  Multi Domain Capability
+    Configuration                               : Automatic
+    First Channel                               : 0
+    Number of Channels                          : 0
+
+  MAC Operation Parameters
+    Configuration                               : Automatic
+    Fragmentation Threshold                     : 2346
+ 
+1645098918.471704 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098918.880990 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    Packet Retry Limit                          : 64\r\n    RTS/CTS Threshold                           : 2347\r\n\r\n  Tx Power\r\n    Number of Supported Power Levels            : 8\r\n    Tx Power Level 1                            : 23 dBm\r\n    Tx Power Level 2                            : 20 dBm\r\n    Tx Power Level 3                            : 17 dBm\r\n    Tx Power Level 4                            : 14 dBm\r\n    Tx Power Level 5                            : 11 dBm\r\n    Tx Power Level 6                            : 8 dBm\r\n    Tx Power Level 7                            : 5 dBm\r\n    Tx Power Level 8                            : 2 dBm\r\n    Tx Power Configuration                      : Automatic\r\n    Current Tx Power Level                      : 1\r\n    Tx Power Assigned By                        : DTPC\r\n\r\n  Phy OFDM Parameters\r\n    Configuration                               : Customized\r\n    Current Channel                             : 6\r\n    Channel Assigned By                         : User\r\n    Extension Channel                           : NONE\r\n    Channel Width                               : 20\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098918.881632 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+             Packet Retry Limit                          : 64
+    RTS/CTS Threshold                           : 2347
+
+  Tx Power
+    Number of Supported Power Levels            : 8
+    Tx Power Level 1                            : 23 dBm
+    Tx Power Level 2                            : 20 dBm
+    Tx Power Level 3                            : 17 dBm
+    Tx Power Level 4                            : 14 dBm
+    Tx Power Level 5                            : 11 dBm
+    Tx Power Level 6                            : 8 dBm
+    Tx Power Level 7                            : 5 dBm
+    Tx Power Level 8                            : 2 dBm
+    Tx Power Configuration                      : Automatic
+    Current Tx Power Level                      : 1
+    Tx Power Assigned By                        : DTPC
+
+  Phy OFDM Parameters
+    Configuration                               : Customized
+    Current Channel                             : 6
+    Channel Assigned By                         : User
+    Extension Channel                           : NONE
+    Channel Width                               : 20
+ 
+1645098918.881818 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098919.290783 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    Allowed Channel List                        : 1,2,3,4,5,6,7,8,9,10,11\r\n    DCA Channel List                            : Global\r\n    Antenna Type                                : EXTERNAL_ANTENNA\r\n    External Antenna Gain (in .5 dBi units)     : 12\r\n    Diversity                                   : DIVERSITY_ENABLED\r\n    802.11n Antennas\r\n      A                                         : ENABLED\r\n      B                                         : ENABLED\r\n      C                                         : ENABLED\r\n      D                                         : ENABLED\r\n\r\n    802.11n Antennas\r\n      MIMO                                      : 4x4\r\n      Tx                                        : A, B, C, D\r\n      Rx                                        : A, B, C, D\r\n      SIA Status                                : Present(DART)\r\n      SIA Product ID                            : C-ANT9103=\r\n\r\n  Performance Profile Parameters\r\n    Interference Threshold                      : 10%\r\n    Noise Threshold                             : -70 dBm\r\n    RF Utilization Threshold                    : 80%\r\n    Client Threshold                            : 12 clients\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098919.291374 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+             Allowed Channel List                        : 1,2,3,4,5,6,7,8,9,10,11
+    DCA Channel List                            : Global
+    Antenna Type                                : EXTERNAL_ANTENNA
+    External Antenna Gain (in .5 dBi units)     : 12
+    Diversity                                   : DIVERSITY_ENABLED
+    802.11n Antennas
+      A                                         : ENABLED
+      B                                         : ENABLED
+      C                                         : ENABLED
+      D                                         : ENABLED
+
+    802.11n Antennas
+      MIMO                                      : 4x4
+      Tx                                        : A, B, C, D
+      Rx                                        : A, B, C, D
+      SIA Status                                : Present(DART)
+      SIA Product ID                            : C-ANT9103=
+
+  Performance Profile Parameters
+    Interference Threshold                      : 10%
+    Noise Threshold                             : -70 dBm
+    RF Utilization Threshold                    : 80%
+    Client Threshold                            : 12 clients
+ 
+1645098919.291532 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098919.698287 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    Coverage Exception Level                    : 25%\r\n\r\n  CleanAir Management Information\r\n    CleanAir Capable                            : Yes\r\n    CleanAir Management Administration State    : Enabled\r\n    CleanAir Management Operation State         : Down\r\n    Rapid Update Mode                           : OFF\r\n    CleanAir NSI Key                            : 142f89c2107d10380487082214bb80a8\r\n    Spectrum Expert Connections counter         : 0\r\n    CleanAir Sensor State                       : CleanAir has been disabled on the AP\r\n\r\n  Radio Extended Configurations\r\n    Beacon period                               : 100 milliseconds\r\n    Beacon range                                : AUTO\r\n    Multicast buffer                            : AUTO\r\n    Multicast data-rate                         : AUTO\r\n    RX SOP threshold                            : DEFAULT\r\n    CCA threshold                               : AUTO\r\n\r\n  Rogue Containment Information\r\n    Containment Count                          : 0\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098919.698854 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+             Coverage Exception Level                    : 25%
+
+  CleanAir Management Information
+    CleanAir Capable                            : Yes
+    CleanAir Management Administration State    : Enabled
+    CleanAir Management Operation State         : Down
+    Rapid Update Mode                           : OFF
+    CleanAir NSI Key                            : 142f89c2107d10380487082214bb80a8
+    Spectrum Expert Connections counter         : 0
+    CleanAir Sensor State                       : CleanAir has been disabled on the AP
+
+  Radio Extended Configurations
+    Beacon period                               : 100 milliseconds
+    Beacon range                                : AUTO
+    Multicast buffer                            : AUTO
+    Multicast data-rate                         : AUTO
+    RX SOP threshold                            : DEFAULT
+    CCA threshold                               : AUTO
+
+  Rogue Containment Information
+    Containment Count                          : 0
+ 
+1645098919.699014 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098920.107765 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08\r\n  Management Frame Information\r\n    Validation                                  : Capable\r\n    Protection                                  : Not capable\r\n  NDP capability                                : Unknown\r\n  NDP mode                                      : Unknown\r\n\r\nAttributes for Slot 1\r\n  AP Regulatory Domain                          : -B\r\n  ATF Mode                                      : Disable\r\n  ATE Optimization                              : N/A\r\n  Radio Type                                    : 802.11ax - 5 GHz\r\n  Radio Subband                                 : All\r\n  Radio Mode                                    : Local\r\n  Radio Role                                    : Client Serving\r\n  Radio Role Op                                 : Manual\r\n  Radio SubType                                 : Main\r\n  Dual Radio Capable                            : True\r\n  Dual Radio Mode                               : Disabled\r\n  Dual Radio Operation mode                     : Auto\r\n  Administrative State                          : Enabled\r\n  Operation State                               : Up\r\n\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098920.108307 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+         
+  Management Frame Information
+    Validation                                  : Capable
+    Protection                                  : Not capable
+  NDP capability                                : Unknown
+  NDP mode                                      : Unknown
+
+Attributes for Slot 1
+  AP Regulatory Domain                          : -B
+  ATF Mode                                      : Disable
+  ATE Optimization                              : N/A
+  Radio Type                                    : 802.11ax - 5 GHz
+  Radio Subband                                 : All
+  Radio Mode                                    : Local
+  Radio Role                                    : Client Serving
+  Radio Role Op                                 : Manual
+  Radio SubType                                 : Main
+  Dual Radio Capable                            : True
+  Dual Radio Mode                               : Disabled
+  Dual Radio Operation mode                     : Auto
+  Administrative State                          : Enabled
+  Operation State                               : Up
+
+ 
+1645098920.108479 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098920.518799 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08  Station Configuration\r\n    Configuration                               : Automatic\r\n    Medium Occupancy Limit                      : 0\r\n    CFP Period                                  : 0\r\n    CFP Maximum Duration                        : 0\r\n    BSSID                                       : 1416.9d53.58c0\r\n    Operation Rate Set\r\n      802.11a 6M Rate                           : Mandatory\r\n      802.11a 9M Rate                           : Supported\r\n      802.11a 12M Rate                          : Mandatory\r\n      802.11a 18M Rate                          : Supported\r\n      802.11a 24M Rate                          : Mandatory\r\n      802.11a 36M Rate                          : Supported\r\n      802.11a 48M Rate                          : Supported\r\n      802.11a 54M Rate                          : Supported\r\n\r\n    MCS Set\r\n      MCS 0                                     : SUPPORTED\r\n      MCS 1                                     : SUPPORTED\r\n      MCS 2                                     : SUPPORTED\r\n      MCS 3                                     : SUPPORTED\r\n      MCS 4                                     : SUPPORTED\r\n      MCS 5                                     : SUPPORTED\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098920.519414 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+           Station Configuration
+    Configuration                               : Automatic
+    Medium Occupancy Limit                      : 0
+    CFP Period                                  : 0
+    CFP Maximum Duration                        : 0
+    BSSID                                       : 1416.9d53.58c0
+    Operation Rate Set
+      802.11a 6M Rate                           : Mandatory
+      802.11a 9M Rate                           : Supported
+      802.11a 12M Rate                          : Mandatory
+      802.11a 18M Rate                          : Supported
+      802.11a 24M Rate                          : Mandatory
+      802.11a 36M Rate                          : Supported
+      802.11a 48M Rate                          : Supported
+      802.11a 54M Rate                          : Supported
+
+    MCS Set
+      MCS 0                                     : SUPPORTED
+      MCS 1                                     : SUPPORTED
+      MCS 2                                     : SUPPORTED
+      MCS 3                                     : SUPPORTED
+      MCS 4                                     : SUPPORTED
+      MCS 5                                     : SUPPORTED
+ 
+1645098920.519584 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098920.877131 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08      MCS 6                                     : SUPPORTED\r\n      MCS 7                                     : SUPPORTED\r\n      MCS 8                                     : SUPPORTED\r\n      MCS 9                                     : SUPPORTED\r\n      MCS 10                                    : SUPPORTED\r\n      MCS 11                                    : SUPPORTED\r\n      MCS 12                                    : SUPPORTED\r\n      MCS 13                                    : SUPPORTED\r\n      MCS 14                                    : SUPPORTED\r\n      MCS 15                                    : SUPPORTED\r\n      MCS 16                                    : SUPPORTED\r\n      MCS 17                                    : SUPPORTED\r\n      MCS 18                                    : SUPPORTED\r\n      MCS 19                                    : SUPPORTED\r\n      MCS 20                                    : SUPPORTED\r\n      MCS 21                                    : SUPPORTED\r\n      MCS 22                                    : SUPPORTED\r\n      MCS 23                                    : SUPPORTED\r\n      MCS 24                                    : SUPPORTED\r\n      MCS 25                                    : SUPPORTED\r\n      MCS 26                                    : SUPPORTED\r\n      MCS 27                                    : SUPPORTED\r\n      MCS 28                                    : SUPPORTED\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098920.877717 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+               MCS 6                                     : SUPPORTED
+      MCS 7                                     : SUPPORTED
+      MCS 8                                     : SUPPORTED
+      MCS 9                                     : SUPPORTED
+      MCS 10                                    : SUPPORTED
+      MCS 11                                    : SUPPORTED
+      MCS 12                                    : SUPPORTED
+      MCS 13                                    : SUPPORTED
+      MCS 14                                    : SUPPORTED
+      MCS 15                                    : SUPPORTED
+      MCS 16                                    : SUPPORTED
+      MCS 17                                    : SUPPORTED
+      MCS 18                                    : SUPPORTED
+      MCS 19                                    : SUPPORTED
+      MCS 20                                    : SUPPORTED
+      MCS 21                                    : SUPPORTED
+      MCS 22                                    : SUPPORTED
+      MCS 23                                    : SUPPORTED
+      MCS 24                                    : SUPPORTED
+      MCS 25                                    : SUPPORTED
+      MCS 26                                    : SUPPORTED
+      MCS 27                                    : SUPPORTED
+      MCS 28                                    : SUPPORTED
+ 
+1645098920.877878 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098921.237263 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08      MCS 29                                    : SUPPORTED\r\n      MCS 30                                    : SUPPORTED\r\n      MCS 31                                    : SUPPORTED\r\n\r\n    802.11ax Parameters\r\n      HE Capable                                : Yes\r\n      BSS Color Capable                         : Yes\r\n      BSS Color Configuration                   : Automatic\r\n      Current BSS Color                         : 26\r\n      OBSS PD Capable                           : Yes\r\n      OBSS PD SRG Capable                       : No\r\n\r\n    Beacon Period                               : 100\r\n    Fragmentation Threshold                     : 2346\r\n    Multi Domain Capability Implemented         : False\r\n    Multi Domain Capability Enabled             : False\r\n    Country String                              : US \r\n\r\n  Multi Domain Capability\r\n    Configuration                               : Automatic\r\n    First Channel                               : 0\r\n    Number of Channels                          : 0\r\n\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098921.237897 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+               MCS 29                                    : SUPPORTED
+      MCS 30                                    : SUPPORTED
+      MCS 31                                    : SUPPORTED
+
+    802.11ax Parameters
+      HE Capable                                : Yes
+      BSS Color Capable                         : Yes
+      BSS Color Configuration                   : Automatic
+      Current BSS Color                         : 26
+      OBSS PD Capable                           : Yes
+      OBSS PD SRG Capable                       : No
+
+    Beacon Period                               : 100
+    Fragmentation Threshold                     : 2346
+    Multi Domain Capability Implemented         : False
+    Multi Domain Capability Enabled             : False
+    Country String                              : US 
+
+  Multi Domain Capability
+    Configuration                               : Automatic
+    First Channel                               : 0
+    Number of Channels                          : 0
+
+ 
+1645098921.238056 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098921.644933 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08  MAC Operation Parameters\r\n    Configuration                               : Automatic\r\n    Fragmentation Threshold                     : 2346\r\n    Packet Retry Limit                          : 64\r\n    RTS/CTS Threshold                           : 2347\r\n\r\n  Tx Power\r\n    Number of Supported Power Levels            : 6\r\n    Tx Power Level 1                            : 20 dBm\r\n    Tx Power Level 2                            : 17 dBm\r\n    Tx Power Level 3                            : 14 dBm\r\n    Tx Power Level 4                            : 11 dBm\r\n    Tx Power Level 5                            : 8 dBm\r\n    Tx Power Level 6                            : 5 dBm\r\n    Tx Power Configuration                      : Automatic\r\n    Current Tx Power Level                      : 1\r\n    Tx Power Assigned By                        : DTPC\r\n\r\n  Phy OFDM Parameters\r\n    Configuration                               : Customized\r\n    Current Channel                             : 36\r\n    Channel Assigned By                         : User\r\n    Extension Channel                           : ABOVE, S40 ABOVE, S80 ABOVE\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098921.645373 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+           MAC Operation Parameters
+    Configuration                               : Automatic
+    Fragmentation Threshold                     : 2346
+    Packet Retry Limit                          : 64
+    RTS/CTS Threshold                           : 2347
+
+  Tx Power
+    Number of Supported Power Levels            : 6
+    Tx Power Level 1                            : 20 dBm
+    Tx Power Level 2                            : 17 dBm
+    Tx Power Level 3                            : 14 dBm
+    Tx Power Level 4                            : 11 dBm
+    Tx Power Level 5                            : 8 dBm
+    Tx Power Level 6                            : 5 dBm
+    Tx Power Configuration                      : Automatic
+    Current Tx Power Level                      : 1
+    Tx Power Assigned By                        : DTPC
+
+  Phy OFDM Parameters
+    Configuration                               : Customized
+    Current Channel                             : 36
+    Channel Assigned By                         : User
+    Extension Channel                           : ABOVE, S40 ABOVE, S80 ABOVE
+ 
+1645098921.645464 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098922.054632 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    Channel Width                               : 160\r\n    Allowed Channel List                        : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161,165\r\n    DCA Channel List                            : Global\r\n    Antenna Type                                : EXTERNAL_ANTENNA\r\n    External Antenna Gain (in .5 dBi units)     : 12\r\n    Diversity                                   : DIVERSITY_ENABLED\r\n    802.11n Antennas\r\n      A                                         : ENABLED\r\n      B                                         : ENABLED\r\n      C                                         : ENABLED\r\n      D                                         : ENABLED\r\n      E                                         : ENABLED\r\n      F                                         : ENABLED\r\n      G                                         : ENABLED\r\n      H                                         : ENABLED\r\n\r\n    802.11n Antennas\r\n      MIMO                                      : 8x8\r\n      Tx                                        : A, B, C, D, E, F, G, H\r\n      Rx                                        : A, B, C, D, E, F, G, H\r\n      SIA Status                                : Present(DART)\r\n      SIA Product ID                            : C-ANT9103=\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098922.055262 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+             Channel Width                               : 160
+    Allowed Channel List                        : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161,165
+    DCA Channel List                            : Global
+    Antenna Type                                : EXTERNAL_ANTENNA
+    External Antenna Gain (in .5 dBi units)     : 12
+    Diversity                                   : DIVERSITY_ENABLED
+    802.11n Antennas
+      A                                         : ENABLED
+      B                                         : ENABLED
+      C                                         : ENABLED
+      D                                         : ENABLED
+      E                                         : ENABLED
+      F                                         : ENABLED
+      G                                         : ENABLED
+      H                                         : ENABLED
+
+    802.11n Antennas
+      MIMO                                      : 8x8
+      Tx                                        : A, B, C, D, E, F, G, H
+      Rx                                        : A, B, C, D, E, F, G, H
+      SIA Status                                : Present(DART)
+      SIA Product ID                            : C-ANT9103=
+ 
+1645098922.055434 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098922.464320 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08\r\n  Performance Profile Parameters\r\n    Interference Threshold                      : 10%\r\n    Noise Threshold                             : -70 dBm\r\n    RF Utilization Threshold                    : 80%\r\n    Client Threshold                            : 12 clients\r\n    Coverage Exception Level                    : 25%\r\n\r\n  CleanAir Management Information\r\n    CleanAir Capable                            : Yes\r\n    CleanAir Management Administration State    : Enabled\r\n    CleanAir Management Operation State         : Down\r\n    Rapid Update Mode                           : OFF\r\n    CleanAir NSI Key                            : 142f89c2107d10380487082214bb80a8\r\n    Spectrum Expert Connections counter         : 0\r\n    CleanAir Sensor State                       : CleanAir has been disabled on the AP\r\n\r\n  Radio Extended Configurations\r\n    Beacon period                               : 100 milliseconds\r\n    Beacon range                                : AUTO\r\n    Multicast buffer                            : AUTO\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098922.465051 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+         
+  Performance Profile Parameters
+    Interference Threshold                      : 10%
+    Noise Threshold                             : -70 dBm
+    RF Utilization Threshold                    : 80%
+    Client Threshold                            : 12 clients
+    Coverage Exception Level                    : 25%
+
+  CleanAir Management Information
+    CleanAir Capable                            : Yes
+    CleanAir Management Administration State    : Enabled
+    CleanAir Management Operation State         : Down
+    Rapid Update Mode                           : OFF
+    CleanAir NSI Key                            : 142f89c2107d10380487082214bb80a8
+    Spectrum Expert Connections counter         : 0
+    CleanAir Sensor State                       : CleanAir has been disabled on the AP
+
+  Radio Extended Configurations
+    Beacon period                               : 100 milliseconds
+    Beacon range                                : AUTO
+    Multicast buffer                            : AUTO
+ 
+1645098922.465302 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098922.874198 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    Multicast data-rate                         : AUTO\r\n    RX SOP threshold                            : DEFAULT\r\n    CCA threshold                               : AUTO\r\n\r\n  Rogue Containment Information\r\n    Containment Count                          : 0\r\n\r\n  Management Frame Information\r\n    Validation                                  : Capable\r\n    Protection                                  : Not capable\r\n  NDP capability                                : Unknown\r\n  NDP mode                                      : Unknown\r\n\r\nAttributes for Slot 2\r\n  AP Regulatory Domain                          : -B\r\n  ATF Mode                                      : Disable\r\n  ATE Optimization                              : N/A\r\n  Radio Type                                    : 802.11ax - 5 GHz\r\n  Radio Subband                                 : All\r\n  Radio Mode                                    : Local\r\n  Radio Role                                    : Client Serving\r\n  Radio Role Op                                 : Auto\r\n  Radio SubType                                 : Slave\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098922.874819 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+             Multicast data-rate                         : AUTO
+    RX SOP threshold                            : DEFAULT
+    CCA threshold                               : AUTO
+
+  Rogue Containment Information
+    Containment Count                          : 0
+
+  Management Frame Information
+    Validation                                  : Capable
+    Protection                                  : Not capable
+  NDP capability                                : Unknown
+  NDP mode                                      : Unknown
+
+Attributes for Slot 2
+  AP Regulatory Domain                          : -B
+  ATF Mode                                      : Disable
+  ATE Optimization                              : N/A
+  Radio Type                                    : 802.11ax - 5 GHz
+  Radio Subband                                 : All
+  Radio Mode                                    : Local
+  Radio Role                                    : Client Serving
+  Radio Role Op                                 : Auto
+  Radio SubType                                 : Slave
+ 
+1645098922.874988 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098923.283538 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08  Administrative State                          : Disabled\r\n  Operation State                               : Down\r\n\r\n  Station Configuration\r\n    Configuration                               : Automatic\r\n    Medium Occupancy Limit                      : 0\r\n    CFP Period                                  : 0\r\n    CFP Maximum Duration                        : 0\r\n    BSSID                                       : 1416.9d53.58c0\r\n    Operation Rate Set\r\n      802.11a 6M Rate                           : Mandatory\r\n      802.11a 9M Rate                           : Supported\r\n      802.11a 12M Rate                          : Mandatory\r\n      802.11a 18M Rate                          : Supported\r\n      802.11a 24M Rate                          : Mandatory\r\n      802.11a 36M Rate                          : Supported\r\n      802.11a 48M Rate                          : Supported\r\n      802.11a 54M Rate                          : Supported\r\n\r\n    MCS Set\r\n      MCS 0                                     : SUPPORTED\r\n      MCS 1                                     : SUPPORTED\r\n      MCS 2                                     : SUPPORTED\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098923.284140 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+           Administrative State                          : Disabled
+  Operation State                               : Down
+
+  Station Configuration
+    Configuration                               : Automatic
+    Medium Occupancy Limit                      : 0
+    CFP Period                                  : 0
+    CFP Maximum Duration                        : 0
+    BSSID                                       : 1416.9d53.58c0
+    Operation Rate Set
+      802.11a 6M Rate                           : Mandatory
+      802.11a 9M Rate                           : Supported
+      802.11a 12M Rate                          : Mandatory
+      802.11a 18M Rate                          : Supported
+      802.11a 24M Rate                          : Mandatory
+      802.11a 36M Rate                          : Supported
+      802.11a 48M Rate                          : Supported
+      802.11a 54M Rate                          : Supported
+
+    MCS Set
+      MCS 0                                     : SUPPORTED
+      MCS 1                                     : SUPPORTED
+      MCS 2                                     : SUPPORTED
+ 
+1645098923.284299 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098923.693356 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08      MCS 3                                     : SUPPORTED\r\n      MCS 4                                     : SUPPORTED\r\n      MCS 5                                     : SUPPORTED\r\n      MCS 6                                     : SUPPORTED\r\n      MCS 7                                     : SUPPORTED\r\n      MCS 8                                     : SUPPORTED\r\n      MCS 9                                     : SUPPORTED\r\n      MCS 10                                    : SUPPORTED\r\n      MCS 11                                    : SUPPORTED\r\n      MCS 12                                    : SUPPORTED\r\n      MCS 13                                    : SUPPORTED\r\n      MCS 14                                    : SUPPORTED\r\n      MCS 15                                    : SUPPORTED\r\n      MCS 16                                    : SUPPORTED\r\n      MCS 17                                    : SUPPORTED\r\n      MCS 18                                    : SUPPORTED\r\n      MCS 19                                    : SUPPORTED\r\n      MCS 20                                    : SUPPORTED\r\n      MCS 21                                    : SUPPORTED\r\n      MCS 22                                    : SUPPORTED\r\n      MCS 23                                    : SUPPORTED\r\n      MCS 24                                    : SUPPORTED\r\n      MCS 25                                    : SUPPORTED\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098923.694037 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+               MCS 3                                     : SUPPORTED
+      MCS 4                                     : SUPPORTED
+      MCS 5                                     : SUPPORTED
+      MCS 6                                     : SUPPORTED
+      MCS 7                                     : SUPPORTED
+      MCS 8                                     : SUPPORTED
+      MCS 9                                     : SUPPORTED
+      MCS 10                                    : SUPPORTED
+      MCS 11                                    : SUPPORTED
+      MCS 12                                    : SUPPORTED
+      MCS 13                                    : SUPPORTED
+      MCS 14                                    : SUPPORTED
+      MCS 15                                    : SUPPORTED
+      MCS 16                                    : SUPPORTED
+      MCS 17                                    : SUPPORTED
+      MCS 18                                    : SUPPORTED
+      MCS 19                                    : SUPPORTED
+      MCS 20                                    : SUPPORTED
+      MCS 21                                    : SUPPORTED
+      MCS 22                                    : SUPPORTED
+      MCS 23                                    : SUPPORTED
+      MCS 24                                    : SUPPORTED
+      MCS 25                                    : SUPPORTED
+ 
+1645098923.694203 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098924.102835 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08      MCS 26                                    : SUPPORTED\r\n      MCS 27                                    : SUPPORTED\r\n      MCS 28                                    : SUPPORTED\r\n      MCS 29                                    : SUPPORTED\r\n      MCS 30                                    : SUPPORTED\r\n      MCS 31                                    : SUPPORTED\r\n\r\n    802.11ax Parameters\r\n      HE Capable                                : Yes\r\n      BSS Color Capable                         : Yes\r\n      BSS Color Configuration                   : Automatic\r\n      Current BSS Color                         : 1\r\n      OBSS PD Capable                           : Yes\r\n      OBSS PD SRG Capable                       : No\r\n\r\n    Beacon Period                               : 100\r\n    Fragmentation Threshold                     : 0\r\n    Multi Domain Capability Implemented         : False\r\n    Multi Domain Capability Enabled             : False\r\n    Country String                              : US \r\n\r\n  Multi Domain Capability\r\n    Configuration                               : Automatic\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098924.103473 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+               MCS 26                                    : SUPPORTED
+      MCS 27                                    : SUPPORTED
+      MCS 28                                    : SUPPORTED
+      MCS 29                                    : SUPPORTED
+      MCS 30                                    : SUPPORTED
+      MCS 31                                    : SUPPORTED
+
+    802.11ax Parameters
+      HE Capable                                : Yes
+      BSS Color Capable                         : Yes
+      BSS Color Configuration                   : Automatic
+      Current BSS Color                         : 1
+      OBSS PD Capable                           : Yes
+      OBSS PD SRG Capable                       : No
+
+    Beacon Period                               : 100
+    Fragmentation Threshold                     : 0
+    Multi Domain Capability Implemented         : False
+    Multi Domain Capability Enabled             : False
+    Country String                              : US 
+
+  Multi Domain Capability
+    Configuration                               : Automatic
+ 
+1645098924.103727 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098924.513421 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    First Channel                               : 0\r\n    Number of Channels                          : 0\r\n\r\n  MAC Operation Parameters\r\n    Configuration                               : Automatic\r\n    Fragmentation Threshold                     : 0\r\n    Packet Retry Limit                          : 64\r\n    RTS/CTS Threshold                           : 2347\r\n\r\n  Tx Power\r\n    Number of Supported Power Levels            : 8\r\n    Tx Power Level 1                            : 0 dBm\r\n    Tx Power Level 2                            : 0 dBm\r\n    Tx Power Level 3                            : 0 dBm\r\n    Tx Power Level 4                            : 0 dBm\r\n    Tx Power Level 5                            : 0 dBm\r\n    Tx Power Level 6                            : 0 dBm\r\n    Tx Power Level 7                            : 0 dBm\r\n    Tx Power Level 8                            : 0 dBm\r\n    Tx Power Configuration                      : Automatic\r\n    Current Tx Power Level                      : 1\r\n    Tx Power Assigned By                        : DTPC\r\n\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098924.514068 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+             First Channel                               : 0
+    Number of Channels                          : 0
+
+  MAC Operation Parameters
+    Configuration                               : Automatic
+    Fragmentation Threshold                     : 0
+    Packet Retry Limit                          : 64
+    RTS/CTS Threshold                           : 2347
+
+  Tx Power
+    Number of Supported Power Levels            : 8
+    Tx Power Level 1                            : 0 dBm
+    Tx Power Level 2                            : 0 dBm
+    Tx Power Level 3                            : 0 dBm
+    Tx Power Level 4                            : 0 dBm
+    Tx Power Level 5                            : 0 dBm
+    Tx Power Level 6                            : 0 dBm
+    Tx Power Level 7                            : 0 dBm
+    Tx Power Level 8                            : 0 dBm
+    Tx Power Configuration                      : Automatic
+    Current Tx Power Level                      : 1
+    Tx Power Assigned By                        : DTPC
+
+ 
+1645098924.514346 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098924.922245 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08  Phy OFDM Parameters\r\n    Configuration                               : Automatic\r\n    Current Channel                             : 36\r\n    Channel Assigned By                         : DCA\r\n    Extension Channel                           : NONE\r\n    Channel Width                               : 20\r\n    Allowed Channel List                        : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161,165\r\n    DCA Channel List                            : Global\r\n    Antenna Type                                : EXTERNAL_ANTENNA\r\n    External Antenna Gain (in .5 dBi units)     : 12\r\n    Diversity                                   : DIVERSITY_ENABLED\r\n    802.11n Antennas\r\n      A                                         : ENABLED\r\n      B                                         : ENABLED\r\n      C                                         : ENABLED\r\n      D                                         : ENABLED\r\n\r\n    802.11n Antennas\r\n      MIMO                                      : 4x4\r\n      Tx                                        : A, B, C, D\r\n      Rx                                        : A, B, C, D\r\n      SIA Status                                : Present(DART)\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098924.922873 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+           Phy OFDM Parameters
+    Configuration                               : Automatic
+    Current Channel                             : 36
+    Channel Assigned By                         : DCA
+    Extension Channel                           : NONE
+    Channel Width                               : 20
+    Allowed Channel List                        : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161,165
+    DCA Channel List                            : Global
+    Antenna Type                                : EXTERNAL_ANTENNA
+    External Antenna Gain (in .5 dBi units)     : 12
+    Diversity                                   : DIVERSITY_ENABLED
+    802.11n Antennas
+      A                                         : ENABLED
+      B                                         : ENABLED
+      C                                         : ENABLED
+      D                                         : ENABLED
+
+    802.11n Antennas
+      MIMO                                      : 4x4
+      Tx                                        : A, B, C, D
+      Rx                                        : A, B, C, D
+      SIA Status                                : Present(DART)
+ 
+1645098924.923076 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098925.331968 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08      SIA Product ID                            : C-ANT9103=\r\n\r\n  Performance Profile Parameters\r\n    Interference Threshold                      : 10%\r\n    Noise Threshold                             : -70 dBm\r\n    RF Utilization Threshold                    : 80%\r\n    Client Threshold                            : 12 clients\r\n    Coverage Exception Level                    : 25%\r\n\r\n\r\n  Radio Extended Configurations\r\n    Beacon period                               : 100 milliseconds\r\n    Beacon range                                : AUTO\r\n    Multicast buffer                            : AUTO\r\n    Multicast data-rate                         : AUTO\r\n    RX SOP threshold                            : DEFAULT\r\n    CCA threshold                               : AUTO\r\n\r\n  Rogue Containment Information\r\n    Containment Count                          : 0\r\n\r\n  Management Frame Information\r\n    Validation                                  : Capable\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098925.332592 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+               SIA Product ID                            : C-ANT9103=
+
+  Performance Profile Parameters
+    Interference Threshold                      : 10%
+    Noise Threshold                             : -70 dBm
+    RF Utilization Threshold                    : 80%
+    Client Threshold                            : 12 clients
+    Coverage Exception Level                    : 25%
+
+
+  Radio Extended Configurations
+    Beacon period                               : 100 milliseconds
+    Beacon range                                : AUTO
+    Multicast buffer                            : AUTO
+    Multicast data-rate                         : AUTO
+    RX SOP threshold                            : DEFAULT
+    CCA threshold                               : AUTO
+
+  Rogue Containment Information
+    Containment Count                          : 0
+
+  Management Frame Information
+    Validation                                  : Capable
+ 
+1645098925.332800 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098925.741640 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    Protection                                  : Not capable\r\n  NDP capability                                : Unknown\r\n  NDP mode                                      : Unknown\r\n\r\n============================================================\r\nCisco AP Identifier                             : 687d.b45f.5c30\r\nCisco AP Name                                   : AP687D.B45C.1D1C\r\nAP Country Code                                 : US \r\nMAC Address                                     : 687d.b45c.1d1c\r\nIP Address Configuration                        : DHCP\r\nIP Address                                      : Disabled\r\nTelnet State                                    : Disabled\r\nSSH State                                       : Enabled\r\nCisco AP Location                               : default location\r\nSite Tag Name                                   : RM204-TB2\r\nAdministrative State                            : Enabled\r\nOperation State                                 : Registered\r\nAP Mode                                         : Local\r\nAP Submode                                      : Not Configured\r\nRemote AP Debug                                 : Disabled\r\nLogging Trap Severity Level                     : information\r\nSoftware Version                                : 17.7.1k\r\nBoot Version                                    : 1.1.2.4\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098925.742393 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+             Protection                                  : Not capable
+  NDP capability                                : Unknown
+  NDP mode                                      : Unknown
+
+============================================================
+Cisco AP Identifier                             : 687d.b45f.5c30
+Cisco AP Name                                   : AP687D.B45C.1D1C
+AP Country Code                                 : US 
+MAC Address                                     : 687d.b45c.1d1c
+IP Address Configuration                        : DHCP
+IP Address                                      : Disabled
+Telnet State                                    : Disabled
+SSH State                                       : Enabled
+Cisco AP Location                               : default location
+Site Tag Name                                   : RM204-TB2
+Administrative State                            : Enabled
+Operation State                                 : Registered
+AP Mode                                         : Local
+AP Submode                                      : Not Configured
+Remote AP Debug                                 : Disabled
+Logging Trap Severity Level                     : information
+Software Version                                : 17.7.1k
+Boot Version                                    : 1.1.2.4
+ 
+1645098925.742585 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098926.152236 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08Mini IOS Version                                : 0.0.0.0\r\nStats Reporting Period                          : 180\r\nprimary_discovery_timer                         : 120\r\nLED State                                       : Enabled\r\nLED Flash State                                 : Enabled\r\nLED Flash Timer                                 : 0\r\nPoE Pre-Standard Switch                         : Disabled\r\nPoE Power Injector MAC Address                  : Disabled\r\nPower Type/Mode                                 : PoE/Full Power\r\nNumber of Slots                                 : 4\r\nAP Model                                        : C9136I-B\r\nIOS Version                                     : 17.7.1.11\r\nReset Button                                    : Disabled\r\nAP Serial Number                                : FOC25322JQP\r\nAP Certificate Type                             : Manufacturer Installed Certificate\r\nAP Certificate Expiry-time                      : 08/09/2099 20:58:26\r\nAP Certificate issuer common-name               : High Assurance SUDI CA\r\nAP Certificate Policy                           : Default\r\nAP CAPWAP-DTLS LSC Status\r\n    Certificate status        : Not Available\r\nAP 802.1x LSC Status\r\n    Certificate status        : Not Available\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098926.152936 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+         Mini IOS Version                                : 0.0.0.0
+Stats Reporting Period                          : 180
+primary_discovery_timer                         : 120
+LED State                                       : Enabled
+LED Flash State                                 : Enabled
+LED Flash Timer                                 : 0
+PoE Pre-Standard Switch                         : Disabled
+PoE Power Injector MAC Address                  : Disabled
+Power Type/Mode                                 : PoE/Full Power
+Number of Slots                                 : 4
+AP Model                                        : C9136I-B
+IOS Version                                     : 17.7.1.11
+Reset Button                                    : Disabled
+AP Serial Number                                : FOC25322JQP
+AP Certificate Type                             : Manufacturer Installed Certificate
+AP Certificate Expiry-time                      : 08/09/2099 20:58:26
+AP Certificate issuer common-name               : High Assurance SUDI CA
+AP Certificate Policy                           : Default
+AP CAPWAP-DTLS LSC Status
+    Certificate status        : Not Available
+AP 802.1x LSC Status
+    Certificate status        : Not Available
+ 
+1645098926.153217 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098926.560868 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08AP User Name                                    : admin\r\nAP 802.1X User Mode                             : Global\r\nAP 802.1X User Name                             : Not Configured\r\nCisco AP System Logging Host                    : 255.255.255.255\r\nAP Up Time                                      : 7 days 14 hours 48 minutes 29 seconds \r\nAP CAPWAP Up Time                               : 7 days 14 hours 45 minutes 51 seconds \r\nJoin Date and Time                              : 02/09/2022 13:10:34\r\nAttributes for Slot 0\r\n  AP Regulatory Domain                          : -A\r\n  ATF Mode                                      : Disable\r\n  ATE Optimization                              : N/A\r\n  Radio Type                                    : 802.11ax - 2.4 GHz\r\n  Radio Mode                                    : Local\r\n  Radio Role                                    : Client Serving\r\n  Radio Role Op                                 : Manual\r\n  Radio SubType                                 : Main\r\n  Administrative State                          : Enabled\r\n  Operation State                               : Up\r\n\r\n  Station Configuration\r\n    Configuration                               : Automatic\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098926.561536 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+         AP User Name                                    : admin
+AP 802.1X User Mode                             : Global
+AP 802.1X User Name                             : Not Configured
+Cisco AP System Logging Host                    : 255.255.255.255
+AP Up Time                                      : 7 days 14 hours 48 minutes 29 seconds 
+AP CAPWAP Up Time                               : 7 days 14 hours 45 minutes 51 seconds 
+Join Date and Time                              : 02/09/2022 13:10:34
+Attributes for Slot 0
+  AP Regulatory Domain                          : -A
+  ATF Mode                                      : Disable
+  ATE Optimization                              : N/A
+  Radio Type                                    : 802.11ax - 2.4 GHz
+  Radio Mode                                    : Local
+  Radio Role                                    : Client Serving
+  Radio Role Op                                 : Manual
+  Radio SubType                                 : Main
+  Administrative State                          : Enabled
+  Operation State                               : Up
+
+  Station Configuration
+    Configuration                               : Automatic
+ 
+1645098926.561811 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098926.970399 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    Medium Occupancy Limit                      : 0\r\n    CFP Period                                  : 0\r\n    CFP Maximum Duration                        : 0\r\n    BSSID                                       : 687d.b45f.5c30\r\n    Operation Rate Set\r\n      802.11b 1M Rate                           : Unsupported \r\n      802.11b 2M Rate                           : Unsupported \r\n      802.11b 5.5M Rate                         : Unsupported \r\n      802.11b 11M Rate                          : Unsupported \r\n      802.11b 6M Rate                           : Unsupported\r\n      802.11b 9M Rate                           : Supported\r\n      802.11b 12M Rate                          : Mandatory\r\n      802.11b 18M Rate                          : Supported\r\n      802.11b 24M Rate                          : Supported\r\n      802.11b 36M Rate                          : Supported\r\n      802.11b 48M Rate                          : Supported\r\n      802.11b 54M Rate                          : Supported\r\n\r\n    MCS Set\r\n      MCS 0                                     : SUPPORTED\r\n      MCS 1                                     : SUPPORTED\r\n      MCS 2                                     : SUPPORTED\r\n      MCS 3                                     : SUPPORTED\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098926.971030 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+             Medium Occupancy Limit                      : 0
+    CFP Period                                  : 0
+    CFP Maximum Duration                        : 0
+    BSSID                                       : 687d.b45f.5c30
+    Operation Rate Set
+      802.11b 1M Rate                           : Unsupported 
+      802.11b 2M Rate                           : Unsupported 
+      802.11b 5.5M Rate                         : Unsupported 
+      802.11b 11M Rate                          : Unsupported 
+      802.11b 6M Rate                           : Unsupported
+      802.11b 9M Rate                           : Supported
+      802.11b 12M Rate                          : Mandatory
+      802.11b 18M Rate                          : Supported
+      802.11b 24M Rate                          : Supported
+      802.11b 36M Rate                          : Supported
+      802.11b 48M Rate                          : Supported
+      802.11b 54M Rate                          : Supported
+
+    MCS Set
+      MCS 0                                     : SUPPORTED
+      MCS 1                                     : SUPPORTED
+      MCS 2                                     : SUPPORTED
+      MCS 3                                     : SUPPORTED
+ 
+1645098926.971216 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098927.379984 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08      MCS 4                                     : SUPPORTED\r\n      MCS 5                                     : SUPPORTED\r\n      MCS 6                                     : SUPPORTED\r\n      MCS 7                                     : SUPPORTED\r\n      MCS 8                                     : SUPPORTED\r\n      MCS 9                                     : SUPPORTED\r\n      MCS 10                                    : SUPPORTED\r\n      MCS 11                                    : SUPPORTED\r\n      MCS 12                                    : SUPPORTED\r\n      MCS 13                                    : SUPPORTED\r\n      MCS 14                                    : SUPPORTED\r\n      MCS 15                                    : SUPPORTED\r\n      MCS 16                                    : SUPPORTED\r\n      MCS 17                                    : SUPPORTED\r\n      MCS 18                                    : SUPPORTED\r\n      MCS 19                                    : SUPPORTED\r\n      MCS 20                                    : SUPPORTED\r\n      MCS 21                                    : SUPPORTED\r\n      MCS 22                                    : SUPPORTED\r\n      MCS 23                                    : SUPPORTED\r\n      MCS 24                                    : SUPPORTED\r\n      MCS 25                                    : SUPPORTED\r\n      MCS 26                                    : SUPPORTED\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098927.380596 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+               MCS 4                                     : SUPPORTED
+      MCS 5                                     : SUPPORTED
+      MCS 6                                     : SUPPORTED
+      MCS 7                                     : SUPPORTED
+      MCS 8                                     : SUPPORTED
+      MCS 9                                     : SUPPORTED
+      MCS 10                                    : SUPPORTED
+      MCS 11                                    : SUPPORTED
+      MCS 12                                    : SUPPORTED
+      MCS 13                                    : SUPPORTED
+      MCS 14                                    : SUPPORTED
+      MCS 15                                    : SUPPORTED
+      MCS 16                                    : SUPPORTED
+      MCS 17                                    : SUPPORTED
+      MCS 18                                    : SUPPORTED
+      MCS 19                                    : SUPPORTED
+      MCS 20                                    : SUPPORTED
+      MCS 21                                    : SUPPORTED
+      MCS 22                                    : SUPPORTED
+      MCS 23                                    : SUPPORTED
+      MCS 24                                    : SUPPORTED
+      MCS 25                                    : SUPPORTED
+      MCS 26                                    : SUPPORTED
+ 
+1645098927.380759 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098927.789808 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08      MCS 27                                    : SUPPORTED\r\n      MCS 28                                    : SUPPORTED\r\n      MCS 29                                    : SUPPORTED\r\n      MCS 30                                    : SUPPORTED\r\n      MCS 31                                    : SUPPORTED\r\n\r\n    802.11ax Parameters\r\n      HE Capable                                : Yes\r\n      BSS Color Capable                         : Yes\r\n      BSS Color Configuration                   : Automatic\r\n      Current BSS Color                         : 4\r\n      OBSS PD Capable                           : Yes\r\n      OBSS PD SRG Capable                       : No\r\n\r\n    Beacon Period                               : 100\r\n    Fragmentation Threshold                     : 2346\r\n    Multi Domain Capability Implemented         : False\r\n    Multi Domain Capability Enabled             : False\r\n    Country String                              : US \r\n\r\n  Multi Domain Capability\r\n    Configuration                               : Automatic\r\n    First Channel                               : 0\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098927.790549 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+               MCS 27                                    : SUPPORTED
+      MCS 28                                    : SUPPORTED
+      MCS 29                                    : SUPPORTED
+      MCS 30                                    : SUPPORTED
+      MCS 31                                    : SUPPORTED
+
+    802.11ax Parameters
+      HE Capable                                : Yes
+      BSS Color Capable                         : Yes
+      BSS Color Configuration                   : Automatic
+      Current BSS Color                         : 4
+      OBSS PD Capable                           : Yes
+      OBSS PD SRG Capable                       : No
+
+    Beacon Period                               : 100
+    Fragmentation Threshold                     : 2346
+    Multi Domain Capability Implemented         : False
+    Multi Domain Capability Enabled             : False
+    Country String                              : US 
+
+  Multi Domain Capability
+    Configuration                               : Automatic
+    First Channel                               : 0
+ 
+1645098927.790908 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098928.199544 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    Number of Channels                          : 0\r\n\r\n  MAC Operation Parameters\r\n    Configuration                               : Automatic\r\n    Fragmentation Threshold                     : 2346\r\n    Packet Retry Limit                          : 64\r\n    RTS/CTS Threshold                           : 2347\r\n\r\n  Tx Power\r\n    Number of Supported Power Levels            : 8\r\n    Tx Power Level 1                            : 23 dBm\r\n    Tx Power Level 2                            : 20 dBm\r\n    Tx Power Level 3                            : 17 dBm\r\n    Tx Power Level 4                            : 14 dBm\r\n    Tx Power Level 5                            : 11 dBm\r\n    Tx Power Level 6                            : 8 dBm\r\n    Tx Power Level 7                            : 5 dBm\r\n    Tx Power Level 8                            : 2 dBm\r\n    Tx Power Configuration                      : Automatic\r\n    Current Tx Power Level                      : 1\r\n    Tx Power Assigned By                        : DTPC\r\n\r\n  Phy OFDM Parameters\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098928.200336 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+             Number of Channels                          : 0
+
+  MAC Operation Parameters
+    Configuration                               : Automatic
+    Fragmentation Threshold                     : 2346
+    Packet Retry Limit                          : 64
+    RTS/CTS Threshold                           : 2347
+
+  Tx Power
+    Number of Supported Power Levels            : 8
+    Tx Power Level 1                            : 23 dBm
+    Tx Power Level 2                            : 20 dBm
+    Tx Power Level 3                            : 17 dBm
+    Tx Power Level 4                            : 14 dBm
+    Tx Power Level 5                            : 11 dBm
+    Tx Power Level 6                            : 8 dBm
+    Tx Power Level 7                            : 5 dBm
+    Tx Power Level 8                            : 2 dBm
+    Tx Power Configuration                      : Automatic
+    Current Tx Power Level                      : 1
+    Tx Power Assigned By                        : DTPC
+
+  Phy OFDM Parameters
+ 
+1645098928.200660 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098928.608765 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    Configuration                               : Customized\r\n    Current Channel                             : 6\r\n    Channel Assigned By                         : User\r\n    Extension Channel                           : NONE\r\n    Channel Width                               : 20\r\n    Allowed Channel List                        : 1,2,3,4,5,6,7,8,9,10,11\r\n    DCA Channel List                            : 1,6,11\r\n    Antenna Type                                : INTERNAL_ANTENNA\r\n    Internal Antenna Gain (in .5 dBi units)     : 8\r\n    Diversity                                   : DIVERSITY_ENABLED\r\n    802.11n Antennas\r\n      A                                         : ENABLED\r\n      B                                         : ENABLED\r\n      C                                         : ENABLED\r\n      D                                         : ENABLED\r\n\r\n    802.11n Antennas\r\n      MIMO                                      : 4x4\r\n      Tx                                        : A, B, C, D\r\n      Rx                                        : A, B, C, D\r\n\r\n  Performance Profile Parameters\r\n    Configuration                               : AUTOMATIC\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098928.609547 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+             Configuration                               : Customized
+    Current Channel                             : 6
+    Channel Assigned By                         : User
+    Extension Channel                           : NONE
+    Channel Width                               : 20
+    Allowed Channel List                        : 1,2,3,4,5,6,7,8,9,10,11
+    DCA Channel List                            : 1,6,11
+    Antenna Type                                : INTERNAL_ANTENNA
+    Internal Antenna Gain (in .5 dBi units)     : 8
+    Diversity                                   : DIVERSITY_ENABLED
+    802.11n Antennas
+      A                                         : ENABLED
+      B                                         : ENABLED
+      C                                         : ENABLED
+      D                                         : ENABLED
+
+    802.11n Antennas
+      MIMO                                      : 4x4
+      Tx                                        : A, B, C, D
+      Rx                                        : A, B, C, D
+
+  Performance Profile Parameters
+    Configuration                               : AUTOMATIC
+ 
+1645098928.609776 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098929.017155 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    Interference Threshold                      : 10%\r\n    Noise Threshold                             : -70 dBm\r\n    RF Utilization Threshold                    : 80%\r\n    Data-rate threshold                         : 1000000 bps\r\n    Client Threshold                            : 12 clients\r\n    Coverage SNR threshold                      : 70 dB\r\n    Coverage Exception Level                    : 25%\r\n    Client minimum exception level              : 3 clients\r\n\r\n\r\n  Radio Extended Configurations\r\n    Beacon period                               : 100 milliseconds\r\n    Beacon range                                : AUTO\r\n    Multicast buffer                            : AUTO\r\n    Multicast data-rate                         : AUTO\r\n    RX SOP threshold                            : DEFAULT\r\n    CCA threshold                               : AUTO\r\n\r\n  Rogue Containment Information\r\n    Containment Count                          : 0\r\n\r\n  Management Frame Information\r\n    Validation                                  : Capable\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098929.017854 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+             Interference Threshold                      : 10%
+    Noise Threshold                             : -70 dBm
+    RF Utilization Threshold                    : 80%
+    Data-rate threshold                         : 1000000 bps
+    Client Threshold                            : 12 clients
+    Coverage SNR threshold                      : 70 dB
+    Coverage Exception Level                    : 25%
+    Client minimum exception level              : 3 clients
+
+
+  Radio Extended Configurations
+    Beacon period                               : 100 milliseconds
+    Beacon range                                : AUTO
+    Multicast buffer                            : AUTO
+    Multicast data-rate                         : AUTO
+    RX SOP threshold                            : DEFAULT
+    CCA threshold                               : AUTO
+
+  Rogue Containment Information
+    Containment Count                          : 0
+
+  Management Frame Information
+    Validation                                  : Capable
+ 
+1645098929.018072 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098929.427833 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    Protection                                  : Not capable\r\n  NDP capability                                : Unknown\r\n  NDP mode                                      : Unknown\r\n\r\nAttributes for Slot 1\r\n  AP Regulatory Domain                          : -B\r\n  ATF Mode                                      : Disable\r\n  ATE Optimization                              : N/A\r\n  Radio Type                                    : 802.11ax - 5 GHz\r\n  Radio Subband                                 : All\r\n  Radio Mode                                    : Local\r\n  Radio Role                                    : Client Serving\r\n  Radio Role Op                                 : Manual\r\n  Radio SubType                                 : Main\r\n  Administrative State                          : Enabled\r\n  Operation State                               : Up\r\n\r\n  Station Configuration\r\n    Configuration                               : Automatic\r\n    Medium Occupancy Limit                      : 0\r\n    CFP Period                                  : 0\r\n    CFP Maximum Duration                        : 0\r\n    BSSID                                       : 687d.b45f.5c30\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098929.428533 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+             Protection                                  : Not capable
+  NDP capability                                : Unknown
+  NDP mode                                      : Unknown
+
+Attributes for Slot 1
+  AP Regulatory Domain                          : -B
+  ATF Mode                                      : Disable
+  ATE Optimization                              : N/A
+  Radio Type                                    : 802.11ax - 5 GHz
+  Radio Subband                                 : All
+  Radio Mode                                    : Local
+  Radio Role                                    : Client Serving
+  Radio Role Op                                 : Manual
+  Radio SubType                                 : Main
+  Administrative State                          : Enabled
+  Operation State                               : Up
+
+  Station Configuration
+    Configuration                               : Automatic
+    Medium Occupancy Limit                      : 0
+    CFP Period                                  : 0
+    CFP Maximum Duration                        : 0
+    BSSID                                       : 687d.b45f.5c30
+ 
+1645098929.428785 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098929.837682 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    Operation Rate Set\r\n      802.11a 6M Rate                           : Mandatory\r\n      802.11a 9M Rate                           : Supported\r\n      802.11a 12M Rate                          : Mandatory\r\n      802.11a 18M Rate                          : Supported\r\n      802.11a 24M Rate                          : Mandatory\r\n      802.11a 36M Rate                          : Supported\r\n      802.11a 48M Rate                          : Supported\r\n      802.11a 54M Rate                          : Supported\r\n\r\n    MCS Set\r\n      MCS 0                                     : SUPPORTED\r\n      MCS 1                                     : SUPPORTED\r\n      MCS 2                                     : SUPPORTED\r\n      MCS 3                                     : SUPPORTED\r\n      MCS 4                                     : SUPPORTED\r\n      MCS 5                                     : SUPPORTED\r\n      MCS 6                                     : SUPPORTED\r\n      MCS 7                                     : SUPPORTED\r\n      MCS 8                                     : SUPPORTED\r\n      MCS 9                                     : SUPPORTED\r\n      MCS 10                                    : SUPPORTED\r\n      MCS 11                                    : SUPPORTED\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098929.838322 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+             Operation Rate Set
+      802.11a 6M Rate                           : Mandatory
+      802.11a 9M Rate                           : Supported
+      802.11a 12M Rate                          : Mandatory
+      802.11a 18M Rate                          : Supported
+      802.11a 24M Rate                          : Mandatory
+      802.11a 36M Rate                          : Supported
+      802.11a 48M Rate                          : Supported
+      802.11a 54M Rate                          : Supported
+
+    MCS Set
+      MCS 0                                     : SUPPORTED
+      MCS 1                                     : SUPPORTED
+      MCS 2                                     : SUPPORTED
+      MCS 3                                     : SUPPORTED
+      MCS 4                                     : SUPPORTED
+      MCS 5                                     : SUPPORTED
+      MCS 6                                     : SUPPORTED
+      MCS 7                                     : SUPPORTED
+      MCS 8                                     : SUPPORTED
+      MCS 9                                     : SUPPORTED
+      MCS 10                                    : SUPPORTED
+      MCS 11                                    : SUPPORTED
+ 
+1645098929.838608 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098930.246440 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08      MCS 12                                    : SUPPORTED\r\n      MCS 13                                    : SUPPORTED\r\n      MCS 14                                    : SUPPORTED\r\n      MCS 15                                    : SUPPORTED\r\n      MCS 16                                    : SUPPORTED\r\n      MCS 17                                    : SUPPORTED\r\n      MCS 18                                    : SUPPORTED\r\n      MCS 19                                    : SUPPORTED\r\n      MCS 20                                    : SUPPORTED\r\n      MCS 21                                    : SUPPORTED\r\n      MCS 22                                    : SUPPORTED\r\n      MCS 23                                    : SUPPORTED\r\n      MCS 24                                    : SUPPORTED\r\n      MCS 25                                    : SUPPORTED\r\n      MCS 26                                    : SUPPORTED\r\n      MCS 27                                    : SUPPORTED\r\n      MCS 28                                    : SUPPORTED\r\n      MCS 29                                    : SUPPORTED\r\n      MCS 30                                    : SUPPORTED\r\n      MCS 31                                    : SUPPORTED\r\n\r\n    802.11ax Parameters\r\n      HE Capable                                : Yes\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098930.246796 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+               MCS 12                                    : SUPPORTED
+      MCS 13                                    : SUPPORTED
+      MCS 14                                    : SUPPORTED
+      MCS 15                                    : SUPPORTED
+      MCS 16                                    : SUPPORTED
+      MCS 17                                    : SUPPORTED
+      MCS 18                                    : SUPPORTED
+      MCS 19                                    : SUPPORTED
+      MCS 20                                    : SUPPORTED
+      MCS 21                                    : SUPPORTED
+      MCS 22                                    : SUPPORTED
+      MCS 23                                    : SUPPORTED
+      MCS 24                                    : SUPPORTED
+      MCS 25                                    : SUPPORTED
+      MCS 26                                    : SUPPORTED
+      MCS 27                                    : SUPPORTED
+      MCS 28                                    : SUPPORTED
+      MCS 29                                    : SUPPORTED
+      MCS 30                                    : SUPPORTED
+      MCS 31                                    : SUPPORTED
+
+    802.11ax Parameters
+      HE Capable                                : Yes
+ 
+1645098930.246861 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098930.603145 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08      BSS Color Capable                         : Yes\r\n      BSS Color Configuration                   : Automatic\r\n      Current BSS Color                         : 38\r\n      OBSS PD Capable                           : Yes\r\n      OBSS PD SRG Capable                       : No\r\n\r\n    Beacon Period                               : 100\r\n    Fragmentation Threshold                     : 2346\r\n    Multi Domain Capability Implemented         : False\r\n    Multi Domain Capability Enabled             : False\r\n    Country String                              : US \r\n\r\n  Multi Domain Capability\r\n    Configuration                               : Automatic\r\n    First Channel                               : 0\r\n    Number of Channels                          : 0\r\n\r\n  MAC Operation Parameters\r\n    Configuration                               : Automatic\r\n    Fragmentation Threshold                     : 2346\r\n    Packet Retry Limit                          : 64\r\n    RTS/CTS Threshold                           : 2347\r\n\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098930.603687 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+               BSS Color Capable                         : Yes
+      BSS Color Configuration                   : Automatic
+      Current BSS Color                         : 38
+      OBSS PD Capable                           : Yes
+      OBSS PD SRG Capable                       : No
+
+    Beacon Period                               : 100
+    Fragmentation Threshold                     : 2346
+    Multi Domain Capability Implemented         : False
+    Multi Domain Capability Enabled             : False
+    Country String                              : US 
+
+  Multi Domain Capability
+    Configuration                               : Automatic
+    First Channel                               : 0
+    Number of Channels                          : 0
+
+  MAC Operation Parameters
+    Configuration                               : Automatic
+    Fragmentation Threshold                     : 2346
+    Packet Retry Limit                          : 64
+    RTS/CTS Threshold                           : 2347
+
+ 
+1645098930.603827 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098930.963301 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08  Tx Power\r\n    Number of Supported Power Levels            : 8\r\n    Tx Power Level 1                            : 21 dBm\r\n    Tx Power Level 2                            : 18 dBm\r\n    Tx Power Level 3                            : 15 dBm\r\n    Tx Power Level 4                            : 12 dBm\r\n    Tx Power Level 5                            : 9 dBm\r\n    Tx Power Level 6                            : 6 dBm\r\n    Tx Power Level 7                            : 3 dBm\r\n    Tx Power Level 8                            : 0 dBm\r\n    Tx Power Configuration                      : Customized\r\n    Current Tx Power Level                      : 1\r\n    Tx Power Assigned By                        : User\r\n\r\n  Phy OFDM Parameters\r\n    Configuration                               : Customized\r\n    Current Channel                             : 36\r\n    Channel Assigned By                         : User\r\n    Extension Channel                           : NONE\r\n    Channel Width                               : 20\r\n    Allowed Channel List                        : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161,165\r\n    DCA Channel List                            : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098930.963904 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+           Tx Power
+    Number of Supported Power Levels            : 8
+    Tx Power Level 1                            : 21 dBm
+    Tx Power Level 2                            : 18 dBm
+    Tx Power Level 3                            : 15 dBm
+    Tx Power Level 4                            : 12 dBm
+    Tx Power Level 5                            : 9 dBm
+    Tx Power Level 6                            : 6 dBm
+    Tx Power Level 7                            : 3 dBm
+    Tx Power Level 8                            : 0 dBm
+    Tx Power Configuration                      : Customized
+    Current Tx Power Level                      : 1
+    Tx Power Assigned By                        : User
+
+  Phy OFDM Parameters
+    Configuration                               : Customized
+    Current Channel                             : 36
+    Channel Assigned By                         : User
+    Extension Channel                           : NONE
+    Channel Width                               : 20
+    Allowed Channel List                        : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161,165
+    DCA Channel List                            : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161
+ 
+1645098930.964061 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098931.320495 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    Antenna Type                                : INTERNAL_ANTENNA\r\n    Internal Antenna Gain (in .5 dBi units)     : 10\r\n    Diversity                                   : DIVERSITY_ENABLED\r\n    802.11n Antennas\r\n      A                                         : ENABLED\r\n      B                                         : ENABLED\r\n      C                                         : ENABLED\r\n      D                                         : ENABLED\r\n      E                                         : ENABLED\r\n      F                                         : ENABLED\r\n      G                                         : ENABLED\r\n      H                                         : ENABLED\r\n\r\n    802.11n Antennas\r\n      MIMO                                      : 8x8\r\n      Tx                                        : A, B, C, D, E, F, G, H\r\n      Rx                                        : A, B, C, D, E, F, G, H\r\n\r\n  Performance Profile Parameters\r\n    Configuration                               : AUTOMATIC\r\n    Interference Threshold                      : 10%\r\n    Noise Threshold                             : -70 dBm\r\n    RF Utilization Threshold                    : 80%\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098931.320789 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+             Antenna Type                                : INTERNAL_ANTENNA
+    Internal Antenna Gain (in .5 dBi units)     : 10
+    Diversity                                   : DIVERSITY_ENABLED
+    802.11n Antennas
+      A                                         : ENABLED
+      B                                         : ENABLED
+      C                                         : ENABLED
+      D                                         : ENABLED
+      E                                         : ENABLED
+      F                                         : ENABLED
+      G                                         : ENABLED
+      H                                         : ENABLED
+
+    802.11n Antennas
+      MIMO                                      : 8x8
+      Tx                                        : A, B, C, D, E, F, G, H
+      Rx                                        : A, B, C, D, E, F, G, H
+
+  Performance Profile Parameters
+    Configuration                               : AUTOMATIC
+    Interference Threshold                      : 10%
+    Noise Threshold                             : -70 dBm
+    RF Utilization Threshold                    : 80%
+ 
+1645098931.320841 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098931.781811 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    Data-rate threshold                         : 1000000 bps\r\n    Client Threshold                            : 12 clients\r\n    Coverage SNR threshold                      : 70 dB\r\n    Coverage Exception Level                    : 25%\r\n    Client minimum exception level              : 3 clients\r\n\r\n\r\n  Radio Extended Configurations\r\n    Beacon period                               : 100 milliseconds\r\n    Beacon range                                : AUTO\r\n    Multicast buffer                            : AUTO\r\n    Multicast data-rate                         : AUTO\r\n    RX SOP threshold                            : DEFAULT\r\n    CCA threshold                               : AUTO\r\n\r\n  Rogue Containment Information\r\n    Containment Count                          : 0\r\n\r\n  Management Frame Information\r\n    Validation                                  : Capable\r\n    Protection                                  : Not capable\r\n  NDP capability                                : Unknown\r\n  NDP mode                                      : Unknown\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098931.782561 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+             Data-rate threshold                         : 1000000 bps
+    Client Threshold                            : 12 clients
+    Coverage SNR threshold                      : 70 dB
+    Coverage Exception Level                    : 25%
+    Client minimum exception level              : 3 clients
+
+
+  Radio Extended Configurations
+    Beacon period                               : 100 milliseconds
+    Beacon range                                : AUTO
+    Multicast buffer                            : AUTO
+    Multicast data-rate                         : AUTO
+    RX SOP threshold                            : DEFAULT
+    CCA threshold                               : AUTO
+
+  Rogue Containment Information
+    Containment Count                          : 0
+
+  Management Frame Information
+    Validation                                  : Capable
+    Protection                                  : Not capable
+  NDP capability                                : Unknown
+  NDP mode                                      : Unknown
+ 
+1645098931.782776 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098932.139002 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08\r\nAttributes for Slot 2\r\n  AP Regulatory Domain                          : -B\r\n  ATF Mode                                      : Disable\r\n  ATE Optimization                              : N/A\r\n  Radio Type                                    : 802.11ax - 5 GHz\r\n  Radio Subband                                 : All\r\n  Radio Mode                                    : Local\r\n  Radio Role                                    : Client Serving\r\n  Radio Role Op                                 : Auto\r\n  Radio SubType                                 : Slave\r\n  Administrative State                          : Disabled\r\n  Operation State                               : Down\r\n\r\n  Station Configuration\r\n    Configuration                               : Automatic\r\n    Medium Occupancy Limit                      : 0\r\n    CFP Period                                  : 0\r\n    CFP Maximum Duration                        : 0\r\n    BSSID                                       : 687d.b45f.5c30\r\n    Operation Rate Set\r\n      802.11a 6M Rate                           : Mandatory\r\n      802.11a 9M Rate                           : Supported\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098932.139546 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+         
+Attributes for Slot 2
+  AP Regulatory Domain                          : -B
+  ATF Mode                                      : Disable
+  ATE Optimization                              : N/A
+  Radio Type                                    : 802.11ax - 5 GHz
+  Radio Subband                                 : All
+  Radio Mode                                    : Local
+  Radio Role                                    : Client Serving
+  Radio Role Op                                 : Auto
+  Radio SubType                                 : Slave
+  Administrative State                          : Disabled
+  Operation State                               : Down
+
+  Station Configuration
+    Configuration                               : Automatic
+    Medium Occupancy Limit                      : 0
+    CFP Period                                  : 0
+    CFP Maximum Duration                        : 0
+    BSSID                                       : 687d.b45f.5c30
+    Operation Rate Set
+      802.11a 6M Rate                           : Mandatory
+      802.11a 9M Rate                           : Supported
+ 
+1645098932.139685 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098932.500254 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08      802.11a 12M Rate                          : Mandatory\r\n      802.11a 18M Rate                          : Supported\r\n      802.11a 24M Rate                          : Mandatory\r\n      802.11a 36M Rate                          : Supported\r\n      802.11a 48M Rate                          : Supported\r\n      802.11a 54M Rate                          : Supported\r\n\r\n    MCS Set\r\n      MCS 0                                     : SUPPORTED\r\n      MCS 1                                     : SUPPORTED\r\n      MCS 2                                     : SUPPORTED\r\n      MCS 3                                     : SUPPORTED\r\n      MCS 4                                     : SUPPORTED\r\n      MCS 5                                     : SUPPORTED\r\n      MCS 6                                     : SUPPORTED\r\n      MCS 7                                     : SUPPORTED\r\n      MCS 8                                     : SUPPORTED\r\n      MCS 9                                     : SUPPORTED\r\n      MCS 10                                    : SUPPORTED\r\n      MCS 11                                    : SUPPORTED\r\n      MCS 12                                    : SUPPORTED\r\n      MCS 13                                    : SUPPORTED\r\n      MCS 14                                    : SUPPORTED\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098932.501035 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+               802.11a 12M Rate                          : Mandatory
+      802.11a 18M Rate                          : Supported
+      802.11a 24M Rate                          : Mandatory
+      802.11a 36M Rate                          : Supported
+      802.11a 48M Rate                          : Supported
+      802.11a 54M Rate                          : Supported
+
+    MCS Set
+      MCS 0                                     : SUPPORTED
+      MCS 1                                     : SUPPORTED
+      MCS 2                                     : SUPPORTED
+      MCS 3                                     : SUPPORTED
+      MCS 4                                     : SUPPORTED
+      MCS 5                                     : SUPPORTED
+      MCS 6                                     : SUPPORTED
+      MCS 7                                     : SUPPORTED
+      MCS 8                                     : SUPPORTED
+      MCS 9                                     : SUPPORTED
+      MCS 10                                    : SUPPORTED
+      MCS 11                                    : SUPPORTED
+      MCS 12                                    : SUPPORTED
+      MCS 13                                    : SUPPORTED
+      MCS 14                                    : SUPPORTED
+ 
+1645098932.501263 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098932.908933 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08      MCS 15                                    : SUPPORTED\r\n      MCS 16                                    : SUPPORTED\r\n      MCS 17                                    : SUPPORTED\r\n      MCS 18                                    : SUPPORTED\r\n      MCS 19                                    : SUPPORTED\r\n      MCS 20                                    : SUPPORTED\r\n      MCS 21                                    : SUPPORTED\r\n      MCS 22                                    : SUPPORTED\r\n      MCS 23                                    : SUPPORTED\r\n      MCS 24                                    : SUPPORTED\r\n      MCS 25                                    : SUPPORTED\r\n      MCS 26                                    : SUPPORTED\r\n      MCS 27                                    : SUPPORTED\r\n      MCS 28                                    : SUPPORTED\r\n      MCS 29                                    : SUPPORTED\r\n      MCS 30                                    : SUPPORTED\r\n      MCS 31                                    : SUPPORTED\r\n\r\n    802.11ax Parameters\r\n      HE Capable                                : Yes\r\n      BSS Color Capable                         : Yes\r\n      BSS Color Configuration                   : Automatic\r\n      Current BSS Color                         : 1\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098932.909532 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+               MCS 15                                    : SUPPORTED
+      MCS 16                                    : SUPPORTED
+      MCS 17                                    : SUPPORTED
+      MCS 18                                    : SUPPORTED
+      MCS 19                                    : SUPPORTED
+      MCS 20                                    : SUPPORTED
+      MCS 21                                    : SUPPORTED
+      MCS 22                                    : SUPPORTED
+      MCS 23                                    : SUPPORTED
+      MCS 24                                    : SUPPORTED
+      MCS 25                                    : SUPPORTED
+      MCS 26                                    : SUPPORTED
+      MCS 27                                    : SUPPORTED
+      MCS 28                                    : SUPPORTED
+      MCS 29                                    : SUPPORTED
+      MCS 30                                    : SUPPORTED
+      MCS 31                                    : SUPPORTED
+
+    802.11ax Parameters
+      HE Capable                                : Yes
+      BSS Color Capable                         : Yes
+      BSS Color Configuration                   : Automatic
+      Current BSS Color                         : 1
+ 
+1645098932.909686 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098933.318552 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08      OBSS PD Capable                           : Yes\r\n      OBSS PD SRG Capable                       : No\r\n\r\n    Beacon Period                               : 100\r\n    Fragmentation Threshold                     : 0\r\n    Multi Domain Capability Implemented         : False\r\n    Multi Domain Capability Enabled             : False\r\n    Country String                              : US \r\n\r\n  Multi Domain Capability\r\n    Configuration                               : Automatic\r\n    First Channel                               : 0\r\n    Number of Channels                          : 0\r\n\r\n  MAC Operation Parameters\r\n    Configuration                               : Automatic\r\n    Fragmentation Threshold                     : 0\r\n    Packet Retry Limit                          : 64\r\n    RTS/CTS Threshold                           : 2347\r\n\r\n  Tx Power\r\n    Number of Supported Power Levels            : 8\r\n    Tx Power Level 1                            : 0 dBm\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098933.319149 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+               OBSS PD Capable                           : Yes
+      OBSS PD SRG Capable                       : No
+
+    Beacon Period                               : 100
+    Fragmentation Threshold                     : 0
+    Multi Domain Capability Implemented         : False
+    Multi Domain Capability Enabled             : False
+    Country String                              : US 
+
+  Multi Domain Capability
+    Configuration                               : Automatic
+    First Channel                               : 0
+    Number of Channels                          : 0
+
+  MAC Operation Parameters
+    Configuration                               : Automatic
+    Fragmentation Threshold                     : 0
+    Packet Retry Limit                          : 64
+    RTS/CTS Threshold                           : 2347
+
+  Tx Power
+    Number of Supported Power Levels            : 8
+    Tx Power Level 1                            : 0 dBm
+ 
+1645098933.319307 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098933.677175 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    Tx Power Level 2                            : 0 dBm\r\n    Tx Power Level 3                            : 0 dBm\r\n    Tx Power Level 4                            : 0 dBm\r\n    Tx Power Level 5                            : 0 dBm\r\n    Tx Power Level 6                            : 0 dBm\r\n    Tx Power Level 7                            : 0 dBm\r\n    Tx Power Level 8                            : 0 dBm\r\n    Tx Power Configuration                      : Automatic\r\n    Current Tx Power Level                      : 8\r\n    Tx Power Assigned By                        : DTPC\r\n\r\n  Phy OFDM Parameters\r\n    Configuration                               : Automatic\r\n    Current Channel                             : 36\r\n    Channel Assigned By                         : DCA\r\n    Extension Channel                           : NONE\r\n    Channel Width                               : 20\r\n    Allowed Channel List                        : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161,165\r\n    DCA Channel List                            : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161\r\n    Antenna Type                                : INTERNAL_ANTENNA\r\n    Internal Antenna Gain (in .5 dBi units)     : 10\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098933.677747 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+             Tx Power Level 2                            : 0 dBm
+    Tx Power Level 3                            : 0 dBm
+    Tx Power Level 4                            : 0 dBm
+    Tx Power Level 5                            : 0 dBm
+    Tx Power Level 6                            : 0 dBm
+    Tx Power Level 7                            : 0 dBm
+    Tx Power Level 8                            : 0 dBm
+    Tx Power Configuration                      : Automatic
+    Current Tx Power Level                      : 8
+    Tx Power Assigned By                        : DTPC
+
+  Phy OFDM Parameters
+    Configuration                               : Automatic
+    Current Channel                             : 36
+    Channel Assigned By                         : DCA
+    Extension Channel                           : NONE
+    Channel Width                               : 20
+    Allowed Channel List                        : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161,165
+    DCA Channel List                            : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161
+    Antenna Type                                : INTERNAL_ANTENNA
+    Internal Antenna Gain (in .5 dBi units)     : 10
+ 
+1645098933.677895 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098934.137955 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    Diversity                                   : DIVERSITY_ENABLED\r\n    802.11n Antennas\r\n      A                                         : ENABLED\r\n      B                                         : ENABLED\r\n      C                                         : ENABLED\r\n      D                                         : ENABLED\r\n\r\n    802.11n Antennas\r\n      MIMO                                      : 4x4\r\n      Tx                                        : A, B, C, D\r\n      Rx                                        : A, B, C, D\r\n\r\n  Performance Profile Parameters\r\n    Configuration                               : AUTOMATIC\r\n    Interference Threshold                      : 10%\r\n    Noise Threshold                             : -70 dBm\r\n    RF Utilization Threshold                    : 80%\r\n    Data-rate threshold                         : 1000000 bps\r\n    Client Threshold                            : 12 clients\r\n    Coverage SNR threshold                      : 70 dB\r\n    Coverage Exception Level                    : 25%\r\n    Client minimum exception level              : 3 clients\r\n\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098934.138546 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+             Diversity                                   : DIVERSITY_ENABLED
+    802.11n Antennas
+      A                                         : ENABLED
+      B                                         : ENABLED
+      C                                         : ENABLED
+      D                                         : ENABLED
+
+    802.11n Antennas
+      MIMO                                      : 4x4
+      Tx                                        : A, B, C, D
+      Rx                                        : A, B, C, D
+
+  Performance Profile Parameters
+    Configuration                               : AUTOMATIC
+    Interference Threshold                      : 10%
+    Noise Threshold                             : -70 dBm
+    RF Utilization Threshold                    : 80%
+    Data-rate threshold                         : 1000000 bps
+    Client Threshold                            : 12 clients
+    Coverage SNR threshold                      : 70 dB
+    Coverage Exception Level                    : 25%
+    Client minimum exception level              : 3 clients
+
+ 
+1645098934.138702 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098934.547864 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08\r\n  Radio Extended Configurations\r\n    Beacon period                               : 100 milliseconds\r\n    Beacon range                                : AUTO\r\n    Multicast buffer                            : AUTO\r\n    Multicast data-rate                         : AUTO\r\n    RX SOP threshold                            : DEFAULT\r\n    CCA threshold                               : AUTO\r\n\r\n  Rogue Containment Information\r\n    Containment Count                          : 0\r\n\r\n  Management Frame Information\r\n    Validation                                  : Capable\r\n    Protection                                  : Not capable\r\n  NDP capability                                : Unknown\r\n  NDP mode                                      : Unknown\r\n\r\nAttributes for Slot 3\r\n  AP Regulatory Domain                          : -B\r\n  ATF Mode                                      : Disable\r\n  ATE Optimization                              : N/A\r\n  Radio Mode                                    : Local\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098934.548465 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+         
+  Radio Extended Configurations
+    Beacon period                               : 100 milliseconds
+    Beacon range                                : AUTO
+    Multicast buffer                            : AUTO
+    Multicast data-rate                         : AUTO
+    RX SOP threshold                            : DEFAULT
+    CCA threshold                               : AUTO
+
+  Rogue Containment Information
+    Containment Count                          : 0
+
+  Management Frame Information
+    Validation                                  : Capable
+    Protection                                  : Not capable
+  NDP capability                                : Unknown
+  NDP mode                                      : Unknown
+
+Attributes for Slot 3
+  AP Regulatory Domain                          : -B
+  ATF Mode                                      : Disable
+  ATE Optimization                              : N/A
+  Radio Mode                                    : Local
+ 
+1645098934.548633 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098934.911222 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08  Radio Role                                    : Client Serving\r\n  Radio Role Op                                 : Manual\r\n  Radio SubType                                 : Main\r\n  Administrative State                          : Enabled\r\n  Operation State                               : Up\r\n\r\n  Station Configuration\r\n    Configuration                               : Automatic\r\n    Medium Occupancy Limit                      : 0\r\n    CFP Period                                  : 0\r\n    CFP Maximum Duration                        : 0\r\n    BSSID                                       : 687d.b45f.5c30\r\n    Operation Rate Set\r\n      802.11 6GHZ 6M Rate                           : Mandatory\r\n      802.11 6GHZ 9M Rate                           : Supported\r\n      802.11 6GHZ 12M Rate                          : Mandatory\r\n      802.11 6GHZ 18M Rate                          : Supported\r\n      802.11 6GHZ 24M Rate                          : Mandatory\r\n      802.11 6GHZ 36M Rate                          : Supported\r\n      802.11 6GHZ 48M Rate                          : Supported\r\n      802.11 6GHZ 54M Rate                          : Supported\r\n\r\n    MCS Set\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098934.911806 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+           Radio Role                                    : Client Serving
+  Radio Role Op                                 : Manual
+  Radio SubType                                 : Main
+  Administrative State                          : Enabled
+  Operation State                               : Up
+
+  Station Configuration
+    Configuration                               : Automatic
+    Medium Occupancy Limit                      : 0
+    CFP Period                                  : 0
+    CFP Maximum Duration                        : 0
+    BSSID                                       : 687d.b45f.5c30
+    Operation Rate Set
+      802.11 6GHZ 6M Rate                           : Mandatory
+      802.11 6GHZ 9M Rate                           : Supported
+      802.11 6GHZ 12M Rate                          : Mandatory
+      802.11 6GHZ 18M Rate                          : Supported
+      802.11 6GHZ 24M Rate                          : Mandatory
+      802.11 6GHZ 36M Rate                          : Supported
+      802.11 6GHZ 48M Rate                          : Supported
+      802.11 6GHZ 54M Rate                          : Supported
+
+    MCS Set
+ 
+1645098934.911944 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098935.268791 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08      MCS 0                                     : DISABLED\r\n      MCS 1                                     : DISABLED\r\n      MCS 2                                     : DISABLED\r\n      MCS 3                                     : DISABLED\r\n      MCS 4                                     : DISABLED\r\n      MCS 5                                     : DISABLED\r\n      MCS 6                                     : DISABLED\r\n      MCS 7                                     : DISABLED\r\n      MCS 8                                     : DISABLED\r\n      MCS 9                                     : DISABLED\r\n      MCS 10                                    : DISABLED\r\n      MCS 11                                    : DISABLED\r\n      MCS 12                                    : DISABLED\r\n      MCS 13                                    : DISABLED\r\n      MCS 14                                    : DISABLED\r\n      MCS 15                                    : DISABLED\r\n      MCS 16                                    : DISABLED\r\n      MCS 17                                    : DISABLED\r\n      MCS 18                                    : DISABLED\r\n      MCS 19                                    : DISABLED\r\n      MCS 20                                    : DISABLED\r\n      MCS 21                                    : DISABLED\r\n      MCS 22                                    : DISABLED\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098935.269085 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+               MCS 0                                     : DISABLED
+      MCS 1                                     : DISABLED
+      MCS 2                                     : DISABLED
+      MCS 3                                     : DISABLED
+      MCS 4                                     : DISABLED
+      MCS 5                                     : DISABLED
+      MCS 6                                     : DISABLED
+      MCS 7                                     : DISABLED
+      MCS 8                                     : DISABLED
+      MCS 9                                     : DISABLED
+      MCS 10                                    : DISABLED
+      MCS 11                                    : DISABLED
+      MCS 12                                    : DISABLED
+      MCS 13                                    : DISABLED
+      MCS 14                                    : DISABLED
+      MCS 15                                    : DISABLED
+      MCS 16                                    : DISABLED
+      MCS 17                                    : DISABLED
+      MCS 18                                    : DISABLED
+      MCS 19                                    : DISABLED
+      MCS 20                                    : DISABLED
+      MCS 21                                    : DISABLED
+      MCS 22                                    : DISABLED
+ 
+1645098935.269130 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098935.627406 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08      MCS 23                                    : DISABLED\r\n      MCS 24                                    : DISABLED\r\n      MCS 25                                    : DISABLED\r\n      MCS 26                                    : DISABLED\r\n      MCS 27                                    : DISABLED\r\n      MCS 28                                    : DISABLED\r\n      MCS 29                                    : DISABLED\r\n      MCS 30                                    : DISABLED\r\n      MCS 31                                    : DISABLED\r\n\r\n    802.11ax Parameters\r\n      HE Capable                                : Yes\r\n      BSS Color Capable                         : Yes\r\n      BSS Color Configuration                   : Automatic\r\n      Current BSS Color                         : 29\r\n      OBSS PD Capable                           : Yes\r\n      OBSS PD SRG Capable                       : Yes\r\n\r\n    Beacon Period                               : 100\r\n    Fragmentation Threshold                     : 2346\r\n    Multi Domain Capability Implemented         : False\r\n    Multi Domain Capability Enabled             : False\r\n    Country String                              : US \r\n --More--' wifi_ctl_9800_3504.py 114
+1645098935.628007 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+               MCS 23                                    : DISABLED
+      MCS 24                                    : DISABLED
+      MCS 25                                    : DISABLED
+      MCS 26                                    : DISABLED
+      MCS 27                                    : DISABLED
+      MCS 28                                    : DISABLED
+      MCS 29                                    : DISABLED
+      MCS 30                                    : DISABLED
+      MCS 31                                    : DISABLED
+
+    802.11ax Parameters
+      HE Capable                                : Yes
+      BSS Color Capable                         : Yes
+      BSS Color Configuration                   : Automatic
+      Current BSS Color                         : 29
+      OBSS PD Capable                           : Yes
+      OBSS PD SRG Capable                       : Yes
+
+    Beacon Period                               : 100
+    Fragmentation Threshold                     : 2346
+    Multi Domain Capability Implemented         : False
+    Multi Domain Capability Enabled             : False
+    Country String                              : US 
+ 
+1645098935.628161 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098935.982897 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08\r\n  Multi Domain Capability\r\n    Configuration                               : Automatic\r\n    First Channel                               : 0\r\n    Number of Channels                          : 0\r\n\r\n  MAC Operation Parameters\r\n    Configuration                               : Automatic\r\n    Fragmentation Threshold                     : 2346\r\n    Packet Retry Limit                          : 64\r\n    RTS/CTS Threshold                           : 2347\r\n\r\n  Tx Power\r\n    Number of Supported Power Levels            : 8\r\n    Tx Power Level 1                            : 18 dBm\r\n    Tx Power Level 2                            : 15 dBm\r\n    Tx Power Level 3                            : 12 dBm\r\n    Tx Power Level 4                            : 9 dBm\r\n    Tx Power Level 5                            : 6 dBm\r\n    Tx Power Level 6                            : 3 dBm\r\n    Tx Power Level 7                            : 0 dBm\r\n    Tx Power Level 8                            : -3 dBm\r\n    Tx Power Configuration                      : Automatic\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098935.983453 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+         
+  Multi Domain Capability
+    Configuration                               : Automatic
+    First Channel                               : 0
+    Number of Channels                          : 0
+
+  MAC Operation Parameters
+    Configuration                               : Automatic
+    Fragmentation Threshold                     : 2346
+    Packet Retry Limit                          : 64
+    RTS/CTS Threshold                           : 2347
+
+  Tx Power
+    Number of Supported Power Levels            : 8
+    Tx Power Level 1                            : 18 dBm
+    Tx Power Level 2                            : 15 dBm
+    Tx Power Level 3                            : 12 dBm
+    Tx Power Level 4                            : 9 dBm
+    Tx Power Level 5                            : 6 dBm
+    Tx Power Level 6                            : 3 dBm
+    Tx Power Level 7                            : 0 dBm
+    Tx Power Level 8                            : -3 dBm
+    Tx Power Configuration                      : Automatic
+ 
+1645098935.983602 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098936.390798 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    Current Tx Power Level                      : 1\r\n    Tx Power Assigned By                        : DTPC\r\n\r\n\r\n    802.11n Antennas\r\n      MIMO                                      : 4x4\r\n      Tx                                        : A, B, C, D\r\n      Rx                                        : A, B, C, D\r\n\r\n  Performance Profile Parameters\r\n    Configuration                               : AUTOMATIC\r\n    Interference Threshold                      : 10%\r\n    Noise Threshold                             : -70 dBm\r\n    RF Utilization Threshold                    : 80%\r\n    Data-rate threshold                         : 1000000 bps\r\n    Client Threshold                            : 12 clients\r\n    Coverage SNR threshold                      : 70 dB\r\n    Coverage Exception Level                    : 25%\r\n    Client minimum exception level              : 3 clients\r\n\r\n\r\n  Radio Extended Configurations\r\n    Beacon period                               : 100 milliseconds\r\n --More--' wifi_ctl_9800_3504.py 114
+1645098936.391458 INFO     expect index: 7 wifi_ctl_9800_3504.py 1568
+             Current Tx Power Level                      : 1
+    Tx Power Assigned By                        : DTPC
+
+
+    802.11n Antennas
+      MIMO                                      : 4x4
+      Tx                                        : A, B, C, D
+      Rx                                        : A, B, C, D
+
+  Performance Profile Parameters
+    Configuration                               : AUTOMATIC
+    Interference Threshold                      : 10%
+    Noise Threshold                             : -70 dBm
+    RF Utilization Threshold                    : 80%
+    Data-rate threshold                         : 1000000 bps
+    Client Threshold                            : 12 clients
+    Coverage SNR threshold                      : 70 dB
+    Coverage Exception Level                    : 25%
+    Client minimum exception level              : 3 clients
+
+
+  Radio Extended Configurations
+    Beacon period                               : 100 milliseconds
+ 
+1645098936.391627 INFO     9800 found --More--, sending space wifi_ctl_9800_3504.py 1623
+1645098936.799208 INFO     b'\x08\x08\x08\x08\x08\x08\x08\x08\x08        \x08\x08\x08\x08\x08\x08\x08\x08\x08    Beacon range                                : AUTO\r\n    Multicast buffer                            : AUTO\r\n    Multicast data-rate                         : AUTO\r\n    RX SOP threshold                            : DEFAULT\r\n    CCA threshold                               : AUTO\r\n\r\n  Rogue Containment Information\r\n    Containment Count                          : 0\r\n\r\n  Management Frame Information\r\n    Validation                                  : Capable\r\n    Protection                                  : Not capable\r\n  NDP capability                                : Unknown\r\n  NDP mode                                      : Unknown\r\n\r\nWLC2#' wifi_ctl_9800_3504.py 114
+1645098936.799809 INFO     expect index: 1 wifi_ctl_9800_3504.py 1568
+             Beacon range                                : AUTO
+    Multicast buffer                            : AUTO
+    Multicast data-rate                         : AUTO
+    RX SOP threshold                            : DEFAULT
+    CCA threshold                               : AUTO
+
+  Rogue Containment Information
+    Containment Count                          : 0
+
+  Management Frame Information
+    Validation                                  : Capable
+    Protection                                  : Not capable
+  NDP capability                                : Unknown
+  NDP mode                                      : Unknown
+
+
+1645098936.799968 INFO     WLC2# prompt received will send logout, loop_count: 52 wifi_ctl_9800_3504.py 1577
+1645098936.850347 INFO     b'logout' wifi_ctl_9800_3504.py 114
+1645098936.950882 INFO     send close to the egg child process wifi_ctl_9800_3504.py 1635

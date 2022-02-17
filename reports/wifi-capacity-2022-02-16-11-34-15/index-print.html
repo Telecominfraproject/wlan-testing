@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <title>Report for:  Wifi Capacity Test</title>    <link rel='shortcut icon' href='canvil.ico' type='image/x-icon' />
+    <link rel='stylesheet' href='report.css' />
+    <link rel='stylesheet' href='custom.css' />
+    <style>
+     pre {
+        overflow: auto;
+     }
+     img {
+        width: 100%;
+        max-width: 8in;
+     }
+    </style>
+  </head>
+  <body>
+<div class='Section report_banner-1000x205' style='background-image:url("report_banner-1000x205.jpg");background-repeat:no-repeat;padding:0;margin:0;min-width:1000px; min-height:205px;width:1000px; height:205px;max-width:1000px; max-height:205px;'>
+<img align='right' style='padding:0;margin:5;width:200px;' src='CandelaLogo2-90dpi-200x90-trans.png' border='0' />
+<div class='HeaderStyle'>
+<h1 class='TitleFontPrint'>Report for:  Wifi Capacity Test</h1><br/><h4 class='TitleFontPrintSub'><br><br><br><br><br>Wed Feb 16 23:34:16 PST 2022</h4></div>
+
+</div><!-- end section -->
+<div class='contentDiv'>
+
+  
+    
+  
+  
+    <h2 align="left">
+      Objective
+    </h2>
+    <p align="left" width="900">
+      The Candela WiFi Capacity test is designed to measure performance of an 
+      Access Point when handling different amounts of WiFi Stations. The test 
+      allows the user to increase the number of stations in user defined steps 
+      for each test iteration and measure the per station and the overall 
+      throughput for each trial. Along with throughput other measurements made 
+      are client connection times, Fairness, % packet loss, DHCP times and 
+      more. The expected behavior is for the AP to be able to handle several 
+      stations (within the limitations of the AP specs) and make sure all 
+      stations get a fair amount of airtime both in the upstream and 
+      downstream. An AP that scales well will not show a significant over-all 
+      throughput decrease as more stations are added.
+    </p>
+  
+
+<br/>
+
+<br/><br/>Realtime Graph shows summary download and upload RX bps of connections created by this test.
+<br/>
+<small><br/><a href='csv-data/data-Realtime_Mbps-1.csv'>CSV Data for Realtime Mbps</a><br/></small>
+<img src='chart-0-print.png' alt='Realtime Mbps'><br/>
+
+<br/><br/>Total Megabits-per-second transferred.  This only counts the protocol payload, so it will not count the Ethernet, IP, UDP, TCP or other header overhead.  A well behaving system will show about the same rate as stations increase.  If the rate decreases significantly as stations increase, then it is not scaling we
+<br/>
+<small><br/><a href='csv-data/data-Total_Mbps_Received_vs_Number_of_Stations_Active-1.csv'>CSV Data for Total Mbps Received vs Number of Stations Active</a><br/></small>
+<img src='kpi-chart-1-print.png' alt='Total Mbps Received vs Number of Stations Active'><br/>
+
+<br/><br/>Protocol-Data-Units received.  For TCP, this does not mean much, but for UDP connections, this correlates to packet size. If the PDU size is larger than what fits into a single frame, then the network stack will segment it accordingly.  A well behaving system will show about the same rate as stations increase.  If the rate decreases significantly as stations increase, then it is not scaling well.
+<br/>
+<small><br/><a href='csv-data/data-Total_PDU_s_Received_vs_Number_of_Stations_Active-1.csv'>CSV Data for Total PDU/s Received vs Number of Stations Active</a><br/></small>
+<img src='chart-2-print.png' alt='Total PDU/s Received vs Number of Stations Active'><br/>
+
+<br/><br/>Station disconnect stats.  These will be only for the last iteration.
+ If the 'Clear Reset Counters' option is selected,
+ the stats are cleared after the initial association.  Any re-connects reported
+ indicate a potential stability issue.
+ Can be used for long-term stability testing in cases where you bring up all
+ stations in one iteration and then run the test for a longer duration.
+
+<br/>
+<small><br/><a href='csv-data/data-Port_Reset_Totals-1.csv'>CSV Data for Port Reset Totals</a><br/></small>
+<img src='chart-3-print.png' alt='Port Reset Totals'><br/>
+
+<br/><br/>Station connect time is calculated from the initial Authenticate message through the completion of Open or RSN association/authentication.
+<br/>
+<small><br/><a href='csv-data/data-Station_Connect_Times-1.csv'>CSV Data for Station Connect Times</a><br/></small>
+<img src='chart-4-print.png' alt='Station Connect Times'><br/>
+
+  
+    
+  
+  
+    <br>
+    
+
+    <table width="700px" border="1" cellpadding="2" cellspacing="0" style="border-top-color: gray; border-top-style: solid; border-top-width: 1px; border-right-color: gray; border-right-style: solid; border-right-width: 1px; border-bottom-color: gray; border-bottom-style: solid; border-bottom-width: 1px; border-left-color: gray; border-left-style: solid; border-left-width: 1px">
+      <tr>
+        <th colspan="2">
+          Wifi-Capacity Test requested values
+        </th>
+      </tr>
+      <tr>
+        <td>
+          Station Increment:
+        </td>
+        <td colspan="3">
+          8
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Loop Iterations:
+        </td>
+        <td colspan="3">
+          Single (1)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Duration:
+        </td>
+        <td colspan="3">
+          2 min (2 m)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Protocol:
+        </td>
+        <td colspan="3">
+          UDP-IPv4
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Layer 4-7 Endpoint:
+        </td>
+        <td colspan="3">
+          NONE
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Payload Size:
+        </td>
+        <td colspan="3">
+          AUTO
+        </td>
+      </tr>
+      <tr>
+        <td>
+          MSS
+        </td>
+        <td colspan="3">
+          AUTO
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Per-Station Download Rate:
+        </td>
+        <td colspan="3">
+          8Mbps
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Total Upload Rate:
+        </td>
+        <td colspan="3">
+          Zero (0 bps)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Percentage TCP Rate:
+        </td>
+        <td colspan="3">
+          10% (10%)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Set Bursty Minimum Speed:
+        </td>
+        <td colspan="3">
+          Burst Mode Disabled (-1)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Randomize Rates
+        </td>
+        <td colspan="3">
+          true
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Leave Ports Up
+        </td>
+        <td colspan="3">
+          false
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Socket buffer size:
+        </td>
+        <td colspan="3">
+          OS Default
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Settle Time:
+        </td>
+        <td colspan="3">
+          5 sec (5 s)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Rpt Timer:
+        </td>
+        <td colspan="3">
+          fast (1 s)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          IP ToS:
+        </td>
+        <td colspan="3">
+          Best Effort (0)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Multi-Conn:
+        </td>
+        <td colspan="3">
+          AUTO
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Show-Per-Iteration-Charts
+        </td>
+        <td colspan="3">
+          true
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Show-Per-Loop-Totals
+        </td>
+        <td colspan="3">
+          true
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Hunt-Lower-Rates
+        </td>
+        <td colspan="3">
+          false
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Show Events
+        </td>
+        <td colspan="3">
+          true
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Clear Reset Counters
+        </td>
+        <td colspan="3">
+          false
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CSV Reporting Dir
+        </td>
+        <td colspan="3">
+          /home/lanforge/report-data/wifi-cap-csv-data-2022-02-16_23.31
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Build Date
+        </td>
+        <td colspan="3">
+          Thu 13 Jan 2022 01:27:32 PM PST
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Build Version
+        </td>
+        <td colspan="3">
+          5.4.4
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Git Version
+        </td>
+        <td colspan="3">
+          c419229103db6f1917b40d5169b2c9926b273e51
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Ports
+        </td>
+        <td colspan="3">
+          1.1.eth2 1.1.sta01000 1.1.sta01001 1.1.sta01002 1.1.sta01003 
+          1.1.sta01004 1.1.sta01005 1.1.sta01006 1.1.sta01007
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Firmware
+        </td>
+        <td colspan="3">
+          10.4b-ct-9984-xtH-13-b1b524c8e5 0x80000aef, 1.1876.0
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Machines
+        </td>
+        <td colspan="3">
+          ct523c-3011
+        </td>
+      </tr>
+    </table>
+  
+
+<br/>
+<br/><br/><pre>
+
+Requested Parameters:
+Download Rate: Per station:   8000000 (   8 Mbps)  All:     64000000 (  64 Mbps)
+Upload Rate:   Per station:         0 (    0 bps)  All:            0 (    0 bps)
+                                                 Total:      64000000 (  64 Mbps)
+Station count: 8   Connections per station: 1   Payload (PDU) sizes: AUTO (AUTO)
+
+Observed Rate:
+Download Rate:     Cx Min:       7 Mbps  Cx Ave:       7 Mbps  Cx Max:       7 Mbps  All Cx:      63 Mbps
+Upload Rate:       Cx Min:        0 bps  Cx Ave:        0 bps  Cx Max:        0 bps  All Cx:        0 bps
+                                                                                     Total:       63 bps
+Aggregated Rate:   Min:          7 Mbps  Avg:          7 Mbps  Max:          7 Mbps
+
+This graph shows fairness.  On a fair system, each station should get about the same throughput.
+In the download direction, it is mostly the device-under-test that is responsible for this behavior,
+but in the upload direction, LANforge itself would be the source of most fairness issues
+unless the device-under-test takes specific actions to ensure fairness.</pre><br/>
+<small><br/><a href='csv-data/data-Combined_Mbps__60_second_running_average-1.csv'>CSV Data for Combined Mbps, 60 second running average</a><br/></small>
+<img src='chart-5-print.png' alt='Combined Mbps, 60 second running average'><br/>
+<br/><br/><pre>
+
+Requested Parameters:
+Download Rate: Per station:   8000000 (   8 Mbps)  All:     64000000 (  64 Mbps)
+Upload Rate:   Per station:         0 (    0 bps)  All:            0 (    0 bps)
+                                                 Total:      64000000 (  64 Mbps)
+Station count: 8   Connections per station: 1   Payload (PDU) sizes: AUTO (AUTO)
+
+Observed Amount:
+Download Amount:   Cx Min:        119 B  Cx Ave:        119 B  Cx Max:        120 B  All Cx:        959 B
+Upload Amount:     Cx Min:          0 B  Cx Ave:          0 B  Cx Max:          0 B  All Cx:          0 B
+                                                                                     Total:         959 B
+
+This graph shows fairness.  On a fair system, each station should get about the same throughput.
+In the download direction, it is mostly the device-under-test that is responsible for this behavior,
+but in the upload direction, LANforge itself would be the source of most fairness issues
+unless the device-under-test takes specific actions to ensure fairness.</pre><br/>
+<small><br/><a href='csv-data/data-Combined_Received_Megabytes__for_entire_2_m_run-1.csv'>CSV Data for Combined Received Megabytes, for entire 2 m run</a><br/></small>
+<img src='chart-6-print.png' alt='Combined Received Megabytes, for entire 2 m run'><br/>
+<br/><br/><pre>Maximum Stations Connected: 8
+Stations NOT connected at this time: 0
+Maximum Stations with IP Address: 8
+Stations without IP at this time: 0</pre><br/>
+<small><br/><a href='csv-data/data-Station_Maximums-1.csv'>CSV Data for Station Maximums</a><br/></small>
+<img src='chart-7-print.png' alt='Station Maximums'><br/>
+
+<br/><br/>RF stats give an indication of how well how congested is the RF environment.  Channel activity is what the wifi radio reports as the busy-time for the RF environment.  It is expected that this be near 100% when LANforge is running at max speed, but at lower speeds, this should be a lower percentage unless the RF environment is busy with other systems.<br>
+<br/>
+<small><br/><a href='csv-data/data-RF_Stats_for_Stations-1.csv'>CSV Data for RF Stats for Stations</a><br/></small>
+<img src='chart-8-print.png' alt='RF Stats for Stations'><br/>
+
+<br/><br/>Link rate stats give an indication of how well the rate-control is working.  For rate-control, the 'RX' link rate corresponds to what the device-under-test is transmitting.  If all of the stations are on the same radio, then the TX and RX encoding rates should be similar for all stations.  If there is a definite pattern where some stations do not get good RX rate, then probably the device-under-test has rate-control problems.  The TX rate is what LANforge is transmitting at.<br>
+<br/>
+<small><br/><a href='csv-data/data-Link_Rate_for_Stations-1.csv'>CSV Data for Link Rate for Stations</a><br/></small>
+<img src='chart-9-print.png' alt='Link Rate for Stations'><br/>
+<br/><a href='kpi.csv'>Key Performance Indicators CSV</a><br/><br/>
+<br/><br/><pre>Scan Results for SSIDs used in this test.
+
+BSS 14:16:9d:53:58:cc(on sta01000)
+	last seen: 523014.941s [boottime]
+	TSF: 1274788221708 usec (14d, 18:06:28)
+	freq: 5180
+	beacon interval: 100 TUs
+	capability: ESS Privacy SpectrumMgmt ShortSlotTime RadioMeasure (0x1511)
+	signal: -49.00 dBm
+	last seen: 3446 ms ago
+	Information elements from Probe Response frame:
+	SSID: ssid_wpa2_5g
+	Supported rates: 6.0* 9.0 12.0* 18.0 24.0* 36.0 48.0 54.0 
+	DS Parameter set: channel 36
+	Country: US	Environment: bogus
+		Channels [36 - 36] @ 20 dBm
+		Channels [40 - 40] @ 20 dBm
+		Channels [44 - 44] @ 20 dBm
+		Channels [48 - 48] @ 20 dBm
+		Channels [52 - 52] @ 15 dBm
+		Channels [56 - 56] @ 15 dBm
+		Channels [60 - 60] @ 15 dBm
+		Channels [64 - 64] @ 15 dBm
+		Channels [100 - 100] @ 14 dBm
+		Channels [104 - 104] @ 14 dBm
+		Channels [108 - 108] @ 14 dBm
+		Channels [112 - 112] @ 14 dBm
+		Channels [116 - 116] @ 14 dBm
+		Channels [120 - 120] @ 14 dBm
+		Channels [124 - 124] @ 14 dBm
+		Channels [128 - 128] @ 14 dBm
+		Channels [132 - 132] @ 14 dBm
+		Channels [136 - 136] @ 14 dBm
+		Channels [140 - 140] @ 14 dBm
+		Channels [144 - 144] @ 13 dBm
+		Channels [149 - 149] @ 26 dBm
+		Channels [153 - 153] @ 26 dBm
+		Channels [157 - 157] @ 26 dBm
+		Channels [161 - 161] @ 26 dBm
+		Channels [165 - 165] @ 26 dBm
+	Power constraint: 3 dB
+	TPC report: TX power: 20 dBm
+	RSN:	 * Version: 1
+		 * Group cipher: CCMP
+		 * Pairwise ciphers: CCMP
+		 * Authentication suites: PSK
+		 * Capabilities: 4-PTKSA-RC 4-GTKSA-RC (0x0028)
+	BSS Load:
+		 * station count: 0
+		 * channel utilisation: 3/255
+		 * available admission capacity: 23437 [*32us]
+	RM enabled capabilities:
+		Capabilities: 0x73 0xd0 0x00 0x00 0x0c
+			Link Measurement
+			Neighbor Report
+			Beacon Passive Measurement
+			Beacon Active Measurement
+			Beacon Table Measurement
+			LCI Measurement
+			Transmit Stream/Category Measurement
+			Triggered Transmit Stream/Category
+			FTM Range Report
+			Civic Location Measurement
+		Nonoperating Channel Max Measurement Duration: 0
+		Measurement Pilot Capability: 4
+	HT capabilities:
+		Capabilities: 0x86f
+			RX LDPC
+			HT20/HT40
+			SM Power Save disabled
+			RX HT20 SGI
+			RX HT40 SGI
+			No RX STBC
+			Max AMSDU length: 7935 bytes
+			No DSSS/CCK HT40
+		Maximum RX AMPDU length 65535 bytes (exponent: 0x003)
+		Minimum RX AMPDU time spacing: No restriction (0x00)
+		HT TX/RX MCS rate indexes supported: 0-31
+	HT operation:
+		 * primary channel: 36
+		 * secondary channel offset: above
+		 * STA channel width: any
+		 * RIFS: 0
+		 * HT protection: no
+		 * non-GF present: 0
+		 * OBSS non-GF present: 0
+		 * dual beacon: 0
+		 * dual CTS protection: 0
+		 * STBC beacon: 0
+		 * L-SIG TXOP Prot: 0
+		 * PCO active: 0
+		 * PCO phase: 0
+	Extended capabilities:
+		 * Extended Channel Switching
+		 * BSS Transition
+		 * Operating Mode Notification
+		 * Max Number Of MSDUs In A-MSDU is unlimited
+	VHT capabilities:
+		VHT Capabilities (0x338ff876):
+			Max MPDU length: 11454
+			Supported Channel Width: 160 MHz
+			RX LDPC
+			short GI (80 MHz)
+			short GI (160/80+80 MHz)
+			SU Beamformer
+			SU Beamformee
+			MU Beamformer
+			RX antenna pattern consistency
+			TX antenna pattern consistency
+		VHT RX MCS set:
+			1 streams: MCS 0-9
+			2 streams: MCS 0-9
+			3 streams: MCS 0-9
+			4 streams: MCS 0-9
+			5 streams: not supported
+			6 streams: not supported
+			7 streams: not supported
+			8 streams: not supported
+		VHT RX highest supported: 0 Mbps
+		VHT TX MCS set:
+			1 streams: MCS 0-9
+			2 streams: MCS 0-9
+			3 streams: MCS 0-9
+			4 streams: MCS 0-9
+			5 streams: not supported
+			6 streams: not supported
+			7 streams: not supported
+			8 streams: not supported
+		VHT TX highest supported: 0 Mbps
+	VHT operation:
+		 * channel width: 1 (80 MHz)
+		 * center freq segment 1: 42
+		 * center freq segment 2: 50
+		 * VHT basic MCS set: 0xfffc
+	Transmit Power Envelope:
+		 * Local Maximum Transmit Power For 20 MHz: 30 dBm
+		 * Local Maximum Transmit Power For 40 MHz: 30 dBm
+		 * Local Maximum Transmit Power For 80 MHz: 30 dBm
+		 * Local Maximum Transmit Power For 160/80+80 MHz: 30 dBm
+	HE capabilities:
+		HE MAC Capabilities (0x01099a081040):
+			+HTC HE Supported
+			Dynamic BA Fragementation Level: 1
+			Minimum Payload size of 128 bytes: 1
+			BSR
+			OM Control
+			Maximum A-MPDU Length Exponent: 3
+			RX Control Frame to MultiBSS
+			A-MSDU in A-MPDU
+			OM Control UL MU Data Disable RX
+		HE PHY Capabilities: (0x0c6040887f5f811c010800):
+			HE40/HE80/5GHz
+			HE160/5GHz
+			LDPC Coding in Payload
+			HE SU PPDU with 1x HE-LTF and 0.8us GI
+			Full Bandwidth UL MU-MIMO
+			DCM Max Constellation Rx: 1
+			SU Beamformer
+			SU Beamformee
+			MU Beamformer
+			Beamformee STS &#60;= 80Mhz: 7
+			Beamformee STS > 80Mhz: 3
+			Sounding Dimensions &#60;= 80Mhz: 7
+			Sounding Dimensions > 80Mhz: 3
+			Ng = 16 SU Feedback
+			Codebook Size SU Feedback
+			PPE Threshold Present
+			HE SU PPDU & HE PPDU 4x HE-LTF 0.8us GI
+			Max NC: 3
+			HE ER SU PPDU 4x HE-LTF 0.8us GI
+			RX 1024-QAM
+		HE RX MCS and NSS set &#60;= 80 MHz
+			1 streams: MCS 0-11
+			2 streams: MCS 0-11
+			3 streams: MCS 0-11
+			4 streams: MCS 0-11
+			5 streams: MCS 0-11
+			6 streams: MCS 0-11
+			7 streams: MCS 0-11
+			8 streams: MCS 0-11
+		HE TX MCS and NSS set &#60;= 80 MHz
+			1 streams: MCS 0-11
+			2 streams: MCS 0-11
+			3 streams: MCS 0-11
+			4 streams: MCS 0-11
+			5 streams: MCS 0-11
+			6 streams: MCS 0-11
+			7 streams: MCS 0-11
+			8 streams: MCS 0-11
+		HE RX MCS and NSS set 160 MHz
+			1 streams: MCS 0-11
+			2 streams: MCS 0-11
+			3 streams: MCS 0-11
+			4 streams: MCS 0-11
+			5 streams: not supported
+			6 streams: not supported
+			7 streams: not supported
+			8 streams: not supported
+		HE TX MCS and NSS set 160 MHz
+			1 streams: MCS 0-11
+			2 streams: MCS 0-11
+			3 streams: MCS 0-11
+			4 streams: MCS 0-11
+			5 streams: not supported
+			6 streams: not supported
+			7 streams: not supported
+			8 streams: not supported
+		PPE Threshold 0x7f 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 
+	WMM:	 * Parameter version 1
+		 * u-APSD
+		 * BE: CW 15-1023, AIFSN 3
+		 * BK: CW 15-1023, AIFSN 7
+		 * VI: CW 7-15, AIFSN 2, TXOP 3008 usec
+		 * VO: CW 3-7, AIFSN 2, TXOP 1504 usec
+
+
+BSS 68:7d:b4:5f:5c:3c(on sta01000)
+	last seen: 523014.867s [boottime]
+	TSF: 577233049462 usec (6d, 16:20:33)
+	freq: 5200
+	beacon interval: 100 TUs
+	capability: ESS Privacy SpectrumMgmt ShortSlotTime RadioMeasure (0x1511)
+	signal: -59.00 dBm
+	last seen: 3519 ms ago
+	Information elements from Probe Response frame:
+	SSID: ssid_wpa2_5g
+	Supported rates: 6.0* 9.0 12.0* 18.0 24.0* 36.0 48.0 54.0 
+	DS Parameter set: channel 40
+	Country: US	Environment: bogus
+		Channels [36 - 36] @ 21 dBm
+		Channels [40 - 40] @ 24 dBm
+		Channels [44 - 44] @ 24 dBm
+		Channels [48 - 48] @ 24 dBm
+		Channels [52 - 52] @ 18 dBm
+		Channels [56 - 56] @ 18 dBm
+		Channels [60 - 60] @ 18 dBm
+		Channels [64 - 64] @ 18 dBm
+		Channels [100 - 100] @ 18 dBm
+		Channels [104 - 104] @ 19 dBm
+		Channels [108 - 108] @ 19 dBm
+		Channels [112 - 112] @ 19 dBm
+		Channels [116 - 116] @ 19 dBm
+		Channels [120 - 120] @ 19 dBm
+		Channels [124 - 124] @ 19 dBm
+		Channels [128 - 128] @ 19 dBm
+		Channels [132 - 132] @ 19 dBm
+		Channels [136 - 136] @ 19 dBm
+		Channels [140 - 140] @ 18 dBm
+		Channels [144 - 144] @ 18 dBm
+		Channels [149 - 149] @ 26 dBm
+		Channels [153 - 153] @ 26 dBm
+		Channels [157 - 157] @ 26 dBm
+		Channels [161 - 161] @ 26 dBm
+		Channels [165 - 165] @ 26 dBm
+	Power constraint: 3 dB
+	TPC report: TX power: 24 dBm
+	RSN:	 * Version: 1
+		 * Group cipher: CCMP
+		 * Pairwise ciphers: CCMP
+		 * Authentication suites: PSK
+		 * Capabilities: 4-PTKSA-RC 4-GTKSA-RC (0x0028)
+	BSS Load:
+		 * station count: 0
+		 * channel utilisation: 3/255
+		 * available admission capacity: 23437 [*32us]
+	RM enabled capabilities:
+		Capabilities: 0x73 0xd0 0x00 0x00 0x0c
+			Link Measurement
+			Neighbor Report
+			Beacon Passive Measurement
+			Beacon Active Measurement
+			Beacon Table Measurement
+			LCI Measurement
+			Transmit Stream/Category Measurement
+			Triggered Transmit Stream/Category
+			FTM Range Report
+			Civic Location Measurement
+		Nonoperating Channel Max Measurement Duration: 0
+		Measurement Pilot Capability: 4
+	HT capabilities:
+		Capabilities: 0x82d
+			RX LDPC
+			HT20
+			SM Power Save disabled
+			RX HT20 SGI
+			No RX STBC
+			Max AMSDU length: 7935 bytes
+			No DSSS/CCK HT40
+		Maximum RX AMPDU length 65535 bytes (exponent: 0x003)
+		Minimum RX AMPDU time spacing: No restriction (0x00)
+		HT TX/RX MCS rate indexes supported: 0-31
+	HT operation:
+		 * primary channel: 40
+		 * secondary channel offset: no secondary
+		 * STA channel width: 20 MHz
+		 * RIFS: 0
+		 * HT protection: no
+		 * non-GF present: 0
+		 * OBSS non-GF present: 0
+		 * dual beacon: 0
+		 * dual CTS protection: 0
+		 * STBC beacon: 0
+		 * L-SIG TXOP Prot: 0
+		 * PCO active: 0
+		 * PCO phase: 0
+	Extended capabilities:
+		 * Extended Channel Switching
+		 * BSS Transition
+		 * Operating Mode Notification
+		 * Max Number Of MSDUs In A-MSDU is unlimited
+	VHT capabilities:
+		VHT Capabilities (0x338ff832):
+			Max MPDU length: 11454
+			Supported Channel Width: neither 160 nor 80+80
+			RX LDPC
+			short GI (80 MHz)
+			SU Beamformer
+			SU Beamformee
+			MU Beamformer
+			RX antenna pattern consistency
+			TX antenna pattern consistency
+		VHT RX MCS set:
+			1 streams: MCS 0-9
+			2 streams: MCS 0-9
+			3 streams: MCS 0-9
+			4 streams: MCS 0-9
+			5 streams: not supported
+			6 streams: not supported
+			7 streams: not supported
+			8 streams: not supported
+		VHT RX highest supported: 0 Mbps
+		VHT TX MCS set:
+			1 streams: MCS 0-9
+			2 streams: MCS 0-9
+			3 streams: MCS 0-9
+			4 streams: MCS 0-9
+			5 streams: not supported
+			6 streams: not supported
+			7 streams: not supported
+			8 streams: not supported
+		VHT TX highest supported: 0 Mbps
+	VHT operation:
+		 * channel width: 0 (20 or 40 MHz)
+		 * center freq segment 1: 0
+		 * center freq segment 2: 0
+		 * VHT basic MCS set: 0xfffc
+	Transmit Power Envelope:
+		 * Local Maximum Transmit Power For 20 MHz: 30 dBm
+		 * Local Maximum Transmit Power For 40 MHz: 30 dBm
+		 * Local Maximum Transmit Power For 80 MHz: 30 dBm
+		 * Local Maximum Transmit Power For 160/80+80 MHz: 30 dBm
+	HE capabilities:
+		HE MAC Capabilities (0x01099a081040):
+			+HTC HE Supported
+			Dynamic BA Fragementation Level: 1
+			Minimum Payload size of 128 bytes: 1
+			BSR
+			OM Control
+			Maximum A-MPDU Length Exponent: 3
+			RX Control Frame to MultiBSS
+			A-MSDU in A-MPDU
+			OM Control UL MU Data Disable RX
+		HE PHY Capabilities: (0x006040881f47811c010800):
+			LDPC Coding in Payload
+			HE SU PPDU with 1x HE-LTF and 0.8us GI
+			Full Bandwidth UL MU-MIMO
+			DCM Max Constellation Rx: 1
+			SU Beamformer
+			SU Beamformee
+			MU Beamformer
+			Beamformee STS &#60;= 80Mhz: 7
+			Sounding Dimensions &#60;= 80Mhz: 7
+			Ng = 16 SU Feedback
+			Codebook Size SU Feedback
+			PPE Threshold Present
+			HE SU PPDU & HE PPDU 4x HE-LTF 0.8us GI
+			Max NC: 3
+			HE ER SU PPDU 4x HE-LTF 0.8us GI
+			RX 1024-QAM
+		PPE Threshold 0xaa 0xaa 0xaa 0xaa 0x7f 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 
+	WMM:	 * Parameter version 1
+		 * u-APSD
+		 * BE: CW 15-1023, AIFSN 3
+		 * BK: CW 15-1023, AIFSN 7
+		 * VI: CW 7-15, AIFSN 2, TXOP 3008 usec
+		 * VO: CW 3-7, AIFSN 2, TXOP 1504 usec
+
+
+BSS 68:7d:b4:5f:5c:3e(on sta01000) -- associated
+	last seen: 588147.392s [boottime]
+	TSF: 642359424409 usec (7d, 10:25:59)
+	freq: 5180
+	beacon interval: 100 TUs
+	capability: ESS Privacy SpectrumMgmt ShortSlotTime RadioMeasure (0x1511)
+	signal: -62.00 dBm
+	last seen: 969 ms ago
+	Information elements from Probe Response frame:
+	SSID: ssid_wpa2_5g
+	Supported rates: 6.0* 9.0 12.0* 18.0 24.0* 36.0 48.0 54.0 
+	DS Parameter set: channel 36
+	Country: US	Environment: bogus
+		Channels [36 - 36] @ 21 dBm
+		Channels [40 - 40] @ 24 dBm
+		Channels [44 - 44] @ 24 dBm
+		Channels [48 - 48] @ 24 dBm
+		Channels [52 - 52] @ 18 dBm
+		Channels [56 - 56] @ 18 dBm
+		Channels [60 - 60] @ 18 dBm
+		Channels [64 - 64] @ 18 dBm
+		Channels [100 - 100] @ 18 dBm
+		Channels [104 - 104] @ 19 dBm
+		Channels [108 - 108] @ 19 dBm
+		Channels [112 - 112] @ 19 dBm
+		Channels [116 - 116] @ 19 dBm
+		Channels [120 - 120] @ 19 dBm
+		Channels [124 - 124] @ 19 dBm
+		Channels [128 - 128] @ 19 dBm
+		Channels [132 - 132] @ 19 dBm
+		Channels [136 - 136] @ 19 dBm
+		Channels [140 - 140] @ 18 dBm
+		Channels [144 - 144] @ 18 dBm
+		Channels [149 - 149] @ 26 dBm
+		Channels [153 - 153] @ 26 dBm
+		Channels [157 - 157] @ 26 dBm
+		Channels [161 - 161] @ 26 dBm
+		Channels [165 - 165] @ 26 dBm
+	Power constraint: 3 dB
+	TPC report: TX power: 21 dBm
+	RSN:	 * Version: 1
+		 * Group cipher: CCMP
+		 * Pairwise ciphers: CCMP
+		 * Authentication suites: PSK
+		 * Capabilities: 4-PTKSA-RC 4-GTKSA-RC (0x0028)
+	BSS Load:
+		 * station count: 32
+		 * channel utilisation: 131/255
+		 * available admission capacity: 23437 [*32us]
+	RM enabled capabilities:
+		Capabilities: 0x73 0xd0 0x00 0x00 0x0c
+			Link Measurement
+			Neighbor Report
+			Beacon Passive Measurement
+			Beacon Active Measurement
+			Beacon Table Measurement
+			LCI Measurement
+			Transmit Stream/Category Measurement
+			Triggered Transmit Stream/Category
+			FTM Range Report
+			Civic Location Measurement
+		Nonoperating Channel Max Measurement Duration: 0
+		Measurement Pilot Capability: 4
+	HT capabilities:
+		Capabilities: 0x82d
+			RX LDPC
+			HT20
+			SM Power Save disabled
+			RX HT20 SGI
+			No RX STBC
+			Max AMSDU length: 7935 bytes
+			No DSSS/CCK HT40
+		Maximum RX AMPDU length 65535 bytes (exponent: 0x003)
+		Minimum RX AMPDU time spacing: No restriction (0x00)
+		HT TX/RX MCS rate indexes supported: 0-31
+	HT operation:
+		 * primary channel: 36
+		 * secondary channel offset: no secondary
+		 * STA channel width: 20 MHz
+		 * RIFS: 0
+		 * HT protection: no
+		 * non-GF present: 1
+		 * OBSS non-GF present: 0
+		 * dual beacon: 0
+		 * dual CTS protection: 0
+		 * STBC beacon: 0
+		 * L-SIG TXOP Prot: 0
+		 * PCO active: 0
+		 * PCO phase: 0
+	Extended capabilities:
+		 * Extended Channel Switching
+		 * BSS Transition
+		 * Operating Mode Notification
+		 * Max Number Of MSDUs In A-MSDU is unlimited
+	VHT capabilities:
+		VHT Capabilities (0x338ff832):
+			Max MPDU length: 11454
+			Supported Channel Width: neither 160 nor 80+80
+			RX LDPC
+			short GI (80 MHz)
+			SU Beamformer
+			SU Beamformee
+			MU Beamformer
+			RX antenna pattern consistency
+			TX antenna pattern consistency
+		VHT RX MCS set:
+			1 streams: MCS 0-9
+			2 streams: MCS 0-9
+			3 streams: MCS 0-9
+			4 streams: MCS 0-9
+			5 streams: not supported
+			6 streams: not supported
+			7 streams: not supported
+			8 streams: not supported
+		VHT RX highest supported: 0 Mbps
+		VHT TX MCS set:
+			1 streams: MCS 0-9
+			2 streams: MCS 0-9
+			3 streams: MCS 0-9
+			4 streams: MCS 0-9
+			5 streams: not supported
+			6 streams: not supported
+			7 streams: not supported
+			8 streams: not supported
+		VHT TX highest supported: 0 Mbps
+	VHT operation:
+		 * channel width: 0 (20 or 40 MHz)
+		 * center freq segment 1: 0
+		 * center freq segment 2: 0
+		 * VHT basic MCS set: 0xfffc
+	Transmit Power Envelope:
+		 * Local Maximum Transmit Power For 20 MHz: 30 dBm
+		 * Local Maximum Transmit Power For 40 MHz: 30 dBm
+		 * Local Maximum Transmit Power For 80 MHz: 30 dBm
+		 * Local Maximum Transmit Power For 160/80+80 MHz: 30 dBm
+	HE capabilities:
+		HE MAC Capabilities (0x01099a081040):
+			+HTC HE Supported
+			Dynamic BA Fragementation Level: 1
+			Minimum Payload size of 128 bytes: 1
+			BSR
+			OM Control
+			Maximum A-MPDU Length Exponent: 3
+			RX Control Frame to MultiBSS
+			A-MSDU in A-MPDU
+			OM Control UL MU Data Disable RX
+		HE PHY Capabilities: (0x006040881f47811c010800):
+			LDPC Coding in Payload
+			HE SU PPDU with 1x HE-LTF and 0.8us GI
+			Full Bandwidth UL MU-MIMO
+			DCM Max Constellation Rx: 1
+			SU Beamformer
+			SU Beamformee
+			MU Beamformer
+			Beamformee STS &#60;= 80Mhz: 7
+			Sounding Dimensions &#60;= 80Mhz: 7
+			Ng = 16 SU Feedback
+			Codebook Size SU Feedback
+			PPE Threshold Present
+			HE SU PPDU & HE PPDU 4x HE-LTF 0.8us GI
+			Max NC: 3
+			HE ER SU PPDU 4x HE-LTF 0.8us GI
+			RX 1024-QAM
+		PPE Threshold 0xaa 0xaa 0xaa 0xaa 0x7f 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 
+	WMM:	 * Parameter version 1
+		 * u-APSD
+		 * BE: CW 15-1023, AIFSN 3
+		 * BK: CW 15-1023, AIFSN 7
+		 * VI: CW 7-15, AIFSN 2, TXOP 3008 usec
+		 * VO: CW 3-7, AIFSN 2, TXOP 1504 usec
+
+
+BSS 14:16:9d:53:58:cd(on sta0000)
+	last seen: 539564.032s [boottime]
+	TSF: 1291337416504 usec (14d, 22:42:17)
+	freq: 5180
+	beacon interval: 100 TUs
+	capability: ESS Privacy SpectrumMgmt ShortSlotTime RadioMeasure (0x1511)
+	signal: -49.00 dBm
+	last seen: 3861 ms ago
+	Information elements from Probe Response frame:
+	SSID: ssid_wpa2_5g
+	Supported rates: 6.0* 9.0 12.0* 18.0 24.0* 36.0 48.0 54.0 
+	DS Parameter set: channel 36
+	Country: US	Environment: bogus
+		Channels [36 - 36] @ 20 dBm
+		Channels [40 - 40] @ 20 dBm
+		Channels [44 - 44] @ 20 dBm
+		Channels [48 - 48] @ 20 dBm
+		Channels [52 - 52] @ 15 dBm
+		Channels [56 - 56] @ 15 dBm
+		Channels [60 - 60] @ 15 dBm
+		Channels [64 - 64] @ 15 dBm
+		Channels [100 - 100] @ 14 dBm
+		Channels [104 - 104] @ 14 dBm
+		Channels [108 - 108] @ 14 dBm
+		Channels [112 - 112] @ 14 dBm
+		Channels [116 - 116] @ 14 dBm
+		Channels [120 - 120] @ 14 dBm
+		Channels [124 - 124] @ 14 dBm
+		Channels [128 - 128] @ 14 dBm
+		Channels [132 - 132] @ 14 dBm
+		Channels [136 - 136] @ 14 dBm
+		Channels [140 - 140] @ 14 dBm
+		Channels [144 - 144] @ 13 dBm
+		Channels [149 - 149] @ 26 dBm
+		Channels [153 - 153] @ 26 dBm
+		Channels [157 - 157] @ 26 dBm
+		Channels [161 - 161] @ 26 dBm
+		Channels [165 - 165] @ 26 dBm
+	Power constraint: 3 dB
+	TPC report: TX power: 20 dBm
+	RSN:	 * Version: 1
+		 * Group cipher: CCMP
+		 * Pairwise ciphers: CCMP
+		 * Authentication suites: PSK
+		 * Capabilities: 4-PTKSA-RC 4-GTKSA-RC (0x0028)
+	BSS Load:
+		 * station count: 0
+		 * channel utilisation: 3/255
+		 * available admission capacity: 23437 [*32us]
+	RM enabled capabilities:
+		Capabilities: 0x73 0xd0 0x00 0x00 0x0c
+			Link Measurement
+			Neighbor Report
+			Beacon Passive Measurement
+			Beacon Active Measurement
+			Beacon Table Measurement
+			LCI Measurement
+			Transmit Stream/Category Measurement
+			Triggered Transmit Stream/Category
+			FTM Range Report
+			Civic Location Measurement
+		Nonoperating Channel Max Measurement Duration: 0
+		Measurement Pilot Capability: 4
+	HT capabilities:
+		Capabilities: 0x86f
+			RX LDPC
+			HT20/HT40
+			SM Power Save disabled
+			RX HT20 SGI
+			RX HT40 SGI
+			No RX STBC
+			Max AMSDU length: 7935 bytes
+			No DSSS/CCK HT40
+		Maximum RX AMPDU length 65535 bytes (exponent: 0x003)
+		Minimum RX AMPDU time spacing: No restriction (0x00)
+		HT TX/RX MCS rate indexes supported: 0-31
+	HT operation:
+		 * primary channel: 36
+		 * secondary channel offset: above
+		 * STA channel width: any
+		 * RIFS: 0
+		 * HT protection: no
+		 * non-GF present: 0
+		 * OBSS non-GF present: 0
+		 * dual beacon: 0
+		 * dual CTS protection: 0
+		 * STBC beacon: 0
+		 * L-SIG TXOP Prot: 0
+		 * PCO active: 0
+		 * PCO phase: 0
+	Extended capabilities:
+		 * Extended Channel Switching
+		 * BSS Transition
+		 * Operating Mode Notification
+		 * Max Number Of MSDUs In A-MSDU is unlimited
+	VHT capabilities:
+		VHT Capabilities (0x338ff876):
+			Max MPDU length: 11454
+			Supported Channel Width: 160 MHz
+			RX LDPC
+			short GI (80 MHz)
+			short GI (160/80+80 MHz)
+			SU Beamformer
+			SU Beamformee
+			MU Beamformer
+			RX antenna pattern consistency
+			TX antenna pattern consistency
+		VHT RX MCS set:
+			1 streams: MCS 0-9
+			2 streams: MCS 0-9
+			3 streams: MCS 0-9
+			4 streams: MCS 0-9
+			5 streams: not supported
+			6 streams: not supported
+			7 streams: not supported
+			8 streams: not supported
+		VHT RX highest supported: 0 Mbps
+		VHT TX MCS set:
+			1 streams: MCS 0-9
+			2 streams: MCS 0-9
+			3 streams: MCS 0-9
+			4 streams: MCS 0-9
+			5 streams: not supported
+			6 streams: not supported
+			7 streams: not supported
+			8 streams: not supported
+		VHT TX highest supported: 0 Mbps
+	VHT operation:
+		 * channel width: 1 (80 MHz)
+		 * center freq segment 1: 42
+		 * center freq segment 2: 50
+		 * VHT basic MCS set: 0xfffc
+	Transmit Power Envelope:
+		 * Local Maximum Transmit Power For 20 MHz: 30 dBm
+		 * Local Maximum Transmit Power For 40 MHz: 30 dBm
+		 * Local Maximum Transmit Power For 80 MHz: 30 dBm
+		 * Local Maximum Transmit Power For 160/80+80 MHz: 30 dBm
+	HE capabilities:
+		HE MAC Capabilities (0x01099a081040):
+			+HTC HE Supported
+			Dynamic BA Fragementation Level: 1
+			Minimum Payload size of 128 bytes: 1
+			BSR
+			OM Control
+			Maximum A-MPDU Length Exponent: 3
+			RX Control Frame to MultiBSS
+			A-MSDU in A-MPDU
+			OM Control UL MU Data Disable RX
+		HE PHY Capabilities: (0x0c6040887f5f811c010800):
+			HE40/HE80/5GHz
+			HE160/5GHz
+			LDPC Coding in Payload
+			HE SU PPDU with 1x HE-LTF and 0.8us GI
+			Full Bandwidth UL MU-MIMO
+			DCM Max Constellation Rx: 1
+			SU Beamformer
+			SU Beamformee
+			MU Beamformer
+			Beamformee STS &#60;= 80Mhz: 7
+			Beamformee STS > 80Mhz: 3
+			Sounding Dimensions &#60;= 80Mhz: 7
+			Sounding Dimensions > 80Mhz: 3
+			Ng = 16 SU Feedback
+			Codebook Size SU Feedback
+			PPE Threshold Present
+			HE SU PPDU & HE PPDU 4x HE-LTF 0.8us GI
+			Max NC: 3
+			HE ER SU PPDU 4x HE-LTF 0.8us GI
+			RX 1024-QAM
+		HE RX MCS and NSS set &#60;= 80 MHz
+			1 streams: MCS 0-11
+			2 streams: MCS 0-11
+			3 streams: MCS 0-11
+			4 streams: MCS 0-11
+			5 streams: MCS 0-11
+			6 streams: MCS 0-11
+			7 streams: MCS 0-11
+			8 streams: MCS 0-11
+		HE TX MCS and NSS set &#60;= 80 MHz
+			1 streams: MCS 0-11
+			2 streams: MCS 0-11
+			3 streams: MCS 0-11
+			4 streams: MCS 0-11
+			5 streams: MCS 0-11
+			6 streams: MCS 0-11
+			7 streams: MCS 0-11
+			8 streams: MCS 0-11
+		HE RX MCS and NSS set 160 MHz
+			1 streams: MCS 0-11
+			2 streams: MCS 0-11
+			3 streams: MCS 0-11
+			4 streams: MCS 0-11
+			5 streams: not supported
+			6 streams: not supported
+			7 streams: not supported
+			8 streams: not supported
+		HE TX MCS and NSS set 160 MHz
+			1 streams: MCS 0-11
+			2 streams: MCS 0-11
+			3 streams: MCS 0-11
+			4 streams: MCS 0-11
+			5 streams: not supported
+			6 streams: not supported
+			7 streams: not supported
+			8 streams: not supported
+		PPE Threshold 0x7f 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 0x1c 0xc7 0x71 
+	WMM:	 * Parameter version 1
+		 * u-APSD
+		 * BE: CW 15-1023, AIFSN 3
+		 * BK: CW 15-1023, AIFSN 7
+		 * VI: CW 7-15, AIFSN 2, TXOP 3008 usec
+		 * VO: CW 3-7, AIFSN 2, TXOP 1504 usec
+
+
+</pre><br/>
+<br/><a href='wifi-cap-csv-data'>Auxiliary files: wifi-cap-csv-data</a><br/><br/>
+<small><br/><a href='csv-data/meta-info.txt'>META Information for Report for:  Wifi Capacity Test</a><br/></small>
+</div><!-- end content-div -->
+<div class='FooterStyle'><span class='Gradient'>Generated by Candela Technologies LANforge network testing tool.<br/>
+  <a href='https://www.candelatech.com/' target='_blank'>www.candelatech.com</a>
+</span>
+<a align='right' class='LogoImgLink' href='https://www.candelatech.com/' target='_blank'><img align='right' src='logo.png'></a>
+</div><br/>
+  </body>
+</html>

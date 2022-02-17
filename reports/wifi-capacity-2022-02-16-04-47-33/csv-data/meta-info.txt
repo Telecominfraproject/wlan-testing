@@ -1,0 +1,16 @@
+chart-0-title-0 Realtime Mbps
+chart-0-prio-0 4
+chart-1-title-0 Total Mbps Received vs Number of Stations Active
+chart-1-prio-0 0
+chart-2-title-0 Total PDU/s Received vs Number of Stations Active
+chart-2-prio-0 5
+chart-3-title-0 Port Reset Totals
+chart-3-prio-0 4
+chart-4-title-0 Station Connect Times
+chart-4-prio-0 4
+chart-5-title-0 Station Maximums
+chart-5-prio-0 1
+chart-6-title-0 RF Stats for Stations
+chart-6-prio-0 2
+chart-7-title-0 Link Rate for Stations
+chart-7-prio-0 2

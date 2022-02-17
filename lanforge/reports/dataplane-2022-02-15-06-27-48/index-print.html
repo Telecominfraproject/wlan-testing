@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <title>Dataplane Test</title>    <link rel='shortcut icon' href='canvil.ico' type='image/x-icon' />
+    <link rel='stylesheet' href='report.css' />
+    <link rel='stylesheet' href='custom.css' />
+    <style>
+     pre {
+        overflow: auto;
+     }
+     img {
+        width: 100%;
+        max-width: 8in;
+     }
+    </style>
+  </head>
+  <body>
+<div class='Section report_banner-1000x205' style='background-image:url("report_banner-1000x205.jpg");background-repeat:no-repeat;padding:0;margin:0;min-width:1000px; min-height:205px;width:1000px; height:205px;max-width:1000px; max-height:205px;'>
+<img align='right' style='padding:0;margin:5;width:200px;' src='CandelaLogo2-90dpi-200x90-trans.png' border='0' />
+<div class='HeaderStyle'>
+<h1 class='TitleFontPrint'>Dataplane Test</h1><br/><h4 class='TitleFontPrintSub'><br><br><br><br><br>Tue Feb 15 06:27:48 PST 2022</h4></div>
+
+</div><!-- end section -->
+<div class='contentDiv'>
+
+  
+    
+  
+  
+    <br>
+    
+
+    <table width="700px" border="1" cellpadding="2" cellspacing="0" style="border-top-color: gray; border-top-style: solid; border-top-width: 1px; border-right-color: gray; border-right-style: solid; border-right-width: 1px; border-bottom-color: gray; border-bottom-style: solid; border-bottom-width: 1px; border-left-color: gray; border-left-style: solid; border-left-width: 1px">
+      <tr>
+        <th colspan="2">
+          Test Setup Information
+        </th>
+      </tr>
+      <tr>
+        <td>
+          Device Under Test
+        </td>
+        <td>
+          <table width="100%" border="0" cellpadding="2" cellspacing="0" style="border-top-color: gray; border-top-style: solid; border-top-width: 1px; border-right-color: gray; border-right-style: solid; border-right-width: 1px; border-bottom-color: gray; border-bottom-style: solid; border-bottom-width: 1px; border-left-color: gray; border-left-style: solid; border-left-width: 1px">
+            <tr>
+              <td>
+                Name
+              </td>
+              <td colspan="3">
+                cisco9130axe
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Software Version
+              </td>
+              <td>
+                17.7.1.11
+              </td>
+              <td>
+                Hardware Version
+              </td>
+              <td>
+                cisco9130axe
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Model Number
+              </td>
+              <td>
+                cisco9130axe
+              </td>
+              <td>
+                Serial Number
+              </td>
+              <td>
+                FJC2428146G
+              </td>
+            </tr>
+            <tr>
+              <td>
+                SSIDs
+              </td>
+              <td colspan="3">
+                <pre></pre>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Passwords
+              </td>
+              <td colspan="3">
+                <pre></pre>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                BSSIDs
+              </td>
+              <td colspan="3">
+                <pre></pre>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Notes
+              </td>
+              <td colspan="3">
+                [BLANK]
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  
+
+<br/>
+
+  
+    
+  
+  
+    <h2 align="left">
+      Objective
+    </h2>
+    <p align="left" width="900">
+      The Candela WiFi data plane test is designed to conduct an automatic 
+      testing of all combinations of station types, MIMO types, Channel 
+      Bandwidths, Traffic types, Traffic direction, Frame sizes etc&#8230; It will 
+      run a quick throughput test at every combination of these test variables 
+      and plot all the results in a set of charts to compare performance. The 
+      user is allowed to define an intended load as a percentage of the max 
+      theoretical PHY rate for every test combination. The expected behavior 
+      is that for every test combination the achieved throughput should be at 
+      least 70% of the theoretical max PHY rate under ideal test conditions. 
+      This test provides a way to go through hundreds of combinations in a 
+      fully automated fashion and very easily find patterns and problem areas 
+      which can be further debugged using more specific testing.
+    </p>
+  
+
+<br/>
+
+<br/><br/>Throughput for each different traffic type.  Datasets with names ending in '-LL' will include the IP, TCP, UDP and Ethernet header bytes in their calculation.  For Armageddon traffic only, low-level throughput includes the Ethernet FCS and preamble.  Other datasets report 'goodput' for the protocol.
+<br/>
+<small><br/><a href='csv-data/data-Throughput_vs_Packet_Size-1.csv'>CSV Data for Throughput vs Packet Size</a><br/></small>
+<img src='kpi-chart-0-print.png' alt='Throughput vs Packet Size'><br/>
+
+<br/><br/>Pps throughput for each different traffic type.  The values are estimated packets-per-second over the DUT, but some protocols such as TCP make this difficult to know for certain, so the value is extrapolated.
+<br/>
+<small><br/><a href='csv-data/data-RX_Pps_vs_Packet_Size-1.csv'>CSV Data for RX Pps vs Packet Size</a><br/></small>
+<img src='chart-1-print.png' alt='RX Pps vs Packet Size'><br/>
+
+<br/><br/>Latency for each different traffic type.  If opposite-direction traffic is non-zero, then round-trip time will be reported.  Otherwise, one-way latency will be reported.
+<br/>
+<small><br/><a href='csv-data/data-Latency_vs_Packet_Size-1.csv'>CSV Data for Latency vs Packet Size</a><br/></small>
+<img src='chart-2-print.png' alt='Latency vs Packet Size'><br/>
+
+<br/><br/>Realtime Graph shows summary download and upload RX Goodput rate of connections created by this test.  Goodput does not include Ethernet, IP, UDP/TCP header overhead.
+<br/>
+<small><br/><a href='csv-data/data-Realtime_Throughput-1.csv'>CSV Data for Realtime Throughput</a><br/></small>
+<img src='chart-3-print.png' alt='Realtime Throughput'><br/>
+
+  
+    
+  
+  
+    <h3>
+      Test Information
+    </h3>
+    <table>
+      <tr>
+        <th>
+          Message
+        </th>
+      </tr>
+      <tr>
+        <td>
+          Starting dataplane test with: 28 iterations.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span style="background-color: #f8f6ad; background-image: null; background-repeat: repeat; background-attachment: scroll; background-position: null"><font color="black">Skipping 
+          packet size not supported by TCP: 60</font></span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span style="background-color: #f8f6ad; background-image: null; background-repeat: repeat; background-attachment: scroll; background-position: null"><font color="black">Skipping 
+          packet size not supported by TCP: 60</font></span>
+        </td>
+      </tr>
+    </table>
+  
+
+<br/>
+
+<br/><br/>Constant values related to the table below.<br><table><tr><td>Iteration-Duration</td><td>15s</td></tr></table><br>CSV data focussed on throughput.  The values reported are gathered at the end of the test iteration before traffic is stopped. The test iterations consider 'Received' traffic to be received in the dominant direction. So, if the iteration is DUT-TX, then Received traffic is traffic received on the Station from the AP.  If the iteration is DUT-RX, then Received traffic is received on Ethernet port from DUT and sent by the station. Columns starting with RSSI are from the perspective of the Station, so Tx-Rate is the Station transmit Phy Rate, and Rx-Rate is the Phy Rate received by the station.  Rpt-Mode is negotiated mode, not necessarily Phy Rate mode.
+<br/>
+<br/><br/><table border='1' style='font-size:8px'>
+<tr><th>Channel</th><th>Frequency</th><th>Security</th><th>NSS</th><th>Cfg-Mode</th><th>Bandwidth</th><th>Pkt</th><th>Traffic-Type</th><th>Direction</th><th>Atten</th><th>Rotation</th><th>Offered-1m</th><th>Rx-Bps</th><th>Rx-Bps-1m</th><th>Rx-Bps-LL</th><th>Rx-Bps-3s</th><th>RSSI</th><th>Tx-Failed</th><th>Tx-Failed%</th><th>Tx-Rate</th><th>Rx-Rate</th><th>Rpt-Mode</th><th>Rpt-Mode-Brief</th></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>60</td><td>UDP</td><td>DUT-TX</td><td>NA</td><td>NA</td><td>75.959 Mbps</td><td>40.238 Mbps</td><td>40.351 Mbps</td><td>134.502 Mbps</td><td>40.969 Mbps</td><td>-65</td><td>0 / 8104168</td><td>0</td><td>57.8 Mbps</td><td>346.7 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>60</td><td>UDP</td><td>DUT-RX</td><td>NA</td><td>NA</td><td>18.92 Mbps</td><td>18.787 Mbps</td><td>18.859 Mbps</td><td>62.864 Mbps</td><td>18.645 Mbps</td><td>-60</td><td>381 / 1966637</td><td>0.019</td><td>346.7 Mbps</td><td>289 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>142</td><td>UDP</td><td>DUT-TX</td><td>NA</td><td>NA</td><td>329.57 Mbps</td><td>170.624 Mbps</td><td>171.757 Mbps</td><td>243.895 Mbps</td><td>194.682 Mbps</td><td>-65</td><td>0 / 6522234</td><td>0</td><td>346.7 Mbps</td><td>385.3 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>142</td><td>UDP</td><td>DUT-RX</td><td>NA</td><td>NA</td><td>111.091 Mbps</td><td>110.308 Mbps</td><td>111.108 Mbps</td><td>157.773 Mbps</td><td>103.474 Mbps</td><td>-60</td><td>573 / 2205068</td><td>0.026</td><td>260 Mbps</td><td>385.3 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>142</td><td>TCP</td><td>DUT-TX</td><td>NA</td><td>NA</td><td>54.926 Mbps</td><td>53.725 Mbps</td><td>54.134 Mbps</td><td>89.913 Mbps</td><td>54.824 Mbps</td><td>-68</td><td>0 / 1337633</td><td>0</td><td>346.7 Mbps</td><td>346.7 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>142</td><td>TCP</td><td>DUT-RX</td><td>NA</td><td>NA</td><td>85.906 Mbps</td><td>79.116 Mbps</td><td>79.137 Mbps</td><td>132.023 Mbps</td><td>79.973 Mbps</td><td>-66</td><td>955 / 1963551</td><td>0.049</td><td>231.1 Mbps</td><td>346.7 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>256</td><td>UDP</td><td>DUT-TX</td><td>NA</td><td>NA</td><td>327.681 Mbps</td><td>202.964 Mbps</td><td>203.154 Mbps</td><td>243.025 Mbps</td><td>223.811 Mbps</td><td>-68</td><td>0 / 2912444</td><td>0</td><td>234 Mbps</td><td>346.7 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>256</td><td>UDP</td><td>DUT-RX</td><td>NA</td><td>NA</td><td>181.255 Mbps</td><td>180.985 Mbps</td><td>181.269 Mbps</td><td>216.846 Mbps</td><td>194.958 Mbps</td><td>-60</td><td>384 / 1595483</td><td>0.024</td><td>288.9 Mbps</td><td>346.7 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>256</td><td>TCP</td><td>DUT-TX</td><td>NA</td><td>NA</td><td>102.395 Mbps</td><td>100.826 Mbps</td><td>101.089 Mbps</td><td>129.935 Mbps</td><td>98.383 Mbps</td><td>-65</td><td>0 / 985986</td><td>0</td><td>346.7 Mbps</td><td>288.9 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>256</td><td>TCP</td><td>DUT-RX</td><td>NA</td><td>NA</td><td>154.086 Mbps</td><td>153.053 Mbps</td><td>153.55 Mbps</td><td>197.213 Mbps</td><td>155.383 Mbps</td><td>-65</td><td>384 / 1520658</td><td>0.025</td><td>346.7 Mbps</td><td>346.7 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>512</td><td>UDP</td><td>DUT-TX</td><td>NA</td><td>NA</td><td>328.205 Mbps</td><td>225.916 Mbps</td><td>226.464 Mbps</td><td>246.701 Mbps</td><td>227.588 Mbps</td><td>-65</td><td>0 / 1352182</td><td>0</td><td>346.7 Mbps</td><td>288.9 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>512</td><td>UDP</td><td>DUT-RX</td><td>NA</td><td>NA</td><td>233.076 Mbps</td><td>230.594 Mbps</td><td>231.465 Mbps</td><td>252.15 Mbps</td><td>220.205 Mbps</td><td>-61</td><td>384 / 925184</td><td>0.042</td><td>260 Mbps</td><td>288.9 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>512</td><td>TCP</td><td>DUT-TX</td><td>NA</td><td>NA</td><td>161.841 Mbps</td><td>161.263 Mbps</td><td>161.586 Mbps</td><td>181.345 Mbps</td><td>174.886 Mbps</td><td>-65</td><td>0 / 687831</td><td>0</td><td>346.7 Mbps</td><td>346.7 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>512</td><td>TCP</td><td>DUT-RX</td><td>NA</td><td>NA</td><td>196.477 Mbps</td><td>195.15 Mbps</td><td>195.826 Mbps</td><td>219.604 Mbps</td><td>207.294 Mbps</td><td>-65</td><td>384 / 823496</td><td>0.047</td><td>346.7 Mbps</td><td>346.7 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>1024</td><td>UDP</td><td>DUT-TX</td><td>NA</td><td>NA</td><td>327.929 Mbps</td><td>261.471 Mbps</td><td>261.912 Mbps</td><td>273.114 Mbps</td><td>243.918 Mbps</td><td>-65</td><td>0 / 652938</td><td>0</td><td>260 Mbps</td><td>346.7 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>1024</td><td>UDP</td><td>DUT-RX</td><td>NA</td><td>NA</td><td>254.327 Mbps</td><td>250.101 Mbps</td><td>250.782 Mbps</td><td>261.508 Mbps</td><td>234.191 Mbps</td><td>-62</td><td>384 / 480046</td><td>0.08</td><td>346.7 Mbps</td><td>346.7 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>1024</td><td>TCP</td><td>DUT-TX</td><td>NA</td><td>NA</td><td>184.301 Mbps</td><td>182.73 Mbps</td><td>183.268 Mbps</td><td>193.8 Mbps</td><td>171.457 Mbps</td><td>-67</td><td>0 / 355347</td><td>0</td><td>260 Mbps</td><td>289 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>1024</td><td>TCP</td><td>DUT-RX</td><td>NA</td><td>NA</td><td>211.743 Mbps</td><td>210.908 Mbps</td><td>211.659 Mbps</td><td>223.728 Mbps</td><td>210.128 Mbps</td><td>-67</td><td>576 / 435705</td><td>0.132</td><td>346.7 Mbps</td><td>346.7 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>MTU</td><td>UDP</td><td>DUT-TX</td><td>NA</td><td>NA</td><td>328.395 Mbps</td><td>259.116 Mbps</td><td>259.887 Mbps</td><td>267.302 Mbps</td><td>241.707 Mbps</td><td>-66</td><td>0 / 434665</td><td>0</td><td>346.7 Mbps</td><td>289 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>MTU</td><td>UDP</td><td>DUT-RX</td><td>NA</td><td>NA</td><td>252.68 Mbps</td><td>246.634 Mbps</td><td>247.322 Mbps</td><td>254.379 Mbps</td><td>286.205 Mbps</td><td>-61</td><td>576 / 316270</td><td>0.182</td><td>346.7 Mbps</td><td>288.9 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>MTU</td><td>TCP</td><td>DUT-TX</td><td>NA</td><td>NA</td><td>187.392 Mbps</td><td>187.092 Mbps</td><td>187.289 Mbps</td><td>195.67 Mbps</td><td>213.916 Mbps</td><td>-66</td><td>0 / 326407</td><td>0</td><td>346.7 Mbps</td><td>346.7 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>MTU</td><td>TCP</td><td>DUT-RX</td><td>NA</td><td>NA</td><td>256.823 Mbps</td><td>252.492 Mbps</td><td>253.02 Mbps</td><td>264.222 Mbps</td><td>264.567 Mbps</td><td>-69</td><td>576 / 385941</td><td>0.149</td><td>289 Mbps</td><td>346.7 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>4000</td><td>UDP</td><td>DUT-TX</td><td>NA</td><td>NA</td><td>328.294 Mbps</td><td>69.044 Mbps</td><td>69.231 Mbps</td><td>71.435 Mbps</td><td>0 bps</td><td>-65</td><td>0 / 480954</td><td>0</td><td>346.7 Mbps</td><td>289 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>4000</td><td>UDP</td><td>DUT-RX</td><td>NA</td><td>NA</td><td>263.396 Mbps</td><td>3.526 Mbps</td><td>3.538 Mbps</td><td>3.65 Mbps</td><td>17.781 Mbps</td><td>-61</td><td>384 / 368577</td><td>0.104</td><td>346.7 Mbps</td><td>289 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>4000</td><td>TCP</td><td>DUT-TX</td><td>NA</td><td>NA</td><td>177.895 Mbps</td><td>176.632 Mbps</td><td>176.927 Mbps</td><td>184.79 Mbps</td><td>170.322 Mbps</td><td>-63</td><td>0 / 273082</td><td>0</td><td>346.7 Mbps</td><td>288.9 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>4000</td><td>TCP</td><td>DUT-RX</td><td>NA</td><td>NA</td><td>260.82 Mbps</td><td>256.536 Mbps</td><td>257.018 Mbps</td><td>268.409 Mbps</td><td>272.235 Mbps</td><td>-64</td><td>384 / 442718</td><td>0.087</td><td>346.7 Mbps</td><td>288.9 Mbps</td><td>802.11an-AC</td><td>802.11ac</td></tr>
+</table>
+
+<br/><br/>CSV data focussed on TX and RX Link Rate and RSSI reports.  The values reported are gathered at the end of the test iteration before traffic is stopped.  The Phy Rate and RSSI are from the perspective of the Station, so Tx-MCS is MCS at which station is sending to the AP, and Rx-MCS is MCS at which the AP is sending to the station.
+<br/>
+<br/><br/><table border='1' style='font-size:8px'>
+<tr><th>Channel</th><th>Frequency</th><th>Security</th><th>NSS</th><th>Cfg-Mode</th><th>Bandwidth</th><th>Pkt</th><th>Traffic-Type</th><th>Direction</th><th>Tx-Mode-Rpt</th><th>Tx-NSS-Rpt</th><th>Tx-MCS</th><th>Tx-BW-Rpt</th><th>Rx-Mode-Rpt</th><th>Rx-NSS-Rpt</th><th>Rx-MCS</th><th>Rx-BW-Rpt</th><th>RSSI dBm</th><th>Tx-Phy-Rate</th><th>Rx-Phy-Rate</th></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>60</td><td>UDP</td><td>DUT-TX</td><td>VHT</td><td>4</td><td>1</td><td>20</td><td>4</td><td>VHT</td><td>1</td><td>20</td><td>-65 [-69, -77, -69, -65]</td><td>57.8 MBit/s VHT-MCS 1 short GI VHT-NSS 4</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>60</td><td>UDP</td><td>DUT-RX</td><td>VHT</td><td>4</td><td>8</td><td>20</td><td>3</td><td>VHT</td><td>8</td><td>20</td><td>-59 [-70, -77, -71, -66]</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td><td>289.0 MBit/s VHT-MCS 9 short GI VHT-NSS 3</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>142</td><td>UDP</td><td>DUT-TX</td><td>VHT</td><td>4</td><td>8</td><td>20</td><td>4</td><td>VHT</td><td>8</td><td>20</td><td>-66 [-70, -77, -69, -67]</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td><td>385.3 MBit/s VHT-MCS 9 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>142</td><td>UDP</td><td>DUT-RX</td><td>VHT</td><td>3</td><td>8</td><td>20</td><td>4</td><td>VHT</td><td>8</td><td>20</td><td>-60 [-70, -76, -69, -67]</td><td>260.0 MBit/s VHT-MCS 8 short GI VHT-NSS 3</td><td>385.3 MBit/s VHT-MCS 9 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>142</td><td>TCP</td><td>DUT-TX</td><td>VHT</td><td>4</td><td>8</td><td>20</td><td>4</td><td>VHT</td><td>8</td><td>20</td><td>-69 [-73, -79, -70, -72]</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>142</td><td>TCP</td><td>DUT-RX</td><td>VHT</td><td>4</td><td>5</td><td>20</td><td>4</td><td>VHT</td><td>5</td><td>20</td><td>-66 [-70, -78, -72, -66]</td><td>231.1 MBit/s VHT-MCS 5 short GI VHT-NSS 4</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>256</td><td>UDP</td><td>DUT-TX</td><td>VHT</td><td>4</td><td>6</td><td>20</td><td>4</td><td>VHT</td><td>6</td><td>20</td><td>-69 [-72, -77, -72, -70]</td><td>234.0 MBit/s VHT-MCS 6 VHT-NSS 4</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>256</td><td>UDP</td><td>DUT-RX</td><td>VHT</td><td>4</td><td>7</td><td>20</td><td>4</td><td>VHT</td><td>7</td><td>20</td><td>-61 [-72, -77, -73, -70]</td><td>288.9 MBit/s VHT-MCS 7 short GI VHT-NSS 4</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>256</td><td>TCP</td><td>DUT-TX</td><td>VHT</td><td>4</td><td>8</td><td>20</td><td>4</td><td>VHT</td><td>8</td><td>20</td><td>-66 [-70, -76, -69, -67]</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td><td>288.9 MBit/s VHT-MCS 7 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>256</td><td>TCP</td><td>DUT-RX</td><td>VHT</td><td>4</td><td>8</td><td>20</td><td>4</td><td>VHT</td><td>8</td><td>20</td><td>-66 [-69, -77, -73, -66]</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>512</td><td>UDP</td><td>DUT-TX</td><td>VHT</td><td>4</td><td>8</td><td>20</td><td>4</td><td>VHT</td><td>8</td><td>20</td><td>-66 [-71, -76, -70, -66]</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td><td>288.9 MBit/s VHT-MCS 7 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>512</td><td>UDP</td><td>DUT-RX</td><td>VHT</td><td>4</td><td>6</td><td>20</td><td>4</td><td>VHT</td><td>6</td><td>20</td><td>-61 [-71, -76, -70, -66]</td><td>260.0 MBit/s VHT-MCS 6 short GI VHT-NSS 4</td><td>288.9 MBit/s VHT-MCS 7 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>512</td><td>TCP</td><td>DUT-TX</td><td>VHT</td><td>4</td><td>8</td><td>20</td><td>4</td><td>VHT</td><td>8</td><td>20</td><td>-65 [-70, -78, -70, -65]</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>512</td><td>TCP</td><td>DUT-RX</td><td>VHT</td><td>3</td><td>8</td><td>20</td><td>4</td><td>VHT</td><td>8</td><td>20</td><td>-66 [-70, -77, -69, -67]</td><td>260.0 MBit/s VHT-MCS 8 short GI VHT-NSS 3</td><td>288.9 MBit/s VHT-MCS 7 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>1024</td><td>UDP</td><td>DUT-TX</td><td>VHT</td><td>3</td><td>8</td><td>20</td><td>4</td><td>VHT</td><td>8</td><td>20</td><td>-66 [-69, -80, -69, -67]</td><td>260.0 MBit/s VHT-MCS 8 short GI VHT-NSS 3</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>1024</td><td>UDP</td><td>DUT-RX</td><td>VHT</td><td>3</td><td>8</td><td>20</td><td>4</td><td>VHT</td><td>8</td><td>20</td><td>-64 [-72, -78, -74, -68]</td><td>260.0 MBit/s VHT-MCS 8 short GI VHT-NSS 3</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>1024</td><td>TCP</td><td>DUT-TX</td><td>VHT</td><td>4</td><td>6</td><td>20</td><td>3</td><td>VHT</td><td>6</td><td>20</td><td>-68 [-72, -77, -71, -68]</td><td>260.0 MBit/s VHT-MCS 6 short GI VHT-NSS 4</td><td>289.0 MBit/s VHT-MCS 9 short GI VHT-NSS 3</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>1024</td><td>TCP</td><td>DUT-RX</td><td>VHT</td><td>4</td><td>8</td><td>20</td><td>4</td><td>VHT</td><td>8</td><td>20</td><td>-68 [-72, -79, -69, -71]</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>MTU</td><td>UDP</td><td>DUT-TX</td><td>VHT</td><td>4</td><td>8</td><td>20</td><td>3</td><td>VHT</td><td>8</td><td>20</td><td>-67 [-71, -79, -70, -67]</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td><td>289.0 MBit/s VHT-MCS 9 short GI VHT-NSS 3</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>MTU</td><td>UDP</td><td>DUT-RX</td><td>VHT</td><td>4</td><td>8</td><td>20</td><td>4</td><td>VHT</td><td>8</td><td>20</td><td>-62 [-71, -77, -69, -68]</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td><td>288.9 MBit/s VHT-MCS 7 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>MTU</td><td>TCP</td><td>DUT-TX</td><td>VHT</td><td>4</td><td>8</td><td>20</td><td>4</td><td>VHT</td><td>8</td><td>20</td><td>-66 [-69, -78, -69, -67]</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>MTU</td><td>TCP</td><td>DUT-RX</td><td>VHT</td><td>3</td><td>9</td><td>20</td><td>4</td><td>VHT</td><td>9</td><td>20</td><td>-70 [-73, -77, -73, -71]</td><td>289.0 MBit/s VHT-MCS 9 short GI VHT-NSS 3</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>4000</td><td>UDP</td><td>DUT-TX</td><td>VHT</td><td>4</td><td>8</td><td>20</td><td>3</td><td>VHT</td><td>8</td><td>20</td><td>-66 [-72, -80, -69, -67]</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td><td>289.0 MBit/s VHT-MCS 9 short GI VHT-NSS 3</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>4000</td><td>UDP</td><td>DUT-RX</td><td>VHT</td><td>4</td><td>8</td><td>20</td><td>3</td><td>VHT</td><td>8</td><td>20</td><td>-61 [-71, -79, -70, -68]</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td><td>289.0 MBit/s VHT-MCS 9 short GI VHT-NSS 3</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>4000</td><td>TCP</td><td>DUT-TX</td><td>VHT</td><td>4</td><td>8</td><td>20</td><td>4</td><td>VHT</td><td>8</td><td>20</td><td>-63 [-68, -75, -71, -63]</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td><td>288.9 MBit/s VHT-MCS 7 short GI VHT-NSS 4</td></tr>
+<tr><td>40</td><td>5200</td><td>WPA2</td><td>4</td><td>AUTO</td><td>20</td><td>4000</td><td>TCP</td><td>DUT-RX</td><td>VHT</td><td>4</td><td>8</td><td>20</td><td>4</td><td>VHT</td><td>8</td><td>20</td><td>-64 [-67, -76, -70, -67]</td><td>346.7 MBit/s VHT-MCS 8 short GI VHT-NSS 4</td><td>288.9 MBit/s VHT-MCS 7 short GI VHT-NSS 4</td></tr>
+</table>
+
+<br/><br/>Brief csv report, may be imported into third-party tools.
+<br/>
+<br/><br/><table border='1' >
+<tr><th>Step Index</th><th>Position [Deg]</th><th>Attenuation [dB]</th><th>Throughput [Mbps]</th><th>Beacon RSSI [dBm]</th><th>Data RSSI [dBm]</th></tr>
+<tr><td>0</td><td>NA</td><td>0</td><td>40.24</td><td>-59</td><td>-65</td></tr>
+<tr><td>1</td><td>NA</td><td>0</td><td>18.79</td><td>-60</td><td>-60</td></tr>
+<tr><td>2</td><td>NA</td><td>0</td><td>170.62</td><td>-59</td><td>-65</td></tr>
+<tr><td>3</td><td>NA</td><td>0</td><td>110.31</td><td>-60</td><td>-60</td></tr>
+<tr><td>4</td><td>NA</td><td>0</td><td>53.72</td><td>-61</td><td>-68</td></tr>
+<tr><td>5</td><td>NA</td><td>0</td><td>79.12</td><td>-59</td><td>-66</td></tr>
+<tr><td>6</td><td>NA</td><td>0</td><td>202.96</td><td>-62</td><td>-68</td></tr>
+<tr><td>7</td><td>NA</td><td>0</td><td>180.99</td><td>-61</td><td>-60</td></tr>
+<tr><td>8</td><td>NA</td><td>0</td><td>100.83</td><td>-60</td><td>-65</td></tr>
+<tr><td>9</td><td>NA</td><td>0</td><td>153.05</td><td>-60</td><td>-65</td></tr>
+<tr><td>10</td><td>NA</td><td>0</td><td>225.92</td><td>-60</td><td>-65</td></tr>
+<tr><td>11</td><td>NA</td><td>0</td><td>230.59</td><td>-61</td><td>-61</td></tr>
+<tr><td>12</td><td>NA</td><td>0</td><td>161.26</td><td>-59</td><td>-65</td></tr>
+<tr><td>13</td><td>NA</td><td>0</td><td>195.15</td><td>-60</td><td>-65</td></tr>
+<tr><td>14</td><td>NA</td><td>0</td><td>261.47</td><td>-59</td><td>-65</td></tr>
+<tr><td>15</td><td>NA</td><td>0</td><td>250.10</td><td>-62</td><td>-62</td></tr>
+<tr><td>16</td><td>NA</td><td>0</td><td>182.73</td><td>-61</td><td>-67</td></tr>
+<tr><td>17</td><td>NA</td><td>0</td><td>210.91</td><td>-61</td><td>-67</td></tr>
+<tr><td>18</td><td>NA</td><td>0</td><td>259.12</td><td>-60</td><td>-66</td></tr>
+<tr><td>19</td><td>NA</td><td>0</td><td>246.63</td><td>-61</td><td>-61</td></tr>
+<tr><td>20</td><td>NA</td><td>0</td><td>187.09</td><td>-59</td><td>-66</td></tr>
+<tr><td>21</td><td>NA</td><td>0</td><td>252.49</td><td>-61</td><td>-69</td></tr>
+<tr><td>22</td><td>NA</td><td>0</td><td>69.04</td><td>-60</td><td>-65</td></tr>
+<tr><td>23</td><td>NA</td><td>0</td><td>3.53</td><td>-61</td><td>-61</td></tr>
+<tr><td>24</td><td>NA</td><td>0</td><td>176.63</td><td>-59</td><td>-63</td></tr>
+<tr><td>25</td><td>NA</td><td>0</td><td>256.54</td><td>-59</td><td>-64</td></tr>
+</table>
+
+<br/><br/>Packet Loss Percentage graph shows the percentage of lost packets as detected by the receiving endpoint due to packet gaps.  If there is full packet loss, then this will not report any loss since there will be no gap to detect.  TCP protocol tests will never show drops since the TCP protcol will retransmit any lost frames.
+<br/>
+<small><br/><a href='csv-data/data-Endpoint_RX_Packet_Loss_Percentage-1.csv'>CSV Data for Endpoint RX Packet Loss Percentage</a><br/></small>
+<img src='chart-4-print.png' alt='Endpoint RX Packet Loss Percentage'><br/>
+
+  
+    
+  
+  
+    <br>
+    
+
+    <table width="700px" border="1" cellpadding="2" cellspacing="0" style="border-top-color: gray; border-top-style: solid; border-top-width: 1px; border-right-color: gray; border-right-style: solid; border-right-width: 1px; border-bottom-color: gray; border-bottom-style: solid; border-bottom-width: 1px; border-left-color: gray; border-left-style: solid; border-left-width: 1px">
+      <tr>
+        <th colspan="2">
+          Test configuration and LANforge software version
+        </th>
+      </tr>
+      <tr>
+        <td>
+          AP Tx Power:
+        </td>
+        <td>
+          0
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Path Loss
+        </td>
+        <td>
+          10
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Requested Speed
+        </td>
+        <td>
+          85%
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Requested Opposite Speed
+        </td>
+        <td>
+          0
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Multi-Conn
+        </td>
+        <td>
+          1
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Armageddon Multi-Pkt
+        </td>
+        <td>
+          1000
+        </td>
+      </tr>
+      <tr>
+        <td>
+          ToS
+        </td>
+        <td>
+          0
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Station Bringup Wait:
+        </td>
+        <td>
+          30 sec (30 s)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          First Byte Wait:
+        </td>
+        <td>
+          30 sec (30 s)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Duration:
+        </td>
+        <td>
+          15 sec (15 s)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Settle Time:
+        </td>
+        <td>
+          1 sec (1 s)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Send Buffer Size:
+        </td>
+        <td>
+          OS Default
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Receive Buffer Size:
+        </td>
+        <td>
+          OS Default
+        </td>
+      </tr>
+      <tr>
+        <td>
+          RvR Helper Script:
+        </td>
+        <td>
+          
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Channels
+        </td>
+        <td>
+          AUTO
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Spatial Streams
+        </td>
+        <td>
+          AUTO
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Bandwidth
+        </td>
+        <td>
+          No-Change
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Attenuator-1
+        </td>
+        <td>
+          0
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Attenuation-1
+        </td>
+        <td>
+          0..+50..950
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Attenuator-2
+        </td>
+        <td>
+          0
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Attenuation-2
+        </td>
+        <td>
+          0..+50..950
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Turntable Chamber
+        </td>
+        <td>
+          0
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Turntable Angles
+        </td>
+        <td>
+          0..+45..359
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Modes
+        </td>
+        <td>
+          Auto
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Packet Size
+        </td>
+        <td>
+          60, 142, 256, 512, 1024, MTU, 4000
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Security
+        </td>
+        <td>
+          AUTO
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Traffic Type
+        </td>
+        <td>
+          UDP, TCP
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Direction
+        </td>
+        <td>
+          DUT Transmit, DUT Receive
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Upstream Port
+        </td>
+        <td>
+          1.1.eth2 Firmware: 0x80000aef, 1.1876.0 Resource: ct523c-3011
+        </td>
+      </tr>
+      <tr>
+        <td>
+          WiFi Port
+        </td>
+        <td>
+          1.1.wlan100 Firmware: 10.4b-ct-9984-xtH-13-b1b524c8e5 Resource: 
+          ct523c-3011
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Outer Loop is Attenuation
+        </td>
+        <td>
+          false
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Show Events
+        </td>
+        <td>
+          true
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Auto Save Report
+        </td>
+        <td>
+          true
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Pass-Fail Tput Criteria
+        </td>
+        <td>
+          <pre></pre>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Build Date
+        </td>
+        <td>
+          Thu 13 Jan 2022 01:27:32 PM PST
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Build Version
+        </td>
+        <td>
+          5.4.4
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Git Version
+        </td>
+        <td>
+          c419229103db6f1917b40d5169b2c9926b273e51
+        </td>
+      </tr>
+    </table>
+  
+
+<br/>
+<br/><a href='kpi.csv'>Key Performance Indicators CSV</a><br/><br/>
+<small><br/><a href='csv-data/meta-info.txt'>META Information for Dataplane Test</a><br/></small>
+</div><!-- end content-div -->
+<div class='FooterStyle'><span class='Gradient'>Generated by Candela Technologies LANforge network testing tool.<br/>
+  <a href='https://www.candelatech.com/' target='_blank'>www.candelatech.com</a>
+</span>
+<a align='right' class='LogoImgLink' href='https://www.candelatech.com/' target='_blank'><img align='right' src='logo.png'></a>
+</div><br/>
+  </body>
+</html>

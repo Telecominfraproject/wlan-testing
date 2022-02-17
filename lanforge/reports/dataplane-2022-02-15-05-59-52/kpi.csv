@@ -1,0 +1,27 @@
+Date	test-rig	test-tag	dut-hw-version	dut-sw-version	dut-model-num	dut-serial-num	test-priority	test-id	short-description	pass/fail	numeric-score	test details	Units	Graph-Group	Subtest-Pass	Subtest-Fail
+1644933127166			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	UDP-DUT-TX-60pkt-sz		41.68863	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933144747			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	UDP-DUT-RX-60pkt-sz		17.059136	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933161620			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	UDP-DUT-TX-142pkt-sz		229.868051	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933178096			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	UDP-DUT-RX-142pkt-sz		98.349913	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933194564			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	TCP-DUT-TX-142pkt-sz		68.96005	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933214003			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	TCP-DUT-RX-142pkt-sz		73.366648	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933230595			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	UDP-DUT-TX-256pkt-sz		491.777998	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933247057			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	UDP-DUT-RX-256pkt-sz		214.75313	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933264623			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	TCP-DUT-TX-256pkt-sz		169.546231	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933283110			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	TCP-DUT-RX-256pkt-sz		187.048202	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933300610			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	UDP-DUT-TX-512pkt-sz		1003.985824	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933319047			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	UDP-DUT-RX-512pkt-sz		493.11658	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933337604			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	TCP-DUT-TX-512pkt-sz		368.556406	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933355102			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	TCP-DUT-RX-512pkt-sz		456.694062	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933372602			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	UDP-DUT-TX-1024pkt-sz		1067.672703	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933389039			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	UDP-DUT-RX-1024pkt-sz		1074.663598	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933405662			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	TCP-DUT-TX-1024pkt-sz		482.993469	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933423101			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	TCP-DUT-RX-1024pkt-sz		974.470106	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933442659			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	UDP-DUT-TX-MTU		1102.557494	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933459095			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	UDP-DUT-RX-MTU		1385.067065	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933476570			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	TCP-DUT-TX-MTU		509.737423	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933495041			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	TCP-DUT-RX-MTU		1234.243878	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933541679			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	UDP-DUT-TX-4000pkt-sz		0.781047	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933558119			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	UDP-DUT-RX-4000pkt-sz		95.319602	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933575625			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	TCP-DUT-TX-4000pkt-sz		518.593828	Throughput at specified settings.	Mbps	Throughput	0	0
+1644933592062			cisco9130axe	17.7.1.11	cisco9130axe	FJC2428146G	95	Dataplane	TCP-DUT-RX-4000pkt-sz		1229.030463	Throughput at specified settings.	Mbps	Throughput	0	0

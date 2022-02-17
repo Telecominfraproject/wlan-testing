@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <title>Report for:  Wifi Capacity Test</title>    <link rel='shortcut icon' href='canvil.ico' type='image/x-icon' />
+    <link rel='stylesheet' href='report.css' />
+    <link rel='stylesheet' href='custom.css' />
+    <style>
+     pre {
+        overflow: auto;
+     }
+     img {
+        width: 100%;
+        max-width: 8in;
+     }
+    </style>
+  </head>
+  <body>
+<div class='Section report_banner-1000x205' style='background-image:url("report_banner-1000x205.jpg");background-repeat:no-repeat;padding:0;margin:0;min-width:1000px; min-height:205px;width:1000px; height:205px;max-width:1000px; max-height:205px;'>
+<img align='right' style='padding:0;margin:5;width:200px;' src='CandelaLogo2-90dpi-200x90-trans.png' border='0' />
+<div class='HeaderStyle'>
+<h1 class='TitleFontPrint'>Report for:  Wifi Capacity Test</h1><br/><h4 class='TitleFontPrintSub'><br><br><br><br><br>Wed Feb 16 04:47:34 PST 2022</h4></div>
+
+</div><!-- end section -->
+<div class='contentDiv'>
+
+  
+    
+  
+  
+    <h2 align="left">
+      Objective
+    </h2>
+    <p align="left" width="900">
+      The Candela WiFi Capacity test is designed to measure performance of an 
+      Access Point when handling different amounts of WiFi Stations. The test 
+      allows the user to increase the number of stations in user defined steps 
+      for each test iteration and measure the per station and the overall 
+      throughput for each trial. Along with throughput other measurements made 
+      are client connection times, Fairness, % packet loss, DHCP times and 
+      more. The expected behavior is for the AP to be able to handle several 
+      stations (within the limitations of the AP specs) and make sure all 
+      stations get a fair amount of airtime both in the upstream and 
+      downstream. An AP that scales well will not show a significant over-all 
+      throughput decrease as more stations are added.
+    </p>
+  
+
+<br/>
+
+<br/><br/>Realtime Graph shows summary download and upload RX bps of connections created by this test.
+<br/>
+<small><br/><a href='csv-data/data-Realtime_Mbps-1.csv'>CSV Data for Realtime Mbps</a><br/></small>
+<img src='chart-0-print.png' alt='Realtime Mbps'><br/>
+
+<br/><br/>Total Megabits-per-second transferred.  This only counts the protocol payload, so it will not count the Ethernet, IP, UDP, TCP or other header overhead.  A well behaving system will show about the same rate as stations increase.  If the rate decreases significantly as stations increase, then it is not scaling we
+<br/>
+<small><br/><a href='csv-data/data-Total_Mbps_Received_vs_Number_of_Stations_Active-1.csv'>CSV Data for Total Mbps Received vs Number of Stations Active</a><br/></small>
+<img src='kpi-chart-1-print.png' alt='Total Mbps Received vs Number of Stations Active'><br/>
+
+<br/><br/>Protocol-Data-Units received.  For TCP, this does not mean much, but for UDP connections, this correlates to packet size. If the PDU size is larger than what fits into a single frame, then the network stack will segment it accordingly.  A well behaving system will show about the same rate as stations increase.  If the rate decreases significantly as stations increase, then it is not scaling well.
+<br/>
+<small><br/><a href='csv-data/data-Total_PDU_s_Received_vs_Number_of_Stations_Active-1.csv'>CSV Data for Total PDU/s Received vs Number of Stations Active</a><br/></small>
+<img src='chart-2-print.png' alt='Total PDU/s Received vs Number of Stations Active'><br/>
+
+<br/><br/>Station disconnect stats.  These will be only for the last iteration.
+ If the 'Clear Reset Counters' option is selected,
+ the stats are cleared after the initial association.  Any re-connects reported
+ indicate a potential stability issue.
+ Can be used for long-term stability testing in cases where you bring up all
+ stations in one iteration and then run the test for a longer duration.
+
+<br/>
+<small><br/><a href='csv-data/data-Port_Reset_Totals-1.csv'>CSV Data for Port Reset Totals</a><br/></small>
+<img src='chart-3-print.png' alt='Port Reset Totals'><br/>
+
+<br/><br/>Station connect time is calculated from the initial Authenticate message through the completion of Open or RSN association/authentication.
+<br/>
+<small><br/><a href='csv-data/data-Station_Connect_Times-1.csv'>CSV Data for Station Connect Times</a><br/></small>
+<img src='chart-4-print.png' alt='Station Connect Times'><br/>
+
+  
+    
+  
+  
+    <br>
+    
+
+    <table width="700px" border="1" cellpadding="2" cellspacing="0" style="border-top-color: gray; border-top-style: solid; border-top-width: 1px; border-right-color: gray; border-right-style: solid; border-right-width: 1px; border-bottom-color: gray; border-bottom-style: solid; border-bottom-width: 1px; border-left-color: gray; border-left-style: solid; border-left-width: 1px">
+      <tr>
+        <th colspan="2">
+          Wifi-Capacity Test requested values
+        </th>
+      </tr>
+      <tr>
+        <td>
+          Station Increment:
+        </td>
+        <td colspan="3">
+          8
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Loop Iterations:
+        </td>
+        <td colspan="3">
+          Single (1)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Duration:
+        </td>
+        <td colspan="3">
+          2 min (2 m)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Protocol:
+        </td>
+        <td colspan="3">
+          UDP-IPv4
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Layer 4-7 Endpoint:
+        </td>
+        <td colspan="3">
+          NONE
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Payload Size:
+        </td>
+        <td colspan="3">
+          AUTO
+        </td>
+      </tr>
+      <tr>
+        <td>
+          MSS
+        </td>
+        <td colspan="3">
+          AUTO
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Per-Station Download Rate:
+        </td>
+        <td colspan="3">
+          8Mbps
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Total Upload Rate:
+        </td>
+        <td colspan="3">
+          Zero (0 bps)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Percentage TCP Rate:
+        </td>
+        <td colspan="3">
+          10% (10%)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Set Bursty Minimum Speed:
+        </td>
+        <td colspan="3">
+          Burst Mode Disabled (-1)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Randomize Rates
+        </td>
+        <td colspan="3">
+          true
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Leave Ports Up
+        </td>
+        <td colspan="3">
+          false
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Socket buffer size:
+        </td>
+        <td colspan="3">
+          OS Default
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Settle Time:
+        </td>
+        <td colspan="3">
+          5 sec (5 s)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Rpt Timer:
+        </td>
+        <td colspan="3">
+          fast (1 s)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          IP ToS:
+        </td>
+        <td colspan="3">
+          Best Effort (0)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Multi-Conn:
+        </td>
+        <td colspan="3">
+          AUTO
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Show-Per-Iteration-Charts
+        </td>
+        <td colspan="3">
+          true
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Show-Per-Loop-Totals
+        </td>
+        <td colspan="3">
+          true
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Hunt-Lower-Rates
+        </td>
+        <td colspan="3">
+          false
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Show Events
+        </td>
+        <td colspan="3">
+          true
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Clear Reset Counters
+        </td>
+        <td colspan="3">
+          false
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CSV Reporting Dir
+        </td>
+        <td colspan="3">
+          /home/lanforge/report-data/wifi-cap-csv-data-2022-02-16_04.45
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Build Date
+        </td>
+        <td colspan="3">
+          Thu 13 Jan 2022 01:27:32 PM PST
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Build Version
+        </td>
+        <td colspan="3">
+          5.4.4
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Git Version
+        </td>
+        <td colspan="3">
+          c419229103db6f1917b40d5169b2c9926b273e51
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Ports
+        </td>
+        <td colspan="3">
+          1.1.eth2 1.1.sta01000 1.1.sta01001 1.1.sta01002 1.1.sta01003 
+          1.1.sta01004 1.1.sta01005 1.1.sta01006 1.1.sta01007
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Firmware
+        </td>
+        <td colspan="3">
+          10.4b-ct-9984-xtH-13-b1b524c8e5 0x80000aef, 1.1876.0
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Machines
+        </td>
+        <td colspan="3">
+          ct523c-3011
+        </td>
+      </tr>
+    </table>
+  
+
+<br/>
+<br/><br/><pre>Maximum Stations Connected: 0
+Stations NOT connected at this time: 8
+Maximum Stations with IP Address: 0
+Stations without IP at this time: 8</pre><br/>
+<small><br/><a href='csv-data/data-Station_Maximums-1.csv'>CSV Data for Station Maximums</a><br/></small>
+<img src='chart-5-print.png' alt='Station Maximums'><br/>
+
+<br/><br/>RF stats give an indication of how well how congested is the RF environment.  Channel activity is what the wifi radio reports as the busy-time for the RF environment.  It is expected that this be near 100% when LANforge is running at max speed, but at lower speeds, this should be a lower percentage unless the RF environment is busy with other systems.<br>
+<br/>
+<small><br/><a href='csv-data/data-RF_Stats_for_Stations-1.csv'>CSV Data for RF Stats for Stations</a><br/></small>
+<img src='chart-6-print.png' alt='RF Stats for Stations'><br/>
+
+<br/><br/>Link rate stats give an indication of how well the rate-control is working.  For rate-control, the 'RX' link rate corresponds to what the device-under-test is transmitting.  If all of the stations are on the same radio, then the TX and RX encoding rates should be similar for all stations.  If there is a definite pattern where some stations do not get good RX rate, then probably the device-under-test has rate-control problems.  The TX rate is what LANforge is transmitting at.<br>
+<br/>
+<small><br/><a href='csv-data/data-Link_Rate_for_Stations-1.csv'>CSV Data for Link Rate for Stations</a><br/></small>
+<img src='chart-7-print.png' alt='Link Rate for Stations'><br/>
+<br/><a href='kpi.csv'>Key Performance Indicators CSV</a><br/><br/>
+<br/><br/><pre>Scan Results for SSIDs used in this test.
+
+</pre><br/>
+<br/><a href='wifi-cap-csv-data'>Auxiliary files: wifi-cap-csv-data</a><br/><br/>
+<small><br/><a href='csv-data/meta-info.txt'>META Information for Report for:  Wifi Capacity Test</a><br/></small>
+</div><!-- end content-div -->
+<div class='FooterStyle'><span class='Gradient'>Generated by Candela Technologies LANforge network testing tool.<br/>
+  <a href='https://www.candelatech.com/' target='_blank'>www.candelatech.com</a>
+</span>
+<a align='right' class='LogoImgLink' href='https://www.candelatech.com/' target='_blank'><img align='right' src='logo.png'></a>
+</div><br/>
+  </body>
+</html>

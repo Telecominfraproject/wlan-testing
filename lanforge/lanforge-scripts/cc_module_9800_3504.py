@@ -33,8 +33,7 @@ import os
 import subprocess
 from pprint import pformat
 
-
-sys.path.append(os.path.join(os.path.abspath("../../../lanforge/lanforge-scripts/")))
+sys.path.append(os.path.join(os.path.abspath(__file__ + "../../")))
 
 logger = logging.getLogger(__name__)
 lf_logger_config = importlib.import_module("py-scripts.lf_logger_config")
@@ -51,7 +50,8 @@ class create_controller_series_object:
                  band=None,
                  ap=None,
                  port=None,
-                 timeout=None
+                 timeout=None,
+                 pwd=None
                  ):
         if scheme is None:
             raise ValueError('Controller scheme must be set: serial, ssh or telnet')
@@ -101,6 +101,7 @@ class create_controller_series_object:
         self.wlan = None
         self.wlanID = None
         self.wlanSSID = None
+        self.security_key = None
         self.wlanpw = None
         self.tag_policy = None
         self.policy_profile = None
@@ -110,7 +111,9 @@ class create_controller_series_object:
         self.action = None
         self.value = None
         self.command = []
+        self.command_extend = []
         self.info = "Cisco 9800 Controller Series"
+        self.pwd = pwd
 
     # TODO update the wifi_ctl_9800_3504 to use 24g, 5g, 6g
 
@@ -128,52 +131,53 @@ class create_controller_series_object:
             raise ValueError("band needs to be set 24g 5g or 6g")
 
     # TODO consolidate the command formats
-    def send_command(self, pwd=os.getcwd()):
+    def send_command(self):
         # for backward compatibility wifi_ctl_9800_3504 expects 'a' for 5g and 'b' for 24b
         self.convert_band()
         logger.info("action {action}".format(action=self.action))
 
+        # Command base
+        if self.pwd is None:
+            self.command = ["./wifi_ctl_9800_3504.py", "--scheme", self.scheme, "--dest", self.dest,
+                            "--user", self.user, "--passwd", self.passwd, "--prompt", self.prompt,
+                            "--series", self.series, "--ap", self.ap, "--band", self.band, "--port", self.port]
+        else:
+            self.command = [str(str(self.pwd) + "/wifi_ctl_9800_3504.py"), "--scheme", self.scheme, "--dest", self.dest,
+                            "--user", self.user, "--passwd", self.passwd, "--prompt", self.prompt,
+                            "--series", self.series, "--ap", self.ap, "--band", self.band, "--port", self.port]
         # Generate command
         if self.action in ['cmd', 'txPower', 'channel', 'bandwidth']:
 
-            self.command = ["./wifi_ctl_9800_3504.py", "--scheme", self.scheme, "--dest", self.dest,
-                            "--user", self.user, "--passwd", self.passwd, "--ap", self.ap, "--band", self.band,
-                            "--action", self.action, "--value", self.value, "--series", self.series, "--port", self.port, "--prompt", self.prompt]
+            self.command_extend = ["--action", self.action, "--value", self.value]
+            self.command.extend(self.command_extend)
 
-        elif self.action in ["enable_wlan", "create_wlan", "create_wlan_wpa2", "create_wlan_wpa3"]:
+        elif self.action in ["create_wlan", "create_wlan_wpa2", "create_wlan_wpa3"]:
 
-            self.command = ["./wifi_ctl_9800_3504.py",
-                            "--scheme", self.scheme, "--dest", self.dest,
-                            "--user", self.user, "--passwd", self.passwd, "--ap", self.ap, "--band", self.band,
-                            "--action", self.action, "--wlan", self.wlan, "--wlanID", self.wlanID, "--wlanSSID", self.wlanSSID,
-                            "--series", self.series, "--port", self.port, "--prompt", self.prompt]
+            if self.action in ["create_wlan"]:
+                self.command_extend = ["--action", self.action, "--wlan", self.wlan,
+                                       "--wlanID", self.wlanID, "--wlanSSID", self.wlanSSID]
+            else:
+                self.command_extend = ["--action", self.action, "--wlan", self.wlan,
+                                       "--wlanID", self.wlanID, "--wlanSSID", self.wlanSSID, "--security_key", self.security_key]
+            self.command.extend(self.command_extend)
 
-        elif self.action in ["disable_wlan", "delete_wlan"]:
+        elif self.action in ["enable_wlan", "disable_wlan", "delete_wlan"]:
 
-            self.command = ["./wifi_ctl_9800_3504.py",
-                            "--scheme", self.scheme, "--dest", self.dest,
-                            "--user", self.user, "--passwd", self.passwd, "--ap", self.ap, "--band", self.band,
-                            "--action", self.action,
-                            "--series", self.series, "--port", self.port, "--prompt", self.prompt]
+            self.command_extend = ["--action", self.action, "--wlan", self.wlan]
+            self.command.extend(self.command_extend)
 
         elif self.action in ["wireless_tag_policy"]:
 
-            self.command = ["./wifi_ctl_9800_3504.py",
-                            "--scheme", self.scheme, "--dest", self.dest,
-                            "--user", self.user, "--passwd", self.passwd,
-                            "--ap", self.ap, "--band", self.band,
-                            "--action", self.action,
-                            "--tag_policy", self.tag_policy, "--policy_profile", self.policy_profile,
-                            "--series", self.series, "--port", self.port, "--prompt", self.prompt]
+            self.command_extend = ["--action", self.action, "--wlan", self.wlan, "--tag_policy", self.tag_policy, "--policy_profile", self.policy_profile]
+            self.command.extend(self.command_extend)
 
         # possible need to look for exact command
-        elif self.action in ["summary", "no_logging_console", "line_console_0", "show_wlan_summary",
+        elif self.action in ["summary", "show_radio", "no_logging_console", "line_console_0", "show_ap_wlan_summary", "show_wlan_summary",
                              "advanced", "disable", "disable_network_5ghz", "disable_network_24ghz",
-                             "manual", "enable_network_5ghz", "enable_network_24ghz", "enable"]:
+                             "manual", "auto", "enable_network_5ghz", "enable_network_24ghz", "enable"]:
 
-            self.command = ["./wifi_ctl_9800_3504.py", "--scheme", self.scheme, "--dest", self.dest,
-                            "--user", self.user, "--passwd", self.passwd, "--ap", self.ap, "--band", self.band,
-                            "--action", self.action, "--series", self.series, "--port", self.port, "--prompt", self.prompt]
+            self.command_extend = ["--action", self.action]
+            self.command.extend(self.command_extend)
 
         else:
             logger.critical("action {action} not supported".format(action=self.action))
@@ -182,30 +186,16 @@ class create_controller_series_object:
         # logger.info(pformat(self.command))
         logger.info(self.command)
         # TODO change the subprocess.run to pOpen
-        # capture output needs to be read , also need to catch exceptions
-        # advanced = subprocess.run(self.command, capture_output=False, check=True)
-        # So using capture_output=True is a no-go, because the output will be stored in a pipe
-        # for you to read after the call finishes.
-        # The simpler is for you to use subprocess.Popen
-        # advanced = subprocess.run(self.command, capture_output=True, check=True)
-        # logger.info(advanced.stdout.decode('utf-8', 'ignore'))
-        # logger.info(advanced.stderr.decode('utf-8', 'ignore'))
-        # return advanced.stdout
-        advanced_output = ''
-        # print(sys.path)
-        print(self.command)
-        print(os.getcwd())
-        os.chdir("../lanforge/lanforge-scripts/")
-        print(os.getcwd())
-        advanced = subprocess.Popen(self.command, universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        for line in iter(advanced.stdout.readline, ''):
+        summary_output = ''
+        summary = subprocess.Popen(self.command, universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        for line in iter(summary.stdout.readline, ''):
             logger.debug(line)
-            advanced_output += line
+            summary_output += line
             # sys.stdout.flush() # please see comments regarding the necessity of this line
-        advanced.wait()
-        logger.info(advanced_output)  # .decode('utf-8', 'ignore'))
+        summary.wait()
+        logger.info(summary_output)  # .decode('utf-8', 'ignore'))
         # logger.info(advanced.stderr.decode('utf-8', 'ignore'))
-        return advanced_output
+        return summary_output
 
     def show_ap_config_slots(self):
         logger.info("show ap config slots")
@@ -231,9 +221,21 @@ class create_controller_series_object:
         summary = self.send_command()
         return summary
 
+    def show_controllers_dot11Radio_0(self):
+        logger.info("show radio")
+        self.action = "show_radio"
+        summary = self.send_command()
+        return summary
+
     def show_ap_summary(self):
         logger.info("show ap summary")
         self.action = "summary"
+        summary = self.send_command()
+        return summary
+
+    def show_ap_wlan_summary(self):
+        logger.info("show ap wlan summary")
+        self.action = "show_ap_wlan_summary"
         summary = self.send_command()
         return summary
 
@@ -265,7 +267,7 @@ class create_controller_series_object:
         return summary
 
     def show_ap_dot11_24gz_shutdown(self):
-        logger.info("ap name {name} dot11 5ghz shutdown")
+        logger.info("ap name {name} dot11 24ghz shutdown")
         self.band = '24g'
         self.action = "disable"
         summary = self.send_command()
@@ -303,6 +305,20 @@ class create_controller_series_object:
         summary = self.send_command()
         return summary
 
+    def ap_dot11_5ghz_radio_role_auto(self):
+        logger.info("ap name {ap_name} dot11 5ghz radio role auto".format(ap_name=self.ap))
+        self.band = '5g'
+        self.action = "auto"
+        summary = self.send_command()
+        return summary
+
+    def ap_dot11_24ghz_radio_role_auto(self):
+        logger.info("ap name {ap_name} dot11 5ghz radio role auto".format(ap_name=self.ap))
+        self.band = '24g'
+        self.action = "auto"
+        summary = self.send_command()
+        return summary
+
     def config_dot11_5ghz_disable_network(self):
         logger.info("config_dot11_5ghz_disable_network")
         self.action = "cmd"
@@ -335,7 +351,7 @@ class create_controller_series_object:
         return summary
 
     def config_dot11_24ghz_tx_power(self):
-        logger.info("config_dot11_5ghz_tx_power")
+        logger.info("config_dot11_24ghz_tx_power")
         self.band = '24g'
         self.action = "txPower"
         self.value = "{tx_power}".format(tx_power=self.tx_power)
@@ -383,6 +399,7 @@ class create_controller_series_object:
         summary = self.send_command()
         return summary
 
+    # TODO 24ghz is always 20 Mhz
     def config_dot11_24ghz_channel_width(self):
         logger.info("config_dot11_24ghz_channel width {bandwidth}".format(bandwidth=self.bandwidth))
         self.band = '24g'
@@ -430,7 +447,7 @@ class create_controller_series_object:
     #        "no shutdown"]:
     # configure wpa2
     def config_wlan_wpa2(self):
-        logger.info("config_wlan_wpa2 wlan: Profile name {wlan} wlanID {wlanID} wlanSSID {wlanSSID}".format(wlan=self.wlan, wlanID=self.wlanID, wlanSSID=self.wlanSSID))
+        logger.info("config_wlan_wpa2 wlan: Profile name {wlan} wlanID {wlanID} wlanSSID {wlanSSID} security_key {security_key}".format(wlan=self.wlan, wlanID=self.wlanID, wlanSSID=self.wlanSSID, security_key=self.security_key))
         self.action = "create_wlan_wpa2"
         summary = self.send_command()
         return summary
@@ -479,21 +496,21 @@ class create_controller_series_object:
 
     # enable_network_5ghz
     def config_no_ap_dot11_5ghz_shutdown(self):
-        logger.info("config_no_ap_dot11_5ghz_shutdown: Profile name {wlan} wlanID {wlanID} wlanSSID {wlanSSID}".format(wlan=self.wlan, wlanID=self.wlanID, wlanSSID=self.wlanSSID))
+        logger.info("config_no_ap_dot11_5ghz_shutdown (enable network 5ghz): Profile name {wlan} wlanID {wlanID} wlanSSID {wlanSSID}".format(wlan=self.wlan, wlanID=self.wlanID, wlanSSID=self.wlanSSID))
         self.action = "enable_network_5ghz"
         summary = self.send_command()
         return summary
 
     # enable_network_24ghz
     def config_no_ap_dot11_24ghz_shutdown(self):
-        logger.info("config_no_ap_dot11_24ghz_shutdown: Profile name {wlan} wlanID {wlanID} wlanSSID {wlanSSID}".format(wlan=self.wlan, wlanID=self.wlanID, wlanSSID=self.wlanSSID))
+        logger.info("config_no_ap_dot11_24ghz_shutdown (enable network 24ghz): Profile name {wlan} wlanID {wlanID} wlanSSID {wlanSSID}".format(wlan=self.wlan, wlanID=self.wlanID, wlanSSID=self.wlanSSID))
         self.action = "enable_network_24ghz"
         summary = self.send_command()
         return summary
 
     # enable ap 5ghz
     def config_ap_no_dot11_5ghz_shutdown(self):
-        logger.info("ap name %s dot11 5ghz shutdown {ap}".format(ap=self.ap))
+        logger.info("ap name %s dot11 5ghz shutdown {ap}  (enable ap)".format(ap=self.ap))
         self.band = '5g'
         self.action = "enable"
         summary = self.send_command()
@@ -501,84 +518,47 @@ class create_controller_series_object:
 
     # enable ap 24ghz
     def config_ap_no_dot11_24ghz_shutdown(self):
-        logger.info("ap name %s dot11 5ghz shutdown {ap}".format(ap=self.ap))
+        logger.info("ap name %s dot11 24ghz shutdown {ap} (enable ap)".format(ap=self.ap))
         self.band = '24g'
         self.action = "enable"
         summary = self.send_command()
         return summary
 
 
-# unit test for 9800 3504 controller
-def main():
-    # arguments
-    parser = argparse.ArgumentParser(
-        prog='cc_9800_3504.py',
-        formatter_class=argparse.RawTextHelpFormatter,
-        epilog='''\
-            cc_9800_3504.py: wrapper for interface to a controller library
-            ''',
-        description='''\
-NAME: cc_module_9800_3504.py
+# This next section is to allow for tests to be created without
+# please do not delete
+# modifying existing tests.
 
-PURPOSE:
-controller module for communicating to a cisco 9800 or 3504 controller
-This module can be dynamically imported
-
-SETUP:
-None
-
-EXAMPLE:
-    There is a unit test included to try sample command scenarios
+# This sample runs thought dumping status
+def sample_test_dump_status(cs):
+    cs.show_ap_config_slots()
+    cs.show_ap_summary()
+    cs.no_logging_console()
+    cs.line_console_0()
+    cs.show_wlan_summary()
+    cs.show_ap_dot11_5gz_summary()
 
 
-COPYWRITE
-    Copyright 2021 Candela Technologies Inc
-    License: Free to distribute and modify. LANforge systems must be licensed.
+# This sample runs though the sequence of commands used
+# by tx_power script
 
-INCLUDE_IN_README
----------
-            ''')
-
-# sample command
-# ./cc_module_9800_3504.py --scheme ssh --dest localhost --port 8887 --user admin --passwd Cisco123 --ap APA453.0E7B.CF9C --series 9800 --prompt "WLC1" --timeout 10 --band '5g'
-    parser.add_argument("--dest", type=str, help="address of the cisco controller", required=True)
-    parser.add_argument("--port", type=str, help="control port on the controller", required=True)
-    parser.add_argument("--user", type=str, help="credential login/username", required=True)
-    parser.add_argument("--passwd", type=str, help="credential password", required=True)
-    parser.add_argument("--ap", type=str, help="ap name APA453.0E7B.CF9C", required=True)
-    parser.add_argument("--prompt", type=str, help="controller prompt", required=True)
-    parser.add_argument("--band", type=str, help="band to test 24g, 5g, 6g", required=True)
-    parser.add_argument("--series", type=str, help="controller series", choices=["9800", "3504"], required=True)
-    parser.add_argument("--scheme", type=str, choices=["serial", "ssh", "telnet"], help="Connect via serial, ssh or telnet")
-    parser.add_argument("--timeout", type=str, help="timeout value", default=3)
-
-    args = parser.parse_args()
-
-    # set up logger , do not delete 
-    logger_config = lf_logger_config.lf_logger_config()
-
-    cs = create_controller_series_object(
-        scheme=args.scheme,
-        dest=args.dest,
-        user=args.user,
-        passwd=args.passwd,
-        prompt=args.prompt,
-        series=args.series,
-        ap=args.ap,
-        port=args.port,
-        band=args.band,
-        timeout=args.timeout)
-
-    # cs.show_ap_config_slots()
-    # cs.show_ap_summary()
-    # cs.no_logging_console()
-    # cs.line_console_0()
-    # cs.show_wlan_summary()
-    # cs.show_ap_dot11_5gz_summary()
+# TODO unit test for 6g wlan, 5g wlan, 2g wlan, and all three
+def sample_test_tx_power_sequence(cs):
 
     # series of commands to create a wlan , similiar to how tx_power works.
-    cs.ap = 'APA453.0E7B.CF9C'
-    cs.band = '5g'
+    # pass in the ap and band from the command line
+    # cs.ap = 'APA453.0E7B.CF9C'
+    # cs.band = '5g'
+
+    logger.info("sample_test_tx_power_sequence")
+    # This needs to be here to disable and delete
+    cs.wlan = 'wpa2_wlan_3'
+    cs.wlanID = '3'
+    cs.wlanSSID = 'wpa2_wlan_3'
+    cs.tx_power = '1'
+
+    cs.tag_policy = 'RM204-TB1'
+    cs.policy_profile = 'default-policy-profile'
 
     # no_logging_console
     cs.no_logging_console()
@@ -589,11 +569,7 @@ INCLUDE_IN_README
 
     # disable
     cs.show_ap_dot11_5gz_shutdown()
-    # cs.show_ap_dot11_24gz_shutdown() not in txpower
-    # This needs to be here to disable and delete
-    cs.wlan = 'wpa2_wlan_4'
-    cs.wlanID = '4'
-    cs.wlanSSID = 'wpa2_wlan_4'
+    cs.show_ap_dot11_24gz_shutdown()
 
     # disable_wlan
     cs.wlan_shutdown()
@@ -603,8 +579,7 @@ INCLUDE_IN_README
     cs.ap_dot11_24ghz_shutdown()
     # manual
     cs.ap_dot11_5ghz_radio_role_manual_client_serving()
-    # cs.ap_dot11_24ghz_radio_role_manual_client_serving()
-    cs.tx_power = '1'
+    cs.ap_dot11_24ghz_radio_role_manual_client_serving()
 
     # Configuration for 5g
 
@@ -640,10 +615,6 @@ INCLUDE_IN_README
     # delete_wlan
     # TODO (there were two in tx_power the logs)
     # need to check if wlan present
-    cs.wlan = 'wpa2_wlan_3'
-    cs.wlanID = '3'
-    cs.wlanSSID = 'wpa2_wlan_3'
-
     # delete wlan
     cs.config_no_wlan()
 
@@ -659,20 +630,16 @@ INCLUDE_IN_README
     # cs.config_wlan_open()
 
     # create_wlan_wpa2
-    cs.wlan = 'wpa2_wlan_3'
-    cs.wlanID = '3'
-    cs.wlanSSID = 'wpa2_wlan_3'
     cs.config_wlan_wpa2()
 
-    # # create_wlan_wpa3
+    # create_wlan_wpa3
     # cs.wlan = 'wpa3_wlan_4'
     # cs.wlanID = '4'
     # cs.wlanSSID = 'wpa3_wlan_4'
+    # cs.security_key = 'hello123'
     # cs.config_wlan_wpa3()
 
     # wireless_tag_policy
-    cs.tag_policy = 'RM204-TB1'
-    cs.policy_profile = 'default-policy-profile'
     cs.config_wireless_tag_policy_and_policy_profile()
     # enable_wlan
     cs.config_enable_wlan_send_no_shutdown()
@@ -688,6 +655,240 @@ INCLUDE_IN_README
     # cs.show_ap_dot11_24gz_summary()
     # show_wlan_summary
     cs.show_wlan_summary()
+
+
+def test_config_tx_power_5g_open(cs):
+
+    logger.info("test_config_tx_power_open")
+    # configure once at the top
+    cs.wlan = 'open-wlan-15'
+    cs.wlanID = '15'
+    cs.wlanSSID = 'open-wlan-15'
+    cs.config_wlan_open()
+
+    # wireless_tag_policy
+    cs.tag_policy = 'RM204-TB1'
+    cs.policy_profile = 'default-policy-profile'
+    cs.config_wireless_tag_policy_and_policy_profile()
+
+    cs.tx_power = '1'
+    cs.channel = '100'
+    cs.bandwidth = '40'
+
+    # no_logging_console
+    cs.no_logging_console()
+    # line_console_0
+    cs.line_console_0()
+    # summary
+    cs.show_ap_summary()
+
+    # disable
+    cs.show_ap_dot11_5gz_shutdown()
+    cs.show_ap_dot11_24gz_shutdown()
+
+    # disable_wlan only need wlan
+    cs.wlan_shutdown()
+    # disable_network_5ghz
+    cs.ap_dot11_5ghz_shutdown()
+    # disable_network_24ghz
+    cs.ap_dot11_24ghz_shutdown()
+    # manual
+    cs.ap_dot11_5ghz_radio_role_manual_client_serving()
+    cs.ap_dot11_24ghz_radio_role_manual_client_serving()
+
+    # Configuration for 5g
+
+    # txPower
+    cs.config_dot11_5ghz_tx_power()
+    # bandwidth (to set to 20 if channel change does not support)
+    cs.bandwidth = '20'
+    cs.config_dot11_5ghz_channel_width()
+    # channel
+    cs.config_dot11_5ghz_channel()
+    # bandwidth
+    cs.bandwidth = '40'
+    cs.config_dot11_5ghz_channel_width()
+    # show_wlan_summary
+    cs.show_wlan_summary()
+
+    # delete_wlan
+    # TODO (there were two in tx_power the logs)
+    # need to check if wlan present
+    # delete wlan
+    # cs.config_no_wlan()
+
+    # create_wlan  open
+
+    # enable_wlan
+    cs.config_enable_wlan_send_no_shutdown()
+    # enable_network_5ghz
+    cs.config_no_ap_dot11_5ghz_shutdown()
+    # enable_network_24ghz
+    cs.config_no_ap_dot11_24ghz_shutdown()
+    # enable
+    cs.config_ap_no_dot11_5ghz_shutdown()
+    cs.config_ap_no_dot11_24ghz_shutdown()
+    # config_ap_no_dot11_24ghz_shutdown
+    # advanced
+    cs.show_ap_dot11_5gz_summary()
+    cs.show_ap_dot11_24gz_summary()
+    # show_wlan_summary
+    cs.show_wlan_summary()
+
+
+def test_config_tx_power_wpa2(cs):
+
+    logger.info("sample_test_tx_power_sequence")
+
+    # no_logging_console
+    cs.no_logging_console()
+    # line_console_0
+    cs.line_console_0()
+    # summary
+    cs.show_ap_summary()
+
+    # disable
+    cs.show_ap_dot11_5gz_shutdown()
+    cs.show_ap_dot11_24gz_shutdown()
+    # This needs to be here to disable and delete
+    cs.wlan = 'wpa2_wlan_3'
+
+    # disable_wlan
+    cs.wlan_shutdown()
+    # disable_network_5ghz
+    cs.ap_dot11_5ghz_shutdown()
+    # disable_network_24ghz
+    cs.ap_dot11_24ghz_shutdown()
+    # manual
+    cs.ap_dot11_5ghz_radio_role_manual_client_serving()
+    # cs.ap_dot11_24ghz_radio_role_manual_client_serving()
+    cs.tx_power = '1'
+
+    # Configuration for 5g
+
+    # txPower
+    cs.config_dot11_5ghz_tx_power()
+    cs.bandwidth = '20'
+    # bandwidth (to set to 20 if channel change does not support)
+    cs.config_dot11_5ghz_channel_width()
+    cs.channel = '100'
+    # channel
+    cs.config_dot11_5ghz_channel()
+    cs.bandwidth = '40'
+    # bandwidth
+    cs.config_dot11_5ghz_channel_width()
+    # show_wlan_summary
+    cs.show_wlan_summary()
+
+    # delete_wlan
+    # TODO (there were two in tx_power the logs)
+    # need to check if wlan present
+    cs.wlan = 'wpa2_wlan_3'
+
+    # delete wlan
+    cs.config_no_wlan()
+
+    # create_wlan_wpa2
+    cs.wlan = 'wpa2_wlan_3'
+    cs.wlanID = '3'
+    cs.wlanSSID = 'wpa2_wlan_3'
+    cs.security_key = 'hello123'
+    cs.config_wlan_wpa2()
+
+    # wireless_tag_policy
+    cs.tag_policy = 'RM204-TB1'
+    cs.policy_profile = 'default-policy-profile'
+    cs.config_wireless_tag_policy_and_policy_profile()
+    # enable_wlan
+    cs.config_enable_wlan_send_no_shutdown()
+    # enable_network_5ghz
+    cs.config_no_ap_dot11_5ghz_shutdown()
+    # enable_network_24ghz
+    # cs.config_no_ap_dot11_24ghz_shutdown()
+    # enable
+    cs.config_ap_no_dot11_5ghz_shutdown()
+    # config_ap_no_dot11_24ghz_shutdown
+    # advanced
+    cs.show_ap_dot11_5gz_summary()
+    # cs.show_ap_dot11_24gz_summary()
+    # show_wlan_summary
+    cs.show_wlan_summary()
+
+
+# unit test for 9800 3504 controller
+def main():
+    # arguments
+    parser = argparse.ArgumentParser(
+        prog='cc_9800_3504.py',
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog='''\
+            cc_9800_3504.py: wrapper for interface to a controller library
+            ''',
+        description='''\
+NAME: cc_module_9800_3504.py
+
+PURPOSE:
+controller module for communicating to a cisco 9800 or 3504 controller
+This module can be dynamically imported
+
+SETUP:
+None
+
+EXAMPLE:
+./cc_module_9800_3504.py --scheme ssh --dest localhost --port 8887 --user admin --passwd Cisco123 --ap APA453.0E7B.CF9C --series 9800 --prompt "WLC1" --timeout 10 --band '5g'
+
+COPYWRITE
+    Copyright 2021 Candela Technologies Inc
+    License: Free to distribute and modify. LANforge systems must be licensed.
+
+INCLUDE_IN_README
+---------
+            ''')
+
+# sample command
+# ./cc_module_9800_3504.py --scheme ssh --dest localhost --port 8887 --user admin --passwd Cisco123 --ap APA453.0E7B.CF9C --series 9800 --prompt "WLC1" --timeout 10 --band '5g'
+    parser.add_argument("--dest", type=str, help="address of the cisco controller", required=True)
+    parser.add_argument("--port", type=str, help="control port on the controller", required=True)
+    parser.add_argument("--user", type=str, help="credential login/username", required=True)
+    parser.add_argument("--passwd", type=str, help="credential password", required=True)
+    parser.add_argument("--ap", type=str, help="ap name APA453.0E7B.CF9C", required=True)
+    parser.add_argument("--prompt", type=str, help="controller prompt", required=True)
+    parser.add_argument("--band", type=str, help="band to test 24g, 5g, 6g", required=True)
+    parser.add_argument("--series", type=str, help="controller series", choices=["9800", "3504"], required=True)
+    parser.add_argument("--scheme", type=str, choices=["serial", "ssh", "telnet"], help="Connect via serial, ssh or telnet")
+    parser.add_argument("--timeout", type=str, help="timeout value", default=3)
+
+    args = parser.parse_args()
+
+    # set up logger , do not delete
+    logger_config = lf_logger_config.lf_logger_config()
+
+    cs = create_controller_series_object(
+        scheme=args.scheme,
+        dest=args.dest,
+        user=args.user,
+        passwd=args.passwd,
+        prompt=args.prompt,
+        series=args.series,
+        ap=args.ap,
+        port=args.port,
+        band=args.band,
+        timeout=args.timeout)
+
+    # TODO add ability to select tests
+    # cs.show_ap_summary()
+    summary = cs.show_ap_wlan_summary()
+    logger.info(summary)
+
+    # sample to dump status
+    # sample_test_dump_status(cs=cs)
+
+    # test sequences used by tx_power
+    # sample_test_tx_power_sequence(cs=cs)
+
+    # test_config_tx_power_5g_open(cs=cs)
+
+    # test_config_tx_power_wpa2(cs=cs)
 
 
 if __name__ == "__main__":

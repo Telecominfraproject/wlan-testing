@@ -20,7 +20,7 @@ import os
 
 sys.path.append(os.path.join(os.path.abspath(__file__ + "../../")))
 
-# TODO change the name from logg to logger 
+# TODO change the name from logg to logger
 # to match consistency with other files.
 logger = logging.getLogger(__name__)
 lf_logger_config = importlib.import_module("py-scripts.lf_logger_config")
@@ -241,7 +241,7 @@ def usage():
     print("-t|--tty tty serial device")
     print("-l|--log <store true> log has same namelog messages here ,stdout means output to console, default stdout")
     print("-a|--ap select AP")
-    print("-b|--bandwidth: List of bandwidths to test: 20 40 80 160, NA means no change, 160 can only do 2x2 spatial streams due to radio limitations")
+    print("-b|--bandwidth: List of bandwidths to test: 20 40 80 160, NA means no change, 160 can only do 2x2 spatial streams in Intel due to radio limitations")
     print("-c|--channel: List of channels, with optional path-loss to test: 36:64 100:60 , NA means no change")
     print("-n|--nss: List of spatial streams to test: 1x1 2x2 3x3 4x4, NA means no change")
     print("-T|--txpower: List of TX power values to test: 1 2 3 4 5 6 7 8, NA means no change, 1 is highest power, the power is halved for each subsquent setting")
@@ -318,15 +318,13 @@ def main():
     global pf_ignore_offset
     global failed_low_threshold
 
-    scheme = "ssh"
-
     parser = argparse.ArgumentParser(description="Cisco TX Power report Script", epilog=EPILOG,
                                      formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument("-d", "--dest", type=str, help="address of the cisco controller", required=True)
     parser.add_argument("-o", "--port", type=str, help="control port on the controller", required=True)
     parser.add_argument("-u", "--user", type=str, help="credential login/username", required=True)
     parser.add_argument("-p", "--passwd", type=str, help="credential password", required=True)
-    parser.add_argument("-s", "--scheme", type=str, choices=["serial", "ssh", "telnet"], help="Connect via serial, ssh or telnet")
+    parser.add_argument("-s", "--scheme", type=str, choices=["serial", "ssh", "telnet"], help="Connect via serial, ssh or telnet", required=True)
     parser.add_argument("-t", "--tty", type=str, help="tty serial device")
     parser.add_argument("-l", "--log", action='store_true', help="create logfile for messages, default stdout")
     parser.add_argument("-a", "--ap", type=str, help="select AP")
@@ -334,7 +332,7 @@ def main():
     parser.add_argument("-c", "--channel", type=str, help="List of channels to test, with optional path-loss, 36:64 149:60. NA means no change")
     parser.add_argument("-n", "--nss", type=str, help="List of spatial streams to test.  NA means no change")
     parser.add_argument("-T", "--txpower", type=str, help="List of txpowers to test.  NA means no change")
-    parser.add_argument("-k", "--keep_state", action="store_true", help="keep the state, no configuration change at the end of the test")
+    parser.add_argument("-k", "--keep_state", "--no_cleanup", dest="keep_state", action="store_true", help="keep the state, no configuration change at the end of the test")
     parser.add_argument('-D', '--duration', type=str, help='--traffic <how long to run in seconds>  example -t 20 (seconds) default: 20 ', default='20')
     parser.add_argument("--station", type=str, help="LANforge station to use (sta0000, etc) use if station present and --create_station not used")
     parser.add_argument("--upstream_port", type=str, help="LANforge upsteram-port to use (eth1, etc)")
@@ -344,8 +342,8 @@ def main():
     parser.add_argument("--outfile", type=str, help="Output file for csv data", default="cisco_power_results")
     parser.add_argument("--pathloss", type=str, help="Calculated pathloss between LANforge Station and AP")
     parser.add_argument("--antenna_gain", type=str, help="Antenna gain,  take into account the gain due to the antenna", default="0")
-    parser.add_argument("--band", type=str, help="Select band (a | b), a means 5Ghz, b means 2.4Ghz.  Default is a",
-                        choices=["a", "b", "abgn"])
+    parser.add_argument("--band", type=str, help="6g, Select band a, 5g, b, 24g",
+                        choices=["a", "5g", "24g", "b", "abgn", "6g"])
     parser.add_argument("--pf_dbm", type=str, help="Pass/Fail threshold.  Default is 6", default="6")
     parser.add_argument("--pf_ignore_offset", type=str, help="Allow a chain to have lower tx-power and still pass. default 0 so disabled", default="0")
     parser.add_argument("--wait_forever", action='store_true', help="Wait forever for station to associate, may aid debugging if STA cannot associate properly")
@@ -358,8 +356,8 @@ def main():
     parser.add_argument("--create_station", type=str, help="create LANforge station at the beginning of the test")
     parser.add_argument("--radio", type=str, help="radio to create LANforge station on at the beginning of the test")
     parser.add_argument("--ssid", type=str, help="ssid, this must patch the wlan", required=True)
-    parser.add_argument("--ssidpw", type=str, help="ssidpw", required=True)
-    parser.add_argument("--security", type=str, help="security", required=True)
+    parser.add_argument("--ssidpw", "--security_key", dest='ssidpw', type=str, help="ssidpw", required=True)
+    parser.add_argument("--security", type=str, help="security type open wpa wpa2 wpa3", required=True)
     parser.add_argument("--cleanup", action='store_true', help="--cleanup , Clean up stations after test completes ")
     parser.add_argument("--vht160", action='store_true', help="--vht160 , Enable VHT160 in lanforge ")
     parser.add_argument('--verbose', action='store_true', help='--verbose , switch the cisco controller output will be captured')
@@ -376,24 +374,24 @@ def main():
         nargs=1,
         type=str,
         help="--ap_info ap_scheme==<telnet,ssh or serial> ap_prompt==<ap_prompt> ap_ip==<ap ip> ap_port==<ap port number> ap_user==<ap user> ap_pw==<ap password>")
-    parser.add_argument("--tag_policy", type=str, help="--tag_policy default-tag-policy", default="default-tag-policy")
-    # parser.add_argument("--tag_policy",     type=str, help="--tag_policy default-tag-policy", default="RM204-TB2")
+    # parser.add_argument("--tag_policy", type=str, help="--tag_policy default-tag-policy", default="default-tag-policy")
+    # TODO remove required
+    parser.add_argument("--tag_policy", type=str, help="--tag_policy default-tag-policy", default="RM204-TB1")
     parser.add_argument("--policy_profile", type=str, help="--policy_profile default-policy-profile", default="default-policy-profile")
     parser.add_argument("--testbed_id", type=str, help="--testbed_id", default="")
-    parser.add_argument(
-        "--lf_logger_config_json",
-        help="--lf_logger_config_json <json file> , json configuration of logger")
-
+    parser.add_argument("--create_wlan", help="--create_wlan", action='store_true')
+    parser.add_argument("--lf_logger_config_json", help="--lf_logger_config_json <json file> , json configuration of logger")
+    parser.add_argument("--module", type=str, help="series module", required=True)
+    parser.add_argument("--timeout", type=str, help="timeout value", default=3)
 
     # current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "{:.3f}".format(time.time() - (math.floor(time.time())))[1:]
     # print(current_time)
     # usage()
     args = None
+
     try:
         # Parcing the input parameters and assignment
         args = parser.parse_args()
-        if (args.scheme is not None):
-            scheme = args.scheme
         # logfile = args.log
         if (args.station is not None):
             lfstation = args.station
@@ -413,10 +411,6 @@ def main():
             outfile = args.outfile
             full_outfile = "full-%s" % (outfile)
             outfile_xlsx = "%s.xlsx" % (outfile)
-        if (args.band is not None):
-            band = args.band
-        else:
-            band = "a"
         if (args.pf_dbm is not None):
             pf_dbm = int(args.pf_dbm)
         if (args.pf_ignore_offset is not None):
@@ -505,6 +499,31 @@ def main():
         # stdout logging
         logging.basicConfig(format=FORMAT, handlers=[console_handler])
         # logg.addHandler(logging.StreamHandler()) # allows to logging to file and stderr
+
+    # dynamic import of the controller module
+    series = importlib.import_module(args.module)
+
+    # create the controller , cs is controller scheme
+    cs = series.create_controller_series_object(
+        scheme=args.scheme,
+        dest=args.dest,
+        user=args.user,
+        passwd=args.passwd,
+        prompt=args.prompt,
+        series=args.series,
+        ap=args.ap,
+        port=args.port,
+        band=args.band,
+        timeout=args.timeout)
+    cs.wlan = args.wlan
+    cs.wlanID = args.wlanID
+    cs.wlanSSID = args.wlanSSID
+    # TODO change to use args.security_key
+    cs.security_key = args.ssidpw
+
+    if args.create_wlan:
+        cs.tag_policy = args.tag_policy
+        cs.policy_profile = args.policy_profile
 
     if bool(ap_dict):
         logg.info("ap_dict {}".format(ap_dict))
@@ -775,56 +794,11 @@ def main():
     # The script supports both the 9800 series controller and the 3504 series controller ,  the controllers have different interfaces
     if args.series == "9800":
 
-        try:
-            logg.info("9800 wifi_ctl_9800_3504.py: no_logging_console")
-            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                       " --action 'no_logging_console' --series {series} --port {port} --prompt  {prompt}").format(
-                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                series=args.series, port=args.port, prompt=args.prompt))
-
-            advanced = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                       "--action", "no_logging_console", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=True, check=True)
-            pss = advanced.stdout.decode('utf-8', 'ignore')
-            logg.info(pss)
-        except subprocess.CalledProcessError as process_error:
-            logg.info("####################################################################################################")
-            logg.info("# CHECK IF CONTROLLER HAS TELNET CONNECTION ALREADY ACTIVE")
-            logg.info("####################################################################################################")
-
-            logg.info("####################################################################################################")
-            logg.info("# Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-            logg.info("####################################################################################################")
-            exit_test(workbook)
-
-        try:
-            logg.info("9800 wifi_ctl_9800_3504.py: line_console_0")
-            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                       " --action 'line_console_0' --series {series} --port {port} --prompt  {prompt}").format(
-                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                series=args.series, port=args.port, prompt=args.prompt))
-
-            advanced = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                       "--action", "line_console_0", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=True, check=True)
-            pss = advanced.stdout.decode('utf-8', 'ignore')
-            logg.info(pss)
-        except subprocess.CalledProcessError as process_error:
-            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code {}  output {}".format(process_error.returncode, process_error.output))
-            exit_test(workbook)
-
-    try:
-        logg.info("9800/3504 wifi_ctl_9800_3504.py: summary")
-        logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                   " --action 'summary' --series {series} --port {port} --prompt  {prompt}").format(
-            scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-            series=args.series, port=args.port, prompt=args.prompt))
-
-        advanced = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                   "--action", "summary", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=True, check=True)
-        pss = advanced.stdout.decode('utf-8', 'ignore')
-        logg.info(pss)
-    except subprocess.CalledProcessError as process_error:
-        logg.info("Controller unable to commicate to AP or unable to communicate to controller error code {}  output {}".format(process_error.returncode, process_error.output))
-        exit_test(workbook)
+        cs.no_logging_console()
+        cs.line_console_0()
+    # TODO
+    pss = cs.show_ap_summary()
+    logg.info(pss)
 
     # Find our current regulatory domain so we can report it properly
     searchap = False
@@ -907,238 +881,79 @@ def main():
                     # Down station
                     port_stats = subprocess.run(["./lf_portmod.pl", "--manager", lfmgr, "--card", lfresource, "--port_name", lfstation,
                                                  "--set_ifstate", "down"])
+                    cs.show_ap_summary()
 
                     # Disable AP, apply settings, enable AP
-                    try:
-                        logg.info("3504/9800 wifi_ctl_9800_3504.py: disable AP {}".format(args.ap))
-                        logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                   " --action 'disable' --series {series} --port {port} --prompt  {prompt}").format(
-                            scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                            series=args.series, port=args.port, prompt=args.prompt))
-
-                        ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                     "--action", "disable", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                        if cap_ctl_out:
-                            pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                            logg.info(pss)
-                    except subprocess.CalledProcessError as process_error:
-                        logg.info("####################################################################################################")
-                        logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                        logg.info("####################################################################################################")
-                        logg.info("####################################################################################################")
-                        logg.info("#CHECK IF CONTROLLER HAS TELNET CONNECTION ALREADY ACTIVE")
-                        logg.info("####################################################################################################")
-
-                        exit_test(workbook)
+                    cs.show_ap_dot11_5gz_shutdown()
+                    cs.show_ap_dot11_24gz_shutdown()
 
                     if args.series == "9800":
                         # 9800 series need to  "Configure radio for manual channel assignment"
                         logg.info("9800 Configure radio for manual channel assignment")
+                        cs.wlan_shutdown()
+                        cs.ap_dot11_5ghz_shutdown()
+                        cs.ap_dot11_24ghz_shutdown()
+                        # manual
+                        cs.ap_dot11_5ghz_radio_role_manual_client_serving()
+                        cs.ap_dot11_24ghz_radio_role_manual_client_serving()
 
-                        try:
-                            logg.info("9800 wifi_ctl_9800_3504.py: disable_wlan")
-                            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                       " --action 'disable_wlan' --wlan {wlan} --wlanID {wlanID} --wlanSSID {wlanSSID}"
-                                       " --series {series} --port {port} --prompt  {prompt}").format(
-                                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                wlan=args.wlan, wlanID=args.wlanID, wlanSSID=args.wlanSSID,
-                                series=args.series, port=args.port, prompt=args.prompt))
-
-                            ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                         "--action", "disable_wlan", "--wlan", args.wlan, "--wlanID", args.wlanID, "--wlanSSID", args.wlanSSID,
-                                                         "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                            if cap_ctl_out:
-                                pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                                logg.info(pss)
-
-                        except subprocess.CalledProcessError as process_error:
-                            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                            exit_test(workbook)
-                        try:
-                            logg.info("9800 wifi_ctl_9800_3504.py: disable_network_5ghz")
-                            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                       " --action 'disable_network_5ghz' --series {series} --port {port} --prompt  {prompt}").format(
-                                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                series=args.series, port=args.port, prompt=args.prompt))
-
-                            ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                         "--action", "disable_network_5ghz", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                            if cap_ctl_out:
-                                pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                                logg.info(pss)
-
-                        except subprocess.CalledProcessError as process_error:
-                            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                            exit_test(workbook)
-
-                        try:
-                            logg.info("9800 wifi_ctl_9800_3504.py: disable_network_24ghz")
-                            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                       " --action 'disable_network_24ghz' --series {series} --port {port} --prompt  {prompt}").format(
-                                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                series=args.series, port=args.port, prompt=args.prompt))
-
-                            ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                         "--action", "disable_network_24ghz", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                            if cap_ctl_out:
-                                pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                                logg.info(pss)
-
-                        except subprocess.CalledProcessError as process_error:
-                            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                            exit_test(workbook)
-
-                        try:
-                            logg.info("9800 wifi_ctl_9800_3504.py: manual")
-                            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                       " --action 'manual' --series {series} --port {port} --prompt  {prompt}").format(
-                                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                series=args.series, port=args.port, prompt=args.prompt))
-
-                            ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                         "--action", "manual", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                            if cap_ctl_out:
-                                pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                                logg.info(pss)
-
-                        except subprocess.CalledProcessError as process_error:
-                            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                            exit_test(workbook)
                     else:
-                        try:
-                            logg.info("3504 wifi_ctl_9800_3504.py: config 802.11a disable network")
-                            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                       " --action 'cmd' --value 'config 802.11a disable network' --series {series} --port {port} --prompt  {prompt}").format(
-                                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                series=args.series, port=args.port, prompt=args.prompt))
+                        cs.ap_dot11_5ghz_shutdown()
+                        cs.ap_dot11_24ghz_shutdown()
 
-                            ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                         "--action", "cmd", "--value", "config 802.11a disable network", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                            if cap_ctl_out:
-                                pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                                logg.info(pss)
-
-                        except subprocess.CalledProcessError as process_error:
-                            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                            exit_test(workbook)
-
-                        try:
-                            logg.info("3504 wifi_ctl_9800_3504.py: config 802.11b disable network")
-                            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                       " --action 'cmd' --value 'config 802.11b disable network' --series {series} --port {port} --prompt  {prompt}").format(
-                                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                series=args.series, port=args.port, prompt=args.prompt))
-
-                            ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                         "--action", "cmd", "--value", "config 802.11b disable network", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-
-                            if cap_ctl_out:
-                                pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                                logg.info(pss)
-
-                        except subprocess.CalledProcessError as process_error:
-                            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                            exit_test(workbook)
-
-                    logg.info("9800/3504 test_parameters_summary: set : tx: {} ch: {} bw: {}".format(tx, ch, bw))
+                    logg.info("9800/3504 test_parameters_summary: set : tx: {tx_power} ch: {channel} bw: {bandwidth}".format(
+                        tx_power=tx, channel=ch, bandwidth=bw))
                     if (tx != "NA"):
-                        logg.info("9800/3504 test_parameters: set txPower: {}".format(tx))
-                        try:
-                            logg.info("9800/3504 wifi_ctl_9800_3504.py: txPower {}".format(tx))
-                            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                       " --action 'txPower' --value {tx} --series {series} --port {port} --prompt  {prompt}").format(
-                                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                tx=tx, series=args.series, port=args.port, prompt=args.prompt))
-
-                            ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                         "--action", "txPower", "--value", tx, "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                            if cap_ctl_out:
-                                pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                                logg.info(pss)
-
-                        except subprocess.CalledProcessError as process_error:
-                            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                            exit_test(workbook)
+                        logg.info("9800/3504 test_parameters: set txPower: {tx_power}".format(tx_power=tx))
+                        cs.tx_power = tx
+                        # TODO add 24ghz and 6ghz
+                        if args.band == 'a':
+                            cs.config_dot11_5ghz_tx_power()
+                        elif args.band == 'b':
+                            cs.config_dot11_5ghz_tx_power()
+                            
+                        # TODO add 24ghz and 6ghz
 
                     if (bw != "NA"):
-                        try:
-                            logg.info("9800/3504 wifi_ctl_9800_3504.py: bandwidth 20 prior to setting channel, some channels only support 20")
-                            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                       " --action 'bandwidth' --value '20' --series {series} --port {port} --prompt  {prompt}").format(
-                                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                series=args.series, port=args.port, prompt=args.prompt))
-
-                            ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                         "--action", "bandwidth", "--value", "20", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                            if cap_ctl_out:
-                                pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                                logg.info(pss)
-
-                        except subprocess.CalledProcessError as process_error:
-                            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                            exit_test(workbook)
+                        logg.info("bandwidth 20 prior to setting channel, some channels only support 20")
+                        cs.bandwidth = '20'
+                        cs.config_dot11_5ghz_channel_width()
+                        cs.config_dot11_24ghz_channel_width()
+                        # TODO add 24ghz , 6ghz
 
                     # NSS is set on the station earlier...
                     if (ch != "NA"):
                         logg.info("9800/3504 test_parameters set channel: {}".format(ch))
-                        try:
-                            logg.info("9800/3504 wifi_ctl_9800_3504.py: channel {}".format(ch))
-                            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                       " --action 'channel' --value {ch} --series {series} --port {port} --prompt  {prompt}").format(
-                                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                ch=ch, series=args.series, port=args.port, prompt=args.prompt))
-
-                            ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                         "--action", "channel", "--value", ch, "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                            if cap_ctl_out:
-                                pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                                logg.info(pss)
-
-                        except subprocess.CalledProcessError as process_error:
-                            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                            exit_test(workbook)
+                        cs.channel = ch
+                        if args.band == 'a':
+                            cs.config_dot11_5ghz_channel()
+                        elif args.band == 'b':                            
+                            cs.config_dot11_24ghz_channel()
 
                     if (bw != "NA"):
                         logg.info("9800/3504 test_parameters bandwidth: set : {}".format(bw))
-                        try:
-                            logg.info("9800/3504 wifi_ctl_9800_3504.py: bandwidth {}".format(bw))
-                            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                       " --action 'bandwidth' --value {bw} --series {series} --port {port} --prompt  {prompt}").format(
-                                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                bw=bw, series=args.series, port=args.port, prompt=args.prompt))
-
-                            ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                         "--action", "bandwidth", "--value", bw, "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                            if cap_ctl_out:
-                                pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                                logg.info(pss)
-
-                        except subprocess.CalledProcessError as process_error:
-                            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                            exit_test(workbook)
+                        cs.bandwidth = bw
+                        if args.band == 'a':
+                            cs.config_dot11_5ghz_channel_width()
+                        elif args.band == 'b':
+                            if bw != '20':
+                                logg.info(" 24ghz channel bw should be 20")
+                            cs.config_dot11_24ghz_channel_width()
 
                     # only create the wlan the first time
                     if args.series == "9800":
+                        if args.create_wlan is False:
+                            wlan_created = True
                         if wlan_created:
+                            pss = cs.show_wlan_summary()
+                            logg.info(pss)
                             logg.info("wlan already present, no need to create wlanID {} wlan {} wlanSSID {} port {}".format(args.wlanID, args.wlan, args.wlanSSID, args.port))
                             pass
                         else:
                             # Verify that a wlan does not exist on wlanID
                             # delete the wlan if already exists
-                            try:
-                                logg.info("9800 wifi_ctl_9800_3504.py: show_wlan_summary")
-                                logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                           " --action 'show_wlan_summary' --series {series} --port {port} --prompt  {prompt}").format(
-                                    scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                    series=args.series, port=args.port, prompt=args.prompt))
-
-                                wlan_info = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                            "--action", "show_wlan_summary", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=True, check=True)
-                                pss = wlan_info.stdout.decode('utf-8', 'ignore')
-                                logg.info(pss)
-                            except subprocess.CalledProcessError as process_error:
-                                logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                                exit_test(workbook)
+                            pss = cs.show_wlan_summary()
+                            logg.info(pss)
 
                             #  "number of WLANs:\s+(\S+)"
                             search_wlan = False
@@ -1157,200 +972,55 @@ def main():
                                         logg.info("###############################################################################")
                                         logg.info("Need to remove wlanID: {} cc_wlan: {} cc_wlan_ssid: {}".format(args.wlanID, cc_wlan, cc_wlan_ssid))
                                         logg.info("###############################################################################")
-                                        try:
-                                            logg.info(
-                                                "9800 wifi_ctl_9800_3504.py: delete_wlan, wlan present at start of test: wlanID: {} cc_wlan {} cc_wlan_ssid: {}".format(
-                                                    args.wlanID, cc_wlan, cc_wlan_ssid))
-                                            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                                       " --action 'delete_wlan' --series {series} --port {port} --prompt  {prompt}").format(
-                                                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                                series=args.series, port=args.port, prompt=args.prompt))
-
-                                            ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                                         "--action", "delete_wlan", "--series", args.series, "--wlanID", args.wlanID, "--wlan", cc_wlan, "--wlanSSID", cc_wlan_ssid,
-                                                                         "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                                            if cap_ctl_out:
-                                                pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                                                logg.info(pss)
-
-                                        except subprocess.CalledProcessError as process_error:
-                                            logg.info(
-                                                "Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(
-                                                    process_error.returncode, process_error.output))
-                                            exit_test(workbook)
+                                        cs.config_no_wlan()
 
                             # Create wlan
                             wlan_created = True
                             logg.info("create wlan {} wlanID {} port {}".format(args.wlan, args.wlanID, args.port))
-                            try:
-                                logg.info("9800 wifi_ctl_9800_3504.py: create_wlan wlan {} wlanID {} wlanSSID {} port {}".format(args.wlan, args.wlanID, args.wlanSSID, args.port))
-                                logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                           " --action 'create_wlan' --series {series}"
-                                           " --wlanID {wlanID} --wlan {wlan} --wlanSSID {wlanSSID}"
-                                           " --port {port} --prompt  {prompt}").format(
-                                    scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                    wlanID=args.wlanID, wlan=args.wlan, wlanSSID=args.wlanSSID,
-                                    series=args.series, port=args.port, prompt=args.prompt))
+                            # TODO be able to do for WPA2 , WPA3
+                            # TODO check for failure to close cookbook
+                            # this needs to be configurable
+                            cs.config_wlan_open()
 
-                                ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                             "--action", "create_wlan", "--series", args.series, "--wlanID", args.wlanID, "--wlan", args.wlan, "--wlanSSID", args.wlanSSID, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                                if cap_ctl_out:
-                                    pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                                    logg.info(pss)
+                            cs.config_wireless_tag_policy_and_policy_profile()
 
-                            except subprocess.CalledProcessError as process_error:
-                                logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                                exit_test(workbook)
-
-                            try:
-                                logg.info("9800 wifi_ctl_9800_3504.py: wireless_tag_policy")
-                                logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                           " --action 'wireless_tag_policy' --series {series}"
-                                           " --port {port} --prompt  {prompt}"
-                                           " --tag_policy {tag_policy} --policy_profile {policy_profile}").format(
-                                    scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                    series=args.series, port=args.port, prompt=args.prompt,
-                                    tag_policy=args.tag_policy, policy_profile=args.policy_profile))
-
-                                ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                            "--action", "wireless_tag_policy", "--series", args.series, "--port", args.port, "--prompt", args.prompt,
-                                                             "--tag_policy", args.tag_policy, "--policy_profile", args.policy_profile], capture_output=cap_ctl_out, check=True)
-                                if cap_ctl_out:
-                                    pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                                    logg.info(pss)
-
-                            except subprocess.CalledProcessError as process_error:
-                                logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                                exit_test(workbook)
-                        try:
-                            logg.info("9800 wifi_ctl_9800_3504.py: enable_wlan")
-                            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                       " --action 'enable_wlan' --wlanID {wlanID} --wlan {wlan} --wlanSSID {wlanSSID}"
-                                       " --series {series} --port {port} --prompt  {prompt}").format(
-                                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                wlanID=args.wlanID, wlan=args.wlan, wlanSSID=args.wlanSSID,
-                                series=args.series, port=args.port, prompt=args.prompt))
-
-                            ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                         "--action", "enable_wlan", "--wlanID", args.wlanID, "--wlan", args.wlan, "--wlanSSID", args.wlanSSID,
-                                                         "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                            if cap_ctl_out:
-                                pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                                logg.info(pss)
-
-                        except subprocess.CalledProcessError as process_error:
-                            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                            exit_test(workbook)
+                        # enable_wlan
+                        cs.config_enable_wlan_send_no_shutdown()
 
                     # enable transmission for the entier 802.11z network
-                    if args.series == "9800":
-                        try:
-                            logg.info("9800 wifi_ctl_9800_3504.py: enable_network_5ghz")
-                            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                       " --action 'enable_network_5ghz' --series {series} --port {port} --prompt  {prompt}").format(
-                                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                series=args.series, port=args.port, prompt=args.prompt))
+                    # enable_network_5ghz
+                    if args.band == 'a':
+                        # enable 5g wlan
+                        pss = cs.config_no_ap_dot11_5ghz_shutdown()
+                        logg.info(pss)
+                        # enable 5g
+                        pss = cs.config_ap_no_dot11_5ghz_shutdown()
+                        logg.info(pss)
 
-                            ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                         "--action", "enable_network_5ghz", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                            if cap_ctl_out:
-                                pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                                logg.info(pss)
-
-                        except subprocess.CalledProcessError as process_error:
-                            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                            exit_test(workbook)
-
-                        try:
-                            logg.info("9800 wifi_ctl_9800_3504.py: enable_network_24ghz")
-                            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                       " --action 'enable_network_24ghz' --series {series} --port {port} --prompt  {prompt}").format(
-                                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                series=args.series, port=args.port, prompt=args.prompt))
-                            ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                         "--action", "enable_network_24ghz", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                            if cap_ctl_out:
-                                pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                                logg.info(pss)
-
-                        except subprocess.CalledProcessError as process_error:
-                            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                            exit_test(workbook)
-                    else:
-                        try:
-                            logg.info("3504 wifi_ctl_9800_3504.py: config 802.11a enable network")
-                            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                       " --action 'cmd' --value 'config 802.11a enable network' --series {series} --port {port} --prompt  {prompt}").format(
-                                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                series=args.series, port=args.port, prompt=args.prompt))
-
-                            ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                         "--action", "cmd", "--value", "config 802.11a enable network", "--port", args.port, "--series", args.series, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                            if cap_ctl_out:
-                                pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                                logg.info(pss)
-
-                        except subprocess.CalledProcessError as process_error:
-                            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                            exit_test(workbook)
-
-                        try:
-                            logg.info("3504 wifi_ctl_9800_3504.py: config 802.11a enable network")
-                            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                       " --action 'cmd' --value 'config 802.11b enable network' --series {series} --port {port} --prompt  {prompt}").format(
-                                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                series=args.series, port=args.port, prompt=args.prompt))
-
-                            ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                         "--action", "cmd", "--value", "config 802.11b enable network", "--port", args.port, "--series", args.series, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                            if cap_ctl_out:
-                                pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                                logg.info(pss)
-
-                        except subprocess.CalledProcessError as process_error:
-                            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                            exit_test(workbook)
-
-                    try:
-                        logg.info("9800/3504 wifi_ctl_9800_3504.py: enable")
-                        logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                   " --action 'enable' --series {series} --port {port} --prompt  {prompt}").format(
-                            scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                            series=args.series, port=args.port, prompt=args.prompt))
-
-                        ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                     "--action", "enable", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                        if cap_ctl_out:
-                            pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                            logg.info(pss)
-
-                    except subprocess.CalledProcessError as process_error:
-                        logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                        exit_test(workbook)
+                    elif args.band == 'b':
+                        # enable wlan
+                        pss = cs.config_no_ap_dot11_24ghz_shutdown()
+                        logg.info(pss)
+                        # enable 2ghz 
+                        cs.config_ap_no_dot11_24ghz_shutdown()
 
                     # Wait a bit for AP to come back up
                     time.sleep(3)
                     loop_count = 0
                     cc_dbm_rcv = False
                     if args.series == "9800":
-                        while cc_dbm_rcv == False and loop_count <= 3:
+                        while cc_dbm_rcv is False and loop_count <= 3:
                             logg.info("9800 read controller dBm")
                             loop_count += 1
                             time.sleep(1)
-                            try:
-                                logg.info("9800 wifi_ctl_9800_3504.py: advanced")
-                                logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                           " --action 'advanced' --series {series} --port {port} --prompt  {prompt}").format(
-                                    scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                    series=args.series, port=args.port, prompt=args.prompt))
-
-                                advanced = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                           "--action", "advanced", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=True, check=True)
-                                pss = advanced.stdout.decode('utf-8', 'ignore')
+                            # TODO configuration for 24g, 6g
+                            if args.band == 'a':
+                                pss = cs.show_ap_dot11_5gz_summary()
                                 logg.info(pss)
-                            except subprocess.CalledProcessError as process_error:
-                                logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                                exit_test(workbook)
+                            else:
+                                pss = cs.show_ap_dot11_24gz_summary()
+                                logg.info(pss)
+
 
                             searchap = False
                             cc_mac = ""
@@ -1404,34 +1074,16 @@ def main():
                                     logg.info("9800 read controller dBm loop_count {} try again".format(loop_count))
                             else:
                                 cc_dbm_rcv = True
-                        try:
-                            logg.info("9800 wifi_ctl_9800_3504.py: show_wlan_summary")
-                            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                       " --action 'show_wlan_summary' --series {series} --port {port} --prompt  {prompt}").format(
-                                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                series=args.series, port=args.port, prompt=args.prompt))
-
-                            wlan_summary = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                           "--action", "show_wlan_summary", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=True, check=True)
-                            pss = wlan_summary.stdout.decode('utf-8', 'ignore')
-                            logg.info(pss)
-                        except subprocess.CalledProcessError as process_error:
-                            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
+                        cs.show_wlan_summary()
                     else:
-                        try:
-                            logg.info("3504 wifi_ctl_9800_3504.py: advanced")
-                            logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                       " --action 'advanced' --series {series} --port {port} --prompt  {prompt}").format(
-                                scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                series=args.series, port=args.port, prompt=args.prompt))
+                        # TODO configuration for 24g, 6g
+                        pss = cs.show_ap_dot11_5gz_summary()
+                        logg.info(pss)
+                        pss = cs.show_ap_dot11_24gz_summary()
+                        logg.info(pss)
+                        pss = cs.show_wlan_summary()
+                        logg.info(pss)
 
-                            advanced = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                       "--action", "advanced", "--port", args.port, "--series", args.series, "--prompt", args.prompt], capture_output=True, check=True)
-                            pss = advanced.stdout.decode('utf-8', 'ignore')
-                            logg.info(pss)
-                        except subprocess.CalledProcessError as process_error:
-                            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                            exit_test(workbook)
 
                         searchap = False
                         cc_mac = ""
@@ -1521,20 +1173,8 @@ def main():
                             e_tot += err
                             e_tot += "  "
                             if args.series == "9800":
-                                try:
-                                    logg.info("9800 wifi_ctl_9800_3504.py: advanced")
-                                    logg.info(("./wifi_ctl_9800_3504.py --scheme {scheme} --dest {dest} --user {user} --passwd {passwd} --ap {ap} --band {band}"
-                                               " --action 'advanced' --series {series} --port {port} --prompt  {prompt}").format(
-                                        scheme=scheme, dest=args.dest, user=args.user, passwd=args.passwd, ap=args.ap, band=args.band,
-                                        series=args.series, port=args.port, prompt=args.prompt))
-
-                                    advanced = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                                               "--action", "advanced", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=True, check=True)
-                                    pss = advanced.stdout.decode('utf-8', 'ignore')
-                                    logg.info(pss)
-                                except subprocess.CalledProcessError as process_error:
-                                    logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                                    exit_test(workbook)
+                                pss = cs.show_ap_dot11_5gz_summary()
+                                logg.info(pss)
 
                             if (args.wait_forever):
                                 logg.info("Will continue waiting, you may wish to debug the system...")
@@ -2198,26 +1838,15 @@ def main():
     workbook.close()
 
     # check if keeping the existing state
+    # TODO add --no_cleanup
     if(args.keep_state):
         logg.info("9800/3504 flag --keep_state set thus keeping state")
-        try:
-            logg.info("9800/3504 wifi_ctl_9800_3504.py: advanced")
-            advanced = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                       "--action", "advanced", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=True, check=True)
-            pss = advanced.stdout.decode('utf-8', 'ignore')
-            logg.info(pss)
-        except subprocess.CalledProcessError as process_error:
-            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-            exit_test(workbook)
-        try:
-            logg.info("9800/3504 wifi_ctl_9800_3504.py: summary")
-            advanced = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                       "--action", "summary", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=True, check=True)
-            pss = advanced.stdout.decode('utf-8', 'ignore')
-            logg.info(pss)
-        except subprocess.CalledProcessError as process_error:
-            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-            exit_test(workbook)
+        pss = cs.show_ap_dot11_5gz_summary()
+        logg.info(pss)
+        pss = cs.show_ap_dot11_24gz_summary()
+        logg.info(pss)
+        pss = cs.show_ap_summary()
+        logg.info(pss)
 
         exit_test(workbook)
     else:
@@ -2228,207 +1857,44 @@ def main():
             subprocess.run(["./lf_associate_ap.pl", "--action", "del_all_phy", "--port_del", args.radio], timeout=20, capture_output=True)
 
         # Disable AP, apply settings, enable AP
-        try:
-            logg.info("9800/3504 wifi_ctl_9800_3504.py: disable AP {}".format(args.ap))
-            ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                         "--action", "disable", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-            if cap_ctl_out:
-                pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                logg.info(pss)
-
-        except subprocess.CalledProcessError as process_error:
-            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-            exit_test(workbook)
-
+        # TODO disable 24gz
         if args.series == "9800":
+            pss = cs.config_no_wlan()
+            logg.info(pss)
 
-            try:
-                logg.info("9800 wifi_ctl_9800_3504.py: no_wlan_wireless_tag_policy")
-                ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                             "--action", "no_wlan_wireless_tag_policy", "--series", args.series, "--wlan", args.wlan, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                if cap_ctl_out:
-                    pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                    logg.info(pss)
+        pss = cs.ap_dot11_5ghz_shutdown()
+        logg.info(pss)
 
-            except subprocess.CalledProcessError as process_error:
-                logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                # exit_test(workbook)
+        pss = cs.ap_dot11_24ghz_shutdown()
+        logg.info(pss)
 
-            try:
-                logg.info("9800 wifi_ctl_9800_3504.py: delete_wlan")
-                ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                             "--action", "delete_wlan", "--series", args.series, "--wlanID", args.wlanID, "--wlan", args.wlan, "--wlanSSID", args.wlanSSID,
-                                             "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                if cap_ctl_out:
-                    pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                    logg.info(pss)
-
-            except subprocess.CalledProcessError as process_error:
-                logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                # exit_test(workbook)
-
-            try:
-                logg.info("9800 wifi_ctl_9800_3504.py: disable_network_5ghz")
-                ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                             "--action", "disable_network_5ghz", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                if cap_ctl_out:
-                    pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                    logg.info(pss)
-
-            except subprocess.CalledProcessError as process_error:
-                logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                # exit_test(workbook)
-
-            try:
-                logg.info("9800 wifi_ctl_9800_3504.py: disable_network_24ghz")
-                ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                             "--action", "disable_network_24ghz", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                if cap_ctl_out:
-                    pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                    logg.info(pss)
-
-            except subprocess.CalledProcessError as process_error:
-                logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                # exit_test(workbook)
-
-        else:
-            try:
-                logg.info("3504 wifi_ctl_9800_3504.py: config 802.11a disable network")
-                ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                             "--action", "cmd", "--value", "config 802.11a disable network", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                if cap_ctl_out:
-                    pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                    logg.info(pss)
-
-            except subprocess.CalledProcessError as process_error:
-                logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                # exit_test(workbook)
-
-            try:
-                logg.info("3504 wifi_ctl_9800_3504.py: config 802.11b disable network")
-                ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                             "--action", "cmd", "--value", "config 802.11b disable network", "--port", args.port, "--series", args.series, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                if cap_ctl_out:
-                    pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                    logg.info(pss)
-
-            except subprocess.CalledProcessError as process_error:
-                logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                # exit_test(workbook)
-
-        if (tx != "NA"):
-            try:
-                logg.info("9800/3504 wifi_ctl_9800_3504.py: txPower tx 1")
-                ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                             "--action", "txPower", "--value", "1", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                if cap_ctl_out:
-                    pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                    logg.info(pss)
-
-            except subprocess.CalledProcessError as process_error:
-                logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                # exit_test(workbook)
+        pss = cs.config_dot11_5ghz_tx_power()
+        logg.info(pss)
 
         # NSS is set on the station earlier...
         if (ch != "NA"):
-            try:
-                logg.info("9800/3504 wifi_ctl_9800_3504.py: channel 36")
-                ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                             "--action", "channel", "--value", "36", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                if cap_ctl_out:
-                    pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                    logg.info(pss)
-
-            except subprocess.CalledProcessError as process_error:
-                logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                # exit_test(workbook)
+            pss = cs.config_dot11_5ghz_channel()
 
         if (bw != "NA"):
-            try:
-                logg.info("9800/3504 wifi_ctl_9800_3504.py: bandwidth 20")
-                ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                             "--action", "bandwidth", "--value", "20", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                if cap_ctl_out:
-                    pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                    logg.info(pss)
-
-            except subprocess.CalledProcessError as process_error:
-                logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                # exit_test(workbook)
+            pss = cs.config_dot11_5ghz_channel_width()
+            logg.info(pss)
 
         if args.series == "9800":
-            try:
-                logg.info("9800 wifi_ctl_9800_3504.py: enable_network_5ghz")
-                ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                             "--action", "enable_network_5ghz", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                if cap_ctl_out:
-                    pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                    logg.info(pss)
-
-            except subprocess.CalledProcessError as process_error:
-                logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                # exit_test(workbook)
-
-            try:
-                logg.info("9800 wifi_ctl_9800_3504.py: enable_network_24ghz")
-                ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                             "--action", "enable_network_24ghz", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                if cap_ctl_out:
-                    pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                    logg.info(pss)
-
-            except subprocess.CalledProcessError as process_error:
-                logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                # exit_test(workbook)
-
-            try:
-                logg.info("9800 wifi_ctl_9800_3504.py: auto")
-                ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                             "--action", "auto", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                if cap_ctl_out:
-                    pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                    logg.info(pss)
-
-            except subprocess.CalledProcessError as process_error:
-                logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                # exit_test(workbook)
+            pss = cs.config_no_ap_dot11_5ghz_shutdown()
+            logg.info(pss)
+            pss = cs.config_no_ap_dot11_24ghz_shutdown()
+            logg.info(pss)
+            pss = cs.ap_dot11_5ghz_radio_role_auto()
+            logg.info(pss)
 
         else:
-            try:
-                logg.info("3504 wifi_ctl_9800_3504.py: config 802.11a enable network")
-                ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                             "--action", "cmd", "--value", "config 802.11a enable network", "--port", args.port, "--series", args.series, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                if cap_ctl_out:
-                    pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                    logg.info(pss)
+            pss = cs.config_no_ap_dot11_5ghz_shutdown()
+            logg.info(pss)
+            pss = cs.config_no_ap_dot11_24ghz_shutdown()
+            logg.info(pss)
 
-            except subprocess.CalledProcessError as process_error:
-                logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                exit_test(workbook)
-
-            try:
-                logg.info("3504 wifi_ctl_9800_3504.py: config 802.11b enable network")
-                ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                             "--action", "cmd", "--value", "config 802.11b enable network", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-                if cap_ctl_out:
-                    pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                    logg.info(pss)
-
-            except subprocess.CalledProcessError as process_error:
-                logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-                exit_test(workbook)
-
-        try:
-            logg.info("9800/3504 wifi_ctl_9800_3504.py: enable")
-            ctl_output = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                         "--action", "enable", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=cap_ctl_out, check=True)
-            if cap_ctl_out:
-                pss = ctl_output.stdout.decode('utf-8', 'ignore')
-                logg.info(pss)
-
-        except subprocess.CalledProcessError as process_error:
-            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-            exit_test(workbook)
+        pss = cs.config_no_ap_dot11_5ghz_shutdown()  # enable_network 5ghz
+        logg.info(pss)
 
         # Remove LANforge traffic connection
         subprocess.run(["./lf_firemod.pl", "--manager", lfmgr, "--resource", lfresource, "--action", "do_cmd",
@@ -2439,15 +1905,8 @@ def main():
                         "--cmd", "rm_endp c-udp-power-B"], capture_output=True)
 
         # Show controller status
-        try:
-            logg.info("9800/3504 wifi_ctl_9800_3504.py: advanced")
-            advanced = subprocess.run(["./wifi_ctl_9800_3504.py", "--scheme", scheme, "--dest", args.dest, "--user", args.user, "--passwd", args.passwd, "--ap", args.ap, "--band", band,
-                                       "--action", "advanced", "--series", args.series, "--port", args.port, "--prompt", args.prompt], capture_output=True, check=True)
-            pss = advanced.stdout.decode('utf-8', 'ignore')
-            logg.info(pss)
-        except subprocess.CalledProcessError as process_error:
-            logg.info("Controller unable to commicate to AP or unable to communicate to controller error code: {} output {}".format(process_error.returncode, process_error.output))
-            exit_test(workbook)
+        pss = cs.show_ap_dot11_5gz_summary()
+        logg.info(pss)
 
 
 # ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----

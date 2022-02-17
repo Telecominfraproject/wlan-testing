@@ -1,0 +1,10 @@
+chart-0-title-0 Throughput vs Packet Size
+chart-0-prio-0 1
+chart-1-title-0 RX Pps vs Packet Size
+chart-1-prio-0 2
+chart-2-title-0 Latency vs Packet Size
+chart-2-prio-0 2
+chart-3-title-0 Realtime Throughput
+chart-3-prio-0 2
+chart-4-title-0 Endpoint RX Packet Loss Percentage
+chart-4-prio-0 4
