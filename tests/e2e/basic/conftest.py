@@ -74,7 +74,7 @@ def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtur
     # call this, if 1.x
     print("fixture version ", fixtures_ver)
     if cc_1:
-        return_var = fixtures_ver.setup_profiles( request, param, run_lf, instantiate_profile, get_configuration, get_markers, lf_tools)
+        return_var = fixtures_ver.setup_profiles(request, param, run_lf, instantiate_profile, get_configuration, get_markers, lf_tools)
     else:
         return_var = fixtures_ver.setup_profiles(request, param, setup_controller, testbed, get_equipment_ref,
                                              instantiate_profile,
