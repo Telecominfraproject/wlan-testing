@@ -104,22 +104,56 @@ class Fixtures_3x:
                             test_cases["wpa2_personal"] = False
 
         print("lf dut data", lf_dut_data)
+        # instantiate controller object
         instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'], timeout="10",
                                                       ssid_data=lf_dut_data)
+        # set ssid on ap
+        # id_slot = instantiate_profile_obj.get_slot_id_wlan()
+        # print(id_slot)
+        # ssid_name = instantiate_profile_obj.get_ssid_name_on_id()
+        # print(ssid_name)
+        # if id_slot[0] == "1":
+        #     # ssid present hai
+        #     # delete karna hai
+        #     # create 2g ssid on 1
+        # elif id_slot[0] == "0":
+        #     # ssid present nhi h
+        #     # create 2g ssid
         for band in range(len(lf_dut_data)):
             if lf_dut_data[band]["appliedRadios"] == ["2G"]:
-                pass
-                # id_slot = instantiate_profile_obj.get_slot_id_wlan()
-                # print(id_slot)
-                # ssid_name = instantiate_profile_obj.get_ssid_name_on_id()
-                # print(ssid_name)
-                # if id_slot[0] == "1":
-                #     # ssid present hai
-                #     # delete karna hai
-                #     # create 2g ssid on 1
-                # elif id_slot[0] == "0":
-                #     # ssid present nhi h
-                #     # create 2g ssid
+                instantiate_profile_obj.no_logging_console()
+                instantiate_profile_obj.line_console()
+                id_slot = instantiate_profile_obj.get_slot_id_wlan()
+                ssid_name = instantiate_profile_obj.get_ssid_name_on_id()
+                if id_slot[0] == "1":
+                    instantiate_profile_obj.show_shutdown_2ghz_ap()
+                    instantiate_profile_obj.disable_wlan(id="1", wlan=ssid_name[0], wlanssid=ssid_name[0])
+                    instantiate_profile_obj.ap_2ghz_shutdown(id="1", wlan=ssid_name[0], wlanssid=ssid_name[0])
+                    instantiate_profile_obj.get_ssids()
+                    instantiate_profile_obj.delete_wlan(ssid=ssid_name[0])
+                    instantiate_profile_obj.get_ssids()
+                    instantiate_profile_obj.create_wlan_wpa2(id="1", wlan=lf_dut_data[0]['ssid_name'],
+                                                             wlanssid=lf_dut_data[0]['ssid_name'],
+                                                             key=lf_dut_data[0]['security_key'])
+                else:
+                    print(lf_dut_data[0]['ssid_name'])
+                    instantiate_profile_obj.get_ssids()
+                    instantiate_profile_obj.show_shutdown_2ghz_ap()
+                    instantiate_profile_obj.get_ssids()
+                    instantiate_profile_obj.create_wlan_wpa2(id="1", wlan=lf_dut_data[0]['ssid_name'],
+                                                             wlanssid=lf_dut_data[0]['ssid_name'],
+                                                             key=lf_dut_data[0]['security_key'])
+                    instantiate_profile_obj.get_ssids()
+
+                instantiate_profile_obj.config_wireless_tag_policy_and_policy_profile(wlan=lf_dut_data[0]['ssid_name'])
+                instantiate_profile_obj.enable_wlan(id="1", wlan=lf_dut_data[0]['ssid_name'],
+                                                    wlanssid=lf_dut_data[0]['ssid_name'])
+                instantiate_profile_obj.enable_2ghz_netwrk(id="1", wlan=lf_dut_data[0]['ssid_name'],
+                                                           wlanssid=lf_dut_data[0]['ssid_name'],
+                                                           key=lf_dut_data[0]['security_key'])
+                instantiate_profile_obj.enable_ap_2ghz()
+                # instantiate_profile_obj.show_5ghz_summary()
+                instantiate_profile_obj.get_ssids()
             elif lf_dut_data[band]["appliedRadios"] == ["5G"]:
                 instantiate_profile_obj.no_logging_console()
                 instantiate_profile_obj.line_console()
@@ -148,7 +182,7 @@ class Fixtures_3x:
 
 
                 instantiate_profile_obj.config_wireless_tag_policy_and_policy_profile(wlan=lf_dut_data[1]['ssid_name'])
-                instantiate_profile_obj.enable_wlan(id="2", wlan=lf_dut_data[1]['ssid_name'], wlanssid=lf_dut_data[1]['ssid_name'], key=lf_dut_data[1]['security_key'])
+                instantiate_profile_obj.enable_wlan(id="2", wlan=lf_dut_data[1]['ssid_name'], wlanssid=lf_dut_data[1]['ssid_name'])
                 instantiate_profile_obj.enable_5ghz_netwrk(id="2", wlan=lf_dut_data[1]['ssid_name'], wlanssid=lf_dut_data[1]['ssid_name'], key=lf_dut_data[1]['security_key'])
                 instantiate_profile_obj.enable_ap_5ghz()
                 # instantiate_profile_obj.show_5ghz_summary()
@@ -157,18 +191,23 @@ class Fixtures_3x:
             elif lf_dut_data[band]["appliedRadios"] == ["6G"]:
                 pass
 
-        # try :
-        #     ssid_data = []
-        #     idx_mapping = {}
-        #     for interface in range(len(lf_dut_data)):
-        #         if lf_dut_data[interface]['security'] == "psk2":
-        #             lf_dut_data[interface]['security'] = "WPA2"
-        #         ssid = ["ssid_idx=" + str(interface) +
-        #                 " ssid=" + lf_dut_data[interface]['ssid_name'] +
-        #                 " security=" + lf_dut_data[interface]['security'] +
-        #                 " password=" + lf_dut_data[interface]['security_key'] +
-        #                 " bssid=" + lf_dut_data[interface][4].lower()
-        #                 ]
+        try :
+            ssid_data = []
+            idx_mapping = {}
+            for interface in range(len(lf_dut_data)):
+                if lf_dut_data[interface]['security'] == "psk2":
+                    lf_dut_data[interface]['security'] = "WPA2"
+                ssid = ["ssid_idx=" + str(interface) +
+                        " ssid=" + lf_dut_data[interface]['ssid_name'] +
+                        " security=" + lf_dut_data[interface]['security'] +
+                        " password=" + lf_dut_data[interface]['security_key'] ]
+                ssid_data.append(ssid)
+        except Exception as e:
+            print(e)
+            pass
+        print(ssid_data)
+        lf_tools.update_ssid(ssid_data=ssid_data)
+
         #         idx_mapping[str(interface)] = [ssid_info_sdk[interface][0],
         #                                        ssid_info_sdk[interface][2],
         #                                        ssid_info_sdk[interface][1],
@@ -180,6 +219,4 @@ class Fixtures_3x:
         #     if not skip_lf:
         #         lf_tools.dut_idx_mapping = idx_mapping
         #         lf_tools.update_ssid(ssid_data=ssid_data)
-        # except Exception as e:
-        #     print(e)
-        #     pass
+
