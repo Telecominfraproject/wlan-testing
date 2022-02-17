@@ -4770,7 +4770,7 @@ def scroll_up_pixel(setup_perfectoMobile):
     print("Scroll up")
     setup_perfectoMobile[1].step_start("Scroll up")
     params2 = {}
-    params2["start"] = "50%,50%"
+    params2["start"] = "50%,20%"
     params2["end"] = "50%,80%"
     params2["duration"] = "4"
     time.sleep(2)
