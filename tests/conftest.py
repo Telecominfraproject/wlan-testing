@@ -628,12 +628,12 @@ def create_lanforge_chamberview_dut(lf_tools, skip_lf, run_lf):
 
 
 @pytest.fixture(scope="session")
-def lf_tools(get_configuration, testbed, skip_lf, run_lf):
+def lf_tools(get_configuration, testbed, skip_lf, run_lf, cc_1):
     """ Create a DUT on LANforge"""
     if not skip_lf:
         obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
                           testbed=testbed, run_lf=run_lf,
-                          access_point_data=get_configuration["access_point"])
+                          access_point_data=get_configuration["access_point"], cc_1=cc_1)
     else:
         obj = False
     yield obj
