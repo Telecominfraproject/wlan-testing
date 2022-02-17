@@ -11,10 +11,6 @@ env:
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
-  # Cloud SDK certs
-  CACERT: ${{ secrets.CACERT }}
-  CAKEY: ${{ secrets.CAKEY }}
-  ALLURE_CLI_VERSION: 2.14.0
 
 on:
   workflow_dispatch:
@@ -116,24 +112,14 @@ jobs:
         curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
-    - name: install Allure CLI tool
-      run: |
-        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-
-    - name: set job name
-      id: job
-      run: echo "::set-output name=name::manual-${{ github.run_id }}"
-
     - name: prepare namespace
       id: namespace
       run: |
         NAMESPACE="testing-${{ github.run_id }}"
-        kubectl create ns $NAMESPACE
-        kubectl config set-context --current --namespace=$NAMESPACE
         echo "::set-output name=name::${NAMESPACE}"
 
     - name: prepare configuration
+      id: configuration
       env:
         CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
         CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
@@ -241,106 +227,19 @@ jobs:
         }
         EOF
 
-        kubectl create secret generic configuration --from-file=configuration=./configuration.py
+        echo "::set-output name=value::$(cat ./configuration.py)"
 
     - name: run tests
-      run: |
-        cat <<EOF | kubectl apply -f -
-        apiVersion: batch/v1
-        kind: Job
-        metadata:
-          name: "${{ steps.job.outputs.name }}"
-        spec:
-          template:
-            metadata:
-              annotations:
-                cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
-            spec:
-              containers:
-              - name: tests
-                image: ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
-                resources:
-                  requests:
-                    memory: "512Mi"
-                    cpu: "250m"
-                  limits:
-                    memory: "512Mi"
-                    cpu: "250m"
-                command:
-                  - /bin/bash
-                  - -c
-                  - |
-                    HOSTS="sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
-                    for HOST in \$HOSTS; do
-                      HOST_ENTRY=""
-                      until [[ ! -z "\$HOST_ENTRY" ]]; do sleep 1; HOST_ENTRY=\$(getent hosts \$HOST); done;
-                      echo "\$HOST_ENTRY" >> /etc/hosts
-                      echo "DNS record for \$HOST resolved successfully!"
-                    done
-
-                    cd tests
-                    pytest -m "${{ github.event.inputs.marker_expression }}" -s -vvv --testbed="basic" -o firmware="${{ github.event.inputs.firmware }}" --alluredir=/tmp/allure-results
-                    ret=\$?
-                    # sleep some time to be able to download the Allure results
-                    sleep 60
-                    exit \$ret
-                volumeMounts:
-                - name: configuration
-                  mountPath: "/wlan-testing/tests/configuration.py"
-                  subPath: configuration
-                  readOnly: true
-              nodeSelector:
-                env: tests
-              tolerations:
-              - key: "tests"
-                operator: "Exists"
-                effect: "NoSchedule"
-              imagePullSecrets:
-              - name: tip-docker-registry-key
-              restartPolicy: Never
-              volumes:
-              - name: configuration
-                secret:
-                  secretName: configuration
-          backoffLimit: 0
-        EOF
-        # wait for pod to spawn
-        sleep 1
-        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
-        kubectl logs -f $podname &
-        until [ -s test_everything.xml ]
-        do
-          sleep 10
-          kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
-        done
-        echo "tests completed"
-        echo "downloading allure results..."
-        kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
-        echo "waiting for pod to exit"
-        kubectl logs -f $podname >/dev/null 2>&1
-        exit $(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}")
-
-    - name: upload Allure results as artifact
-      if: always()
-      uses: actions/upload-artifact@v2
+      uses: ./.github/actions/run-tests
       with:
-        name: allure-results
-        path: allure-results
-
-    - name: generate Allure report
-      run: allure-${{ env.ALLURE_CLI_VERSION }}/bin/allure generate allure-results
-
-    - name: upload Allure report as artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: allure-report
-        path: allure-report
-
-    - name: cleanup
-      if: always()
-      run: |
-        kubectl delete ns "${{ steps.namespace.outputs.name }}" --wait=true
+        namespace: ${{ steps.namespace.outputs.name }}
+        testbed: basic
+        marker_expression: ${{ github.event.inputs.marker_expression }}
+        configuration: "${{ steps.configuration.outputs.value }}"
+        testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+        additional_args: '-o firmware="${{ github.event.inputs.firmware }}"'
+        allure_results_artifact_name: allure-results
+        dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
     - name: stop reservation
       if: always()
@@ -349,6 +248,17 @@ jobs:
         CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
         CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
         CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
+
+    - name: generate Allure report
+      uses: ./.github/actions/generate-allure-report
+      with:
+        results_path: ./allure-results
+
+    - name: upload Allure report as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: allure-report
+        path: allure-report
 
   cleanup:
     needs: [ test ]
