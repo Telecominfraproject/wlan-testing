@@ -1615,6 +1615,8 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         check_if_no_internet_popup(driver)
                     except:
                         try:
+                            print("Not able to verify the connected WiFi. Scrolling up.")
+                            scroll_up_pixel(setup_perfectoMobile)
                             check_if_no_internet_popup(driver)
                             WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                                 EC.presence_of_element_located((MobileBy.XPATH,
@@ -3396,6 +3398,8 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                         check_if_no_internet_popup(driver)
                     except:
                         try:
+                            print("Not able to verify the connected WiFi. Scrolling up.")
+                            scroll_up_pixel(setup_perfectoMobile)
                             check_if_no_internet_popup(driver)
                             WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                                 EC.presence_of_element_located((MobileBy.XPATH,
