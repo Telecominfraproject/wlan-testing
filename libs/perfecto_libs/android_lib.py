@@ -1618,7 +1618,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                             print("Not able to verify the connected WiFi. Scrolling up.")
                             scroll_up(setup_perfectoMobile)
                             scroll_up(setup_perfectoMobile)
-                            check_if_no_internet_popup(driver)
+                            # check_if_no_internet_popup(driver)
                             WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                                 EC.presence_of_element_located((MobileBy.XPATH,
                                                                 "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='"+ WifiName + "']")))
@@ -1627,16 +1627,17 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         except:
                             try:
                                 report.step_start("Verify if Wifi is Connected")
+                                print("Verifying after scrolling")
                                 scroll_up(setup_perfectoMobile)
                                 WifiInternetErrMsg = WebDriverWait(driver, 60).until(EC.presence_of_element_located((
                                     MobileBy.XPATH,
-                                    "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                                    "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                                 ssid_with_internet = True
                                 print("Wifi Successfully Connected")
                             except NoSuchElementException:
                                 print("Wifi Connection Error: " + WifiName)
-                                # closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                                # return ip_address_element_text, ssid_with_internet
+                                closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                                return ip_address_element_text, ssid_with_internet
                     # -------------------------------------------------------
 
                     # Get into Additional Details
@@ -3415,13 +3416,13 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                                 scroll_up(setup_perfectoMobile)
                                 WifiInternetErrMsg = WebDriverWait(driver, 60).until(EC.presence_of_element_located((
                                     MobileBy.XPATH,
-                                    "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                                    "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                                 ssid_with_internet = True
                                 print("Wifi Successfully Connected")
                             except NoSuchElementException:
                                 print("Wifi Connection Error: " + WifiName)
-                                # closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                                # return ip_address_element_text, ssid_with_internet
+                                closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                                return ip_address_element_text, ssid_with_internet
                     # -------------------------------------------------------
 
                     # Get into Additional Details
