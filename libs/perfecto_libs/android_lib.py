@@ -1617,6 +1617,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         try:
                             print("Not able to verify the connected WiFi. Scrolling up.")
                             scroll_up(setup_perfectoMobile)
+                            scroll_up(setup_perfectoMobile)
                             check_if_no_internet_popup(driver)
                             WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                                 EC.presence_of_element_located((MobileBy.XPATH,
@@ -3401,6 +3402,7 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                         try:
                             print("Not able to verify the connected WiFi. Scrolling up.")
                             scroll_up(setup_perfectoMobile)
+                            scroll_up(setup_perfectoMobile)
                             check_if_no_internet_popup(driver)
                             WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                                 EC.presence_of_element_located((MobileBy.XPATH,
@@ -4774,8 +4776,8 @@ def scroll_up(setup_perfectoMobile):
     params2 = {}
     params2["start"] = "50%,20%"
     params2["end"] = "50%,80%"
-    params2["duration"] = "4"
-    time.sleep(2)
+    params2["duration"] = "2"
+    time.sleep(1)
     setup_perfectoMobile[0].execute_script('mobile:touch:swipe', params2)
     time.sleep(1)
 
