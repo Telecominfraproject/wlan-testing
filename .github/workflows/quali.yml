@@ -282,7 +282,9 @@ jobs:
             sed -i "s/https:\/\/sec-.*\.cicd\.lab\.wlan\.tip\.build/https:\/\/sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build/g" configuration.py
           fi
 
-          echo "::set-output name=value::$(cat ./configuration.py)"
+          echo 'CONFIGURATION<<EOF' >> $GITHUB_ENV
+          cat ./configuration.py >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -290,7 +292,7 @@ jobs:
           namespace: ${{ steps.namespace.outputs.name }}
           testbed: basic
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
-          configuration: "${{ steps.configuration.outputs.value }}"
+          configuration: "${{ env.CONFIGURATION }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: allure-results-${{ matrix.ap_model }}
