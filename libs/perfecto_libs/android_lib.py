@@ -1635,8 +1635,8 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                 print("Wifi Successfully Connected")
                             except NoSuchElementException:
                                 print("Wifi Connection Error: " + WifiName)
-                                closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                                return ip_address_element_text, ssid_with_internet
+                                # closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                                # return ip_address_element_text, ssid_with_internet
                     # -------------------------------------------------------
 
                     # Get into Additional Details
@@ -3420,8 +3420,8 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                                 print("Wifi Successfully Connected")
                             except NoSuchElementException:
                                 print("Wifi Connection Error: " + WifiName)
-                                closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                                return ip_address_element_text, ssid_with_internet
+                                # closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                                # return ip_address_element_text, ssid_with_internet
                     # -------------------------------------------------------
 
                     # Get into Additional Details
