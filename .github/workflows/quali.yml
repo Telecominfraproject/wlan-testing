@@ -140,138 +140,138 @@ jobs:
         id: configuration
         run: |
           cat << EOF > configuration.py
-          Customer = ""
-          server = ""
+          Customer = ''
+          server = ''
           CONFIGURATION = {
-            "basic": $(python .quali/get_configuration.py ${{ steps.reservation.outputs.identifier }})
+            'basic': $(python .quali/get_configuration.py ${{ steps.reservation.outputs.identifier }})
           }
 
           open_flow = {}
 
           RADIUS_SERVER_DATA = {
-              "ip": "10.10.1.221",
-              "port": 1812,
-              "secret": "testing123",
-              "user": "user",
-              "password": "password",
-              "pk_password": "whatever"
+              'ip': '10.10.1.221',
+              'port': 1812,
+              'secret': 'testing123',
+              'user': 'user',
+              'password': 'password',
+              'pk_password': 'whatever'
           }
 
           RADIUS_ACCOUNTING_DATA = {
-              "ip": "10.10.1.221",
-              "port": 1813,
-              "secret": "testing123",
-              "user": "user",
-              "password": "password",
-              "pk_password": "whatever"
+              'ip': '10.10.1.221',
+              'port': 1813,
+              'secret': 'testing123',
+              'user': 'user',
+              'password': 'password',
+              'pk_password': 'whatever'
           }
 
           DYNAMIC_VLAN_RADIUS_SERVER_DATA = {
-            "ip": "3.20.165.131",
-            "port": 1812,
-            "secret": "testing123",
-            "user": "user",
-            "password": "password",
-            "pk_password": "whatever"
+            'ip': '3.20.165.131',
+            'port': 1812,
+            'secret': 'testing123',
+            'user': 'user',
+            'password': 'password',
+            'pk_password': 'whatever'
           }
 
           DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA = {
-              "ip": "3.20.165.131",
-              "port": 1813,
-              "secret": "testing123",
-              "user": "user",
-              "password": "password",
-              "pk_password": "whatever"
+              'ip': '3.20.165.131',
+              'port': 1813,
+              'secret': 'testing123',
+              'user': 'user',
+              'password': 'password',
+              'pk_password': 'whatever'
           }
 
           PASSPOINT_RADIUS_SERVER_DATA = {
-              "ip": "52.234.179.191",
-              "port": 11812,
-              "secret": "yeababy20!",
-              "user": "nolaradius",
-              "password": "nolastart",
-              "pk_password": "whatever"
+              'ip': '52.234.179.191',
+              'port': 11812,
+              'secret': 'yeababy20!',
+              'user': 'nolaradius',
+              'password': 'nolastart',
+              'pk_password': 'whatever'
           }
 
           PASSPOINT_RADIUS_ACCOUNTING_SERVER_DATA = {
-              "ip": "52.234.179.191",
-              "port": 11813,
-              "secret": "yeababy20!"
+              'ip': '52.234.179.191',
+              'port': 11813,
+              'secret': 'yeababy20!'
           }
 
           PASSPOINT_PROVIDER_INFO = {
-              "mcc": None,
-              "mnc": None,
-              "network": None,
-              "nai_realms": {
-                  "domain": "oss.ameriband.com",
-                  "encoding": 0,
-                  "eap_map": {"EAP-TTLS with username/password": ["Credential Type:username/password",
-                                                                  "Non-EAP Inner Authentication Type:MSCHAPV2"]}
+              'mcc': None,
+              'mnc': None,
+              'network': None,
+              'nai_realms': {
+                  'domain': 'oss.ameriband.com',
+                  'encoding': 0,
+                  'eap_map': {'EAP-TTLS with username/password': ['Credential Type:username/password',
+                                                                  'Non-EAP Inner Authentication Type:MSCHAPV2']}
               },
-              "osu_nai_standalone": "anonymous@ameriband.com",
-              "osu_nai_shared": "anonymous@ameriband.com",
-              "roaming_oi": []
+              'osu_nai_standalone': 'anonymous@ameriband.com',
+              'osu_nai_shared': 'anonymous@ameriband.com',
+              'roaming_oi': []
           }
           RATE_LIMITING_RADIUS_SERVER_DATA = {
-              "ip": "18.189.85.200",
-              "port": 1812,
-              "secret": "testing123",
-              "user": "user",
-              "password": "password",
-              "pk_password": "whatever"
+              'ip': '18.189.85.200',
+              'port': 1812,
+              'secret': 'testing123',
+              'user': 'user',
+              'password': 'password',
+              'pk_password': 'whatever'
           }
 
           RATE_LIMITING_RADIUS_ACCOUNTING_DATA = {
-              "ip": "18.189.85.200",
-              "port": 1813,
-              "secret": "testing123",
-              "user": "user",
-              "password": "password",
-              "pk_password": "whatever"
+              'ip': '18.189.85.200',
+              'port': 1813,
+              'secret': 'testing123',
+              'user': 'user',
+              'password': 'password',
+              'pk_password': 'whatever'
           }
 
           PASSPOINT_OPERATOR_INFO = {
-              "osen": "Disabled",
-              "domain_name_list": ["telecominfraproject.atlassian.net"],
-              "operator_names": [
-                  {"locale": "eng", "name": "Default friendly passpoint_operator name"},
-                  {"locale": "fra", "name": "Nom de l'opérateur convivial par défaut"}
+              'osen': 'Disabled',
+              'domain_name_list': ['telecominfraproject.atlassian.net'],
+              'operator_names': [
+                  {'locale': 'eng', 'name': 'Default friendly passpoint_operator name'},
+                  {'locale': 'fra', 'name': 'Nom de l\'opérateur convivial par défaut'}
               ]
           }
 
           PASSPOINT_VENUE_INFO = {
-              "venue_type": {"group": "Business", "type": "Police Station"},
-              "venue_names": [
-                  {"locale": "eng", "name": "Example passpoint_venue", "url": "http://www.example.com/info-eng"},
-                  {"locale": "fra", "name": "Exemple de lieu", "url": "http://www.example.com/info-fra"}
+              'venue_type': {'group': 'Business', 'type': 'Police Station'},
+              'venue_names': [
+                  {'locale': 'eng', 'name': 'Example passpoint_venue', 'url': 'http://www.example.com/info-eng'},
+                  {'locale': 'fra', 'name': 'Exemple de lieu', 'url': 'http://www.example.com/info-fra'}
               ]
           }
 
           PASSPOINT_PROFILE_INFO = {
-              "profile_download_url_ios": "https://onboard.almondlabs.net/ttls/AmeriBand-Profile.mobileconfig",
-              "profile_download_url_android": "https://onboard.almondlabs.net/ttls/androidconfig.cfg",
-              "profile_name_on_device": "AmeriBand",
-              "radius_configuration": {
-                  "user_defined_nas_id": "FB001AP001",
-                  "operator_id": "AmeribandTIP",
-                  "radius_acounting_service_interval": 60
+              'profile_download_url_ios': 'https://onboard.almondlabs.net/ttls/AmeriBand-Profile.mobileconfig',
+              'profile_download_url_android': 'https://onboard.almondlabs.net/ttls/androidconfig.cfg',
+              'profile_name_on_device': 'AmeriBand',
+              'radius_configuration': {
+                  'user_defined_nas_id': 'FB001AP001',
+                  'operator_id': 'AmeribandTIP',
+                  'radius_acounting_service_interval': 60
               },
-              "interworking_hs2dot0": "Enabled",
-              "hessid": None,
-              "access_network": {
-                  "Access Network Type": "Free Public Network",
-                  "Authentication Type": "Acceptance of Terms & Conditions",
-                  "Emergency Services Reachable": "Enabled",
-                  "Unauthenticated Emergency Service": "Disabled",
+              'interworking_hs2dot0': 'Enabled',
+              'hessid': None,
+              'access_network': {
+                  'Access Network Type': 'Free Public Network',
+                  'Authentication Type': 'Acceptance of Terms & Conditions',
+                  'Emergency Services Reachable': 'Enabled',
+                  'Unauthenticated Emergency Service': 'Disabled',
               },
-              "ip_connectivity": {
-                  "Internet Connectivity": "Enabled",
-                  "IP Address Type": "Public IPv4 Address Available",
-                  "Connection Capability": [{"status": "open", "protocol": "TCP", "port": 8888}],
-                  "ANQP Domain ID": 1234,
-                  "GAS Address 3 Behaviour": "P2P Spec Workaround From Request",
-                  "Disable DGAF": False
+              'ip_connectivity': {
+                  'Internet Connectivity': 'Enabled',
+                  'IP Address Type': 'Public IPv4 Address Available',
+                  'Connection Capability': [{'status': 'open', 'protocol': 'TCP', 'port': 8888}],
+                  'ANQP Domain ID': 1234,
+                  'GAS Address 3 Behaviour': 'P2P Spec Workaround From Request',
+                  'Disable DGAF': False
               }
           }
           EOF
@@ -282,17 +282,13 @@ jobs:
             sed -i "s/https:\/\/sec-.*\.cicd\.lab\.wlan\.tip\.build/https:\/\/sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build/g" configuration.py
           fi
 
-          echo 'CONFIGURATION<<EOF' >> $GITHUB_ENV
-          cat ./configuration.py >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
-
       - name: run tests
         uses: ./.github/actions/run-tests
         with:
           namespace: ${{ steps.namespace.outputs.name }}
           testbed: basic
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
-          configuration: "${{ env.CONFIGURATION }}"
+          configuration_file: "./configuration.py"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: allure-results-${{ matrix.ap_model }}

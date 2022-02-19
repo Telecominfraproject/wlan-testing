@@ -12,8 +12,11 @@ inputs:
     description: the marker expression that will be passed to the -m parameter
     required: true
   configuration:
-    description: the configuration string that will be used to create the configuration secret
-    required: true
+    description: the configuration string that will be used to create the configuration secret, setting either this or configuration_file is required
+    required: false
+  configuration_file:
+    description: the configuration file that will be used to create the configuration secret, setting either this or configuration is required
+    required: false
   testing_docker_image:
     description: Docker image to use when executing tests
     required: true
@@ -46,10 +49,15 @@ runs:
     - name: create configuration.py secret
       shell: bash
       run: |
+        if [ -n "${{ inputs.configuration_file }}" ]; then
+        kubectl create secret generic configuration --from-file=configuration=${{ inputs.configuration_file }}
+        else
         cat << EOF > configuration.py
-        ${{ inputs.configuration }}
+        ${{ inputs.configuration || 'configuration missing' }}
         EOF
+
         kubectl create secret generic configuration --from-file=configuration=./configuration.py
+        fi
 
     - name: run tests
       shell: bash
