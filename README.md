@@ -117,8 +117,8 @@ All code must be written in python 3 and conform to PEP 8 style guide. The test 
     |── README.md         -/* Pytest framework and testcases information */
 ```
 
-### Setup Instructions
-
+# Test Automation Setup Instructions 
+```
 # Let's assume '~/automation' directory for setting wlan-testing
 cd ~/
 mkdir automation
@@ -131,14 +131,10 @@ mkdir ~/.pip
 echo "[global]" > ~/.pip/pip.conf
 echo "index-url = https://pypi.org/simple" >> ~/.pip/pip.conf
 echo "extra-index-url = https://tip-read:tip-read@tip.jfrog.io/artifactory/api/pypi/tip-wlan-python-pypi-local/simple" >> ~/.pip/pip.conf
-
 pip3 install -r requirements.txt
 
 cd tests
-
-vim configuration.py
-
-# Setup your testbed data info here
+vim configuration.py    # Setup your testbed data info here
 
 # Check if everything is good 
 pytest --collect-only 
@@ -150,12 +146,8 @@ pytest --collect-only
 # install allure command
 npm install -g allure-commandline --save-dev
 
-
-# To run Automated Tests, 
-
 ```
 
-```
 
 ### Executing and Contributing new test cases
 
