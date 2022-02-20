@@ -79,6 +79,8 @@ http://pythontesting.net/framework/pytest/pytest-introduction/
 
 [![Quali advanced testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/quali-advanced.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/quali-advanced.yml)
 
+[![regression testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/regression.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/regression.yml)
+
 ### Best Practice
 
 1. Ensure to have a python version > 3
