@@ -5029,7 +5029,7 @@ def scroll_up(setup_perfectoMobile):
     time.sleep(1)
 
 
-def get_ip_add_and(request, WifiName, WifiPass, setup_perfectoMobile, connData):
+def gets_ip_add_and_does_not_forget_ssid(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Select Wifi/AccessPoint Connection")
     print("-------------------------------------")
@@ -5604,7 +5604,7 @@ def get_ip_add_and(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
     return ip_address_element_text, ssid_with_internet
 #----------------------------------Gets ip address of the enterprise ssid and does not forget it------------------
-def get_ip_add_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoMobile, connData):
+def gets_ip_add_eap_and_does_not_forget_ssid(request, WifiName, User, ttls_passwd, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Select Wifi/AccessPoint Connection")
     print("-------------------------------------")
@@ -6256,7 +6256,7 @@ def get_ip_add_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoMobil
 
 
 #-----------------------------ip address check------------------------------------------------
-def get_ip_add_check_and(request, WifiName, WifiPass, setup_perfectoMobile, connData):
+def gets_ip_add_for_checking_and_forgets_ssid(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Select Wifi/AccessPoint Connection")
     print("-------------------------------------")
