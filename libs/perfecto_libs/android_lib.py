@@ -1520,7 +1520,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     # This is To get all available ssids
                     # ------------------------------------------------------
                     try:
-                        for k in range(3):
+                        for k in range(5):
                             available_ssids = get_all_available_ssids(driver, deviceModelName)
                             print("active_ssid_list: ", available_ssids)
                             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
@@ -1535,27 +1535,27 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                     break
                             except:
                                 print("couldn't find wifi in available ssid")
+                        # if not ssid_found:
+                        #     ssid_not_found = False
+                        #     for k in range(3):
+                        #         try:
+                        #             report.step_start("Selecting Wifi: " + WifiName)
+                        #             wifi_selection_element = WebDriverWait(driver, 35).until(
+                        #                 EC.presence_of_element_located(
+                        #                     (MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
+                        #             wifi_selection_element.click()
+                        #             ssid_not_found = False
+                        #             check_if_no_internet_popup(driver)
+                        #             break
+                        #         except Exception as e:
+                        #             ssid_not_found = True
+                        #             print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
+                        #         scroll_up_pixel(setup_perfectoMobile)
                         if not ssid_found:
-                            ssid_not_found = False
-                            for k in range(3):
-                                try:
-                                    report.step_start("Selecting Wifi: " + WifiName)
-                                    wifi_selection_element = WebDriverWait(driver, 35).until(
-                                        EC.presence_of_element_located(
-                                            (MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
-                                    wifi_selection_element.click()
-                                    ssid_not_found = False
-                                    check_if_no_internet_popup(driver)
-                                    break
-                                except Exception as e:
-                                    ssid_not_found = True
-                                    print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
-                                scroll_up_pixel(setup_perfectoMobile)
-                            if ssid_not_found:
-                                print("could not found " + WifiName + " in device")
-                                # allure.attach(name= body=str("could not found" + WifiName + " in device"))
-                                closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                                return ip_address_element_text, ssid_with_internet
+                            print("could not found " + WifiName + " in device")
+                            # allure.attach(name= body=str("could not found" + WifiName + " in device"))
+                            closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                            return ip_address_element_text, ssid_with_internet
                     except:
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         return ip_address_element_text, ssid_with_internet
@@ -1615,7 +1615,10 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         check_if_no_internet_popup(driver)
                     except:
                         try:
-                            check_if_no_internet_popup(driver)
+                            print("Not able to verify the connected WiFi. Scrolling up.")
+                            scroll_up(setup_perfectoMobile)
+                            scroll_up(setup_perfectoMobile)
+                            # check_if_no_internet_popup(driver)
                             WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                                 EC.presence_of_element_located((MobileBy.XPATH,
                                                                 "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='"+ WifiName + "']")))
@@ -1624,9 +1627,11 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         except:
                             try:
                                 report.step_start("Verify if Wifi is Connected")
+                                print("Verifying after scrolling")
+                                scroll_up(setup_perfectoMobile)
                                 WifiInternetErrMsg = WebDriverWait(driver, 60).until(EC.presence_of_element_located((
                                     MobileBy.XPATH,
-                                    "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                                    "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                                 ssid_with_internet = True
                                 print("Wifi Successfully Connected")
                             except NoSuchElementException:
@@ -2161,7 +2166,14 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                     # -------------------------------------------------------
                     try:
                         report.step_start("Verify if Wifi is Connected")
-                        WifiInternetErrMsg = WebDriverWait(driver, 35).until(
+                        try:
+                            WifiInternetErrMsg = WebDriverWait(driver, 35).until(
+                            EC.presence_of_element_located((MobileBy.XPATH,
+                                                            "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                        except:
+                            print("Not able to verify the connected WiFi. Scrolling up.")
+                            scroll_up_pixel(setup_perfectoMobile)
+                            WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                             EC.presence_of_element_located((MobileBy.XPATH,
                                                             "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                         ssid_with_internet = True
@@ -3253,7 +3265,7 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                     # This is To get all available ssids
                     # ------------------------------------------------------
                     try:
-                        for k in range(3):
+                        for k in range(5):
                             available_ssids = get_all_available_ssids(driver, deviceModelName)
                             print("active_ssid_list: ", available_ssids)
                             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
@@ -3268,27 +3280,27 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                                     break
                             except:
                                 print("couldn't find wifi in available ssid")
+                        # if not ssid_found:
+                        #     ssid_not_found = False
+                        #     for k in range(3):
+                        #         try:
+                        #             report.step_start("Selecting Wifi: " + WifiName)
+                        #             wifi_selection_element = WebDriverWait(driver, 35).until(
+                        #                 EC.presence_of_element_located(
+                        #                     (MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
+                        #             wifi_selection_element.click()
+                        #             ssid_not_found = False
+                        #             check_if_no_internet_popup(driver)
+                        #             break
+                        #         except Exception as e:
+                        #             ssid_not_found = True
+                        #             print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
+                        #         scroll_up_pixel(setup_perfectoMobile)
                         if not ssid_found:
-                            ssid_not_found = False
-                            for k in range(3):
-                                try:
-                                    report.step_start("Selecting Wifi: " + WifiName)
-                                    wifi_selection_element = WebDriverWait(driver, 35).until(
-                                        EC.presence_of_element_located(
-                                            (MobileBy.XPATH, "//*[@text='" + WifiName + "']")))
-                                    wifi_selection_element.click()
-                                    ssid_not_found = False
-                                    check_if_no_internet_popup(driver)
-                                    break
-                                except Exception as e:
-                                    ssid_not_found = True
-                                    print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
-                                scroll_up_pixel(setup_perfectoMobile)
-                            if ssid_not_found:
-                                print("could not found " + WifiName + " in device")
-                                # allure.attach(name= body=str("could not found" + WifiName + " in device"))
-                                closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                                return ip_address_element_text, ssid_with_internet
+                            print("could not found " + WifiName + " in device")
+                            # allure.attach(name= body=str("could not found" + WifiName + " in device"))
+                            closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                            return ip_address_element_text, ssid_with_internet
                     except:
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         return ip_address_element_text, ssid_with_internet
@@ -3389,6 +3401,9 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                         check_if_no_internet_popup(driver)
                     except:
                         try:
+                            print("Not able to verify the connected WiFi. Scrolling up.")
+                            scroll_up(setup_perfectoMobile)
+                            scroll_up(setup_perfectoMobile)
                             check_if_no_internet_popup(driver)
                             WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                                 EC.presence_of_element_located((MobileBy.XPATH,
@@ -3398,9 +3413,10 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                         except:
                             try:
                                 report.step_start("Verify if Wifi is Connected")
+                                scroll_up(setup_perfectoMobile)
                                 WifiInternetErrMsg = WebDriverWait(driver, 60).until(EC.presence_of_element_located((
                                     MobileBy.XPATH,
-                                    "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                                    "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                                 ssid_with_internet = True
                                 print("Wifi Successfully Connected")
                             except NoSuchElementException:
@@ -4755,14 +4771,14 @@ def scroll_down_pixel(setup_perfectoMobile):
     time.sleep(2)
     setup_perfectoMobile[0].execute_script('mobile:touch:swipe', params2)
     time.sleep(1)
-def scroll_up_pixel(setup_perfectoMobile):
+def scroll_up(setup_perfectoMobile):
     print("Scroll up")
     setup_perfectoMobile[1].step_start("Scroll up")
     params2 = {}
-    params2["start"] = "50%,50%"
+    params2["start"] = "50%,20%"
     params2["end"] = "50%,80%"
-    params2["duration"] = "4"
-    time.sleep(2)
+    params2["duration"] = "2"
+    time.sleep(1)
     setup_perfectoMobile[0].execute_script('mobile:touch:swipe', params2)
     time.sleep(1)
 
