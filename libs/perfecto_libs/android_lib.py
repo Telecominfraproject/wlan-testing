@@ -2308,14 +2308,7 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                     # -------------------------------------------------------
                     try:
                         report.step_start("Verify if Wifi is Connected")
-                        try:
-                            WifiInternetErrMsg = WebDriverWait(driver, 35).until(
-                            EC.presence_of_element_located((MobileBy.XPATH,
-                                                            "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
-                        except:
-                            print("Not able to verify the connected WiFi. Scrolling up.")
-                            scroll_up(setup_perfectoMobile)
-                            WifiInternetErrMsg = WebDriverWait(driver, 35).until(
+                        WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                             EC.presence_of_element_located((MobileBy.XPATH,
                                                             "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                         ssid_with_internet = True
@@ -2324,7 +2317,10 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                         check_if_no_internet_popup(driver)
                     except:
                         try:
-                            check_if_no_internet_popup(driver)
+                            print("Not able to verify the connected WiFi. Scrolling up.")
+                            scroll_up(setup_perfectoMobile)
+                            scroll_up(setup_perfectoMobile)
+                            # check_if_no_internet_popup(driver)
                             WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                                 EC.presence_of_element_located((MobileBy.XPATH,
                                                                 "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
@@ -2333,9 +2329,11 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                         except:
                             try:
                                 report.step_start("Verify if Wifi is Connected")
+                                print("Verifying after scrolling")
+                                scroll_up(setup_perfectoMobile)
                                 WifiInternetErrMsg = WebDriverWait(driver, 60).until(EC.presence_of_element_located((
                                     MobileBy.XPATH,
-                                    "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                                    "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                                 ssid_with_internet = True
                                 print("Wifi Successfully Connected")
                             except NoSuchElementException:
@@ -4271,7 +4269,10 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                         check_if_no_internet_popup(driver)
                     except:
                         try:
-                            check_if_no_internet_popup(driver)
+                            print("Not able to verify the connected WiFi. Scrolling up.")
+                            scroll_up(setup_perfectoMobile)
+                            scroll_up(setup_perfectoMobile)
+                            # check_if_no_internet_popup(driver)
                             WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                                 EC.presence_of_element_located((MobileBy.XPATH,
                                                                 "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
@@ -4280,9 +4281,11 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                         except:
                             try:
                                 report.step_start("Verify if Wifi is Connected")
+                                print("Verifying after scrolling")
+                                scroll_up(setup_perfectoMobile)
                                 WifiInternetErrMsg = WebDriverWait(driver, 60).until(EC.presence_of_element_located((
                                     MobileBy.XPATH,
-                                    "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                                    "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                                 ssid_with_internet = True
                                 print("Wifi Successfully Connected")
                             except NoSuchElementException:
@@ -5514,18 +5517,23 @@ def gets_ip_add_and_does_not_forget_ssid(request, WifiName, WifiPass, setup_perf
                         check_if_no_internet_popup(driver)
                     except:
                         try:
-                            check_if_no_internet_popup(driver)
+                            print("Not able to verify the connected WiFi. Scrolling up.")
+                            scroll_up(setup_perfectoMobile)
+                            scroll_up(setup_perfectoMobile)
+                            # check_if_no_internet_popup(driver)
                             WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                                 EC.presence_of_element_located((MobileBy.XPATH,
-                                                                "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='"+ WifiName + "']")))
+                                                                "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                             print("Wifi Successfully Connected without internet")
                             check_if_no_internet_popup(driver)
                         except:
                             try:
                                 report.step_start("Verify if Wifi is Connected")
+                                print("Verifying after scrolling")
+                                scroll_up(setup_perfectoMobile)
                                 WifiInternetErrMsg = WebDriverWait(driver, 60).until(EC.presence_of_element_located((
                                     MobileBy.XPATH,
-                                    "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                                    "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                                 ssid_with_internet = True
                                 print("Wifi Successfully Connected")
                             except NoSuchElementException:
@@ -6165,18 +6173,23 @@ def gets_ip_add_eap_and_does_not_forget_ssid(request, WifiName, User, ttls_passw
                         check_if_no_internet_popup(driver)
                     except:
                         try:
-                            check_if_no_internet_popup(driver)
+                            print("Not able to verify the connected WiFi. Scrolling up.")
+                            scroll_up(setup_perfectoMobile)
+                            scroll_up(setup_perfectoMobile)
+                            # check_if_no_internet_popup(driver)
                             WifiInternetErrMsg = WebDriverWait(driver, 35).until(
                                 EC.presence_of_element_located((MobileBy.XPATH,
-                                                                "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='"+ WifiName + "']")))
+                                                                "//*[@resource-id='com.android.settings:id/summary' and @text='Connected without internet']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                             print("Wifi Successfully Connected without internet")
                             check_if_no_internet_popup(driver)
                         except:
                             try:
                                 report.step_start("Verify if Wifi is Connected")
+                                print("Verifying after scrolling")
+                                scroll_up(setup_perfectoMobile)
                                 WifiInternetErrMsg = WebDriverWait(driver, 60).until(EC.presence_of_element_located((
                                     MobileBy.XPATH,
-                                    "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
+                                    "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/android.widget.TextView[@text='" + WifiName + "']")))
                                 ssid_with_internet = True
                                 print("Wifi Successfully Connected")
                             except NoSuchElementException:
