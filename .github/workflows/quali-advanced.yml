@@ -131,7 +131,6 @@ jobs:
         echo "::set-output name=name::${NAMESPACE}"
 
     - name: prepare configuration
-      id: configuration
       run: |
         cat << EOF > configuration.py
         Customer = ""
@@ -268,15 +267,13 @@ jobs:
         }
         EOF
 
-        echo "::set-output name=value::$(cat ./configuration.py)"
-
     - name: run tests
       uses: ./.github/actions/run-tests
       with:
         namespace: ${{ steps.namespace.outputs.name }}
         testbed: advanced
         marker_expression: "${{ needs.vars.outputs.marker_expression }}"
-        configuration: "${{ steps.configuration.outputs.value }}"
+        configuration_file: "./configuration.py"
         testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
         additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
         allure_results_artifact_name: allure-results-${{ matrix.ap_model }}

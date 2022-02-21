@@ -359,7 +359,6 @@ jobs:
         echo "::set-output name=name::${NAMESPACE}"
 
     - name: create configuration.py secret
-      id: configuration
       run: |
         cat << EOF > configuration.py
         ${{ secrets.LAB_CONFIGURATION }}
@@ -367,15 +366,13 @@ jobs:
         sed -i -r "s/'url': ('|\").*('|\")/'url': 'https:\/\/${{ needs.deploy-controller.outputs.sec_url }}:16001'/" configuration.py
         sed -i -r "s/'password': ('|\")openwifi('|\")/'password': '"${{ secrets.OWSEC_NEW_PASSWORD }}"'/" configuration.py
 
-        echo "::set-output name=value::$(cat ./configuration.py)"
-
     - name: run tests
       uses: ./.github/actions/run-tests
       with:
         namespace: ${{ steps.namespace.outputs.name }}
         testbed: "${{ github.event.inputs.testbeds || 'basic-05' }}"
         marker_expression: "${{ github.event.inputs.marker_expression || 'sdk_restapi' }}"
-        configuration: "${{ steps.configuration.outputs.value }}"
+        configuration_file: "./configuration.py"
         testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
         allure_results_artifact_name: allure-results-docker-compose-${{ github.event.inputs.marker_expression || 'sdk_restapi' }}
 

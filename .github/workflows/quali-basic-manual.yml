@@ -119,7 +119,6 @@ jobs:
         echo "::set-output name=name::${NAMESPACE}"
 
     - name: prepare configuration
-      id: configuration
       env:
         CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
         CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
@@ -227,15 +226,13 @@ jobs:
         }
         EOF
 
-        echo "::set-output name=value::$(cat ./configuration.py)"
-
     - name: run tests
       uses: ./.github/actions/run-tests
       with:
         namespace: ${{ steps.namespace.outputs.name }}
         testbed: basic
         marker_expression: ${{ github.event.inputs.marker_expression }}
-        configuration: "${{ steps.configuration.outputs.value }}"
+        configuration_file: "./configuration.py"
         testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
         additional_args: '-o firmware="${{ github.event.inputs.firmware }}"'
         allure_results_artifact_name: allure-results
