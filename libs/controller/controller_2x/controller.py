@@ -451,6 +451,7 @@ class UProfileUtility:
         else:
             return False
 
+
     def get_ssid_info(self):
         ssid_info = []
         for interfaces in self.base_profile_config["interfaces"]:
