@@ -1130,7 +1130,6 @@ class RunTest:
         self.set_radio_country_channel(_radio=radio,_country_num=country_num)
         station = self.Client_Connect(ssid=ssid, passkey=passkey, security=security, mode=mode, band=band,
                                          station_name=station_name, vlan_id=vlan_id)
-
         if station:
             for i in range(10):
                 station_info = station.json_get(f"/port/1/1/{station_name[0]}")
