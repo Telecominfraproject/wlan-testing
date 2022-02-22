@@ -1,11 +1,10 @@
 """
 
-    Performance Test: Country code along with Channel and Channel-width  Test: Bridge Mode
+    Performance Test: Country code along with Channel and Channel-width Test: Bridge Mode
     pytest -m "country_code and Bridge"
 
 """
-# TODO: remove 5g config
-#  correct markers in comments
+
 
 import os
 import pytest
@@ -18,22 +17,13 @@ setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-                         {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"2G":
-        {
-        'band': '2G',
+        {'band': '2G',
         'country': 'US',
         'channel-width': 20,
-        "channel": 1
-    },
-        "5G":
-            {
-        "band": "5G",
-        "country": "US",
-        "channel-width": 40,
-        "channel": 36
-        }},
+        "channel": 1}
+           },
     "radius": False
 }
 
@@ -47,7 +37,7 @@ setup_params_general = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestCountryUS20Mhz2GChannel1(object):
-    """Throughput vs Various Pkt Size Test Bridge mode
+    """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
@@ -57,8 +47,8 @@ class TestCountryUS20Mhz2GChannel1(object):
     @pytest.mark.twog
     @pytest.mark.channelone
     def test_client_bridge_wpa2_chn1_20Mhz_US_2g(self, lf_test, station_names_twog, get_configuration):
-        """Throughput Vs Pkt Sizes Bridge Mode
-           pytest -m "throughput_vs_pkt and Bridge and open and twog and pkt60"
+        """Country code Bridge Mode
+           pytest -m "country_code and twentyMhz and wpa2 and twog and channelone"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
