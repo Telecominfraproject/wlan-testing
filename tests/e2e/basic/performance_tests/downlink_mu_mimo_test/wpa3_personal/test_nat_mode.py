@@ -1,19 +1,19 @@
 """
 
     Performance Test: Downlink MU-MIMO Test: Bridge Mode
-    pytest -m "downlink_mu_mimo and Nat and open and fiveg"
+    pytest -m "downlink_mu_mimo and Nat and wpa3_personal and fiveg"
 
 """
 import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.downlink_mu_mimo, pytest.mark.Bridge, pytest.mark.open]
+pytestmark = [pytest.mark.downlink_mu_mimo, pytest.mark.Bridge, pytest.mark.wpa3_personal]
 
 setup_params_general = {
     "mode": "NAT",
     "ssid_modes": {
-        "open": [
+        "wpa3_personal": [
             {"ssid_name": "mu-mimo-5g", "appliedRadios": ["5G"]},
             {"ssid_name": "mu-mimo-2g", "appliedRadios": ["2G"]}
         ]
@@ -24,7 +24,7 @@ setup_params_general = {
 
 
 @allure.suite("performance")
-@allure.feature("BRIDGE MODE open security and Downlink MU_MIMO Test")
+@allure.feature("BRIDGE MODE wpa3_personal security and Downlink MU_MIMO Test")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -40,12 +40,12 @@ class TestMuMimoNat(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6849",
                      name="WIFI-6849")
-    @pytest.mark.open
+    @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
-    def test_mu_mimo_open_nat_5g(self, lf_tools, lf_test, create_lanforge_chamberview_dut):
+    def test_mu_mimo_wpa3_personal_nat_5g(self, lf_tools, lf_test, create_lanforge_chamberview_dut):
         """
             Downlink MU-MIMO Test: Bridge Mode
-            pytest -m downlink_mu_mimo and Bridge and open and fiveg
+            pytest -m downlink_mu_mimo and Bridge and wpa3_personal and fiveg
             """
         dut_name = create_lanforge_chamberview_dut
         mode = "NAT"

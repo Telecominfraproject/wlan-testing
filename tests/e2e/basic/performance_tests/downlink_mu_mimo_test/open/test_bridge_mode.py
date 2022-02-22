@@ -47,6 +47,7 @@ class TestMuMimoBridge(object):
             Downlink MU-MIMO Test: Bridge Mode
             pytest -m downlink_mu_mimo and Bridge and open and fiveg
             """
+        print('lf tool')
         dut_name = create_lanforge_chamberview_dut
         mode = "BRIDGE"
         upstream_port = "1.1.eth2"
@@ -62,7 +63,7 @@ class TestMuMimoBridge(object):
             if lf_tools.dut_idx_mapping[i][3] == "2G":
                 dut_2g = dut_name + ' ' + lf_tools.dut_idx_mapping[i][0] + ' ' + lf_tools.dut_idx_mapping[i][4] + ' (2)'
                 print(dut_2g)
-        tr398_obj = lf_test.tr398Test(radios_2g=[], radios_5g=[], upstream_port=upstream_port, mode=mode, dut_name=dut_name, dut_5g=dut_5g, dut_2g=dut_2g, config_name="", raw_line=raw_line)
+        tr398_obj = lf_test.tr398Test(radios_2g=[], radios_5g=[], upstream_port=upstream_port, mode=mode, vlan_id=vlan, dut_name=dut_name, dut_5g=dut_5g, dut_2g=dut_2g, config_name="", raw_line=raw_line)
         report_name = tr398_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Downlink MU-MIMO Test")
         assert True

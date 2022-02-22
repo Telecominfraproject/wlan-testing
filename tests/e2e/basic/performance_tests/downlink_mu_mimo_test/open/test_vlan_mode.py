@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.downlink_mu_mimo, pytest.mark.Bridge, pytest.mark.open]
+pytestmark = [pytest.mark.downlink_mu_mimo, pytest.mark.vlan, pytest.mark.open]
 
 setup_params_general = {
     "mode": "NAT",
