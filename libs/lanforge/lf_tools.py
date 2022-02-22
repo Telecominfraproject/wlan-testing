@@ -343,7 +343,7 @@ class ChamberView:
                     self.raw_line.append(station_data)
             if num_stations == "max":
                 for radio in self.twog_radios:
-                    num_stations = self.get_max_sta(radio)
+                    num_stations = 64
                     station_data = ["profile_link " + radio.split(".")[0] + "." + radio.split(".")[1] +
                                     " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
                                     str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
@@ -369,7 +369,7 @@ class ChamberView:
                     self.raw_line.append(station_data)
             if num_stations == "max":
                 for radio in self.fiveg_radios:
-                    num_stations = self.get_max_sta(radio)
+                    num_stations = 64
                     station_data = ["profile_link " + radio.split(".")[0] + "." + radio.split(".")[1] +
                                     " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
                                     str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
