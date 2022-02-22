@@ -385,6 +385,9 @@ class Fixtures_2x:
         if "dfs" in list_key:
             print("In dfs")
             instantiate_profile_obj.set_radio_config(DFS=True, channel=parameter["dfs"]["channel"], bw=parameter["dfs"]["channel_bandwidth"])
+        if len(parameter['rf']) > 0:
+            print("In country code channel division")
+            instantiate_profile_obj.set_radio_config(radio_config=parameter['rf'])
         else:
             instantiate_profile_obj.set_radio_config()
         if parameter['mode'] not in ["BRIDGE", "NAT", "VLAN"]:
