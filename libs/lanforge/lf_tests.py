@@ -1121,7 +1121,6 @@ class RunTest:
         allure.attach(name="scan_ssid_data", body=csv_data_table)
         obj_scan.cleanup()
 
-
     def country_code_channel_division(self, ssid = "[BLANK]", passkey='[BLANK]', security="wpa2", mode="BRIDGE",
                                       band='2G', station_name=[], vlan_id=100, channel='1', channel_width=20,
                                       country_num=392, country='United States(US)'):
