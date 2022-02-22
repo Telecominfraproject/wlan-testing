@@ -1,6 +1,6 @@
 """
 
-    Performance Test: Throughput vs Various Pkt Size Test: Bridge Mode
+    Performance Test: Country code along with Channel and Channel-width  Test: Bridge Mode
     pytest -m "country_code and Bridge"
 
 """
@@ -56,7 +56,7 @@ class TestCountryUS20Mhz2GChannel1(object):
     @pytest.mark.twentyMhz
     @pytest.mark.twog
     @pytest.mark.channelone
-    def test_client_bridge_open_chn1_20Mhz_US_2g(self, lf_test, station_names_twog, get_configuration):
+    def test_client_bridge_wpa2_chn1_20Mhz_US_2g(self, lf_test, station_names_twog, get_configuration):
         """Throughput Vs Pkt Sizes Bridge Mode
            pytest -m "throughput_vs_pkt and Bridge and open and twog and pkt60"
         """
