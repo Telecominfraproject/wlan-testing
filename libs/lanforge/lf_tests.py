@@ -991,7 +991,18 @@ class RunTest:
         self.Client_disconnect(station_name=station_name)
         return atten_serial_radio
 
-
+    def country_code_channel_division(self, ssid = "[BLANK]", passkey='[BLANK]', security="wpa2", mode="BRIDGE",
+                                      band='2G', station_name=[], vlan_id=100, channel='1'):
+        station = self.Client_Connect(ssid=ssid, passkey=passkey, security=security, mode=mode, band=band,
+                                         station_name=station_name, vlan_id=vlan_id)
+        if station:
+            check_channel_ip = station.json_get("/port/1/1/sta0000")
+            allure.attach(name=station_name, body=check_channel_ip)
+            print(f"station IP: {check_channel_ip['interface']['ip']}   connected channel: {check_channel_ip['interface']['channel']}")
+            if check_channel_ip['interface']['ip'] and check_channel_ip['interface']['channel'] == str(channel):
+                return True
+            else:
+                return False
 
 if __name__ == '__main__':
     influx_host = "influx.cicd.lab.wlan.tip.build"
@@ -1039,3 +1050,9 @@ if __name__ == '__main__':
     # print(a)
     # print(obj.eap_connect.json_get("port/1/1/sta0000?fields=ap,ip"))
     # obj.EAP_Connect(station_name=["sta0000", "sta0001"], eap="TTLS", ssid="testing_radius")
+
+
+# TODO: create new funtion
+#  --> create sta and once it's connected
+#  --> check the sta connected to expected chan
+#  --> attach details to allure (ref:client_connectivity)
