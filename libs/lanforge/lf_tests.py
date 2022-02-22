@@ -997,8 +997,8 @@ class RunTest:
                                          station_name=station_name, vlan_id=vlan_id)
         if station:
             check_channel_ip = station.json_get("/port/1/1/sta0000")
-            allure.attach(name=station_name, body=check_channel_ip)
             print(f"station IP: {check_channel_ip['interface']['ip']}   connected channel: {check_channel_ip['interface']['channel']}")
+            allure.attach(name=station_name, body=check_channel_ip['interface'])
             if check_channel_ip['interface']['ip'] and check_channel_ip['interface']['channel'] == str(channel):
                 return True
             else:
