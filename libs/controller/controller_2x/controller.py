@@ -483,6 +483,11 @@ class UProfileUtility:
                 "channel-width": bw,
                 "channel": channel
             })
+        if radio_config:
+            if '2G' in radio_config:
+                self.base_profile_config["radios"].append(radio_config['2G'])
+            if '5G' in radio_config:
+                self.base_profile_config["radios"].append(radio_config['5G'])
         else:
             self.base_profile_config["radios"].append({
                 "band": "2G",
