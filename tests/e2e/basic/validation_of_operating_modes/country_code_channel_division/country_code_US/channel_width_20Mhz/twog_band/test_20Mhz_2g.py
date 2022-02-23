@@ -93,7 +93,7 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryUS20Mhz2GChannel1(object):
+class TestCountryUS20Mhz2GChannel2(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -103,7 +103,7 @@ class TestCountryUS20Mhz2GChannel1(object):
     @pytest.mark.twentyMhz
     @pytest.mark.twog
     @pytest.mark.channeltwo
-    def test_client_bridge_wpa2_chn1_20Mhz_US_2g(self, lf_test, station_names_twog, get_configuration):
+    def test_client_bridge_wpa2_chn2_20Mhz_US_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and twog and channeltwo"
         """
