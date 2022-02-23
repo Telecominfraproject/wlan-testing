@@ -16,7 +16,7 @@ setup_params_general1 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
+                         {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
