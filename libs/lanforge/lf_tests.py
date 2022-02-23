@@ -996,10 +996,16 @@ class RunTest:
         station = self.Client_Connect(ssid=ssid, passkey=passkey, security=security, mode=mode, band=band,
                                          station_name=station_name, vlan_id=vlan_id)
         if station:
-            check_channel_ip = station.json_get("/port/1/1/sta0000")
-            print(f"station IP: {check_channel_ip['interface']['ip']}\nconnected channel: {check_channel_ip['interface']['channel']}")
-            allure.attach(name=station_name, body=str(check_channel_ip['interface']))
-            if check_channel_ip['interface']['ip'] and check_channel_ip['interface']['channel'] == str(channel):
+            station_info = station.json_get("/port/1/1/sta0000")
+            print(f"station IP: {station_info['interface']['ip']}\nconnected channel: {station_info['interface']['channel']}")
+            station_data_str = "Hellooooo\nkarthika"
+            # for i in station_info["interface"]:
+            #     try:
+            #         station_data_str += i + "  :  " + str(station_info["interface"][i]) + "\n"
+            #     except Exception as e:
+            #         print(e)
+            allure.attach(name=str(station_name), body=str(station_data_str))
+            if station_info['interface']['ip'] and station_info['interface']['channel'] == str(channel):
                 return True
             else:
                 return False
@@ -1053,6 +1059,4 @@ if __name__ == '__main__':
 
 
 # TODO: create new funtion
-#  --> create sta and once it's connected
-#  --> check the sta connected to expected chan
 #  --> attach details to allure (ref:client_connectivity)
