@@ -2,6 +2,7 @@
 # Used by Nightly_Sanity
 # This has different types of old_pytest like Single client connectivity, Single_Client_EAP, testrail_retest
 #########################################################################################################
+import datetime
 import sys
 import os
 
@@ -48,6 +49,8 @@ from attenuator_serial import AttenuatorSerial
 from lf_atten_mod_test import CreateAttenuator
 from lf_mesh_test import MeshTest
 from lf_tr398_test import TR398Test
+from lf_pcap import LfPcap
+from wifi_monitor_profile import WifiMonitor
 
 
 class RunTest:
@@ -99,6 +102,8 @@ class RunTest:
             self.dualbandptest_obj = None
             self.msthpt_obj = None
             self.cvtest_obj = None
+            self.pcap_obj = None
+            self.monitor_obj = WifiMonitor()
             self.influx_params = influx_params
             # self.influxdb = RecordInflux(_influx_host=influx_params["influx_host"],
             #                              _influx_port=influx_params["influx_port"],
@@ -928,21 +933,18 @@ class RunTest:
         self.Client_disconnect(station_name=station_name)
         return atten_serial_radio
 
-    def tr398Test(self, dut_name="TIP", upstream_port="", dut_5g="", dut_2g="", config_name="", raw_line=[],
-                  radios_2g=[], radios_5g=[], mode="BRIDGE", vlan_id=1):
-        if len(radios_2g) != 0 and len(radios_5g) != 0:
-            radios_2g = self.twog_radios
-            radios_5g = self.fiveg_radios
+    def downlink_mu_mimo(self, dut_name="TIP", dut_5g="", dut_2g="", mode="BRIDGE", vlan_id=1):
+        radios_2g = self.twog_radios
+        radios_5g = self.fiveg_radios
+        radios_ax = self.ax_radios
         sets = [['Calibrate Attenuators', '0'], ['Receiver Sensitivity', '0'], ['Maximum Connection', '0'],
                 ['Maximum Throughput', '0'], ['Airtime Fairness', '0'], ['Range Versus Rate', '0'],
                 ['Spatial Consistency', '0'],
                 ['Multiple STAs Performance', '0'], ['Multiple Assoc Stability', '0'], ['Downlink MU-MIMO', '1'],
                 ['AP Coexistence', '0'], ['Long Term Stability', '0'], ['Skip 2.4Ghz Tests', '1'], ['2.4Ghz Channel', 'AUTO'], ['5Ghz Channel', 'AUTO']]
-        if len(raw_line) == 0:
-            raw_line = [['radio-0: 1.1.4 wiphy1'], ['radio-1: 1.1.5 wiphy0'], ['radio-2: 1.1.6 wiphy3'],
-                        ['radio-3: 1.1.7 wiphy2'], ['radio-4: 1.1.8 wiphy4'], ['radio-5: 1.1.9 wiphy5']]
+        raw_line = [['radio-0: 1.1.5 wiphy1'], ['radio-1: 1.1.4 wiphy0'], ['radio-2: 1.1.7 wiphy3'],
+                    ['radio-3: 1.1.6 wiphy2'], ['radio-4: 1.1.8 wiphy4'], ['radio-5: 1.1.9 wiphy5']]
         instance_name = "tr398-instance-{}".format(str(random.randint(0, 1000)))
-        print("Upstream Port: ", upstream_port)
 
         if not os.path.exists("mu-mimo-config.txt"):
             with open("mu-mimo-config.txt", "wt") as f:
@@ -955,6 +957,7 @@ class RunTest:
             self.upstream_port = self.upstream_port
         else:
             self.upstream_port = self.upstream_port + "." + str(vlan_id)
+        print("Upstream Port: ", self.upstream_port)
 
         self.cvtest_obj = TR398Test(lf_host=self.lanforge_ip,
                                     lf_port=self.lanforge_port,
@@ -962,7 +965,7 @@ class RunTest:
                                     lf_password="lanforge",
                                     instance_name=instance_name,
                                     config_name="cv_dflt_cfg",
-                                    upstream=upstream_port,
+                                    upstream="1.1." + self.upstream_port,
                                     pull_report=True,
                                     local_lf_report_dir=self.local_report_path,
                                     load_old_cfg=False,
@@ -990,6 +993,21 @@ class RunTest:
 
         influx.glob()
         return self.cvtest_obj
+
+    def live_capture(self, interface_name="Wiphy0", output_file="live.pcap", sniff_duration=300):
+        if sniff_duration is not None or type(sniff_duration) is str:
+            sniff_duration = int(sniff_duration)
+        else:
+            sniff_duration = 300
+        self.pcap_obj = LfPcap()
+        self.pcap_obj.capture_live_pcap(interface=interface_name, output_file_name=output_file, duration=sniff_duration)
+        return self.pcap_obj
+
+    def sniff_packets(self, interface_name="Wiphy0", test_name="mu-mimo", sniff_duration=180):
+        pcap_name = test_name + str(datetime.datetime.now()) + ".pcap"
+        self.monitor_obj.create(resource_=1, channel=None, mode="AUTO", radio_=interface_name, name_="moni0")
+        self.monitor_obj.start_sniff(capname=pcap_name, duration_sec=sniff_duration)
+        self.monitor_obj.cleanup()
 
 
 if __name__ == '__main__':
