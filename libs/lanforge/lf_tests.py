@@ -998,13 +998,13 @@ class RunTest:
         if station:
             station_info = station.json_get("/port/1/1/sta0000")
             print(f"station IP: {station_info['interface']['ip']}\nconnected channel: {station_info['interface']['channel']}")
-            station_data_str = "Hellooooo\nkarthika"
-            # for i in station_info["interface"]:
-            #     try:
-            #         station_data_str += i + "  :  " + str(station_info["interface"][i]) + "\n"
-            #     except Exception as e:
-            #         print(e)
-            allure.attach(name=str(station_name), body=str(station_data_str))
+            station_data_str = ""
+            for i in station_info["interface"]:
+                try:
+                    station_data_str += i + "  :  " + str(station_info["interface"][i]) + "\n"
+                except Exception as e:
+                    print(e)
+            allure.attach(name=str(station_name[0]), body=str(station_data_str))
             if station_info['interface']['ip'] and station_info['interface']['channel'] == str(channel):
                 return True
             else:
