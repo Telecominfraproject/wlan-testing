@@ -13,7 +13,7 @@ import allure
 pytestmark = [pytest.mark.country_code, pytest.mark.Bridge, pytest.mark.wpa2, pytest.mark.US]
               # pytest.mark.usefixtures("setup_test_run")]
 
-setup_params_general = {
+setup_params_general1 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
@@ -32,7 +32,7 @@ setup_params_general = {
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general],
+    [setup_params_general1],
     indirect=True,
     scope="class"
 )
@@ -51,14 +51,14 @@ class TestCountryUS20Mhz2GChannel1(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and twog and channelone"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
         band = "twog"
         vlan = 1
-        channel = setup_params_general['rf']['2G']['channel']
+        channel = setup_params_general1['rf']['2G']['channel']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
@@ -69,7 +69,7 @@ class TestCountryUS20Mhz2GChannel1(object):
             assert False
 
 
-setup_params_general = {
+setup_params_general2 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
@@ -88,7 +88,7 @@ setup_params_general = {
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general],
+    [setup_params_general2],
     indirect=True,
     scope="class"
 )
@@ -107,14 +107,14 @@ class TestCountryUS20Mhz2GChannel2(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and twog and channeltwo"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
         band = "twog"
         vlan = 1
-        channel = setup_params_general['rf']['2G']['channel']
+        channel = setup_params_general2['rf']['2G']['channel']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
