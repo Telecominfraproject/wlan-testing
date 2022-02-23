@@ -996,7 +996,7 @@ class RunTest:
         station = self.Client_Connect(ssid=ssid, passkey=passkey, security=security, mode=mode, band=band,
                                          station_name=station_name, vlan_id=vlan_id)
         if station:
-            station_info = station.json_get("/port/1/1/sta0000")
+            station_info = station.json_get(f"/port/1/1/{station_name[0]}")
             print(f"station IP: {station_info['interface']['ip']}\nconnected channel: {station_info['interface']['channel']}")
             station_data_str = ""
             for i in station_info["interface"]:
