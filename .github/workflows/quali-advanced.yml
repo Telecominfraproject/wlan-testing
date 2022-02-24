@@ -76,6 +76,7 @@ jobs:
   test:
     runs-on: [ self-hosted, small ]
     needs: [ vars, generate-matrix, build ]
+    timeout-minutes: 720
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
