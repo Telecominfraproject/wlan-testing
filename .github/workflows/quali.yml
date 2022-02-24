@@ -137,7 +137,6 @@ jobs:
           echo "::set-output name=name::${NAMESPACE}"
 
       - name: prepare configuration
-        id: configuration
         run: |
           cat << EOF > configuration.py
           Customer = ''
