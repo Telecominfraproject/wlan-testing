@@ -15,7 +15,7 @@ setup_params_general = {
     "rf": {},
     "radius": False
 }
-@allure.suite("Roam Test")
+@allure.suite("Roam Test with attenuator")
 @allure.feature("Roam Test")
 @pytest.mark.parametrize(
     'setup_profiles',
@@ -25,7 +25,7 @@ setup_params_general = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 
-class TestRateLimitingWithRadiusBridge(object):
+class TestRoam(object):
 
 
     @pytest.mark.roam_2g
