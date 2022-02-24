@@ -53,7 +53,7 @@ jobs:
     - name: create configuration.py file
       run: |
         cat << EOF > configuration.py
-        ${{ secrets.LAB_CONFIGURATION }}
+        ${{ secrets.LAB_CONFIGURATION_JSON }}
         EOF
 
     - name: Get redirector URL

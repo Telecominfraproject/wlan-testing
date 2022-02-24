@@ -1,3 +1,4 @@
+import argparse
 import json
 import sys
 
@@ -18,8 +19,13 @@ def get_attribute_value(cloudshell_session, attribute):
 
 
 def main():
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('--json', default=False, help="render configuration as JSON instead of Python dict", action='store_true')
+    argparser.add_argument('reservation_id')
+    args = argparser.parse_args()
+
     session = get_session()
-    res_id = sys.argv[1]
+    res_id = args.reservation_id
 
     reservation_details = session.GetReservationDetails(res_id).ReservationDescription
     resources_in_reservation = reservation_details.Resources
@@ -83,7 +89,10 @@ def main():
         else:
             continue
 
-    print(repr(config))
+    if args.json:
+        print(json.dumps(config))
+    else:
+        print(repr(config))
 
 
 if __name__ == '__main__':

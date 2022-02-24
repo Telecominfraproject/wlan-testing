@@ -76,7 +76,7 @@ jobs:
         namespace: ${{ steps.namespace.outputs.name }}
         testbed: ${{ steps.testbed.outputs.name }}
         marker_expression: "performance and ${{ matrix.marker }}"
-        configuration: "${{ secrets.LAB_CONFIGURATION }}"
+        configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
         testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
         allure_results_artifact_name: allure-results-${{ matrix.marker }}
 
