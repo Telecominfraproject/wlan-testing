@@ -77,6 +77,7 @@ class ChamberView:
                 self.delete_old_scenario = True
                 if access_point_data:
                     print(len(access_point_data))
+
                     for ap in range(len(access_point_data)):
                         print(access_point_data[ap])
                         self.dut_name = access_point_data[ap]["model"]
@@ -591,6 +592,28 @@ class ChamberView:
             self.CreateDut = DUT(lfmgr=self.lanforge_ip,
                                  port=self.lanforge_port,
                                  dut_name=self.dut_name,
+                                 hw_version=self.ap_model,
+                                 model_num=self.ap_model,
+                                 serial_num=self.serial
+                                 )
+            self.Create_Dut()
+            # [['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58']]
+            self.update_ssid(ssid_data=ssid_data[ssid])
+
+    def create_non_meh_dut(self, ssid_data=[]):
+        print("hi")
+        for ap, ssid in zip(self.access_point_data, range(len(ssid_data))):
+            print("ap", ap)
+            print(ssid_data[ssid])
+            self.dut_name = ap["model"]
+            print(self.dut_name)
+            self.ap_model = ap["model"]
+            self.version = ap["version"].split("/")[-1]
+            self.serial = ap["serial"]
+            self.CreateDut = DUT(lfmgr=self.lanforge_ip,
+                                 port=self.lanforge_port,
+                                 dut_name=self.dut_name,
+                                 sw_version=self.version,
                                  hw_version=self.ap_model,
                                  model_num=self.ap_model,
                                  serial_num=self.serial
