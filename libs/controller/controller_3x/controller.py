@@ -12,10 +12,13 @@ sys.path.append(os.path.join(os.path.abspath("../../../lanforge/lanforge-scripts
 logger = logging.getLogger(__name__)
 lf_logger_config = importlib.import_module("py-scripts.lf_logger_config")
 
-
 class CController:
-    def __init__(self, controller_data, timeout=None, ssid_data=None):
+    def __init__(self, controller_data, ap_data=None, timeout=None, ssid_data=None, type=None):
         self.controller_data = controller_data
+        self.ap_data = ap_data
+        self.type = type
+        print("type", type)
+        print(self.ap_data)
         self.ip = self.controller_data["ip"]
         self.user = self.controller_data["username"]
         self.password = self.controller_data["password"]
@@ -26,7 +29,19 @@ class CController:
         #     self.ap_name = self.controller_data["ap_name"][i]
         # for band in range(controller_data["band"]):
         #     self.band = self.controller_data["band"][i]
-        self.ap_name = self.controller_data["ap_name"][0]["ap_name"]  # hard coded
+        # self.ap_name = self.controller_data["ap_name"][0]["ap_name"]   # hard coded
+        self.ap_name = None
+        if self.ap_name == None:
+            self.ap_name = self.ap_data[0]['ap_name']
+        if type == 0:
+            print("yes")
+            self.ap_name = self.ap_data[0]['ap_name']
+            print(self.ap_data[0]['ap_name'])
+        if type == 1:
+            self.ap_name = self.ap_data[1]['ap_name']
+            print(self.ap_data[1]['ap_name'])
+
+        print("ap_name //////", self.ap_name)
         self.band = self.controller_data["band"][0]
 
         self.scheme = self.controller_data["scheme"]
@@ -74,8 +89,12 @@ class CController:
                     self.cc.security_key = ssid_data[i]['security_key']
 
         self.cc.wlanpw = None
-        self.cc.tag_policy = self.controller_data['tag_policy']
-        self.cc.policy_profile = self.controller_data['policy_profile']
+        if type == 0:
+            self.cc.tag_policy = self.ap_data[0]['tag_policy']
+            self.cc.policy_profile = self.ap_data[0]['policy_profile']
+        if type == 1:
+            self.cc.tag_policy = self.ap_data[1]['tag_policy']
+            self.cc.policy_profile = self.ap_data[1]['policy_profile']
         self.cc.tx_power = None
         self.cc.channel = None
         self.cc.bandwidth = None
@@ -248,6 +267,73 @@ class CController:
         # print(ident_list)
         return ident_list
 
+    def get_ap_bssid_2g(self):
+        bssid_2g = self.cc.show_ap_bssid_24ghz()
+        return bssid_2g
+
+    def get_ap_bssid_5g(self):
+        bssid_5g = self.cc.show_ap_bssid_5ghz()
+        return bssid_5g
+
+    def cal_bssid_2g(self):
+        wlan_sumry = self.get_ap_bssid_2g()
+        ele_list = [y for y in (x.strip() for x in wlan_sumry.splitlines()) if y]
+        indices = [i for i, s in enumerate(ele_list) if 'BSSID' in s]
+        data = indices[1]
+        data2 = data + 1
+        data3 = data + 2
+        data4 = data + 3
+        data5 = data + 4
+        acc_data = ele_list[int(data)]
+        acc_data2 = ele_list[int(data2)]
+        acc_data3 = ele_list[int(data3)]
+        acc_data4 = ele_list[int(data4)]
+        acc_data5 = ele_list[int(data5)]
+        wlan_id_list = []
+        wlan_bssid = []
+        if acc_data == "WLAN ID    BSSID":
+            if acc_data2 == "-------------------------":
+                id_list = acc_data3.split()
+                # print(id_list)
+                if id_list[0] == "1":
+                    wlan_id_list.append(id_list)
+                    wlan_bssid.append(id_list[1])
+                else:
+                    print("no wlan on slot 1 presnt")
+        y = wlan_bssid[0].replace(".", '')
+        bssid = ':'.join(a + b for a, b in zip(y[::2], y[1::2]))
+        return bssid
+
+    def cal_bssid_5g(self):
+        wlan_sumry = self.get_ap_bssid_5g()
+        ele_list = [y for y in (x.strip() for x in wlan_sumry.splitlines()) if y]
+        indices = [i for i, s in enumerate(ele_list) if 'BSSID' in s]
+        data = indices[1]
+        data2 = data + 1
+        data3 = data + 2
+        data4 = data + 3
+        data5 = data + 4
+        acc_data = ele_list[int(data)]
+        acc_data2 = ele_list[int(data2)]
+        acc_data3 = ele_list[int(data3)]
+        acc_data4 = ele_list[int(data4)]
+        acc_data5 = ele_list[int(data5)]
+        wlan_id_list = []
+        wlan_bssid = []
+        if acc_data == "WLAN ID    BSSID":
+            if acc_data2 == "-------------------------":
+                id_list = acc_data4.split()
+                # print(id_list)
+                if id_list[0] == "2":
+                    wlan_id_list.append(id_list)
+                    wlan_bssid.append(id_list[1])
+                else:
+                    print("no wlan on slot 2 present")
+        y = wlan_bssid[0].replace(".", '')
+        bssid = ':'.join(a + b for a, b in zip(y[::2], y[1::2]))
+        return bssid
+        return bssid
+
     def get_slot_id_wlan(self):
         id = self.calculate_data(place=0)
         return id
@@ -271,31 +357,61 @@ class CController:
         print(w_sum)
         return w_sum
 
-    def get_ap_ssid_state(self):
-        pass
 
 
 
 if __name__ == '__main__':
     controller = {
-        'ip': "localhost",                  # '172.16.0.2'
-        'username': "admin",
-        'password': 'yz',
-        'ssh_port': "8888",   # 22
-        'series': "9800",
-        'prompt': "WLC2",
-        'ap_name': "AP2C57.4152.385C",
-        'band': "5g",
-        'scheme': "ssh"
-        }
-    obj = CController(controller_data=controller, timeout="10", ssid_data=None)
+        "url": "https://172.16.0.2",
+        "ip": "localhost",
+        "username": "admin",
+        "password": "Cisco123",
+        "ssh_port": "8888",
+        "series": "9800",
+        "prompt": "WLC2",
+        "band": ["5g"],
+        "scheme": "ssh"
+    }
+    access_point = [
+        {
+            "ap_name": "AP687D.B45C.1D1C",
+            "chamber": "C1",
+            "model": "cisco9136i",
+            "mode": "wifi6",
+            "serial": "FOC25322JQP",
+            "tag_policy": "RM204-TB2-AP1",
+            "policy_profile": "default-policy-profile",
+            "ssid": {
+                "2g-ssid": "candela2ghz",
+                "5g-ssid": "open-wlan",
+                "6g-ssid": "candela6ghz",
+                "2g-password": "hello123",
+                "5g-password": "[BLANK]",
+                "6g-password": "hello123",
+                "2g-encryption": "WPA2",
+                "5g-encryption": "open",
+                "6g-encryption": "WPA3",
+                "2g-bssid": "68:7d:b4:5f:5c:31 ",
+                "5g-bssid": "68:7d:b4:5f:5c:3c",
+                "6g-bssid": "68:7d:b4:5f:5c:38"
+            },
+
+            "ip": "192.168.100.109",
+            "username": "lanforge",
+            "password": "lanforge",
+            "port": 22,
+            "jumphost_tty": "/dev/ttyAP1",
+            "version": "17.7.1.11"
+        }]
+    obj = CController(controller_data=controller, ap_data=access_point, timeout="10", ssid_data=None)
+    obj.get_ap_bssid_2g()
     # x = obj.get_all_ssids_from_controller()
     # print(x)
     # obj.no_logging_console()
     # obj.line_console()
     # obj.delete_wlan()
     # obj.no_logging_console()
-    obj.get_ssids()
+    # obj.get_ssids()
     # obj.delete_wlan()
     # obj.create_wlan_open()
     # obj.get_ssids()
