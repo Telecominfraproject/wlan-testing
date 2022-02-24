@@ -709,8 +709,8 @@ def add_env_properties(get_configuration, get_sdk_version, get_apnos, fixtures_v
         pass
     if cc_1:
         add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
-        for i in range(len(get_configuration["controller"]["ap_name"])):
-            add_allure_environment_property(str('AP-Name-' + str(i+1)), get_configuration["controller"]["ap_name"][i]["ap_name"] )
+        for i in range(len(get_configuration["access_point"])):
+            add_allure_environment_property(str('AP-Name-' + str(i+1)), get_configuration["access_point"][i]["ap_name"])
         for i in range(len(get_configuration["access_point"])):
             add_allure_environment_property(str('AP-Serial-Number-'+str(i+1)), get_configuration["access_point"][i]["serial"])
     else:
@@ -809,7 +809,8 @@ def get_apnos_logs(get_apnos, get_configuration):
 @pytest.fixture(scope="function")
 def get_controller_logs(get_configuration, ):
     print("hi")
-    obj = CController(controller_data=get_configuration['controller'])
+
+    obj = CController(controller_data=get_configuration['controller'], ap_data=get_configuration['access_point'])
     summary = obj.show_ap_summary()
     print(summary)
     allure.attach(name='controller_log', body=str(summary))
@@ -817,7 +818,7 @@ def get_controller_logs(get_configuration, ):
 
 @pytest.fixture(scope="function")
 def get_ap_config_slots(get_configuration):
-    obj = CController(controller_data=get_configuration['controller'])
+    obj = CController(controller_data=get_configuration['controller'], ap_data=get_configuration['access_point'])
     slot = obj.show_ap_config_slots()
     # print(slot)
     allure.attach(name="ap_slots", body=str(slot))
