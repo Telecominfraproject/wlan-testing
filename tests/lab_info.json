@@ -10,22 +10,49 @@
             "ssh_port": "8888",
             "series": "9800",
             "prompt" : "WLC2",
-            "ap_name": [
-                {
-                    "ap_name": "AP2C57.4152.385C"
-                }
-            ],
             "band": ["5g"],
-            "scheme": "ssh",
-            "tag_policy": "RM204-TB2",
-            "policy_profile": "default-policy-profile"
+            "scheme": "ssh"
         },
         "access_point": [
             {
+                "ap_name":"AP687D.B45C.1D1C",
+                "chamber": "C1",
+                "model": "cisco9136i",
+                "mode": "wifi6",
+                "serial": "FOC25322JQP",
+                "tag_policy": "RM204-TB2-AP1",
+                "policy_profile": "default-policy-profile",
+                "jumphost": true,
+                "ssid": {
+                    "2g-ssid": "candela2ghz",
+                    "5g-ssid": "open-wlan",
+                    "6g-ssid" : "candela6ghz",
+                    "2g-password": "hello123",
+                    "5g-password": "[BLANK]",
+                    "6g-password": "hello123",
+                    "2g-encryption": "WPA2",
+                    "5g-encryption": "open",
+                    "6g-encryption": "WPA3",
+                    "2g-bssid": "68:7d:b4:5f:5c:31 ",
+                    "5g-bssid": "68:7d:b4:5f:5c:3c",
+                    "6g-bssid": "68:7d:b4:5f:5c:38"
+                },
+
+                "ip": "192.168.100.109",
+                "username": "lanforge",
+                "password": "lanforge",
+                "port": 22,
+                "jumphost_tty": "/dev/ttyAP1",
+                "version": "17.7.1.11"
+            },
+            {
+                "ap_name": "AP2C57.4152.385C",
                 "chamber": "C2",
                 "model": "cisco9130axe",
                 "mode": "wifi6",
                 "serial": "FJC2428146G",
+                "tag_policy": "RM204-TB2-AP2",
+                "policy_profile": "default-policy-profile",
                 "jumphost": true,
                 "ssid": {
                     "2g-ssid": "candela2ghz",
@@ -44,6 +71,9 @@
                 "jumphost_tty": "/dev/ttyAP2",
                 "version": "17.7.1.11"
             }
+
+
+
         ],
         "traffic_generator": {
             "name": "lanforge",
