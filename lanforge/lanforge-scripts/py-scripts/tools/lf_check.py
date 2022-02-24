@@ -88,6 +88,7 @@ Starting LANforge:
 
 '''
 
+from psutil import TimeoutExpired
 import requests
 import pandas as pd
 import paramiko
@@ -910,6 +911,8 @@ QA Report Dashboard: lf_qa.py was not run as last script of test suite"""
                     self.logger.info("command: {}".format(command))
                     self.logger.info("cmd_args {}".format(cmd_args))
 
+                    # TODO this code is always run since there is a default
+                    # TODO change name to file obj to make more unde
                     if self.outfile_name is not None:
                         stdout_log_txt = os.path.join(
                             self.log_path, "{}-{}-stdout.txt".format(self.outfile_name, test))
@@ -936,26 +939,45 @@ QA Report Dashboard: lf_qa.py was not run as last script of test suite"""
                         "Test start: {time} Timeout: {timeout}".format(
                             time=self.test_start_time, timeout=self.test_timeout))
                     start_time = datetime.datetime.now()
+                    # try:
+                    #     process = subprocess.Popen(command_to_run, shell=False, stdout=stdout_log, stderr=stderr_log,
+                    #                                universal_newlines=True)
+                    #     # if there is a better solution please propose,  the
+                    #     # TIMEOUT Result is different then FAIL
+                    #     try:
+                    #         if int(self.test_timeout != 0):
+                    #             process.wait(timeout=int(self.test_timeout))
+                    #         else:
+                    #             process.wait()
+                    #     except subprocess.TimeoutExpired:
+                    #         process.terminate()
+                    #         self.test_result = "TIMEOUT"
+#
+                    # except BaseException:
+                    #     print(
+                    #         "No such file or directory with command: {}".format(command))
+                    #     self.logger.info(
+                    #         "No such file or directory with command: {}".format(command))
+                    summary_output = ''
+                    # have stderr go to stdout
+                    summary = subprocess.Popen(command_to_run, shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                               universal_newlines=True)
+                    for line in iter(summary.stdout.readline, ''):
+                        self.logger.info(line)
+                        summary_output += line
                     try:
-                        process = subprocess.Popen(command_to_run, shell=False, stdout=stdout_log, stderr=stderr_log,
-                                                   universal_newlines=True)
-                        # if there is a better solution please propose,  the
-                        # TIMEOUT Result is different then FAIL
-                        try:
-                            if int(self.test_timeout != 0):
-                                process.wait(timeout=int(self.test_timeout))
-                            else:
-                                process.wait()
-                        except subprocess.TimeoutExpired:
-                            process.terminate()
-                            self.test_result = "TIMEOUT"
+                        if int(self.test_timeout != 0):
+                            summary.wait(timeout=int(self.test_timeout))
+                        else:
+                            summary.wait()
+                    except TimeoutExpired:
+                        summary.terminate
+                        self.test_result = "TIMEOUT"
 
-                    except BaseException:
-                        print(
-                            "No such file or directory with command: {}".format(command))
-                        self.logger.info(
-                            "No such file or directory with command: {}".format(command))
+                    self.logger.info(summary_output)
 
+                    stdout_log.write(summary_output)
+                    stdout_log.close()
                     end_time = datetime.datetime.now()
                     self.test_end_time = str(datetime.datetime.now().strftime(
                         "%Y-%m-%d-%H-%M-%S")).replace(':', '-')
@@ -974,6 +996,7 @@ QA Report Dashboard: lf_qa.py was not run as last script of test suite"""
                     meta_data_path = ""
                     # Will gather data even on a TIMEOUT condition as there is
                     # some results on longer tests
+                    # TODO use the summary
                     stdout_log_size = os.path.getsize(stdout_log_txt)
                     if stdout_log_size > 0:
                         stdout_log_fd = open(stdout_log_txt)
@@ -1053,26 +1076,27 @@ QA Report Dashboard: lf_qa.py was not run as last script of test suite"""
                         self.test_result = "Time Out"
                         background = self.background_purple
                     else:
-                        stderr_log_size = os.path.getsize(stderr_log_txt)
-                        if stderr_log_size > 0:
-                            self.logger.info(
-                                "File: {} is not empty: {}".format(
-                                    stderr_log_txt, str(stderr_log_size)))
-                            text = open(stderr_log_txt).read()
-                            if 'Error' in text:
-                                self.text_result = "Failure"
-                                background = self.background_red
-                            else:
-                                self.text_result = "Success"
-                                background = self.background_green
-                        else:
-                            self.logger.info(
-                                "File: {} is empty: {}".format(
-                                    stderr_log_txt, str(stderr_log_size)))
-                            self.test_result = "Success"
-                            background = self.background_green
+                        # stderr_log_size = os.path.getsize(stderr_log_txt)
+                        # if stderr_log_size > 0:
+                        #    self.logger.info(
+                        #        "File: {} is not empty: {}".format(
+                        #            stderr_log_txt, str(stderr_log_size)))
+                        #    text = open(stderr_log_txt).read()
+                        #    if 'Error' in text:
+                        #        self.text_result = "Failure"
+                        #        background = self.background_red
+                        #    else:
+                        #        self.text_result = "Success"
+                        #        background = self.background_green
+                        # else:
+                        #    self.logger.info(
+                        #        "File: {} is empty: {}".format(
+                        #            stderr_log_txt, str(stderr_log_size)))
+                        #    self.test_result = "Success"
+                        #    background = self.background_green
 
                         # Check to see if there is an error in stdout_log
+                        # TODO use the test result returned
                         if stdout_log_size > 0:
                             text = open(stdout_log_txt).read()
                             # for 5.4.3 only TestTag was not present
@@ -1093,8 +1117,12 @@ QA Report Dashboard: lf_qa.py was not run as last script of test suite"""
                                 self.test_result = "Some Tests Failed"
                                 background = self.background_orange
                             elif 'error ' in text.lower():
-                                self.test_result = "Test Errors"
-                                background = self.background_red
+                                if 'passes: zero test results' in text:
+                                    self.test_result = "Success"
+                                    background = self.background_green
+                                else:
+                                    self.test_result = "Test Errors"
+                                    background = self.background_red
                             elif 'tests failed' in text.lower():
                                 self.test_result = "Some Tests Failed"
                                 background = self.background_orange

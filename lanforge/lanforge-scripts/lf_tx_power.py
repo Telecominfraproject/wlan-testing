@@ -14,6 +14,7 @@ import time
 import logging
 import re
 import sys
+import datetime
 
 import importlib
 import os
@@ -35,22 +36,9 @@ EPILOG = '''\
 # Verified 2/7/2022 : Run against already created station "--station sta0001"
 ./lf_tx_power.py -d localhost -u admin -p Cisco123 --port 8888 --scheme ssh --ap AP687D.B45C.1D1C --bandwidth "160" --channel "36" --nss 4 --txpower "1" --pathloss 56 --antenna_gain 6 --band a --upstream_port eth2 --series 9800 --radio wiphy1 --slot 1 --ssid open-wlan --prompt "WLC2" --station sta0001 --ssidpw [BLANK] --security open   --wlan open-wlan --wlanID 1 --wlanSSID open-wlan --lfmgr 192.168.100.131 --lfresource 1 --vht160  --tag_policy "RM204-TB2"
 
+# Verified 2/17/2022 : create station and create open wlan on controller on testbed WLC1
+ ./lf_tx_power.py -d localhost -u admin -p Cisco123 --port 8887 --scheme ssh --ap APA453.0E7B.CF9C --bandwidth "40" --channel "100" --nss 4 --txpower "1 3" --pathloss 56 --antenna_gain 6 --band a --upstream_port eth2 --series 9800 --radio wiphy4 --slot 1 --ssid open-wlan-14 --prompt "WLC1" --create_station  'sta0002' --lfmgr '192.168.100.178' --ssidpw '[BLANK]' --security open   --wlan open-wlan-14  --wlanID 14 --wlanSSID open-wlan-14 --lfresource 1 --vht160  --tag_policy "RM204-TB1" --policy_profile "default-policy-profile" --testbed_id 'Cisco-WLC1' --module 'cc_module_9800_3504'  --create_wlan
 
-
-
-##############################################################################
-Sample script to run create station, wlan and talk to ap 1/26/2021 run on 9800
-carriage returns specifically left out
-##############################################################################
-./lf_tx_power.py -d 172.19.27.55 -u admin -p Wnbulab@123 --port 2013 --scheme telnet --ap 9120_Candela --bandwidth "20" --channel "52 100 104" --nss 4 --txpower "1" --pathloss 56 --antenna_gain 6 --band a --upstream_port eth2 --series 9800 --radio wiphy5 --slot 1 --ssid open-wlan --prompt "katar_candela" --create_station sta0001 --ssidpw [BLANK] --security open --verbose  --wlan open-wlan --wlanID 1 --wlanSSID open-wlan --ap_info "ap_scheme==telnet ap_prompt==9120_Candela ap_ip==172.19.27.55 ap_port==2008 ap_user==admin ap_pw==Wnbulab@123"
-
-
-
-#############################################################
-Sample to test pf_ignore_offset switch 1/27/2021 run on 9800
-carriage returns specifically left out
-#############################################################
-./lf_tx_power.py -d 172.19.27.55 -u admin -p Wnbulab@123 --port 2013 --scheme telnet --ap 9120_Candela --bandwidth "20" --channel "36 52 100 104 161" --nss 4 --txpower "1" --pathloss 56 --antenna_gain 6 --band a --upstream_port eth2 --series 9800 --radio wiphy5 --slot 1 --ssid open-wlan --prompt "katar_candela" --create_station sta0001 --ssidpw [BLANK] --security open --verbose  --wlan open-wlan --wlanID 1 --wlanSSID open-wlan --pf_ignore_offset "35"
 
 
 ##############################################################################################
@@ -63,6 +51,10 @@ $ sudo yum install python3-xlsxwriter
 You might need to install pexpect-serial using pip:
 $ pip3 install pexpect-serial
 $ pip3 install XlsxWriter
+
+You might need to install perl
+Fedora : dnf install perl-Net-Telnet
+Ubunto : sudo apt install libnet-telnet-perl
 
 This script will automatically create and start a layer-3 UDP connection between the
 configured upstream port and station.
@@ -82,22 +74,9 @@ NOTE:  Telnet port 23 unless specified ,  ssh  port 22 unless specified,  scheme
 ./lf_tx_power.py -d 172.19.27.55 -u admin -p Wnbulab@123 --port 2013 --scheme telnet \
     --ap 9120_Candela --bandwidth "20" --channel "149" --nss 4 --txpower "1" \
     --pathloss 56 --band a --upstream_port eth2 --series 9800 --radio wiphy5 --slot 1 --ssid open-wlan \
-    --prompt "katar_candela" --create_station sta0001 --ssidpw [BLANK] --security open --verbose \
+    --prompt "katar_candela" --create_station --station sta0001 --ssidpw [BLANK] --security open  \
     --antenna_gain "6" --wlanID 1 --wlan open-wlan --wlanSSID open-wlan\
     --ap_info "ap_scheme==telnet ap_prompt==9120_Candela ap_ip==172.19.27.55 ap_port==2008 ap_user==admin ap_pw==Wnbulab@123"
-
-
-##############################################################################################
-# send email and or text on --exit_on_fail
-##############################################################################################
-
-./lf_tx_power.py -d 192.168.100.112 -u admin -p Cisco123 -s ssh --port 22 -a APA453.0E7B.CF9C --lfmgr 192.168.100.178 \
-    --bandwidth "80" --channel "144" --nss 4 --txpower "1" --pathloss 51 --antenna_gain 10 --lfmgr 192.168.100.178 --band a \
-    --upstream_port eth3 --outfile cisco_power_results --create_station sta0001 --radio wiphy1 --ssid test_candela --ssidpw [BLANK] \
-    --security open -l out_file2  -D 14 --exit_on_fail \
-    --email "user==lanforgetest@gmail.com passwd==lanforge123 to==2082868321@vtext.com smtp==smtp.gmail.com port==465"\
-    --email "user==lanforgetest@gmail.com passwd==lanforge123 to==lanforgetest@gmail.com  smtp==smtp.gmail.com port==465"\
-    --series "3504" --prompt "(Cisco Controler)"
 
 ##############################################################################################
 # Long duration test -- need to create the ---wlanID 1 --wlan open-wlan --wlanSSID open-wlan
@@ -106,8 +85,8 @@ NOTE:  Telnet port 23 unless specified ,  ssh  port 22 unless specified,  scheme
 ./lf_tx_power.py -d 172.19.36.168 -u admin -p Wnbulab@123 --port 23 --scheme telnet --ap "APA453.0E7B.CF60" \
     --bandwidth "20 40 80" --channel "36 40 44 48 52 56 60 64 100 104 108 112 116 120 124 128 132 136 140 144 149 153 157 161 165" \
     --nss 4 --txpower "1 2 3 4 5 6 7 8" --pathloss 54 --antenna_gain 6 --band a --upstream_port eth2 --series 9800  \
-    --wlanID 1 --wlan open-wlan --wlanSSID open-wlan --create_station sta0001 --radio wiphy1 --ssid  open-wlan --ssidpw [BLANK] --security open \
-    --outfile cisco_power_results_60_chan_ALL  --cleanup --slot 1 --verbose
+    --wlanID 1 --wlan open-wlan --wlanSSID open-wlan --create_station --station sta0001 --radio wiphy1 --ssid  open-wlan --ssidpw [BLANK] --security open \
+    --outfile cisco_power_results_60_chan_ALL  --cleanup --slot 1
 
 
 ##############################################################################################
@@ -116,7 +95,7 @@ NOTE:  Telnet port 23 unless specified ,  ssh  port 22 unless specified,  scheme
 
 ./lf_tx_power.py -d 192.168.100.112 -u admin -p Cisco123 -s ssh --port 22 -a VC --lfmgr 192.168.100.178 \
   --station sta00000 --bandwidth "20 40 80 160" --channel "36:64 149:60" --antenna_gain 5 --nss 4 --txpower "1 2 3 4 5 6 7 8" --pathloss 64 \
-  --band a --upstream_port eth2 --lfresource2 2 --verbose
+  --band a --upstream_port eth2 --lfresource2 2
 
 ##############################################################################################
 # To create a station run test against station create open-wlan
@@ -124,8 +103,8 @@ NOTE:  Telnet port 23 unless specified ,  ssh  port 22 unless specified,  scheme
 
 ./lf_tx_power.py -d <router IP> -u admin -p Cisco123 -port 23 --scheme telnet --ap AP6C71.0DE6.45D0 \
 --station sta2222 --bandwidth "20" --channel "36" --nss 4 --txpower "1 2 3 4 5 6 7 8" --pathloss 54 --antenna_gain 6 --band a \
---upstream_port eth2 --series 9800 --wlanID 1 --wlan open-wlan --wlanSSID open-wlan --create_station sta2222 --radio wiphy1 --ssid open-wlan \
---ssidpw [BLANK] --security open --verbose
+--upstream_port eth2 --series 9800 --wlanID 1 --wlan open-wlan --wlanSSID open-wlan --create_station --station sta2222 --radio wiphy1 --ssid open-wlan \
+--ssidpw [BLANK] --security open
 
 ##############################################################################################
 # station already present
@@ -133,7 +112,7 @@ NOTE:  Telnet port 23 unless specified ,  ssh  port 22 unless specified,  scheme
 
 ./lf_tx_power.py -d <router IP> -u admin -p Cisco123 -port 23 --scheme telnet --ap AP6C71.0DE6.45D0 \
 --station sta0000 --bandwidth "20" --channel "36" --nss 4 --txpower "1 2 3 4 5 6 7 8" --pathloss 64 --antenna_gain 5 --band a \
---upstream_port eth2 --series 9800 --wlanID 1 --wlan open-wlan --wlanSSID open-wlan --verbose
+--upstream_port eth2 --series 9800 --wlanID 1 --wlan open-wlan --wlanSSID open-wlan
 
 
 ##############################################################################################
@@ -145,21 +124,6 @@ NOTE:  Telnet port 23 unless specified ,  ssh  port 22 unless specified,  scheme
 
 Changing regulatory domain should happen outside of this script.
 
-##############################################################################################
-# If wish to send Text after test completion follow the email format based on carrier
-##############################################################################################
-Text message via email:
-
-T-Mobile – number@tmomail.net
-Virgin Mobile – number@vmobl.com
-AT&T – number@txt.att.net
-Sprint – number@messaging.sprintpcs.com
-Verizon – number@vtext.com
-Tracfone – number@mmst5.tracfone.com
-Ting – number@message.ting.com
-Boost Mobile – number@myboostmobile.com
-U.S. Cellular – number@email.uscc.net
-Metro PCS – number@mymetropcs.com
 
 ##############################################################################################
 # OUTPUT in XLSX file - Spread sheet how values determined
@@ -213,6 +177,18 @@ outfile_xlsx = "cisco_power_results.xlsx"
 upstream_port = "eth1"
 pf_dbm = 6
 
+# kpi notes
+# Maybe subtest pass/failed is interesting,
+# and for KPI, could do min/max/avg of the beacon power offset
+# from expected, and same for data power offset from expected?
+
+# Channel notes
+# setting channel' typically means setting the bandwidth range,
+# and also setting the control channel.
+# So, running on ctrl channel 36 at HT40 and ch 40 at HT40 uses same total bandwdith range,
+# but in second case, the beacons and control frames should be on ch 40.
+# At least that is normally how things are implemented.
+
 # Allow one chain to have a lower signal, since customer's DUT has
 # lower tx-power on one chain when doing high MCS at 4x4.
 pf_ignore_offset = 0
@@ -232,56 +208,8 @@ nf_at_calibration = -105
 
 
 def usage():
-    print("############  USAGE ############")
-    print("-d|--dest:  destination host, address of the controller")
-    print("-o|--port:  destination port, default = 23")
-    print("-u|--user:  login name or username")
-    print("-p|--passwd:  password")
-    print("-s|--scheme (serial|telnet|ssh): connect via serial, ssh or telnet")
-    print("-t|--tty tty serial device")
-    print("-l|--log <store true> log has same namelog messages here ,stdout means output to console, default stdout")
-    print("-a|--ap select AP")
-    print("-b|--bandwidth: List of bandwidths to test: 20 40 80 160, NA means no change, 160 can only do 2x2 spatial streams in Intel due to radio limitations")
-    print("-c|--channel: List of channels, with optional path-loss to test: 36:64 100:60 , NA means no change")
-    print("-n|--nss: List of spatial streams to test: 1x1 2x2 3x3 4x4, NA means no change")
-    print("-T|--txpower: List of TX power values to test: 1 2 3 4 5 6 7 8, NA means no change, 1 is highest power, the power is halved for each subsquent setting")
-    print("-k|--keep_state <store true>  keep the state, no configuration change at the end of the test, store true flage present ")
-    print("--station: LANforge station name for test(sta0000), use if station present and --create_station not used")
-    print("--upstream_port: LANforge upstream port name (eth1)")
-    print("--lfmgr: LANforge manager IP address")
-    print("--lfresource: LANforge resource ID for station")
-    print("--lfresource2: LANforge resource ID for upstream port")
-    print("--outfile: Output file for txt and xlsx data, default cisco_power_results")
-    print("--pathloss:  Calculated path-loss between LANforge station and AP")
-    print("--antenna_gain: Antenna gain for AP, if no Antenna attached then antenna gain needs to be taken into account, default 0")
-    print("--band:  Select band (a | b | abgn), a means 5Ghz, b means 2.4, abgn means 2.4 on dual-band AP, default a")
-    print("--pf_dbm: Pass/Fail range, default is 6")
-    print("--pf_ignore_offset: Allow one chain to use lower tx-power and still pass when doing 4x4, default 100. so disabled")
-    print("--wait_forever: <store true> Wait forever for station to associate, may aid debugging if STA cannot associate properly")
-    print("--adjust_nf: <store true> Adjust RSSI based on noise-floor.  ath10k without the use-real-noise-floor fix needs this option")
-    print("--wlan: for 9800, wlan identifier ")
-    print("--wlanID: wlanID  for 9800 , defaults to 1")
-    print("--wlanSSID: wlanSSID  for 9800")
-    print("--series: controller series  9800 , defaults to 3504")
-    print("--slot: 9800 AP slot defaults to 1")
-    print("--create_station", "create LANforge station at the beginning of the test")
-    print("--radio", "radio to create LANforge station on at the beginning of the test")
-    print("--ssid", "ssid default open-wlan")
-    print("--ssidpw", "ssidpw default [BLANK]")
-    print("--security", "security default open")
-    print("--cleanup", "<store true> Clean up all stations after test completes, only need switch for True, Defaults False")
-    print("--vht160", "<store true> Enables VHT160 in lanforge, only need switch for True, Defaults False")
-    print("--verbose", "<store ture> switch the cisco controller output will be captured")
-    print("--exit_on_fail", "--exit_on_fail,  exit on test failure")
-    print("--exit_on_error", "--exit_on_error, exit on test error, test mechanics failed")
-    print('-e', '--email', "--email user==<from email> passwd==<email password> to==<to email> smtp==<smtp server> port==<smtp port> 465 (SSL)")
-    print('-ccp', '--prompt', "--prompt controller prompt default WLC")
-    print('--beacon_dbm_diff', "--beacon_dbm_diff <value>  is the delta that is allowed between the controller tx and the beacon measured")
-    print('--show_lf_portmod', "<store_true> show the output of lf_portmod after traffic to verify RSSI values measured by lanforge")
-    print('-api', '--ap_info', "--ap_info ap_scheme==<telnet,ssh or serial> ap_prompt==<ap_prompt> ap_ip==<ap ip> ap_port==<ap port number> ap_user==<ap user> ap_pw==<ap password>")
-
-    print("-h|--help")
-
+    print("Incorrect inputs:  ./lf_tx_power.py --help to show usage ")
+#
 # see https://stackoverflow.com/a/13306095/11014343
 
 
@@ -320,69 +248,77 @@ def main():
 
     parser = argparse.ArgumentParser(description="Cisco TX Power report Script", epilog=EPILOG,
                                      formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument("-d", "--dest", type=str, help="address of the cisco controller", required=True)
-    parser.add_argument("-o", "--port", type=str, help="control port on the controller", required=True)
-    parser.add_argument("-u", "--user", type=str, help="credential login/username", required=True)
-    parser.add_argument("-p", "--passwd", type=str, help="credential password", required=True)
-    parser.add_argument("-s", "--scheme", type=str, choices=["serial", "ssh", "telnet"], help="Connect via serial, ssh or telnet", required=True)
-    parser.add_argument("-t", "--tty", type=str, help="tty serial device")
-    parser.add_argument("-l", "--log", action='store_true', help="create logfile for messages, default stdout")
-    parser.add_argument("-a", "--ap", type=str, help="select AP")
-    parser.add_argument("-b", "--bandwidth", type=str, help="List of bandwidths to test. NA means no change")
-    parser.add_argument("-c", "--channel", type=str, help="List of channels to test, with optional path-loss, 36:64 149:60. NA means no change")
-    parser.add_argument("-n", "--nss", type=str, help="List of spatial streams to test.  NA means no change")
-    parser.add_argument("-T", "--txpower", type=str, help="List of txpowers to test.  NA means no change")
-    parser.add_argument("-k", "--keep_state", "--no_cleanup", dest="keep_state", action="store_true", help="keep the state, no configuration change at the end of the test")
-    parser.add_argument('-D', '--duration', type=str, help='--traffic <how long to run in seconds>  example -t 20 (seconds) default: 20 ', default='20')
-    parser.add_argument("--station", type=str, help="LANforge station to use (sta0000, etc) use if station present and --create_station not used")
-    parser.add_argument("--upstream_port", type=str, help="LANforge upsteram-port to use (eth1, etc)")
-    parser.add_argument("--lfmgr", type=str, help="LANforge Manager IP address")
-    parser.add_argument("--lfresource", type=str, help="LANforge resource ID for the station")
-    parser.add_argument("--lfresource2", type=str, help="LANforge resource ID for the upstream port system")
-    parser.add_argument("--outfile", type=str, help="Output file for csv data", default="cisco_power_results")
-    parser.add_argument("--pathloss", type=str, help="Calculated pathloss between LANforge Station and AP")
-    parser.add_argument("--antenna_gain", type=str, help="Antenna gain,  take into account the gain due to the antenna", default="0")
-    parser.add_argument("--band", type=str, help="6g, Select band a, 5g, b, 24g",
-                        choices=["a", "5g", "24g", "b", "abgn", "6g"])
-    parser.add_argument("--pf_dbm", type=str, help="Pass/Fail threshold.  Default is 6", default="6")
-    parser.add_argument("--pf_ignore_offset", type=str, help="Allow a chain to have lower tx-power and still pass. default 0 so disabled", default="0")
-    parser.add_argument("--wait_forever", action='store_true', help="Wait forever for station to associate, may aid debugging if STA cannot associate properly")
-    parser.add_argument("--adjust_nf", action='store_true', help="Adjust RSSI based on noise-floor.  ath10k without the use-real-noise-floor fix needs this option")
-    parser.add_argument("--wlan", type=str, help="--wlan  9800, wlan identifier", required=True)
-    parser.add_argument("--wlanID", type=str, help="--wlanID  9800 , defaults to 1", default="1", required=True)
-    parser.add_argument("--wlanSSID", type=str, help="--wlan  9800, wlan SSID, this must match the -ssid , ssid for station", required=True)
-    parser.add_argument("--series", type=str, help="--series  9800 or 3504, defaults to 9800", default="9800")
-    parser.add_argument("--slot", type=str, help="--slot 1 , 9800 AP slot defaults to 1", default="1")
-    parser.add_argument("--create_station", type=str, help="create LANforge station at the beginning of the test")
-    parser.add_argument("--radio", type=str, help="radio to create LANforge station on at the beginning of the test")
-    parser.add_argument("--ssid", type=str, help="ssid, this must patch the wlan", required=True)
-    parser.add_argument("--ssidpw", "--security_key", dest='ssidpw', type=str, help="ssidpw", required=True)
-    parser.add_argument("--security", type=str, help="security type open wpa wpa2 wpa3", required=True)
-    parser.add_argument("--cleanup", action='store_true', help="--cleanup , Clean up stations after test completes ")
-    parser.add_argument("--vht160", action='store_true', help="--vht160 , Enable VHT160 in lanforge ")
-    parser.add_argument('--verbose', action='store_true', help='--verbose , switch the cisco controller output will be captured')
-    parser.add_argument("--exit_on_fail", action='store_true', help="--exit_on_fail,  exit on test failure")
-    parser.add_argument("--exit_on_error", action='store_true', help="--exit_on_error, exit on test error, test mechanics failed")
-    parser.add_argument('-e', '--email', action='append', nargs=1, type=str, help="--email user==<from email> passwd==<email password> to==<to email> smtp==<smtp server> port==<smtp port> 465 (SSL)")
-    parser.add_argument('-ccp', '--prompt', type=str, help="controller prompt", required=True)
-    parser.add_argument('--beacon_dbm_diff', type=str, help="--beacon_dbm_diff <value>  is the delta that is allowed between the controller tx and the beacon measured", default="7")
-    parser.add_argument('--show_lf_portmod', action='store_true', help="--show_lf_portmod,  show the output of lf_portmod after traffic to verify RSSI values measured by lanforge")
-    parser.add_argument(
-        '-api',
-        '--ap_info',
-        action='append',
-        nargs=1,
-        type=str,
-        help="--ap_info ap_scheme==<telnet,ssh or serial> ap_prompt==<ap_prompt> ap_ip==<ap ip> ap_port==<ap port number> ap_user==<ap user> ap_pw==<ap password>")
-    # parser.add_argument("--tag_policy", type=str, help="--tag_policy default-tag-policy", default="default-tag-policy")
-    # TODO remove required
-    parser.add_argument("--tag_policy", type=str, help="--tag_policy default-tag-policy", default="RM204-TB1")
-    parser.add_argument("--policy_profile", type=str, help="--policy_profile default-policy-profile", default="default-policy-profile")
-    parser.add_argument("--testbed_id", type=str, help="--testbed_id", default="")
-    parser.add_argument("--create_wlan", help="--create_wlan", action='store_true')
-    parser.add_argument("--lf_logger_config_json", help="--lf_logger_config_json <json file> , json configuration of logger")
-    parser.add_argument("--module", type=str, help="series module", required=True)
-    parser.add_argument("--timeout", type=str, help="timeout value", default=3)
+
+    # controller configuration
+    parser.add_argument("-s", "--scheme", type=str, choices=["serial", "ssh", "telnet"], help="[controller configuration] Connect via serial, ssh or telnet", required=True)
+    parser.add_argument("-d", "--dest", type=str, help="[controller configuration] address of the cisco controller", required=True)
+    parser.add_argument("-o", "--port", type=str, help="[controller configuration] control port on the controller", required=True)
+    parser.add_argument("-u", "--user", type=str, help="[controller configuration] credential login/username", required=True)
+    parser.add_argument("-p", "--passwd", type=str, help="[controller configuration] credential password", required=True)
+    parser.add_argument('-ccp', '--prompt', type=str, help="[controller configuration] controller prompt", required=True)
+    parser.add_argument("--series", type=str, help="[controller configuration] --series  9800 or 3504, defaults to 9800", required=True)
+    parser.add_argument("-a", "--ap", type=str, help="select AP", required=True)
+    parser.add_argument("--band", type=str, help="6g, Select band a, 5g, b, 24g", choices=["a", "5g", "24g", "b", "abgn", "6g"])
+    parser.add_argument("--module", type=str, help="[controller configuration] series module (cc_module_9800_3504.py) ", required=True)
+    parser.add_argument("--timeout", type=str, help="[controller configuration] command timeout value ", default=3)
+
+    # wlan configuration
+    parser.add_argument("--create_wlan", help="[wlan configuration] --create_wlan", action='store_true')
+    parser.add_argument("--wlan", type=str, help="[wlan configuration] --wlan  9800, wlan identifier", required=True)
+    parser.add_argument("--wlan_id", "--wlanID", dest="wlanID", type=str, help="[wlan configuration] --wlan_id  9800 , defaults to 1", default="1", required=True)
+    parser.add_argument("--wlan_ssid", "--wlanSSID", dest="wlanSSID", type=str, help="[wlan configuration] --wlan_ssid  9800, wlan SSID, this must match the -ssid , ssid for station", required=True)
+    parser.add_argument("--slot", type=str, help="[wlan configuration] --slot 1 , 9800 AP slot , use show ap dot11 24ghz summary or 5ghz", required=True)
+    parser.add_argument("--tag_policy", type=str, help="[wlan configuration] --tag_policy RM204-TB1")
+    parser.add_argument("--policy_profile", type=str, help="[wlan configuration] --policy_profile default-policy-profile")
+
+    # ap interface configuration
+    parser.add_argument('-api', '--ap_info', action='append', nargs=1, type=str, help="[ap configuration] --ap_info ap_scheme==<telnet,ssh or serial> ap_prompt==<ap_prompt> ap_ip==<ap ip> ap_port==<ap port number> ap_user==<ap user> ap_pw==<ap password>")
+
+    # tx power configuration
+    parser.add_argument("--pathloss", type=str, help="[tx power configuration] Calculated pathloss between LANforge Station and AP", required=True)
+    parser.add_argument("--antenna_gain", type=str, help="[tx power configuration] Antenna gain,  take into account the gain due to the antenna", required=True)
+    parser.add_argument("--pf_dbm", type=str, help="[tx power configuration] Pass/Fail threshold.  Default is 6", default="6")
+    parser.add_argument("--pf_ignore_offset", type=str, help="[tx power configuration] Allow a chain to have lower tx-power and still pass. default 0 so disabled", default="0")
+    parser.add_argument("--adjust_nf", action='store_true', help="[tx power configuration] Adjust RSSI based on noise-floor.  ath10k without the use-real-noise-floor fix needs this option")
+    parser.add_argument('--beacon_dbm_diff', type=str, help="[tx power configuration] --beacon_dbm_diff <value>  is the delta that is allowed between the controller tx and the beacon measured", default="7")
+
+    # traffic generation configuration (LANforge)
+    parser.add_argument("--lfmgr", type=str, help="[traffic generation configuration (LANforge)] LANforge Manager IP address", required=True)
+    parser.add_argument("--upstream_port", type=str, help="[traffic generation configuration (LANforge)] LANforge upsteram-port to use (eth1, etc)", required=True)
+    parser.add_argument("--lfresource", type=str, help="[traffic generation configuration (LANforge)] LANforge resource ID for the station")
+    parser.add_argument("--lfresource2", type=str, help="[traffic generation configuration (LANforge)] LANforge resource ID for the upstream port system")
+
+    # station configuration
+    parser.add_argument("--create_station", help="[station configuration] create LANforge station at the beginning of the test", action='store_true')
+    parser.add_argument("--station", type=str, help="[station configuration] Use already created LANforge station, use --no_cleanup also", required=True)
+    parser.add_argument("--radio", type=str, help="[station configuration] radio to create LANforge station on at the beginning of the test")
+    parser.add_argument("--ssid", type=str, help="[station configuration] station ssid, ssid of station must match the wlan created", required=True)
+    parser.add_argument("--ssidpw", "--security_key", dest='ssidpw', type=str, help="[station configuration]  station security key", required=True)
+    parser.add_argument("--security", type=str, help="[station configuration] security type open wpa wpa2 wpa3", required=True)
+    parser.add_argument("--vht160", action='store_true', help="[station configuration] --vht160 , Enable VHT160 in lanforge ")
+    parser.add_argument("--no_cleanup_station", action='store_true', help="[station configuration] --no_cleanup_station , do not clean up station after test completes ")
+
+    # test configuration
+    parser.add_argument("-b", "--bandwidth", type=str, help="[test configuration] List of bandwidths to test. NA means no change")
+    parser.add_argument("-c", "--channel", type=str, help="[test configuration] List of channels to test, with optional path-loss, 36:64 149:60. NA means no change")
+    parser.add_argument("-n", "--nss", type=str, help="[test configuration] List of spatial streams to test.  NA means no change")
+    parser.add_argument("-T", "--txpower", type=str, help="[test configuration] List of txpowers to test.  NA means no change")
+    parser.add_argument('-D', '--duration', type=str, help='[test configuration] --traffic <how long to run in seconds>  example -t 20 (seconds) default: 20 ', default='20')
+    parser.add_argument("--outfile", help="[test configuration] Output file for csv data")
+
+    # testbed configuration
+    parser.add_argument("--testbed_id", type=str, help="[testbed configuration] --testbed_id", default="")
+
+    # TODO ADD KPI configuration
+
+    # debug configuration
+    parser.add_argument("--wait_forever", action='store_true', help="[debug configuration] Wait forever for station to associate, may aid debugging if STA cannot associate properly")
+    parser.add_argument("-k", "--keep_state", "--no_cleanup", dest="keep_state", action="store_true", help="[debug configuration] --no_cleanup, keep the state, no configuration change at the end of the test")
+    # TODO remove the cleanup flag
+    parser.add_argument('--show_lf_portmod', action='store_true', help="[debug configuration] --show_lf_portmod,  show the output of lf_portmod after traffic to verify RSSI values measured by lanforge")
+    parser.add_argument("--lf_logger_config_json", help="[debug configuration] --lf_logger_config_json <json file> , json configuration of logger")
+    parser.add_argument("--exit_on_fail", action='store_true', help="[debug configuration] --exit_on_fail,  exit on test failure")
+    parser.add_argument("--exit_on_error", action='store_true', help="[debug configuration] --exit_on_error, exit on test error, test mechanics failed")
 
     # current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "{:.3f}".format(time.time() - (math.floor(time.time())))[1:]
     # print(current_time)
@@ -392,50 +328,49 @@ def main():
     try:
         # Parcing the input parameters and assignment
         args = parser.parse_args()
-        # logfile = args.log
-        if (args.station is not None):
-            lfstation = args.station
-        if (args.create_station is not None):
-            lfstation = args.create_station
-            if (args.station is not None):
-                print("NOTE: both station: {} and create_station: {} on command line, test will use create_station {} ".format(args.station, args.create_station, args.create_station))
-        if (args.upstream_port is not None):
-            upstream_port = args.upstream_port
-        if (args.lfmgr is not None):
-            lfmgr = args.lfmgr
+        lfstation = args.station
+        upstream_port = args.upstream_port
+        lfmgr = args.lfmgr
+        # TODO
         if (args.lfresource is not None):
             lfresource = args.lfresource
         if (args.lfresource2 is not None):
             lfresource2 = args.lfresource2
-        if (args.outfile is not None):
+        if (args.outfile):
             outfile = args.outfile
             full_outfile = "full-%s" % (outfile)
             outfile_xlsx = "%s.xlsx" % (outfile)
+        else:
+            outfile = 'tx_power'
+            full_outfile = "full-%s" % (outfile)
+            outfile_xlsx = "%s.xlsx" % (outfile)
+
+        print("outfile {}".format(outfile))
+
         if (args.pf_dbm is not None):
             pf_dbm = int(args.pf_dbm)
         if (args.pf_ignore_offset is not None):
             pf_ignore_offset = int(args.pf_ignore_offset)
-        if (args.verbose):
-            # capture the controller output , thus won't go to stdout some output always present
-            cap_ctl_out = False
-        else:
-            cap_ctl_out = True
         if (args.wlanSSID != args.ssid):
             print("####### ERROR ################################")
             print("wlanSSID: {} must equial the station ssid: {}".format(args.wlanSSID, args.ssid))
             print("####### ERROR ################################")
             exit(1)
+        if (args.create_wlan):
+            if(args.tag_policy is None or args.policy_profile is None):
+                print("####### ERROR ######################################################")
+                print(" For create_wlan both tag_policy and policy_profile must be entered")
+                print("####### ERROR #######################################################")
+                exit(1)
+
         # note: there would always be an args.outfile due to the default
         current_time = time.strftime("%m_%d_%Y_%H_%M_%S", time.localtime())
-        outfile = "{}_{}.txt".format(args.outfile, current_time)
-        full_outfile = "{}_full_{}.txt".format(args.outfile, current_time)
-        outfile_xlsx = "{}_{}.xlsx".format(args.outfile, current_time)
+        outfile = "{}_{}.txt".format(outfile, current_time)
+        full_outfile = "{}_full_{}.txt".format(full_outfile, current_time)
+        outfile_xlsx = "{}_{}.xlsx".format(outfile_xlsx, current_time)
         print("output file: {}".format(outfile))
         print("output file full: {}".format(full_outfile))
         print("output file xlsx: {}".format(outfile_xlsx))
-        if args.log:
-            outfile_log = "{}_{}_output_log.log".format(args.outfile, current_time)
-            print("output file log: {}".format(outfile_log))
 
         ap_dict = []
         if args.ap_info:
@@ -450,21 +385,6 @@ def main():
                         exit(1)
                 print("ap_dict: {}".format(ap_dict))
 
-        email_dicts = []
-        if args.email:
-            emails = args.email
-            for _email in emails:
-                # print("email {}".format(_email))
-                email_keys = ['user', 'passwd', 'to', 'smtp', 'port']
-                _email_dict = dict(map(lambda x: x.split('=='), str(_email).replace('[', '').replace(']', '').replace("'", "").split()))
-                # print("email_dict {}".format(_email_dict))
-                for key in email_keys:
-                    if key not in _email_dict:
-                        print("missing config, for the {}, all of the following need to be present {} ".format(key, email_keys))
-                        exit(1)
-                email_dicts.append(_email_dict)
-                print("email_dicts: {}".format(email_dicts))
-
     except Exception as e:
         logging.exception(e)
         usage()
@@ -477,28 +397,9 @@ def main():
         logger_config.lf_logger_config_json = args.lf_logger_config_json
         logger_config.load_lf_logger_config()
 
-    console_handler = logging.StreamHandler()
-    formatter = logging.Formatter(FORMAT)
-
     # TODO refactor to be logger for consistency
     logg = logging.getLogger(__name__)
     # logg.setLevel(logging.DEBUG)
-
-    file_handler = None
-    # Setting up log file if specified
-    if args.log:
-        file_handler = logging.FileHandler(outfile_log, "w")
-        file_handler.setLevel(logging.DEBUG)
-        file_handler.setFormatter(formatter)
-        logg.addHandler(file_handler)
-        logg.addHandler(logging.StreamHandler(sys.stdout))  # allows to logging to file and stderr
-        # logging.basicConfig(format=FORMAT, handlers=[console_handler])
-
-    else:
-        # pass
-        # stdout logging
-        logging.basicConfig(format=FORMAT, handlers=[console_handler])
-        # logg.addHandler(logging.StreamHandler()) # allows to logging to file and stderr
 
     # dynamic import of the controller module
     series = importlib.import_module(args.module)
@@ -528,16 +429,10 @@ def main():
     if bool(ap_dict):
         logg.info("ap_dict {}".format(ap_dict))
 
-    if bool(email_dicts):
-        logg.info("email_dicts {}".format(email_dicts))
-
     if args.outfile is not None:
         logg.info("output file: {}".format(outfile))
         logg.info("output file full: {}".format(full_outfile))
         logg.info("output file xlsx: {}".format(outfile_xlsx))
-
-    if args.log:
-        logg.info("output file log: {}".format(outfile_log))
 
     if (args.bandwidth is None):
         usage()
@@ -732,6 +627,12 @@ def main():
     worksheet.set_column(col, col, 24)  # Set width
     worksheet.write(row, col, 'Time Stamp\n', dgreen_bold)
     col += 1
+    worksheet.set_column(col, col, 24)  # Set width
+    worksheet.write(row, col, 'Run Time Single Test\n', dgreen_bold)
+    col += 1
+    worksheet.set_column(col, col, 24)  # Set width
+    worksheet.write(row, col, 'Total Run Time\n', dgreen_bold)
+    col += 1
     worksheet.set_column(col, col, 100)  # Set width
     worksheet.write(row, col, 'Information, Warnings, Errors', dgreen_bold_left)
     col += 1
@@ -743,22 +644,22 @@ def main():
     txpowers = args.txpower.split()
 
     # The script has the ability to create a station if one does not exist
-    if (args.create_station is not None):
+    if (args.create_station):
         if (args.radio is None):
             logg.info("WARNING --create needs a radio")
             exit_test(workbook)
         elif (args.vht160):
-            logg.info("creating station with VHT160 set: {} on radio {}".format(args.create_station, args.radio))
+            logg.info("creating station with VHT160 set: {} on radio {}".format(args.station, args.radio))
             print()
             subprocess.run(["./lf_associate_ap.pl", "--mgr", lfmgr, "--radio", args.radio, "--ssid", args.ssid, "--passphrase", args.ssidpw,
                             "--security", args.security, "--upstream", args.upstream_port, "--first_ip", "DHCP",
-                            "--first_sta", args.create_station, "--action", "add", "--xsec", "ht160_enable"], timeout=20, capture_output=True)
+                            "--first_sta", args.station, "--action", "add", "--xsec", "ht160_enable"], timeout=20, capture_output=True)
             sleep(3)
         else:
-            logg.info("creating station: {} on radio {}".format(args.create_station, args.radio))
+            logg.info("creating station: {} on radio {}".format(args.station, args.radio))
             subprocess.run(["./lf_associate_ap.pl", "--mgr", lfmgr, "--radio", args.radio, "--ssid", args.ssid, "--passphrase", args.ssidpw,
                             "--security", args.security, "--upstream", args.upstream_port, "--first_ip", "DHCP",
-                            "--first_sta", args.create_station, "--action", "add"], timeout=20, capture_output=True)
+                            "--first_sta", args.station, "--action", "add"], timeout=20, capture_output=True)
             sleep(3)
 
     # Find LANforge station parent radio
@@ -823,6 +724,11 @@ def main():
     # The is the main loop of loops:   Channels, spatial streams (nss), bandwidth (bw), txpowers (tx)
     # Note: supports 9800 and 3504 controllers
     wlan_created = False
+    # create blank time stamp
+    total_run_duration = datetime.timedelta(0)
+    run_start_time = datetime.datetime.now()
+    run_start_time_str = str(datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")).replace(':', '-')
+    logger.info("run_start_time : {run_start_time}".format(run_start_time=run_start_time_str))
     for ch in channels:
         pathloss = args.pathloss
         antenna_gain = args.antenna_gain
@@ -911,14 +817,16 @@ def main():
                             cs.config_dot11_5ghz_tx_power()
                         elif args.band == 'b':
                             cs.config_dot11_5ghz_tx_power()
-                            
+
                         # TODO add 24ghz and 6ghz
 
                     if (bw != "NA"):
                         logg.info("bandwidth 20 prior to setting channel, some channels only support 20")
                         cs.bandwidth = '20'
-                        cs.config_dot11_5ghz_channel_width()
-                        cs.config_dot11_24ghz_channel_width()
+                        if args.band == 'a':
+                            cs.config_dot11_5ghz_channel_width()
+                        # setting channel to 20 is invalid for 20 Mhz
+                        # cs.config_dot11_24ghz_channel_width()
                         # TODO add 24ghz , 6ghz
 
                     # NSS is set on the station earlier...
@@ -927,8 +835,9 @@ def main():
                         cs.channel = ch
                         if args.band == 'a':
                             cs.config_dot11_5ghz_channel()
-                        elif args.band == 'b':                            
+                        elif args.band == 'b':
                             cs.config_dot11_24ghz_channel()
+                        # exit(1)
 
                     if (bw != "NA"):
                         logg.info("9800/3504 test_parameters bandwidth: set : {}".format(bw))
@@ -947,7 +856,9 @@ def main():
                         if wlan_created:
                             pss = cs.show_wlan_summary()
                             logg.info(pss)
-                            logg.info("wlan already present, no need to create wlanID {} wlan {} wlanSSID {} port {}".format(args.wlanID, args.wlan, args.wlanSSID, args.port))
+                            logg.info(
+                                "wlan already present, no need to create wlanID {} wlan {} wlanSSID {} port {}".format(
+                                    args.wlanID, args.wlan, args.wlanSSID, args.port))
                             pass
                         else:
                             # Verify that a wlan does not exist on wlanID
@@ -1001,7 +912,7 @@ def main():
                         # enable wlan
                         pss = cs.config_no_ap_dot11_24ghz_shutdown()
                         logg.info(pss)
-                        # enable 2ghz 
+                        # enable 2ghz
                         cs.config_ap_no_dot11_24ghz_shutdown()
 
                     # Wait a bit for AP to come back up
@@ -1020,7 +931,6 @@ def main():
                             else:
                                 pss = cs.show_ap_dot11_24gz_summary()
                                 logg.info(pss)
-
 
                             searchap = False
                             cc_mac = ""
@@ -1048,7 +958,9 @@ def main():
 
                                             cc_ch_count = cc_ch.count(",") + 1
                                             cc_bw = m.group(3)
-                                            logg.info("group 1: {} 2: {} 3: {} 4: {} 5: {} 6: {}".format(m.group(1), m.group(2), m.group(3), m.group(4), m.group(5), m.group(6)))
+                                            logg.info(
+                                                "group 1: {} 2: {} 3: {} 4: {} 5: {} 6: {}".format(
+                                                    m.group(1), m.group(2), m.group(3), m.group(4), m.group(5), m.group(6)))
                                             logg.info("9800 test_parameters_summary:  read: tx: {} ch: {} bw: {}".format(tx, ch, bw))
 
                                             logg.info("9800 test_parameters cc_mac: read : {}".format(cc_mac))
@@ -1065,9 +977,9 @@ def main():
                                     # Could not talk to controller? Not this may not be a reason to exit
                                     # Some of the tests run for 32 plus hours ,  do not kill the whole test unless trying to
                                     # debug an issue with the test.  Sometimes the controller is taking time to configure.
-                                    err = "ERROR:  Could not query dBm from controller, maybe controller died?"
+                                    err = "ERROR: cc_dmp not found from query of controller:  is the AP --slot set correctly?"
                                     logg.info(err)
-                                    logg.info("Check controller and AP , Command on AP to erase the config: capwap ap erase all")
+                                    logg.info("run show ap dot11 5ghz summary or show ap dot11 24ghz summary to verify the slot")
                                     e_tot += err
                                     e_tot += "  "
                                 else:
@@ -1083,7 +995,6 @@ def main():
                         logg.info(pss)
                         pss = cs.show_wlan_summary()
                         logg.info(pss)
-
 
                         searchap = False
                         cc_mac = ""
@@ -1114,7 +1025,7 @@ def main():
 
                         if (cc_dbm == ""):
                             # Could not talk to controller?
-                            err = "ERROR:  Could not query dBm from controller, maybe controller died?"
+                            err = "Warning : Could not query dBm from controller"
                             logg.info(err)
                             e_tot += err
                             e_tot += "  "
@@ -1205,7 +1116,8 @@ def main():
                         pss = port_stats.stdout.decode('utf-8', 'ignore')
                         # for debug: print the output of lf_portmod.pl and the command used
                         if (args.show_lf_portmod):
-                            logg.info("./lf_portmod.pl --manager {} --card {} --port_name {} --cli_cmd probe_port 1 {} {}".format(lfmgr, lfresource, lfstation, lfresource, lfstation))
+                            logg.info("./lf_portmod.pl --manager {} --card {} --port_name {} --cli_cmd probe_port 1 {} {}".format(lfmgr,
+                                                                                                                                  lfresource, lfstation, lfresource, lfstation))
                             logg.info(pss)
 
                         foundit = False
@@ -1254,7 +1166,8 @@ def main():
                     # logg.info(pss)
 
                     for line in pss.splitlines():
-                        # logg.info("probe-line: %s"%(line))From Lanforge probe, command ./lf_portmod.pl with cli parameter probe_port 1 (about line 1150)
+                        # logg.info("probe-line: %s"%(line))From Lanforge probe, command
+                        # ./lf_portmod.pl with cli parameter probe_port 1 (about line 1150)
                         m = re.search('Rx Bytes:\\s+(\\d+)', line)
                         if (m is not None):
                             logg.info("Rx Bytes: result {}".format(m))
@@ -1394,7 +1307,8 @@ def main():
                     logg.info("diff_dbm_beacon {} calc_dbm_beacon {} - cc_dbmi {}".format(diff_dbm_beacon, calc_dbm_beacon, cc_dbmi))
 
                     if(int(abs(diff_dbm_beacon)) > int(args.beacon_dbm_diff)):
-                        w_tot = "WARNING: Controller dBm and Calculated dBm Beacon power different by greater than +/- {} dBm".format(args.beacon_dbm_diff)
+                        w_tot = "ERROR: Controller dBm and Calculated dBm Beacon power different by greater than +/- {} dBm".format(
+                            args.beacon_dbm_diff)
 
                     pfs = "PASS"
                     pfrange = pf_dbm
@@ -1509,7 +1423,7 @@ def main():
                             try:
                                 logg.info("ap_ctl.py: read AP power information")
                                 ap_info = subprocess.run(["./ap_ctl.py", "--scheme", ap_dict['ap_scheme'], "--prompt", ap_dict['ap_prompt'], "--dest", ap_dict['ap_ip'], "--port", ap_dict["ap_port"],
-                                                         "--user", ap_dict['ap_user'], "--passwd", ap_dict['ap_pw'], "--action", "powercfg"], stdout=subprocess.PIPE)
+                                                          "--user", ap_dict['ap_user'], "--passwd", ap_dict['ap_pw'], "--action", "powercfg"], stdout=subprocess.PIPE)
                                 try:
                                     pss = ap_info.stdout.decode('utf-8', 'ignore')
                                 except BaseException:
@@ -1522,7 +1436,9 @@ def main():
                                 logg.info("####################################################################################################")
 
                                 logg.info("####################################################################################################")
-                                logg.info("# Unable to commicate to AP error code: {} output {}".format(process_error.returncode, process_error.output))
+                                logg.info(
+                                    "# Unable to commicate to AP error code: {} output {}".format(
+                                        process_error.returncode, process_error.output))
                                 logg.info("####################################################################################################")
                                 # exit_test(workbook)
                                 pss = "empty_process_error"
@@ -1579,7 +1495,9 @@ def main():
                             pf = 0
 
                         if(pf_ignore_offset != 0):
-                            logg.info("diff_a1: {} diff_a2: {} diff_a3: {} diff_a4: {} pfrange: {} pf_ignore_offset: {}".format(diff_a1, diff_a2, diff_a3, diff_a4, pfrange, pf_ignore_offset))
+                            logg.info(
+                                "diff_a1: {} diff_a2: {} diff_a3: {} diff_a4: {} pfrange: {} pf_ignore_offset: {}".format(
+                                    diff_a1, diff_a2, diff_a3, diff_a4, pfrange, pf_ignore_offset))
                             if (diff_a1 < -pfrange):
                                 if(diff_a1 < (-pfrange - pf_ignore_offset)):
                                     logg.info("diff_a1: {} < -pfrange: {} - pf_ignore_offset: {}".format(diff_a1, pfrange, pf_ignore_offset))
@@ -1627,25 +1545,44 @@ def main():
 
                     if (pf == 0 or e_tot != ""):
                         pfs = "FAIL"
+                    run_end_time = datetime.datetime.now()
+                    run_end_time_str = str(datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")).replace(':', '-')
+                    logger.info("run_end_time : {run_end_time}".format(run_end_time=run_end_time_str))
+
+                    run_time_delta = run_end_time - run_start_time
+                    minutes, seconds = divmod(run_time_delta.seconds, 60)
+                    hours, minutes = divmod(minutes, 60)
+                    run_duration = "{day}d {hours}h {minutes}m {seconds}s {msec} ms".format(
+                        day=run_time_delta.days, hours=hours, minutes=minutes, seconds=seconds, msec=run_time_delta.microseconds)
+                    logger.info("Run Duration:  {run_duration}".format(run_duration=run_duration))
+
+                    total_run_duration += run_time_delta
+                    minutes, seconds = divmod(total_run_duration.seconds, 60)
+                    hours, minutes = divmod(minutes, 60)
+                    total_run_duration_str = "{day}d {hours}h {minutes}m {seconds}s {msec} ms".format(
+                        day=total_run_duration.days, hours=hours, minutes=minutes, seconds=seconds, msec=total_run_duration.microseconds)
+                    logger.info("Total Run Duration:  {total_run_duration}".format(total_run_duration=total_run_duration))
+
+                    run_start_time = run_end_time
 
                     time_stamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "{:.3f}".format(time.time() - (math.floor(time.time())))[1:]
-                    ln = "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (
+                    ln = "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (
                         myrd, pathloss, antenna_gain, ch, n, bw, tx, beacon_sig, sig,
                         antstr, _ap, _bw, _ch, _mode, _nss, _noise, _rxrate,
                         cc_mac, cc_ch, cc_power, cc_dbm,
                         calc_dbm, diff_dbm, calc_ant1, calc_ant2, calc_ant3, calc_ant4,
-                        diff_a1, diff_a2, diff_a3, diff_a4, pfs, time_stamp
+                        diff_a1, diff_a2, diff_a3, diff_a4, pfs, time_stamp, run_duration, total_run_duration_str
                     )
 
                     # logg.info("RESULT: %s"%(ln))
                     csv.write(ln)
                     csv.write("\t")
 
-                    ln = "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (
+                    ln = "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (
                         myrd, pathloss, antenna_gain, _ch, _nss, _bw, tx, allowed_per_path,
                         antstr,
                         calc_ant1, calc_ant2, calc_ant3, calc_ant4,
-                        diff_a1, diff_a2, diff_a3, diff_a4, pfs, time_stamp
+                        diff_a1, diff_a2, diff_a3, diff_a4, pfs, time_stamp, run_duration, total_run_duration_str
                     )
                     csvs.write(ln)
                     csvs.write("\t")
@@ -1743,6 +1680,11 @@ def main():
                         col += 1
                     worksheet.write(row, col, time_stamp, green)
                     col += 1
+                    worksheet.write(row, col, run_duration, green)
+                    col += 1
+                    worksheet.write(row, col, total_run_duration_str, green)
+                    col += 1
+
                     if (_bw != bw):
                         err = "ERROR:  Requested bandwidth: %s != station's reported bandwidth: %s.  " % (bw, _bw)
                         e_tot += err
@@ -1780,20 +1722,6 @@ def main():
                     if (e_tot != ""):
                         if(args.exit_on_error):
                             logg.info("EXITING ON ERROR, exit_on_error err: {} ".format(e_tot))
-                            if bool(email_dicts):
-                                for email_dict in email_dicts:
-                                    try:
-                                        logg.info("Sending Email ")
-                                        subject = "Lanforge: Error {}".format(outfile_xlsx)
-                                        body = "Lanforeg: Error: AP: {} Channel: {} NSS: {} BW: {} TX-Power {}, pfs: {} time_stamp: {}  {}".format(
-                                            args.ap, ch, n, bw, tx, pfs, time_stamp, outfile_xlsx)
-                                        email_out = subprocess.run(["./lf_mail.py", "--user", email_dict['user'], "--passwd", email_dict['passwd'], "--to", email_dict['to'],
-                                                                    "--subject", subject, "--body", body, "--smtp", email_dict['smtp'], "--port", email_dict['port']], capture_output=cap_ctl_out, check=True)
-                                        pss = email_out.stdout.decode('utf-8', 'ignore')
-                                        logg.info(pss)
-                                    except subprocess.CalledProcessError as process_error:
-                                        logg.info("Unable to send email smtp {} port {} error code: {} output {}".format(
-                                            email_dict['smtp'], email_dict['port'], process_error.returncode, process_error.output))
                             exit_test(workbook)
 
                     # write out the data and exit on failure
@@ -1803,42 +1731,17 @@ def main():
                                 logg.info("EXITING ON FAILURE as a result of  err {}".format(e_tot))
                             else:
                                 logg.info("EXITING ON FAILURE, exit_on_fail set there was no err ")
-                            if bool(email_dicts):
-                                for email_dict in email_dicts:
-                                    try:
-                                        logg.info("Sending Email ")
-                                        subject = "Lanforge: Failure Found {}".format(outfile_xlsx)
-                                        body = "Lanforge: Failure Found:  AP: {} Channel: {} NSS: {} BW: {} TX-Power {}, pfs: {} time_stamp: {} {}".format(
-                                            args.ap, ch, n, bw, tx, pfs, time_stamp, outfile_xlsx)
-                                        email_out = subprocess.run(["./lf_mail.py", "--user", email_dict['user'], "--passwd", email_dict['passwd'], "--to", email_dict['to'],
-                                                                   "--subject", subject, "--body", body, "--smtp", email_dict['smtp'], "--port", email_dict['port']], capture_output=cap_ctl_out, check=True)
-                                        if cap_ctl_out:
-                                            pss = email_out.stdout.decode('utf-8', 'ignore')
-                                            logg.info(pss)
-                                    except subprocess.CalledProcessError as process_error:
-                                        logg.info("Unable to send email smtp {} port {} error code: {} output {}".format(
-                                            email_dict['smtp'], email_dict['port'], process_error.returncode, process_error.output))
-
                             exit_test(workbook)
-
-    if bool(email_dicts):
-        for email_dict in email_dicts:
-            try:
-                logg.info("Sending Email ")
-                subject = "Lanforge Test Compete {}".format(outfile_xlsx)
-                body = "Lanforeg Test Complete : AP: {} time_stamp: {}  {}".format(args.ap, time_stamp, outfile_xlsx)
-                email_out = subprocess.run(["./lf_mail.py", "--user", email_dict['user'], "--passwd", email_dict['passwd'], "--to", email_dict['to'],
-                                            "--subject", subject, "--body", body, "--smtp", email_dict['smtp'], "--port", email_dict['port']], capture_output=cap_ctl_out, check=True)
-                if cap_ctl_out:
-                    pss = email_out.stdout.decode('utf-8', 'ignore')
-                    logg.info(pss)
-            except subprocess.CalledProcessError as process_error:
-                logg.info("Unable to send email smtp {} port {} error code: {} output {}".format(email_dict['smtp'], email_dict['port'], process_error.returncode, process_error.output))
 
     workbook.close()
 
     # check if keeping the existing state
     # TODO add --no_cleanup
+
+    if(args.no_cleanup_station is False):
+        logg.info("--no_cleanup_station set False,  Deleting all stations on radio {}".format(args.radio))
+        subprocess.run(["./lf_associate_ap.pl", "--action", "del_all_phy", "--port_del", args.radio], timeout=20, capture_output=True)
+
     if(args.keep_state):
         logg.info("9800/3504 flag --keep_state set thus keeping state")
         pss = cs.show_ap_dot11_5gz_summary()
@@ -1851,10 +1754,7 @@ def main():
         exit_test(workbook)
     else:
         # Set things back to defaults
-        # remove the station
-        if(args.cleanup):
-            logg.info("--cleanup set Deleting all stations on radio {}".format(args.radio))
-            subprocess.run(["./lf_associate_ap.pl", "--action", "del_all_phy", "--port_del", args.radio], timeout=20, capture_output=True)
+        # if no_cleanup_station is False then clean up station
 
         # Disable AP, apply settings, enable AP
         # TODO disable 24gz

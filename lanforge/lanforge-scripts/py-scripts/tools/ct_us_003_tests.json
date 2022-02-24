@@ -24,7 +24,7 @@
                 "command":"test_l3_longevity.py",
                 "args":"",
                 "args_list":[
-                    " --lfmgr LF_MGR_IP --local_lf_report_dir REPORT_PATH --test_duration 15s --polling_interval 5s --upstream_port eth2 ",
+                    " --lfmgr LF_MGR_IP --local_lf_report_dir REPORT_PATH --test_duration 15s --polling_interval 5s --upstream_port UPSTREAM_PORT ",
                     " use_ssid_idx=1 --radio 'radio==wiphy1,stations==4,ssid==SSID_USED,ssid_pw==SSID_PW_USED,security==SECURITY_USED' ",
                     " --endp_type lf_udp --rates_are_totals --side_a_min_bps=20000 --side_b_min_bps=300000000",
                     " --test_rig TEST_RIG --test_tag 'l3_longevity'"
@@ -302,7 +302,7 @@
                 "args": "",
                 "args_list":[
                     " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user LF_MGR_USER --lf_password LF_MGR_PASS",
-                    " --instance_name ap_auto --config_name test_con --upstream eth2",
+                    " --instance_name ap_auto --config_name test_con --upstream UPSTREAM_PORT",
                     " use_ssid_idx=0 --dut2_0 'USE_DUT_NAME SSID_USED BSSID_TO_USE (1)'",
                     " use_ssid_idx=1 --dut5_0 'USE_DUT_NAME SSID_USED BSSID_TO_USE (2)'",
                     " --max_stations_2 6 --max_stations_5 6 --max_stations_dual 1",
@@ -366,7 +366,7 @@
                 "args": "",
                 "args_list":[
                     " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge",
-                    " --instance_name ap_auto --config_name test_con --upstream eth2",
+                    " --instance_name ap_auto --config_name test_con --upstream UPSTREAM_PORT",
                     " use_ssid_idx=0 --dut2_0 'USE_DUT_NAME SSID_USED BSSID_TO_USE (1)'",
                     " use_ssid_idx=1 --dut5_0 'USE_DUT_NAME SSID_USED BSSID_TO_USE (2)'",
                     " --max_stations_2 6 --max_stations_5 6 --max_stations_dual 1",
@@ -430,7 +430,7 @@
                 "args": "",
                 "args_list":[
                     " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge",
-                    " --instance_name ap_auto --config_name test_con --upstream eth2",
+                    " --instance_name ap_auto --config_name test_con --upstream UPSTREAM_PORT",
                     " use_ssid_idx=0 --dut2_0 'USE_DUT_NAME lanforge BSSID_TO_USE (1)'",
                     " use_ssid_idx=1 --dut5_0 'USE_DUT_NAME lanforge BSSID_TO_USE (2)'",
                     " --max_stations_2 6 --max_stations_5 6 --max_stations_dual 1",
@@ -494,7 +494,7 @@
                 "args": "",
                 "args_list":[
                     " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge",
-                    " --instance_name ap_auto --config_name test_con --upstream eth2",
+                    " --instance_name ap_auto --config_name test_con --upstream UPSTREAM_PORT",
                     " use_ssid_idx=0 --dut2_0 'USE_DUT_NAME lanforge BSSID_TO_USE (1)'",
                     " use_ssid_idx=1 --dut5_0 'USE_DUT_NAME lanforge BSSID_TO_USE (2)'",
                     " --max_stations_2 6 --max_stations_5 6 --max_stations_dual 1",
@@ -547,7 +547,7 @@
                 "command":"test_l3_longevity.py",
                 "args":"",
                 "args_list":[
-                    " --lfmgr LF_MGR_IP --test_duration 15s --polling_interval 5s --upstream_port eth2 ",
+                    " --lfmgr LF_MGR_IP --test_duration 15s --polling_interval 5s --upstream_port UPSTREAM_PORT ",
                     " --radio 'radio==wiphy1,stations==4,ssid==SSID_USED,ssid_pw==SSID_PW_USED,security==SECURITY_USED' ",
                     " --endp_type lf_udp --rates_are_totals --side_a_min_bps=20000 --side_b_min_bps=300000000"
                 ]

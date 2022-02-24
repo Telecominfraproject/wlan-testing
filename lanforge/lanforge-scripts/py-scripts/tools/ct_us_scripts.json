@@ -60,7 +60,7 @@
                 "args":"",
                 "args_list":[
                     " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge --instance_name ATH10K_9984_wc",
-                    " --upstream 1.1.eth2 --batch_size 1,5,25,32 --loop_iter 1 --protocol UDP-IPv4 --duration 6000",
+                    " --upstream UPSTREAM_PORT --batch_size 1,5,25,32 --loop_iter 1 --protocol UDP-IPv4 --duration 6000",
                     " --pull_report --local_lf_report_dir REPORT_PATH --test_tag 'ATH10K_9984'",
                     " --test_rig TEST_RIG ",
                     " --set DUT_SET_NAME"
@@ -99,7 +99,7 @@
                 "args":"",
                 "args_list":[
                     " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge --instance_name ATH10K_9984_dp",
-                    " --config_name test_con --upstream 1.1.eth2 --dut asus_5g --duration 30s --station 1.1.wlan1",
+                    " --config_name test_con --upstream UPSTREAM_PORT --dut asus_5g --duration 30s --station 1.1.wlan1",
                     " --download_speed 85% --upload_speed 0 --raw_line 'pkts: 60;Custom' ",
                     " --raw_line 'cust_pkt_sz: 88;256;512;768;1024;MTU' ",
                     " --raw_line 'directions: DUT Transmit' --raw_line 'traffic_types: UDP' --raw_line 'bandw_options: AUTO'",
@@ -272,7 +272,7 @@
                     " --mgr LF_MGR_IP ",
                     " use_ssid_idx=0  --radio wiphy4 --ssid SSID_USED --passwd SSID_PW_USED --security SECURITY_USED",
                     " --test_duration 60s --output_format csv ",
-                    " --traffic_type lf_tcp --a_min 600000000 --b_min 600000000  --upstream_port eth2",
+                    " --traffic_type lf_tcp --a_min 600000000 --b_min 600000000  --upstream_port UPSTREAM_PORT",
                     " --mode '5' --layer3_cols 'name','tx rate','rx rate' ",
                     " --port_mgr_cols 'alias','channel','activity','mode'",
                     " --num_stations 1"
@@ -287,7 +287,7 @@
                     " --mgr LF_MGR_IP",
                     " use_ssid_idx=1  --radio wiphy1 --ssid SSID_USED --passwd SSID_PW_USED --security SECURITY_USED",
                     " --test_duration 60s --output_format csv ",
-                    " --traffic_type lf_tcp --a_min 600000000 --b_min 600000000  --upstream_port eth2",
+                    " --traffic_type lf_tcp --a_min 600000000 --b_min 600000000  --upstream_port UPSTREAM_PORT",
                     " --mode '5' --layer3_cols 'name','tx rate','rx rate' ",
                     " --port_mgr_cols 'alias','channel','activity','mode'"
                 ]
@@ -441,7 +441,7 @@
                 "command":"test_ipv4_ttls.py",
                 "args":"",
                 "args_list":[
-                    "--mgr LF_MGR_IP --radio 1.1.wiphy0 --upstream_port 1.1.eth2 ",
+                    "--mgr LF_MGR_IP --radio 1.1.wiphy0 --upstream_port UPSTREAM_PORT ",
                     " use_ssid_idx=0 --ssid SSID_USED --passwd  SSID_PW_USED --security  SECURITY_USED "
                 ]
             },
@@ -565,7 +565,7 @@
                     " --mgr LF_MGR_IP ",
                     " use_ssid_idx=1  --radio wiphy4 --ssid SSID_USED --passwd SSID_PW_USED --security SECURITY_USED",
                     " --test_duration 60s --output_format csv ",
-                    " --traffic_type lf_tcp --a_min 600000000 --b_min 600000000  --upstream_port eth2",
+                    " --traffic_type lf_tcp --a_min 600000000 --b_min 600000000  --upstream_port UPSTREAM_PORT",
                     " --mode '5' --layer3_cols 'name','tx rate','rx rate' ",
                     " --port_mgr_cols 'alias','channel','activity','mode'",
                     " --num_stations 1"]
@@ -579,7 +579,7 @@
                     " --mgr LF_MGR_IP",
                     " use_ssid_idx=1  --radio wiphy1 --ssid SSID_USED --passwd SSID_PW_USED --security SECURITY_USED",
                     " --test_duration 60s --output_format csv ",
-                    " --traffic_type lf_tcp --a_min 600000000 --b_min 600000000  --upstream_port eth2",
+                    " --traffic_type lf_tcp --a_min 600000000 --b_min 600000000  --upstream_port UPSTREAM_PORT",
                     " --mode '5' --layer3_cols 'name','tx rate','rx rate' ",
                     " --port_mgr_cols 'alias','channel','activity','mode'"
                 ]},
@@ -611,7 +611,7 @@
                     " --mgr LF_MGR_IP ",
                     " use_ssid_idx=1  --radio wiphy4 --ssid SSID_USED --passwd SSID_PW_USED --security SECURITY_USED",
                     " --test_duration 60s --output_format csv ",
-                    " --traffic_type lf_tcp --a_min 600000000 --b_min 600000000  --upstream_port eth2",
+                    " --traffic_type lf_tcp --a_min 600000000 --b_min 600000000  --upstream_port UPSTREAM_PORT",
                     " --mode '5' --layer3_cols 'name','tx rate','rx rate' ",
                     " --port_mgr_cols 'alias','channel','activity','mode'",
                     " --num_stations 1"]
@@ -625,7 +625,7 @@
                     " --mgr LF_MGR_IP",
                     " use_ssid_idx=1  --radio wiphy1 --ssid SSID_USED --passwd SSID_PW_USED --security SECURITY_USED",
                     " --test_duration 60s --output_format csv ",
-                    " --traffic_type lf_tcp --a_min 600000000 --b_min 600000000  --upstream_port eth2",
+                    " --traffic_type lf_tcp --a_min 600000000 --b_min 600000000  --upstream_port UPSTREAM_PORT",
                     " --mode '5' --layer3_cols 'name','tx rate','rx rate' ",
                     " --port_mgr_cols 'alias','channel','activity','mode'"
                 ]},

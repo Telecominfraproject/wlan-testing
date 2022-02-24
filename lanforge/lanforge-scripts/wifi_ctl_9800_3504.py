@@ -143,11 +143,12 @@ def main():
     # parser.add_argument("--wlan_name", type=str, help="--wlan_name open-wlan", default="open-wlan")
 
     parser.add_argument("--action", type=str, help="perform action",
-                        choices=["config", "debug_disable_all", "no_logging_console", "line_console_0", "country", "ap_country", "enable", "disable", "summary", "advanced",
+                        choices=["config", "dtim", "debug_disable_all", "no_logging_console", "line_console_0", "country", "ap_country", "enable", "disable", "summary", "advanced",
                                  "cmd", "txPower", "bandwidth", "manual", "auto", "no_wlan", "show_ap_wlan_summary", "show_wlan_summary", "show_radio",
                                  "ap_channel", "auto_rf", "channel", "show", "create_wlan", "create_wlan_wpa2", "create_wlan_wpa3", "enable_wlan", "disable_wlan", "wlan_qos",
-                                 "disable_network_5ghz", "disable_network_24ghz", "enable_network_5ghz", "enable_network_24ghz",
-                                 "wireless_tag_policy", "no_wlan_wireless_tag_policy", "delete_wlan"])
+                                 "disable_network_6ghz","disable_network_5ghz", "disable_network_24ghz", 
+                                 "enable_network_6ghz", "enable_network_5ghz", "enable_network_24ghz",
+                                 "wireless_tag_policy", "no_wlan_wireless_tag_policy", "delete_wlan", "show_ap_bssid_24g", "show_ap_bssid_5g"])
     parser.add_argument("--value", type=str, help="set value")
     # logging configuration
     parser.add_argument(
@@ -232,6 +233,10 @@ def main():
    print("CCP_CONFIG_WLAN {}".format(CCP_CONFIG_WLAN))
    print("CCP_POLICY_TAG {}".format(CCP_POLICY_TAG))
    print("CCP_CONFIG_LINE {}".format(CCP_CONFIG_LINE))'''
+
+    # DTIM , dtim, Delivery Traffic Indication Message
+    # dtim dot11 5ghz
+    # (config-wlan)#dtim dot11 5ghz ? <DTIM> Period
 
     try:
         if (scheme == "serial"):
@@ -1033,6 +1038,20 @@ def main():
         else:
             command = "show advanced 802.11%s summary" % (band)
 
+    if (args.action == "show_ap_bssid_24g"):
+        if args.series == "9800":
+            if band == "a":
+                command = "show ap name %s wlan dot11 24ghz" % (args.ap)
+            else:
+                command = "show ap name %s wlan dot11 24ghz" % (args.ap)
+
+    if (args.action == "show_ap_bssid_5g"):
+        if args.series == "9800":
+            if band == "a":
+                command = "show ap name %s wlan dot11 5ghz" % (args.ap)
+            else:
+                command = "show ap name %s wlan dot11 5ghz" % (args.ap)
+
     if ((args.action == "auto_rf") and ((args.ap is None))):
         raise Exception("auto_rf requires AP name")
 
@@ -1070,7 +1089,9 @@ def main():
         raise Exception("action requires AP name")
     if (args.action == "manual"):
         if args.series == "9800":
-            if band == "a":
+            if band == "6g":
+                command = "ap name %s dot11 6ghz radio role manual client-serving" % (args.ap)
+            elif band == "a":
                 command = "ap name %s dot11 5ghz radio role manual client-serving" % (args.ap)
             else:
                 command = "ap name %s dot11 24ghz radio role manual client-serving" % (args.ap)
@@ -1083,6 +1104,27 @@ def main():
                 command = "ap name %s dot11 5ghz radio role auto" % (args.ap)
             else:
                 command = "ap name %s dot11 24ghz radio role auto" % (args.ap)
+
+    if (args.action == "disable_network_6ghz"):
+        if args.series == "9800":
+            egg.sendline("config t")
+            sleep(0.1)
+            i = egg.expect_exact(["(config)#", pexpect.TIMEOUT], timeout=timeout)
+            if i == 0:
+                egg.sendline("ap dot11 6ghz shutdown")
+                sleep(0.1)
+                i = egg.expect_exact(["Are you sure you want to continue? (y/n)[y]:", pexpect.TIMEOUT], timeout=timeout)
+                if j == 0:
+                    logg.info("did get Are you sure you want to continue? (y/n)[y]:")
+                    egg.sendline("y")
+                    sleep(0.5)
+                if j == 1:
+                    logg.info("did not get Are you sure you want to continue? (y/n)[y]:")
+                    egg.sendline("y")
+                    sleep(0.5)
+            if i == 1:
+                logg.info("timed out on (config)# disable_network_6ghz")
+
 
     if (args.action == "disable_network_5ghz"):
         if args.series == "9800":
@@ -1132,6 +1174,17 @@ def main():
             logg.info("3504 disable_network_24ghz")
             command = 'config 802.11a disable network'
 
+    if (args.action == "enable_network_6ghz"):
+        if args.series == "9800":
+            egg.sendline("config t")
+            sleep(0.1)
+            i = egg.expect_exact(["(config)#", pexpect.TIMEOUT], timeout=timeout)
+            if i == 0:
+                egg.sendline("no ap dot11 6ghz shutdown")
+                sleep(0.1)
+            if i == 1:
+                logg.info("timed out on (config) prompt")
+
     if (args.action == "enable_network_5ghz"):
         if args.series == "9800":
             egg.sendline("config t")
@@ -1175,7 +1228,10 @@ def main():
         raise Exception("action requires AP name")
     if (args.action == "disable"):
         if args.series == "9800":
-            if band == "a":
+            # TODO use the 24g 5g 6g notation, also support abgn (dual band?)
+            if band == '6g':
+                command = "ap name %s dot11 6ghz shutdown" % (args.ap)
+            elif band == "a":
                 command = "ap name %s dot11 5ghz shutdown" % (args.ap)
             else:
                 command = "ap name %s dot11 24ghz shutdown" % (args.ap)
@@ -1326,6 +1382,45 @@ def main():
     if (args.action == "show_wlan_summary"):
         print("command show wlan summary ")
         command = "show wlan summary"
+
+    # need the wlan name to elevate the prompt
+    # WLC1#config t
+    # Enter configuration commands, one per line.  End with CNTL/Z.
+    # WLC1(config)#wlan open-wlan-15
+    # WLC1(config-wlan)#
+    # WLC1(config-wlan)#dtim dot11 5ghz ?
+    #  <1-255>  DTIM Period
+    # WLC1(config-wlan)#dtim dot11 5ghz 3
+    # % WLAN needs to be disabled before performing this operation.
+
+    if (args.action == "dtim" and ((args.value is None) or (args.wlan is None))):
+        raise Exception("dtim a value 1 - 255 required")
+    if (args.action == "dtim"):
+        logg.info("(config-wlan)# dtim dot11 5ghz  {value} ".format(value=args.value))
+        if args.series == "9800":
+            egg.sendline("config t")
+            sleep(0.4)
+            i = egg.expect_exact(["(config)#", pexpect.TIMEOUT], timeout=timeout)
+            if i == 0:
+                logg.info("elevated to (config)#")
+
+                logg.info("elevated to (config)#")
+                # for create wlan <name> <ID> <ssid>
+                command = "wlan {}".format(args.wlan)
+                egg.sendline(command)
+                sleep(0.4)
+                j = egg.expect_exact([CCP_CONFIG_WLAN, pexpect.TIMEOUT], timeout=timeout)
+                if j == 0:
+                    command = "dtim dot11 5ghz {value}".format(value=args.value)
+                    logg.info("dtim command:  {command}".format(command=command))
+                    egg.sendline(command)
+                    sleep(0.4)
+                if j == 1:
+                    logg.info("did not get the (config-wlan)# prompt")
+            if i == 0:
+                logg.info("did not get the (config)# prompt")
+        else:
+            command = "dtim {value}".format(args.value)
 
     if (args.action == "create_wlan_wpa2" and ((args.wlanID is None) or (args.wlan is None) or (args.wlanSSID is None) or (args.security_key is None))):
         raise Exception("create_wlan_wpa2 wlanID, wlan, wlanSSID are required an")
