@@ -1551,11 +1551,11 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                     ssid_not_found = True
                                     print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
                                 scroll_up(setup_perfectoMobile)
-                        if ssid_not_found:
-                            print("could not found " + WifiName + " in device")
-                            # allure.attach(name= body=str("could not found" + WifiName + " in device"))
-                            closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                            return ip_address_element_text, ssid_with_internet
+                            if ssid_not_found:
+                                print("could not found " + WifiName + " in device")
+                                # allure.attach(name= body=str("could not found" + WifiName + " in device"))
+                                closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                                return ip_address_element_text, ssid_with_internet
                     except:
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         return ip_address_element_text, ssid_with_internet
@@ -3296,11 +3296,11 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
                                     ssid_not_found = True
                                     print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
                                 scroll_up(setup_perfectoMobile)
-                        if ssid_not_found:
-                            print("could not found " + WifiName + " in device")
-                            # allure.attach(name= body=str("could not found" + WifiName + " in device"))
-                            closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                            return ip_address_element_text, ssid_with_internet
+                            if ssid_not_found:
+                                print("could not found " + WifiName + " in device")
+                                # allure.attach(name= body=str("could not found" + WifiName + " in device"))
+                                closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                                return ip_address_element_text, ssid_with_internet
                     except:
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         return ip_address_element_text, ssid_with_internet
