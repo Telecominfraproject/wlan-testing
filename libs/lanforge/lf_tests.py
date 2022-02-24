@@ -997,7 +997,9 @@ class RunTest:
                                          station_name=station_name, vlan_id=vlan_id)
         if station:
             station_info = station.json_get(f"/port/1/1/{station_name[0]}")
-            print(f"station IP: {station_info['interface']['ip']}\nconnected channel: {station_info['interface']['channel']}")
+            print(f"station {station_name[0]} IP: {station_info['interface']['ip']}\n"
+                  f"connected channel: {station_info['interface']['channel']}\n"
+                  f"and expected channel: {channel}")
             station_data_str = ""
             for i in station_info["interface"]:
                 try:
