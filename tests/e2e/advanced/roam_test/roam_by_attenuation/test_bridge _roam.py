@@ -2,7 +2,7 @@ import time
 
 import pytest
 import allure
-from configuration import CONFIGURATION
+# from configuration import CONFIGURATION
 
 pytestmark = [pytest.mark.roam_test, pytest.mark.bridge]
 
@@ -15,11 +15,23 @@ setup_params_general = {
     "rf": {},
     "radius": False
 }
+@allure.suite("Roam Test")
+@allure.feature("Roam Test")
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
 
 class TestRateLimitingWithRadiusBridge(object):
 
+
     @pytest.mark.roam_2g
-    def test_basic_roam_2g(self, get_configuration, lf_test, station_names_twog, lf_tools, run_lf, add_env_properties):
+    @pytest.mark.wpa2_personal
+    def test_basic_roam_2g(self, get_configuration, lf_test, station_names_twog, lf_tools, run_lf, add_env_properties,
+                           instantiate_profile, get_controller_logs, get_ap_config_slots, get_lf_logs):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -35,7 +47,22 @@ class TestRateLimitingWithRadiusBridge(object):
             c2_2g_bssid = get_configuration["access_point"][1]["ssid"]["2g-bssid"]
             allure.attach(name="bssid of ap2", body=c2_2g_bssid)
 
+        else:
+            for ap_name in range(len(get_configuration['access_point'])):
+                instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
+                                                              timeout="10", ap_data=get_configuration['access_point'], type=ap_name)
+                bssid_2g = instantiate_profile_obj.cal_bssid_2g()
+                if ap_name == 0 :
+                    c1_2g_bssid = bssid_2g
+                if ap_name == 1:
+                    c2_2g_bssid = bssid_2g
+        print("bssid of c1 ", c1_2g_bssid)
+        allure.attach(name="bssid of ap1", body=c1_2g_bssid)
+        print("bssid of c2",  c2_2g_bssid)
+        allure.attach(name="bssid of ap2", body=c2_2g_bssid)
+
         ser_no = lf_test.attenuator_serial()
+
         print(ser_no[0])
         ser_1 = ser_no[0].split(".")[2]
         ser_2 = ser_no[1].split(".")[2]
@@ -47,7 +74,7 @@ class TestRateLimitingWithRadiusBridge(object):
         # # create station
         station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
-        if station :
+        if station:
             lf_test.attach_stationdata_to_allure(name="staion info before roam", station_name=station_names_twog)
             bssid = lf_tools.station_data_query(station_name=str(station_names_twog[0]), query="ap")
             formated_bssid = bssid.lower()
@@ -59,7 +86,7 @@ class TestRateLimitingWithRadiusBridge(object):
                 print("station connected to chamber 2 ap")
                 station_before = formated_bssid
             # logic to decrease c1 attenuation and increase c2 attenuation
-            for atten_val1, atten_val2 in zip([0, 100, 300, 500, 750, 950],[950, 750, 500,300, 100, 0]):
+            for atten_val1, atten_val2 in zip([0, 100, 300, 500, 750, 950], [950, 750, 500, 300, 100, 0]):
                 print(atten_val1)
                 print(atten_val2)
                 for i in range(4):
@@ -68,7 +95,7 @@ class TestRateLimitingWithRadiusBridge(object):
                 time.sleep(10)
                 lf_tools.admin_up_down(sta_list=station_names_twog, option="down")
                 time.sleep(15)
-                lf_tools.admin_up_down(sta_list=station_names_twog,option="up")
+                lf_tools.admin_up_down(sta_list=station_names_twog, option="up")
                 time.sleep(15)
                 bssid = lf_tools.station_data_query(station_name=str(station_names_twog[0]), query="ap")
                 station_after = bssid.lower()
@@ -86,9 +113,12 @@ class TestRateLimitingWithRadiusBridge(object):
             allure.attach(name="FAIL", body="station failed to get ip")
             assert False
 
+
     @pytest.mark.roam_5g
-    def test_basic_roam_5g(self, get_configuration, lf_test, station_names_fiveg, lf_tools, run_lf, add_env_properties):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
+    @pytest.mark.wpa2_personal
+    def test_basic_roam_5g(self, get_configuration, lf_test, station_names_fiveg, lf_tools, run_lf, add_env_properties,
+                           instantiate_profile, get_controller_logs, get_ap_config_slots, get_lf_logs):
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -102,6 +132,19 @@ class TestRateLimitingWithRadiusBridge(object):
             allure.attach(name="bssid of ap1", body=c1_5g_bssid)
             c2_5g_bssid = get_configuration["access_point"][1]["ssid"]["5g-bssid"]
             allure.attach(name="bssid of ap2", body=c2_5g_bssid)
+        else:
+            for ap_name in range(len(get_configuration['access_point'])):
+                instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
+                                                              timeout="10", ap_data=get_configuration['access_point'], type=ap_name)
+                bssid_5g = instantiate_profile_obj.cal_bssid_5g()
+                if ap_name == 0 :
+                    c1_5g_bssid = bssid_5g
+                if ap_name == 1:
+                    c2_5g_bssid = bssid_5g
+        print("bssid of c1 ", c1_5g_bssid)
+        allure.attach(name="bssid of ap1", body=c1_5g_bssid)
+        print("bssid of c2",  c2_5g_bssid)
+        allure.attach(name="bssid of ap2", body=c2_5g_bssid)
 
         ser_no = lf_test.attenuator_serial()
         print(ser_no[0])
@@ -155,8 +198,17 @@ class TestRateLimitingWithRadiusBridge(object):
             assert False
 
 
-    @pytest.mark.multi_roam
-    def test_multiple_roam_2g(self, get_configuration, lf_test, station_names_twog, lf_tools, run_lf, add_env_properties):
+    @pytest.mark.multi_roam_2g
+    @pytest.mark.wpa2_personl
+    def test_multiple_roam_2g(self, get_configuration, lf_test, station_names_twog, lf_tools, run_lf, add_env_properties,
+                              instantiate_profile, get_controller_logs, get_ap_config_slots, get_lf_logs):
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
+        ssid_name = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+        security = "wpa2"
+        mode = "BRIDGE"
+        band = "twog"
+        vlan = 1
         c1_2g_bssid = ""
         c2_2g_bssid = ""
         if run_lf:
@@ -165,6 +217,20 @@ class TestRateLimitingWithRadiusBridge(object):
             c2_2g_bssid = get_configuration["access_point"][1]["ssid"]["2g-bssid"]
             allure.attach(name="bssid of ap2", body=c2_2g_bssid)
             ssid_name = get_configuration["access_point"][0]["ssid"]["2g-ssid"]
+        else:
+            for ap_name in range(len(get_configuration['access_point'])):
+                instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
+                                                              timeout="10", ap_data=get_configuration['access_point'], type=ap_name)
+                bssid_2g = instantiate_profile_obj.cal_bssid_2g()
+                if ap_name == 0 :
+                    c1_2g_bssid = bssid_2g
+                if ap_name == 1:
+                    c2_2g_bssid = bssid_2g
+        print("bssid of c1 ", c1_2g_bssid)
+        allure.attach(name="bssid of ap1", body=c1_2g_bssid)
+        print("bssid of c2",  c2_2g_bssid)
+        allure.attach(name="bssid of ap2", body=c2_2g_bssid)
+
 
         ser_no = lf_test.attenuator_serial()
         print(ser_no[0])
