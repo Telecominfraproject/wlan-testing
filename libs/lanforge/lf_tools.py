@@ -343,7 +343,7 @@ class ChamberView:
                     self.raw_line.append(station_data)
             if num_stations == "max":
                 for radio in self.twog_radios:
-                    num_stations = self.get_max_sta(radio)
+                    num_stations = 64
                     station_data = ["profile_link " + radio.split(".")[0] + "." + radio.split(".")[1] +
                                     " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
                                     str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
@@ -369,7 +369,7 @@ class ChamberView:
                     self.raw_line.append(station_data)
             if num_stations == "max":
                 for radio in self.fiveg_radios:
-                    num_stations = self.get_max_sta(radio)
+                    num_stations = 64
                     station_data = ["profile_link " + radio.split(".")[0] + "." + radio.split(".")[1] +
                                     " STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
                                     str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
@@ -391,18 +391,20 @@ class ChamberView:
                         max = self.get_max_sta(radio)
                         num_stations = num_stations - max
                         station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
-                                        str(int(idx) + 1) + "'" + " NA " + radio]
+                                        str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
                         self.raw_line.append(station_data)
                 else:
                     num_stations = num_stations
                     station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
-                                    str(int(idx) + 1) + "'" + " NA " + self.ax_radios[0]]
+                                    str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
                     self.raw_line.append(station_data)
             if num_stations == "max":
                 for radio in self.ax_radios:
+                    print("radio", radio)
                     num_stations = self.get_max_sta(radio)
+                    print("num_stations", num_stations)
                     station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
-                                    str(int(idx) + 1) + "'" + " NA " + radio]
+                                    str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
                     self.raw_line.append(station_data)
 
     def Create_Dut(self):
@@ -609,7 +611,7 @@ class ChamberView:
 
     def get_max_sta(self, radio=""):
         data = self.json_get("/radiostatus/all")
-        return data[radio]["max_sta"]
+        return data[radio]["max_vifs"]
 
 
 def main():

@@ -159,6 +159,71 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7127", name="WIFI-7127")
+    @pytest.mark.tcp_upload
+    def test_client_wpa2_bridge_tcp_ul(self, get_vif_state, lf_tools, setup_profiles,
+                                       lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                       get_configuration):
+        """ Wifi Capacity Test BRIDGE mode
+            pytest -m "wifi_capacity_test and BRIDGE and wpa2_personal and twog"
+        """
+        lf_tools.reset_scenario()
+        profile_data = setup_params_general_dual_band["ssid_modes"]["wpa2_personal"][0]
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        vlan = 1
+        get_vif_state.append(ssid_name)
+        if ssid_name not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.Chamber_View()
+        influx_tags = ["tcp", "download", "2.4G-5G Combined"]
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_ul", mode=mode, vlan_id=vlan,
+                                        download_rate="0", batch_size="1,5,10,20,40,64,128,256",
+                                        influx_tags=influx_tags,
+                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000")
+
+        report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+
+        lf_tools.attach_report_graphs(report_name=report_name)
+        print("Test Completed... Cleaning up Stations")
+        assert True
+
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7128", name="WIFI-7128")
+    @pytest.mark.udp_upload
+    def test_client_wpa2_bridge_udp_ul(self, get_vif_state, lf_tools,
+                                       lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                       get_configuration):
+        """ Wifi Capacity Test BRIDGE mode
+            pytest -m "wifi_capacity_test and BRIDGE and wpa2_personal and twog"
+        """
+        lf_tools.reset_scenario()
+        profile_data = setup_params_general_dual_band["ssid_modes"]["wpa2_personal"][0]
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        vlan = 1
+        get_vif_state.append(ssid_name)
+        if ssid_name not in get_vif_state:
+            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.Chamber_View()
+        influx_tags = ["udp", "download", "2.4G-5G Combined"]
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_ul", mode=mode, vlan_id=vlan,
+                                        download_rate="0", batch_size="1,5,10,20,40,64,128,256",
+                                        influx_tags=influx_tags,
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
+
+        report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+
+        lf_tools.attach_report_graphs(report_name=report_name)
+        print("Test Completed... Cleaning up Stations")
+        assert True
 
 setup_params_general_2G = {
     "mode": "BRIDGE",
