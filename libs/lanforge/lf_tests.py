@@ -49,8 +49,6 @@ from attenuator_serial import AttenuatorSerial
 from lf_atten_mod_test import CreateAttenuator
 from lf_mesh_test import MeshTest
 from lf_tr398_test import TR398Test
-from lf_pcap import LfPcap
-from wifi_monitor_profile import WifiMonitor
 
 
 class RunTest:
@@ -102,8 +100,6 @@ class RunTest:
             self.dualbandptest_obj = None
             self.msthpt_obj = None
             self.cvtest_obj = None
-            self.pcap_obj = None
-            self.monitor_obj = WifiMonitor()
             self.influx_params = influx_params
             # self.influxdb = RecordInflux(_influx_host=influx_params["influx_host"],
             #                              _influx_port=influx_params["influx_port"],
@@ -993,21 +989,6 @@ class RunTest:
 
         influx.glob()
         return self.cvtest_obj
-
-    def live_capture(self, interface_name="Wiphy0", output_file="live.pcap", sniff_duration=300):
-        if sniff_duration is not None or type(sniff_duration) is str:
-            sniff_duration = int(sniff_duration)
-        else:
-            sniff_duration = 300
-        self.pcap_obj = LfPcap()
-        self.pcap_obj.capture_live_pcap(interface=interface_name, output_file_name=output_file, duration=sniff_duration)
-        return self.pcap_obj
-
-    def sniff_packets(self, interface_name="Wiphy0", test_name="mu-mimo", sniff_duration=180):
-        pcap_name = test_name + str(datetime.datetime.now()) + ".pcap"
-        self.monitor_obj.create(resource_=1, channel=None, mode="AUTO", radio_=interface_name, name_="moni0")
-        self.monitor_obj.start_sniff(capname=pcap_name, duration_sec=sniff_duration)
-        self.monitor_obj.cleanup()
 
 
 if __name__ == '__main__':
