@@ -1,7 +1,7 @@
 """
 
     Performance Test: Downlink MU-MIMO Test: Bridge Mode
-    pytest -m "downlink_mu_mimo and Bridge and open and fiveg"
+    pytest -m "downlink_mu_mimo and bridge and open and fiveg"
 
 """
 import os
@@ -35,7 +35,7 @@ setup_params_general = {
 class TestMuMimoBridge(object):
     """
     Downlink MU-MIMO Test: Bridge Mode
-    pytest -m downlink_mu_mimo and Bridge
+    pytest -m downlink_mu_mimo and bridge
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6849",
@@ -45,7 +45,7 @@ class TestMuMimoBridge(object):
     def test_mu_mimo_open_bridge_5g(self, lf_tools, lf_test, create_lanforge_chamberview_dut):
         """
             Downlink MU-MIMO Test: Bridge Mode
-            pytest -m downlink_mu_mimo and Bridge and open and fiveg
+            pytest -m downlink_mu_mimo and bridge and open and fiveg
             """
         print('lf tool')
         dut_name = create_lanforge_chamberview_dut

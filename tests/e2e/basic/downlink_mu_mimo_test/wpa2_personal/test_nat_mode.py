@@ -1,7 +1,7 @@
 """
 
-    Performance Test: Downlink MU-MIMO Test: Bridge Mode
-    pytest -m "downlink_mu_mimo and Nat and wpa2_personal and fiveg"
+    Performance Test: Downlink MU-MIMO Test: NAT Mode
+    pytest -m "downlink_mu_mimo and nat and wpa2_personal and fiveg"
 
 """
 import os
@@ -14,8 +14,8 @@ setup_params_general = {
     "mode": "NAT",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "mu-mimo-5g", "appliedRadios": ["5G"]},
-            {"ssid_name": "mu-mimo-2g", "appliedRadios": ["2G"]}
+            {"ssid_name": "mu-mimo-5g", "appliedRadios": ["5G"], "security_key": "something"},
+            {"ssid_name": "mu-mimo-2g", "appliedRadios": ["2G"], "security_key": "something"}
         ]
     },
     "rf": [],
@@ -24,7 +24,7 @@ setup_params_general = {
 
 
 @allure.suite("performance")
-@allure.feature("BRIDGE MODE wpa2_personal security and Downlink MU_MIMO Test")
+@allure.feature("NAT MODE wpa2_personal security and Downlink MU_MIMO Test")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -34,8 +34,8 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestMuMimoNat(object):
     """
-    Downlink MU-MIMO Test: Bridge Mode
-    pytest -m downlink_mu_mimo and Bridge
+    Downlink MU-MIMO Test: nat Mode
+    pytest -m downlink_mu_mimo and nat
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6849",
@@ -44,12 +44,11 @@ class TestMuMimoNat(object):
     @pytest.mark.fiveg
     def test_mu_mimo_wpa2_personal_nat_5g(self, lf_tools, lf_test, create_lanforge_chamberview_dut):
         """
-            Downlink MU-MIMO Test: Bridge Mode
-            pytest -m downlink_mu_mimo and Bridge and wpa2_personal and fiveg
+            Downlink MU-MIMO Test: nat Mode
+            pytest -m downlink_mu_mimo and nat and wpa2_personal and fiveg
             """
         dut_name = create_lanforge_chamberview_dut
         mode = "NAT"
-        upstream_port = "1.1.eth2"
         vlan = 1
         dut_5g = ""
         dut_2g = ""
@@ -61,7 +60,7 @@ class TestMuMimoNat(object):
             if lf_tools.dut_idx_mapping[i][3] == "2G":
                 dut_2g = dut_name + ' ' + lf_tools.dut_idx_mapping[i][0] + ' ' + lf_tools.dut_idx_mapping[i][4] + ' (2)'
                 print(dut_2g)
-        tr398_obj = lf_test.tr398Test(radios_2g=[], radios_5g=[], upstream_port=upstream_port, dut_name=dut_name, dut_5g=dut_5g, dut_2g=dut_2g)
+        tr398_obj = lf_test.tr398Test(mode=mode, vlan_id=vlan, dut_name=dut_name, dut_5g=dut_5g, dut_2g=dut_2g)
         report_name = tr398_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Downlink MU-MIMO Test")
         assert True
