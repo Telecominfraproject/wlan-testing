@@ -1,16 +1,4 @@
 name: performance testing
-env:
-  # AWS credentials
-  AWS_EKS_NAME: tip-wlan-main
-  AWS_DEFAULT_OUTPUT: json
-  AWS_DEFAULT_REGION: us-east-2
-  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
-  # Cloud SDK certs
-  CACERT: ${{ secrets.CACERT }}
-  CAKEY: ${{ secrets.CAKEY }}
-
 on:
   workflow_dispatch:
     inputs:
@@ -38,6 +26,13 @@ jobs:
   test:
     runs-on: [ self-hosted, small ]
     needs: [ build ]
+    env:
+      AWS_EKS_NAME: tip-wlan-main
+      AWS_DEFAULT_OUTPUT: json
+      AWS_DEFAULT_REGION: us-east-2
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
     strategy:
       max-parallel: 1
       fail-fast: false
@@ -65,10 +60,6 @@ jobs:
     - name: get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
-    - name: set job name
-      id: job
-      run: echo "::set-output name=name::perf-${{ github.run_id }}"
-
     - name: set testbed
       id: testbed
       run: echo "::set-output name=name::${{ github.event.inputs.testbed || 'basic-01' }}"
@@ -77,108 +68,18 @@ jobs:
       id: namespace
       run: |
         NAMESPACE="testing-${{ github.run_id }}-${{ steps.testbed.outputs.name }}"
-        kubectl create ns $NAMESPACE
-        kubectl config set-context --current --namespace=$NAMESPACE
         echo "::set-output name=name::${NAMESPACE}"
 
-    - name: create configuration.py secret
-      run: |
-        cat << EOF > configuration.py
-        ${{ secrets.LAB_CONFIGURATION }}
-        EOF
-        sed -i -r "s/'password': ('|\")openwifi('|\")/'password': '"${{ secrets.OWSEC_NEW_PASSWORD }}"'/" configuration.py
-        kubectl create secret generic configuration --from-file=configuration=./configuration.py
-
-    - name: run perf tests
-      run: |
-        cat <<EOF | kubectl apply -f -
-        apiVersion: batch/v1
-        kind: Job
-        metadata:
-          name: "${{ steps.job.outputs.name }}"
-        spec:
-          template:
-            metadata:
-              annotations:
-                cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
-            spec:
-              containers:
-              - name: tests
-                image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-                resources:
-                  requests:
-                    memory: "512Mi"
-                    cpu: "250m"
-                  limits:
-                    memory: "512Mi"
-                    cpu: "250m"
-                command:
-                  - /bin/bash
-                  - -c
-                  - |
-                    cd tests
-                    pytest -m "performance and ${{ matrix.marker }}" -s -vvv --testbed="${{ steps.testbed.outputs.name }}" --alluredir=/tmp/allure-results
-                    ret=\$?
-                    # sleep some time to be able to download the Allure results
-                    sleep 60
-                    exit \$ret
-                volumeMounts:
-                - name: configuration
-                  mountPath: "/wlan-testing/tests/configuration.py"
-                  subPath: configuration
-                  readOnly: true
-              nodeSelector:
-                env: tests
-              tolerations:
-              - key: "tests"
-                operator: "Exists"
-                effect: "NoSchedule"
-              imagePullSecrets:
-              - name: tip-docker-registry-key
-              restartPolicy: Never
-              volumes:
-              - name: configuration
-                secret:
-                  secretName: configuration
-          backoffLimit: 0
-        EOF
-        # wait for pod to spawn
-        sleep 1
-        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
-        #sleep 30 # wait for the pod to come up
-        until [ -s test_everything.xml ]
-        do
-          sleep 10
-          echo "waiting for tests to complete..."
-          kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
-        done
-        echo "tests completed"
-        echo "downloading allure results..."
-        kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
-        echo "waiting for pod to exit"
-        kubectl logs -f $podname >/dev/null 2>&1
-
-        until [[ ! -z "$EXIT_CODE" ]]; do EXIT_CODE=$(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}"); sleep 1; done;
-        exit $EXIT_CODE
-
-    - name: print logs
-      if: always()
-      run: |
-        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-        kubectl logs $podname
-
-    - name: upload Allure results as artifact
-      if: always()
-      uses: actions/upload-artifact@v2
+    - name: run tests
+      uses: ./.github/actions/run-tests
       with:
-        name: allure-results-${{ matrix.marker }}
-        path: allure-results
+        namespace: ${{ steps.namespace.outputs.name }}
+        testbed: ${{ steps.testbed.outputs.name }}
+        marker_expression: "performance and ${{ matrix.marker }}"
+        configuration: "${{ secrets.LAB_CONFIGURATION }}"
+        testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+        allure_results_artifact_name: allure-results-${{ matrix.marker }}
 
-    - name: cleanup
-      if: always()
-      run: |
-        kubectl delete ns "${{ steps.namespace.outputs.name }}" --wait=true
   report:
     runs-on: ubuntu-latest
     needs: [ test ]
