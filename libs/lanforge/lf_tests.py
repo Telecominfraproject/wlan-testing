@@ -996,7 +996,12 @@ class RunTest:
         station = self.Client_Connect(ssid=ssid, passkey=passkey, security=security, mode=mode, band=band,
                                          station_name=station_name, vlan_id=vlan_id)
         if station:
-            station_info = station.json_get(f"/port/1/1/{station_name[0]}")
+            for i in range(10):
+                station_info = station.json_get(f"/port/1/1/{station_name[0]}")
+                if station_info['interface']['ip'] == '0.0.0.0':
+                    time.sleep(5)
+                else:
+                    break
             print(f"station {station_name[0]} IP: {station_info['interface']['ip']}\n"
                   f"connected channel: {station_info['interface']['channel']}\n"
                   f"and expected channel: {channel}")
