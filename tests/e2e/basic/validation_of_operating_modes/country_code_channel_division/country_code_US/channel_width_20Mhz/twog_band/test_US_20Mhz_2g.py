@@ -25,6 +25,7 @@ setup_params_general1 = {
         'channel-width': 20,
         "channel": 36},
         "2G":
+
         {'band': '2G',
         'country': 'US',
         "channel-mode": "VHT",
@@ -49,7 +50,6 @@ class TestCountryUS20Mhz2GChannel1(object):
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    # @pytest.mark.US
     @pytest.mark.twentyMhz
     @pytest.mark.twog
     @pytest.mark.channel1
@@ -90,6 +90,7 @@ setup_params_general2 = {
         'channel-width': 20,
         "channel": 36},
         "2G":
+
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
@@ -154,6 +155,7 @@ setup_params_general3 = {
         'channel-width': 20,
         "channel": 36},
         "2G":
+
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
@@ -218,6 +220,7 @@ setup_params_general4 = {
         'channel-width': 20,
         "channel": 36},
         "2G":
+
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
@@ -281,6 +284,7 @@ setup_params_general5 = {
         'channel-width': 20,
         "channel": 36},
         "2G":
+
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
@@ -344,6 +348,7 @@ setup_params_general6 = {
         'channel-width': 20,
         "channel": 36},
         "2G":
+
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
@@ -407,6 +412,7 @@ setup_params_general7 = {
         'channel-width': 20,
         "channel": 36},
         "2G":
+
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
@@ -470,6 +476,7 @@ setup_params_general8 = {
         'channel-width': 20,
         "channel": 36},
         "2G":
+
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
@@ -533,6 +540,7 @@ setup_params_general9 = {
         'channel-width': 20,
         "channel": 36},
         "2G":
+
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
@@ -596,6 +604,7 @@ setup_params_general10 = {
         'channel-width': 20,
         "channel": 36},
         "2G":
+
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
@@ -659,6 +668,7 @@ setup_params_general11 = {
         'channel-width': 20,
         "channel": 36},
         "2G":
+
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
