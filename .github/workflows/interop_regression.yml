@@ -294,7 +294,7 @@ jobs:
         if: github.ref == 'refs/heads/master' && needs.vars.outputs.marker_overwrite == ''
         uses: ./.github/actions/allure-report-to-s3
         with:
-          test_type: interop
+          test_type: interop-regression
           testbed: ${{ matrix.device }}
           report_path: allure-report
           s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
