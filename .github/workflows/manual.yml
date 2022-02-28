@@ -81,7 +81,7 @@ jobs:
           namespace: "manual-${{ github.run_id }}-${{ github.event.inputs.testbed }}"
           testbed: "${{ github.event.inputs.testbed }}"
           marker_expression: "${{ github.event.inputs.marker_expression }}"
-          configuration: "${{ secrets.LAB_CONFIGURATION }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ github.event.inputs.firmware }} ${{ github.event.inputs.additional_args }}"
           allure_results_artifact_name: allure-results
