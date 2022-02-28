@@ -25,6 +25,7 @@ setup_params_general1 = {
         'channel-width': 20,
         "channel": 36},
         "2G":
+
         {'band': '2G',
         'country': 'IN',
         "channel-mode": "VHT",
@@ -89,6 +90,7 @@ setup_params_general2 = {
         'channel-width': 20,
         "channel": 36},
            "2G":
+
         {'band': '2G',
         'country': 'IN',
         'channel-mode': 'VHT',
@@ -153,6 +155,7 @@ setup_params_general3 = {
         'channel-width': 20,
         "channel": 36},
            "2G":
+
         {'band': '2G',
         'country': 'IN',
         'channel-mode': 'VHT',
@@ -217,6 +220,7 @@ setup_params_general4 = {
         'channel-width': 20,
         "channel": 36},
            "2G":
+
         {'band': '2G',
         'country': 'IN',
         'channel-mode': 'VHT',
@@ -280,6 +284,7 @@ setup_params_general5 = {
         'channel-width': 20,
         "channel": 36},
            "2G":
+
         {'band': '2G',
         'country': 'IN',
         'channel-mode': 'VHT',
@@ -343,6 +348,7 @@ setup_params_general6 = {
         'channel-width': 20,
         "channel": 36},
            "2G":
+
         {'band': '2G',
         'country': 'IN',
         'channel-mode': 'VHT',
@@ -406,6 +412,7 @@ setup_params_general7 = {
         'channel-width': 20,
         "channel": 36},
            "2G":
+
         {'band': '2G',
         'country': 'IN',
         'channel-mode': 'VHT',
@@ -469,6 +476,7 @@ setup_params_general8 = {
         'channel-width': 20,
         "channel": 36},
            "2G":
+
         {'band': '2G',
         'country': 'IN',
         'channel-mode': 'VHT',
@@ -532,6 +540,7 @@ setup_params_general9 = {
         'channel-width': 20,
         "channel": 36},
            "2G":
+
         {'band': '2G',
         'country': 'IN',
         'channel-mode': 'VHT',
@@ -595,6 +604,7 @@ setup_params_general10 = {
         'channel-width': 20,
         "channel": 36},
            "2G":
+
         {'band': '2G',
         'country': 'IN',
         'channel-mode': 'VHT',
@@ -658,6 +668,7 @@ setup_params_general11 = {
         'channel-width': 20,
         "channel": 36},
            "2G":
+
         {'band': '2G',
         'country': 'IN',
         'channel-mode': 'VHT',
@@ -832,4 +843,5 @@ class TestCountryIN20Mhz2GChannel13(object):
             assert True
         else:
             assert False
+
 
