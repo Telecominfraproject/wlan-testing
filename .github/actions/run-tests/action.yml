@@ -46,17 +46,17 @@ runs:
       id: job
       run: echo "::set-output name=name::testing"
 
-    - name: create configuration.py secret
+    - name: create configuration secret
       shell: bash
       run: |
         if [ -n "${{ inputs.configuration_file }}" ]; then
         kubectl create secret generic configuration --from-file=configuration=${{ inputs.configuration_file }}
         else
-        cat << EOF > configuration.py
+        cat << EOF > lab_info.json
         ${{ inputs.configuration || 'configuration missing' }}
         EOF
 
-        kubectl create secret generic configuration --from-file=configuration=./configuration.py
+        kubectl create secret generic configuration --from-file=configuration=./lab_info.json
         fi
 
     - name: run tests
@@ -103,7 +103,7 @@ runs:
                     exit \$ret
                 volumeMounts:
                 - name: configuration
-                  mountPath: "/wlan-testing/tests/configuration.py"
+                  mountPath: "/wlan-testing/tests/lab_info.json"
                   subPath: configuration
                   readOnly: true
               nodeSelector:
