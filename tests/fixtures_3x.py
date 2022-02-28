@@ -114,13 +114,7 @@ class Fixtures_3x:
             print("ap ", ap_name)
             instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'], timeout="10",
                                                       ssid_data=lf_dut_data, ap_data=self.lab_info['access_point'], type=ap_name)
-            bssid_2g = instantiate_profile_obj.cal_bssid_2g()
-            print("bssid 2g", bssid_2g)
-            lst_2g = bssid_list_2g.append(bssid_2g)
 
-            bssid_5g = instantiate_profile_obj.cal_bssid_5g()
-            print("bssid 5g ", bssid_5g)
-            lst_5g = bssid_list_5g.append(bssid_5g)
 
             # set ssid on ap
             # id_slot = instantiate_profile_obj.get_slot_id_wlan()
@@ -205,6 +199,14 @@ class Fixtures_3x:
 
                 elif lf_dut_data[band]["appliedRadios"] == ["6G"]:
                     pass
+
+            bssid_2g = instantiate_profile_obj.cal_bssid_2g()
+            print("bssid 2g", bssid_2g)
+            lst_2g = bssid_list_2g.append(bssid_2g)
+
+            bssid_5g = instantiate_profile_obj.cal_bssid_5g()
+            print("bssid 5g ", bssid_5g)
+            lst_5g = bssid_list_5g.append(bssid_5g)
             # print(bssid_5g)
             # print(bssid_list_2g)
             # print(bssid_list_5g)
