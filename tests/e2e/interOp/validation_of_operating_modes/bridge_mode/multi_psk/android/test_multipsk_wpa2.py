@@ -9,9 +9,10 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from appium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-
+import random
 import sys
 import allure
+import string
 
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
@@ -26,7 +27,7 @@ setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "ssid_2g_multi_psk",
+            {"ssid_name": "ssid_2g_mpsk",
              "appliedRadios": ["2G"],
              "security": "psk2",
              "security_key": "something",
@@ -97,7 +98,7 @@ setup_params_general = {
                  }
              ],
              },
-            {"ssid_name": "ssid_5g_multi_psk",
+            {"ssid_name": "ssid_5g_mpsk",
              "appliedRadios": ["5G"],
              "security": "psk2",
              "security_key": "something",
@@ -172,6 +173,12 @@ setup_params_general = {
     "rf": {},
     "radius": False
 }
+for sec_modes in setup_params_general['ssid_modes'].keys():
+    for i in range(len(setup_params_general['ssid_modes'][sec_modes])):
+        N = 3
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                     string.digits, k=N)))+str(int(time.time_ns())%10000)
+        setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
