@@ -369,7 +369,7 @@ class Fixtures_2x:
     def setup_profiles(self, request, param, setup_controller, testbed, get_equipment_ref,
                        instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                        get_security_flags, get_configuration, radius_info, get_apnos,
-                       radius_accounting_info, skip_lf=False, run_lf=False):
+                       radius_accounting_info, skip_lf=False, run_lf=False, open_flow=None):
         if run_lf:
            return 0
         instantiate_profile_obj = instantiate_profile(sdk_client=setup_controller)

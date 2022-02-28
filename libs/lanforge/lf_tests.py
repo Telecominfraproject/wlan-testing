@@ -991,6 +991,120 @@ class RunTest:
         self.Client_disconnect(station_name=station_name)
         return atten_serial_radio
 
+    def basic_roam(self, run_lf, get_configuration, lf_tools, instantiate_profile, ssid_name=None, security=None, security_key=None,
+                   mode=None, band=None, station_name=None, vlan=None, test=None):
+        allure.attach(name="Test Procedure", body="This test consists of creating a single client which will be " \
+                                                  " connected to the nearest ap, here the test automation will " \
+                                                  "set ap1 to attenuation value zero and ap2 to highest attenuation," \
+                                                  " then it will keep on increasing attenuation value of ap1 by 5db parallely " \
+                                                  "decreasing attenuation of ap2 by 5 db and simultaneously monitoring client bssid. ")
+        c1_bssid = ""
+        c2_bssid = ""
+        if test == "2g":
+            c1_2g_bssid = ""
+            c2_2g_bssid = ""
+            if run_lf:
+                c1_2g_bssid = get_configuration["access_point"][0]["ssid"]["2g-bssid"]
+                allure.attach(name="bssid of ap1", body=c1_2g_bssid)
+                c2_2g_bssid = get_configuration["access_point"][1]["ssid"]["2g-bssid"]
+                allure.attach(name="bssid of ap2", body=c2_2g_bssid)
+
+            else:
+                # instantiate controller class and check bssid's for each ap in testbed
+                for ap_name in range(len(get_configuration['access_point'])):
+                    instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
+                                                              timeout="10", ap_data=get_configuration['access_point'], type=ap_name)
+                    bssid_2g = instantiate_profile_obj.cal_bssid_2g()
+                    if ap_name == 0 :
+                        c1_2g_bssid = bssid_2g
+                    if ap_name == 1:
+                        c2_2g_bssid = bssid_2g
+            c1_bssid = c1_2g_bssid
+            c2_bssid = c2_2g_bssid
+        elif test == "5g":
+            c1_5g_bssid = ""
+            c2_5g_bssid = ""
+            if run_lf:
+                c1_5g_bssid = get_configuration["access_point"][0]["ssid"]["5g-bssid"]
+                allure.attach(name="bssid of ap1", body=c1_5g_bssid)
+                c2_5g_bssid = get_configuration["access_point"][1]["ssid"]["5g-bssid"]
+                allure.attach(name="bssid of ap2", body=c2_5g_bssid)
+            else:
+                for ap_name in range(len(get_configuration['access_point'])):
+                    instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
+                                                                  timeout="10",
+                                                                  ap_data=get_configuration['access_point'],
+                                                                  type=ap_name)
+                    bssid_5g = instantiate_profile_obj.cal_bssid_5g()
+                    if ap_name == 0:
+                        c1_5g_bssid = bssid_5g
+                    if ap_name == 1:
+                        c2_5g_bssid = bssid_5g
+            c1_bssid = c1_5g_bssid
+            c2_bssid = c2_5g_bssid
+
+        print("bssid of c1 ", c1_bssid)
+        allure.attach(name="bssid of ap1", body=c1_bssid)
+        print("bssid of c2",  c2_bssid)
+        allure.attach(name="bssid of ap2", body=c2_bssid)
+
+        #  get serial nummber of attenuators from lf
+        ser_no = self.attenuator_serial()
+        print(ser_no[0])
+        ser_1 = ser_no[0].split(".")[2]
+        ser_2 = ser_no[1].split(".")[2]
+
+        # set attenuation to zero in first attenuator and high in second attenuator
+        for i in range(4):
+            self.attenuator_modify(ser_1, i, 950)
+            self.attenuator_modify(ser_2, i, 0)
+        allure.attach(name="Pass Fail Criteria",
+                      body="Pass criteria will check if client bssid for station info before roam  is not similar to "\
+                           "station info after roam then the test will state client successfully performed roam ")
+
+        #  create station
+        station = self.Client_Connect(ssid=ssid_name, security=security, passkey=security_key, mode=mode, band=band,
+                                         station_name=station_name, vlan_id=vlan)
+
+        # if station connects then query bssid of station
+        if station:
+            self.attach_stationdata_to_allure(name="staion info before roam", station_name=station_name)
+            bssid = lf_tools.station_data_query(station_name=str(station_name[0]), query="ap")
+            formated_bssid = bssid.lower()
+            station_before = ""
+            if formated_bssid == c1_bssid:
+                print("station connected to chamber1 ap")
+                station_before = formated_bssid
+            elif formated_bssid == c2_bssid:
+                print("station connected to chamber 2 ap")
+                station_before = formated_bssid
+
+            # logic to decrease c2 attenuation and increase c1 attenuation by 5db/50ddb
+            for atten_val1, atten_val2 in zip(range(50, 950, 50), range(900, 0, -50)):
+                print(atten_val1)
+                print(atten_val2)
+                for i in range(4):
+                    self.attenuator_modify(int(ser_1), i, atten_val2)
+                    self.attenuator_modify(int(ser_2), i, atten_val1)
+                time.sleep(10)
+                bssid = lf_tools.station_data_query(station_name=str(station_name[0]), query="ap")
+                station_after = bssid.lower()
+                if station_after == station_before:
+                    print("station did not roamed")
+                    continue
+                elif station_after != station_before:
+                    print("client performed roam")
+                    self.attach_stationdata_to_allure(name="staion info after roam",
+                                                         station_name=station_name)
+                    allure.attach(name="attenuation_data", body="ap1 was at attenuation value " + str(
+                        atten_val2) + "ddbm and ap2 was at attenuation value " + str(atten_val1) + "ddbm")
+                    break
+            self.Client_disconnect(station_name=station_name)
+            return True
+        else:
+            allure.attach(name="FAIL", body="station failed to get ip")
+            return False
+
 
 
 if __name__ == '__main__':

@@ -1,8 +1,5 @@
 name: Quali advanced testing
 
-env:
-  ALLURE_CLI_VERSION: 2.14.0
-
 on:
   workflow_dispatch:
     inputs:
@@ -76,6 +73,7 @@ jobs:
   test:
     runs-on: [ self-hosted, small ]
     needs: [ vars, generate-matrix, build ]
+    timeout-minutes: 720
     strategy:
       fail-fast: false
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
@@ -127,21 +125,10 @@ jobs:
     - name: get EKS access credentials
       run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-    - name: install Allure CLI tool
-      run: |
-        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-        
-    - name: set job name
-      id: job
-      run: echo "::set-output name=name::advanced-ci-${{ github.run_number }}"
-
     - name: prepare namespace
       id: namespace
       run: |
         NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ matrix.ap_model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-        kubectl create ns $NAMESPACE
-        kubectl config set-context --current --namespace=$NAMESPACE
         echo "::set-output name=name::${NAMESPACE}"
 
     - name: prepare configuration
@@ -281,91 +268,17 @@ jobs:
         }
         EOF
 
-        kubectl create secret generic configuration --from-file=configuration=./configuration.py
-
     - name: run tests
-      run: |
-        cat <<EOF | kubectl apply -f -
-        apiVersion: batch/v1
-        kind: Job
-        metadata:
-          name: "${{ steps.job.outputs.name }}"
-        spec:
-          template:
-            metadata:
-              annotations:
-                cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
-            spec:
-              containers:
-              - name: tests
-                image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-                resources:
-                  requests:
-                    memory: "512Mi"
-                    cpu: "250m"
-                  limits:
-                    memory: "512Mi"
-                    cpu: "250m"
-                command:
-                  - /bin/bash
-                  - -c
-                  - |
-                    HOSTS="sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
-                    for HOST in \$HOSTS; do
-                      HOST_ENTRY=""
-                      until [[ ! -z "\$HOST_ENTRY" ]]; do sleep 1; HOST_ENTRY=\$(getent hosts \$HOST); done;
-                      echo "\$HOST_ENTRY" >> /etc/hosts
-                      echo "DNS record for \$HOST resolved successfully!"
-                    done
-
-                    cat /etc/hosts
-
-                    cd tests
-                    pytest -m "${{ needs.vars.outputs.marker_expression }}" -s -vvv --testbed="advanced" --alluredir=/tmp/allure-results -o firmware="${{ needs.vars.outputs.ap_version }}"
-                    ret=\$?
-                    # sleep some time to be able to download the Allure results
-                    sleep 60
-                    exit \$ret
-                volumeMounts:
-                - name: configuration
-                  mountPath: "/wlan-testing/tests/configuration.py"
-                  subPath: configuration
-                  readOnly: true
-              nodeSelector:
-                env: tests
-              tolerations:
-              - key: "tests"
-                operator: "Exists"
-                effect: "NoSchedule"
-              imagePullSecrets:
-              - name: tip-docker-registry-key
-              restartPolicy: Never
-              volumes:
-              - name: configuration
-                secret:
-                  secretName: configuration
-          backoffLimit: 0
-        EOF
-        # wait for pod to spawn
-        sleep 1
-
-        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
-        kubectl logs -f $podname &
-
-        until [ -s test_everything.xml ]
-        do
-          sleep 10
-          kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
-        done
-        echo "tests completed"
-        echo "downloading allure results..."
-        kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
-        echo "waiting for pod to exit"
-        kubectl logs -f $podname >/dev/null 2>&1
-
-        until [[ ! -z "$EXIT_CODE" ]]; do EXIT_CODE=$(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}"); sleep 1; done;
-        exit $EXIT_CODE
+      uses: ./.github/actions/run-tests
+      with:
+        namespace: ${{ steps.namespace.outputs.name }}
+        testbed: advanced
+        marker_expression: "${{ needs.vars.outputs.marker_expression }}"
+        configuration_file: "./configuration.py"
+        testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+        additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+        allure_results_artifact_name: allure-results-${{ matrix.ap_model }}
+        dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
     - name: show gw logs
       if: failure()
@@ -382,18 +295,6 @@ jobs:
     - name: show sec logs
       if: failure()
       run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
-
-    - name: upload Allure results as artifact
-      if: ${{ always() }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: allure-results-${{ matrix.ap_model }}
-        path: allure-results
-
-    - name: cleanup
-      if: ${{ always() }}
-      run: |
-        kubectl delete ns "${{ steps.namespace.outputs.name }}" --wait=true
 
     - name: stop reservation
       if: always()
