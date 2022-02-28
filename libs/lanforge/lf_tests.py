@@ -929,18 +929,29 @@ class RunTest:
         self.Client_disconnect(station_name=station_name)
         return atten_serial_radio
 
-    def downlink_mu_mimo(self, dut_name="TIP", dut_5g="", dut_2g="", mode="BRIDGE", vlan_id=1):
-        radios_2g = self.twog_radios
-        radios_5g = self.fiveg_radios
-        radios_ax = self.ax_radios
+    def downlink_mu_mimo(self, radios_2g=[], radios_5g=[], radios_ax=[], dut_name="TIP", dut_5g="", dut_2g="", mode="BRIDGE", vlan_id=1, skip_2g=True, skip_5g=False):
+        raw_line = []
+        skip_twog = '1' if skip_2g else '0'
+        skip_fiveg = '1' if skip_5g else '0'
+
         sets = [['Calibrate Attenuators', '0'], ['Receiver Sensitivity', '0'], ['Maximum Connection', '0'],
                 ['Maximum Throughput', '0'], ['Airtime Fairness', '0'], ['Range Versus Rate', '0'],
                 ['Spatial Consistency', '0'],
                 ['Multiple STAs Performance', '0'], ['Multiple Assoc Stability', '0'], ['Downlink MU-MIMO', '1'],
-                ['AP Coexistence', '0'], ['Long Term Stability', '0'], ['Skip 2.4Ghz Tests', '1'], ['2.4Ghz Channel', 'AUTO'], ['5Ghz Channel', 'AUTO']]
-        raw_line = [['radio-0: 1.1.5 wiphy1'], ['radio-1: 1.1.4 wiphy0'], ['radio-2: 1.1.7 wiphy3'],
-                    ['radio-3: 1.1.6 wiphy2'], ['radio-4: 1.1.8 wiphy4'], ['radio-5: 1.1.9 wiphy5']]
-        instance_name = "tr398-instance-{}".format(str(random.randint(0, 1000)))
+                ['AP Coexistence', '0'], ['Long Term Stability', '0'], ['Skip 2.4Ghz Tests', f'{skip_twog}'],
+                ['Skip 5Ghz Tests', f'{skip_fiveg}'], ['2.4Ghz Channel', 'AUTO'], ['5Ghz Channel', 'AUTO']]
+        for i in range(6):
+            if i == 0 or i == 2:
+                raw_line.append([f'radio-{i}: {radios_2g[0] if i == 0 else radios_2g[1]}'])
+            if i == 1 or i == 3:
+                raw_line.append([f'radio-{i}: {radios_5g[0] if i == 1 else radios_5g[1]}'])
+            if i == 4 or i == 5:
+                raw_line.append([f'radio-{i}: {radios_ax[0] if i == 4 else radios_ax[1]}'])
+
+        if len(raw_line) != 6:
+            raw_line = [['radio-0: 1.1.5 wiphy1'], ['radio-1: 1.1.4 wiphy0'], ['radio-2: 1.1.7 wiphy3'],
+                        ['radio-3: 1.1.6 wiphy2'], ['radio-4: 1.1.8 wiphy4'], ['radio-5: 1.1.9 wiphy5']]
+        instance_name = "tr398-instance-{}".format(str(random.randint(0, 100000)))
 
         if not os.path.exists("mu-mimo-config.txt"):
             with open("mu-mimo-config.txt", "wt") as f:
