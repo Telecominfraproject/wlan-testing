@@ -57,7 +57,6 @@ class TestCountryCA40Mhz2GChannel1(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel1
-    @pytest.mark.shivamth
     def test_client_bridge_wpa2_chn1_40Mhz_CA_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and twog and channel1"
@@ -97,6 +96,7 @@ setup_params_general2 = {
                 "channel": 36
             },
         "2G":
+
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -163,6 +163,7 @@ setup_params_general3 = {
                 "channel": 36
             },
         "2G":
+
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -229,6 +230,7 @@ setup_params_general4 = {
                 "channel": 36
             },
         "2G":
+
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -294,6 +296,7 @@ setup_params_general5 = {
                 "channel": 36
             },
         "2G":
+
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -359,6 +362,7 @@ setup_params_general6 = {
                 "channel": 36
             },
         "2G":
+
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -424,6 +428,7 @@ setup_params_general7 = {
                 "channel": 36
             },
         "2G":
+
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -489,6 +494,7 @@ setup_params_general8 = {
                 "channel": 36
             },
         "2G":
+
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -554,6 +560,7 @@ setup_params_general9 = {
                 "channel": 36
             },
         "2G":
+
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -619,6 +626,7 @@ setup_params_general10 = {
                 "channel": 36
             },
         "2G":
+
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -684,6 +692,7 @@ setup_params_general11 = {
                 "channel": 36
             },
         "2G":
+
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
