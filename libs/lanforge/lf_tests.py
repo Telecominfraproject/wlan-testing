@@ -4,6 +4,8 @@
 #########################################################################################################
 import sys
 import os
+import time
+import datetime
 
 import allure
 import pytest
@@ -1054,10 +1056,12 @@ class RunTest:
         ser_1 = ser_no[0].split(".")[2]
         ser_2 = ser_no[1].split(".")[2]
 
+        start_time = time.time()
+
         # set attenuation to zero in first attenuator and high in second attenuator
-        for i in range(4):
-            self.attenuator_modify(ser_1, i, 950)
-            self.attenuator_modify(ser_2, i, 0)
+        self.attenuator_modify(ser_1, "all", 950)
+        self.attenuator_modify(ser_2, "all", 0)
+
         allure.attach(name="Pass Fail Criteria",
                       body="Pass criteria will check if client bssid for station info before roam  is not similar to "\
                            "station info after roam then the test will state client successfully performed roam ")
@@ -1070,6 +1074,12 @@ class RunTest:
         if station:
             self.attach_stationdata_to_allure(name="staion info before roam", station_name=station_name)
             bssid = lf_tools.station_data_query(station_name=str(station_name[0]), query="ap")
+            rssi = lf_tools.station_data_query(station_name=str(station_name[0]), query="signal")
+            cx_time = lf_tools.station_data_query(station_name=str(station_name[0]), query="cx time (us)")
+            # print(rssi)
+            # print(cx_time)
+            allure.attach(name="rssi of station before roam", body=str(rssi))
+            allure.attach(name="connect-time of station before roam", body=str(cx_time))
             formated_bssid = bssid.lower()
             station_before = ""
             if formated_bssid == c1_bssid:
@@ -1083,9 +1093,9 @@ class RunTest:
             for atten_val1, atten_val2 in zip(range(50, 950, 50), range(900, 0, -50)):
                 print(atten_val1)
                 print(atten_val2)
-                for i in range(4):
-                    self.attenuator_modify(int(ser_1), i, atten_val2)
-                    self.attenuator_modify(int(ser_2), i, atten_val1)
+
+                self.attenuator_modify(int(ser_1), "all", atten_val2)
+                self.attenuator_modify(int(ser_2), "all", atten_val1)
                 time.sleep(10)
                 bssid = lf_tools.station_data_query(station_name=str(station_name[0]), query="ap")
                 station_after = bssid.lower()
@@ -1096,10 +1106,19 @@ class RunTest:
                     print("client performed roam")
                     self.attach_stationdata_to_allure(name="staion info after roam",
                                                          station_name=station_name)
+                    rssi = lf_tools.station_data_query(station_name=str(station_name[0]), query="signal")
+                    cx_time = lf_tools.station_data_query(station_name=str(station_name[0]), query="cx time (us)")
+                    # print(rssi)
+                    # print(cx_time)
+                    allure.attach(name="rssi of station after roam", body=str(rssi))
+                    allure.attach(name="connect-time of station after roam", body=str(cx_time))
                     allure.attach(name="attenuation_data", body="ap1 was at attenuation value " + str(
-                        atten_val2) + "ddbm and ap2 was at attenuation value " + str(atten_val1) + "ddbm")
+                        atten_val1) + "ddbm and ap2 was at attenuation value " + str(atten_val2) + "ddbm")
                     break
             self.Client_disconnect(station_name=station_name)
+            overall_time = (time.time() - start_time)
+            final_time = datetime.timedelta(seconds=overall_time)
+            allure.attach(name="execution time", body=str(final_time))
             return True
         else:
             allure.attach(name="FAIL", body="station failed to get ip")
