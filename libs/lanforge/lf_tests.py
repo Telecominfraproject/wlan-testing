@@ -942,9 +942,9 @@ class RunTest:
                 ['Skip 5Ghz Tests', f'{skip_fiveg}'], ['2.4Ghz Channel', 'AUTO'], ['5Ghz Channel', 'AUTO']]
         for i in range(6):
             if i == 0 or i == 2:
-                raw_line.append([f'radio-{i}: {radios_2g[0] if i == 0 else radios_2g[1]}'])
+                raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
             if i == 1 or i == 3:
-                raw_line.append([f'radio-{i}: {radios_5g[0] if i == 1 else radios_5g[1]}'])
+                raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
             if i == 4 or i == 5:
                 raw_line.append([f'radio-{i}: {radios_ax[0] if i == 4 else radios_ax[1]}'])
 
