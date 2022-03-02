@@ -1280,8 +1280,10 @@ class RunTest:
         if station:
             response = self.get_layer3_values(query="rx rate")
             response1 = self.get_layer3_values(query="rx bytes")
+            response3 = self.get_layer3_values(query="rx pkts ll")
             print(response)
             # print(response1)
+            allure.attach(name="rx packets before roam", body=str(response3))
             allure.attach(name="rx bytes before roam", body=str(response1))
             allure.attach(name='rx rate before roam', body=str(str(response) + " bps"))
             self.attach_stationdata_to_allure(name="staion info before roam", station_name=station_name)
@@ -1332,6 +1334,8 @@ class RunTest:
                     # print(response1)
                     allure.attach(name="rx bytes after roam", body=str(response1))
                     allure.attach(name='rx rate after roam', body=str(str(response) + " bps"))
+                    response3 = self.get_layer3_values(query="rx pkts ll")
+                    allure.attach(name="rx packets after roam", body=str(response3))
                     break
 
 
@@ -1367,6 +1371,8 @@ class RunTest:
                         # print(response1)
                         allure.attach(name="rx bytes after roam", body=str(response1))
                         allure.attach(name='rx rate after roam', body=str(str(response) + " bps"))
+                        response3 = self.get_layer3_values(query="rx pkts ll")
+                        allure.attach(name="rx packets after roam", body=str(response3))
                         break
 
             # allure.attach(name="attenuation_data", body="ap1 was at attenuation value " + str(atten_val1) + "ddbm and ap2 was at attenuation value " + str(atten_val2) + "ddbm")
