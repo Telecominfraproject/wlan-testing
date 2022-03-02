@@ -1272,7 +1272,7 @@ class RunTest:
         station = self.Client_Connect(ssid=ssid_name, security=security, passkey=security_key, mode=mode, band=band,
                                          station_name=station_name, vlan_id=vlan)
         self.create_layer3(side_a_min_rate=1000000, side_a_max_rate=1000000, side_b_min_rate=0, side_b_max_rate=0,sta_list=station_name[0], traffic_type="lf_udp")
-        time.sleep(10)
+        time.sleep(20)
 
 
         # if station connects then query bssid of station
