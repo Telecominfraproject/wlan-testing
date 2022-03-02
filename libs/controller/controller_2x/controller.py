@@ -406,7 +406,6 @@ class UProfileUtility:
 
     def set_express_wifi(self, open_flow=None):
         if self.mode == "NAT":
-            self.base_profile_config["interfaces"][0]["services"] = ["lldp", "ssh"]
             self.base_profile_config["interfaces"][1]["services"] = ["ssh", "lldp", "open-flow"]
             self.base_profile_config["interfaces"][1]["ipv4"]["subnet"] = "192.168.97.1/24"
             self.base_profile_config["interfaces"][1]["ipv4"]["dhcp"]["lease-count"] = 100
