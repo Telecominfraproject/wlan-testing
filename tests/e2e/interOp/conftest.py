@@ -672,12 +672,13 @@ def is_device_available(request, model):
         raise Exception("Unable to get response.")
     device_available = get_attribute_device(responseXml, 'available')
     print("Result:" + device_available)
-    if device_available == 'false':
+    if device_available == 'true':
+        return True
+    else:
         allocated_to = get_attribute_device(responseXml, 'allocatedTo')
         print("The device is currently allocated to:" + allocated_to)
         return False
-    return True
-
+        
 # Checks whether the device is available or not.If the device is not available rechecks depending upon the 
 # 'timerValue' and 'timerThreshold' values.With the current parameters it will check after:10,20,40,80 mins.
 def is_device_Available_timeout(request, model):
