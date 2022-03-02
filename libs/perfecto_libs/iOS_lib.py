@@ -2483,7 +2483,7 @@ def ssid_Visible(driver,WifiName):
         return True
 
 #--------------------------------Gets ip address from ssid but it won't get disconnected from it------------------
-def get_ip_add_ios(request, WifiName, WifiPass, setup_perfectoMobile, connData):
+def gets_ip_add_and_does_not_forget_ssid_ios(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Select Wifi/Get IP Address IOS Connection")
     print("-------------------------------------")
@@ -2727,7 +2727,7 @@ def get_ip_add_ios(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
     return ip_address_element_text, is_internet
 #----------------Gets ip address of Enterprise ssids and won't forget it---------------
-def get_ip_add_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoMobile, connData):
+def gets_ip_add_eap_and_does_not_forget_ssid_ios(request, WifiName, User, ttls_passwd, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Get IP Address Enterprise IOS Connection")
     print("-------------------------------------")
@@ -2999,7 +2999,7 @@ def get_ip_add_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoMobil
 
 
 #------------------Gets the ip address of already connected ssid---------------------------------------
-def get_ip_add_check_ios(request, WifiName, WifiPass, setup_perfectoMobile, connData):
+def gets_ip_add_for_checking_and_forgets_ssid_ios(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Select Wifi/Get IP Address IOS Connection")
     print("-------------------------------------")
