@@ -493,7 +493,7 @@ class UProfileUtility:
             self.base_profile_config["radios"].append({
                 "band": "5G",
                 "country": "US",
-                "allow-dfs":True,
+                "allow-dfs": True,
                 # "channel-mode": "HE",
                 "channel-width": 80,
                 # "channel": "auto"
@@ -648,7 +648,12 @@ if __name__ == '__main__':
         'password': 'OpenWifi%123',
     }
     obj = Controller(controller_data=controller)
-    print(obj.get_device_by_serial_number(serial_number="903cb36ae224"))
+    up = UProfileUtility(sdk_client=obj, controller_data=controller)
+    up.set_mode(mode="BRIDGE")
+    up.set_radio_config()
+    up.add_ssid(ssid_data={"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something", "security": "psk2"})
+    up.push_config(serial_number="3c2c99f44e77")
+    print(obj.get_device_by_serial_number(serial_number="3c2c99f44e77"))
     # print(datetime.datetime.utcnow())
     # fms = FMSUtils(sdk_client=obj)
     # new = fms.get_firmwares(model='ecw5410')
