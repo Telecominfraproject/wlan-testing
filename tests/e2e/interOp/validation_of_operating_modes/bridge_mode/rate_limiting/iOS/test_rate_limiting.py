@@ -104,7 +104,7 @@ for sec_modes in setup_params_general['ssid_modes'].keys():
 @pytest.mark.usefixtures("setup_profiles")
 class TestRateLimitingBridge(object):
 
-    @pytest.mark.hari
+
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     def test_rate_limiting_wpa2_2g(self, request, get_vif_state, get_ap_logs,
