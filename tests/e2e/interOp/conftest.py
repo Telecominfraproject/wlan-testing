@@ -199,7 +199,7 @@ def setup_vlan():
 
 
 @pytest.fixture(scope="class")
-def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtures_ver, skip_lf, get_openflow,
+def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtures_ver, skip_lf, get_openflow, run_lf,
                    instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                    get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
 
@@ -292,6 +292,13 @@ def pytest_runtest_makereport(item, call):
     testCaseErrorMsg = []
     testCaseReportURL = []
 
+    if os.environ.get('PYTEST_CURRENT_TEST') is not None:
+        if (str(os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]).strip()).startswith("test_unique"):
+            return 0
+
+    # if os.environ.get('PYTEST_CURRENT_TEST') is not None and ((os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]).strip()).startswith("test_unique_ssid"):
+    #     return 0;
+
     if result.when == 'call':
         item.session.results[item] = result
 
@@ -383,7 +390,7 @@ def pytest_sessionfinish(session, exitstatus):
 
     except Exception as e:
         pass
-    print('------------------------------------------------------------------\n\n\n\n')
+    print('\n------------------------------------------------------------------\n\n\n\n')
 
 
 @pytest.fixture(scope="function")
@@ -681,8 +688,10 @@ def is_device_available(request, model):
         allocated_to = get_attribute_device(responseXml, 'allocatedTo')
         print("The device is currently allocated to:" + allocated_to)
         return False
-        
-# Checks whether the device is available or not.If the device is not available rechecks depending upon the 
+
+# Checks whether the device is available or not.If the device is not available rechecks depending upon the
+
+# Checks whether the device is available or not.If the device is not available rechecks depending upon the
 # 'timerValue' and 'timerThreshold' values.With the current parameters it will check after:10,20,40,80 mins.
 def is_device_Available_timeout(request, model):
     device_available = is_device_available(request, model)
@@ -699,10 +708,22 @@ def is_device_Available_timeout(request, model):
                 return True
             else:
                 timerValue = timerValue + 5
-        
+
         if(timerValue > timerThreshold):
             return False
         else:
             return True
     else:
         return True
+
+def get_device_attribuites(request, model, attribute):
+    try:
+        responseXml = response_device(request, model)
+    except:
+        print("Unable to get response.")
+        raise Exception("Unable to get response.")
+    try:
+        attribute_value = get_attribute_device(responseXml, str(attribute))
+    except:
+        attribute_value = False
+    return attribute_value
