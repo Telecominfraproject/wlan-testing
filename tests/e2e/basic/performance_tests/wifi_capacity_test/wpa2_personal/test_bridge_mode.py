@@ -4,9 +4,11 @@
     pytest -m "wifi_capacity_test and BRIDGE"
 
 """
-import os
-import pytest
+import logging
 import allure
+import pytest
+
+LOGGER = logging.getLogger(__name__)
 
 pytestmark = [pytest.mark.performance, pytest.mark.bridge]
 # """pytest.mark.usefixtures("setup_test_run")"""]
@@ -24,7 +26,7 @@ setup_params_general_dual_band = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("BRIDGE MODE WIFI CAPACITY TEST")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general_dual_band],
@@ -51,6 +53,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa2_personal and twog"
         """
+        LOGGER.info('test_client_wpa2_BRIDGE_tcp_dl Test Setup Finished, Starting test now...')
         lf_tools.reset_scenario()
         profile_data = setup_params_general_dual_band["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -69,7 +72,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
-        print("Test Completed... Cleaning up Stations")
+        LOGGER.info('test_client_wpa2_BRIDGE_tcp_dl Test Finished')
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3927", name="WIFI-3927")
