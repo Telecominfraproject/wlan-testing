@@ -98,6 +98,10 @@ sed -i "s~\(^SYSTEM_URI_UI=\).*~\1$SYSTEM_URI_UI~" owgw.env
 sed -i "s~\(^RTTY_SERVER=\).*~\1$OWGW_RTTY_SERVER~" owgw.env
 sed -i "s~.*RTTY_TOKEN=.*~RTTY_TOKEN=$RTTY_TOKEN~" owgw.env
 
+if [[ ! -z "$SIMULATORID" ]]; then
+  sed -i "s~.*SIMULATORID=.*~SIMULATORID=$SIMULATORID~" owgw.env
+fi
+
 sed -i "s~\(^DEFAULT_UCENTRALSEC_URL=\).*~\1$DEFAULT_UCENTRALSEC_URL~" owgw-ui.env
 
 sed -i "s~.*AUTHENTICATION_DEFAULT_USERNAME=.*~AUTHENTICATION_DEFAULT_USERNAME=$OWSEC_AUTHENTICATION_DEFAULT_USERNAME~" owsec.env
