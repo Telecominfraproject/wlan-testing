@@ -96,7 +96,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-12
-          testbed: interop-01
+          testbed: interop-04
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -261,7 +261,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-11
-          testbed: interop-04
+          testbed: interop-01
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
