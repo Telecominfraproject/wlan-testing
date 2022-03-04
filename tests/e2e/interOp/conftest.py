@@ -233,6 +233,9 @@ def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtur
                                              get_markers, create_lanforge_chamberview_dut, lf_tools,
                                              get_security_flags, get_configuration, radius_info, get_apnos,
                                              radius_accounting_info, skip_lf=skip_lf, open_flow=get_openflow)
+    print("sleeping for 120 sec.")
+    time.sleep(120)
+    print("Done sleeping")
     yield return_var
 
 
