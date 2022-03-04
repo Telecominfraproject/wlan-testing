@@ -36,6 +36,7 @@ usage () {
   echo "- EXTRA_VALUES - extra values that should be passed to Helm deployment separated by comma (,)"
   echo "- DEVICE_CERT_LOCATION - path to certificate in PEM format that will be used for load simulator";
   echo "- DEVICE_KEY_LOCATION - path to private key in PEM format that will be used for load simulator";
+  echo "- USE_SEPARATE_OWGW_LB - flag that should change split external DNS for OWGW and other services"
 }
 
 # Global variables
@@ -137,6 +138,14 @@ for EXTRA_VALUE in ${EXTRA_VALUES_SPLITTED[*]}; do
   EXTRA_VALUES_FLAGS+=("--set" $EXTRA_VALUE)
 done
 
+if [[ "$USE_SEPARATE_OWGW_LB" == "true" ]]; then
+  export HAPROXY_SERVICE_DNS_RECORDS="sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,rtty-${NAMESPACE}.cicd.lab.wlan.tip.build"
+  export OWGW_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build"
+else
+  export HAPROXY_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build\,sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,rtty-${NAMESPACE}.cicd.lab.wlan.tip.build"
+  export OWGW_SERVICE_DNS_RECORDS=""
+fi
+
 # Run the deployment
 helm upgrade --install --create-namespace --wait --timeout 60m \
   --namespace openwifi-${NAMESPACE} \
@@ -179,12 +188,13 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set clustersysteminfo.secret_env_variables.OWSEC_NEW_PASSWORD=${OWSEC_NEW_PASSWORD} \
   --set owls.services.owls.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=ls-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owls.configProperties."openwifi\.system\.uri\.public"=https://ls-${NAMESPACE}.cicd.lab.wlan.tip.build:16007 \
-  --set owls.configProperties."openwifi\.system\.uri\.private"=https://ls-${NAMESPACE}.cicd.lab.wlan.tip.build:17007 \
+  --set owls.configProperties."openwifi\.system\.uri\.private"=https://owls-owls:17007 \
   --set owls.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owlsui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=lsui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owlsui.ingresses.default.hosts={lsui-${NAMESPACE}.cicd.lab.wlan.tip.build} \
   --set owlsui.public_env_variables.DEFAULT_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
-  --set haproxy.service.annotations."external-dns\.alpha\.kubernetes\.io/hostname"="gw-${NAMESPACE}.cicd.lab.wlan.tip.build\,sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,rtty-${NAMESPACE}.cicd.lab.wlan.tip.build" \
+  --set haproxy.service.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=$HAPROXY_SERVICE_DNS_RECORDS \
+  --set owgw.services.owgw.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=$OWGW_SERVICE_DNS_RECORDS \
   ${EXTRA_VALUES_FLAGS[*]} \
   --set-file owgw.certs."restapi-cert\.pem"=$CERT_LOCATION \
   --set-file owgw.certs."restapi-key\.pem"=$KEY_LOCATION \
