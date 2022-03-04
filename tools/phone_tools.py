@@ -1,7 +1,6 @@
 #!/usr/bin/python3.9
 """
     phone_tools : Tools for Phones: Reserve / Unreserve using Perfecto
-                reboot, run_cmd, etc
     ./phone_tools --startTime 09.02.2022 13:52:00 --endTime 09.02.2022 14:19:00 --deviceId 3747365744583398
      --securityToken eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ --perfectoURL tip --action reserve --reservationNumber
 """
@@ -18,6 +17,7 @@ class PhoneTools:
 
     def __init__(self, startTime, endTime, deviceId, securityToken, perfectoURL):
         self.startTime = startTime
+        self.endTime = endTime
         self.deviceId = deviceId
         self.securityToken = securityToken
         self.perfectoURL = perfectoURL
