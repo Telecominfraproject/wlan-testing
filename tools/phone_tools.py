@@ -25,7 +25,7 @@ class PhoneTools:
     # Creates a reservation based on the deviceID.
     # Returns reservationId if the reservation is successful.Returns an empty string if the request is not successful
     def reserve(self):
-        pattern = '%d.%m.%Y %H:%M:%S'
+        pattern = '%d.%m.%Y-%H:%M:%S%z'
         startTime = int(time.mktime(time.strptime(self.startTime, pattern))) * 1000
         endTime = int(time.mktime(time.strptime(self.endTime, pattern))) * 1000
         perfecto_mobile_url = "https://{}.perfectomobile.com/services/reservations?Operation=create&securityToken={}&StartTime={}&EndTime={}&ResourceIds={}".format(
