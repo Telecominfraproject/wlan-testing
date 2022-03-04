@@ -82,10 +82,10 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s9
 
-  test-iphone-12:
+  test-iphone-11:
     runs-on: ubuntu-latest
     needs: [vars, test-galaxy-s9]
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
       - uses: actions/checkout@v2
 
@@ -95,19 +95,19 @@ jobs:
       - name: run tests
         uses: ./.github/actions/run-tests
         with:
-          namespace: interop-${{ github.run_id }}-iphone-12
+          namespace: interop-${{ github.run_id }}-iphone-11
           testbed: interop-01
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "-o model-iOS='iPhone-12' -o 'jobName=Github-Interop-iphone-12' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
-          allure_results_artifact_name: allure-results-iphone-12
+          additional_args: "-o model-iOS='iPhone-11' -o 'jobName=Github-Interop-iphone-11' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-iphone-11
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-12
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-11
 
   # interop-02
   test-galaxy-s10:
@@ -247,10 +247,10 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-pixel-4
 
-  test-iphone-11:
+  test-iphone-12:
     runs-on: ubuntu-latest
     needs: [vars, test-pixel-4]
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
       - uses: actions/checkout@v2
 
@@ -260,19 +260,19 @@ jobs:
       - name: run tests
         uses: ./.github/actions/run-tests
         with:
-          namespace: interop-${{ github.run_id }}-iphone-11
+          namespace: interop-${{ github.run_id }}-iphone-12
           testbed: interop-04
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "-o model-iOS='iPhone-11' -o 'jobName=Github-Interop-iphone-11' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
-          allure_results_artifact_name: allure-results-iphone-11
+          additional_args: "-o model-iOS='iPhone-12' -o 'jobName=Github-Interop-iphone-12' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-iphone-12
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-11
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-12
 
   report:
     needs: [vars, test-iphone-11, test-iphone-xr, test-iphone-12, test-iphone-7]
