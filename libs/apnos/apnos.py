@@ -655,24 +655,18 @@ class APNOS:
 
 if __name__ == '__main__':
     obj = {
-        'model': 'eap102',
-        'mode': 'wifi6',
-        'serial': '903cb30bcf12',
-        'jumphost': True,
-        'ip': "192.168.200.80",
-        'username': "lanforge",
-        'password': "lanforge",
-        'port': 22,
-        'jumphost_tty': '/dev/ttyAP1',
-        'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/trunk/ecw5410-1.1.0.tar.gz"
-    }
+                "model": "edgecore_eap101",
+                "mode": "wifi6",
+                "serial": "903cb36ae223",
+                "jumphost": True,
+                "ip": "10.28.3.103",
+                "username": "lanforge",
+                "password": "pumpkin77",
+                "port": 22,
+                "jumphost_tty": "/dev/ttyAP3",
+                "version": "release-latest"
+            }
     var = APNOS(credentials=obj, sdk="2.x")
-    a = var.get_uc_latest_config()
+    var.run_generic_command(cmd="chmod +x /usr/share/ucentral/wifi_max_user.uc")
+    a = var.run_generic_command(cmd="/usr/share/ucentral/wifi_max_user.uc")
     print(a)
-    # S = 9
-    # instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
-    # var.run_generic_command(cmd="logger start testcase: " + instance_name)
-    # time.sleep(60)
-    # var.run_generic_command(cmd="logger stop testcase: " + instance_name)
-    # var.get_logread(start_ref="start testcase: " + instance_name,
-    #                 stop_ref="stop testcase: " + instance_name)
