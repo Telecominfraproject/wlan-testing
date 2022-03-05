@@ -34,8 +34,8 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
-    def test_wpa_enterprise_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
-                               station_names_twog, setup_profiles,  lf_test,
+    def test_wpa_enterprise_2g(self,  get_ap_logs, get_lf_logs,
+                               station_names_twog,   lf_test,
                                update_report,
                                test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa_enterprise"][0]
@@ -48,9 +48,6 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
@@ -60,8 +57,8 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
-    def test_wpa_enterprise_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
-                               station_names_fiveg, setup_profiles,  lf_test,
+    def test_wpa_enterprise_5g(self,  get_ap_logs, get_lf_logs,
+                               station_names_fiveg,   lf_test,
                                update_report,
                                test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa_enterprise"][1]
@@ -74,9 +71,6 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
@@ -87,8 +81,8 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
-    def test_wpa2_enterprise_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
-                                station_names_twog, setup_profiles,  lf_test,
+    def test_wpa2_enterprise_2g(self,  get_ap_logs, get_lf_logs,
+                                station_names_twog,   lf_test,
                                 update_report,
                                 test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][0]
@@ -100,10 +94,6 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
@@ -114,8 +104,8 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
-    def test_wpa2_enterprise_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
-                                station_names_fiveg, setup_profiles,  lf_test,
+    def test_wpa2_enterprise_5g(self,  get_ap_logs, get_lf_logs,
+                                station_names_fiveg,   lf_test,
                                 update_report,
                                 test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][1]
@@ -127,10 +117,6 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
@@ -140,8 +126,8 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
-    def test_wpa3_enterprise_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
-                                station_names_twog, setup_profiles,  lf_test,
+    def test_wpa3_enterprise_2g(self,  get_ap_logs, get_lf_logs,
+                                station_names_twog,   lf_test,
                                 update_report,
                                 test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][0]
@@ -153,9 +139,6 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band, ieee80211w=2, key_mgmt="WPA-EAP-SHA256",
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
@@ -165,8 +148,8 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
-    def test_wpa3_enterprise_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
-                                station_names_fiveg, setup_profiles,  lf_test,
+    def test_wpa3_enterprise_5g(self,  get_ap_logs, get_lf_logs,
+                                station_names_fiveg,   lf_test,
                                 update_report,
                                 test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][1]
@@ -178,9 +161,6 @@ class TestVLANModeEnterpriseTTLSSuiteOne(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band, ieee80211w=2, key_mgmt="WPA-EAP-SHA256",
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
@@ -216,8 +196,9 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.twog
-    def test_wpa_wpa2_enterprise_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
-                                    station_names_twog, setup_profiles,  lf_test,
+    @pytest.mark.shivamt
+    def test_wpa_wpa2_enterprise_2g(self, get_ap_logs, get_lf_logs,
+                                    station_names_twog,  lf_test,
                                     update_report,
                                     test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise_two["ssid_modes"]["wpa_wpa2_enterprise_mixed"][0]
@@ -230,9 +211,6 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
@@ -242,8 +220,8 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.fiveg
-    def test_wpa_wpa2_enterprise_5g(self, get_vif_state, get_ap_logs,
-                                    station_names_fiveg, setup_profiles, 
+    def test_wpa_wpa2_enterprise_5g(self,  get_ap_logs,
+                                    station_names_fiveg,  
                                     lf_test, get_lf_logs,
                                     update_report, test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise_two["ssid_modes"]["wpa_wpa2_enterprise_mixed"][1]
@@ -256,9 +234,6 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
@@ -268,8 +243,8 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.twog
-    def test_wpa3_enterprise_mixed_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
-                                      station_names_twog, setup_profiles, 
+    def test_wpa3_enterprise_mixed_2g(self,  get_ap_logs, get_lf_logs,
+                                      station_names_twog,  
                                       lf_test,
                                       update_report, test_cases, radius_info, exit_on_fail):
         profile_data = setup_params_enterprise_two["ssid_modes"]["wpa3_enterprise_mixed"][0]
@@ -281,9 +256,6 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
@@ -293,8 +265,8 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.fiveg
-    def test_wpa3_enterprise_mixed_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
-                                      station_names_fiveg, setup_profiles, 
+    def test_wpa3_enterprise_mixed_5g(self,  get_ap_logs, get_lf_logs,
+                                      station_names_fiveg,  
                                       lf_test,
                                       update_report, exit_on_fail,
                                       test_cases, radius_info):
@@ -307,9 +279,6 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
