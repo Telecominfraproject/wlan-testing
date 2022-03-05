@@ -619,15 +619,14 @@ class UProfileUtility:
             pytest.exit("invalid Operating Mode")
 
     def push_config(self, serial_number):
-        payload = {"configuration": self.base_profile_config, "serialNumber": serial_number, "UUID": 0}
+        payload = {"configuration": self.base_profile_config, "serialNumber": serial_number, "UUID": 1}
 
         uri = self.sdk_client.build_uri("device/" + serial_number + "/configure")
         basic_cfg_str = json.dumps(payload)
-        print(self.base_profile_config)
         allure.attach(name="ucentral_config: ",
-                      body=str(self.base_profile_config).replace("'", '"'),
+                      body=str(basic_cfg_str),
                       attachment_type=allure.attachment_type.JSON)
-        print(self.base_profile_config)
+        print("JSON Post Configure: " + str(basic_cfg_str))
         print("Sending Configure Command: ", datetime.datetime.utcnow())
         resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
                              verify=False, timeout=100)
