@@ -291,7 +291,7 @@ jobs:
         run: cp -r allure-results allure-report/results
 
       - name: upload to S3
-        if: github.ref == 'refs/heads/WIFI-7220' && needs.vars.outputs.marker_overwrite == 'android and bridge and client_connectivity and enterprise'
+        if: github.ref == 'refs/heads/master' && needs.vars.outputs.marker_overwrite == ''
         uses: ./.github/actions/allure-report-to-s3
         with:
           test_type: interop-regression
