@@ -47,7 +47,6 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3926", name="WIFI-3926")
     @pytest.mark.tcp_download
-    @pytest.mark.uc_sanity
     def test_client_wpa2_BRIDGE_tcp_dl(self, lf_tools, get_apnos_max_clients,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
@@ -109,7 +108,6 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3932", name="WIFI-3932")
     @pytest.mark.tcp_bidirectional
-    @pytest.mark.uc_sanity
     def test_client_wpa2_BRIDGE_tcp_bidirectional(self, lf_tools, get_apnos_max_clients,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                   get_configuration):
