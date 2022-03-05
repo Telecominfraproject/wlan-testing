@@ -5,12 +5,11 @@
 
 """
 
-
 import os
 import allure
 import pytest
 
-pytestmark = [pytest.mark.regression,pytest.mark.bridge, pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.regression, pytest.mark.bridge, pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -43,8 +42,8 @@ class TestAPStabilityBridge(object):
     @pytest.mark.fiveg
     @allure.testcase(name="test_ap_stability_wpa2_personal",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3035")
-    def test_ap_stability_wpa2_personal(self, get_vif_state, lf_tools,
-                                  create_lanforge_chamberview_dut, lf_test, get_configuration):
+    def test_ap_stability_wpa2_personal(self, lf_tools,
+                                        create_lanforge_chamberview_dut, lf_test, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
         ssid_5G = profile_data[0]["ssid_name"]
@@ -61,13 +60,9 @@ class TestAPStabilityBridge(object):
             if lf_tools.dut_idx_mapping[i][3] == "2G":
                 dut_2g = dut_name + ' ' + lf_tools.dut_idx_mapping[i][0] + ' ' + lf_tools.dut_idx_mapping[i][4]
                 print(dut_2g)
-        if ssid_2G and ssid_5G not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID's NOT AVAILABLE IN VIF STATE")
-
         apstab_obj = lf_test.apstabilitytest(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                                   instance_name="stability_instance_wpa2p_bridge",
-                                                   vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
+                                             instance_name="stability_instance_wpa2p_bridge",
+                                             vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
 
         report_name = apstab_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="AP Stability Test")

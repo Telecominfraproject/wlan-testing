@@ -58,9 +58,6 @@ class TestThroughputVsPktWpaNat2G(object):
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        # if ssid_name not in get_vif_state:
-        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -107,9 +104,6 @@ class TestThroughputVsPktWpaNat2G(object):
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        # if ssid_name not in get_vif_state:
-        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -156,9 +150,6 @@ class TestThroughputVsPktWpaNat2G(object):
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        # if ssid_name not in get_vif_state:
-        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -205,9 +196,6 @@ class TestThroughputVsPktWpaNat2G(object):
                      ['directions: DUT Transmit;DUT Receive'],
                      ['traffic_types: UDP;TCP'], ["show_3s: 1"],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        # if ssid_name not in get_vif_state:
-        #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-        #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key,
                                          mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
