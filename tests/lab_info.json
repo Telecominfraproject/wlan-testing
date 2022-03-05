@@ -3,7 +3,7 @@
 "CONFIGURATION" : {
     "basic-01": {
         "controller": {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",  
+            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",
             "password": "OpenWifi%123"
         },
@@ -38,10 +38,10 @@
                 "AX-Station-Name": "ax"
             }
         }
-    },  
+    },
     "basic-02": {
         "controller": {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",  
+            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",
             "password": "OpenWifi%123"
         },
@@ -76,10 +76,10 @@
                 "AX-Station-Name": "ax"
             }
         }
-    },  
+    },
     "basic-03": {
         "controller": {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",  
+            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",
             "password": "OpenWifi%123"
         },
@@ -114,10 +114,10 @@
                 "AX-Station-Name": "ax"
             }
         }
-    },  
+    },
     "basic-03a": {
         "controller": {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",  
+            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",
             "password": "OpenWifi%123"
         },
@@ -155,7 +155,7 @@
     },
     "basic-04": {
         "controller": {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",  
+            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",
             "password": "OpenWifi%123"
         },
@@ -190,10 +190,10 @@
                 "AX-Station-Name": "ax"
             }
         }
-    },  
+    },
     "basic-05": {
         "controller": {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",  
+            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",
             "password": "OpenWifi%123"
         },
@@ -228,10 +228,10 @@
                 "AX-Station-Name": "ax"
             }
         }
-    },  
+    },
     "basic-06": {
         "controller": {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",  
+            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",
             "password": "OpenWifi%123"
         },
@@ -266,10 +266,10 @@
                 "AX-Station-Name": "ax"
             }
         }
-    },  
+    },
     "basic-07": {
         "controller": {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",  
+            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",
             "password": "OpenWifi%123"
         },
@@ -304,10 +304,10 @@
                 "AX-Station-Name": "ax"
             }
         }
-    },  
+    },
     "basic-08": {
         "controller": {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",  
+            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",
             "password": "OpenWifi%123"
         },
@@ -342,11 +342,11 @@
                 "AX-Station-Name": "ax"
             }
         }
-    },  
+    },
 
     "advanced-01": {
         "controller": {
-            "url":"https://sec-qa01.cicd.lab.wlan.tip.build:16001",  
+            "url":"https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",
             "password": "OpenWifi%123"
         },
@@ -354,12 +354,12 @@
             {
                 "model": "cig_wf194c4",
                 "mode": "wifi6",
-                "serial": "f40b9fe78e03", 
+                "serial": "f40b9fe78e03",
                 "jumphost": true,
-                "ip": "10.28.3.102",  
+                "ip": "10.28.3.102",
                 "username": "lanforge",
                 "password": "pumpkin77",
-                "port": 22,  
+                "port": 22,
                 "jumphost_tty": "/dev/ttyAP2",
                 "version": "release-latest"
             }
@@ -385,7 +385,7 @@
     },
     "advanced-02": {
         "controller": {
-            "url":"https://sec-qa01.cicd.lab.wlan.tip.build:16001",  
+            "url":"https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",
             "password": "OpenWifi%123"
         },
@@ -424,7 +424,7 @@
     },
     "mesh-01": {
         "controller": {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",  
+            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",
             "password": "OpenWifi%123"
         },
@@ -461,7 +461,7 @@
                 "mode": "wifi6",
                 "serial": "903cb39d692c",
                 "jumphost": true,
-                "ip": "10.28.3.101",  
+                "ip": "10.28.3.101",
                 "username": "lanforge",
                 "password": "pumpkin77",
                 "port": 22,
@@ -509,7 +509,7 @@
     },
     "mesh-02": {
         "controller": {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",  
+            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",
             "password": "OpenWifi%123"
         },
@@ -596,7 +596,7 @@
 
     "interop-01": {
         "controller": {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",  
+            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",
             "password": "OpenWifi%123"
         },
@@ -637,7 +637,7 @@
 
     "interop-02": {
         "controller": {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",  
+            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",
             "password": "OpenWifi%123"
         },
@@ -678,7 +678,7 @@
 
     "interop-03": {
         "controller": {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",  
+            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",
             "password": "OpenWifi%123"
         },
@@ -719,7 +719,7 @@
 
     "basic-ext-03-03": {
         "controller": {
-            "url": "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",  
+            "url": "https://wlan-portal-svc-nola-ext-03.cicd.lab.wlan.tip.build",
             "username": "support@example.com",
             "password": "support",
             "version": "1.1.0-SNAPSHOT",
@@ -889,5 +889,5 @@
 "open_flow":{}
 
 
-  
+
 }
