@@ -269,8 +269,8 @@ jobs:
       - name: download history of previous run
         continue-on-error: true
         run: |
-          LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key interop_regression/${{ matrix.device }}/latest/index.html | jq -r .Metadata.latest)
-          aws s3 cp --recursive s3://openwifi-allure-reports/interop_regression/${{ matrix.device }}/$LAST_RUN_ID/history history
+          LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key interop-regression/${{ matrix.device }}/latest/index.html | jq -r .Metadata.latest)
+          aws s3 cp --recursive s3://openwifi-allure-reports/interop-regression/${{ matrix.device }}/$LAST_RUN_ID/history history
 
       - name: generate Allure report
         uses: ./.github/actions/generate-allure-report
