@@ -1,6 +1,9 @@
 import re
 import sys
 import os
+import  importlib
+
+import pytest
 
 sys.path.append(
     os.path.dirname(
@@ -19,6 +22,7 @@ sys.path.append(f'../libs')
 sys.path.append(f'../libs/lanforge/')
 import allure
 from sta_connect2 import StaConnect2
+
 from create_chamberview import CreateChamberview
 from create_chamberview_dut import DUT
 import time
@@ -26,16 +30,106 @@ from LANforge.lfcli_base import LFCliBase
 import json
 import os
 import pandas as pd
+realm = importlib.import_module("py-json.realm")
+Realm = realm.Realm
 
 
 class ChamberView:
 
-    def __init__(self, lanforge_data=None, access_point_data=None, debug=True, testbed=None):
+    def __init__(self, lanforge_data=None, access_point_data=None, run_lf=False, debug=True, testbed=None):
         print("lanforge data", lanforge_data)
         print("access point data", access_point_data)
         self.access_point_data = access_point_data
+        self.access_point_data = access_point_data
+        self.run_lf = run_lf
         print("testbed", testbed)
         if "type" in lanforge_data.keys():
+            if lanforge_data["type"] == "Non-mesh":
+                self.lanforge_ip = lanforge_data["ip"]
+                self.lanforge_port = lanforge_data["port"]
+                self.ssh_port = lanforge_data["ssh_port"]
+                self.twog_radios = lanforge_data["2.4G-Radio"]
+                self.fiveg_radios = lanforge_data["5G-Radio"]
+                self.ax_radios = lanforge_data["AX-Radio"]
+                self.upstream_port = lanforge_data["upstream"]
+                self.uplink_port = lanforge_data["uplink"]
+                self.upstream_subnet = lanforge_data["upstream_subnet"]
+                self.upstream_resources = self.upstream_port.split(".")[0] + "." + self.upstream_port.split(".")[1]
+                self.uplink_resources = self.uplink_port.split(".")[0] + "." + self.uplink_port.split(".")[1]
+                self.scenario_name = testbed
+                self.debug = debug
+                self.exit_on_error = False
+                self.dut_idx_mapping = {}
+                self.ssid_list = []
+                self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
+                self.local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
+                self.raw_line = [
+                    ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " +
+                     self.upstream_port.split(".")
+                     [2] + ",AUTO -1 NA"],
+                    [
+                        "profile_link " + self.uplink_resources + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
+                        + "' NA " + self.uplink_port.split(".")[2] + "," + self.upstream_port.split(".")[2] + " -1 NA"]
+                ]
+                self.CreateChamberview = CreateChamberview(self.lanforge_ip, self.lanforge_port)
+
+                self.delete_old_scenario = True
+                if access_point_data:
+                    print(len(access_point_data))
+                    for ap in range(len(access_point_data)):
+                        print(access_point_data[ap])
+                        self.dut_name = access_point_data[ap]["model"]
+                        print(self.dut_name)
+                        self.ap_model = access_point_data[ap]["model"]
+                        self.version = access_point_data[ap]["version"].split("/")[-1]
+                        self.serial = access_point_data[ap]["serial"]
+                        self.ssid_data = None
+                        if self.run_lf:
+                            self.ssid_data = access_point_data[ap]['ssid']
+                            print(self.ssid_data)
+
+                        self.CreateDut = DUT(lfmgr=self.lanforge_ip,
+                                             port=self.lanforge_port,
+                                             dut_name=self.dut_name,
+                                             sw_version=self.version,
+                                             hw_version=self.ap_model,
+                                             model_num=self.ap_model,
+                                             serial_num=self.serial
+                                             )
+                        self.CreateDut.ssid = []
+                        if self.ssid_data is not None:
+                            self.twog_ssid = ["ssid_idx=0"
+                                              " ssid=" + self.ssid_data["2g-ssid"] +
+                                              " security=" + self.ssid_data["2g-encryption"].upper() +
+                                              " password=" + self.ssid_data["2g-password"] +
+                                              " bssid=" + self.ssid_data["2g-bssid"].lower().replace(" ", "")
+                                              ]
+
+                            self.fiveg_ssid = ["ssid_idx=1 ssid=" +
+                                               self.ssid_data["5g-ssid"] +
+                                               " security=" +
+                                               self.ssid_data["5g-encryption"].upper() +
+                                               " password=" +
+                                               self.ssid_data["5g-password"] +
+                                               " bssid=" +
+                                               self.ssid_data["5g-bssid"].lower().replace(" ", "")]
+                            if "6g-ssid" in self.ssid_data.keys():
+                                print("yes")
+                                self.sixg_ssid = ["ssid_idx=2 ssid=" +
+                                                   self.ssid_data["6g-ssid"] +
+                                                   " security=" +
+                                                   self.ssid_data["6g-encryption"].upper() +
+                                                   " password=" +
+                                                   self.ssid_data["6g-password"] +
+                                                   " bssid=" +
+                                                   self.ssid_data["6g-bssid"].lower().replace(" ", "")]
+                                ssid_var = [self.twog_ssid, self.fiveg_ssid, self.sixg_ssid]
+                            else :
+                                ssid_var = [self.twog_ssid, self.fiveg_ssid]
+                            self.CreateDut.ssid = ssid_var
+                            # print(self.CreateDut.ssid)
+                            self.Create_Dut()
+
             if lanforge_data["type"] == "mesh":
                 self.lanforge_ip = lanforge_data["ip"]
                 self.lanforge_port = lanforge_data["port"]
@@ -109,7 +203,9 @@ class ChamberView:
                 self.ap_model = access_point_data[0]["model"]
                 self.version = access_point_data[0]["version"].split("/")[-1]
                 self.serial = access_point_data[0]["serial"]
-
+                self.ssid_data = None
+                if self.run_lf:
+                    self.ssid_data = access_point_data[0]['ssid']
                 self.CreateDut = DUT(lfmgr=self.lanforge_ip,
                                      port=self.lanforge_port,
                                      dut_name=self.testbed,
@@ -119,15 +215,45 @@ class ChamberView:
                                      serial_num=self.serial
                                      )
                 self.CreateDut.ssid = []
+                if self.ssid_data is not None:
+                    # ssid = ['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58']
+                    # ssid = ["ssid_idx=" + str(interface) +
+                    #         " ssid=" + ssid_info_sdk[interface][0] +
+                    #         " security=" + ssid_info_sdk[interface][1].upper() +
+                    #         " password=" + ssid_info_sdk[interface][2] +
+                    #         " bssid=" + ssid_info_sdk[interface][4].lower()
+                    #         ]
+                    self.twog_ssid = ["ssid_idx=0"
+                                      " ssid=" + self.ssid_data["2g-ssid"] +
+                                      " security=" + self.ssid_data["2g-encryption"].upper() +
+                                      " password=" + self.ssid_data["2g-password"] +
+                                      " bssid=" + self.ssid_data["2g-bssid"].lower().replace(" ", "")
+                                      ]
+
+                    self.fiveg_ssid = ["ssid_idx=1 ssid=" +
+                                       self.ssid_data["5g-ssid"] +
+                                       " security=" +
+                                       self.ssid_data["5g-encryption"].upper() +
+                                       " password=" +
+                                       self.ssid_data["5g-password"] +
+                                       " bssid=" +
+                                       self.ssid_data["5g-bssid"].lower().replace(" ", "")]
+                    self.CreateDut.ssid = [self.twog_ssid, self.fiveg_ssid]
+                    # print(self.CreateDut.ssid)
+                    self.Create_Dut()
+
 
     def reset_scenario(self):
-        self.raw_line = [
-            ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " + self.upstream_port.split(".")
-            [2] + ",AUTO -1 NA"],
-            ["profile_link " + self.uplink_resources + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
-             + "' NA " + self.uplink_port.split(".")[2] + "," + self.upstream_port.split(".")[2] + " -1 NA"]
-        ]
-        print(self.raw_line)
+        # self.layer3_cleanup()
+        # self.Create_Dut()
+        if not self.run_lf:
+            self.raw_line = [
+                ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " + self.upstream_port.split(".")
+                [2] + ",AUTO -1 NA"],
+                ["profile_link " + self.uplink_resources + " uplink-nat 1 'DUT: upstream LAN " + self.upstream_subnet
+                 + "' NA " + self.uplink_port.split(".")[2] + "," + self.upstream_port.split(".")[2] + " -1 NA"]
+            ]
+            print(self.raw_line)
         self.Chamber_View()
 
     def reset_dut(self):
@@ -146,6 +272,7 @@ class ChamberView:
             for j in i:
                 sta_list.append(j)
         return sta_list
+
 
     def admin_up_down(self, sta_list=[], option="up"):
         #realm_obj = self.staConnect.localrealm
@@ -185,8 +312,13 @@ class ChamberView:
                                       + " NA " + self.upstream_port.split(".")[2] + ",AUTO -1 " + str(vlans)])
             self.Chamber_View()
 
-    def add_stations(self, band="2G", num_stations="max", dut="NA", ssid_name=[]):
-        idx = 0
+    def add_stations(self, band="2G", num_stations="max", dut="NA", ssid_name=[], idx=0):
+        idx = idx
+        if self.run_lf:
+            if band == "2G":
+                idx = 0
+            if band == "5G":
+                idx = 1
         print(self.dut_idx_mapping)
         for i in self.dut_idx_mapping:
             if self.dut_idx_mapping[i][0] == ssid_name and self.dut_idx_mapping[i][3] == band:
@@ -245,23 +377,34 @@ class ChamberView:
                     self.raw_line.append(station_data)
 
         if band == "ax":
+
             if num_stations != "max":
+                max_possible = 0
+                for radio in self.ax_radios:
+                    max_possible = max_possible + self.get_max_sta(radio)
                 if num_stations > 1:
+                    if num_stations > max_possible:
+                        pytest.exit("Error: Can't Create " + num_stations + ", only " + max_possible + " Stations can be created")
+
                     num_stations = int(num_stations / len(self.ax_radios))
                     for radio in self.ax_radios:
+                        max = self.get_max_sta(radio)
+                        num_stations = num_stations - max
                         station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
-                                        str(int(idx) + 1) + "'" + " NA " + radio]
+                                        str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
                         self.raw_line.append(station_data)
                 else:
                     num_stations = num_stations
                     station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
-                                    str(int(idx) + 1) + "'" + " NA " + self.ax_radios[0]]
+                                    str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
                     self.raw_line.append(station_data)
             if num_stations == "max":
                 for radio in self.ax_radios:
-                    num_stations = 1
+                    print("radio", radio)
+                    num_stations = self.get_max_sta(radio)
+                    print("num_stations", num_stations)
                     station_data = ["profile_link 1.1 STA-AUTO " + str(num_stations) + " 'DUT: " + dut + " Radio-" +
-                                    str(int(idx) + 1) + "'" + " NA " + radio]
+                                    str(int(idx) + 1) + "'" + " NA " + radio.split(".")[2]]
                     self.raw_line.append(station_data)
 
     def Create_Dut(self):
@@ -302,8 +445,8 @@ class ChamberView:
 
     def station_data_query(self, station_name="wlan0", query="channel"):
         x = self.upstream_port.split(".")
-        print(x)
         url = f"/port/{x[0]}/{x[1]}/{station_name}?fields={query}"
+        # print("url//////", url)
         response = self.json_get(_req_url=url)
         print("response: ", response)
         if (response is None) or ("interface" not in response):
@@ -332,7 +475,7 @@ class ChamberView:
     def read_csv_individual_station_throughput(self, dir_name, option):
         try:
             df = pd.read_csv(
-                "../reports/" + str(dir_name) + "/csv-data/data-Combined_bps__60_second_running_average-1.csv",
+                "../reports/" + str(dir_name) + "/csv-data/data-Combined_Mbps__60_second_running_average-1.csv",
                 sep=r'\t', engine='python')
             print("csv file opened")
         except FileNotFoundError:
@@ -466,87 +609,119 @@ class ChamberView:
         cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port, )
         return cli_base.json_post(req_url, data)
 
+    def get_max_sta(self, radio=""):
+        data = self.json_get("/radiostatus/all")
+        return data[radio]["max_vifs"]
+
 
 def main():
-    # lanforge_data = {'ip': 'localhost', 'port': 8802, 'ssh_port': 8804, '2.4G-Radio': ['1.1.wiphy0', '1.1.wiphy2'], '5G-Radio': ['1.1.wiphy1', '1.1.wiphy3'], 'AX-Radio': ['1.1.wiphy4', '1.1.wiphy5', '1.1.wiphy6', '1.1.wiphy7'], 'upstream': '1.1.eth2', 'upstream_subnet': '10.28.2.1/24', 'uplink': '1.1.eth1', '2.4G-Station-Name': 'sta00', '5G-Station-Name': 'sta10', 'AX-Station-Name': 'ax'}
+    # # lanforge_data = {'ip': 'localhost', 'port': 8802, 'ssh_port': 8804, '2.4G-Radio': ['1.1.wiphy0', '1.1.wiphy2'], '5G-Radio': ['1.1.wiphy1', '1.1.wiphy3'], 'AX-Radio': ['1.1.wiphy4', '1.1.wiphy5', '1.1.wiphy6', '1.1.wiphy7'], 'upstream': '1.1.eth2', 'upstream_subnet': '10.28.2.1/24', 'uplink': '1.1.eth1', '2.4G-Station-Name': 'sta00', '5G-Station-Name': 'sta10', 'AX-Station-Name': 'ax'}
+    # lanforge_data = {
+    #     "type": "mesh",
+    #     "ip": "localhost",  # 10.28.3.14
+    #     "port": 8802,  # 8080
+    #     "ssh_port": 8804,
+    #     "2.4G-Radio-mobile-sta": ["1.1.wiphy0", "1.1.wiphy2"],
+    #     "5G-Radio-mobile-sta": ["1.1.wiphy1", "1.1.wiphy3"],
+    #     "AX-Radio-mobile-sta": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
+    #     "upstream-mobile-sta": "1.1.eth2",
+    #     "upstream_subnet-mobile-sta": "10.28.2.1/24",
+    #     "uplink-mobile-sta": "1.1.eth3",
+    #     "2.4G-Radio-root": ["1.2.wiphy0"],
+    #     "5G-Radio-root": ["1.2.wiphy1"],
+    #     "AX-Radio-root": [],
+    #     "upstream-root": "1.2.eth2",
+    #     "upstream_subnet-root": "10.28.2.1/24",
+    #     "uplink-root": "1.2.eth3",
+    #     "2.4G-Radio-node-1": ["1.3.wiphy0"],
+    #     "5G-Radio-node-1": ["1.3.wiphy1"],
+    #     "AX-Radio-node-1": [],
+    #     "upstream-node-1": "1.3.eth2",
+    #     "upstream_subnet-node-1": "10.28.2.1/24",
+    #     "uplink--node-1": "1.3.eth3",
+    #     "2.4G-Radio-node-2": ["1.4.wiphy0"],
+    #     "5G-Radio-node-2": ["1.4.wiphy1"],
+    #     "AX-Radio-node-2": [],
+    #     "upstream-node-2": "1.4.eth2",
+    #     "upstream_subnet-node-2": "10.28.2.1/24",
+    #     "uplink--node-2": "1.4.eth3",
+    #     "2.4G-Station-Name": "wlan0",
+    #     "5G-Station-Name": "wlan0",
+    #     "AX-Station-Name": "ax"
+    # }
+    # # ap_data = [{'model': 'wf188n', 'mode': 'wifi6', 'serial': '0000c1018812', 'jumphost': True, 'ip': 'localhost', 'username': 'lanforge', 'password': 'pumpkin77', 'port': 8803, 'jumphost_tty': '/dev/ttyAP1', 'version': 'https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf188/20210729-cig_wf188-v2.0.0-rc2-ec3662e-upgrade.bin'}]
+    # ap_data = [
+    #     {
+    #         'type': 'root',
+    #         'model': 'eap101',
+    #         'mode': 'wifi6',
+    #         'serial': '34efb6af4a7a',
+    #         'jumphost': True,
+    #         'ip': "localhost",  # 10\.28\.3\.101
+    #         'username': "lanforge",
+    #         'password': "pumpkin77",
+    #         'port': 8803,  # 22
+    #         'jumphost_tty': '/dev/ttyAP2',
+    #         'version': "latest"
+    #     },
+    #     {
+    #         'type': 'node-1',
+    #         'model': 'eap101',
+    #         'mode': 'wifi6',
+    #         'serial': '34efb6af4903',
+    #         'jumphost': True,
+    #         'ip': "localhost",  # 10\.28\.3\.101
+    #         'username': "lanforge",
+    #         'password': "pumpkin77",
+    #         'port': 8803,  # 22
+    #         'jumphost_tty': '/dev/ttyAP3',
+    #         'version': "latest"
+    #     },
+    #     {
+    #         'type': 'node-2',
+    #         'model': 'eap102',
+    #         'mode': 'wifi6',
+    #         'serial': '34efb6af4a7a',
+    #         'jumphost': True,
+    #         'ip': "localhost",  # 10\.28\.3\.101
+    #         'username': "lanforge",
+    #         'password': "pumpkin77",
+    #         'port': 8803,  # 22
+    #         'jumphost_tty': '/dev/ttyAP4',
+    #         'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/eap101/trunk/eap101-1.1.0.tar.gz"
+    #     }
+    # ]
+    # testbed = "mesh"
     lanforge_data = {
-        "type": "mesh",
-        "ip": "localhost",  # 10.28.3.14
-        "port": 8802,  # 8080
-        "ssh_port": 8804,
-        "2.4G-Radio-mobile-sta": ["1.1.wiphy0", "1.1.wiphy2"],
-        "5G-Radio-mobile-sta": ["1.1.wiphy1", "1.1.wiphy3"],
-        "AX-Radio-mobile-sta": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
-        "upstream-mobile-sta": "1.1.eth2",
-        "upstream_subnet-mobile-sta": "10.28.2.1/24",
-        "uplink-mobile-sta": "1.1.eth3",
-        "2.4G-Radio-root": ["1.2.wiphy0"],
-        "5G-Radio-root": ["1.2.wiphy1"],
-        "AX-Radio-root": [],
-        "upstream-root": "1.2.eth2",
-        "upstream_subnet-root": "10.28.2.1/24",
-        "uplink-root": "1.2.eth3",
-        "2.4G-Radio-node-1": ["1.3.wiphy0"],
-        "5G-Radio-node-1": ["1.3.wiphy1"],
-        "AX-Radio-node-1": [],
-        "upstream-node-1": "1.3.eth2",
-        "upstream_subnet-node-1": "10.28.2.1/24",
-        "uplink--node-1": "1.3.eth3",
-        "2.4G-Radio-node-2": ["1.4.wiphy0"],
-        "5G-Radio-node-2": ["1.4.wiphy1"],
-        "AX-Radio-node-2": [],
-        "upstream-node-2": "1.4.eth2",
-        "upstream_subnet-node-2": "10.28.2.1/24",
-        "uplink--node-2": "1.4.eth3",
+        "ip": "10.28.3.6",
+        "port": 8080,
+        "ssh_port": 22,
+        "2.4G-Radio": ["1.1.wiphy4"],
+        "5G-Radio": ["1.1.wiphy5"],
+        "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
+        "upstream": "1.1.eth2",
+        "upstream_subnet": "10.28.2.1/24",
+        "uplink": "1.1.eth3",
         "2.4G-Station-Name": "wlan0",
-        "5G-Station-Name": "wlan0",
+        "5G-Station-Name": "wlan1",
         "AX-Station-Name": "ax"
     }
-    # ap_data = [{'model': 'wf188n', 'mode': 'wifi6', 'serial': '0000c1018812', 'jumphost': True, 'ip': 'localhost', 'username': 'lanforge', 'password': 'pumpkin77', 'port': 8803, 'jumphost_tty': '/dev/ttyAP1', 'version': 'https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/uCentral/cig_wf188/20210729-cig_wf188-v2.0.0-rc2-ec3662e-upgrade.bin'}]
-    ap_data = [
-        {
-            'type': 'root',
-            'model': 'eap101',
-            'mode': 'wifi6',
-            'serial': '34efb6af4a7a',
-            'jumphost': True,
-            'ip': "localhost",  # 10\.28\.3\.101
-            'username': "lanforge",
-            'password': "pumpkin77",
-            'port': 8803,  # 22
-            'jumphost_tty': '/dev/ttyAP2',
-            'version': "latest"
-        },
-        {
-            'type': 'node-1',
-            'model': 'eap101',
-            'mode': 'wifi6',
-            'serial': '34efb6af4903',
-            'jumphost': True,
-            'ip': "localhost",  # 10\.28\.3\.101
-            'username': "lanforge",
-            'password': "pumpkin77",
-            'port': 8803,  # 22
-            'jumphost_tty': '/dev/ttyAP3',
-            'version': "latest"
-        },
-        {
-            'type': 'node-2',
-            'model': 'eap102',
-            'mode': 'wifi6',
-            'serial': '34efb6af4a7a',
-            'jumphost': True,
-            'ip': "localhost",  # 10\.28\.3\.101
-            'username': "lanforge",
-            'password': "pumpkin77",
-            'port': 8803,  # 22
-            'jumphost_tty': '/dev/ttyAP4',
-            'version': "https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/eap101/trunk/eap101-1.1.0.tar.gz"
-        }
-    ]
-    testbed = "mesh"
-    obj = ChamberView(lanforge_data=lanforge_data, access_point_data=ap_data, testbed="mesh")
-    obj.create_mesh_dut()
+    ap_data = [{
+        "model": "edgecore_ecw5410",
+        "mode": "wifi5",
+        "serial": "3c2c99f44e77",
+        "jumphost": True,
+        "ip": "10.28.3.100",
+        "username": "lanforge",
+        "password": "pumpkin77",
+        "port": 22,
+        "jumphost_tty": "/dev/ttyAP1",
+        "version": "release-latest"
+    }]
+    obj = ChamberView(lanforge_data=lanforge_data, access_point_data=ap_data, testbed="basic")
+    a = obj.get_max_sta("1.1.wiphy0")
+    print(a)
+    # obj.create_mesh_dut()
 
 
 if __name__ == '__main__':

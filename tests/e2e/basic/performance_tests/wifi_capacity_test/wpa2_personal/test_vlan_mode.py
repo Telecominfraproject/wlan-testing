@@ -8,8 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.VLAN]
-# """pytest.mark.usefixtures("setup_test_run")"""]
+pytestmark = [pytest.mark.performance, pytest.mark.vlan]
 
 
 setup_params_general_dual_band = {
@@ -42,7 +41,7 @@ class TestWifiCapacityVLANModeDualBand(object):
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3926", name="WIFI-3926")
     @pytest.mark.tcp_download
-    def test_client_wpa2_VLAN_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
+    def test_client_wpa2_VLAN_tcp_dl(self,  lf_tools, setup_profiles,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test VLAN mode
@@ -52,9 +51,6 @@ class TestWifiCapacityVLANModeDualBand(object):
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
         vlan = 100
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
@@ -70,7 +66,7 @@ class TestWifiCapacityVLANModeDualBand(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3927", name="WIFI-3927")
     @pytest.mark.udp_download
-    def test_client_wpa2_VLAN_udp_dl(self, get_vif_state, lf_tools,
+    def test_client_wpa2_VLAN_udp_dl(self,  lf_tools,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test VLAN mode
@@ -80,9 +76,6 @@ class TestWifiCapacityVLANModeDualBand(object):
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
         vlan = 100
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
@@ -98,7 +91,7 @@ class TestWifiCapacityVLANModeDualBand(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3932", name="WIFI-3932")
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa2_VLAN_tcp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa2_VLAN_tcp_bidirectional(self,  lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                   get_configuration):
         """ Wifi Capacity Test VLAN mode
@@ -108,9 +101,6 @@ class TestWifiCapacityVLANModeDualBand(object):
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
         vlan = 100
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
@@ -126,7 +116,7 @@ class TestWifiCapacityVLANModeDualBand(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3933", name="WIFI-3933")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa2_VLAN_udp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa2_VLAN_udp_bidirectional(self,  lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                   get_configuration):
         """ Wifi Capacity Test VLAN mode
@@ -136,9 +126,6 @@ class TestWifiCapacityVLANModeDualBand(object):
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
         vlan = 100
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
@@ -182,7 +169,7 @@ class TestWifiCapacityVLANMode2G(object):
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3928", name="WIFI-3928")
     @pytest.mark.tcp_download
-    def test_client_wpa2_VLAN_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
+    def test_client_wpa2_VLAN_tcp_dl(self,  lf_tools, setup_profiles,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test VLAN mode
@@ -192,9 +179,6 @@ class TestWifiCapacityVLANMode2G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
         vlan = 100
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_VLAN_tcp_dl", mode=mode, vlan_id=vlan,
@@ -209,7 +193,7 @@ class TestWifiCapacityVLANMode2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3930", name="WIFI-3930")
     @pytest.mark.udp_download
-    def test_client_wpa2_VLAN_udp_dl(self, get_vif_state, lf_tools,
+    def test_client_wpa2_VLAN_udp_dl(self,  lf_tools,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test VLAN mode
@@ -219,9 +203,6 @@ class TestWifiCapacityVLANMode2G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
         vlan = 100
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_VLAN_udp_dl", mode=mode, vlan_id=vlan,
@@ -236,7 +217,7 @@ class TestWifiCapacityVLANMode2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3934", name="WIFI-3934")
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa2_VLAN_tcp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa2_VLAN_tcp_bidirectional(self,  lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                   get_configuration):
         """ Wifi Capacity Test VLAN mode
@@ -246,9 +227,6 @@ class TestWifiCapacityVLANMode2G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
         vlan = 100
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_VLAN_tcp_bi", mode=mode, vlan_id=vlan,
@@ -263,7 +241,7 @@ class TestWifiCapacityVLANMode2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3935", name="WIFI-3935")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa2_VLAN_udp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa2_VLAN_udp_bidirectional(self,  lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                   get_configuration):
         """ Wifi Capacity Test VLAN mode
@@ -273,9 +251,6 @@ class TestWifiCapacityVLANMode2G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
         vlan = 100
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_VLAN_udp_bi", mode=mode, vlan_id=vlan,
@@ -318,7 +293,7 @@ class TestWifiCapacityVLANMode5G(object):
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3929", name="WIFI-3929")
     @pytest.mark.tcp_download
-    def test_client_wpa2_VLAN_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
+    def test_client_wpa2_VLAN_tcp_dl(self,  lf_tools, setup_profiles,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test VLAN mode
@@ -328,9 +303,6 @@ class TestWifiCapacityVLANMode5G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
         vlan = 100
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_VLAN_tcp_dl", mode=mode, vlan_id=vlan,
@@ -345,7 +317,7 @@ class TestWifiCapacityVLANMode5G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3931", name="WIFI-3931")
     @pytest.mark.udp_download
-    def test_client_wpa2_VLAN_udp_dl(self, get_vif_state, lf_tools,
+    def test_client_wpa2_VLAN_udp_dl(self,  lf_tools,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test VLAN mode
@@ -355,9 +327,6 @@ class TestWifiCapacityVLANMode5G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
         vlan = 100
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_VLAN_udp_dl", mode=mode, vlan_id=vlan,
@@ -372,7 +341,7 @@ class TestWifiCapacityVLANMode5G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3936", name="WIFI-3936")
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa2_VLAN_tcp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa2_VLAN_tcp_bidirectional(self,  lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                   get_configuration):
         """ Wifi Capacity Test VLAN mode
@@ -382,9 +351,6 @@ class TestWifiCapacityVLANMode5G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
         vlan = 100
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_VLAN_tcp_bi", mode=mode, vlan_id=vlan,
@@ -399,7 +365,7 @@ class TestWifiCapacityVLANMode5G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3937", name="WIFI-3937")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa2_VLAN_udp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa2_VLAN_udp_bidirectional(self,  lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                   get_configuration):
         """ Wifi Capacity Test VLAN mode
@@ -409,9 +375,6 @@ class TestWifiCapacityVLANMode5G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
         vlan = 100
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_VLAN_udp_bi", mode=mode, vlan_id=vlan,

@@ -21,7 +21,7 @@ pytestmark = [pytest.mark.regression, pytest.mark.interop, pytest.mark.android, 
               pytest.mark.client_reconnect, pytest.mark.enterprise]
 
 from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_WifiMode_android, ForgetWifiConnection, openApp,\
-    get_ip_add_check_and, verifyUploadDownloadSpeed_android, wifi_connect, wifi_disconnect_and_forget, get_ip_add_eap_and
+    gets_ip_add_for_checking_and_forgets_ssid, verifyUploadDownloadSpeed_android, wifi_connect, wifi_disconnect_and_forget, gets_ip_add_eap_and_does_not_forget_ssid
 
 setup_params_enterprise = {
     "mode": "NAT",
@@ -84,7 +84,7 @@ class TestToggleWifiModeAndroidNatModeEnterpriseTTLSSuiteA(object):
         connData = get_ToggleAirplaneMode_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_add_eap_and(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android, connData)
+        ip, is_internet = gets_ip_add_eap_and_does_not_forget_ssid(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android, connData)
         #
         if is_internet:
             if ip:
@@ -96,7 +96,7 @@ class TestToggleWifiModeAndroidNatModeEnterpriseTTLSSuiteA(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
-            ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, ttls_passwd,
+            ip_check, is_internet_check = gets_ip_add_for_checking_and_forgets_ssid(request, ssidName, ttls_passwd,
                                                                setup_perfectoMobile_android, connData)
             if (ip_check == ip):
                 assert True
@@ -129,7 +129,7 @@ class TestToggleWifiModeAndroidNatModeEnterpriseTTLSSuiteA(object):
         connData = get_ToggleAirplaneMode_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_add_eap_and(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android, connData)
+        ip, is_internet = gets_ip_add_eap_and_does_not_forget_ssid(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android, connData)
         #
         if is_internet:
             if ip:
@@ -141,7 +141,7 @@ class TestToggleWifiModeAndroidNatModeEnterpriseTTLSSuiteA(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
-            ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, ttls_passwd,
+            ip_check, is_internet_check = gets_ip_add_for_checking_and_forgets_ssid(request, ssidName, ttls_passwd,
                                                                setup_perfectoMobile_android, connData)
             if (ip_check == ip):
                 assert True
@@ -174,7 +174,7 @@ class TestToggleWifiModeAndroidNatModeEnterpriseTTLSSuiteA(object):
         connData = get_ToggleAirplaneMode_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_add_eap_and(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android, connData)
+        ip, is_internet = gets_ip_add_eap_and_does_not_forget_ssid(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android, connData)
         #
         if is_internet:
             if ip:
@@ -186,7 +186,7 @@ class TestToggleWifiModeAndroidNatModeEnterpriseTTLSSuiteA(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
-            ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, ttls_passwd,
+            ip_check, is_internet_check = gets_ip_add_for_checking_and_forgets_ssid(request, ssidName, ttls_passwd,
                                                                setup_perfectoMobile_android, connData)
             if (ip_check == ip):
                 assert True
@@ -219,7 +219,7 @@ class TestToggleWifiModeAndroidNatModeEnterpriseTTLSSuiteA(object):
         connData = get_ToggleAirplaneMode_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_add_eap_and(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android, connData)
+        ip, is_internet = gets_ip_add_eap_and_does_not_forget_ssid(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android, connData)
         #
         if is_internet:
             if ip:
@@ -231,7 +231,7 @@ class TestToggleWifiModeAndroidNatModeEnterpriseTTLSSuiteA(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
-            ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, ttls_passwd,
+            ip_check, is_internet_check = gets_ip_add_for_checking_and_forgets_ssid(request, ssidName, ttls_passwd,
                                                                setup_perfectoMobile_android, connData)
             if (ip_check == ip):
                 assert True
@@ -264,7 +264,7 @@ class TestToggleWifiModeAndroidNatModeEnterpriseTTLSSuiteA(object):
         connData = get_ToggleAirplaneMode_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_add_eap_and(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android, connData)
+        ip, is_internet = gets_ip_add_eap_and_does_not_forget_ssid(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android, connData)
         #
         if is_internet:
             if ip:
@@ -276,7 +276,7 @@ class TestToggleWifiModeAndroidNatModeEnterpriseTTLSSuiteA(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
-            ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, ttls_passwd,
+            ip_check, is_internet_check = gets_ip_add_for_checking_and_forgets_ssid(request, ssidName, ttls_passwd,
                                                                setup_perfectoMobile_android, connData)
             if (ip_check == ip):
                 assert True
@@ -309,7 +309,7 @@ class TestToggleWifiModeAndroidNatModeEnterpriseTTLSSuiteA(object):
         connData = get_ToggleAirplaneMode_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_add_eap_and(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android, connData)
+        ip, is_internet = gets_ip_add_eap_and_does_not_forget_ssid(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android, connData)
         #
         if is_internet:
             if ip:
@@ -321,7 +321,7 @@ class TestToggleWifiModeAndroidNatModeEnterpriseTTLSSuiteA(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_WifiMode_android(request, setup_perfectoMobile_android, ssidName, connData)
-            ip_check, is_internet_check = get_ip_add_check_and(request, ssidName, ttls_passwd,
+            ip_check, is_internet_check = gets_ip_add_for_checking_and_forgets_ssid(request, ssidName, ttls_passwd,
                                                                setup_perfectoMobile_android, connData)
             if (ip_check == ip):
                 assert True

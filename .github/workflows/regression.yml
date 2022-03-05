@@ -1,0 +1,200 @@
+name: regression testing
+
+on:
+  workflow_dispatch:
+    inputs:
+      testbeds:
+        description: testbeds to test
+        default: basic-01,basic-02,basic-03,basic-04,basic-05,basic-06,basic-07,basic-08
+        required: true
+      regression_markers:
+        description: regression markers to execute
+        default: dfs,multipsk,rate_limiting,rate_limiting_with_radius,dynamic_vlan
+        required: true
+
+  #schedule:
+  #  - cron: "30 20 * * *"
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  vars:
+    runs-on: ubuntu-latest
+    outputs:
+      regression_markers: ${{ steps.vars.outputs.regression_markers }}
+      testbeds: ${{ steps.vars.outputs.testbeds }}
+
+    steps:
+      - name: set variables
+        id: vars
+        run: |
+          MARKERS="${{ github.event.inputs.regression_markers || 'dfs,multipsk,rate_limiting,rate_limiting_with_radius,dynamic_vlan' }}"
+          MARKERS=$(echo $MARKERS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
+          echo "::set-output name=regression_markers::${MARKERS}"
+
+          TESTBEDS="${{ github.event.inputs.testbeds || 'basic-01,basic-02,basic-03,basic-04,basic-05,basic-06,basic-07,basic-08' }}"
+          TESTBEDS=$(echo $TESTBEDS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
+          echo "::set-output name=testbeds::${TESTBEDS}"
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: build and push Docker image
+        uses: ./.github/actions/build-and-push-docker
+        with:
+          registry: tip-tip-wlan-cloud-docker-repo.jfrog.io
+          registry_user: wlan-testing-cicd
+          registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
+
+  test:
+    runs-on: [self-hosted, small]
+    needs: [vars, build]
+    timeout-minutes: 1440
+    strategy:
+      fail-fast: false
+      matrix:
+        testbed: ${{ fromJson( needs.vars.outputs.testbeds )}}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: install aws CLI tool
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: get EKS access credentials
+        env:
+          AWS_EKS_NAME: tip-wlan-main
+          AWS_DEFAULT_OUTPUT: json
+          AWS_DEFAULT_REGION: us-east-2
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      - name: run dfs tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'dfs')"
+        with:
+          namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-dfs
+          testbed: "${{ matrix.testbed }}"
+          marker_expression: "regression and dfs"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-dfs
+
+      - name: run multipsk tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'multipsk')"
+        with:
+          namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-multipsk
+          testbed: "${{ matrix.testbed }}"
+          marker_expression: "regression and multipsk"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-multipsk
+
+      - name: run rate_limiting tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'rate_limiting')"
+        with:
+          namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-rate_limiting
+          testbed: "${{ matrix.testbed }}"
+          marker_expression: "regression and rate_limiting"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-rate_limiting
+
+      - name: run rate_limiting_with_radius tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'rate_limiting_with_radius')"
+        with:
+          namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-rate_limiting_with_radius
+          testbed: "${{ matrix.testbed }}"
+          marker_expression: "regression and rate_limiting_with_radius"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-rate_limiting_with_radius
+
+      - name: run dynamic_vlan tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'dynamic_vlan')"
+        with:
+          namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-dynamic_vlan
+          testbed: "${{ matrix.testbed }}"
+          marker_expression: "regression and dynamic_vlan"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-dynamic_vlan
+
+  report:
+    needs: [vars, test]
+    if: "!cancelled()"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        testbed: ${{ fromJson( needs.vars.outputs.testbeds )}}
+        marker: ${{ fromJson( needs.vars.outputs.regression_markers )}}
+
+    steps:
+      - name: checkout testing repo
+        uses: actions/checkout@v2
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: allure-results-${{ matrix.testbed }}-${{ matrix.marker }}
+          path: allure-results
+
+      - name: download history of previous run
+        continue-on-error: true
+        run: |
+          LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key regression_${{ matrix.marker }}/${{ matrix.testbed }}/latest/index.html | jq -r .Metadata.latest)
+          aws s3 cp --recursive s3://openwifi-allure-reports/regression_${{ matrix.marker }}/${{ matrix.testbed }}/$LAST_RUN_ID/history history
+
+      - name: generate Allure report
+        uses: ./.github/actions/generate-allure-report
+        with:
+          results_path: ./allure-results
+          history_path: ./history
+
+      - name: upload Allure report as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: allure-report-${{ matrix.testbed }}-${{ matrix.marker }}
+          path: allure-report
+
+      # doing this to be able to aggregate multiple reports together later on
+      - name: copy results into report
+        run: cp -r allure-results allure-report/results
+
+      - name: upload to S3
+        if: github.ref == 'refs/heads/master' && needs.test.outputs.additional_markers == ''
+        uses: ./.github/actions/allure-report-to-s3
+        with:
+          test_type: regression_${{ matrix.marker }}
+          testbed: ${{ matrix.testbed }}
+          report_path: allure-report
+          s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
+          s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
+
+  cleanup:
+    needs: [test]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v2
+      - name: cleanup Docker image
+        uses: ./.github/actions/cleanup-docker
+        with:
+          registry_user: wlan-testing-cicd
+          registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}

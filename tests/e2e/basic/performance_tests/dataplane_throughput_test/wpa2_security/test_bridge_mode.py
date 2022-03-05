@@ -39,6 +39,7 @@ class TestDataplaneThroughputBRIDGE(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3913", name="WIFI-3913")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.twow
     def test_tcp_upd_wpa2_personal_bridge_2g_band_ac_station(self, get_vif_state, lf_tools,
                                                              lf_test, station_names_twog,
                                                              create_lanforge_chamberview_dut,
