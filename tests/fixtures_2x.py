@@ -512,10 +512,8 @@ class Fixtures_2x:
             if mode == "wpa2_enterprise":
                 for j in profile_data["ssid"][mode]:
                     if "radius_auth_data" in j:
-                        print("yes")
                         var = True
                     else:
-                        print("no")
                         var = False
                 for j in profile_data["ssid"][mode]:
                     if mode in get_markers.keys() and get_markers[mode]:
@@ -582,7 +580,63 @@ class Fixtures_2x:
                         except Exception as e:
                             print(e)
                             test_cases["wpa_eap"] = False
-
+            if mode == "wpa_wpa2_enterprise_mixed":  # -------WPA WPA2 Enterprise Mixed----------------
+                for j in profile_data["ssid"][mode]:
+                    if mode in get_markers.keys() and get_markers[mode]:
+                        try:
+                            if j["appliedRadios"].__contains__("2G"):
+                                lf_dut_data.append(j)
+                            if j["appliedRadios"].__contains__("5G"):
+                                lf_dut_data.append(j)
+                            j["appliedRadios"] = list(set(j["appliedRadios"]))
+                            j['security'] = "wpa-mixed"
+                            RADIUS_SERVER_DATA = radius_info
+                            RADIUS_ACCOUNTING_DATA = radius_accounting_info
+                            creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j, radius=True,
+                                                                               radius_auth_data=RADIUS_SERVER_DATA,
+                                                                               radius_accounting_data=RADIUS_ACCOUNTING_DATA)
+                            test_cases["wpa_eap"] = True
+                        except Exception as e:
+                            print(e)
+                            test_cases["wpa_eap"] = False
+            if mode == "wpa3_enterprise_mixed":  # -------WPA3 Enterprise Mixed----------------
+                for j in profile_data["ssid"][mode]:
+                    if mode in get_markers.keys() and get_markers[mode]:
+                        try:
+                            if j["appliedRadios"].__contains__("2G"):
+                                lf_dut_data.append(j)
+                            if j["appliedRadios"].__contains__("5G"):
+                                lf_dut_data.append(j)
+                            j["appliedRadios"] = list(set(j["appliedRadios"]))
+                            j['security'] = "wpa3-mixed"
+                            RADIUS_SERVER_DATA = radius_info
+                            RADIUS_ACCOUNTING_DATA = radius_accounting_info
+                            creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j, radius=True,
+                                                                               radius_auth_data=RADIUS_SERVER_DATA,
+                                                                               radius_accounting_data=RADIUS_ACCOUNTING_DATA)
+                            test_cases["wpa_eap"] = True
+                        except Exception as e:
+                            print(e)
+                            test_cases["wpa_eap"] = False
+            if mode == "wpa3_192_enterprise":  # -------WPA3 192 Enterprise Mixed----------------
+                for j in profile_data["ssid"][mode]:
+                    if mode in get_markers.keys() and get_markers[mode]:
+                        try:
+                            if j["appliedRadios"].__contains__("2G"):
+                                lf_dut_data.append(j)
+                            if j["appliedRadios"].__contains__("5G"):
+                                lf_dut_data.append(j)
+                            j["appliedRadios"] = list(set(j["appliedRadios"]))
+                            j['security'] = "wpa3-192"
+                            RADIUS_SERVER_DATA = radius_info
+                            RADIUS_ACCOUNTING_DATA = radius_accounting_info
+                            creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j, radius=True,
+                                                                               radius_auth_data=RADIUS_SERVER_DATA,
+                                                                               radius_accounting_data=RADIUS_ACCOUNTING_DATA)
+                            test_cases["wpa_eap"] = True
+                        except Exception as e:
+                            print(e)
+                            test_cases["wpa_eap"] = False
         try:
             if parameter['express-wifi']:
                 instantiate_profile_obj.set_express_wifi(open_flow=open_flow)

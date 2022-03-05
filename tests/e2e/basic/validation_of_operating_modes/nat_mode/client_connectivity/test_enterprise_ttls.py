@@ -2,7 +2,7 @@ import allure
 import pytest
 
 pytestmark = [pytest.mark.client_connectivity, pytest.mark.nat, pytest.mark.enterprise, pytest.mark.ttls,
-              pytest.mark.ucentral, pytest.mark.sanity] #pytest.mark.usefixtures("setup_test_run"),
+              pytest.mark.ucentral, pytest.mark.sanity, pytest.mark.uc_sanity]
 
 setup_params_enterprise = {
     "mode": "NAT",
@@ -28,7 +28,6 @@ setup_params_enterprise = {
     indirect=True,
     scope="class"
 )
-@pytest.mark.uc_sanity
 @pytest.mark.usefixtures("setup_profiles")
 class TestNATModeEnterpriseTTLSSuiteOne(object):
 
