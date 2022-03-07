@@ -469,7 +469,7 @@ class UProfileUtility:
                         ssid_info.append(temp)
         return ssid_info
 
-    def set_radio_config(self, radio_config={}):
+    def set_radio_config(self, radio_config=None, DFS=False, channel=None, bw=None):
         base_radio_config_2g = {
             "band": "2G",
             "country": "CA",
@@ -494,9 +494,17 @@ class UProfileUtility:
             #     for keys in radio_config[band]:
             #         base_radio_config_6g[keys] = radio_config[band][keys]
 
-
-        self.base_profile_config["radios"].append(base_radio_config_2g)
-        self.base_profile_config["radios"].append(base_radio_config_5g)
+        if DFS:
+            self.base_profile_config["radios"].append({
+                "band": "5G",
+                "country": "CA",
+                "channel-mode": "VHT",
+                "channel-width": bw,
+                "channel": channel
+            })
+        else:
+            self.base_profile_config["radios"].append(base_radio_config_2g)
+            self.base_profile_config["radios"].append(base_radio_config_5g)
         print(self.base_profile_config)
         self.vlan_section["ssids"] = []
         self.vlan_ids = []

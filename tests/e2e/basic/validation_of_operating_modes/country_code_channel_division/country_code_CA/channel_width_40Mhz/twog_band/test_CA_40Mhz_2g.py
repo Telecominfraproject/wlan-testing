@@ -57,6 +57,7 @@ class TestCountryCA40Mhz2GChannel1(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel1
+    @pytest.mark.shivamth
     def test_client_bridge_wpa2_chn1_40Mhz_CA_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and twog and channel1"
