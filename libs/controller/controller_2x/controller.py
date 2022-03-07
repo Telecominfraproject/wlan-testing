@@ -258,7 +258,6 @@ class FMSUtils:
         else:
             return {}
 
-
     def get_firmwares(self, limit="10000", model="", latestonly="", branch="", commit_id="", offset="3000"):
 
         deviceType = self.ap_model_lookup(model=model)
@@ -283,8 +282,6 @@ class FMSUtils:
             # print(data)
 
         return "error"
-
-
 
 
 class UProfileUtility:
@@ -393,16 +390,16 @@ class UProfileUtility:
         var = {
             "filters": ["probe",
                         "auth"]
-                }
+        }
         self.base_profile_config["metrics"]['wifi-frames'] = var
         del self.base_profile_config['services']
         var2 = {
-            "lldp":{
+            "lldp": {
                 "describe": "uCentral",
                 "location": "universe"
             },
-            "ssh" : {
-                "port" : 22
+            "ssh": {
+                "port": 22
             }
         }
         self.base_profile_config['services'] = var2
@@ -435,8 +432,6 @@ class UProfileUtility:
             # print(self.base_profile_config)
             # print(self.base_profile_config, file=sourceFile)
             # sourceFile.close()
-
-
 
     def encryption_lookup(self, encryption="psk"):
         encryption_mapping = {
@@ -474,7 +469,31 @@ class UProfileUtility:
                         ssid_info.append(temp)
         return ssid_info
 
-    def set_radio_config(self, radio_config=None, DFS = False, channel=None, bw=None):
+    def set_radio_config(self, radio_config=None, DFS=False, channel=None, bw=None):
+        base_radio_config_2g = {
+            "band": "2G",
+            "country": "CA",
+            "channel-mode": "HE",
+            "channel": "auto"
+        }
+        base_radio_config_5g = {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "HE",
+            "channel": "auto"
+        }
+        for band in radio_config:
+            if band == "2G":
+                for keys in radio_config[band]:
+                    base_radio_config_2g[keys] = radio_config[band][keys]
+            if band == "5G":
+                for keys in radio_config[band]:
+                    base_radio_config_5g[keys] = radio_config[band][keys]
+            # if band == "6G":
+            #     for keys in radio_config[band]:
+            #         base_radio_config_6g[keys] = radio_config[band][keys]
+
         if DFS:
             self.base_profile_config["radios"].append({
                 "band": "5G",
@@ -483,27 +502,10 @@ class UProfileUtility:
                 "channel-width": bw,
                 "channel": channel
             })
-        if radio_config:
-            if '2G' in radio_config:
-                self.base_profile_config["radios"].append(radio_config['2G'])
-            if '5G' in radio_config:
-                self.base_profile_config["radios"].append(radio_config['5G'])
         else:
-            self.base_profile_config["radios"].append({
-                "band": "2G",
-                "country": "US",
-                # "channel-mode": "HE",
-                "channel-width": 40,
-                # "channel": 11
-            })
-            self.base_profile_config["radios"].append({
-                "band": "5G",
-                "country": "US",
-                # "channel-mode": "HE",
-                "channel-width": 80,
-                # "channel": "auto"
-            })
-
+            self.base_profile_config["radios"].append(base_radio_config_2g)
+            self.base_profile_config["radios"].append(base_radio_config_5g)
+        print(self.base_profile_config)
         self.vlan_section["ssids"] = []
         self.vlan_ids = []
 
@@ -660,7 +662,6 @@ if __name__ == '__main__':
     # for i in new:
     #     print(i)
     # print(len(new))
-
 
     # print(profile.get_ssid_info())
     # # print(obj.get_devices())
