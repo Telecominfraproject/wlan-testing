@@ -98,7 +98,7 @@ class TestWifiCapacityNATModeDualBand(object):
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_udp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags,
-                                        upload_rate="0", protocol="UDP-IPv4", duration="60000")
+                                        upload_rate="100Mbps", protocol="UDP-IPv4", duration="60000")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
