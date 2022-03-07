@@ -3758,7 +3758,6 @@ def get_ip_address_eap_and(request, WifiName, User, ttls_passwd, setup_perfectoM
         # -----------------To Open Connections page---------------------------
     closeApp(connData["appPackage-android"], setup_perfectoMobile)
     return ip_address_element_text, ssid_with_internet
-
 #only to connect to wifi
 def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
@@ -6677,3 +6676,75 @@ def get_phone_information(setup_perfectoMobile, search_this):
     device_information = driver.execute_script('mobile:handset:info', params)
     print("device information for "+search_this+" is: ", device_information)
     return device_information
+
+#------------Return upload download rate------------------------------
+def return_upload_download_speed_android(request, setup_perfectoMobile, get_APToMobileDevice_data):
+    print("\n-------------------------------------")
+    print("Verify Upload & Download Speed")
+    print("-------------------------------------")
+
+    report = setup_perfectoMobile[1]
+    driver = setup_perfectoMobile[0]
+    connData = get_APToMobileDevice_data
+
+    driver.switch_to.context('WEBVIEW_1')
+
+    try:
+        print("Launching Chrome")
+        report.step_start("Google Home Page")
+        driver.get(connData["webURL"])
+        print("Enter Search Text")
+        elementFindTxt = driver.find_element_by_xpath(connData["lblSearch"])
+        elementFindTxt.send_keys("Internet Speed Test")
+    except Exception as e:
+        print("Launching Chrome Failed")
+        print (e)
+        # allure.attach(name="Speed Test logs: ", body=str("Launching Safari Failed"))
+        # allure.attach(name="Speed Test logs: ", body=str("Error log: " + e))
+
+    try:
+        print("Click Search Button")
+        report.step_start("Click Search Button")
+        time.sleep(2)
+        driver.implicitly_wait(2)
+        elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
+        elelSearch.click()
+    except:
+        try:
+            time.sleep(2)
+            driver.implicitly_wait(2)
+            elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
+            elelSearch.click()
+        except:
+            print("Search Drop Down not active...")
+            return False
+
+    try:
+        print("Click Run Speed Test Button...")
+        report.step_start("Click Run Speed Test Button")
+        driver.find_element_by_xpath(connData["BtnRunSpeedTest"]).click()
+    except NoSuchElementException:
+        print("Error in speed test element ", NoSuchElementException)
+        # allure.attach(name="Speed Test logs: ", body=str("Search Run Speed Test not active..." + NoSuchElementException))
+        return False
+
+    #Get upload/Download Speed
+    try:
+        print("Get Download Speed")
+        report.step_start("Get upload/Download Speed")
+        time.sleep(60)
+        downloadMbps = driver.find_element_by_xpath(connData["downloadMbps"])
+        downloadSpeed = downloadMbps.text
+        print("Download: " + downloadSpeed + " Mbps")
+
+        print("Get Upload Speed")
+        report.step_start("Get Upload Speed")
+        UploadMbps = driver.find_element_by_xpath(connData["UploadMbps"])
+        uploadSpeed = UploadMbps.text
+        print("Upload: " + uploadSpeed + " Mbps")
+        allure.attach(name="Speed Test logs: ", body=str("Upload: " + uploadSpeed + " Mbps" + "  Download: " + downloadSpeed + " Mbps"))
+        print("Access Point Verification Completed Successfully")
+    except NoSuchElementException:
+        print("Access Point Verification NOT Completed, checking Connection....")
+
+    return downloadSpeed, uploadSpeed
