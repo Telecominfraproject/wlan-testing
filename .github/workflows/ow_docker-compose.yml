@@ -258,7 +258,7 @@ jobs:
                 value: "$RTTY_TOKEN"
               - name: OWGW_FILEUPLOADER_HOST_NAME
                 value: "ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
-               name: OWGW_FILEUPLOADER_URI
+              - name: OWGW_FILEUPLOADER_URI
                 value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16003"
               - name: OWGW_SYSTEM_URI_PRIVATE
                 value: "https://owgw.wlan.local:17002"
