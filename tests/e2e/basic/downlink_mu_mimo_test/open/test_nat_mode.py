@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.downlink_mu_mimo, pytest.mark.nat, pytest.mark.open,  pytest.mark.fiveg, pytest.mark.twog]
+pytestmark = [pytest.mark.downlink_mu_mimo, pytest.mark.nat, pytest.mark.open]
 
 setup_params_general = {
     "mode": "NAT",

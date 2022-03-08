@@ -5,6 +5,7 @@
 import datetime
 import sys
 import os
+import threading
 
 import allure
 import pytest
@@ -49,11 +50,13 @@ from attenuator_serial import AttenuatorSerial
 from lf_atten_mod_test import CreateAttenuator
 from lf_mesh_test import MeshTest
 from lf_tr398_test import TR398Test
+from lf_pcap import LfPcap
 
 
 class RunTest:
 
     def __init__(self, lanforge_data=None, local_report_path="../reports/", influx_params=None, debug=False):
+        self.pcap_obj = None
         print("lanforge data", lanforge_data)
         if "type" in lanforge_data.keys():
             if lanforge_data["type"] == "mesh":
@@ -966,6 +969,7 @@ class RunTest:
             self.upstream_port = self.upstream_port + "." + str(vlan_id)
         print("Upstream Port: ", self.upstream_port)
 
+        self.pcap_obj = LfPcap(host=self.lanforge_ip, port=self.lanforge_port)
         self.cvtest_obj = TR398Test(lf_host=self.lanforge_ip,
                                     lf_port=self.lanforge_port,
                                     lf_user="lanforge",
@@ -986,7 +990,14 @@ class RunTest:
                                     test_rig=dut_name
                                     )
         self.cvtest_obj.setup()
-        self.cvtest_obj.run()
+        t1 = threading.Thread(target=self.cvtest_obj.run)
+        t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=("Wiphy0", "mu-mimo", 36, 120))
+        t1.start()
+        if t1.is_alive():
+            time.sleep(180)
+            t2.start()
+        while t1.is_alive():
+            time.sleep(1)
         if os.path.exists("mu-mimo-config.txt"):
             os.remove("mu-mimo-config.txt")
 

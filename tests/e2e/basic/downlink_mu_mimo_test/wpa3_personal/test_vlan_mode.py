@@ -8,8 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.downlink_mu_mimo, pytest.mark.vlan, pytest.mark.wpa3_personal, pytest.mark.fiveg,
-              pytest.mark.twog]
+pytestmark = [pytest.mark.downlink_mu_mimo, pytest.mark.vlan, pytest.mark.wpa3_personal]
 
 setup_params_general = {
     "mode": "VLAN",
