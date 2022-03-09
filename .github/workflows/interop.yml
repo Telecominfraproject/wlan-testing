@@ -2097,7 +2097,7 @@ jobs:
           s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
 
   cleanup:
-    needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
+    needs: [ test-iphone-11-vlan-eap-suiteA, test-iphone-xr-vlan-eap-suiteA, test-iphone-12-vlan-eap-suiteA, test-iphone-7-vlan-eap-suiteA, test-pixel-4-vlan-eap-suiteA, test-galaxy-s20-vlan-eap-suiteA, test-galaxy-s10-vlan-eap-suiteA, test-galaxy-s9-vlan-eap-suiteA ]
     runs-on: ubuntu-latest
     if: always()
     steps:
