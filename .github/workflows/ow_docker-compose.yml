@@ -356,6 +356,7 @@ jobs:
       - name: Connect to virtual AP and start firstcontact service
         run: |
           echo "${{ env.VIRTUAL_AP_SSH_KEY }}" > openwifi-virtual-ap.pem
+          chmod 600 openwifi-virtual-ap.pem
           ssh -o StrictHostKeyChecking=accept-new -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_public_ip.outputs.ip }} /etc/init.d/firstcontact start
 
   test:
