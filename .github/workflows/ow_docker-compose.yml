@@ -358,8 +358,7 @@ jobs:
       - name: Connect to virtual AP and start firstcontact service
         run: |
           echo ${{ env.VIRTUAL_AP_SSH_KEY }} > openwifi-virtual-ap.pem
-          ssh -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_public_ip.outputs.ip }}
-          /etc/init.d/firstcontact start
+          ssh -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_public_ip.outputs.ip }} /etc/init.d/firstcontact start
 
   test:
    name: Test specified microservice
@@ -374,18 +373,21 @@ jobs:
        if: ${{ github.event.inputs.microservice }} == 'owgw'
        run: |
          wget https://github.com/Telecominfraproject/wlan-cloud-ucentralgw/blob/master/test_scripts/curl/cli
+         chmod +x cli
          ./cli test_service
 
      - name: Checkout wlan-cloud-ucentralsec repo and test OWSec
        if: ${{ github.event.inputs.microservice }} == 'owsec'
        run: |
          wget https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/blob/main/test_scripts/curl/cli
+         chmod +x cli
          ./cli test_service
 
      - name: Checkout wlan-cloud-ucentralfms repo and test OWFms
        if: ${{ github.event.inputs.microservice }} == 'owfms'
        run: |
          wget https://github.com/Telecominfraproject/wlan-cloud-ucentralfms/blob/main/test_scripts/curl/cli
+         chmod +x cli
          ./cli test_service
 
   destroy-controller:
