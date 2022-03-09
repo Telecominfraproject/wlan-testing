@@ -8,10 +8,6 @@ env:
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
-  # Cloud SDK certs
-  CACERT: ${{ secrets.CACERT }}
-  CAKEY: ${{ secrets.CAKEY }}
-  ALLURE_CLI_VERSION: 2.14.0
 
 on:
   workflow_dispatch:
@@ -80,6 +76,12 @@ jobs:
           additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
           allure_results_artifact_name: allure-results-galaxy-s9
 
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s9
+
   test-iphone-12:
     runs-on: ubuntu-latest
     needs: [vars, test-galaxy-s9]
@@ -100,6 +102,12 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o model-iOS='iPhone-12' -o 'jobName=Github-Interop-iphone-12' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
           allure_results_artifact_name: allure-results-iphone-12
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-12
 
   # interop-02
   test-galaxy-s10:
@@ -123,6 +131,12 @@ jobs:
           additional_args: "-o model-android='Galaxy S10.*' -o 'jobName=Github-Interop-galaxy-s10' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
           allure_results_artifact_name: allure-results-galaxy-s10
 
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s10
+
   test-iphone-7:
     runs-on: ubuntu-latest
     needs: [vars, test-galaxy-s10]
@@ -143,6 +157,12 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o model-iOS='iPhone-7' -o 'jobName=Github-Interop-iphone-7' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
           allure_results_artifact_name: allure-results-iphone-7
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-7
 
   # interop-03
   test-galaxy-s20:
@@ -166,6 +186,12 @@ jobs:
           additional_args: "-o model-android='Galaxy S20' -o 'jobName=Github-Interop-galaxy-s20' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
           allure_results_artifact_name: allure-results-galaxy-s20
 
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s20
+
   test-iphone-xr:
     runs-on: ubuntu-latest
     needs: [vars, test-galaxy-s20]
@@ -186,6 +212,12 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o model-iOS='iPhone-XR' -o 'jobName=Github-Interop-iphone-xr' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
           allure_results_artifact_name: allure-results-iphone-xr
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-xr
 
   #interop-04
   test-pixel-4:
@@ -209,6 +241,12 @@ jobs:
           additional_args: "-o model-android='Pixel 4' -o 'jobName=Github-Interop-pixel-4' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
           allure_results_artifact_name: allure-results-pixel-4
 
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-pixel-4
+
   test-iphone-11:
     runs-on: ubuntu-latest
     needs: [vars, test-pixel-4]
@@ -229,6 +267,12 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o model-iOS='iPhone-11' -o 'jobName=Github-Interop-iphone-11' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
           allure_results_artifact_name: allure-results-iphone-11
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-11
 
   report:
     needs: [vars, test-iphone-11, test-iphone-xr, test-iphone-12, test-iphone-7]

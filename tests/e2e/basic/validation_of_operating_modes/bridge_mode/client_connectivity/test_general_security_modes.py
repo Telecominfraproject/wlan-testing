@@ -46,7 +46,6 @@ class TestBridgeModeConnectivitySuiteA(object):
         pytest -m "client_connectivity and bridge and general and suiteA"
     """
 
-    @pytest.mark.reg
     @pytest.mark.open
     @pytest.mark.twog
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")

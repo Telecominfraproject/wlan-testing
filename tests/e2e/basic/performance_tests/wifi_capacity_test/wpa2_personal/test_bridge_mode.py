@@ -44,8 +44,124 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3926", name="WIFI-3926")
-    @pytest.mark.tcp_download
-    def test_client_wpa2_bridge_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
+    @pytest.mark.tcp_download_wct
+    def test_client_wpa2_BRIDGE_tcp_dl(self,  lf_tools, setup_profiles,
+                                       lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                       get_configuration):
+        """ Wifi Capacity Test BRIDGE mode
+            pytest -m "wifi_capacity_test and BRIDGE and wpa2_personal and twog"
+        """
+        lf_tools.reset_scenario()
+        profile_data = setup_params_general_dual_band["ssid_modes"]["wpa2_personal"][0]
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        vlan = 1
+        lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.Chamber_View()
+        influx_tags = ["tcp", "download", "2.4G-5G Combined"]
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_dl", mode=mode, vlan_id=vlan,
+                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
+                                        influx_tags=influx_tags,
+                                        upload_rate="0", protocol="TCP-IPv4", duration="60000")
+
+        report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+
+        lf_tools.attach_report_graphs(report_name=report_name)
+        print("Test Completed... Cleaning up Stations")
+        assert True
+
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3927", name="WIFI-3927")
+    @pytest.mark.udp_download
+    def test_client_wpa2_BRIDGE_udp_dl(self,  lf_tools,
+                                       lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                       get_configuration):
+        """ Wifi Capacity Test BRIDGE mode
+            pytest -m "wifi_capacity_test and BRIDGE and wpa2_personal and twog"
+        """
+        lf_tools.reset_scenario()
+        profile_data = setup_params_general_dual_band["ssid_modes"]["wpa2_personal"][0]
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        vlan = 1
+        lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.Chamber_View()
+        influx_tags = ["udp", "download", "2.4G-5G Combined"]
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_dl", mode=mode, vlan_id=vlan,
+                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
+                                        influx_tags=influx_tags,
+                                        upload_rate="0", protocol="UDP-IPv4", duration="60000")
+
+        report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+
+        lf_tools.attach_report_graphs(report_name=report_name)
+        print("Test Completed... Cleaning up Stations")
+        assert True
+
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3932", name="WIFI-3932")
+    @pytest.mark.tcp_bidirectional
+    def test_client_wpa2_BRIDGE_tcp_bidirectional(self,  lf_tools,
+                                                  lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                  get_configuration):
+        """ Wifi Capacity Test BRIDGE mode
+            pytest -m "wifi_capacity_test and BRIDGE and wpa2_personal and twog"
+        """
+        lf_tools.reset_scenario()
+        profile_data = setup_params_general_dual_band["ssid_modes"]["wpa2_personal"][0]
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        vlan = 1
+        lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.Chamber_View()
+        influx_tags = ["tcp", "bidirectional", "2.4G-5G Combined"]
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_bi", mode=mode, vlan_id=vlan,
+                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
+                                        influx_tags=influx_tags,
+                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000")
+
+        report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+
+        lf_tools.attach_report_graphs(report_name=report_name)
+        print("Test Completed... Cleaning up Stations")
+        assert True
+
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3933", name="WIFI-3933")
+    @pytest.mark.udp_bidirectional
+    def test_client_wpa2_BRIDGE_udp_bidirectional(self,  lf_tools,
+                                                  lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                                  get_configuration):
+        """ Wifi Capacity Test BRIDGE mode
+            pytest -m "wifi_capacity_test and BRIDGE and wpa2_personal and twog"
+        """
+        lf_tools.reset_scenario()
+        profile_data = setup_params_general_dual_band["ssid_modes"]["wpa2_personal"][0]
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        vlan = 1
+        lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.Chamber_View()
+        influx_tags = ["udp", "bidirectional", "2.4G-5G Combined"]
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_bi", mode=mode, vlan_id=vlan,
+                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
+                                        influx_tags=influx_tags,
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
+
+        report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+
+        lf_tools.attach_report_graphs(report_name=report_name)
+        print("Test Completed... Cleaning up Stations")
+        assert True
+
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7127", name="WIFI-7127")
+    @pytest.mark.tcp_upload
+    def test_client_wpa2_bridge_tcp_ul(self, get_vif_state, lf_tools, setup_profiles,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -65,10 +181,10 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         influx_tags = ["tcp", "download", "2.4G-5G Combined"]
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_dl", mode=mode, vlan_id=vlan,
-                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_ul", mode=mode, vlan_id=vlan,
+                                        download_rate="0", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags,
-                                        upload_rate="0", protocol="TCP-IPv4", duration="60000")
+                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -76,9 +192,9 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3927", name="WIFI-3927")
-    @pytest.mark.udp_download
-    def test_client_wpa2_bridge_udp_dl(self, get_vif_state, lf_tools,
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7128", name="WIFI-7128")
+    @pytest.mark.udp_upload
+    def test_client_wpa2_bridge_udp_ul(self, get_vif_state, lf_tools,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -98,72 +214,8 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         influx_tags = ["udp", "download", "2.4G-5G Combined"]
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_dl", mode=mode, vlan_id=vlan,
-                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                        influx_tags=influx_tags,
-                                        upload_rate="0", protocol="UDP-IPv4", duration="60000")
-
-        report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
-        lf_tools.attach_report_graphs(report_name=report_name)
-        print("Test Completed... Cleaning up Stations")
-        assert True
-
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3932", name="WIFI-3932")
-    @pytest.mark.tcp_bidirectional
-    def test_client_wpa2_bridge_tcp_bidirectional(self, get_vif_state, lf_tools,
-                                                  lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                                  get_configuration):
-        """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa2_personal and twog"
-        """
-        lf_tools.reset_scenario()
-        profile_data = setup_params_general_dual_band["ssid_modes"]["wpa2_personal"][0]
-        ssid_name = profile_data["ssid_name"]
-        mode = "BRIDGE"
-        vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.Chamber_View()
-        influx_tags = ["tcp", "bidirectional", "2.4G-5G Combined"]
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_bi", mode=mode, vlan_id=vlan,
-                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                        influx_tags=influx_tags,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000")
-
-        report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
-        lf_tools.attach_report_graphs(report_name=report_name)
-        print("Test Completed... Cleaning up Stations")
-        assert True
-
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3933", name="WIFI-3933")
-    @pytest.mark.udp_bidirectional
-    def test_client_wpa2_bridge_udp_bidirectional(self, get_vif_state, lf_tools,
-                                                  lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                                  get_configuration):
-        """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa2_personal and twog"
-        """
-        lf_tools.reset_scenario()
-        profile_data = setup_params_general_dual_band["ssid_modes"]["wpa2_personal"][0]
-        ssid_name = profile_data["ssid_name"]
-        mode = "BRIDGE"
-        vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.Chamber_View()
-        influx_tags = ["udp", "bidirectional", "2.4G-5G Combined"]
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_bi", mode=mode, vlan_id=vlan,
-                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_ul", mode=mode, vlan_id=vlan,
+                                        download_rate="0", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags,
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
 
@@ -172,7 +224,6 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         lf_tools.attach_report_graphs(report_name=report_name)
         print("Test Completed... Cleaning up Stations")
         assert True
-
 
 setup_params_general_2G = {
     "mode": "BRIDGE",
@@ -204,7 +255,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3928", name="WIFI-3928")
     @pytest.mark.tcp_download
-    def test_client_wpa2_bridge_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
+    def test_client_wpa2_BRIDGE_tcp_dl(self,  lf_tools, setup_profiles,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -214,11 +265,8 @@ class TestWifiCapacityBRIDGEMode2G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -232,7 +280,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3930", name="WIFI-3930")
     @pytest.mark.udp_download
-    def test_client_wpa2_bridge_udp_dl(self, get_vif_state, lf_tools,
+    def test_client_wpa2_BRIDGE_udp_dl(self,  lf_tools,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -242,11 +290,8 @@ class TestWifiCapacityBRIDGEMode2G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -260,7 +305,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3934", name="WIFI-3934")
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa2_bridge_tcp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa2_BRIDGE_tcp_bidirectional(self,  lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                   get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -270,11 +315,8 @@ class TestWifiCapacityBRIDGEMode2G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -288,7 +330,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3935", name="WIFI-3935")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa2_bridge_udp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa2_BRIDGE_udp_bidirectional(self,  lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                   get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -298,11 +340,8 @@ class TestWifiCapacityBRIDGEMode2G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -345,7 +384,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3929", name="WIFI-3929")
     @pytest.mark.tcp_download
-    def test_client_wpa2_bridge_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
+    def test_client_wpa2_BRIDGE_tcp_dl(self,  lf_tools, setup_profiles,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -355,11 +394,8 @@ class TestWifiCapacityBRIDGEMode5G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -373,7 +409,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3931", name="WIFI-3931")
     @pytest.mark.udp_download
-    def test_client_wpa2_bridge_udp_dl(self, get_vif_state, lf_tools,
+    def test_client_wpa2_BRIDGE_udp_dl(self,  lf_tools,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -383,11 +419,8 @@ class TestWifiCapacityBRIDGEMode5G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -401,7 +434,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3936", name="WIFI-3936")
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa2_bridge_tcp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa2_BRIDGE_tcp_bidirectional(self,  lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                   get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -411,11 +444,8 @@ class TestWifiCapacityBRIDGEMode5G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",
@@ -429,7 +459,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3937", name="WIFI-3937")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa2_bridge_udp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa2_BRIDGE_udp_bidirectional(self,  lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                   get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -439,11 +469,8 @@ class TestWifiCapacityBRIDGEMode5G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps",

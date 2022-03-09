@@ -8,8 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.throughput_across_bw_test, pytest.mark.Bridge,
-              pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.throughput_across_bw_test, pytest.mark.bridge]
 raw_lines = [['pkts: %s' % 1],
                          ['directions: DUT Transmit;DUT Receive'],
                          ['bandw_options: %s' % 1],
@@ -47,7 +46,7 @@ class TestThroughputAcrossBw20MhzBRIDGE(object):
     @pytest.mark.bw20Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    def test_client_wpa2_personal_2g(self, get_vif_state,
+    def test_client_wpa2_personal_2g(self, 
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
         """Throughput Across Bw Bridge Mode
@@ -61,9 +60,6 @@ class TestThroughputAcrossBw20MhzBRIDGE(object):
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -91,7 +87,7 @@ class TestThroughputAcrossBw20MhzBRIDGE(object):
     @pytest.mark.bw20Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    def test_client_wpa2_personal_5g(self, get_vif_state,
+    def test_client_wpa2_personal_5g(self, 
                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
         """Throughput Across Bw Bridge Mode
            pytest -m "throughput_across_bw_test and Bridge and wpa2_personal and fiveg"
@@ -104,9 +100,6 @@ class TestThroughputAcrossBw20MhzBRIDGE(object):
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -162,7 +155,7 @@ class TestThroughputAcrossBw40MhzBRIDGE(object):
     @pytest.mark.bw40Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    def test_client_wpa2_personal_2g(self, get_vif_state,
+    def test_client_wpa2_personal_2g(self, 
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
         """Throughput Across Bw Bridge Mode
@@ -176,9 +169,6 @@ class TestThroughputAcrossBw40MhzBRIDGE(object):
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -206,7 +196,7 @@ class TestThroughputAcrossBw40MhzBRIDGE(object):
     @pytest.mark.bw40Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    def test_client_wpa2_personal_5g(self, get_vif_state,
+    def test_client_wpa2_personal_5g(self, 
                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
         """Throughput Across Bw Bridge Mode
            pytest -m "throughput_across_bw_test and Bridge and wpa2_personal and fiveg"
@@ -219,9 +209,6 @@ class TestThroughputAcrossBw40MhzBRIDGE(object):
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -276,7 +263,7 @@ class TestThroughputAcrossBw80MhzBRIDGE(object):
     @pytest.mark.bw80Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    def test_client_wpa2_personal_2g(self, get_vif_state,
+    def test_client_wpa2_personal_2g(self, 
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
         """Throughput Across Bw Bridge Mode
@@ -290,9 +277,6 @@ class TestThroughputAcrossBw80MhzBRIDGE(object):
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -320,7 +304,7 @@ class TestThroughputAcrossBw80MhzBRIDGE(object):
     @pytest.mark.bw80Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    def test_client_wpa2_personal_5g(self, get_vif_state,
+    def test_client_wpa2_personal_5g(self, 
                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
         """Throughput Across Bw Bridge Mode
            pytest -m "throughput_across_bw_test and Bridge and wpa2_personal and fiveg"
@@ -333,9 +317,6 @@ class TestThroughputAcrossBw80MhzBRIDGE(object):
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -391,7 +372,7 @@ class TestThroughputAcrossBw160MhzBRIDGE(object):
     @pytest.mark.bw160Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    def test_client_wpa2_personal_2g(self, get_vif_state,
+    def test_client_wpa2_personal_2g(self, 
                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
         """Throughput Across Bw Bridge Mode
@@ -405,9 +386,6 @@ class TestThroughputAcrossBw160MhzBRIDGE(object):
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -435,7 +413,7 @@ class TestThroughputAcrossBw160MhzBRIDGE(object):
     @pytest.mark.bw160Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    def test_client_wpa2_personal_5g(self, get_vif_state,
+    def test_client_wpa2_personal_5g(self, 
                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
         """Throughput Across Bw Bridge Mode
            pytest -m "throughput_across_bw_test and Bridge and wpa2_personal and fiveg"
@@ -448,9 +426,6 @@ class TestThroughputAcrossBw160MhzBRIDGE(object):
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)

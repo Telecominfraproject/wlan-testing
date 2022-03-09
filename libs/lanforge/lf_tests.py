@@ -9,6 +9,7 @@ import threading
 
 import allure
 import pytest
+import importlib
 
 sys.path.append(
     os.path.dirname(
@@ -43,7 +44,7 @@ from lf_dataplane_test import DataplaneTest
 from lf_rx_sensitivity_test import RxSensitivityTest
 from lf_ap_auto_test import ApAutoTest
 from csv_to_influx import CSVtoInflux
-from influx2 import RecordInflux
+# from influx import RecordInflux
 from lf_multipsk import MultiPsk
 from lf_rvr_test import RvrTest
 from attenuator_serial import AttenuatorSerial
@@ -85,18 +86,21 @@ class RunTest:
                 self.local_report_path = local_report_path
 
         else:
-            self.lanforge_ip = lanforge_data["ip"]
-            self.lanforge_port = lanforge_data["port"]
-            self.lanforge_ssh_port = lanforge_data["ssh_port"]
-            self.twog_radios = lanforge_data["2.4G-Radio"]
-            self.fiveg_radios = lanforge_data["5G-Radio"]
-            self.ax_radios = lanforge_data["AX-Radio"]
-            self.upstream_port = lanforge_data["upstream"].split(".")[2]
-            self.twog_prefix = lanforge_data["2.4G-Station-Name"]
-            self.fiveg_prefix = lanforge_data["5G-Station-Name"]
-            self.ax_prefix = lanforge_data["AX-Station-Name"]
+            self.lanforge_ip = configuration_data['traffic_generator']['details']["ip"]
+            self.lanforge_port = configuration_data['traffic_generator']['details']["port"]
+            self.lanforge_ssh_port = configuration_data['traffic_generator']['details']["ssh_port"]
+            self.twog_radios = configuration_data['traffic_generator']['details']["2.4G-Radio"]
+            self.fiveg_radios = configuration_data['traffic_generator']['details']["5G-Radio"]
+            self.ax_radios = configuration_data['traffic_generator']['details']["AX-Radio"]
+            self.upstream_port = configuration_data['traffic_generator']['details']["upstream"].split(".")[2]
+            self.twog_prefix = configuration_data['traffic_generator']['details']["2.4G-Station-Name"]
+            self.fiveg_prefix = configuration_data['traffic_generator']['details']["5G-Station-Name"]
+            self.ax_prefix = configuration_data['traffic_generator']['details']["AX-Station-Name"]
             self.debug = debug
-            self.lf_ssh_port = lanforge_data["ssh_port"]
+            self.run_lf = run_lf
+            if self.run_lf:
+                self.ssid_data = configuration_data['access_point'][0]['ssid']
+            self.lf_ssh_port = configuration_data['traffic_generator']['details']["ssh_port"]
             self.staConnect = None
             self.dataplane_obj = None
             self.rx_sensitivity_obj = None
@@ -109,12 +113,10 @@ class RunTest:
             #                              _influx_org=influx_params["influx_org"],
             #                              _influx_token=influx_params["influx_token"],
             #                              _influx_bucket=influx_params["influx_bucket"])
-        self.local_report_path = local_report_path
-        if not os.path.exists(self.local_report_path):
-            os.mkdir(self.local_report_path)
-        # self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
-        # self.eap_connect = TTLSTest(host=self.lanforge_ip, port=self.lanforge_port,
-        #                             sta_list="station_name", vap=False, _debug_on=self.debug)
+            self.local_report_path = local_report_path
+            if not os.path.exists(self.local_report_path):
+                os.mkdir(self.local_report_path)
+
 
     def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[],
                             station_name=[], mode="BRIDGE", vlan_id=1, band="twog"):
@@ -130,11 +132,20 @@ class RunTest:
         else:
             self.staConnect.upstream_port = self.upstream_port + "." + str(vlan_id)
         if band == "twog":
+            if self.run_lf:
+                ssid = self.ssid_data["2g-ssid"]
+                passkey = self.ssid_data["2g-password"]
+                security = self.ssid_data["2g-encryption"].lower()
+                print(ssid)
             self.staConnect.radio = self.twog_radios[0]
             self.staConnect.admin_down(self.staConnect.radio)
             self.staConnect.admin_up(self.staConnect.radio)
             self.staConnect.sta_prefix = self.twog_prefix
         if band == "fiveg":
+            if self.run_lf:
+                ssid = self.ssid_data["5g-ssid"]
+                passkey = self.ssid_data["5g-password"]
+                security = self.ssid_data["5g-encryption"].lower()
             self.staConnect.radio = self.fiveg_radios[0]
             self.staConnect.reset_port(self.staConnect.radio)
             self.staConnect.sta_prefix = self.fiveg_prefix
@@ -146,7 +157,7 @@ class RunTest:
         self.staConnect.runtime_secs = 40
         self.staConnect.bringup_time_sec = 80
         self.staConnect.cleanup_on_exit = True
-        # self.staConnect.cleanup()
+        print("gopi: ", self.staConnect.dut_ssid, self.staConnect.dut_passwd)
         self.staConnect.setup(extra_securities=extra_securities)
         self.staConnect.start()
         print("napping %f sec" % self.staConnect.runtime_secs)
@@ -225,11 +236,19 @@ class RunTest:
             self.eap_connect.l3_cx_obj_udp.upstream = self.upstream_port + "." + str(vlan_id)
             self.eap_connect.l3_cx_obj_tcp.upstream = self.upstream_port + "." + str(vlan_id)
         if band == "twog":
+            if self.run_lf:
+                ssid = self.ssid_data["2g-ssid"]
+                passkey = self.ssid_data["2g-password"]
+                security = self.ssid_data["2g-encryption"]
             self.eap_connect.radio = self.twog_radios[0]
             self.eap_connect.admin_down(self.eap_connect.radio)
             self.eap_connect.admin_up(self.eap_connect.radio)
             # self.eap_connect.sta_prefix = self.twog_prefix
         if band == "fiveg":
+            if self.run_lf:
+                ssid = self.ssid_data["5g-ssid"]
+                passkey = self.ssid_data["5g-password"]
+                security = self.ssid_data["5g-encryption"]
             self.eap_connect.radio = self.fiveg_radios[0]
             self.eap_connect.admin_down(self.eap_connect.radio)
             self.eap_connect.admin_up(self.eap_connect.radio)
@@ -366,10 +385,18 @@ class RunTest:
     def Client_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog",
                        vlan_id=100,
                        station_name=[]):
-
+        if band == "twog":
+            if self.run_lf:
+                ssid = self.ssid_data["2g-ssid"]
+                passkey = self.ssid_data["2g-password"]
+                security = self.ssid_data["2g-encryption"].lower()
+        if band == "fiveg":
+            if self.run_lf:
+                ssid = self.ssid_data["5g-ssid"]
+                passkey = self.ssid_data["5g-password"]
+                security = self.ssid_data["5g-encryption"].lower()
         self.client_connect = CreateStation(_host=self.lanforge_ip, _port=self.lanforge_port,
                                             _sta_list=station_name, _password=passkey, _ssid=ssid, _security=security)
-
         self.client_connect.station_profile.sta_mode = 0
         self.client_connect.upstream_resource = 1
         if mode == "BRIDGE":
@@ -394,6 +421,34 @@ class RunTest:
         else:
             return False
 
+    def attach_stationdata_to_allure(self, station_name=[], name=""):
+        self.sta_url_map = None
+        for sta_name_ in station_name:
+            if sta_name_ is None:
+                raise ValueError("get_station_url wants a station name")
+            if self.sta_url_map is None:
+                self.sta_url_map = {}
+                for sta_name in station_name:
+                    self.sta_url_map[sta_name] = "port/1/%s/%s" % (str(1), sta_name)
+                    print(self.sta_url_map)
+
+        for sta_name in station_name:
+            try:
+                station_data_str = ""
+                # sta_url = self.staConnect.get_station_url(sta_name)
+                cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port, )
+                station_info = cli_base.json_get(_req_url=self.sta_url_map[sta_name])
+                print("station info", station_info)
+                for i in station_info["interface"]:
+                    try:
+                        station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
+                    except Exception as e:
+                        print(e)
+                print("sta name", sta_name)
+                allure.attach(name=name, body=str(station_data_str))
+            except Exception as e:
+                print(e)
+
     def Client_Connect_Using_Radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
                                    vlan_id=100, radio=None, sta_mode=0,
                                    station_name=[]):
@@ -416,6 +471,15 @@ class RunTest:
         if self.client_connect.wait_for_ip(station_name):
             self.client_connect._pass("ALL Stations got IP's", print_=True)
             return self.client_connect
+        else:
+            return False
+
+    def wait_for_ip(self, station=[]):
+        self.local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
+        print(station)
+        if self.local_realm.wait_for_ip(station_list=station):
+            self.local_realm._pass("ALL Stations got IP's", print_=True)
+            return True
         else:
             return False
 
@@ -1014,7 +1078,6 @@ class RunTest:
         influx.glob()
         return self.cvtest_obj
 
-
 if __name__ == '__main__':
     influx_host = "influx.cicd.lab.wlan.tip.build"
     influx_port = 80
@@ -1061,3 +1124,7 @@ if __name__ == '__main__':
     # print(a)
     # print(obj.eap_connect.json_get("port/1/1/sta0000?fields=ap,ip"))
     # obj.EAP_Connect(station_name=["sta0000", "sta0001"], eap="TTLS", ssid="testing_radius")
+
+
+# TODO: create new funtion
+#  --> attach details to allure (ref:client_connectivity)
