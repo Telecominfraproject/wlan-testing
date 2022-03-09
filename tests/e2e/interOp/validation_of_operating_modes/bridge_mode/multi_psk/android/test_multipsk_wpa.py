@@ -29,7 +29,7 @@ setup_params_general = {
         "wpa": [
             {"ssid_name": "ssid_2g_mpsk",
              "appliedRadios": ["2G"],
-             "security": "psk2",
+             "security": "psk",
              "security_key": "something",
              "multi-psk": [
                  {
@@ -100,7 +100,7 @@ setup_params_general = {
              },
             {"ssid_name": "ssid_5g_mpsk",
              "appliedRadios": ["5G"],
-             "security": "psk2",
+             "security": "psk",
              "security_key": "something",
              "multi-psk": [
                  {
