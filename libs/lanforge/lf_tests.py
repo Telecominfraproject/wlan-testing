@@ -936,6 +936,9 @@ class RunTest:
         raw_line = []
         skip_twog = '1' if skip_2g else '0'
         skip_fiveg = '1' if skip_5g else '0'
+        sniff_radio = 'wiphy1' if skip_twog else 'wiphy0'
+        channel = 136 if skip_2g else 11
+        upstream_port = self.upstream_port
 
         sets = [['Calibrate Attenuators', '0'], ['Receiver Sensitivity', '0'], ['Maximum Connection', '0'],
                 ['Maximum Throughput', '0'], ['Airtime Fairness', '0'], ['Range Versus Rate', '0'],
@@ -961,12 +964,11 @@ class RunTest:
                 for i in raw_line:
                     f.write(str(i[0]) + "\n")
                 f.close()
-        if mode == "BRIDGE":
-            self.upstream_port = self.upstream_port
-        elif mode == "NAT":
-            self.upstream_port = self.upstream_port
+
+        if mode == "BRIDGE" or mode == "NAT":
+            upstream_port = self.upstream_port
         else:
-            self.upstream_port = self.upstream_port + "." + str(vlan_id)
+            upstream_port = self.upstream_port + "." + str(vlan_id)
         print("Upstream Port: ", self.upstream_port)
 
         self.pcap_obj = LfPcap(host=self.lanforge_ip, port=self.lanforge_port)
@@ -976,7 +978,7 @@ class RunTest:
                                     lf_password="lanforge",
                                     instance_name=instance_name,
                                     config_name="cv_dflt_cfg",
-                                    upstream="1.1." + self.upstream_port,
+                                    upstream="1.1." + upstream_port,
                                     pull_report=True,
                                     local_lf_report_dir=self.local_report_path,
                                     load_old_cfg=False,
@@ -991,7 +993,7 @@ class RunTest:
                                     )
         self.cvtest_obj.setup()
         t1 = threading.Thread(target=self.cvtest_obj.run)
-        t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=("Wiphy0", "mu-mimo", 36, 120))
+        t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 180))
         t1.start()
         if t1.is_alive():
             time.sleep(180)

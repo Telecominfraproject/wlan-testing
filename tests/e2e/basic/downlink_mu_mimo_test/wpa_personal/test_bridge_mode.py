@@ -18,7 +18,16 @@ setup_params_general = {
             {"ssid_name": "mu-mimo-2g", "appliedRadios": ["2G"], "security_key": "something"}
         ]
     },
-    "rf": [],
+    "rf": {
+        "5G": {
+            "band": '5G',
+            "channel": 136
+        },
+        "2G": {
+            "band": '2G',
+            "2G": 11
+        }
+    },
     "radius": False
 }
 
