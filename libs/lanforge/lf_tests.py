@@ -50,16 +50,17 @@ from lf_rvr_test import RvrTest
 from attenuator_serial import AttenuatorSerial
 from lf_atten_mod_test import CreateAttenuator
 from lf_mesh_test import MeshTest
+from LANforge.lfcli_base import LFCliBase
 from lf_tr398_test import TR398Test
 from lf_pcap import LfPcap
+realm = importlib.import_module("py-json.realm")
+Realm = realm.Realm
 
 
 class RunTest:
 
-    def __init__(self, lanforge_data=None, local_report_path="../reports/", influx_params=None, debug=False):
-        self.pcap_obj = None
-        print("lanforge data", lanforge_data)
-        if "type" in lanforge_data.keys():
+    def __init__(self, configuration_data=None, local_report_path="../reports/", influx_params=None, run_lf=False, debug=False):
+        if "type" in configuration_data['traffic_generator'].keys():
             if lanforge_data["type"] == "mesh":
                 self.lanforge_ip = lanforge_data["ip"]
                 self.lanforge_port = lanforge_data["port"]
@@ -107,6 +108,7 @@ class RunTest:
             self.dualbandptest_obj = None
             self.msthpt_obj = None
             self.cvtest_obj = None
+            self.pcap_obj = None
             self.influx_params = influx_params
             # self.influxdb = RecordInflux(_influx_host=influx_params["influx_host"],
             #                              _influx_port=influx_params["influx_port"],

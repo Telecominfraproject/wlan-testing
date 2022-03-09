@@ -20,12 +20,13 @@ setup_params_general = {
     },
     "rf": {
         "5G": {
+            "allow-dfs": False,
             "band": '5G',
             "channel": 136
         },
         "2G": {
             "band": '2G',
-            "2G": 11
+            "channel": 11
         }
     },
     "radius": False
