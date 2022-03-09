@@ -23,9 +23,9 @@ from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnecti
     return_upload_download_speed_iOS, get_ip_address_ios, wifi_connect, wifi_disconnect_and_forget
 
 pytestmark = [pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
-              pytest.mark.rate_limiting, pytest.mark.nat]
+              pytest.mark.rate_limiting, pytest.mark.vlan]
 setup_params_general = {
-    "mode": "NAT",
+    "mode": "VLAN",
     "ssid_modes": {
         "wpa2_personal": [
             {"ssid_name": "ssid_wpa2_2g_RL",
@@ -94,7 +94,7 @@ for sec_modes in setup_params_general['ssid_modes'].keys():
         setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 
-@allure.feature("NAT MODE Rate Limiting")
+@allure.feature("VLAN MODE Rate Limiting")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -102,7 +102,8 @@ for sec_modes in setup_params_general['ssid_modes'].keys():
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestRateLimitingNAT(object):
+class TestRateLimitingVLAN(object):
+
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
