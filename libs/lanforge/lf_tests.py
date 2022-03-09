@@ -67,21 +67,20 @@ Realm = realm.Realm
 
 class RunTest:
 
-    def __init__(self, configuration_data=None, local_report_path="../reports/", influx_params=None, run_lf=False,
-                 debug=False):
-        if "type" in configuration_data['traffic_generator'].keys():
-            if lanforge_data["type"] == "mesh":
-                self.lanforge_ip = lanforge_data["ip"]
-                self.lanforge_port = lanforge_data["port"]
-                self.ssh_port = lanforge_data["ssh_port"]
-                self.upstream_port_1 = lanforge_data["upstream-mobile-sta"]
-                self.upstream_port_2 = lanforge_data["upstream-root"]
-                self.upstream_port_3 = lanforge_data["upstream-node-1"]
-                self.upstream_port_4 = lanforge_data["upstream-node-2"]
-                self.uplink_port_1 = lanforge_data["uplink-mobile-sta"]
-                self.uplink_port_2 = lanforge_data["uplink-root"]
-                self.uplink_port_3 = lanforge_data["uplink--node-1"]
-                self.uplink_port_4 = lanforge_data["uplink--node-2"]
+    def __init__(self, configuration_data=None, local_report_path="../reports/", influx_params=None, run_lf=False, debug=False):
+        if "type" in configuration_data['traffic_generator']["details"].keys():
+            if configuration_data['traffic_generator']["details"]["type"] == "mesh":
+                self.lanforge_ip = configuration_data['traffic_generator']['details']["ip"]
+                self.lanforge_port = configuration_data['traffic_generator']['details']["port"]
+                self.ssh_port = configuration_data['traffic_generator']['details']["ssh_port"]
+                self.upstream_port_1 = configuration_data['traffic_generator']['details']["upstream-mobile-sta"]
+                self.upstream_port_2 = configuration_data['traffic_generator']['details']["upstream-root"]
+                self.upstream_port_3 = configuration_data['traffic_generator']['details']["upstream-node-1"]
+                self.upstream_port_4 = configuration_data['traffic_generator']['details']["upstream-node-2"]
+                self.uplink_port_1 = configuration_data['traffic_generator']['details']["uplink-mobile-sta"]
+                self.uplink_port_2 = configuration_data['traffic_generator']['details']["uplink-root"]
+                self.uplink_port_3 = configuration_data['traffic_generator']['details']["uplink--node-1"]
+                self.uplink_port_4 = configuration_data['traffic_generator']['details']["uplink--node-2"]
                 self.upstream_resource_1 = self.upstream_port_1.split(".")[0] + "." + self.upstream_port_1.split(".")[1]
                 self.upstream_resource_2 = self.upstream_port_2.split(".")[0] + "." + self.upstream_port_2.split(".")[1]
                 self.upstream_resource_3 = self.upstream_port_3.split(".")[0] + "." + self.upstream_port_3.split(".")[1]
@@ -90,8 +89,8 @@ class RunTest:
                 self.uplink_resource_2 = self.uplink_port_2.split(".")[0] + "." + self.uplink_port_2.split(".")[1]
                 self.uplink_resource_3 = self.uplink_port_3.split(".")[0] + "." + self.uplink_port_3.split(".")[1]
                 self.uplink_resource_4 = self.uplink_port_4.split(".")[0] + "." + self.uplink_port_4.split(".")[1]
-                self.upstream_subnet = lanforge_data["upstream_subnet-mobile-sta"]
-                self.lf_ssh_port = lanforge_data["ssh_port"]
+                self.upstream_subnet = configuration_data['traffic_generator']['details']["upstream_subnet-mobile-sta"]
+                self.lf_ssh_port = configuration_data['traffic_generator']['details']["ssh_port"]
                 print("hi", self.lanforge_port)
                 self.local_report_path = local_report_path
 

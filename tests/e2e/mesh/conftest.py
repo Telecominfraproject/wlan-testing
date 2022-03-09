@@ -115,7 +115,7 @@ def setup_profiles(request, setup_controller, testbed, get_equipment_id, fixture
 
 @pytest.fixture(scope="session")
 def lf_test(get_configuration, setup_influx):
-    obj = RunTest(lanforge_data=get_configuration['traffic_generator']['details'], influx_params=setup_influx)
+    obj = RunTest(configuration_data=get_configuration, influx_params=setup_influx)
     yield obj
 
 
