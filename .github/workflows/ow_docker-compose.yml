@@ -371,21 +371,21 @@ jobs:
      - name: Checkout wlan-cloud-ucentralgw repo and test OWGW
        if: ${{ github.event.inputs.microservice }} == 'owgw'
        run: |
-         wget https://github.com/Telecominfraproject/wlan-cloud-ucentralgw/blob/master/test_scripts/curl/cli
+         curl https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralgw/master/test_scripts/curl/cli -o cli
          chmod +x cli
          ./cli test_service
 
      - name: Checkout wlan-cloud-ucentralsec repo and test OWSec
        if: ${{ github.event.inputs.microservice }} == 'owsec'
        run: |
-         wget https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/blob/main/test_scripts/curl/cli
+         curl https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralsec/main/test_scripts/curl/cli -o cli
          chmod +x cli
          ./cli test_service
 
      - name: Checkout wlan-cloud-ucentralfms repo and test OWFms
        if: ${{ github.event.inputs.microservice }} == 'owfms'
        run: |
-         wget https://github.com/Telecominfraproject/wlan-cloud-ucentralfms/blob/main/test_scripts/curl/cli
+         curl https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralfms/main/test_scripts/curl/cli -o cli
          chmod +x cli
          ./cli test_service
 
