@@ -1,4 +1,9 @@
 name: 2.x testing with Docker Compose deployment
+env:
+  AWS_EKS_NAME: tip-wlan-main
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
 on:
   workflow_dispatch:
     inputs:
@@ -53,12 +58,8 @@ jobs:
   deploy-controller:
     name: Deploy OpenWIFI Cloud SDK
     env:
-      AWS_EKS_NAME: tip-wlan-main
       AWS_DEFAULT_OUTPUT: json
       AWS_DEFAULT_REGION: us-east-2
-      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
     runs-on: ubuntu-latest
     needs: id
     outputs:
@@ -334,9 +335,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AWS_DEFAULT_REGION: us-east-1
-      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
       VIRTUAL_AP_SSH_KEY: ${{ secrets.VIRTUAL_AP_SSH_KEY }}
       DIGICERT_API_KEY: ${{ secrets.DIGICERT_API_KEY }}
     steps:
@@ -357,7 +355,7 @@ jobs:
 
       - name: Connect to virtual AP and start firstcontact service
         run: |
-          echo ${{ env.VIRTUAL_AP_SSH_KEY }} > openwifi-virtual-ap.pem
+          echo "${{ env.VIRTUAL_AP_SSH_KEY }}" > openwifi-virtual-ap.pem
           ssh -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_public_ip.outputs.ip }} /etc/init.d/firstcontact start
 
   test:
@@ -394,6 +392,8 @@ jobs:
     name: Destroy controller namespace
     needs: [deploy-controller, test]
     runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: us-east-2
     if: always()
     steps:
       - name: Checkout wlan-testing repo
