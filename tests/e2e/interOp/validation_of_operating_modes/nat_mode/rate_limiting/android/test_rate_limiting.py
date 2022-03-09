@@ -18,7 +18,7 @@ if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
 pytestmark = [pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and,
-              pytest.mark.rate_limiting, pytest.mark.bridge]
+              pytest.mark.rate_limiting, pytest.mark.nat]
 
 from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, \
     get_ip_address_and, return_upload_download_speed_android, wifi_connect, wifi_disconnect_and_forget
