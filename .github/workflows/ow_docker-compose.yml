@@ -376,21 +376,21 @@ jobs:
      OWSEC_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
    steps:
      - name: Checkout wlan-cloud-ucentralgw repo and test OWGW
-       if: ${{ github.event.inputs.microservice }} == 'owgw'
+       if: github.event.inputs.microservice == 'owgw'
        run: |
          curl https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralgw/master/test_scripts/curl/cli -o cli
          chmod +x cli
          ./cli test_service ${{ needs.set-redirector-url.outputs.mac_address }}
 
      - name: Checkout wlan-cloud-ucentralsec repo and test OWSec
-       if: ${{ github.event.inputs.microservice }} == 'owsec'
+       if: github.event.inputs.microservice == 'owsec'
        run: |
          curl https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralsec/main/test_scripts/curl/cli -o cli
          chmod +x cli
          ./cli test_service
 
      - name: Checkout wlan-cloud-ucentralfms repo and test OWFms
-       if: ${{ github.event.inputs.microservice }} == 'owfms'
+       if: github.event.inputs.microservice == 'owfms'
        run: |
          curl https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralfms/main/test_scripts/curl/cli -o cli
          chmod +x cli
