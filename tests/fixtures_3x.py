@@ -36,43 +36,20 @@ class Fixtures_3x:
         # print(self.lab_info)
         print("cc.1")
         self.controller_obj = ""
-        # if not run_lf:
-        #     try:
-        #         self.controller_obj = CController(controller_data=self.lab_info["controller"], ap_data=self.lab_info['access_point'], timeout="10")
-        #     except Exception as e:
-        #         print(e)
-        #         allure.attach(body=str(e), name="Controller Instantiation Failed: ")
-        #         sdk_client = False
-        #         pytest.exit("unable to communicate to Controller" + str(e))
-
-    # def get_ap_version(self, get_apnos, get_configuration):
-    #
-    #     version_list = []
-    #     if self.cc_1:
-    #         version_list.append(get_configuration['access_point']['version'])
-    #     if not self.run_lf and not self.cc_1:
-    #         for access_point_info in get_configuration['access_point']:
-    #             ap_ssh = get_apnos(access_point_info)
-    #             version = ap_ssh.get_ap_version_ucentral()
-    #             version_list.append(version)
-    #     return version_list
-
 
     def setup_profiles(self, request, param, run_lf, instantiate_profile, get_configuration, get_markers, lf_tools):
         if run_lf:
             return 0
-        print("hi nikita")
+        print("check params")
+        # gives parameter value of setup_params_general
         parameter = dict(param)
         print("parameter", parameter)
-        # # print(get_configuration)
-        # instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'])
-        # print(1, instantiate_profile_obj)
-        vlan_id, mode = 0, 0
 
         test_cases = {}
         profile_data= {}
         var = ""
         list_key = list(parameter.keys())
+
         if parameter['mode'] not in ["BRIDGE", "NAT", "VLAN"]:
             print("Invalid Mode: ", parameter['mode'])
             return test_cases
@@ -83,7 +60,10 @@ class Fixtures_3x:
             for j in range(len(parameter["ssid_modes"][i])):
                 data = parameter["ssid_modes"][i][j]
                 profile_data["ssid"][i].append(data)
+
+        # profile data will give ssid data like {'ssid': {'wpa2_personal': [{'ssid_name': 'ssid_wpa2_2g', 'appliedRadios': ['2G'], 'security_key': 'something'}, {'ssid_name': 'ssid_wpa2_5g', 'appliedRadios': ['5G'], 'security_key': 'something'}], 'wpa3_personal': [{'ssid_name': 'ssid_wpa2_5g', 'appliedRadios': ['6G'], 'security_key': 'something'}]}}
         print(profile_data)
+
 
         # create wlan
         for mode in profile_data['ssid']:
@@ -95,23 +75,164 @@ class Fixtures_3x:
                                 lf_dut_data.append(j)
                             if j["appliedRadios"].__contains__("5G"):
                                 lf_dut_data.append(j)
+                            if j["appliedRadios"].__contains__("6G"):
+                                lf_dut_data.append(j)
                             j["appliedRadios"] = list(set(j["appliedRadios"]))
-                            j['security'] = 'psk2'
+                            j['security'] = 'wpa2'
                             # print("dut data", lf_dut_data)
                             test_cases["wpa_2g"] = True
                         except Exception as e:
                             print(e)
                             test_cases["wpa2_personal"] = False
+            if mode == "wpa3_personal":
+                for j in profile_data["ssid"][mode]:
+                    if mode in get_markers.keys() and get_markers[mode]:
+                        try:
+                            if j["appliedRadios"].__contains__("2G"):
+                                lf_dut_data.append(j)
+                            if j["appliedRadios"].__contains__("5G"):
+                                lf_dut_data.append(j)
+                            if j["appliedRadios"].__contains__("6G"):
+                                lf_dut_data.append(j)
+                            j["appliedRadios"] = list(set(j["appliedRadios"]))
+                            j['security'] = 'wpa3'
+                            test_cases["wpa_2g"] = True
+                        except Exception as e:
+                            print(e)
+                            test_cases["wpa3_personal"] = False
 
+        # lf dut data [{'ssid_name': 'ssid_wpa2_2g', 'appliedRadios': ['2G'], 'security_key': 'something', 'security': 'wpa2'}, {'ssid_name': 'ssid_wpa2_5g', 'appliedRadios': ['5G'], 'security_key': 'something', 'security': 'wpa2'}, {'ssid_name': 'ssid_wpa2_5g', 'appliedRadios': ['6G'], 'security_key': 'something', 'security': 'wpa3'}]
         print("lf dut data", lf_dut_data)
 
-        # instantiate controller object
+        if parameter["roam"] == True:
+            print("configure according to roam")
+            for ap_name in range(len(self.lab_info['access_point'])):
+                print("ap ", ap_name)
+                # instantiate controller object
+                instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
+                                                              timeout="10", ssid_data=lf_dut_data,
+                                                              ap_data=self.lab_info['access_point'], type=ap_name)
+                # if ap_name == 0:
+                #     for band in range(len(lf_dut_data)):
+                #         if lf_dut_data[band]["appliedRadios"] == ["5G"]:
+                #             instantiate_profile_obj.no_logging_console()
+                #             instantiate_profile_obj.line_console()
+                #             id_slot = instantiate_profile_obj.get_slot_id_wlan()
+                #             print(id_slot)
+                #             ssid_name = instantiate_profile_obj.get_ssid_name_on_id()
+                #             print(ssid_name)
+                #             if id_slot[1] == "2":
+                #                 instantiate_profile_obj.show_shutdown_5ghz_ap()
+                #                 instantiate_profile_obj.disable_wlan(id="2", wlan=ssid_name[1], wlanssid=ssid_name[1])
+                #                 instantiate_profile_obj.ap_5ghz_shutdown(id="2", wlan=ssid_name[1], wlanssid=ssid_name[1])
+                #                 instantiate_profile_obj.get_ssids()
+                #                 instantiate_profile_obj.delete_wlan(ssid=ssid_name[1])
+                #                 instantiate_profile_obj.get_ssids()
+                #                 instantiate_profile_obj.create_wlan_wpa2(id="2", wlan=lf_dut_data[1]['ssid_name'],
+                #                                                          wlanssid=lf_dut_data[1]['ssid_name'],
+                #                                                          key=lf_dut_data[1]['security_key'])
+                #             else:
+                #                 print("vwjhcdcnjkcj")
+                #                 print(lf_dut_data[1]['ssid_name'])
+                #                 instantiate_profile_obj.get_ssids()
+                #                 instantiate_profile_obj.show_shutdown_5ghz_ap()
+                #                 instantiate_profile_obj.get_ssids()
+                #                 instantiate_profile_obj.create_wlan_wpa2(id="2", wlan=lf_dut_data[1]['ssid_name'],
+                #                                                          wlanssid=lf_dut_data[1]['ssid_name'],
+                #                                                          key=lf_dut_data[1]['security_key'])
+                #                 instantiate_profile_obj.get_ssids()
+                #
+                #             instantiate_profile_obj.config_wireless_tag_policy_and_policy_profile(
+                #                 wlan=lf_dut_data[1]['ssid_name'])
+                #             instantiate_profile_obj.enable_wlan(id="2", wlan=lf_dut_data[1]['ssid_name'],
+                #                                                 wlanssid=lf_dut_data[1]['ssid_name'])
+                #             instantiate_profile_obj.enable_5ghz_netwrk(id="2", wlan=lf_dut_data[1]['ssid_name'],
+                #                                                        wlanssid=lf_dut_data[1]['ssid_name'],
+                #                                                        key=lf_dut_data[1]['security_key'])
+                #             instantiate_profile_obj.enable_ap_5ghz()
+                #             # instantiate_profile_obj.show_5ghz_summary()
+                #             instantiate_profile_obj.get_ssids()
+                if ap_name == 0:
+                    print("set 6g wpa3 wlan on ap2")
+                    for band in range(len(lf_dut_data)):
+                        if lf_dut_data[band]["appliedRadios"] == ["6G"]:
+                            # instantiate_profile_obj.no_logging_console()
+                            # instantiate_profile_obj.line_console()
+                            id_slot = instantiate_profile_obj.get_slot_id_wlan()
+                            print(id_slot)
+                            exit()
+                            ssid_name = instantiate_profile_obj.get_ssid_name_on_id()
+                            print(ssid_name)
+                            # if id_slot[0] == "1":
+                            #     instantiate_profile_obj.show_shutdown_2ghz_ap()
+                            #     instantiate_profile_obj.disable_wlan(id="1", wlan=ssid_name[0], wlanssid=ssid_name[0])
+                            #     instantiate_profile_obj.ap_2ghz_shutdown(id="1", wlan=ssid_name[0],
+                            #                                              wlanssid=ssid_name[0])
+                            #     instantiate_profile_obj.get_ssids()
+                            #     instantiate_profile_obj.delete_wlan(ssid=ssid_name[0])
+                            #     instantiate_profile_obj.get_ssids()
+
+                            # if id_slot[1] == "2":
+                            #     instantiate_profile_obj.show_shutdown_5ghz_ap()
+                            #     instantiate_profile_obj.disable_wlan(id="2", wlan=ssid_name[1], wlanssid=ssid_name[1])
+                            #     instantiate_profile_obj.ap_5ghz_shutdown(id="2", wlan=ssid_name[1], wlanssid=ssid_name[1])
+                            #     instantiate_profile_obj.get_ssids()
+                            #     instantiate_profile_obj.delete_wlan(ssid=ssid_name[1])
+                            #     instantiate_profile_obj.get_ssids()
+                            if id_slot[2] == "3":
+                                instantiate_profile_obj.show_shutdown_6ghz_ap()
+                                instantiate_profile_obj.show_shutdown_5ghz_ap()
+                                instantiate_profile_obj.show_shutdown_2ghz_ap()
+                                exit()
+                                instantiate_profile_obj.disable_wlan(id="3", wlan=ssid_name[2], wlanssid=ssid_name[2])
+                                instantiate_profile_obj.ap_6ghz_shutdown(id="3", wlan=ssid_name[2],
+                                                                         wlanssid=ssid_name[2])
+                                instantiate_profile_obj.get_ssids()
+                                instantiate_profile_obj.delete_wlan(ssid=ssid_name[2])
+                                instantiate_profile_obj.get_ssids()
+                                instantiate_profile_obj.create_wlan_wpa3(id="3", wlan=lf_dut_data[1]['ssid_name'],
+                                                                         wlanssid=lf_dut_data[1]['ssid_name'],
+                                                                         key=lf_dut_data[1]['security_key'])
+                            else:
+                                print("hey/////")
+                                print(lf_dut_data)
+                                print(lf_dut_data[1]['ssid_name'])
+                                instantiate_profile_obj.get_ssids()
+                                instantiate_profile_obj.show_shutdown_6ghz_ap()
+                                instantiate_profile_obj.get_ssids()
+                                instantiate_profile_obj.create_wlan_wpa3(id="3", wlan=lf_dut_data[1]['ssid_name'],
+                                                                         wlanssid=lf_dut_data[1]['ssid_name'],
+                                                                         key=lf_dut_data[1]['security_key'])
+                                instantiate_profile_obj.get_ssids()
+
+                            instantiate_profile_obj.config_wireless_tag_policy_and_policy_profile(wlan=lf_dut_data[1]['ssid_name'])
+                            instantiate_profile_obj.enable_wlan(id="3", wlan=lf_dut_data[1]['ssid_name'],
+                                                                wlanssid=lf_dut_data[1]['ssid_name'])
+                            instantiate_profile_obj.enable_6ghz_netwrk(id="3", wlan=lf_dut_data[1]['ssid_name'],
+                                                                       wlanssid=lf_dut_data[1]['ssid_name'],
+                                                                       key=lf_dut_data[1]['security_key'])
+                            instantiate_profile_obj.enable_ap_6ghz()
+                            # instantiate_profile_obj.show_5ghz_summary()
+                            instantiate_profile_obj.get_ssids()
+
+
+
+
+
+            exit()
+
+
+        # else:
+        #     exit()
+
+
         bssid_list_2g = []
         bssid_list_5g = []
         ssid_data_list = []
 
         for ap_name in range(len(self.lab_info['access_point'])):
             print("ap ", ap_name)
+            # instantiate controller object
             instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'], timeout="10",
                                                       ssid_data=lf_dut_data, ap_data=self.lab_info['access_point'], type=ap_name)
 
