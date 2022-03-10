@@ -3966,7 +3966,9 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
                     except NoSuchElementException:
                         print("validation failed")
                     # -------------------------------------------------------
-
+                    if (deviceModelName == "Galaxy S9"):
+                        driver.hide_keyboard()
+                        print("Hide keyboard")
                     # Click on connect button
                     # -------------------------------------------------------
                     try:
