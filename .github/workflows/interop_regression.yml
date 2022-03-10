@@ -70,11 +70,11 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s9
           testbed: interop-01
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'android and client_connectivity' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_and and not client_connect and not client_connectivity' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
-          allure_results_artifact_name: allure-results-galaxy-s9
+          additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9-regression' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-galaxy-s9-regression
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
@@ -82,26 +82,26 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s9
 
-#  test-iphone-12:
-#    runs-on: ubuntu-latest
-#    needs: [vars, test-galaxy-s9]
-#    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
-#    steps:
-#      - uses: actions/checkout@v2
-#
-#      - name: get EKS access credentials
-#        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-#
-#      - name: run tests
-#        uses: ./.github/actions/run-tests
-#        with:
-#          namespace: interop-${{ github.run_id }}-iphone-12
-#          testbed: interop-01
-#          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
-#          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
-#          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-#          additional_args: "-o model-iOS='iPhone-12' -o 'jobName=Github-Interop-iphone-12' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
-#          allure_results_artifact_name: allure-results-iphone-12
+  test-iphone-12:
+    runs-on: ubuntu-latest
+    needs: [vars, test-galaxy-s9]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-12
+          testbed: interop-01
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_ios and not client_connect and not client_connectivity' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-12' -o 'jobName=Github-Interop-iphone-12-regression' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-iphone-12-regression
 
   # interop-02
   test-galaxy-s10:
@@ -119,37 +119,37 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s10
           testbed: interop-02
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'android and client_connectivity' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_and and not client_connect and not client_connectivity' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "-o model-android='Galaxy S10.*' -o 'jobName=Github-Interop-galaxy-s10' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
-          allure_results_artifact_name: allure-results-galaxy-s10
+          additional_args: "-o model-android='Galaxy S10.*' -o 'jobName=Github-Interop-galaxy-s10-regression' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-galaxy-s10-regression
             # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
         if: always()
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s10
 
-#  test-iphone-7:
-#    runs-on: ubuntu-latest
-#    needs: [vars, test-galaxy-s10]
-#    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
-#    steps:
-#      - uses: actions/checkout@v2
-#
-#      - name: get EKS access credentials
-#        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-#
-#      - name: run tests
-#        uses: ./.github/actions/run-tests
-#        with:
-#          namespace: interop-${{ github.run_id }}-iphone-7
-#          testbed: interop-02
-#          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
-#          configuration: "${{ secrets.LAB_CONFIGURATION }}"
-#          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-#          additional_args: "-o model-iOS='iPhone-7' -o 'jobName=Github-Interop-iphone-7' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
-#          allure_results_artifact_name: allure-results-iphone-7
+  test-iphone-7:
+    runs-on: ubuntu-latest
+    needs: [vars, test-galaxy-s10]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-7
+          testbed: interop-02
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_ios and not client_connect and not client_connectivity' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-7' -o 'jobName=Github-Interop-iphone-7-regression' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-iphone-7-regression
 
   # interop-03
   test-galaxy-s20:
@@ -167,37 +167,37 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s20
           testbed: interop-03
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'android and client_connectivity' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_and and not client_connect and not client_connectivity' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "-o model-android='Galaxy S20' -o 'jobName=Github-Interop-galaxy-s20' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
-          allure_results_artifact_name: allure-results-galaxy-s20
+          additional_args: "-o model-android='Galaxy S20' -o 'jobName=Github-Interop-galaxy-s20-regression' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-galaxy-s20-regression
             # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
         if: always()
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s20
 
-#  test-iphone-xr:
-#    runs-on: ubuntu-latest
-#    needs: [vars, test-galaxy-s20]
-#    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
-#    steps:
-#      - uses: actions/checkout@v2
-#
-#      - name: get EKS access credentials
-#        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-#
-#      - name: run tests
-#        uses: ./.github/actions/run-tests
-#        with:
-#          namespace: interop-${{ github.run_id }}-iphone-xr
-#          testbed: interop-03
-#          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
-#          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
-#          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-#          additional_args: "-o model-iOS='iPhone-XR' -o 'jobName=Github-Interop-iphone-xr' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
-#          allure_results_artifact_name: allure-results-iphone-xr
+  test-iphone-xr:
+    runs-on: ubuntu-latest
+    needs: [vars, test-galaxy-s20]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-xr
+          testbed: interop-03
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_ios and not client_connect and not client_connectivity' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-XR' -o 'jobName=Github-Interop-iphone-xr-regression' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-iphone-xr-regression
 
   #interop-04
   test-pixel-4:
@@ -215,11 +215,11 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-pixel-4
           testbed: interop-04
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'android and client_connectivity' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_and and not client_connect and not client_connectivity' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "-o model-android='Pixel 4' -o 'jobName=Github-Interop-pixel-4' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
-          allure_results_artifact_name: allure-results-pixel-4
+          additional_args: "-o model-android='Pixel 4' -o 'jobName=Github-Interop-pixel-4-regression' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-pixel-4-regression
             # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
         if: always()
@@ -227,26 +227,26 @@ jobs:
         run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-pixel-4
 
 
-  #  test-iphone-11:
-#    runs-on: ubuntu-latest
-#    needs: [vars, test-pixel-4]
-#    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
-#    steps:
-#      - uses: actions/checkout@v2
-#
-#      - name: get EKS access credentials
-#        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-#
-#      - name: run tests
-#        uses: ./.github/actions/run-tests
-#        with:
-#          namespace: interop-${{ github.run_id }}-iphone-11
-#          testbed: interop-04
-#          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
-#          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
-#          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-#          additional_args: "-o model-iOS='iPhone-11' -o 'jobName=Github-Interop-iphone-11' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
-#          allure_results_artifact_name: allure-results-iphone-11
+  test-iphone-11:
+    runs-on: ubuntu-latest
+    needs: [vars, test-pixel-4]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-11
+          testbed: interop-04
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_ios and not client_connect and not client_connectivity' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-11' -o 'jobName=Github-Interop-iphone-11-regression' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-iphone-11-regression
 
   report:
     needs: [vars, test-pixel-4, test-galaxy-s20, test-galaxy-s10, test-galaxy-s9]
