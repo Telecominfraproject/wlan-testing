@@ -36,6 +36,7 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
+    @pytest.mark.jk
     def test_tls_wpa_enterprise_2g(self, station_names_twog, lf_test,
                                     radius_info, exit_on_fail, lf_tools):
         """ wpa enterprise 2g
@@ -55,6 +56,7 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
         identity = radius_info['user']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
+        lf_test.scan_ssid(radio=lf_tools.twog_radios[0].radio_name.split(".")[2])
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
                                      identity=identity, station_name=station_names_twog,
