@@ -54,6 +54,12 @@ from lf_mesh_test import MeshTest
 from LANforge.lfcli_base import LFCliBase
 realm = importlib.import_module("py-json.realm")
 Realm = realm.Realm
+from LANforge import LFUtils
+from lf_cleanup import lf_clean
+
+@allure.step
+def nested_step_allure(bssid, rssi):
+    pass
 
 class RunTest:
 
@@ -994,137 +1000,49 @@ class RunTest:
         self.Client_disconnect(station_name=station_name)
         return atten_serial_radio
 
-    # def basic_roam(self, run_lf, get_configuration, lf_tools, instantiate_profile, ssid_name=None, security=None, security_key=None,
-    #                mode=None, band=None, station_name=None, vlan=None, test=None):
-    #     allure.attach(name="Test Procedure", body="This test consists of creating a single client which will be " \
-    #                                               " connected to the nearest ap, here the test automation will " \
-    #                                               "set ap1 to attenuation value zero and ap2 to highest attenuation," \
-    #                                               " then it will keep on increasing attenuation value of ap1 by 5db parallely " \
-    #                                               "decreasing attenuation of ap2 by 5 db and simultaneously monitoring client bssid. ")
-    #     # c1_bssid = ""
-    #     # c2_bssid = ""
-    #     # if test == "2g":
-    #     #     c1_2g_bssid = ""
-    #     #     c2_2g_bssid = ""
-    #     #     if run_lf:
-    #     #         c1_2g_bssid = get_configuration["access_point"][0]["ssid"]["2g-bssid"]
-    #     #         allure.attach(name="bssid of ap1", body=c1_2g_bssid)
-    #     #         c2_2g_bssid = get_configuration["access_point"][1]["ssid"]["2g-bssid"]
-    #     #         allure.attach(name="bssid of ap2", body=c2_2g_bssid)
-    #     #
-    #     #     else:
-    #     #         # instantiate controller class and check bssid's for each ap in testbed
-    #     #         for ap_name in range(len(get_configuration['access_point'])):
-    #     #             instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
-    #     #                                                       timeout="10", ap_data=get_configuration['access_point'], type=ap_name)
-    #     #             bssid_2g = instantiate_profile_obj.cal_bssid_2g()
-    #     #             if ap_name == 0 :
-    #     #                 c1_2g_bssid = bssid_2g
-    #     #             if ap_name == 1:
-    #     #                 c2_2g_bssid = bssid_2g
-    #     #     c1_bssid = c1_2g_bssid
-    #     #     c2_bssid = c2_2g_bssid
-    #     # elif test == "5g":
-    #     #     c1_5g_bssid = ""
-    #     #     c2_5g_bssid = ""
-    #     #     if run_lf:
-    #     #         c1_5g_bssid = get_configuration["access_point"][0]["ssid"]["5g-bssid"]
-    #     #         allure.attach(name="bssid of ap1", body=c1_5g_bssid)
-    #     #         c2_5g_bssid = get_configuration["access_point"][1]["ssid"]["5g-bssid"]
-    #     #         allure.attach(name="bssid of ap2", body=c2_5g_bssid)
-    #     #     else:
-    #     #         for ap_name in range(len(get_configuration['access_point'])):
-    #     #             instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
-    #     #                                                           timeout="10",
-    #     #                                                           ap_data=get_configuration['access_point'],
-    #     #                                                           type=ap_name)
-    #     #             bssid_5g = instantiate_profile_obj.cal_bssid_5g()
-    #     #             if ap_name == 0:
-    #     #                 c1_5g_bssid = bssid_5g
-    #     #             if ap_name == 1:
-    #     #                 c2_5g_bssid = bssid_5g
-    #     #     c1_bssid = c1_5g_bssid
-    #     #     c2_bssid = c2_5g_bssid
-    #     #
-    #     # print("bssid of c1 ", c1_bssid)
-    #     # allure.attach(name="bssid of ap1", body=c1_bssid)
-    #     # print("bssid of c2",  c2_bssid)
-    #     # allure.attach(name="bssid of ap2", body=c2_bssid)
-    #
-    #     #  get serial nummber of attenuators from lf
-    #     ser_no = self.attenuator_serial()
-    #     print(ser_no[0])
-    #     ser_1 = ser_no[0].split(".")[2]
-    #     ser_2 = ser_no[1].split(".")[2]
-    #
-    #     start_time = time.time()
-    #
-    #     # set attenuation to zero in first attenuator and high in second attenuator
-    #     self.attenuator_modify(ser_1, "all", 950)
-    #     self.attenuator_modify(ser_2, "all", 0)
-    #
-    #     allure.attach(name="Pass Fail Criteria",
-    #                   body="Pass criteria will check if client bssid for station info before roam  is not similar to "\
-    #                        "station info after roam then the test will state client successfully performed roam ")
-    #
-    #     #  create station
-    #     station = self.Client_Connect(ssid=ssid_name, security=security, passkey=security_key, mode=mode, band=band,
-    #                                      station_name=station_name, vlan_id=vlan)
-    #
-    #     # if station connects then query bssid of station
-    #     if station:
-    #         self.attach_stationdata_to_allure(name="staion info before roam", station_name=station_name)
-    #         bssid = lf_tools.station_data_query(station_name=str(station_name[0]), query="ap")
-    #         rssi = lf_tools.station_data_query(station_name=str(station_name[0]), query="signal")
-    #         cx_time = lf_tools.station_data_query(station_name=str(station_name[0]), query="cx time (us)")
-    #         print(rssi)
-    #         print(cx_time)
-    #         exit()
-    #         allure.attach(name="rssi of station before roam", body=str(rssi))
-    #         allure.attach(name="connect-time of station before roam", body=str(cx_time))
-    #         formated_bssid = bssid.lower()
-    #         station_before = ""
-    #         if formated_bssid == c1_bssid:
-    #             print("station connected to chamber1 ap")
-    #             station_before = formated_bssid
-    #         elif formated_bssid == c2_bssid:
-    #             print("station connected to chamber 2 ap")
-    #             station_before = formated_bssid
-    #
-    #         # logic to decrease c2 attenuation and increase c1 attenuation by 5db/50ddb
-    #         for atten_val1, atten_val2 in zip(range(50, 950, 50), range(900, 0, -50)):
-    #             print(atten_val1)
-    #             print(atten_val2)
-    #
-    #             self.attenuator_modify(int(ser_1), "all", atten_val2)
-    #             self.attenuator_modify(int(ser_2), "all", atten_val1)
-    #             time.sleep(10)
-    #             bssid = lf_tools.station_data_query(station_name=str(station_name[0]), query="ap")
-    #             station_after = bssid.lower()
-    #             if station_after == station_before:
-    #                 print("station did not roamed")
-    #                 continue
-    #             elif station_after != station_before:
-    #                 print("client performed roam")
-    #                 self.attach_stationdata_to_allure(name="station info after roam",
-    #                                                      station_name=station_name)
-    #                 rssi = lf_tools.station_data_query(station_name=str(station_name[0]), query="signal")
-    #                 cx_time = lf_tools.station_data_query(station_name=str(station_name[0]), query="cx time (us)")
-    #                 # print(rssi)
-    #                 # print(cx_time)
-    #                 allure.attach(name="rssi of station after roam", body=str(rssi))
-    #                 allure.attach(name="connect-time of station after roam", body=str(cx_time))
-    #                 allure.attach(name="attenuation_data", body="ap1 was at attenuation value " + str(
-    #                     atten_val1) + "ddbm and ap2 was at attenuation value " + str(atten_val2) + "ddbm")
-    #                 break
-    #         self.Client_disconnect(station_name=station_name)
-    #         overall_time = (time.time() - start_time)
-    #         final_time = datetime.timedelta(seconds=overall_time)
-    #         allure.attach(name="execution time", body=str(final_time))
-    #         return True
-    #     else:
-    #         allure.attach(name="FAIL", body="station failed to get ip")
-    #         return False
+    def create_n_clients(self, start_id=0, sta_prefix=None, num_sta=None, dut_ssid=None,
+                         dut_security=None, dut_passwd=None, band=None, radio=None, lf_tools=None):
+
+        local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
+        station_profile = local_realm.new_station_profile()
+
+        # pre clean
+        sta_list = lf_tools.get_station_list()
+        print(sta_list)
+        if not sta_list:
+            print("no stations on lanforge")
+        else:
+            station_profile.cleanup(sta_list, delay=1)
+            LFUtils.wait_until_ports_disappear(base_url=local_realm.lfclient_url,
+                                               port_list=sta_list,
+                                               debug=True)
+            time.sleep(2)
+            print("pre cleanup done")
+
+        station_list = LFUtils.portNameSeries(prefix_=sta_prefix, start_id_=start_id,
+                                                            end_id_=num_sta - 1, padding_number_=10000,
+                                                            radio=radio)
+
+        station_profile.use_security(dut_security, dut_ssid, dut_passwd)
+        station_profile.set_number_template("00")
+
+        station_profile.set_command_flag("add_sta", "create_admin_down", 1)
+
+        station_profile.set_command_param("set_port", "report_timer", 1500)
+
+        # connect station to particular bssid
+        # self.station_profile.set_command_param("add_sta", "ap", self.bssid[0])
+
+        station_profile.set_command_flag("set_port", "rpt_timer", 1)
+        station_profile.create(radio=radio, sta_names_=station_list)
+        local_realm.wait_until_ports_appear(sta_list=station_list)
+        station_profile.admin_up()
+        if local_realm.wait_for_ip(station_list):
+            print("All stations got IPs")
+            return True
+        else:
+            print("Stations failed to get IPs")
+            return False
 
     def json_get(self, _req_url="/"):
         cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port, )
@@ -1133,6 +1051,7 @@ class RunTest:
 
     def create_layer3(self, side_a_min_rate, side_a_max_rate, side_b_min_rate, side_b_max_rate,
                       traffic_type, sta_list,):
+        # checked
         print(sta_list)
         print(type(sta_list))
         print(self.upstream)
@@ -1147,61 +1066,60 @@ class RunTest:
         cx_profile.side_b_max_bps = side_b_max_rate
 
         # create
-        cx_profile.create(endp_type=traffic_type, side_a=[sta_list],
+        cx_profile.create(endp_type=traffic_type, side_a=sta_list,
                                side_b=self.upstream,
                                sleep_time=0)
         cx_profile.start_cx()
 
     def get_cx_list(self):
-        url = f"/cx/"
+        local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
+        layer3_result = local_realm.cx_list()
+        layer3_names = [item["name"] for item in layer3_result.values() if "_links" in item]
+        print(layer3_names)
+        return layer3_names
 
+
+    def get_layer3_values(self, cx_name=None, query=None):
+        url = f"/cx/{cx_name}"
         response = self.json_get(_req_url=url)
-        print(response)
-        exit()
-        if (response is None) or ("endpoint" not in response):
-            print("incomplete response:")
-        # pprint(response)
-        exit(1)
-        y = response["endpoint"]['rx rate']
-        return y
+        result = response[str(cx_name)][str(query)]
+        return result
+
+    # def get_layer3_values(self, query=None, cx_name=None):
+    #     # self.get_cx_list()
+    #     # self.json_get("http://192.168.100.131:8080/endp/Unsetwlan000-0-B?fields=rx%20rate")
+    #     url = f"/endp/{cx_name}?fields={query}"
+    #     response = self.json_get(_req_url=url)
+    #     print(response)
+    #     if (response is None) or ("endpoint" not in response):
+    #         print("incomplete response:")
+    #     #pprint(response)
+    #         exit(1)
+    #     final = response["endpoint"][query]
+    #     return final
 
 
-    def get_layer3_values(self, query=None):
-        # self.get_cx_list()
+    def crete_file_attach(self, bssid,rssi, rx_rate, rx_bytes, rx_packets, cx_time,  filename, name ):
+        try:
+            filename = filename
+            with open(filename, 'w') as f:
+                lines = ["bssid: " + str(bssid), 'rssi: ' + str(rssi), "rx rate: " + str(rx_rate),
+                         "rx packets: " + str(rx_packets), "rx bytes: " + str(rx_bytes), "connection time: " + str(cx_time)]
+                for line in lines:
+                    f.write(line)
+                    f.write('\n')
+            allure.attach.file(name=str(name), source=str(filename))
+        except FileNotFoundError:
+            print("The 'docs' directory does not exist")
 
+    def basic_roam(self, run_lf, get_configuration, lf_tools, lf_reports,  instantiate_profile, ssid_name=None, security=None, security_key=None,
+                   mode=None, band=None, station_name=None, vlan=None, test=None, iteration=2):
 
-        url = f"/endp/Unsetwlan000-0-B?fields={query}"
-
-        response = self.json_get(_req_url=url)
-        print(response)
-        if (response is None) or ("endpoint" not in response):
-            print("incomplete response:")
-        #pprint(response)
-            exit(1)
-        final = response["endpoint"][query]
-        # else:
-        #     if query == "rx rate":
-        #         y = response["endpoint"]['rx rate']
-        #         print(y)
-        #         print(type(y))
-        #         final = y
-        #         print("final",final)
-        #         exit()
-        #     if query == "rx bytes":
-        #         final = response["endpoint"]['rx bytes']
-        #         print("final",final)
-
-        return final
-        # self.json_get("http://192.168.100.131:8080/endp/Unsetwlan000-0-B?fields=rx%20rate")
-
-
-    def basic_roam(self, run_lf, get_configuration, lf_tools, instantiate_profile, ssid_name=None, security=None, security_key=None,
-                   mode=None, band=None, station_name=None, vlan=None, test=None):
         allure.attach(name="Test Procedure", body="This test consists of creating a single client which will be " \
                                                   " connected to the nearest ap, here the test automation will " \
                                                   "set ap1 to lowest attenuation value say 10 db and ap2 to highest attenuation," \
                                                   " say 95 db, then it will keep on decreasing  attenuation value of ap2 by 5db till it reaches its lowest " \
-                                                  "and then increasing attenuation of ap1 by 5db to highest and check if client performed roam by monitoring client bssid. ")
+                                                  "and then increasing attenuation of ap1 by 5db to highest and check if client performed roam by monitoring client bssid, for n number of iterations ")
         c1_bssid = ""
         c2_bssid = ""
         if test == "2g":
@@ -1226,6 +1144,460 @@ class RunTest:
             c1_bssid = c1_2g_bssid
             c2_bssid = c2_2g_bssid
         elif test == "5g":
+            c1_5g_bssid = "68:7d:b4:5f:5c:3e"
+            c2_5g_bssid = "14:16:9d:53:58:ce"
+            # if run_lf:
+            #     c1_5g_bssid = get_configuration["access_point"][0]["ssid"]["5g-bssid"]
+            #     allure.attach(name="bssid of ap1", body=c1_5g_bssid)
+            #     c2_5g_bssid = get_configuration["access_point"][1]["ssid"]["5g-bssid"]
+            #     allure.attach(name="bssid of ap2", body=c2_5g_bssid)
+            # else:
+            #     for ap_name in range(len(get_configuration['access_point'])):
+            #         instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
+            #                                                       timeout="10",
+            #                                                       ap_data=get_configuration['access_point'],
+            #                                                       type=ap_name)
+            #         bssid_5g = instantiate_profile_obj.cal_bssid_5g()
+            #         if ap_name == 0:
+            #             c1_5g_bssid = bssid_5g
+            #         if ap_name == 1:
+            #             c2_5g_bssid = bssid_5g
+            c1_bssid = c1_5g_bssid
+            c2_bssid = c2_5g_bssid
+
+        print("bssid of c1 ", c1_bssid)
+        allure.attach(name="bssid of ap1", body=c1_bssid)
+        print("bssid of c2",  c2_bssid)
+        allure.attach(name="bssid of ap2", body=c2_bssid)
+        allure.attach(name="Pass Fail Criteria",
+                      body="Pass criteria will check if client bssid for station info before roam  is not similar to "\
+                           "station info after roam then the test will state client successfully performed roam ")
+        start_time = time.time()
+        number = ""
+        result =[]
+        for num in range(iteration):
+            table_values  = []
+            table_values_1 = []
+            table = []
+            table_2 = []
+            table_values.append(num)
+            table_values_1.append(num)
+            print(num)
+
+
+            if num % 2 == 0:
+                print("even set c1 to lowest and c2 to highest attenuation ")
+                number = "even"
+
+
+                #  get serial nummber of attenuators from lf
+                ser_no = self.attenuator_serial()
+                print(ser_no[0])
+                ser_1 = ser_no[0].split(".")[2]
+                ser_2 = ser_no[1].split(".")[2]
+
+
+
+                # set attenuation to zero in first attenuator and high in second attenuator
+                self.attenuator_modify(ser_1, "all", 950)
+                self.attenuator_modify(ser_2, "all", 100)
+            else:
+                print("odd, set c1 to highest and c2 to lowest")
+                number = "odd"
+                #  get serial nummber of attenuators from lf
+                # ser_no = self.attenuator_serial()
+                # print(ser_no[0])
+                # ser_1 = ser_no[0].split(".")[2]
+                # ser_2 = ser_no[1].split(".")[2]
+                #
+                # start_time = time.time()
+                #
+                # # set attenuation to zero in first attenuator and high in second attenuator
+                # self.attenuator_modify(ser_1, "all", 100)
+                # self.attenuator_modify(ser_2, "all", 950)
+
+
+
+
+            #  create station
+            station = self.Client_Connect(ssid=ssid_name, security=security, passkey=security_key, mode=mode, band=band,
+                                             station_name=station_name, vlan_id=vlan)
+            self.create_layer3(side_a_min_rate=1000000, side_a_max_rate=1000000, side_b_min_rate=0, side_b_max_rate=0,sta_list=[station_name[0]], traffic_type="lf_udp")
+            time.sleep(20)
+
+
+            # if station connects then query bssid of station
+            rssi_list = []
+            if station:
+                response = self.get_layer3_values(query="rx rate")
+                response1 = self.get_layer3_values(query="rx bytes")
+                response3 = self.get_layer3_values(query="rx pkts ll")
+                print(response)
+                # print(response1)
+                # allure.attach(name="rx packets before roam", body=str(response3))
+                # allure.attach(name="rx bytes before roam", body=str(response1))
+                # allure.attach(name='rx rate before roam', body=str(str(response) + " bps"))
+                # self.attach_stationdata_to_allure(name="staion info before roam", station_name=station_name)
+                bssid = lf_tools.station_data_query(station_name=str(station_name[0]), query="ap")
+                rssi = lf_tools.station_data_query(station_name=str(station_name[0]), query="signal")
+                cx_time = lf_tools.station_data_query(station_name=str(station_name[0]), query="cx time (us)")
+                print(rssi)
+                print(cx_time)
+
+                table_values.append(bssid.lower())
+                table_values.append(rssi)
+                table_values.append(response3)
+                table_values.append(response1)
+                table_values.append(str(str(response) + " bps"))
+                table_values.append(cx_time)
+                table_values.append("N/A")
+                table_header = [ "iteration", "BSSID", "Rssi", "rx packets", "rx bytes",  "rx rate", "cx time",  "Result" ]
+                table.append(table_header)
+                table.append(table_values)
+                print("table ", table)
+
+                final = lf_reports.table2(table=table)
+                allure.attach(name=str("client data for iteration " + str(num) + " just at initial stage of connection"), body=str(final))
+                # self.crete_file_attach(bssid=bssid.lower(), rssi=rssi, rx_packets=response3, rx_bytes=response1,
+                #                        rx_rate=str(str(response) + " bps"), cx_time=cx_time,
+                #                        name=str("client data for iteration " + str(num) + " just at initial stage of connection"), filename="station_before")
+
+                # allure.attach(name="rssi of station before roam", body=str(rssi))
+                # allure.attach(name="connect-time of station before roam", body=str(cx_time))
+                formated_bssid = bssid.lower()
+                station_before = ""
+                if formated_bssid == c1_bssid:
+                    print("station connected to chamber1 ap")
+                    station_before = formated_bssid
+                elif formated_bssid == c2_bssid:
+                    print("station connected to chamber 2 ap")
+                    station_before = formated_bssid
+                status = ""
+                # logic to decrease c2 attenuation till 10 db
+                if number == "even":
+                    for atten_val2 in range(900, 100, -50):
+                        self.attenuator_modify(int(ser_1), "all", atten_val2)
+                        time.sleep(10)
+                        bssid = lf_tools.station_data_query(station_name=str(station_name[0]), query="ap")
+                        station_after = bssid.lower()
+                        if station_after == station_before:
+                            status = "station did not roamed"
+                            print("station did not roamed")
+                            rssi = lf_tools.station_data_query(station_name=str(station_name[0]), query="signal")
+                            rssi_list.append(rssi)
+                            continue
+                        elif station_after != station_before:
+                            print("client performed roam")
+
+                            self.attach_stationdata_to_allure(name="station info after roam",
+                                                              station_name=station_name)
+                            rssi = lf_tools.station_data_query(station_name=str(station_name[0]), query="signal")
+                            cx_time = lf_tools.station_data_query(station_name=str(station_name[0]), query="cx time (us)")
+                            # print(rssi)
+                            # print(cx_time)
+                            rssi_of_lastap=rssi_list[-1]
+                            # allure.attach(name="rssi of station just before roam", body=str(rssi_of_lastap))
+                            # allure.attach(name="rssi of station after roam", body=str(rssi))
+                            # allure.attach(name="connect-time of station after roam", body=str(cx_time))
+                            response = self.get_layer3_values(query="rx rate")
+                            response1 = self.get_layer3_values(query="rx bytes")
+                            print(response)
+                            # print(response1)
+                            # allure.attach(name="rx bytes after roam", body=str(response1))
+                            # allure.attach(name='rx rate after roam', body=str(str(response) + " bps"))
+                            response3 = self.get_layer3_values(query="rx pkts ll")
+                            allure.attach(name="rx packets after roam", body=str(response3))
+                            table_values_1.append(station_after)
+                            table_values_1.append(rssi)
+                            table_values_1.append(response3)
+                            table_values_1.append(response1)
+                            table_values_1.append(str(str(response) + " bps"))
+                            table_values_1.append(cx_time)
+                            table_values_1.append(rssi_of_lastap)
+                            table_values_1.append("Pass")
+                            table_header_2 = ["iteration", "BSSID", "Rssi", "rx packets", "rx bytes", "rx rate",
+                                            "cx time", "Rssi-1",  "Result"]
+                            table_2.append(table_header_2)
+                            table_2.append(table_values_1)
+                            print("table ", table_2)
+
+                            final = lf_reports.table2(table=table_2)
+                            allure.attach(name=str(
+                                "client data for iteration " + str(num) + " just after roam"),
+                                          body=str(final))
+                            break
+
+
+
+                    if status == "station did not roamed":
+                        for atten_val1 in (range(150, 950, 50)):
+                            print(atten_val1)
+                            self.attenuator_modify(int(ser_2), "all", atten_val1)
+                            time.sleep(10)
+                            bssid = lf_tools.station_data_query(station_name=str(station_name[0]), query="ap")
+                            station_after = bssid.lower()
+                            if station_after == station_before:
+                                print("station did not roamed")
+                                rssi = lf_tools.station_data_query(station_name=str(station_name[0]), query="signal")
+                                rssi_list.append(rssi)
+                                status = "station did not roamed"
+                                continue
+                            elif station_after != station_before:
+                                print("client performed roam")
+                                status = "client performed roam"
+                                # self.attach_stationdata_to_allure(name="station info after roam",
+                                #                                   station_name=station_name)
+                                rssi = lf_tools.station_data_query(station_name=str(station_name[0]), query="signal")
+                                cx_time = lf_tools.station_data_query(station_name=str(station_name[0]),
+                                                                      query="cx time (us)")
+                                # print(rssi)
+                                # print(cx_time)
+                                rssi_of_lastap = rssi_list[-1]
+                                # allure.attach(name="rssi of station just before roam", body=str(rssi_of_lastap))
+                                # allure.attach(name="rssi of station after roam", body=str(rssi))
+                                # allure.attach(name="connect-time of station after roam", body=str(cx_time))
+                                response = self.get_layer3_values(query="rx rate")
+                                response1 = self.get_layer3_values(query="rx bytes")
+                                print(response)
+                                # print(response1)
+                                # allure.attach(name="rx bytes after roam", body=str(response1))
+                                # allure.attach(name='rx rate after roam', body=str(str(response) + " bps"))
+                                response3 = self.get_layer3_values(query="rx pkts ll")
+                                # allure.attach(name="rx packets after roam", body=str(response3))
+                                table_values_1.append(bssid.lower())
+                                table_values_1.append(rssi)
+                                table_values_1.append(response3)
+                                table_values_1.append(response1)
+                                table_values_1.append(str(str(response) + " bps"))
+                                table_values_1.append(cx_time)
+                                table_values_1.append(rssi_of_lastap)
+                                table_values_1.append("Pass")
+                                table_header_2 = ["iteration", "BSSID", "Rssi", "rx packets", "rx bytes", "rx rate",
+                                                "cx time","Rssi-1", "Result"]
+                                table_2.append(table_header_2)
+                                table_2.append(table_values_1)
+                                print("table ", table_2)
+
+                                final = lf_reports.table2(table=table_2)
+                                allure.attach(name=str(
+                                    "client data for iteration " + str(num) + " just after roam"),
+                                              body=str(final))
+                                # self.crete_file_attach(bssid=bssid.lower(), rssi=rssi, rx_packets=response3, rx_bytes=response1,
+                                #                        rx_rate=str(str(response) + " bps"),cx_time=cx_time,
+                                #                        name=str("client data for iteration  " + str(num) + " just after performing roam"),
+                                #                        filename="station_after")
+
+                                break
+                            elif station_after == station_before:
+                                table_values_1.append("Fail")
+                                table_header_2 = ["iteration", "result"]
+                                table_2.append(table_header_2)
+                                table_2.append(table_values_1)
+                                print("table ", table_2)
+
+                                final = lf_reports.table2(table=table_2)
+                                allure.attach(name=str(
+                                    "client data for iteration " + str(num) + " just after roam"),
+                                    body=str(final))
+
+                    # allure.attach(name="attenuation_data", body="ap1 was at attenuation value " + str(atten_val1) + "ddbm and ap2 was at attenuation value " + str(atten_val2) + "ddbm")
+                    if status == "station did not roamed":
+                        result.append("Fail")
+
+                    else:
+                        result.append("Pass")
+                    self.Client_disconnect(station_name=station_name)
+                else:
+                    # logic to increase  c2 attenuation till 10 db
+                    for atten_val2 in  range(900, 100, -50):
+                        self.attenuator_modify(int(ser_2), "all", atten_val2)
+                        time.sleep(10)
+                        bssid = lf_tools.station_data_query(station_name=str(station_name[0]), query="ap")
+                        station_after = bssid.lower()
+                        if station_after == station_before:
+                            status = "station did not roamed"
+                            print("station did not roamed")
+                            rssi = lf_tools.station_data_query(station_name=str(station_name[0]), query="signal")
+                            rssi_list.append(rssi)
+                            continue
+                        elif station_after != station_before:
+                            print("client performed roam")
+                            status = "client performed roam"
+                            self.attach_stationdata_to_allure(name="station info after roam",
+                                                              station_name=station_name)
+                            rssi = lf_tools.station_data_query(station_name=str(station_name[0]), query="signal")
+                            cx_time = lf_tools.station_data_query(station_name=str(station_name[0]), query="cx time (us)")
+                            # print(rssi)
+                            # print(cx_time)
+                            rssi_of_lastap=rssi_list[-1]
+                            # allure.attach(name="rssi of station just before roam", body=str(rssi_of_lastap))
+                            # allure.attach(name="rssi of station after roam", body=str(rssi))
+                            # allure.attach(name="connect-time of station after roam", body=str(cx_time))
+                            response = self.get_layer3_values(query="rx rate")
+                            response1 = self.get_layer3_values(query="rx bytes")
+                            # print(response)
+                            # # print(response1)
+                            # allure.attach(name="rx bytes after roam", body=str(response1))
+                            # allure.attach(name='rx rate after roam', body=str(str(response) + " bps"))
+                            response3 = self.get_layer3_values(query="rx pkts ll")
+                            # allure.attach(name="rx packets after roam", body=str(response3))
+                            table_values_1.append(bssid.lower())
+                            table_values_1.append(rssi)
+                            table_values_1.append(response3)
+                            table_values_1.append(response1)
+                            table_values_1.append(str(str(response) + " bps"))
+                            table_values_1.append(cx_time)
+                            table_values_1.append(rssi_of_lastap)
+                            table_values_1.append("Pass")
+                            table_header_2 = ["iteration", "BSSID", "Rssi", "rx packets", "rx bytes", "rx rate",
+                                            "cx time", "Rssi-1", "Result"]
+                            table_2.append(table_header_2)
+                            table_2.append(table_values_1)
+                            print("table ", table_2)
+
+                            final = lf_reports.table2(table=table_2)
+                            allure.attach(name=str(
+                                "client data for iteration " + str(num) + " just after roam"),
+                                body=str(final))
+                            break
+
+
+
+                    if status == "station did not roamed":
+                        for atten_val1 in  range(150, 950, 50):
+                            print(atten_val1)
+                            self.attenuator_modify(int(ser_1), "all", atten_val1)
+                            time.sleep(10)
+                            bssid = lf_tools.station_data_query(station_name=str(station_name[0]), query="ap")
+                            station_after = bssid.lower()
+                            if station_after == station_before:
+                                print("station did not roamed")
+                                rssi = lf_tools.station_data_query(station_name=str(station_name[0]), query="signal")
+                                rssi_list.append(rssi)
+                                status = "station did not roamed"
+                                continue
+                            elif station_after != station_before:
+                                print("client performed roam")
+                                status = "client performed roam"
+                                # self.attach_stationdata_to_allure(name="station info after roam",
+                                #                                   station_name=station_name)
+                                rssi = lf_tools.station_data_query(station_name=str(station_name[0]), query="signal")
+                                cx_time = lf_tools.station_data_query(station_name=str(station_name[0]),
+                                                                      query="cx time (us)")
+                                # print(rssi)
+                                # print(cx_time)
+                                rssi_of_lastap = rssi_list[-1]
+                                # allure.attach(name="rssi of station just before roam", body=str(rssi_of_lastap))
+                                # allure.attach(name="rssi of station after roam", body=str(rssi))
+                                # allure.attach(name="connect-time of station after roam", body=str(cx_time))
+                                response = self.get_layer3_values(query="rx rate")
+                                response1 = self.get_layer3_values(query="rx bytes")
+                                print(response)
+                                # print(response1)
+                                # allure.attach(name="rx bytes after roam", body=str(response1))
+                                # allure.attach(name='rx rate after roam', body=str(str(response) + " bps"))
+                                response3 = self.get_layer3_values(query="rx pkts ll")
+                                # allure.attach(name="rx packets after roam", body=str(response3))
+                                table_values_1.append(station_after)
+                                table_values_1.append(rssi)
+                                table_values_1.append(response3)
+                                table_values_1.append(response1)
+                                table_values_1.append(str(str(response) + " bps"))
+                                table_values_1.append(cx_time)
+                                table_values_1.append(rssi_of_lastap)
+                                table_values_1.append("Pass")
+                                table_header_2 = ["iteration", "BSSID", "Rssi", "rx packets", "rx bytes", "rx rate",
+                                                "cx time", "Rssi-1", "Result"]
+                                table_2.append(table_header_2)
+                                table_2.append(table_values_1)
+                                print("table ", table_2)
+
+                                final = lf_reports.table2(table=table_2)
+                                allure.attach(name=str(
+                                    "client data for iteration " + str(num) + " just after roam"),
+                                    body=str(final))
+                                # self.crete_file_attach(bssid=bssid.lower(), rssi=rssi, rx_packets=response3, rx_bytes=response1,
+                                #                        rx_rate=str(str(response) + " bps"),cx_time=cx_time,
+                                #                        name=str("client data for iteration  " + str(num) + " just after performing roam"),
+                                #                        filename="station_after")
+
+                                break
+                            elif station_after == station_before:
+                                table_values_1.append("Fail")
+                                table_header_3 = ["iteration", "result"]
+                                table_2.append(table_header_3)
+                                table_2.append(table_values_1)
+                                print("table ", table_2)
+
+                                final = lf_reports.table2(table=table_2)
+                                allure.attach(name=str(
+                                    "client data for iteration " + str(num) + " just after roam"),
+                                    body=str(final))
+
+                    # allure.attach(name="attenuation_data", body="ap1 was at attenuation value " + str(atten_val1) + "ddbm and ap2 was at attenuation value " + str(atten_val2) + "ddbm")
+                    if status == "station did not roamed":
+                        result.append("Fail")
+                    else:
+                        result.append("Pass")
+                    self.Client_disconnect(station_name=station_name)
+
+
+            else:
+                allure.attach(name="FAIL", body="station failed to get ip")
+
+
+
+        print("overall result", result)
+        lf_reports.key1 = "iteration"
+        lf_reports.key2 = "Result"
+        lf_reports.val1 = list(range(0, iteration))
+        lf_reports.val2 = result
+        final = lf_reports.table1()
+        allure.attach(name="pass/Fail for all iteration", body=str(final))
+
+
+        overall_time = (time.time() - start_time)
+        final_time = datetime.timedelta(seconds=overall_time)
+        allure.attach(name="execution time", body=str(final_time))
+
+    def multi_roam(self, run_lf, get_configuration, lf_tools, lf_reports,  instantiate_profile, ssid_name=None, security=None, security_key=None,
+                   mode=None, band=None, station_name=None, vlan=None, test=None, iteration=1, num_sta=2):
+        # attach test definition
+        allure.attach(name="Test Procedure", body="This test consists of creating a multiple  client which will be " \
+                                                  " connected to the nearest ap, here the test automation will " \
+                                                  "set ap1 to lowest attenuation value say 10 db and ap2 to highest attenuation," \
+                                                  " say 95 db, then it will keep on decreasing  attenuation value of ap2 by 5db till it reaches its lowest " \
+                                                  "and then increasing attenuation of ap1 by 5db to highest and check if client performed roam by monitoring client bssid, for n number of iterions")
+
+        # get bssid from ap for 2g and 5g
+        c1_bssid = ""
+        c2_bssid = ""
+        if test == "2g":
+            c1_2g_bssid = ""
+            c2_2g_bssid = ""
+            if run_lf:
+                c1_2g_bssid = get_configuration["access_point"][0]["ssid"]["2g-bssid"]
+                allure.attach(name="bssid of ap1", body=c1_2g_bssid)
+                c2_2g_bssid = get_configuration["access_point"][1]["ssid"]["2g-bssid"]
+                allure.attach(name="bssid of ap2", body=c2_2g_bssid)
+
+            else:
+                # instantiate controller class and check bssid's for each ap in testbed
+                for ap_name in range(len(get_configuration['access_point'])):
+                    instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
+                                                                  timeout="10",
+                                                                  ap_data=get_configuration['access_point'],
+                                                                  type=ap_name)
+                    bssid_2g = instantiate_profile_obj.cal_bssid_2g()
+                    if ap_name == 0:
+                        c1_2g_bssid = bssid_2g
+                    if ap_name == 1:
+                        c2_2g_bssid = bssid_2g
+            c1_bssid = c1_2g_bssid
+            c2_bssid = c2_2g_bssid
+        elif test == "5g":
+            # c1_5g_bssid = "68:7d:b4:5f:5c:3d"
+            # c2_5g_bssid = "14:16:9d:53:58:ce"
             c1_5g_bssid = ""
             c2_5g_bssid = ""
             if run_lf:
@@ -1249,141 +1621,272 @@ class RunTest:
 
         print("bssid of c1 ", c1_bssid)
         allure.attach(name="bssid of ap1", body=c1_bssid)
-        print("bssid of c2",  c2_bssid)
+        print("bssid of c2", c2_bssid)
         allure.attach(name="bssid of ap2", body=c2_bssid)
-
-        #  get serial nummber of attenuators from lf
-        ser_no = self.attenuator_serial()
-        print(ser_no[0])
-        ser_1 = ser_no[0].split(".")[2]
-        ser_2 = ser_no[1].split(".")[2]
-
-        start_time = time.time()
-
-        # set attenuation to zero in first attenuator and high in second attenuator
-        self.attenuator_modify(ser_1, "all", 950)
-        self.attenuator_modify(ser_2, "all", 100)
-
         allure.attach(name="Pass Fail Criteria",
-                      body="Pass criteria will check if client bssid for station info before roam  is not similar to "\
+                      body="Pass criteria will check if client bssid for station info before roam  is not similar to " \
                            "station info after roam then the test will state client successfully performed roam ")
-
-        #  create station
-        station = self.Client_Connect(ssid=ssid_name, security=security, passkey=security_key, mode=mode, band=band,
-                                         station_name=station_name, vlan_id=vlan)
-        self.create_layer3(side_a_min_rate=1000000, side_a_max_rate=1000000, side_b_min_rate=0, side_b_max_rate=0,sta_list=station_name[0], traffic_type="lf_udp")
-        time.sleep(20)
-
-
-        # if station connects then query bssid of station
-        rssi_list = []
-        if station:
-            response = self.get_layer3_values(query="rx rate")
-            response1 = self.get_layer3_values(query="rx bytes")
-            response3 = self.get_layer3_values(query="rx pkts ll")
-            print(response)
-            # print(response1)
-            allure.attach(name="rx packets before roam", body=str(response3))
-            allure.attach(name="rx bytes before roam", body=str(response1))
-            allure.attach(name='rx rate before roam', body=str(str(response) + " bps"))
-            self.attach_stationdata_to_allure(name="staion info before roam", station_name=station_name)
-            bssid = lf_tools.station_data_query(station_name=str(station_name[0]), query="ap")
-            rssi = lf_tools.station_data_query(station_name=str(station_name[0]), query="signal")
-            cx_time = lf_tools.station_data_query(station_name=str(station_name[0]), query="cx time (us)")
-            print(rssi)
-            print(cx_time)
-            allure.attach(name="rssi of station before roam", body=str(rssi))
-            # allure.attach(name="connect-time of station before roam", body=str(cx_time))
-            formated_bssid = bssid.lower()
-            station_before = ""
-            if formated_bssid == c1_bssid:
-                print("station connected to chamber1 ap")
-                station_before = formated_bssid
-            elif formated_bssid == c2_bssid:
-                print("station connected to chamber 2 ap")
-                station_before = formated_bssid
-
-            status = ""
-            # logic to decrease c2 attenuation till 10 db
-            for atten_val2 in range(900, 100, -50):
-                self.attenuator_modify(int(ser_1), "all", atten_val2)
-                time.sleep(10)
-                bssid = lf_tools.station_data_query(station_name=str(station_name[0]), query="ap")
-                station_after = bssid.lower()
-                if station_after == station_before:
-                    status = "station did not roamed"
-                    print("station did not roamed")
-                    rssi = lf_tools.station_data_query(station_name=str(station_name[0]), query="signal")
-                    rssi_list.append(rssi)
-                    continue
-                elif station_after != station_before:
-                    print("client performed roam")
-                    self.attach_stationdata_to_allure(name="station info after roam",
-                                                      station_name=station_name)
-                    rssi = lf_tools.station_data_query(station_name=str(station_name[0]), query="signal")
-                    cx_time = lf_tools.station_data_query(station_name=str(station_name[0]), query="cx time (us)")
-                    # print(rssi)
-                    # print(cx_time)
-                    rssi_of_lastap=rssi_list[-1]
-                    allure.attach(name="rssi of station just before roam", body=str(rssi_of_lastap))
-                    allure.attach(name="rssi of station after roam", body=str(rssi))
-                    allure.attach(name="connect-time of station after roam", body=str(cx_time))
-                    response = self.get_layer3_values(query="rx rate")
-                    response1 = self.get_layer3_values(query="rx bytes")
-                    print(response)
-                    # print(response1)
-                    allure.attach(name="rx bytes after roam", body=str(response1))
-                    allure.attach(name='rx rate after roam', body=str(str(response) + " bps"))
-                    response3 = self.get_layer3_values(query="rx pkts ll")
-                    allure.attach(name="rx packets after roam", body=str(response3))
-                    break
+        # clean layer3 and  endp before start of test
+        obj = lf_clean(host=self.lanforge_ip,
+                       port=self.lanforge_port,
+                       clean_cxs=True,
+                       clean_endp=True)
+        obj.cxs_clean()
+        obj.endp_clean()
+        start_time = time.time()
+        # create stations at start
+        if band == "twog":
+            self.create_n_clients(sta_prefix="wlan1", num_sta=num_sta, dut_ssid=ssid_name,
+                                  dut_security=security, dut_passwd=security_key, radio=self.twog_radios[0],
+                                  lf_tools=lf_tools)
+        if band == "fiveg":
+            self.create_n_clients(sta_prefix="wlan", num_sta=num_sta, dut_ssid=ssid_name,
+                         dut_security=security, dut_passwd=security_key, radio=self.fiveg_radios[0], lf_tools=lf_tools)
 
 
+        # check if all stations have ip
+        sta_list = lf_tools.get_station_list()
+        print(sta_list)
+        val = self.wait_for_ip(station=sta_list)
+        self.create_layer3(side_a_min_rate=1000000, side_a_max_rate=1000000, side_b_min_rate=0, side_b_max_rate=0,
+                           sta_list=sta_list, traffic_type="lf_udp")
+        cx_list =  self.get_cx_list()
+        cx_list.reverse()
+        table_head = ["iteration", "client count", "bssid before", "bssid after", "Result"]
+        table_head_2 = ["iteration", "station name", "Rssi-1", "Rssi", "cx time", "rx packets", "rx rate"]
 
-            if status == "station did not roamed":
-                for atten_val1 in (range(150, 950, 50)):
-                    print(atten_val1)
-                    self.attenuator_modify(int(ser_2), "all", atten_val1)
-                    time.sleep(10)
-                    bssid = lf_tools.station_data_query(station_name=str(station_name[0]), query="ap")
-                    station_after = bssid.lower()
-                    if station_after == station_before:
-                        print("station did not roamed")
-                        rssi = lf_tools.station_data_query(station_name=str(station_name[0]), query="signal")
-                        rssi_list.append(rssi)
-                        continue
-                    elif station_after != station_before:
-                        print("client performed roam")
-                        self.attach_stationdata_to_allure(name="station info after roam",
-                                                          station_name=station_name)
-                        rssi = lf_tools.station_data_query(station_name=str(station_name[0]), query="signal")
-                        cx_time = lf_tools.station_data_query(station_name=str(station_name[0]),
-                                                              query="cx time (us)")
-                        # print(rssi)
-                        # print(cx_time)
-                        rssi_of_lastap = rssi_list[-1]
-                        allure.attach(name="rssi of station just before roam", body=str(rssi_of_lastap))
-                        allure.attach(name="rssi of station after roam", body=str(rssi))
-                        allure.attach(name="connect-time of station after roam", body=str(cx_time))
-                        response = self.get_layer3_values(query="rx rate")
-                        response1 = self.get_layer3_values(query="rx bytes")
-                        print(response)
-                        # print(response1)
-                        allure.attach(name="rx bytes after roam", body=str(response1))
-                        allure.attach(name='rx rate after roam', body=str(str(response) + " bps"))
-                        response3 = self.get_layer3_values(query="rx pkts ll")
-                        allure.attach(name="rx packets after roam", body=str(response3))
-                        break
+        table_global = []
+        table2_global = []
+        table_global.append(table_head)
+        table2_global.append(table_head_2)
+        if val:
+            for num in range(iteration):
+                table_local = []
+                table_local.append(num)
+                print(num)
 
-            # allure.attach(name="attenuation_data", body="ap1 was at attenuation value " + str(atten_val1) + "ddbm and ap2 was at attenuation value " + str(atten_val2) + "ddbm")
-            self.Client_disconnect(station_name=station_name)
-            overall_time = (time.time() - start_time)
-            final_time = datetime.timedelta(seconds=overall_time)
-            allure.attach(name="execution time", body=str(final_time))
-            return True
+                if num % 2 == 0:
+                    print("even set c1 to lowest and c2 to highest attenuation ")
+                    number = "even"
+                    #  get serial nummber of attenuators from lf
+                    ser_no = self.attenuator_serial()
+                    print(ser_no[0])
+                    ser_1 = ser_no[0].split(".")[2]
+                    ser_2 = ser_no[1].split(".")[2]
+
+                    # set attenuation to zero in first attenuator and high in second attenuator
+                    self.attenuator_modify(ser_1, "all", 950)
+                    self.attenuator_modify(ser_2, "all", 100)
+                else:
+                    print("odd,  c1 is already at  highest and c2 is at  lowest")
+                    number = "odd"
+
+                # after setting attenuation wait for ip , if true perform roam test
+                sta_list = lf_tools.get_station_list()
+                print(sta_list)
+                station = self.wait_for_ip(station=sta_list)
+                if station:
+                    # get bssid's of all stations connected
+                    bssid_list = []
+                    for sta_name in sta_list:
+                        sta = sta_name.split(".")[2]
+                        time.sleep(5)
+                        bssid = lf_tools.station_data_query(station_name=str(sta), query="ap")
+                        bssid_list.append(bssid)
+                    print(bssid_list)
+
+                    # check if all element of bssid list has same bssid's
+                    result = all(element == bssid_list[0] for element in bssid_list)
+                    if (result):
+                        print("All sstations connected to one ap")
+                        #  if all bid are equal then do check to hich ap it is connected
+                        formated_bssid = bssid_list[0].lower()
+                        station_before = ""
+                        if formated_bssid == c1_bssid:
+                            print("station connected to chamber1 ap")
+                            station_before = formated_bssid
+                        elif formated_bssid == c2_bssid:
+                            print("station connected to chamber 2 ap")
+                            station_before = formated_bssid
+                        table_local.append(num_sta)
+                        table_local.append(station_before)
+                        status = ""
+
+                        if number == "even":
+                            # logic to decrease c2 attenuation till 10 db
+                            for atten_val2 in range(900, 100, -50):
+                                self.attenuator_modify(int(ser_1), "all", atten_val2)
+                                time.sleep(10)
+                                #  query bssid's of all stations
+                                bssid_list_1 = []
+                                for sta_name in sta_list:
+                                    sta = sta_name.split(".")[2]
+                                    time.sleep(5)
+                                    bssid = lf_tools.station_data_query(station_name=str(sta), query="ap")
+                                    bssid_list_1.append(bssid)
+                                print(bssid_list_1)
+                                # check if all are equal
+                                result = all(element == bssid_list_1[0] for element in bssid_list_1)
+                                if result:
+                                    station_after = bssid_list_1[0].lower()
+                                    if station_after == station_before:
+                                        status = "station did not roamed"
+                                        print("station did not roamed")
+                                        continue
+                                    elif station_after != station_before:
+                                        print("client performed roam")
+                                        table_local.append(station_after)
+                                        table_local.append("PASS")
+                                        break
+
+                            if status == "station did not roamed":
+                                rssi_lst = []
+                                # set c1 to high
+                                for atten_val1 in (range(150, 950, 50)):
+                                    print(atten_val1)
+                                    self.attenuator_modify(int(ser_2), "all", atten_val1)
+                                    time.sleep(10)
+                                    bssid_list_1 = []
+                                    for sta_name in sta_list:
+                                        sta = sta_name.split(".")[2]
+                                        time.sleep(5)
+                                        bssid = lf_tools.station_data_query(station_name=str(sta), query="ap")
+                                        bssid_list_1.append(bssid)
+                                    print(bssid_list_1)
+                                    # check if all are equal
+                                    result = all(element == bssid_list_1[0] for element in bssid_list_1)
+                                    if result:
+                                        station_after = bssid_list_1[0].lower()
+                                        if station_after == station_before:
+                                            status = "station did not roamed"
+                                            print("station did not roamed")
+                                            rssi_local = []
+                                            for sta in sta_list:
+                                                client = sta.split(".")[2]
+                                                time.sleep(2)
+                                                rssi = lf_tools.station_data_query(station_name=str(client), query="signal")
+                                                rssi_local.append(rssi)
+                                            rssi_lst.append(rssi_local)
+                                            continue
+                                        elif station_after != station_before:
+                                            print("client performed roam")
+                                            # checking for rssi/rx_packets etc
+                                            rssi_of_lastit = rssi_lst[-1]
+                                            for (sta, cx, rs) in zip(sta_list, cx_list, rssi_of_lastit):
+                                                local_list = []
+                                                local_list.append(num)
+                                                client = sta.split(".")[2]
+                                                time.sleep(10)
+                                                local_list.append(client)
+                                                local_list.append(rs)
+                                                rssi = lf_tools.station_data_query(station_name=str(client), query="signal")
+                                                local_list.append(rssi)
+                                                cx_time = lf_tools.station_data_query(station_name=str(client), query="cx time (us)")
+                                                local_list.append(cx_time)
+                                                rate = self.get_layer3_values(query="bps rx b", cx_name=cx)
+                                                packets = self.get_layer3_values(query="pkt rx b", cx_name=cx)
+                                                local_list.append(packets)
+                                                local_list.append(rate)
+                                                table2_global.append(local_list)
+                                            table_local.append(station_after)
+                                            table_local.append("PASS")
+                                            break
+                                        elif station_after == station_before:
+                                            table_local.append(station_after)
+                                            table_local.append("FAIL")
+                            table_global.append(table_local)
+
+                        if number == "odd":
+                            # logic to decrease c2 attenuation till 10 db
+                            for atten_val2 in range(900, 100, -50):
+                                self.attenuator_modify(int(ser_2), "all", atten_val2)
+                                time.sleep(10)
+                                #  query bssid's of all stations
+                                bssid_list_1 = []
+                                for sta_name in sta_list:
+                                    sta = sta_name.split(".")[2]
+                                    time.sleep(5)
+                                    bssid = lf_tools.station_data_query(station_name=str(sta), query="ap")
+                                    bssid_list_1.append(bssid)
+                                print(bssid_list_1)
+                                # check if all are equal
+                                result = all(element == bssid_list_1[0] for element in bssid_list_1)
+                                if result:
+                                    station_after = bssid_list_1[0].lower()
+                                    if station_after == station_before:
+                                        status = "station did not roamed"
+                                        print("station did not roamed")
+                                        continue
+                                    elif station_after != station_before:
+                                        print("client performed roam")
+                                        table_local.append(station_after)
+                                        table_local.append("PASS")
+                                        break
+
+                            if status == "station did not roamed":
+                                # set c1 to high
+                                for atten_val1 in (range(150, 950, 50)):
+                                    print(atten_val1)
+                                    self.attenuator_modify(int(ser_1), "all", atten_val1)
+                                    time.sleep(10)
+                                    bssid_list_1 = []
+                                    for sta_name in sta_list:
+                                        sta = sta_name.split(".")[2]
+                                        time.sleep(5)
+                                        bssid = lf_tools.station_data_query(station_name=str(sta), query="ap")
+                                        bssid_list_1.append(bssid)
+                                    print(bssid_list_1)
+                                    # check if all are equal
+                                    result = all(element == bssid_list_1[0] for element in bssid_list_1)
+                                    if result:
+                                        station_after = bssid_list_1[0].lower()
+                                        if station_after == station_before:
+                                            status = "station did not roamed"
+                                            print("station did not roamed")
+                                            continue
+                                        elif station_after != station_before:
+                                            print("client performed roam")
+                                            table_local.append(station_after)
+                                            table_local.append("PASS")
+                                            break
+                                        elif station_after == station_before:
+                                            table_local.append(station_after)
+                                            table_local.append("FAIL")
+                            table_global.append(table_local)
+
+                    else:
+                        print("not all station connected to same ap")
+                        allure.attach(name="Fail", body="not all station's connected to same ap cannot test roam ")
+
+                else:
+                    print("Failed to get ip")
+                    allure.attach(name="FAIL", body="stations did not got ip after changing c1 to low and c2 to high attenuation")
+
+            instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
+                                                          timeout="10",
+                                                          ap_data=get_configuration['access_point'],
+                                                          type=0)
+            log= instantiate_profile_obj.show_11r_log()
+            final1 = lf_reports.table2(table=table2_global)
+            allure.attach(name="iteration table", body=str(final1))
+            print("table value", table_global)
+            final = lf_reports.table2(table=table_global)
+            allure.attach(name="Result table", body=str(final))
+            allure.attach(name="11r_log_from_controller", body=str(log))
+
+
+
         else:
-            allure.attach(name="FAIL", body="station failed to get ip")
-            return False
+            print("station's failed to get associate at the begining")
+            allure.attach(name="FAIL", body="stations did not got ip at the start of test")
+
+
+
+
+
+
+
+
 
 
 
