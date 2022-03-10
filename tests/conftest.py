@@ -56,6 +56,7 @@ from lanforge.scp_util import SCP_File
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
 from lf_tools import ChamberView
+from report import Report
 from os import path
 from typing import Any, Callable, Optional
 
@@ -638,6 +639,12 @@ def lf_tools(get_configuration, testbed, skip_lf, run_lf, cc_1):
         obj = False
     yield obj
 
+@pytest.fixture(scope="session")
+def lf_reports():
+    obj = Report()
+    yield obj
+
+
 
 @pytest.fixture(scope="session")
 def lf_test(get_configuration, setup_influx, request, skip_lf, run_lf):
@@ -822,3 +829,4 @@ def get_ap_config_slots(get_configuration):
     slot = obj.show_ap_config_slots()
     # print(slot)
     allure.attach(name="ap_slots", body=str(slot))
+
