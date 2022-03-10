@@ -41,7 +41,7 @@ class CController:
             self.ap_name = self.ap_data[1]['ap_name']
             print(self.ap_data[1]['ap_name'])
 
-        print("ap_name //////", self.ap_name)
+        print("ap_name ", self.ap_name)
         self.band = self.controller_data["band"][0]
 
         self.scheme = self.controller_data["scheme"]
@@ -123,6 +123,12 @@ class CController:
         fiveghz = self.cc.show_ap_dot11_24gz_shutdown()
         return fiveghz
 
+    def show_shutdown_6ghz_ap(self):
+        self.cc.ap_slot = "3"
+        sixg = self.cc.show_ap_dot11_6gz_shutdown()
+        print(sixg)
+        return sixg
+
 
     def disable_wlan(self, id , wlan, wlanssid):
         self.cc.wlan = wlan
@@ -145,6 +151,12 @@ class CController:
         shut = self.cc.ap_dot11_24ghz_shutdown()
         return shut
 
+    def ap_6ghz_shutdown(self, id, wlan, wlanssid):
+        self.cc.wlan = wlan
+        self.cc.wlanID = id
+        self.cc.wlanSSID = wlanssid
+        shut = self.cc.ap_dot11_6ghz_shutdown()
+        return shut
 
     def get_ssids(self):
         wlan_summary = self.cc.show_wlan_summary()
@@ -162,6 +174,14 @@ class CController:
         self.cc.wlanSSID = wlanssid
         self.cc.security_key = key
         ssid = self.cc.config_wlan_wpa2()
+        return ssid
+
+    def create_wlan_wpa3(self,id, wlan, wlanssid, key):
+        self.cc.wlan = wlan
+        self.cc.wlanID = id
+        self.cc.wlanSSID = wlanssid
+        self.cc.security_key = key
+        ssid = self.cc.config_wlan_wpa3()
         return ssid
 
     def config_wireless_tag_policy_and_policy_profile(self, wlan):
@@ -192,6 +212,14 @@ class CController:
         en_net = self.cc.config_no_ap_dot11_24ghz_shutdown()
         return en_net
 
+    def enable_6ghz_netwrk(self, id, wlan, wlanssid, key):
+        self.cc.wlan = wlan
+        self.cc.wlanID = id
+        self.cc.wlanSSID = wlanssid
+        self.cc.security_key = key
+        en_net = self.cc.config_no_ap_dot11_6ghz_shutdown()
+        return en_net
+
     def enable_ap_5ghz(self):
         ap = self.cc.config_ap_no_dot11_5ghz_shutdown()
         return ap
@@ -199,6 +227,11 @@ class CController:
     def enable_ap_2ghz(self):
         ap = self.cc.config_ap_no_dot11_24ghz_shutdown()
         return ap
+
+    def enable_ap_6ghz(self):
+        ap = self.cc.config_ap_no_dot11_6ghz_shutdown()
+        return ap
+
 
     def show_5ghz_summary(self):
         sum= self.cc.show_ap_dot11_5gz_summary()
@@ -240,7 +273,8 @@ class CController:
         acc_data3 = ele_list[int(data3)]
         acc_data4 = ele_list[int(data4)]
         acc_data5 = ele_list[int(data5)]
-        print(acc_data4)
+        print("data 4 ",acc_data4)
+        print("data 5",acc_data5)
         ident_list = []
         if acc_data == 'ID   Profile Name                     SSID                             Status Security':
             if acc_data2 == "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------":
@@ -257,10 +291,19 @@ class CController:
                 else:
                     ident_list.append("0")
                 id_list3 = acc_data5.split()
-                print(id_list3)
+                print("hi",id_list3)
                 if id_list3[0] == "3":
                     ident_list.append(id_list3[int(place)])
+                    print("ident_list 1", ident_list)
+                elif id_list2[0] == "3":
+                    ident_list.append(id_list2[int(place)])
+                    print("ident_list 2", ident_list)
+                elif id_list[0] == "3":
+                    ident_list.append(id_list[int(place)])
+                    print("ident_list 3", ident_list)
+
                 else:
+                    print("ident_list", ident_list)
                     ident_list.append("0")
         else:
             print("There is no Profile name")
@@ -289,15 +332,25 @@ class CController:
         acc_data3 = ele_list[int(data3)]
         acc_data4 = ele_list[int(data4)]
         acc_data5 = ele_list[int(data5)]
+        print(acc_data3)
+        print(acc_data4)
+        print(acc_data5)
+        id_list = acc_data3.split()
+        id_list1 = acc_data4.split()
+        id_list2 = acc_data5.split()
         wlan_id_list = []
         wlan_bssid = []
         if acc_data == "WLAN ID    BSSID":
             if acc_data2 == "-------------------------":
-                id_list = acc_data3.split()
-                # print(id_list)
                 if id_list[0] == "1":
                     wlan_id_list.append(id_list)
                     wlan_bssid.append(id_list[1])
+                elif id_list1[0] == "1":
+                    wlan_id_list.append(id_list1)
+                    wlan_bssid.append(id_list1[1])
+                elif id_list2[0] == "1":
+                    wlan_id_list.append(id_list2)
+                    wlan_bssid.append(id_list2[1])
                 else:
                     print("no wlan on slot 1 presnt")
         y = wlan_bssid[0].replace(".", '')
@@ -313,20 +366,35 @@ class CController:
         data3 = data + 2
         data4 = data + 3
         data5 = data + 4
+        data6 = data + 5
         acc_data = ele_list[int(data)]
         acc_data2 = ele_list[int(data2)]
         acc_data3 = ele_list[int(data3)]
         acc_data4 = ele_list[int(data4)]
         acc_data5 = ele_list[int(data5)]
+        acc_data6 = ele_list[int(data6)]
+        id_list = acc_data3.split()
+        id_list1 = acc_data4.split()
+        id_list2 = acc_data5.split()
+        id_list3 = acc_data6.split()
         wlan_id_list = []
         wlan_bssid = []
         if acc_data == "WLAN ID    BSSID":
             if acc_data2 == "-------------------------":
-                id_list = acc_data4.split()
+
                 # print(id_list)
-                if id_list[0] == "2":
+                if id_list[0] == "1":
                     wlan_id_list.append(id_list)
                     wlan_bssid.append(id_list[1])
+                elif id_list1[0] == "1":
+                    wlan_id_list.append(id_list1)
+                    wlan_bssid.append(id_list1[1])
+                elif id_list2[0] == "1":
+                    wlan_id_list.append(id_list2)
+                    wlan_bssid.append(id_list2[1])
+                elif id_list3[0] == "1":
+                    wlan_id_list.append(id_list3)
+                    wlan_bssid.append(id_list3[1])
                 else:
                     print("no wlan on slot 2 present")
         y = wlan_bssid[0].replace(".", '')
@@ -356,6 +424,11 @@ class CController:
         w_sum = self.cc.show_ap_wlan_summary()
         print(w_sum)
         return w_sum
+
+    def show_11r_log(self):
+        show = self.cc.show_11r_logs()
+        print(show)
+        return show
 
 
 
