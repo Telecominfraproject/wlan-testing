@@ -1002,8 +1002,8 @@ class RunTest:
         raw_line = []
         skip_twog = '1' if skip_2g else '0'
         skip_fiveg = '1' if skip_5g else '0'
-        sniff_radio = 'wiphy1' if skip_twog else 'wiphy0'
-        channel = 136 if skip_2g else 11
+        sniff_radio = 'wiphy6'
+        channel = 149 if skip_2g else 11
         upstream_port = self.upstream_port
 
         sets = [['Calibrate Attenuators', '0'], ['Receiver Sensitivity', '0'], ['Maximum Connection', '0'],
@@ -1059,7 +1059,7 @@ class RunTest:
                                     )
         self.cvtest_obj.setup()
         t1 = threading.Thread(target=self.cvtest_obj.run)
-        t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 180))
+        t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 60))
         t1.start()
         if t1.is_alive():
             time.sleep(180)
