@@ -330,13 +330,15 @@ jobs:
             tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo:main
 
   set-redirector-url:
-    name: Set redirector URL on virtual AP
+    name: Get virtual AP instance facts and set redirector URL
     needs: deploy-controller 
     runs-on: ubuntu-latest
     env:
       AWS_DEFAULT_REGION: us-east-1
       VIRTUAL_AP_SSH_KEY: ${{ secrets.VIRTUAL_AP_SSH_KEY }}
       DIGICERT_API_KEY: ${{ secrets.DIGICERT_API_KEY }}
+    outputs:
+      mac_address: ${{ steps.get_virtual_ap_mac_address.outputs.value }}
     steps:
       - name: Checkout wlan-pki-cert-scripts repo
         uses: actions/checkout@v2
@@ -348,6 +350,11 @@ jobs:
         id: get_virtual_ap_public_ip
         run: |
           echo ::set-output name=ip::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=tip-wlan-main OpenWifi virtual AP (WIFI-7204)' --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)"
+
+      - name: Get mac address of virtual AP EC2 instance
+        id: get_virtual_ap_mac_address
+        run: |
+          echo ::set-output name=value::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=tip-wlan-main OpenWifi virtual AP (WIFI-7204)' --query 'Reservations[*].Instances[*].NetworkInterfaces[*].MacAddress' --output text | sed 's/://g')"
 
       - name: Set redirector URL
         run: |
@@ -373,7 +380,7 @@ jobs:
        run: |
          curl https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralgw/master/test_scripts/curl/cli -o cli
          chmod +x cli
-         ./cli test_service 066fdf5d30e2
+         ./cli test_service ${{ needs.set-redirector-url.outputs.mac_address }}
 
      - name: Checkout wlan-cloud-ucentralsec repo and test OWSec
        if: ${{ github.event.inputs.microservice }} == 'owsec'
@@ -387,7 +394,7 @@ jobs:
        run: |
          curl https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralfms/main/test_scripts/curl/cli -o cli
          chmod +x cli
-         ./cli test_service 066fdf5d30e2
+         ./cli test_service ${{ needs.set-redirector-url.outputs.mac_address }}
 
   destroy-controller:
     name: Destroy controller namespace
