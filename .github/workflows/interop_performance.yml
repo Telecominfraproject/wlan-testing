@@ -39,7 +39,7 @@ jobs:
         run: |
           echo "::set-output name=marker_overwrite::${{ github.event.inputs.marker_overwrite || '' }}"
 
-          DEVICES="${{ github.event.inputs.devices || 'galaxy-s9,galaxy-s10,galaxy-s20,pixel-4' }}"
+          DEVICES="${{ github.event.inputs.devices || 'galaxy-s9,galaxy-s10,galaxy-s20,pixel-4,iphone-7,iphone-11,iphone-xr,iphone-12' }}"
           DEVICES=$(echo $DEVICES | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           echo "::set-output name=devices::${DEVICES}"
 
