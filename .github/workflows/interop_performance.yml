@@ -263,7 +263,7 @@ jobs:
 
       - uses: actions/download-artifact@v2
         with:
-          name: allure-results-${{ matrix.device }}
+          name: allure-results-${{ matrix.device }}-performance
           path: allure-results
 
       - name: download history of previous run
@@ -283,7 +283,7 @@ jobs:
       - name: upload Allure report as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: allure-report-${{ matrix.device }}
+          name: allure-report-${{ matrix.device }}-performance
           path: allure-report
 
       # doing this to be able to aggregate multiple reports together later on
