@@ -8,24 +8,28 @@ pytestmark = [pytest.mark.roam_test, pytest.mark.bridge]
 
 setup_params_general = {
     "mode": "BRIDGE",
+    "roam": False,
     "ssid_modes": {
         "wpa2_personal": [
             {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}]},
+            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}],
+        "wpa3_personal": [
+            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["6G"], "security_key": "something"}
+        ]},
     "rf": {},
     "radius": False
 }
 @allure.suite("Roam Test with attenuator")
 @allure.feature("Roam Test")
-@pytest.mark.parametrize(
-    'setup_profiles',
-    [setup_params_general],
-    indirect=True,
-    scope="class"
-)
-@pytest.mark.usefixtures("setup_profiles")
+# @pytest.mark.parametrize(
+#     'setup_profiles',
+#     [setup_params_general],
+#     indirect=True,
+#     scope="class"
+# )
+# @pytest.mark.usefixtures("setup_profiles")
 
-class TestRoam(object):
+class TestBasicRoam(object):
 
 
     @pytest.mark.roam_2g
@@ -50,6 +54,7 @@ class TestRoam(object):
         else:
             assert False
 
+
     @pytest.mark.roam_5g
     @pytest.mark.wpa2_personal
     def test_basic_roam_5g(self, get_configuration, lf_test, station_names_fiveg, lf_tools, run_lf, add_env_properties,
@@ -69,6 +74,39 @@ class TestRoam(object):
             assert True
         else:
             assert False
+
+    @pytest.mark.sixg
+    @pytest.mark.wpa2_personal
+    @pytest.mark.wpa3_personal
+    def test_basic_roam_6g(self):
+        pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # @pytest.mark.multi_roam_2g
     # @pytest.mark.wpa2_personl
