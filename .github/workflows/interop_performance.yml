@@ -301,7 +301,7 @@ jobs:
           s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
 
   cleanup:
-    needs: [vars, test-iphone-11, test-iphone-xr, test-iphone-12, test-iphone-7]
+    needs: [test-iphone-11, test-iphone-xr, test-iphone-12, test-iphone-7]
     runs-on: ubuntu-latest
     if: always()
     steps:
