@@ -50,6 +50,7 @@ from attenuator_serial import AttenuatorSerial
 from lf_atten_mod_test import CreateAttenuator
 from lf_mesh_test import MeshTest
 from LANforge.lfcli_base import LFCliBase
+from sta_scan_test import StaScan
 realm = importlib.import_module("py-json.realm")
 Realm = realm.Realm
 
@@ -189,7 +190,7 @@ class RunTest:
                                name="supplicant_log")
         except Exception as e:
             print(e)
-            
+
         for result in run_results:
             print("test result: " + result)
         result = True
@@ -308,7 +309,7 @@ class RunTest:
                                name="supplicant_log")
         except Exception as e:
             print(e)
-            
+
         if not self.eap_connect.passes():
             if self.debug:
                 print("test result: " + self.eap_connect.passes())
@@ -950,7 +951,7 @@ class RunTest:
         self.mesh_obj.setup()
         self.mesh_obj.run()
         return self.mesh_obj
-      
+
     def attenuator_serial_2g_radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
                                    vlan_id=100, sta_mode=0, station_name=[], lf_tools_obj=None):
         radio = self.twog_radios[0]
@@ -994,6 +995,15 @@ class RunTest:
             atten_serial_radio = atten_serial[::-1]
         self.Client_disconnect(station_name=station_name)
         return atten_serial_radio
+
+    def scan_ssid(self, radio=""):
+        '''This method for scan ssid data'''
+        obj_scan = StaScan(host=self.lanforge_ip, port=self.lanforge_port, ssid="fake ssid", security="open", radio=radio, sta_list=[sta0000], csv_output="test.csv")
+        obj_scan.pre_cleanup()
+        obj_scan.build()
+        obj_scan.start()
+        allure.attach(name=str(scan_ssid_data), body=obj_scan.csv_output)
+        obj_scan.cleanup()
 
 
 
