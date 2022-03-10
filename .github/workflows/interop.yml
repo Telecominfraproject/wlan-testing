@@ -69,7 +69,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s10
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -97,7 +97,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s9
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -124,7 +124,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-11
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -152,7 +152,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-7
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -180,7 +180,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s20
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -207,7 +207,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-xr
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -235,7 +235,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-pixel-4
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -262,7 +262,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-12
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -290,7 +290,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s10
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -318,8 +318,8 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s9
-          testbed: interop-01
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
+          testbed: interop-02
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (InteropsuiteB) and interop_and and not wpa3_personal' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
@@ -345,7 +345,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-11
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -373,7 +373,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-7
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -401,7 +401,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s20
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -428,7 +428,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-xr
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -456,7 +456,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-pixel-4
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -483,7 +483,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-12
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -511,7 +511,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s10
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (suiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -539,7 +539,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s9
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (suiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -566,7 +566,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-11
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (suiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -594,7 +594,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-7
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (suiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -622,7 +622,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s20
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (suiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -649,7 +649,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-xr
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (suiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -677,7 +677,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-pixel-4
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (suiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -704,7 +704,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-12
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (bridge) and interop_uc_sanity and (suiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -732,7 +732,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s10
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -760,7 +760,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s9
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -787,7 +787,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-11
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -815,7 +815,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-7
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -843,7 +843,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s20
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -870,7 +870,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-xr
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -898,7 +898,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-pixel-4
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -925,7 +925,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-12
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -953,7 +953,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s10
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -981,8 +981,8 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s9
-          testbed: interop-01
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
+          testbed: interop-02
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (InteropsuiteB) and interop_and and not wpa3_personal' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
@@ -1008,7 +1008,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-11
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1036,7 +1036,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-7
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1064,7 +1064,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s20
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1091,7 +1091,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-xr
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1119,7 +1119,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-pixel-4
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1146,7 +1146,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-12
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1174,7 +1174,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s10
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (suiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1202,7 +1202,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s9
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (suiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1229,7 +1229,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-11
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (suiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1257,7 +1257,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-7
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (suiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1285,7 +1285,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s20
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (suiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1312,7 +1312,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-xr
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (suiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1340,7 +1340,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-pixel-4
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (suiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1367,7 +1367,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-12
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (nat) and interop_uc_sanity and (suiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1395,7 +1395,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s10
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1423,7 +1423,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s9
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1450,7 +1450,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-11
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1478,7 +1478,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-7
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1506,7 +1506,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s20
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1533,7 +1533,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-xr
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1561,7 +1561,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-pixel-4
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1588,7 +1588,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-12
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1616,7 +1616,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s10
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1644,8 +1644,8 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s9
-          testbed: interop-01
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
+          testbed: interop-02
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (InteropsuiteB) and interop_and and not wpa3_personal' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
@@ -1671,7 +1671,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-11
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1699,7 +1699,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-7
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1727,7 +1727,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s20
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1754,7 +1754,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-xr
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1782,7 +1782,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-pixel-4
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1809,7 +1809,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-12
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1837,7 +1837,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s10
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (suiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1865,7 +1865,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s9
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (suiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1892,7 +1892,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-11
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (suiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1920,7 +1920,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-7
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (suiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1948,7 +1948,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s20
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (suiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1975,7 +1975,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-xr
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (suiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2003,7 +2003,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-pixel-4
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (suiteA) and interop_and' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2030,7 +2030,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: interop-${{ github.run_id }}-iphone-12
-          testbed: interop-01
+          testbed: interop-02
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connect and (vlan) and interop_uc_sanity and (suiteA) and interop_ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
