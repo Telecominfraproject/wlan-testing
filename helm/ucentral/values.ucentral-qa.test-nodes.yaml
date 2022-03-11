@@ -70,6 +70,22 @@ owls:
     operator: "Exists"
     effect: "NoSchedule"
 
+  postgresql:
+    primary:
+      nodeSelector:
+        env: tests
+      tolerations:
+      - key: "tests"
+        operator: "Exists"
+        effect: "NoSchedule"
+    readReplicas:
+      nodeSelector:
+        env: tests
+      tolerations:
+      - key: "tests"
+        operator: "Exists"
+        effect: "NoSchedule"
+
 owlsui:
   nodeSelector:
     env: tests
