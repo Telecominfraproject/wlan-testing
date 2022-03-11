@@ -1,9 +1,11 @@
 name: 2.x testing with Docker Compose deployment
+
 env:
   AWS_EKS_NAME: tip-wlan-main
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+
 on:
   workflow_dispatch:
     inputs:
@@ -336,6 +338,7 @@ jobs:
     env:
       AWS_DEFAULT_REGION: us-east-1
       VIRTUAL_AP_SSH_KEY: ${{ secrets.VIRTUAL_AP_SSH_KEY }}
+      VIRTUAL_AP_CONFIG: ${{ secrets.VIRTUAL_AP_CONFIG }}
       DIGICERT_API_KEY: ${{ secrets.DIGICERT_API_KEY }}
     outputs:
       mac_address: ${{ steps.get_virtual_ap_mac_address.outputs.value }}
@@ -360,11 +363,12 @@ jobs:
         run: |
           ./wlan-pki-cert-scripts/digicert-change-ap-redirector.sh 06:6f:df:5d:30:e2 ${{ needs.deploy-controller.outputs.gateway_url }}
 
-      - name: Connect to virtual AP and start firstcontact service
+      # starting the firstcontact service applies a default config, which is why we need to re-apply our config modifications in order to add the SSH key
+      - name: Connect to virtual AP, start firstcontact service and re-apply AP config
         run: |
           echo "${{ env.VIRTUAL_AP_SSH_KEY }}" > openwifi-virtual-ap.pem
           chmod 600 openwifi-virtual-ap.pem
-          ssh -o StrictHostKeyChecking=accept-new -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_public_ip.outputs.ip }} /etc/init.d/firstcontact start
+          ssh -o StrictHostKeyChecking=accept-new -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_public_ip.outputs.ip }} '/etc/init.d/firstcontact start; echo "${{ env.VIRTUAL_AP_CONFIG }}" > /tmp/config.json"; /usr/share/ucentral/ucentral.uc /tmp/config.json'
 
   test:
    name: Test specified microservice
