@@ -12,6 +12,11 @@ owgw:
 
   configProperties:
     simulatorid: 53494D020202
+    storage.type: postgresql
+    storage.type.postgresql.host: owgw-pgsql
+    storage.type.postgresql.database: owgw
+    storage.type.postgresql.username: owgw
+    storage.type.postgresql.password: owgw
 
   resources:
     requests:
@@ -20,6 +25,14 @@ owgw:
     limits:
       cpu: 2000m
       memory: 3000Mi
+
+  postgresql:
+    enabled: true
+    fullnameOverride: owgw-pgsql
+
+    postgresqlDatabase: owgw
+    postgresqlUsername: owgw
+    postgresqlPassword: owgw
 
 owls:
   enabled: true
