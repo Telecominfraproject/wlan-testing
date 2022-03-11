@@ -322,7 +322,7 @@ jobs:
           - name: docker-compose-deployment
             image: docker/compose:latest
             command: ["/bin/sh", "-c"]
-            args: ["apk add git; wget https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/feature/wifi-6851--owls-parameters/docker-compose/openwifi/deploy_owls.sh; chmod +x deploy_owls.sh; sh deploy_owls.sh"]
+            args: ["apk add git; wget https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/master/docker-compose/openwifi/deploy_owls.sh; chmod +x deploy_owls.sh; sh deploy_owls.sh"]
             env:
             - name: DOCKER_TLS_VERIFY
               value: "true"
@@ -498,7 +498,7 @@ jobs:
           - name: docker-compose-deployment
             image: docker/compose:latest
             command: ["/bin/sh", "-c"]
-            args: ["apk add git; wget https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/feature/wifi-6851--owls-parameters/docker-compose/openwifi/deploy.sh; chmod +x deploy.sh; sh deploy.sh"]
+            args: ["apk add git; wget https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/master/docker-compose/openwifi/deploy.sh; chmod +x deploy.sh; sh deploy.sh"]
             env:
             - name: DOCKER_TLS_VERIFY
               value: "true"
