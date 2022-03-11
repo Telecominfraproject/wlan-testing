@@ -994,10 +994,11 @@ class RunTest:
     def country_code_channel_division(self, ssid = "[BLANK]", passkey='[BLANK]', security="wpa2", mode="BRIDGE",
                                       band='2G', station_name=[], vlan_id=100, channel='1',country=392):
         self.local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
+        radio = (self.fiveg_radios[0] if band == "fiveg" else self.twog_radios[0]).split('.')
         data = {
-            "shelf": 1,
-            "resource": 1,
-            "radio": self.fiveg_radios if band == "fiveg" else self.twog_radios,
+            "shelf": radio[0],
+            "resource": radio[1],
+            "radio": radio[2],
             "mode": "NA",
             "channel": "NA",
             "country": country
