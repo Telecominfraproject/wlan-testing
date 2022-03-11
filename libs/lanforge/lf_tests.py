@@ -992,7 +992,18 @@ class RunTest:
         return atten_serial_radio
 
     def country_code_channel_division(self, ssid = "[BLANK]", passkey='[BLANK]', security="wpa2", mode="BRIDGE",
-                                      band='2G', station_name=[], vlan_id=100, channel='1'):
+                                      band='2G', station_name=[], vlan_id=100, channel='1',country=392):
+        self.local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
+        data = {
+            "shelf": 1,
+            "resource": 1,
+            "radio": self.fiveg_radios if band == "fiveg" else self.twog_radios,
+            "mode": "NA",
+            "channel": "NA",
+            "country": country
+        }
+        print(f"Lanforge-radio Country changed {country}")
+        self.local_realm.json_post("/cli-json/set_wifi_radio", _data=data)
         station = self.Client_Connect(ssid=ssid, passkey=passkey, security=security, mode=mode, band=band,
                                          station_name=station_name, vlan_id=vlan_id)
         if station:
@@ -1063,7 +1074,3 @@ if __name__ == '__main__':
     # print(a)
     # print(obj.eap_connect.json_get("port/1/1/sta0000?fields=ap,ip"))
     # obj.EAP_Connect(station_name=["sta0000", "sta0001"], eap="TTLS", ssid="testing_radius")
-
-
-# TODO: create new funtion
-#  --> attach details to allure (ref:client_connectivity)
