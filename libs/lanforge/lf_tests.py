@@ -1128,6 +1128,7 @@ class RunTest:
         radio = (self.fiveg_radios[0] if band == "fiveg" else self.twog_radios[0]).split('.')
 
         self.set_radio_country_channel(_radio=radio,_country_num=country_num)
+
         station = self.Client_Connect(ssid=ssid, passkey=passkey, security=security, mode=mode, band=band,
                                          station_name=station_name, vlan_id=vlan_id)
         if station:
@@ -1214,7 +1215,3 @@ if __name__ == '__main__':
     # print(a)
     # print(obj.eap_connect.json_get("port/1/1/sta0000?fields=ap,ip"))
     # obj.EAP_Connect(station_name=["sta0000", "sta0001"], eap="TTLS", ssid="testing_radius")
-
-
-# TODO: create new funtion
-#  --> attach details to allure (ref:client_connectivity)
