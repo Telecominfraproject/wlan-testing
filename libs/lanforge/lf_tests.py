@@ -1126,7 +1126,6 @@ class RunTest:
                                       country_num=392, country='United States(US)'):
         self.local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
         radio = (self.fiveg_radios[0] if band == "fiveg" else self.twog_radios[0]).split('.')
-
         self.set_radio_country_channel(_radio=radio,_country_num=country_num)
 
         station = self.Client_Connect(ssid=ssid, passkey=passkey, security=security, mode=mode, band=band,
