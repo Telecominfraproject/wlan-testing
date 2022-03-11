@@ -23,13 +23,13 @@ setup_params_general1 = {
         {'band': '5G',
         'country': 'JP',
         "channel-mode": "VHT",
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 36},
         "2G":
         {'band': '2G',
         'country': 'JP',
         "channel-mode": "VHT",
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 1}
            },
     "radius": False
@@ -44,18 +44,18 @@ setup_params_general1 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP20Mhz2GChannel1(object):
+class TestCountryJP40Mhz2GChannel1(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.twentyMhz
+    @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel1
-    def test_client_bridge_wpa2_chn1_20Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
+    def test_client_bridge_wpa2_chn1_40Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and twentyMhz and wpa2 and twog and channel1"
+           pytest -m "country_code and fourtyMhz and wpa2 and twog and channel1"
         """
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
@@ -86,13 +86,13 @@ setup_params_general2 = {
         {'band': '5G',
         'country': 'JP',
         "channel-mode": "VHT",
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 36},
         "2G":
         {'band': '2G',
         'country': 'JP',
         'channel-mode': 'VHT',
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 2}
            },
     "radius": False
@@ -107,18 +107,18 @@ setup_params_general2 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP20Mhz2GChannel2(object):
+class TestCountryJP40Mhz2GChannel2(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.twentyMhz
+    @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel2
-    def test_client_bridge_wpa2_chn2_20Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
+    def test_client_bridge_wpa2_chn2_40Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and twentyMhz and wpa2 and twog and channel2"
+           pytest -m "country_code and fourtyMhz and wpa2 and twog and channel2"
         """
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
@@ -149,13 +149,13 @@ setup_params_general3 = {
         {'band': '5G',
         'country': 'JP',
         "channel-mode": "VHT",
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 36},
         "2G":
         {'band': '2G',
         'country': 'JP',
         'channel-mode': 'VHT',
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 3}
            },
     "radius": False
@@ -170,18 +170,18 @@ setup_params_general3 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP20Mhz2GChannel3(object):
+class TestCountryJP40Mhz2GChannel3(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.twentyMhz
+    @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel3
-    def test_client_bridge_wpa2_chn3_20Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
+    def test_client_bridge_wpa2_chn3_40Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and twentyMhz and wpa2 and twog and channel3"
+           pytest -m "country_code and fourtyMhz and wpa2 and twog and channel3"
         """
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
@@ -212,13 +212,13 @@ setup_params_general4 = {
         {'band': '5G',
         'country': 'JP',
         "channel-mode": "VHT",
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 36},
         "2G":
         {'band': '2G',
         'country': 'JP',
         'channel-mode': 'VHT',
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 4}
            },
     "radius": False
@@ -232,18 +232,18 @@ setup_params_general4 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP20Mhz2GChannel4(object):
+class TestCountryJP40Mhz2GChannel4(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.twentyMhz
+    @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel4
-    def test_client_bridge_wpa2_chn4_20Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
+    def test_client_bridge_wpa2_chn4_40Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and twentyMhz and wpa2 and twog and channel4"
+           pytest -m "country_code and fourtyMhz and wpa2 and twog and channel4"
         """
         profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
@@ -274,13 +274,13 @@ setup_params_general5 = {
         {'band': '5G',
         'country': 'JP',
         "channel-mode": "VHT",
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 36},
         "2G":
         {'band': '2G',
         'country': 'JP',
         'channel-mode': 'VHT',
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 5}
            },
     "radius": False
@@ -294,18 +294,18 @@ setup_params_general5 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP20Mhz2GChannel5(object):
+class TestCountryJP40Mhz2GChannel5(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.twentyMhz
+    @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel5
-    def test_client_bridge_wpa2_chn5_20Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
+    def test_client_bridge_wpa2_chn5_40Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and twentyMhz and wpa2 and twog and channel5"
+           pytest -m "country_code and fourtyMhz and wpa2 and twog and channel5"
         """
         profile_data = setup_params_general5["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
@@ -336,13 +336,13 @@ setup_params_general6 = {
         {'band': '5G',
         'country': 'JP',
         "channel-mode": "VHT",
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 36},
         "2G":
         {'band': '2G',
         'country': 'JP',
         'channel-mode': 'VHT',
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 6}
            },
     "radius": False
@@ -356,18 +356,18 @@ setup_params_general6 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP20Mhz2GChannel6(object):
+class TestCountryJP40Mhz2GChannel6(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.twentyMhz
+    @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel6
-    def test_client_bridge_wpa2_chn6_20Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
+    def test_client_bridge_wpa2_chn6_40Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and twentyMhz and wpa2 and twog and channel6"
+           pytest -m "country_code and fourtyMhz and wpa2 and twog and channel6"
         """
         profile_data = setup_params_general6["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
@@ -398,13 +398,13 @@ setup_params_general7 = {
         {'band': '5G',
         'country': 'JP',
         "channel-mode": "VHT",
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 36},
         "2G":
         {'band': '2G',
         'country': 'JP',
         'channel-mode': 'VHT',
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 7}
            },
     "radius": False
@@ -418,18 +418,18 @@ setup_params_general7 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP20Mhz2GChannel7(object):
+class TestCountryJP40Mhz2GChannel7(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.twentyMhz
+    @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel7
-    def test_client_bridge_wpa2_chn7_20Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
+    def test_client_bridge_wpa2_chn7_40Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and twentyMhz and wpa2 and twog and channel7"
+           pytest -m "country_code and fourtyMhz and wpa2 and twog and channel7"
         """
         profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
@@ -460,13 +460,13 @@ setup_params_general8 = {
         {'band': '5G',
         'country': 'JP',
         "channel-mode": "VHT",
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 36},
         "2G":
         {'band': '2G',
         'country': 'JP',
         'channel-mode': 'VHT',
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 8}
            },
     "radius": False
@@ -480,18 +480,18 @@ setup_params_general8 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP20Mhz2GChannel8(object):
+class TestCountryJP40Mhz2GChannel8(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.twentyMhz
+    @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel8
-    def test_client_bridge_wpa2_chn8_20Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
+    def test_client_bridge_wpa2_chn8_40Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and twentyMhz and wpa2 and twog and channel8"
+           pytest -m "country_code and fourtyMhz and wpa2 and twog and channel8"
         """
         profile_data = setup_params_general8["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
@@ -522,13 +522,13 @@ setup_params_general9 = {
         {'band': '5G',
         'country': 'JP',
         "channel-mode": "VHT",
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 36},
         "2G":
         {'band': '2G',
         'country': 'JP',
         'channel-mode': 'VHT',
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 9}
            },
     "radius": False
@@ -542,18 +542,18 @@ setup_params_general9 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP20Mhz2GChannel9(object):
+class TestCountryJP40Mhz2GChannel9(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.twentyMhz
+    @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel9
-    def test_client_bridge_wpa2_chn9_20Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
+    def test_client_bridge_wpa2_chn9_40Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and twentyMhz and wpa2 and twog and channel9"
+           pytest -m "country_code and fourtyMhz and wpa2 and twog and channel9"
         """
         profile_data = setup_params_general9["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
@@ -584,13 +584,13 @@ setup_params_general10 = {
         {'band': '5G',
         'country': 'JP',
         "channel-mode": "VHT",
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 36},
         "2G":
         {'band': '2G',
         'country': 'JP',
         'channel-mode': 'VHT',
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 10}
            },
     "radius": False
@@ -604,18 +604,18 @@ setup_params_general10 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP20Mhz2GChannel10(object):
+class TestCountryJP40Mhz2GChannel10(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.twentyMhz
+    @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel10
-    def test_client_bridge_wpa2_chn10_20Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
+    def test_client_bridge_wpa2_chn10_40Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and twentyMhz and wpa2 and twog and channel10"
+           pytest -m "country_code and fourtyMhz and wpa2 and twog and channel10"
         """
         profile_data = setup_params_general10["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
@@ -646,13 +646,13 @@ setup_params_general11 = {
         {'band': '5G',
         'country': 'JP',
         "channel-mode": "VHT",
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 36},
         "2G":
         {'band': '2G',
         'country': 'JP',
         'channel-mode': 'VHT',
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 11}
            },
     "radius": False
@@ -666,18 +666,18 @@ setup_params_general11 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP20Mhz2GChannel11(object):
+class TestCountryJP40Mhz2GChannel11(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.twentyMhz
+    @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel11
-    def test_client_bridge_wpa2_chn11_20Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
+    def test_client_bridge_wpa2_chn11_40Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and twentyMhz and wpa2 and twog and channel11"
+           pytest -m "country_code and fourtyMhz and wpa2 and twog and channel11"
         """
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
@@ -708,13 +708,13 @@ setup_params_general12 = {
         {'band': '5G',
         'country': 'JP',
         "channel-mode": "VHT",
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 36},
         "2G":
         {'band': '2G',
         'country': 'JP',
         'channel-mode': 'VHT',
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 12}
            },
     "radius": False
@@ -728,18 +728,18 @@ setup_params_general12 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP20Mhz2GChannel12(object):
+class TestCountryJP40Mhz2GChannel12(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.twentyMhz
+    @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel12
-    def test_client_bridge_wpa2_chn12_20Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
+    def test_client_bridge_wpa2_chn12_40Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and twentyMhz and wpa2 and twog and channel12"
+           pytest -m "country_code and fourtyMhz and wpa2 and twog and channel12"
         """
         profile_data = setup_params_general12["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
@@ -770,13 +770,13 @@ setup_params_general13 = {
         {'band': '5G',
         'country': 'JP',
         "channel-mode": "VHT",
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 36},
         "2G":
         {'band': '2G',
         'country': 'JP',
         'channel-mode': 'VHT',
-        'channel-width': 20,
+        'channel-width': 40,
         "channel": 13}
            },
     "radius": False
@@ -790,18 +790,18 @@ setup_params_general13 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP20Mhz2GChannel13(object):
+class TestCountryJP40Mhz2GChannel13(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.twentyMhz
+    @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel13
-    def test_client_bridge_wpa2_chn13_20Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
+    def test_client_bridge_wpa2_chn13_40Mhz_JP_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and twentyMhz and wpa2 and twog and channel13"
+           pytest -m "country_code and fourtyMhz and wpa2 and twog and channel13"
         """
         profile_data = setup_params_general13["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
