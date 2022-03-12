@@ -265,7 +265,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: " --device='iPhone-12' --skip-lanforge"
+          additional_args: "--device='iPhone-12' --skip-lanforge"
           allure_results_artifact_name: allure-results-iphone-12
 
       # necessary because if conditionals in composite actions are currently not respected
