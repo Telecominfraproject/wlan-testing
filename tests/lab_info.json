@@ -776,7 +776,9 @@
         "browserType-iOS": "Safari",
         "bundleId-iOS-Safari": "com.apple.mobilesafari",
         "platformName-android": "Android",
-        "appPackage-android": "com.android.settings"
+        "appPackage-android": "com.android.settings",
+        "jobName": "Interop-iphone-11",
+        "jobNumber": 38
     },
     "iPhone-12": {
         "model-iOS": "iPhone-12",
@@ -787,7 +789,9 @@
         "browserType-iOS": "Safari",
         "bundleId-iOS-Safari": "com.apple.mobilesafari",
         "platformName-android": "Android",
-        "appPackage-android": "com.android.settings"
+        "appPackage-android": "com.android.settings",
+        "jobName": "Interop-iphone-12",
+        "jobNumber": 38
     },
     "iPhone-7": {
         "model-iOS": "iPhone-7",
@@ -798,7 +802,9 @@
         "browserType-iOS": "Safari",
         "bundleId-iOS-Safari": "com.apple.mobilesafari",
         "platformName-android": "Android",
-        "appPackage-android": "com.android.settings"
+        "appPackage-android": "com.android.settings",
+        "jobName": "Interop-iphone-7",
+        "jobNumber": 38
     },
     "iPhone-XR": {
         "model-iOS": "iPhone-XR",
@@ -809,35 +815,45 @@
         "browserType-iOS": "Safari",
         "bundleId-iOS-Safari": "com.apple.mobilesafari",
         "platformName-android": "Android",
-        "appPackage-android": "com.android.settings"
+        "appPackage-android": "com.android.settings",
+        "jobName": "Interop-iphone-XR",
+        "jobNumber": 38
     },
     "Galaxy S20": {
         "platformName-android": "Android",
         "model-android": "Galaxy S20",
         "appPackage-android": "com.android.settings",
         "bundleId-iOS-Settings": "com.apple.Preferences",
-        "bundleId-iOS-Safari": "com.apple.mobilesafari"
+        "bundleId-iOS-Safari": "com.apple.mobilesafari",
+        "jobName": "Interop-Galaxy-S20",
+        "jobNumber": 38
     },
     "Galaxy S10.*": {
         "platformName-android": "Android",
         "model-android": "Galaxy S10.*",
         "appPackage-android": "com.android.settings",
         "bundleId-iOS-Settings": "com.apple.Preferences",
-        "bundleId-iOS-Safari": "com.apple.mobilesafari"
+        "bundleId-iOS-Safari": "com.apple.mobilesafari",
+        "jobName": "Interop-Galaxy-S10",
+        "jobNumber": 38
     },
     "Galaxy S9": {
         "platformName-android": "Android",
         "model-android": "Galaxy S9",
         "appPackage-android": "com.android.settings",
         "bundleId-iOS-Settings": "com.apple.Preferences",
-        "bundleId-iOS-Safari": "com.apple.mobilesafari"
+        "bundleId-iOS-Safari": "com.apple.mobilesafari",
+        "jobName": "Interop-Galaxy-S9",
+        "jobNumber": 38
     },
     "Pixel 4": {
         "platformName-android": "Android",
         "model-android": "Pixel 4",
         "appPackage-android": "com.android.settings",
         "bundleId-iOS-Settings": "com.apple.Preferences",
-        "bundleId-iOS-Safari": "com.apple.mobilesafari"
+        "bundleId-iOS-Safari": "com.apple.mobilesafari",
+        "jobName": "Interop-pixel-4",
+        "jobNumber": 38
     }
 },
 
