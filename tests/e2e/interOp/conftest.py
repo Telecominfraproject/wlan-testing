@@ -429,8 +429,8 @@ def setup_perfectoMobile_android(request, get_device_configuration):
 
     projectname = PERFECTO_DETAILS["projectName"]
     projectversion = PERFECTO_DETAILS["projectVersion"]
-    jobname = PERFECTO_DETAILS["jobName"]
-    jobnumber = PERFECTO_DETAILS["jobNumber"]
+    jobname = get_device_configuration["jobName"]
+    jobnumber = get_device_configuration["jobNumber"]
     tags = PERFECTO_DETAILS["reportTags"]
     testCaseName = TestCaseName
 
@@ -526,10 +526,10 @@ def setup_perfectoMobileWeb(request, get_device_configuration):
 
     projectname = PERFECTO_DETAILS["projectName"]
     projectversion = PERFECTO_DETAILS["projectVersion"]
-    jobname = PERFECTO_DETAILS["jobName"]
-    jobnumber = PERFECTO_DETAILS["jobNumber"]
+    jobname = get_device_configuration["jobName"]
+    jobnumber = get_device_configuration["jobNumber"]
     tags = PERFECTO_DETAILS["reportTags"]
-    testCaseName = PERFECTO_DETAILS["jobName"]
+    testCaseName = get_device_configuration["jobName"]
 
     print("Setting Perfecto ReportClient....")
     perfecto_execution_context = PerfectoExecutionContext(rdriver, tags, Job(jobname, jobnumber),
@@ -605,8 +605,8 @@ def setup_perfectoMobile_iOS(request, get_device_configuration):
 
     projectname = PERFECTO_DETAILS["projectName"]
     projectversion = PERFECTO_DETAILS["projectVersion"]
-    jobname = PERFECTO_DETAILS["jobName"]
-    jobnumber = PERFECTO_DETAILS["jobNumber"]
+    jobname = get_device_configuration["jobName"]
+    jobnumber = get_device_configuration["jobNumber"]
     tags = PERFECTO_DETAILS["reportTags"]
     testCaseName = TestCaseName
 
