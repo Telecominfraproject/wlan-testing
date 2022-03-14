@@ -77,7 +77,7 @@ http://pythontesting.net/framework/pytest/pytest-introduction/
 [![performance testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/performance.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/performance.yml)
 ![performance test count](https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/badges/performance-count.svg)
 
-[![Quali advanced testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/quali-advanced.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/quali-advanced.yml)
+[![RF Testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/quali-advanced.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/quali-advanced.yml)
 ![Advance test count](https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/badges/advance-count.svg)
 
 [![regression testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/regression.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/regression.yml)
