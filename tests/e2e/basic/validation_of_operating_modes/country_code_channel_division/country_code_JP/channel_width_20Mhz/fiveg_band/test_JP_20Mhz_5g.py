@@ -1255,7 +1255,6 @@ class TestCountryJP20Mhz5GChannel144(object):
     @pytest.mark.twentyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel144
-    @pytest.mark.checkchannel
     def test_client_bridge_wpa2_chn144_20Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel144"
@@ -1319,7 +1318,6 @@ class TestCountryJP20Mhz5GChannel149(object):
     @pytest.mark.twentyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel149
-    @pytest.mark.checkchannel
     def test_client_bridge_wpa2_chn149_20Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel149"
@@ -1383,7 +1381,6 @@ class TestCountryJP20Mhz5GChannel153(object):
     @pytest.mark.twentyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel153
-    @pytest.mark.checkchannel
     def test_client_bridge_wpa2_chn153_20Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel153"
@@ -1447,7 +1444,6 @@ class TestCountryJP20Mhz5GChannel157(object):
     @pytest.mark.twentyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel157
-    @pytest.mark.checkchannel
     def test_client_bridge_wpa2_chn157_20Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel157"
@@ -1511,7 +1507,6 @@ class TestCountryJP20Mhz5GChannel161(object):
     @pytest.mark.twentyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel161
-    @pytest.mark.checkchannel
     def test_client_bridge_wpa2_chn161_20Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel161"
@@ -1575,7 +1570,6 @@ class TestCountryJP20Mhz5GChannel165(object):
     @pytest.mark.twentyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel165
-    @pytest.mark.checkchannel
     def test_client_bridge_wpa2_chn165_20Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel165"
@@ -1598,3 +1592,4 @@ class TestCountryJP20Mhz5GChannel165(object):
             assert True
         else:
             assert False
+

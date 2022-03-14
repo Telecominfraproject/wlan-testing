@@ -630,7 +630,6 @@ class TestCountryJP40Mhz5GChannel140(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel140
-    @pytest.mark.checkchannel
     def test_client_bridge_wpa2_chn140_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel140"
@@ -783,3 +782,4 @@ class TestCountryJP40Mhz5GChannel157(object):
             assert True
         else:
             assert False
+

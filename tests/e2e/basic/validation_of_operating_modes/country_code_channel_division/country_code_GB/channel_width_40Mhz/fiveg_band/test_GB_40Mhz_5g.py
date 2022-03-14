@@ -12,6 +12,7 @@ import allure
 
 pytestmark = [pytest.mark.country_code, pytest.mark.bridge, pytest.mark.wpa2, pytest.mark.united_kingdom]
 
+
 setup_params_general1 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -780,3 +781,4 @@ class TestCountryGB40Mhz5GChannel157(object):
             assert True
         else:
             assert False
+

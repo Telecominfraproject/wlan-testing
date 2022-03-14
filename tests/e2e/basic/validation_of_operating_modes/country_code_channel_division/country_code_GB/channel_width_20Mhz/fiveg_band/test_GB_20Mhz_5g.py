@@ -1592,4 +1592,3 @@ class TestCountryGB20Mhz5GChannel165(object):
             assert True
         else:
             assert False
-

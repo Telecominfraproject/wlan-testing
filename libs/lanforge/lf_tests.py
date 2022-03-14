@@ -1053,6 +1053,7 @@ class RunTest:
             else:
                 return False
 
+
 if __name__ == '__main__':
     influx_host = "influx.cicd.lab.wlan.tip.build"
     influx_port = 80

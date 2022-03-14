@@ -263,3 +263,4 @@ class TestCountryUS80Mhz5GChannel132(object):
             assert True
         else:
             assert False
+
