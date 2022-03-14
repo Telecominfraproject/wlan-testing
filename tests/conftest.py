@@ -2,25 +2,16 @@
     Pytest fixtures: High level Resource Management and base setup fixtures
 """
 import datetime
+import os
 import random
 import string
 import sys
-import os
-import time
 
 import allure
-import re
-import logging
-
-from _pytest.fixtures import SubRequest
-from pyparsing import Optional
 
 ALLURE_ENVIRONMENT_PROPERTIES_FILE = 'environment.properties'
 ALLUREDIR_OPTION = '--alluredir'
 
-# if "logs" not in os.listdir():
-#     os.mkdir("logs/")
-# logging.basicConfig(level=logging.INFO, filename="logs/" + '{:%Y-%m-%d-%H-%M-%S}.log'.format(datetime.datetime.now()))
 sys.path.append(
     os.path.dirname(
         os.path.realpath(__file__)
@@ -62,13 +53,14 @@ from typing import Any, Callable, Optional
 from _pytest.fixtures import SubRequest
 from pytest import fixture
 
-import fixtures_1x
 from fixtures_1x import Fixtures_1x
-import fixtures_2x
 from fixtures_2x import Fixtures_2x
 
 ALLURE_ENVIRONMENT_PROPERTIES_FILE = 'environment.properties'
 ALLUREDIR_OPTION = '--alluredir'
+import logging
+
+LOGGER = logging.getLogger(__name__)
 
 
 def pytest_addoption(parser):
@@ -262,9 +254,8 @@ def get_configuration(testbed, request):
         version = request.config.getini("firmware")
         version_list = version.split(",")
         for i in range(len(CONFIGURATION[testbed]["access_point"])):
-            print("i", i)
-            print(version_list)
             CONFIGURATION[testbed]["access_point"][i]["version"] = version_list[0]
+    LOGGER.info("Selected the lab Info data: " + str((CONFIGURATION[testbed])))
     yield CONFIGURATION[testbed]
 
 
@@ -604,7 +595,7 @@ def traffic_generator_connectivity(testbed, get_configuration):
 @pytest.fixture(scope="session")
 def create_lanforge_chamberview_dut(lf_tools, skip_lf, run_lf):
     dut_name = ""
-    if (not run_lf ) and (not skip_lf):
+    if (not run_lf) and (not skip_lf):
         dut_object, dut_name = lf_tools.Create_Dut()
     return dut_name
 
@@ -693,7 +684,7 @@ def add_firmware_property_after_upgrade(add_allure_environment_property, fixture
                                         get_configuration):
     # try:
     add_allure_environment_property('Access-Point-Firmware-Version',
-                                        fixtures_ver.get_ap_version(get_apnos, get_configuration)[0].split("\n")[1])
+                                    fixtures_ver.get_ap_version(get_apnos, get_configuration)[0].split("\n")[1])
     # except Exception as e:
     #     print(e)
     #     pass
@@ -771,4 +762,18 @@ def get_apnos_logs(get_apnos, get_configuration):
         ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
         logs = ap_ssh.logread()
         all_logs.append(logs)
+    yield all_logs
+
+
+@pytest.fixture(scope="session")
+def get_apnos_max_clients(get_apnos, get_configuration):
+    all_logs = []
+    for ap in get_configuration['access_point']:
+        ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
+        ap_ssh.run_generic_command(cmd="chmod +x /usr/share/ucentral/wifi_max_user.uc")
+        a = ap_ssh.run_generic_command(cmd="/usr/share/ucentral/wifi_max_user.uc")
+        try:
+            all_logs.append(a[1])
+        except Exception as e:
+            pass
     yield all_logs

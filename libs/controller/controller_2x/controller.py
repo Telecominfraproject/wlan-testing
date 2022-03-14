@@ -406,7 +406,6 @@ class UProfileUtility:
 
     def set_express_wifi(self, open_flow=None):
         if self.mode == "NAT":
-            self.base_profile_config["interfaces"][0]["services"] = ["lldp", "ssh"]
             self.base_profile_config["interfaces"][1]["services"] = ["ssh", "lldp", "open-flow"]
             self.base_profile_config["interfaces"][1]["ipv4"]["subnet"] = "192.168.97.1/24"
             self.base_profile_config["interfaces"][1]["ipv4"]["dhcp"]["lease-count"] = 100
@@ -626,15 +625,14 @@ class UProfileUtility:
             pytest.exit("invalid Operating Mode")
 
     def push_config(self, serial_number):
-        payload = {"configuration": self.base_profile_config, "serialNumber": serial_number, "UUID": 0}
+        payload = {"configuration": self.base_profile_config, "serialNumber": serial_number, "UUID": 1}
 
         uri = self.sdk_client.build_uri("device/" + serial_number + "/configure")
         basic_cfg_str = json.dumps(payload)
-        print(self.base_profile_config)
         allure.attach(name="ucentral_config: ",
-                      body=str(self.base_profile_config).replace("'", '"'),
+                      body=str(basic_cfg_str),
                       attachment_type=allure.attachment_type.JSON)
-        print(self.base_profile_config)
+        print("JSON Post Configure: " + str(basic_cfg_str))
         print("Sending Configure Command: ", datetime.datetime.utcnow())
         resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
                              verify=False, timeout=100)
@@ -655,7 +653,12 @@ if __name__ == '__main__':
         'password': 'OpenWifi%123',
     }
     obj = Controller(controller_data=controller)
-    print(obj.get_device_by_serial_number(serial_number="903cb36ae224"))
+    up = UProfileUtility(sdk_client=obj, controller_data=controller)
+    up.set_mode(mode="BRIDGE")
+    up.set_radio_config()
+    up.add_ssid(ssid_data={"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something", "security": "psk2"})
+    up.push_config(serial_number="3c2c99f44e77")
+    print(obj.get_device_by_serial_number(serial_number="3c2c99f44e77"))
     # print(datetime.datetime.utcnow())
     # fms = FMSUtils(sdk_client=obj)
     # new = fms.get_firmwares(model='ecw5410')

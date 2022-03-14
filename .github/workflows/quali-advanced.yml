@@ -1,8 +1,5 @@
 name: Quali advanced testing
 
-env:
-  ALLURE_CLI_VERSION: 2.14.0
-
 on:
   workflow_dispatch:
     inputs:
@@ -128,245 +125,32 @@ jobs:
     - name: get EKS access credentials
       run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-    - name: install Allure CLI tool
-      run: |
-        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-        
-    - name: set job name
-      id: job
-      run: echo "::set-output name=name::advanced-ci-${{ github.run_number }}"
-
     - name: prepare namespace
       id: namespace
       run: |
         NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ matrix.ap_model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-        kubectl create ns $NAMESPACE
-        kubectl config set-context --current --namespace=$NAMESPACE
         echo "::set-output name=name::${NAMESPACE}"
 
     - name: prepare configuration
       run: |
-        cat << EOF > configuration.py
-        Customer = ""
-        server = ""
-        CONFIGURATION = {
-          "advanced": $(python .quali/get_configuration.py ${{ steps.reservation.outputs.identifier }})
-        }
-        open_flow = {}
-        RADIUS_SERVER_DATA = {
-            "ip": "10.10.1.221",
-            "port": 1812,
-            "secret": "testing123",
-            "user": "user",
-            "password": "password",
-            "pk_password": "whatever"
-        }
-
-        RADIUS_ACCOUNTING_DATA = {
-            "ip": "10.10.1.221",
-            "port": 1813,
-            "secret": "testing123",
-            "user": "user",
-            "password": "password",
-            "pk_password": "whatever"
-        }
-
-        DYNAMIC_VLAN_RADIUS_SERVER_DATA = {
-          "ip": "3.20.165.131",
-          "port": 1812,
-          "secret": "testing123",
-          "user": "user",
-          "password": "password",
-          "pk_password": "whatever"
-        }
-
-        DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA = {
-            "ip": "3.20.165.131",
-            "port": 1813,
-            "secret": "testing123",
-            "user": "user",
-            "password": "password",
-            "pk_password": "whatever"
-        }
-
-        PASSPOINT_RADIUS_SERVER_DATA = {
-            "ip": "52.234.179.191",
-            "port": 11812,
-            "secret": "yeababy20!",
-            "user": "nolaradius",
-            "password": "nolastart",
-            "pk_password": "whatever"
-        }
-
-        PASSPOINT_RADIUS_ACCOUNTING_SERVER_DATA = {
-            "ip": "52.234.179.191",
-            "port": 11813,
-            "secret": "yeababy20!"
-        }
-
-        PASSPOINT_PROVIDER_INFO = {
-            "mcc": None,
-            "mnc": None,
-            "network": None,
-            "nai_realms": {
-                "domain": "oss.ameriband.com",
-                "encoding": 0,
-                "eap_map": {"EAP-TTLS with username/password": ["Credential Type:username/password",
-                                                                "Non-EAP Inner Authentication Type:MSCHAPV2"]}
-            },
-            "osu_nai_standalone": "anonymous@ameriband.com",
-            "osu_nai_shared": "anonymous@ameriband.com",
-            "roaming_oi": []
-        }
-        RATE_LIMITING_RADIUS_SERVER_DATA = {
-            "ip": "18.189.85.200",
-            "port": 1812,
-            "secret": "testing123",
-            "user": "user",
-            "password": "password",
-            "pk_password": "whatever"
-        }
-
-        RATE_LIMITING_RADIUS_ACCOUNTING_DATA = {
-            "ip": "18.189.85.200",
-            "port": 1813,
-            "secret": "testing123",
-            "user": "user",
-            "password": "password",
-            "pk_password": "whatever"
-        }
-
-        PASSPOINT_OPERATOR_INFO = {
-            "osen": "Disabled",
-            "domain_name_list": ["telecominfraproject.atlassian.net"],
-            "operator_names": [
-                {"locale": "eng", "name": "Default friendly passpoint_operator name"},
-                {"locale": "fra", "name": "Nom de l'opérateur convivial par défaut"}
-            ]
-        }
-
-        PASSPOINT_VENUE_INFO = {
-            "venue_type": {"group": "Business", "type": "Police Station"},
-            "venue_names": [
-                {"locale": "eng", "name": "Example passpoint_venue", "url": "http://www.example.com/info-eng"},
-                {"locale": "fra", "name": "Exemple de lieu", "url": "http://www.example.com/info-fra"}
-            ]
-        }
-
-        PASSPOINT_PROFILE_INFO = {
-            "profile_download_url_ios": "https://onboard.almondlabs.net/ttls/AmeriBand-Profile.mobileconfig",
-            "profile_download_url_android": "https://onboard.almondlabs.net/ttls/androidconfig.cfg",
-            "profile_name_on_device": "AmeriBand",
-            "radius_configuration": {
-                "user_defined_nas_id": "FB001AP001",
-                "operator_id": "AmeribandTIP",
-                "radius_acounting_service_interval": 60
-            },
-            "interworking_hs2dot0": "Enabled",
-            "hessid": None,
-            "access_network": {
-                "Access Network Type": "Free Public Network",
-                "Authentication Type": "Acceptance of Terms & Conditions",
-                "Emergency Services Reachable": "Enabled",
-                "Unauthenticated Emergency Service": "Disabled",
-            },
-            "ip_connectivity": {
-                "Internet Connectivity": "Enabled",
-                "IP Address Type": "Public IPv4 Address Available",
-                "Connection Capability": [{"status": "open", "protocol": "TCP", "port": 8888}],
-                "ANQP Domain ID": 1234,
-                "GAS Address 3 Behaviour": "P2P Spec Workaround From Request",
-                "Disable DGAF": False
-            }
-        }
+        cat << EOF > lab_info.json
+        ${{ secrets.LAB_CONFIGURATION_JSON }}
         EOF
 
-        kubectl create secret generic configuration --from-file=configuration=./configuration.py
+        DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
+        jq ".CONFIGURATION.basic=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
 
     - name: run tests
-      run: |
-        cat <<EOF | kubectl apply -f -
-        apiVersion: batch/v1
-        kind: Job
-        metadata:
-          name: "${{ steps.job.outputs.name }}"
-        spec:
-          template:
-            metadata:
-              annotations:
-                cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
-            spec:
-              containers:
-              - name: tests
-                image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-                resources:
-                  requests:
-                    memory: "512Mi"
-                    cpu: "250m"
-                  limits:
-                    memory: "512Mi"
-                    cpu: "250m"
-                command:
-                  - /bin/bash
-                  - -c
-                  - |
-                    HOSTS="sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
-                    for HOST in \$HOSTS; do
-                      HOST_ENTRY=""
-                      until [[ ! -z "\$HOST_ENTRY" ]]; do sleep 1; HOST_ENTRY=\$(getent hosts \$HOST); done;
-                      echo "\$HOST_ENTRY" >> /etc/hosts
-                      echo "DNS record for \$HOST resolved successfully!"
-                    done
-
-                    cat /etc/hosts
-
-                    cd tests
-                    pytest -m "${{ needs.vars.outputs.marker_expression }}" -s -vvv --testbed="advanced" --alluredir=/tmp/allure-results -o firmware="${{ needs.vars.outputs.ap_version }}"
-                    ret=\$?
-                    # sleep some time to be able to download the Allure results
-                    sleep 60
-                    exit \$ret
-                volumeMounts:
-                - name: configuration
-                  mountPath: "/wlan-testing/tests/configuration.py"
-                  subPath: configuration
-                  readOnly: true
-              nodeSelector:
-                env: tests
-              tolerations:
-              - key: "tests"
-                operator: "Exists"
-                effect: "NoSchedule"
-              imagePullSecrets:
-              - name: tip-docker-registry-key
-              restartPolicy: Never
-              volumes:
-              - name: configuration
-                secret:
-                  secretName: configuration
-          backoffLimit: 0
-        EOF
-        # wait for pod to spawn
-        sleep 1
-
-        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
-        kubectl logs -f $podname &
-
-        until [ -s test_everything.xml ]
-        do
-          sleep 10
-          kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
-        done
-        echo "tests completed"
-        echo "downloading allure results..."
-        kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
-        echo "waiting for pod to exit"
-        kubectl logs -f $podname >/dev/null 2>&1
-
-        until [[ ! -z "$EXIT_CODE" ]]; do EXIT_CODE=$(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}"); sleep 1; done;
-        exit $EXIT_CODE
+      uses: ./.github/actions/run-tests
+      with:
+        namespace: ${{ steps.namespace.outputs.name }}
+        testbed: advanced
+        marker_expression: "${{ needs.vars.outputs.marker_expression }}"
+        configuration_file: "./lab_info.json"
+        testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+        additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+        allure_results_artifact_name: allure-results-${{ matrix.ap_model }}
+        dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
     - name: show gw logs
       if: failure()
@@ -383,18 +167,6 @@ jobs:
     - name: show sec logs
       if: failure()
       run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
-
-    - name: upload Allure results as artifact
-      if: ${{ always() }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: allure-results-${{ matrix.ap_model }}
-        path: allure-results
-
-    - name: cleanup
-      if: ${{ always() }}
-      run: |
-        kubectl delete ns "${{ steps.namespace.outputs.name }}" --wait=true
 
     - name: stop reservation
       if: always()

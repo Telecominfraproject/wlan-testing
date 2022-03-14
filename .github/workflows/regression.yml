@@ -88,7 +88,7 @@ jobs:
           namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-dfs
           testbed: "${{ matrix.testbed }}"
           marker_expression: "regression and dfs"
-          configuration: "${{ secrets.LAB_CONFIGURATION }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           allure_results_artifact_name: allure-results-${{ matrix.testbed }}-dfs
 
@@ -99,7 +99,7 @@ jobs:
           namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-multipsk
           testbed: "${{ matrix.testbed }}"
           marker_expression: "regression and multipsk"
-          configuration: "${{ secrets.LAB_CONFIGURATION }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           allure_results_artifact_name: allure-results-${{ matrix.testbed }}-multipsk
 
@@ -110,7 +110,7 @@ jobs:
           namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-rate_limiting
           testbed: "${{ matrix.testbed }}"
           marker_expression: "regression and rate_limiting"
-          configuration: "${{ secrets.LAB_CONFIGURATION }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           allure_results_artifact_name: allure-results-${{ matrix.testbed }}-rate_limiting
 
@@ -121,7 +121,7 @@ jobs:
           namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-rate_limiting_with_radius
           testbed: "${{ matrix.testbed }}"
           marker_expression: "regression and rate_limiting_with_radius"
-          configuration: "${{ secrets.LAB_CONFIGURATION }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           allure_results_artifact_name: allure-results-${{ matrix.testbed }}-rate_limiting_with_radius
 
@@ -132,7 +132,7 @@ jobs:
           namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-dynamic_vlan
           testbed: "${{ matrix.testbed }}"
           marker_expression: "regression and dynamic_vlan"
-          configuration: "${{ secrets.LAB_CONFIGURATION }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           allure_results_artifact_name: allure-results-${{ matrix.testbed }}-dynamic_vlan
 
