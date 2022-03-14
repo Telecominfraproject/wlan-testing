@@ -26,7 +26,7 @@ setup_params_general1 = {
         'channel-width': 40,
         "channel": 36},
         "2G":
-        {'band': '5G',
+        {'band': '2G',
         'country': 'GB',
         "channel-mode": "VHT",
         'channel-width': 40,
