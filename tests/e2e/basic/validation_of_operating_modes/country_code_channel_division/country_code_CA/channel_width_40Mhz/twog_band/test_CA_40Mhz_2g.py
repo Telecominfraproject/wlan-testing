@@ -16,8 +16,17 @@ setup_params_general1 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {
+        "5G":
+            {
+                'band': '5G',
+                'country': 'CA',
+                "channel-mode": "VHT",
+                'channel-width': 40,
+                "channel": 36
+            },
         "2G":
             {
                 'band': '2G',
@@ -64,7 +73,7 @@ class TestCountryCA40Mhz2GChannel1(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=124)
         if result:
             assert True
         else:
@@ -75,8 +84,17 @@ setup_params_general2 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
-    "rf": {"2G":
+    "rf": {"5G":
+            {
+                'band': '5G',
+                'country': 'CA',
+                "channel-mode": "VHT",
+                'channel-width': 40,
+                "channel": 36
+            },
+        "2G":
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -119,7 +137,7 @@ class TestCountryCA40Mhz2GChannel2(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=124)
         if result:
             assert True
         else:
@@ -130,8 +148,17 @@ setup_params_general3 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
-    "rf": {"2G":
+    "rf": {"5G":
+            {
+                'band': '5G',
+                'country': 'CA',
+                "channel-mode": "VHT",
+                'channel-width': 40,
+                "channel": 36
+            },
+        "2G":
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -174,7 +201,7 @@ class TestCountryCA40Mhz2GChannel3(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=124)
         if result:
             assert True
         else:
@@ -185,8 +212,17 @@ setup_params_general4 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
-    "rf": {"2G":
+    "rf": {"5G":
+            {
+                'band': '5G',
+                'country': 'CA',
+                "channel-mode": "VHT",
+                'channel-width': 40,
+                "channel": 36
+            },
+        "2G":
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -228,7 +264,7 @@ class TestCountryCA40Mhz2GChannel4(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=124)
         if result:
             assert True
         else:
@@ -239,8 +275,17 @@ setup_params_general5 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
-    "rf": {"2G":
+    "rf": {"5G":
+            {
+                'band': '5G',
+                'country': 'CA',
+                "channel-mode": "VHT",
+                'channel-width': 40,
+                "channel": 36
+            },
+        "2G":
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -282,7 +327,7 @@ class TestCountryCA40Mhz2GChannel5(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=124)
         if result:
             assert True
         else:
@@ -293,8 +338,17 @@ setup_params_general6 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
-    "rf": {"2G":
+    "rf": {"5G":
+            {
+                'band': '5G',
+                'country': 'CA',
+                "channel-mode": "VHT",
+                'channel-width': 40,
+                "channel": 36
+            },
+        "2G":
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -336,7 +390,7 @@ class TestCountryCA40Mhz2GChannel6(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=124)
         if result:
             assert True
         else:
@@ -347,8 +401,17 @@ setup_params_general7 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
-    "rf": {"2G":
+    "rf": {"5G":
+            {
+                'band': '5G',
+                'country': 'CA',
+                "channel-mode": "VHT",
+                'channel-width': 40,
+                "channel": 36
+            },
+        "2G":
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -390,7 +453,7 @@ class TestCountryCA40Mhz2GChannel7(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=124)
         if result:
             assert True
         else:
@@ -401,8 +464,17 @@ setup_params_general8 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
-    "rf": {"2G":
+    "rf": {"5G":
+            {
+                'band': '5G',
+                'country': 'CA',
+                "channel-mode": "VHT",
+                'channel-width': 40,
+                "channel": 36
+            },
+        "2G":
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -444,7 +516,7 @@ class TestCountryCA40Mhz2GChannel8(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=124)
         if result:
             assert True
         else:
@@ -455,8 +527,17 @@ setup_params_general9 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
-    "rf": {"2G":
+    "rf": {"5G":
+            {
+                'band': '5G',
+                'country': 'CA',
+                "channel-mode": "VHT",
+                'channel-width': 40,
+                "channel": 36
+            },
+        "2G":
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -498,7 +579,7 @@ class TestCountryCA40Mhz2GChannel9(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=124)
         if result:
             assert True
         else:
@@ -509,8 +590,17 @@ setup_params_general10 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
-    "rf": {"2G":
+    "rf": {"5G":
+            {
+                'band': '5G',
+                'country': 'CA',
+                "channel-mode": "VHT",
+                'channel-width': 40,
+                "channel": 36
+            },
+        "2G":
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -552,7 +642,7 @@ class TestCountryCA40Mhz2GChannel10(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=124)
         if result:
             assert True
         else:
@@ -563,8 +653,17 @@ setup_params_general11 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
-    "rf": {"2G":
+    "rf": {"5G":
+            {
+                'band': '5G',
+                'country': 'CA',
+                "channel-mode": "VHT",
+                'channel-width': 40,
+                "channel": 36
+            },
+        "2G":
         {'band': '2G',
         'country': 'CA',
         'channel-mode': 'VHT',
@@ -606,7 +705,7 @@ class TestCountryCA40Mhz2GChannel11(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=124)
         if result:
             assert True
         else:
