@@ -84,7 +84,7 @@ http://pythontesting.net/framework/pytest/pytest-introduction/
 ![Regression test count](https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/badges/regression-count.svg)
 
 [![interop regression testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/interop_regression.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/interop_regression.yml)
-![Interop Regression test count](https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/badges/interop_regression-count.svg)
+![Interop Regression test count](https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/badges/regression-interop-count.svg)
 
 ### Best Practice
 
