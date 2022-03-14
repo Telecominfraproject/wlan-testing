@@ -29,6 +29,8 @@ from sta_connect2 import StaConnect2
 import time
 import string
 import random
+import csv
+from report import Report
 from scp_util import SCP_File
 
 
@@ -50,6 +52,7 @@ from attenuator_serial import AttenuatorSerial
 from lf_atten_mod_test import CreateAttenuator
 from lf_mesh_test import MeshTest
 from LANforge.lfcli_base import LFCliBase
+from sta_scan_test import StaScan
 realm = importlib.import_module("py-json.realm")
 Realm = realm.Realm
 
@@ -145,6 +148,8 @@ class RunTest:
             self.staConnect.radio = self.fiveg_radios[0]
             self.staConnect.reset_port(self.staConnect.radio)
             self.staConnect.sta_prefix = self.fiveg_prefix
+        print("scand ssid radio", self.staConnect.radio.split(".")[2])
+        self.scan_ssid(radio=self.staConnect.radio.split(".")[2])
         self.staConnect.resource = 1
         self.staConnect.dut_ssid = ssid
         self.staConnect.dut_passwd = passkey
@@ -153,7 +158,6 @@ class RunTest:
         self.staConnect.runtime_secs = 40
         self.staConnect.bringup_time_sec = 80
         self.staConnect.cleanup_on_exit = True
-        print("gopi: ", self.staConnect.dut_ssid, self.staConnect.dut_passwd)
         self.staConnect.setup(extra_securities=extra_securities)
         self.staConnect.start()
         print("napping %f sec" % self.staConnect.runtime_secs)
@@ -189,7 +193,7 @@ class RunTest:
                                name="supplicant_log")
         except Exception as e:
             print(e)
-            
+
         for result in run_results:
             print("test result: " + result)
         result = True
@@ -250,6 +254,8 @@ class RunTest:
             self.eap_connect.admin_up(self.eap_connect.radio)
             # self.eap_connect.sta_prefix = self.fiveg_prefix
         # self.eap_connect.resource = 1
+        print("scand ssid radio", self.eap_connect.radio.split(".")[2])
+        self.scan_ssid(radio=self.eap_connect.radio.split(".")[2])
         if eap == "TTLS":
             self.eap_connect.ieee80211w = ieee80211w
             self.eap_connect.key_mgmt = key_mgmt
@@ -308,7 +314,7 @@ class RunTest:
                                name="supplicant_log")
         except Exception as e:
             print(e)
-            
+
         if not self.eap_connect.passes():
             if self.debug:
                 print("test result: " + self.eap_connect.passes())
@@ -411,6 +417,8 @@ class RunTest:
             self.client_connect.radio = self.fiveg_radios[0]
         if band == "ax":
             self.client_connect.radio = self.ax_radios[0]
+        print("scan ssid radio", sself.client_connect.radio.split(".")[2])
+        self.scan_ssid(radio=self.client_connect.radio.split(".")[2])
         self.client_connect.build()
         self.client_connect.wait_for_ip(station_name)
         print(self.client_connect.wait_for_ip(station_name))
@@ -951,7 +959,7 @@ class RunTest:
         self.mesh_obj.setup()
         self.mesh_obj.run()
         return self.mesh_obj
-      
+
     def attenuator_serial_2g_radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
                                    vlan_id=100, sta_mode=0, station_name=[], lf_tools_obj=None):
         radio = self.twog_radios[0]
@@ -996,6 +1004,25 @@ class RunTest:
         self.Client_disconnect(station_name=station_name)
         return atten_serial_radio
 
+
+    def scan_ssid(self, radio=""):
+        '''This method for scan ssid data'''
+        obj_scan = StaScan(host=self.lanforge_ip, port=self.lanforge_port, ssid="fake ssid", security="open", password="[BLANK]", radio=radio, sta_list=["sta0000"], csv_output="scan_ssid.csv")
+        obj_scan.pre_cleanup()
+        obj_scan.build()
+        obj_scan.start()
+        with open(obj_scan.csv_output, 'r') as file:
+            reader = csv.reader(file)
+            list_data = []
+            for row in reader:
+                list_data.append(row)
+        report_obj = Report()
+        csv_data_table = report_obj.table2(list_data)
+        allure.attach(name="scan_ssid_data", body=csv_data_table)
+        obj_scan.cleanup()
+
+
+
     def country_code_channel_division(self, ssid = "[BLANK]", passkey='[BLANK]', security="wpa2", mode="BRIDGE",
                                       band='2G', station_name=[], vlan_id=100, channel='1',country=392):
         self.local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
@@ -1034,6 +1061,7 @@ class RunTest:
                 return True
             else:
                 return False
+
 
 if __name__ == '__main__':
     influx_host = "influx.cicd.lab.wlan.tip.build"
