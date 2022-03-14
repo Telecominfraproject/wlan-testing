@@ -385,6 +385,9 @@ class Fixtures_2x:
         if "dfs" in list_key:
             print("In dfs")
             instantiate_profile_obj.set_radio_config(DFS=True, channel=parameter["dfs"]["channel"], bw=parameter["dfs"]["channel_bandwidth"])
+        if len(parameter['rf']) > 0:
+            print("Country code channel division")
+            instantiate_profile_obj.set_radio_config(radio_config=parameter['rf'])
         else:
             instantiate_profile_obj.set_radio_config()
         if parameter['mode'] not in ["BRIDGE", "NAT", "VLAN"]:
@@ -679,6 +682,8 @@ class Fixtures_2x:
 
         # Apply config
         instantiate_profile_obj.push_config(serial_number=get_equipment_ref[0])
+
+
         print(instantiate_profile_obj.base_profile_config)
         config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"').replace("True", "true"))
         config["uuid"] = 0

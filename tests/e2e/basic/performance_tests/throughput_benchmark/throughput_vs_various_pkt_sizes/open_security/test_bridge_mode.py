@@ -38,8 +38,8 @@ class TestThroughputVsPktBridge2G(object):
     @pytest.mark.twog
     @pytest.mark.pkt60
 
-    def test_client_open_pkt_60_2g(self, lf_tools, lf_test, station_names_twog, create_lanforge_chamberview_dut):
-
+    def test_client_open_pkt_60_2g(self, lf_tools, lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                   get_configuration):
         """Throughput Vs Pkt Sizes Bridge Mode
            pytest -m "throughput_vs_pkt and Bridge and open and twog and pkt60"
         """

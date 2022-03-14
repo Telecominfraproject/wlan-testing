@@ -996,7 +996,44 @@ class RunTest:
         self.Client_disconnect(station_name=station_name)
         return atten_serial_radio
 
-
+    def country_code_channel_division(self, ssid = "[BLANK]", passkey='[BLANK]', security="wpa2", mode="BRIDGE",
+                                      band='2G', station_name=[], vlan_id=100, channel='1',country=392):
+        self.local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
+        radio = (self.fiveg_radios[0] if band == "fiveg" else self.twog_radios[0]).split('.')
+        data = {
+            "shelf": radio[0],
+            "resource": radio[1],
+            "radio": radio[2],
+            "mode": "NA",
+            "channel": "NA",
+            "country": country
+        }
+        print(f"Lanforge-radio Country changed {country}")
+        self.local_realm.json_post("/cli-json/set_wifi_radio", _data=data)
+        station = self.Client_Connect(ssid=ssid, passkey=passkey, security=security, mode=mode, band=band,
+                                         station_name=station_name, vlan_id=vlan_id)
+        if station:
+            for i in range(10):
+                station_info = station.json_get(f"/port/1/1/{station_name[0]}")
+                if station_info['interface']['ip'] == '0.0.0.0':
+                    time.sleep(5)
+                else:
+                    break
+            print(f"station {station_name[0]} IP: {station_info['interface']['ip']}\n"
+                  f"connected channel: {station_info['interface']['channel']}\n"
+                  f"and expected channel: {channel}")
+            station_data_str = ""
+            for i in station_info["interface"]:
+                try:
+                    station_data_str += i + "  :  " + str(station_info["interface"][i]) + "\n"
+                except Exception as e:
+                    print(e)
+            allure.attach(name=str(station_name[0]), body=str(station_data_str))
+            station.station_profile.cleanup()
+            if station_info['interface']['ip'] and station_info['interface']['channel'] == str(channel):
+                return True
+            else:
+                return False
 
 if __name__ == '__main__':
     influx_host = "influx.cicd.lab.wlan.tip.build"
