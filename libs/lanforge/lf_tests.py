@@ -506,15 +506,16 @@ class RunTest:
 
             self.upstream_port = self.upstream_port
         elif mode == "VLAN":
-            self.upstream_port = self.upstream_port + "." + str(vlan_id)
+            # self.upstream_port = self.upstream_port + "." + str(vlan_id)
+            upstream_port = self.upstream_port + "." + str(vlan_id)
 
         if raw_lines is None:
             raw_lines = [['pkts: 60;142;256;512;1024;MTU;4000'], ['directions: DUT Transmit;DUT Receive'],
                          ['traffic_types: UDP;TCP'],
                          ["show_3s: 1"], ["show_ll_graphs: 1"], ["show_log: 1"]]
-            self.client_connect.upstream_port = self.upstream_port
+            self.client_connect.upstream_port = upstream_port
         elif mode == "VLAN":
-            self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
+            self.client_connect.upstream_port = upstream_port + "." + str(vlan_id)
 
         if raw_lines is None:
             raw_lines = [['pkts: 60;142;256;512;1024;MTU;4000'], ['directions: DUT Transmit;DUT Receive'],
@@ -529,7 +530,7 @@ class RunTest:
                                            lf_password="lanforge",
                                            instance_name=instance_name,
                                            config_name="dpt_config",
-                                           upstream="1.1." + self.upstream_port,
+                                           upstream="1.1." + upstream_port,
                                            pull_report=True,
                                            load_old_cfg=False,
                                            download_speed=download_rate,
@@ -1003,6 +1004,7 @@ class RunTest:
         self.Client_disconnect(station_name=station_name)
         return atten_serial_radio
 
+
     def scan_ssid(self, radio=""):
         '''This method for scan ssid data'''
         obj_scan = StaScan(host=self.lanforge_ip, port=self.lanforge_port, ssid="fake ssid", security="open", password="[BLANK]", radio=radio, sta_list=["sta0000"], csv_output="scan_ssid.csv")
@@ -1019,6 +1021,46 @@ class RunTest:
         allure.attach(name="scan_ssid_data", body=csv_data_table)
         obj_scan.cleanup()
 
+
+
+    def country_code_channel_division(self, ssid = "[BLANK]", passkey='[BLANK]', security="wpa2", mode="BRIDGE",
+                                      band='2G', station_name=[], vlan_id=100, channel='1',country=392):
+        self.local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
+        radio = (self.fiveg_radios[0] if band == "fiveg" else self.twog_radios[0]).split('.')
+        data = {
+            "shelf": radio[0],
+            "resource": radio[1],
+            "radio": radio[2],
+            "mode": "NA",
+            "channel": "NA",
+            "country": country
+        }
+        print(f"Lanforge-radio Country changed {country}")
+        self.local_realm.json_post("/cli-json/set_wifi_radio", _data=data)
+        station = self.Client_Connect(ssid=ssid, passkey=passkey, security=security, mode=mode, band=band,
+                                         station_name=station_name, vlan_id=vlan_id)
+        if station:
+            for i in range(10):
+                station_info = station.json_get(f"/port/1/1/{station_name[0]}")
+                if station_info['interface']['ip'] == '0.0.0.0':
+                    time.sleep(5)
+                else:
+                    break
+            print(f"station {station_name[0]} IP: {station_info['interface']['ip']}\n"
+                  f"connected channel: {station_info['interface']['channel']}\n"
+                  f"and expected channel: {channel}")
+            station_data_str = ""
+            for i in station_info["interface"]:
+                try:
+                    station_data_str += i + "  :  " + str(station_info["interface"][i]) + "\n"
+                except Exception as e:
+                    print(e)
+            allure.attach(name=str(station_name[0]), body=str(station_data_str))
+            station.station_profile.cleanup()
+            if station_info['interface']['ip'] and station_info['interface']['channel'] == str(channel):
+                return True
+            else:
+                return False
 
 
 if __name__ == '__main__':
