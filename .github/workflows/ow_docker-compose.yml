@@ -44,6 +44,7 @@ on:
         - owgw
         - owsec
         - owfms
+        - all
 
 defaults:
   run:
@@ -338,7 +339,6 @@ jobs:
     env:
       AWS_DEFAULT_REGION: us-east-1
       VIRTUAL_AP_SSH_KEY: ${{ secrets.VIRTUAL_AP_SSH_KEY }}
-      VIRTUAL_AP_CONFIG: ${{ secrets.VIRTUAL_AP_CONFIG }}
       DIGICERT_API_KEY: ${{ secrets.DIGICERT_API_KEY }}
     outputs:
       mac_address: ${{ steps.get_virtual_ap_mac_address.outputs.value }}
@@ -368,7 +368,7 @@ jobs:
         run: |
           echo "${{ env.VIRTUAL_AP_SSH_KEY }}" > openwifi-virtual-ap.pem
           chmod 600 openwifi-virtual-ap.pem
-          ssh -o StrictHostKeyChecking=accept-new -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_public_ip.outputs.ip }} '/etc/init.d/firstcontact start; echo "${{ env.VIRTUAL_AP_CONFIG }}" > /tmp/config.json; /usr/share/ucentral/ucentral.uc /tmp/config.json'
+          ssh -o StrictHostKeyChecking=accept-new -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_public_ip.outputs.ip }} '/etc/init.d/firstcontact start; /usr/share/ucentral/ucentral.uc /root/config.json'
 
   test:
    name: Test specified microservice
@@ -380,21 +380,21 @@ jobs:
      OWSEC_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
    steps:
      - name: Checkout wlan-cloud-ucentralgw repo and test OWGW
-       if: github.event.inputs.microservice == 'owgw'
+       if: github.event.inputs.microservice == 'owgw' || github.event.inputs.microservice == 'all'
        run: |
          curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralgw/master/test_scripts/curl/cli -o cli
          chmod +x cli
          ./cli test_service ${{ needs.set-redirector-url.outputs.mac_address }}
 
      - name: Checkout wlan-cloud-ucentralsec repo and test OWSec
-       if: github.event.inputs.microservice == 'owsec'
+       if: github.event.inputs.microservice == 'owsec' || github.event.inputs.microservice == 'all'
        run: |
          curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralsec/main/test_scripts/curl/cli -o cli
          chmod +x cli
          ./cli test_service
 
      - name: Checkout wlan-cloud-ucentralfms repo and test OWFms
-       if: github.event.inputs.microservice == 'owfms'
+       if: github.event.inputs.microservice == 'owfms' || github.event.inputs.microservice == 'all'
        run: |
          curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralfms/main/test_scripts/curl/cli -o cli
          chmod +x cli
