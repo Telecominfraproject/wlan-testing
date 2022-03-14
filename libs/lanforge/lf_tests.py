@@ -498,15 +498,16 @@ class RunTest:
 
             self.upstream_port = self.upstream_port
         elif mode == "VLAN":
-            self.upstream_port = self.upstream_port + "." + str(vlan_id)
+            # self.upstream_port = self.upstream_port + "." + str(vlan_id)
+            upstream_port = self.upstream_port + "." + str(vlan_id)
 
         if raw_lines is None:
             raw_lines = [['pkts: 60;142;256;512;1024;MTU;4000'], ['directions: DUT Transmit;DUT Receive'],
                          ['traffic_types: UDP;TCP'],
                          ["show_3s: 1"], ["show_ll_graphs: 1"], ["show_log: 1"]]
-            self.client_connect.upstream_port = self.upstream_port
+            self.client_connect.upstream_port = upstream_port
         elif mode == "VLAN":
-            self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
+            self.client_connect.upstream_port = upstream_port + "." + str(vlan_id)
 
         if raw_lines is None:
             raw_lines = [['pkts: 60;142;256;512;1024;MTU;4000'], ['directions: DUT Transmit;DUT Receive'],
@@ -521,7 +522,7 @@ class RunTest:
                                            lf_password="lanforge",
                                            instance_name=instance_name,
                                            config_name="dpt_config",
-                                           upstream="1.1." + self.upstream_port,
+                                           upstream="1.1." + upstream_port,
                                            pull_report=True,
                                            load_old_cfg=False,
                                            download_speed=download_rate,
