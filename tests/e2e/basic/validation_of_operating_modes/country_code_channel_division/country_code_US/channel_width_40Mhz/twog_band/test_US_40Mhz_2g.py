@@ -16,7 +16,6 @@ setup_params_general1 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-
                           {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
@@ -26,7 +25,6 @@ setup_params_general1 = {
         'channel-width': 40,
         "channel": 36},
            "2G":
-
         {'band': '2G',
         'country': 'US',
         "channel-mode": "VHT",
@@ -82,7 +80,6 @@ setup_params_general2 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-
                           {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
@@ -92,7 +89,6 @@ setup_params_general2 = {
         'channel-width': 40,
         "channel": 36},
            "2G":
-
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
@@ -148,7 +144,6 @@ setup_params_general3 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-
                           {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
@@ -158,7 +153,6 @@ setup_params_general3 = {
         'channel-width': 40,
         "channel": 36},
            "2G":
-
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
@@ -214,7 +208,6 @@ setup_params_general4 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-
                           {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
@@ -224,7 +217,6 @@ setup_params_general4 = {
         'channel-width': 40,
         "channel": 36},
            "2G":
-
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
@@ -279,7 +271,6 @@ setup_params_general5 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-
                           {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
@@ -289,7 +280,6 @@ setup_params_general5 = {
         'channel-width': 40,
         "channel": 36},
            "2G":
-
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
@@ -344,7 +334,6 @@ setup_params_general6 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-
                           {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
@@ -354,7 +343,6 @@ setup_params_general6 = {
         'channel-width': 40,
         "channel": 36},
            "2G":
-
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
@@ -409,7 +397,6 @@ setup_params_general7 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-
                           {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
@@ -419,7 +406,6 @@ setup_params_general7 = {
         'channel-width': 40,
         "channel": 36},
            "2G":
-
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
@@ -474,7 +460,6 @@ setup_params_general8 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-
                           {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
@@ -484,7 +469,6 @@ setup_params_general8 = {
         'channel-width': 40,
         "channel": 36},
            "2G":
-
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
@@ -539,7 +523,6 @@ setup_params_general9 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-
                           {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
@@ -549,7 +532,6 @@ setup_params_general9 = {
         'channel-width': 40,
         "channel": 36},
            "2G":
-
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
@@ -604,7 +586,6 @@ setup_params_general10 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-
                           {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
@@ -614,7 +595,6 @@ setup_params_general10 = {
         'channel-width': 40,
         "channel": 36},
            "2G":
-
         {'band': '2G',
         'country': 'US',
         'channel-mode': 'VHT',
