@@ -1024,6 +1024,7 @@ class RunTest:
                 except Exception as e:
                     print(e)
             allure.attach(name=str(station_name[0]), body=str(station_data_str))
+            station.station_profile.cleanup()
             if station_info['interface']['ip'] and station_info['interface']['channel'] == str(channel):
                 return True
             else:
