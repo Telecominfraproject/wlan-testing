@@ -468,7 +468,7 @@ class UProfileUtility:
                         ssid_info.append(temp)
         return ssid_info
 
-    def set_radio_config(self, radio_config=None, DFS=False, channel=None, bw=None):
+    def set_radio_config(self, radio_config={}, DFS=False, channel=None, bw=None):
         base_radio_config_2g = {
             "band": "2G",
             "country": "CA",
