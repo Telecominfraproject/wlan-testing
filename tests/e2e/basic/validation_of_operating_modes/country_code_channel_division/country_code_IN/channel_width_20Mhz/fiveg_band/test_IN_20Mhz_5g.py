@@ -15,14 +15,21 @@ pytestmark = [pytest.mark.country_code, pytest.mark.Bridge, pytest.mark.wpa2, py
 setup_params_general1 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
         'country': 'IN',
         "channel-mode": "VHT",
         'channel-width': 20,
-        "channel": 36}
+        "channel": 36},
+        "2G":
+        {'band': '2G',
+        'country': 'IN',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 1}
            },
     "radius": False
 }
@@ -49,7 +56,7 @@ class TestCountryIN20Mhz5GChannel36(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel36"
         """
-        profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][1]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -60,7 +67,7 @@ class TestCountryIN20Mhz5GChannel36(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=356)
         if result:
             assert True
         else:
@@ -70,14 +77,21 @@ class TestCountryIN20Mhz5GChannel36(object):
 setup_params_general2 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
         'country': 'IN',
         "channel-mode": "VHT",
         'channel-width': 20,
-        "channel": 40}
+        "channel": 40},
+        "2G":
+        {'band': '2G',
+        'country': 'IN',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 1}
            },
     "radius": False
 }
@@ -104,7 +118,7 @@ class TestCountryIN20Mhz5GChannel40(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel40"
         """
-        profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][1]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -115,7 +129,7 @@ class TestCountryIN20Mhz5GChannel40(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=356)
         if result:
             assert True
         else:
@@ -124,14 +138,21 @@ class TestCountryIN20Mhz5GChannel40(object):
 setup_params_general3 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
         'country': 'IN',
         'channel-mode': 'VHT',
         'channel-width': 20,
-        "channel": 44}
+        "channel": 44},
+        "2G":
+        {'band': '2G',
+        'country': 'IN',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 1}
            },
     "radius": False
 }
@@ -158,7 +179,7 @@ class TestCountryIN20Mhz5GChannel44(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel44"
         """
-        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][1]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -169,7 +190,7 @@ class TestCountryIN20Mhz5GChannel44(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=356)
         if result:
             assert True
         else:
@@ -179,14 +200,21 @@ class TestCountryIN20Mhz5GChannel44(object):
 setup_params_general4 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
         'country': 'IN',
         "channel-mode": "VHT",
         'channel-width': 20,
-        "channel": 48}
+        "channel": 48},
+        "2G":
+        {'band': '2G',
+        'country': 'IN',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 1}
            },
     "radius": False
 }
@@ -213,7 +241,7 @@ class TestCountryIN20Mhz5GChannel48(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel48"
         """
-        profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][1]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -224,7 +252,7 @@ class TestCountryIN20Mhz5GChannel48(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=356)
         if result:
             assert True
         else:
@@ -234,14 +262,21 @@ class TestCountryIN20Mhz5GChannel48(object):
 setup_params_general5 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
         'country': 'IN',
         'channel-mode': 'VHT',
         'channel-width': 20,
-        "channel": 52}
+        "channel": 52},
+        "2G":
+        {'band': '2G',
+        'country': 'IN',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 1}
            },
     "radius": False
 }
@@ -268,7 +303,7 @@ class TestCountryIN20Mhz5GChannel52(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel52"
         """
-        profile_data = setup_params_general5["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general5["ssid_modes"]["wpa2_personal"][1]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -279,7 +314,7 @@ class TestCountryIN20Mhz5GChannel52(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=356)
         if result:
             assert True
         else:
@@ -289,14 +324,21 @@ class TestCountryIN20Mhz5GChannel52(object):
 setup_params_general6 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
         'country': 'IN',
         "channel-mode": "VHT",
         'channel-width': 20,
-        "channel": 56}
+        "channel": 56},
+        "2G":
+        {'band': '2G',
+        'country': 'IN',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 1}
            },
     "radius": False
 }
@@ -323,7 +365,7 @@ class TestCountryIN20Mhz5GChannel56(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel56"
         """
-        profile_data = setup_params_general6["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general6["ssid_modes"]["wpa2_personal"][1]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -334,7 +376,7 @@ class TestCountryIN20Mhz5GChannel56(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=356)
         if result:
             assert True
         else:
@@ -344,14 +386,21 @@ class TestCountryIN20Mhz5GChannel56(object):
 setup_params_general7 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
         'country': 'IN',
         'channel-mode': 'VHT',
         'channel-width': 20,
-        "channel": 60}
+        "channel": 60},
+        "2G":
+        {'band': '2G',
+        'country': 'IN',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 1}
            },
     "radius": False
 }
@@ -377,7 +426,7 @@ class TestCountryIN20Mhz5GChannel60(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel60"
         """
-        profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][1]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -388,7 +437,7 @@ class TestCountryIN20Mhz5GChannel60(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=356)
         if result:
             assert True
         else:
@@ -398,14 +447,21 @@ class TestCountryIN20Mhz5GChannel60(object):
 setup_params_general8 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
         'country': 'IN',
         "channel-mode": "VHT",
         'channel-width': 20,
-        "channel": 64}
+        "channel": 64},
+        "2G":
+        {'band': '2G',
+        'country': 'IN',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 1}
            },
     "radius": False
 }
@@ -432,7 +488,7 @@ class TestCountryIN20Mhz5GChannel64(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel64"
         """
-        profile_data = setup_params_general8["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general8["ssid_modes"]["wpa2_personal"][1]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -443,7 +499,7 @@ class TestCountryIN20Mhz5GChannel64(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=356)
         if result:
             assert True
         else:
@@ -453,14 +509,21 @@ class TestCountryIN20Mhz5GChannel64(object):
 setup_params_general9 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
         'country': 'IN',
         'channel-mode': 'VHT',
         'channel-width': 20,
-        "channel": 100}
+        "channel": 100},
+        "2G":
+        {'band': '2G',
+        'country': 'IN',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 1}
            },
     "radius": False
 }
@@ -486,7 +549,7 @@ class TestCountryIN20Mhz5GChannel100(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel100"
         """
-        profile_data = setup_params_general9["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general9["ssid_modes"]["wpa2_personal"][1]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -497,7 +560,7 @@ class TestCountryIN20Mhz5GChannel100(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=356)
         if result:
             assert True
         else:
@@ -507,14 +570,21 @@ class TestCountryIN20Mhz5GChannel100(object):
 setup_params_general10 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
         'country': 'IN',
         'channel-mode': 'VHT',
         'channel-width': 20,
-        "channel": 104}
+        "channel": 104},
+        "2G":
+        {'band': '2G',
+        'country': 'IN',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 1}
            },
     "radius": False
 }
@@ -540,7 +610,7 @@ class TestCountryIN20Mhz5GChannel104(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel104"
         """
-        profile_data = setup_params_general10["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general10["ssid_modes"]["wpa2_personal"][1]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -551,7 +621,7 @@ class TestCountryIN20Mhz5GChannel104(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=356)
         if result:
             assert True
         else:
@@ -561,14 +631,21 @@ class TestCountryIN20Mhz5GChannel104(object):
 setup_params_general11 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
         'country': 'IN',
         'channel-mode': 'VHT',
         'channel-width': 20,
-        "channel": 108}
+        "channel": 108},
+        "2G":
+        {'band': '2G',
+        'country': 'IN',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 1}
            },
     "radius": False
 }
@@ -594,7 +671,7 @@ class TestCountryIN20Mhz5GChannel108(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel108"
         """
-        profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][1]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -605,7 +682,7 @@ class TestCountryIN20Mhz5GChannel108(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=356)
         if result:
             assert True
         else:
@@ -615,14 +692,21 @@ class TestCountryIN20Mhz5GChannel108(object):
 setup_params_general12 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
         'country': 'IN',
         'channel-mode': 'VHT',
         'channel-width': 20,
-        "channel": 112}
+        "channel": 112},
+        "2G":
+        {'band': '2G',
+        'country': 'IN',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 1}
            },
     "radius": False
 }
@@ -648,7 +732,7 @@ class TestCountryIN20Mhz5GChannel112(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel112"
         """
-        profile_data = setup_params_general12["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general12["ssid_modes"]["wpa2_personal"][1]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -659,7 +743,7 @@ class TestCountryIN20Mhz5GChannel112(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=356)
         if result:
             assert True
         else:
@@ -669,14 +753,21 @@ class TestCountryIN20Mhz5GChannel112(object):
 setup_params_general13 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
         'country': 'IN',
         'channel-mode': 'VHT',
         'channel-width': 20,
-        "channel": 116}
+        "channel": 116},
+        "2G":
+        {'band': '2G',
+        'country': 'IN',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 1}
            },
     "radius": False
 }
@@ -702,7 +793,7 @@ class TestCountryIN20Mhz5GChannel116(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel116"
         """
-        profile_data = setup_params_general13["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general13["ssid_modes"]["wpa2_personal"][1]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -713,7 +804,7 @@ class TestCountryIN20Mhz5GChannel116(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=356)
         if result:
             assert True
         else:
@@ -723,14 +814,21 @@ class TestCountryIN20Mhz5GChannel116(object):
 setup_params_general14 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
         'country': 'IN',
         'channel-mode': 'VHT',
         'channel-width': 20,
-        "channel": 132}
+        "channel": 132},
+        "2G":
+        {'band': '2G',
+        'country': 'IN',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 1}
            },
     "radius": False
 }
@@ -756,7 +854,7 @@ class TestCountryIN20Mhz5GChannel132(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel132"
         """
-        profile_data = setup_params_general14["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general14["ssid_modes"]["wpa2_personal"][1]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -767,7 +865,7 @@ class TestCountryIN20Mhz5GChannel132(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=356)
         if result:
             assert True
         else:
@@ -777,14 +875,21 @@ class TestCountryIN20Mhz5GChannel132(object):
 setup_params_general15 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
         'country': 'IN',
         'channel-mode': 'VHT',
         'channel-width': 20,
-        "channel": 136}
+        "channel": 136},
+        "2G":
+        {'band': '2G',
+        'country': 'IN',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 1}
            },
     "radius": False
 }
@@ -810,7 +915,7 @@ class TestCountryIN20Mhz5GChannel136(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel136"
         """
-        profile_data = setup_params_general15["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general15["ssid_modes"]["wpa2_personal"][1]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -821,7 +926,7 @@ class TestCountryIN20Mhz5GChannel136(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=356)
         if result:
             assert True
         else:
@@ -831,14 +936,21 @@ class TestCountryIN20Mhz5GChannel136(object):
 setup_params_general16 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
         'country': 'IN',
         'channel-mode': 'VHT',
         'channel-width': 20,
-        "channel": 140}
+        "channel": 140},
+        "2G":
+        {'band': '2G',
+        'country': 'IN',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 1}
            },
     "radius": False
 }
@@ -864,7 +976,7 @@ class TestCountryIN20Mhz5GChannel140(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel140"
         """
-        profile_data = setup_params_general16["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general16["ssid_modes"]["wpa2_personal"][1]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -875,7 +987,7 @@ class TestCountryIN20Mhz5GChannel140(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=356)
         if result:
             assert True
         else:
@@ -885,14 +997,21 @@ class TestCountryIN20Mhz5GChannel140(object):
 setup_params_general17 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
         'country': 'IN',
         'channel-mode': 'VHT',
         'channel-width': 20,
-        "channel": 144}
+        "channel": 144},
+        "2G":
+        {'band': '2G',
+        'country': 'IN',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 1}
            },
     "radius": False
 }
@@ -918,7 +1037,7 @@ class TestCountryIN20Mhz5GChannel144(object):
         """Country code Bridge Mode
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel144"
         """
-        profile_data = setup_params_general17["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general17["ssid_modes"]["wpa2_personal"][1]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -929,7 +1048,7 @@ class TestCountryIN20Mhz5GChannel144(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel)
+                                                       channel=channel,country=356)
         if result:
             assert True
         else:
