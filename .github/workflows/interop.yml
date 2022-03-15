@@ -71,7 +71,7 @@ jobs:
           CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
           CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
         run: |
-          python .quali/start_reservation.py --global-inputs '{"EAP 101":"1","iOS Phones Quantity":1}' "InterOp Lab - Generic Selection"
+          python .quali/start_reservation.py --global-inputs '{"EAP 101":"1","iOS Phones Quantity":"1"}' "InterOp Lab - Generic Selection"
 
       - name: set reservation outputs
         if: always()
