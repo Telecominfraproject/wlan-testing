@@ -62,8 +62,38 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: install dependencies
+        run: pip install -r .quali/requirements.txt
+
+      - name: start reservation
+        env:
+          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
+          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
+          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
+        run: |
+          python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ github.event.inputs.openwifi_revision }}","AP Model":"${{ github.event.inputs.ap_model }}"}' "Basic Lab"
+
+      - name: set reservation outputs
+        if: always()
+        id: reservation
+        run: |
+          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+          echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      - name: prepare configuration
+        env:
+          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
+          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
+          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
+        run: |
+          cat << EOF > lab_info.json
+          ${{ secrets.LAB_CONFIGURATION_JSON }}
+          EOF
+          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
+          jq ".CONFIGURATION.basic=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -75,6 +105,14 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "--device='Galaxy S9' --skip-lanforge"
           allure_results_artifact_name: allure-results-galaxy-s9
+
+      - name: stop reservation
+        if: always()
+        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
+        env:
+          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
+          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
+          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
