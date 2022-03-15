@@ -41,6 +41,7 @@ if "tests" not in sys.path:
     sys.path.append(f'../tests')
 
 from configuration import CONFIGURATION
+from configuration import PERFECTO_DETAILS
 
 from urllib3 import exceptions
 
@@ -52,68 +53,68 @@ testCaseReportURL = []
 
 
 @pytest.fixture(scope="function")
-def get_PassPointConniOS_data(request):
+def get_PassPointConniOS_data(request, get_device_configuration):
     passPoint_data = {
         "netAnalyzer-inter-Con-Xpath": "//*[@label='Network Connected']/parent::*/XCUIElementTypeButton",
-        "bundleId-iOS-Settings": request.config.getini("bundleId-iOS-Settings"),
-        "bundleId-iOS-Ping": request.config.getini("bundleId-iOS-Ping")
+        "bundleId-iOS-Settings": get_device_configuration["bundleId-iOS-Settings"],
+        "bundleId-iOS-Ping": get_device_configuration["bundleId-iOS-Ping"]
     }
     yield passPoint_data
 
 
 @pytest.fixture(scope="function")
-def get_APToMobileDevice_data(request):
+def get_APToMobileDevice_data(request, get_device_configuration):
     passPoint_data = {
         "webURL": "https://www.google.com",
         "lblSearch": "//*[@class='gLFyf']",
         "elelSearch": "(//*[@class='sbic sb43'])[1]",
         "BtnRunSpeedTest": "//*[text()='RUN SPEED TEST']",
-        "bundleId-iOS-Settings": request.config.getini("bundleId-iOS-Settings"),
-        "bundleId-iOS-Safari": request.config.getini("bundleId-iOS-Safari"),
+        "bundleId-iOS-Settings": get_device_configuration["bundleId-iOS-Settings"],
+        "bundleId-iOS-Safari": get_device_configuration["bundleId-iOS-Safari"],
         "downloadMbps": "//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']",
         "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
         # Android
-        "platformName-android": request.config.getini("platformName-android"),
-        "appPackage-android": request.config.getini("appPackage-android")
+        "platformName-android": get_device_configuration["platformName-android"],
+        "appPackage-android": get_device_configuration["appPackage-android"]
     }
     yield passPoint_data
 
 
 @pytest.fixture(scope="function")
-def get_AccessPointConn_data(request):
+def get_AccessPointConn_data(request, get_device_configuration):
     passPoint_data = {
-        "bundleId-iOS-Settings": request.config.getini("bundleId-iOS-Settings"),
-        "bundleId-iOS-Ping": request.config.getini("bundleId-iOS-Ping")
+        "bundleId-iOS-Settings": get_device_configuration["bundleId-iOS-Settings"],
+        "bundleId-iOS-Ping": get_device_configuration["bundleId-iOS-Ping"]
     }
     yield passPoint_data
 
 
 @pytest.fixture(scope="function")
-def get_ToggleAirplaneMode_data(request):
+def get_ToggleAirplaneMode_data(request, get_device_configuration):
     passPoint_data = {
         "webURL": "https://www.google.com",
         "lblSearch": "//*[@class='gLFyf']",
         "elelSearch": "(//*[@class='sbic sb43'])[1]",
         "BtnRunSpeedTest": "//*[text()='RUN SPEED TEST']",
-        "bundleId-iOS-Settings": request.config.getini("bundleId-iOS-Settings"),
-        "bundleId-iOS-Safari": request.config.getini("bundleId-iOS-Safari"),
+        "bundleId-iOS-Settings": get_device_configuration["bundleId-iOS-Settings"],
+        "bundleId-iOS-Safari": get_device_configuration["bundleId-iOS-Safari"],
         "downloadMbps": "//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']",
         "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
         # Android
-        "platformName-android": request.config.getini("platformName-android"),
-        "appPackage-android": request.config.getini("appPackage-android")
+        "platformName-android": get_device_configuration["platformName-android"],
+        "appPackage-android": get_device_configuration["appPackage-android"]
     }
     yield passPoint_data
 
 
 @pytest.fixture(scope="function")
-def get_ToggleWifiMode_data(request):
+def get_ToggleWifiMode_data(request,get_device_configuration):
     passPoint_data = {
         # iOS
-        "bundleId-iOS-Settings": request.config.getini("bundleId-iOS-Settings"),
+        "bundleId-iOS-Settings": get_device_configuration["bundleId-iOS-Settings"],
         # Android
-        "platformName-android": request.config.getini("platformName-android"),
-        "appPackage-android": request.config.getini("appPackage-android")
+        "platformName-android": get_device_configuration["platformName-android"],
+        "appPackage-android": get_device_configuration["appPackage-android"]
     }
     yield passPoint_data
 
@@ -387,7 +388,7 @@ def pytest_sessionfinish(session, exitstatus):
 
 
 @pytest.fixture(scope="function")
-def setup_perfectoMobile_android(request):
+def setup_perfectoMobile_android(request, get_device_configuration):
     from appium import webdriver
     driver = None
     reporting_client = None
@@ -396,11 +397,11 @@ def setup_perfectoMobile_android(request):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     capabilities = {
-        'platformName': request.config.getini("platformName-android"),
-        'model': request.config.getini("model-android"),
+        'platformName': get_device_configuration["platformName-android"],
+        'model': get_device_configuration["model-android"],
         'browserName': 'mobileOS',
         # 'automationName' : 'Appium',
-        'securityToken': request.config.getini("securityToken"),
+        'securityToken': PERFECTO_DETAILS["securityToken"],
         'useAppiumForWeb': 'false',
         'useAppiumForHybrid': 'false',
         # 'bundleId' : request.config.getini("appPackage-android"),
@@ -411,7 +412,7 @@ def setup_perfectoMobile_android(request):
         pytest.exit("Exiting Pytest")
 
     driver = webdriver.Remote(
-        'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
+        'https://' + PERFECTO_DETAILS["perfectoURL"] + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
         capabilities)
     driver.implicitly_wait(2)
 
@@ -426,11 +427,11 @@ def setup_perfectoMobile_android(request):
         print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
         # print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
 
-    projectname = request.config.getini("projectName")
-    projectversion = request.config.getini("projectVersion")
-    jobname = request.config.getini("jobName")
-    jobnumber = request.config.getini("jobNumber")
-    tags = request.config.getini("reportTags")
+    projectname = PERFECTO_DETAILS["projectName"]
+    projectversion = PERFECTO_DETAILS["projectVersion"]
+    jobname = get_device_configuration["jobName"]
+    jobnumber = get_device_configuration["jobNumber"]
+    tags = PERFECTO_DETAILS["reportTags"]
     testCaseName = TestCaseName
 
     # print("\nSetting Perfecto ReportClient....")
@@ -499,7 +500,7 @@ def reportPerfecto(testCaseName, testCaseStatus, testErrorMsg, reportURL):
 
 
 @pytest.fixture(scope="class")
-def setup_perfectoMobileWeb(request):
+def setup_perfectoMobileWeb(request, get_device_configuration):
     from selenium import webdriver
     rdriver = None
     reporting_client = None
@@ -508,10 +509,10 @@ def setup_perfectoMobileWeb(request):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     capabilities = {
-        'platformName': request.config.getini("platformName-iOS"),
-        'model': request.config.getini("model-iOS"),
-        'browserName': request.config.getini("browserType-iOS"),
-        'securityToken': request.config.getini("securityToken"),
+        'platformName': get_device_configuration["platformName-iOS"],
+        'model': get_device_configuration["model-iOS"],
+        'browserName': get_device_configuration["browserType-iOS"],
+        'securityToken': get_device_configuration["securityToken"],
     }
 
     if not is_device_Available_timeout(request, capabilities['model']):
@@ -519,16 +520,16 @@ def setup_perfectoMobileWeb(request):
         pytest.exit("Exiting Pytest")
 
     rdriver = webdriver.Remote(
-        'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
+        'https://' + PERFECTO_DETAILS["perfectoURL"] + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
         capabilities)
     rdriver.implicitly_wait(2)
 
-    projectname = request.config.getini("projectName")
-    projectversion = request.config.getini("projectVersion")
-    jobname = request.config.getini("jobName")
-    jobnumber = request.config.getini("jobNumber")
-    tags = request.config.getini("reportTags")
-    testCaseName = request.config.getini("jobName")
+    projectname = PERFECTO_DETAILS["projectName"]
+    projectversion = PERFECTO_DETAILS["projectVersion"]
+    jobname = get_device_configuration["jobName"]
+    jobnumber = get_device_configuration["jobNumber"]
+    tags = PERFECTO_DETAILS["reportTags"]
+    testCaseName = get_device_configuration["jobName"]
 
     print("Setting Perfecto ReportClient....")
     perfecto_execution_context = PerfectoExecutionContext(rdriver, tags, Job(jobname, jobnumber),
@@ -561,7 +562,7 @@ def setup_perfectoMobileWeb(request):
 
 
 @pytest.fixture(scope="function")
-def setup_perfectoMobile_iOS(request):
+def setup_perfectoMobile_iOS(request, get_device_configuration):
     from appium import webdriver
     driver = None
     reporting_client = None
@@ -570,11 +571,11 @@ def setup_perfectoMobile_iOS(request):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     capabilities = {
-        'platformName': request.config.getini("platformName-iOS"),
-        'model': request.config.getini("model-iOS"),
+        'platformName': get_device_configuration["platformName-iOS"],
+        'model': get_device_configuration["model-iOS"],
         'browserName': 'safari',
         # 'automationName' : 'Appium',
-        'securityToken': request.config.getini("securityToken"),
+        'securityToken': PERFECTO_DETAILS["securityToken"],
         'useAppiumForWeb': 'false',
         'autoAcceptAlerts': 'true',
         # 'bundleId' : request.config.getini("bundleId-iOS"),
@@ -587,7 +588,7 @@ def setup_perfectoMobile_iOS(request):
         pytest.exit("Exiting Pytest")
 
     driver = webdriver.Remote(
-        'https://' + request.config.getini("perfectoURL") + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
+        'https://' + PERFECTO_DETAILS["perfectoURL"] + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
         capabilities)
     driver.implicitly_wait(2)
 
@@ -602,11 +603,11 @@ def setup_perfectoMobile_iOS(request):
         print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
         # print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
 
-    projectname = request.config.getini("projectName")
-    projectversion = request.config.getini("projectVersion")
-    jobname = request.config.getini("jobName")
-    jobnumber = request.config.getini("jobNumber")
-    tags = request.config.getini("reportTags")
+    projectname = PERFECTO_DETAILS["projectName"]
+    projectversion = PERFECTO_DETAILS["projectVersion"]
+    jobname = get_device_configuration["jobName"]
+    jobnumber = get_device_configuration["jobNumber"]
+    tags = PERFECTO_DETAILS["reportTags"]
     testCaseName = TestCaseName
 
     print("\nSetting Perfecto ReportClient....")
@@ -652,8 +653,8 @@ def setup_perfectoMobile_iOS(request):
         yield driver, reporting_client
 # Does a HTTP GET request to Perfecto cloud and gets response and information related to a headset
 def response_device(request, model):
-    securityToken = request.config.getini("securityToken")
-    perfectoURL = request.config.getini("perfectoURL")
+    securityToken = PERFECTO_DETAILS["securityToken"]
+    perfectoURL = PERFECTO_DETAILS["perfectoURL"]
     url = f"https://{perfectoURL}.perfectomobile.com/services/handsets?operation=list&securityToken={securityToken}&model={model}"
     resp = requests.get(url=url)
     return ET.fromstring(resp.content)

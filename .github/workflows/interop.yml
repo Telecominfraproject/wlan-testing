@@ -73,7 +73,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and android and not wpa3_personal' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          additional_args: "--device='Galaxy S9' --skip-lanforge"
           allure_results_artifact_name: allure-results-galaxy-s9
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -100,7 +100,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "-o model-iOS='iPhone-11' -o 'jobName=Github-Interop-iphone-11' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          additional_args: "--device='iPhone-11' --skip-lanforge"
           allure_results_artifact_name: allure-results-iphone-11
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -128,7 +128,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and android' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "-o model-android='Galaxy S10.*' -o 'jobName=Github-Interop-galaxy-s10' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          additional_args: "--device='Galaxy S10.*' --skip-lanforge"
           allure_results_artifact_name: allure-results-galaxy-s10
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -155,7 +155,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "-o model-iOS='iPhone-7' -o 'jobName=Github-Interop-iphone-7' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          additional_args: "--device='iPhone-7' --skip-lanforge"
           allure_results_artifact_name: allure-results-iphone-7
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -183,7 +183,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and android' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "-o model-android='Galaxy S20' -o 'jobName=Github-Interop-galaxy-s20' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          additional_args: "--device='Galaxy S20' --skip-lanforge"
           allure_results_artifact_name: allure-results-galaxy-s20
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -210,7 +210,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "-o model-iOS='iPhone-XR' -o 'jobName=Github-Interop-iphone-xr' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          additional_args: "--device='iPhone-XR' --skip-lanforge"
           allure_results_artifact_name: allure-results-iphone-xr
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -238,7 +238,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and android' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "-o model-android='Pixel 4' -o 'jobName=Github-Interop-pixel-4' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          additional_args: "--device='Pixel 4' --skip-lanforge"
           allure_results_artifact_name: allure-results-pixel-4
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -265,7 +265,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "-o model-iOS='iPhone-12' -o 'jobName=Github-Interop-iphone-12' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          additional_args: "--device='iPhone-12' --skip-lanforge"
           allure_results_artifact_name: allure-results-iphone-12
 
       # necessary because if conditionals in composite actions are currently not respected
