@@ -51,7 +51,7 @@ runs:
       run: |
         echo "${{ env.VIRTUAL_AP_SSH_KEY }}" > openwifi-virtual-ap.pem
         chmod 600 openwifi-virtual-ap.pem
-        ssh -o StrictHostKeyChecking=accept-new -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_public_ip.outputs.value }} 'echo "${{ env.VIRTUAL_AP_CERT }}" > /etc/ucentral/cert.pem; echo "${{ env.VIRTUAL_AP_KEY }}" > /etc/ucentral/key.pem && chmod 600 /etc/ucentral/key.pem; echo "${{ env.VIRTUAL_AP_DEV_ID }}" > /etc/ucentral/dev-id'
+        ssh -o StrictHostKeyChecking=accept-new -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} 'echo "${{ env.VIRTUAL_AP_CERT }}" > /etc/ucentral/cert.pem; echo "${{ env.VIRTUAL_AP_KEY }}" > /etc/ucentral/key.pem && chmod 600 /etc/ucentral/key.pem; echo "${{ env.VIRTUAL_AP_DEV_ID }}" > /etc/ucentral/dev-id'
 
     - name: Stop ucentral service on AP and connect manually to gateway
       shell: bash
