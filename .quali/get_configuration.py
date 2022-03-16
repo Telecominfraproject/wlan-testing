@@ -146,11 +146,12 @@ def main():
             else:
                 continue
 
-        entire_config = {"interop": config, "PERFECTO_DETAILS": pf_details}
+        #entire_config = {"interop": config, "PERFECTO_DETAILS": pf_details}
+        config["PERFECTO_DETAILS"]=pf_details
         if args.json:
-            print(json.dumps(entire_config))
+            print(json.dumps(config))
         else:
-            print(repr(entire_config))
+            print(repr(config))
 
 
 if __name__ == '__main__':
