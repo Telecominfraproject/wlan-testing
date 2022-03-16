@@ -1,0 +1,59 @@
+name: Deploy virtual AP instance
+description: create EC2 instance running latest wlan-ap release and connect to gateway
+
+inputs:
+  gateway_url:
+    description: URL of the gateway the virtual AP should connect to
+    required: true
+
+outputs:
+  serial_number:
+    description: Serial number of the created virtual AP instance
+    value: ${{ steps.get_virtual_ap_facts.outputs.serial_number }}
+  instance_id:
+    description: Name of the created virtual AP EC2 instance
+    value: ${{ steps.get_virtual_ap_facts.outputs.instance_id }}
+
+env:
+  AWS_DEFAULT_REGION: us-east-1
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+  VIRTUAL_AP_SSH_KEY: ${{ secrets.VIRTUAL_AP_SSH_KEY }}
+  VIRTUAL_AP_DEV_ID: ${{ secrets.VIRTUAL_AP_DEV_ID }}
+  VIRTUAL_AP_CERT: ${{ secrets.VIRTUAL_AP_CERT }}
+  VIRTUAL_AP_KEY: ${{ secrets.VIRTUAL_AP_KEY }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get AMI ID of most recent x64_vmware firmware image
+      shell: bash
+      id: get_ami_id
+      run: |
+        echo ::set-output name=id::"$(aws ec2 describe-images --owners self --filters 'Name=name,Values=*-x64_vmware-*' --query 'sort_by(Images, &CreationDate)[-1].ImageId' --output text)"
+
+    - name: Create openwifi-virtual-ap EC2 instance
+      shell: bash
+      run: |
+        aws ec2 run-instances --key-name openwifi-virtual-ap --security-groups openwifi-virtual-ap --instance-type t2.nano --image-id ${{ steps.get_ami_id.outputs.id }} --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=openwifi-virtual-ap-${{ github.run_id }}}]'
+
+    - name: Get virtual AP instance facts
+      shell: bash
+      id: get_virtual_ap_facts
+      run: |
+        echo ::set-output name=public_ip::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_id }}' --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)"
+        echo ::set-output name=serial_number::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_id }}' --query 'Reservations[*].Instances[*].NetworkInterfaces[*].MacAddress' --output text | sed 's/://g')"
+        echo ::set-output name=instance_id::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_id }}' --query 'Reservations[*].Instances[*].InstanceId' --output text)"
+
+    - name: Upload AP certificate, key and dev-id to instance
+      shell: bash
+      run: |
+        echo "${{ env.VIRTUAL_AP_SSH_KEY }}" > openwifi-virtual-ap.pem
+        chmod 600 openwifi-virtual-ap.pem
+        ssh -o StrictHostKeyChecking=accept-new -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_public_ip.outputs.value }} 'echo "${{ env.VIRTUAL_AP_CERT }}" > /etc/ucentral/cert.pem; echo "${{ env.VIRTUAL_AP_KEY }}" > /etc/ucentral/key.pem && chmod 600 /etc/ucentral/key.pem; echo "${{ env.VIRTUAL_AP_DEV_ID }}" > /etc/ucentral/dev-id'
+
+    - name: Stop ucentral service on AP and connect manually to gateway
+      shell: bash
+      run: |
+        ssh -o StrictHostKeyChecking=accept-new -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} '/etc/init.d/ucentral stop; /usr/sbin/ucentral -S ${{ steps.get_virtual_ap_facts.outputs.serial_number }} -s ${{ inputs.gateway_url }} -P 15002 -d -f $(awk 'FNR == 8 {print $2,$3,$4,$5}' /etc/openwrt_release) &'
