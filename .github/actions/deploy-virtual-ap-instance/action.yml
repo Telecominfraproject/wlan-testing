@@ -11,7 +11,7 @@ outputs:
     description: Serial number of the created virtual AP instance
     value: ${{ steps.get_virtual_ap_facts.outputs.serial_number }}
   instance_id:
-    description: Name of the created virtual AP EC2 instance
+    description: ID of the created virtual AP EC2 instance
     value: ${{ steps.get_virtual_ap_facts.outputs.instance_id }}
 
 env:
