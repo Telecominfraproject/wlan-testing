@@ -117,32 +117,32 @@ def main():
                 for attribute in details.ResourceAttributes:
                     key = attribute.Name.replace(f"{resource.ResourceModelName}.", '')
                     phone_config[key] = get_attribute_value(session, attribute)
-                    if phone_config["OS"] == "iOS":
-                        pf_details[phone_config['model']] = \
-                            {
-                                "model-iOS": phone_config['model'],
-                                "bundleId-iOS": "com.apple.Preferences",
-                                "platformName-iOS": phone_config['OS'],
-                                "bundleId-iOS-Settings": "com.apple.Preferences",
-                                "bundleId-iOS-Ping": "com.deftapps.ping",
-                                "browserType-iOS": "Safari",
-                                "bundleId-iOS-Safari": "com.apple.mobilesafari",
-                                "platformName-android": "Android",
-                                "appPackage-android": "com.android.settings",
-                                "jobName": "Interop-" + phone_config['model'],
-                                "jobNumber": 38
-                            }
-                    elif phone_config["OS"] == "Android":
-                        pf_details[phone_config['model']] = \
-                            {
-                                "platformName-android": phone_config["OS"],
-                                "model-android": phone_config["model"],
-                                "appPackage-android": "com.android.settings",
-                                "bundleId-iOS-Settings": "com.apple.Preferences",
-                                "bundleId-iOS-Safari": "com.apple.mobilesafari",
-                                "jobName": "Interop-" + refine(phone_config['model']),
-                                "jobNumber": 38
-                            }
+                if phone_config["OS"] == "iOS":
+                    pf_details[phone_config['model']] = \
+                        {
+                            "model-iOS": phone_config['model'],
+                            "bundleId-iOS": "com.apple.Preferences",
+                            "platformName-iOS": phone_config['OS'],
+                            "bundleId-iOS-Settings": "com.apple.Preferences",
+                            "bundleId-iOS-Ping": "com.deftapps.ping",
+                            "browserType-iOS": "Safari",
+                            "bundleId-iOS-Safari": "com.apple.mobilesafari",
+                            "platformName-android": "Android",
+                            "appPackage-android": "com.android.settings",
+                            "jobName": "Interop-" + phone_config['model'],
+                            "jobNumber": 38
+                        }
+                elif phone_config["OS"] == "Android":
+                    pf_details[phone_config['model']] = \
+                        {
+                            "platformName-android": phone_config["OS"],
+                            "model-android": phone_config["model"],
+                            "appPackage-android": "com.android.settings",
+                            "bundleId-iOS-Settings": "com.apple.Preferences",
+                            "bundleId-iOS-Safari": "com.apple.mobilesafari",
+                            "jobName": "Interop-" + refine(phone_config['model']),
+                            "jobNumber": 38
+                        }
             else:
                 continue
 
