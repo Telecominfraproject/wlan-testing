@@ -14,8 +14,8 @@ setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa_personal": [
-            {"ssid_name": "mu-mimo-5g", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "mu-mimo-2g", "appliedRadios": ["2G"], "security_key": "something"}
+            {"ssid_name": "mu-mimo-wpa-5g", "appliedRadios": ["5G"], "security_key": "something"},
+            {"ssid_name": "mu-mimo-wpa-2g", "appliedRadios": ["2G"], "security_key": "something"}
         ]
     },
     "rf": {

@@ -14,8 +14,8 @@ setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "open": [
-            {"ssid_name": "mu-mimo-5g", "appliedRadios": ["5G"]},
-            {"ssid_name": "mu-mimo-2g", "appliedRadios": ["2G"]}
+            {"ssid_name": "mu-mimo-open-5g", "appliedRadios": ["5G"]},
+            {"ssid_name": "mu-mimo-open-2g", "appliedRadios": ["2G"]}
         ]
     },
     "rf": {
