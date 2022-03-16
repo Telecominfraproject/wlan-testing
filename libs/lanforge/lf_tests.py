@@ -1059,11 +1059,11 @@ class RunTest:
                                     )
         self.cvtest_obj.setup()
         t1 = threading.Thread(target=self.cvtest_obj.run)
-        t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 60))
-        t1.start()
-        if t1.is_alive():
-            time.sleep(180)
-            t2.start()
+        # t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 60))
+        # t1.start()
+        # if t1.is_alive():
+        #     time.sleep(180)
+        #     t2.start()
         while t1.is_alive():
             time.sleep(1)
         if os.path.exists("mu-mimo-config.txt"):
