@@ -417,7 +417,7 @@ class RunTest:
             self.client_connect.radio = self.fiveg_radios[0]
         if band == "ax":
             self.client_connect.radio = self.ax_radios[0]
-        print("scan ssid radio", sself.client_connect.radio.split(".")[2])
+        print("scan ssid radio", self.client_connect.radio.split(".")[2])
         self.scan_ssid(radio=self.client_connect.radio.split(".")[2])
         self.client_connect.build()
         self.client_connect.wait_for_ip(station_name)
