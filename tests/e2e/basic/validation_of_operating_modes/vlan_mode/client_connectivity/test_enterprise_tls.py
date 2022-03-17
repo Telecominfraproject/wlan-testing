@@ -149,7 +149,7 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
-    def test_wpa3_enterprise_5g(self, get_ap_logs, get_lf_logs,
+     def test_wpa3_enterprise_5g(self, get_ap_logs, get_lf_logs,
                                 station_names_fiveg, lf_test,
                                 update_report,
                                 test_cases, radius_info, exit_on_fail):
@@ -168,7 +168,6 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         assert passes
-
 
 setup_params_enterprise_two = {
     "mode": "VLAN",
