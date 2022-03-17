@@ -1,21 +1,21 @@
-import pytest
 import allure
+import pytest
 
-pytestmark = [pytest.mark.client_connectivity, pytest.mark.bridge, pytest.mark.enterprise,
-              pytest.mark.tls, pytest.mark.uc_sanity]
+pytestmark = [pytest.mark.client_connectivity,
+              pytest.mark.vlan, pytest.mark.enterprise, pytest.mark.tls, pytest.mark.uc_sanity]
+
 setup_params_enterprise = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa_enterprise": [
-            {"ssid_name": "tls_ssid_wpa2_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "tls_ssid_wpa2_eap_5g", "appliedRadios": ["5G"]}],
+            {"ssid_name": "tls_ssid_wpa_eap_2g", "appliedRadios": ["2G"]},
+            {"ssid_name": "tls_ssid_wpa_eap_5g", "appliedRadios": ["5G"]}],
         "wpa2_enterprise": [
             {"ssid_name": "tls_ssid_wpa2_eap_2g", "appliedRadios": ["2G"]},
             {"ssid_name": "tls_ssid_wpa2_eap_5g", "appliedRadios": ["5G"]}],
         "wpa3_enterprise": [
             {"ssid_name": "tls_ssid_wpa3_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "tls_ssid_wpa3_eap_5g", "appliedRadios": ["5G"]}]
-    },
+            {"ssid_name": "tls_ssid_wpa3_eap_5g", "appliedRadios": ["5G"]}]},
 
     "rf": {},
     "radius": True
@@ -28,6 +28,7 @@ setup_params_enterprise = {
     indirect=True,
     scope="class"
 )
+@pytest.mark.uc_sanity
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeEnterpriseTLSSuiteA(object):
     """ SuiteA Enterprise Test Cases
@@ -36,8 +37,9 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
-    def test_tls_wpa_enterprise_2g(self, station_names_twog, lf_test,
-                                    radius_info, exit_on_fail, lf_tools):
+    def test_tls_wpa_enterprise_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
+                                    station_names_twog, setup_profiles,  lf_test, update_report,
+                                    test_cases, radius_info, exit_on_fail):
         """ wpa enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
@@ -64,8 +66,10 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
-    def test_tls_wpa_enterprise_5g(self, station_names_fiveg, lf_test,
-                                    radius_info, exit_on_fail, lf_tools):
+    def test_tls_wpa_enterprise_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
+                                      station_names_fiveg, setup_profiles,  lf_test,
+                                      update_report, exit_on_fail,
+                                      test_cases, radius_info):
         """ wpa enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
@@ -85,15 +89,16 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
         # lf_tools.add_vlan(vlan)
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
-                                     identity=identity, station_name=station_names_twog,
+                                     identity=identity, station_name=station_names_fiveg,
                                      key_mgmt=key_mgmt, vlan_id=vlan)
 
         assert passes
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
-    def test_tls_wpa2_enterprise_2g(self, station_names_twog, lf_test,
-                                    radius_info, exit_on_fail, lf_tools):
+    def test_tls_wpa2_enterprise_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
+                                    station_names_twog, setup_profiles,  lf_test, update_report,
+                                    test_cases, radius_info, exit_on_fail):
         """ wpa enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
@@ -119,8 +124,10 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
-    def test_tls_wpa2_enterprise_5g(self, station_names_fiveg, lf_test,
-                                    radius_info, exit_on_fail, lf_tools):
+    def test_tls_wpa2_enterprise_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
+                                      station_names_fiveg, setup_profiles,  lf_test,
+                                      update_report, exit_on_fail,
+                                      test_cases, radius_info):
         """ wpa enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
@@ -147,8 +154,9 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @pytest.mark.shivam
-    def test_tls_wpa3_enterprise_2g(self, station_names_twog, lf_test,
-                                    radius_info, exit_on_fail, lf_tools):
+    def test_tls_wpa3_enterprise_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
+                                    station_names_twog, setup_profiles,  lf_test, update_report,
+                                    test_cases, radius_info, exit_on_fail):
         """ wpa enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
@@ -174,8 +182,10 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
-    def test_tls_wpa3_enterprise_5g(self, station_names_fiveg, lf_test,
-                                    radius_info, exit_on_fail, lf_tools):
+    def test_tls_wpa3_enterprise_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
+                                      station_names_fiveg, setup_profiles,  lf_test,
+                                      update_report, exit_on_fail,
+                                      test_cases, radius_info):
         """ wpa enterprise 5g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """

@@ -1,8 +1,8 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.client_connectivity, pytest.mark.nat, pytest.mark.enterprise, pytest.mark.tls,
-              pytest.mark.uc_sanity]
+pytestmark = [pytest.mark.client_connectivity,
+              pytest.mark.vlan, pytest.mark.enterprise, pytest.mark.tls, pytest.mark.uc_sanity]
 
 setup_params_enterprise = {
     "mode": "NAT",
@@ -22,7 +22,6 @@ setup_params_enterprise = {
 }
 
 
-@pytest.mark.enterprise
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_enterprise],
@@ -35,8 +34,9 @@ class TestNATModeEnterpriseTLSSuiteOne(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
-    def test_tls_wpa_enterprise_2g(self, station_names_twog, lf_test,
-                                   radius_info, exit_on_fail, lf_tools):
+    def test_tls_wpa_enterprise_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
+                                    station_names_twog, setup_profiles,  lf_test, update_report,
+                                    test_cases, radius_info, exit_on_fail):
         """ wpa enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
@@ -63,8 +63,9 @@ class TestNATModeEnterpriseTLSSuiteOne(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
-    def test_tls_wpa_enterprise_5g(self, station_names_fiveg, lf_test, update_report, test_cases,
-                                   radius_info, exit_on_fail, lf_tools):
+    def test_tls_wpa_enterprise_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
+                                    station_names_fiveg, setup_profiles,  lf_test,
+                                    update_report, test_cases, radius_info, exit_on_fail):
         """ wpa enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
@@ -104,8 +105,9 @@ class TestNATModeEnterpriseTLSSuiteOne(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
-    def test_tls_wpa2_enterprise_2g(self, station_names_twog, lf_test,
-                                   radius_info, exit_on_fail, lf_tools):
+    def test_tls_wpa2_enterprise_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
+                                    station_names_twog, setup_profiles,  lf_test, update_report,
+                                    test_cases, radius_info, exit_on_fail):
         """ wpa enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
@@ -131,8 +133,9 @@ class TestNATModeEnterpriseTLSSuiteOne(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
-    def test_tls_wpa2_enterprise_5g(self, station_names_fiveg, lf_test, update_report, test_cases,
-                                   radius_info, exit_on_fail, lf_tools):
+    def test_tls_wpa2_enterprise_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
+                                    station_names_fiveg, setup_profiles,  lf_test,
+                                    update_report, test_cases, radius_info, exit_on_fail):
         """ wpa enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
@@ -171,8 +174,9 @@ class TestNATModeEnterpriseTLSSuiteOne(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
-    def test_tls_wpa3_enterprise_2g(self, station_names_twog, lf_test,
-                                   radius_info, exit_on_fail, lf_tools):
+    def test_tls_wpa3_enterprise_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
+                                    station_names_twog, setup_profiles,  lf_test, update_report,
+                                    test_cases, radius_info, exit_on_fail):
         """ wpa enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
@@ -198,8 +202,9 @@ class TestNATModeEnterpriseTLSSuiteOne(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
-    def test_tls_wpa3_enterprise_5g(self, station_names_fiveg, lf_test, update_report, test_cases,
-                                   radius_info, exit_on_fail, lf_tools):
+    def test_tls_wpa3_enterprise_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
+                                    station_names_fiveg, setup_profiles,  lf_test,
+                                    update_report, test_cases, radius_info, exit_on_fail):
         """ wpa3 enterprise 5g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
