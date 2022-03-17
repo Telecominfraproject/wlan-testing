@@ -195,7 +195,7 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
 
-        profile_data = setup_params_enterprise["ssid_modes"]["wpa_enterprise"][1]
+        profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][1]
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
         mode = "VLAN"
