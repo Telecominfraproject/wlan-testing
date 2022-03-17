@@ -341,6 +341,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: WIFI-7277-switch-to-dynamic-virtual-ap
+
       - name: Deploy virtual AP instance
         uses: ./.github/actions/deploy-virtual-ap-instance
         with:
@@ -355,21 +359,21 @@ jobs:
      OWSEC_USERNAME: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
      OWSEC_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
    steps:
-     - name: Checkout wlan-cloud-ucentralgw repo and test OWGW
+     - name: Get OWGW CLI script and test service
        if: github.event.inputs.microservice == 'owgw' || github.event.inputs.microservice == 'all'
        run: |
          curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralgw/master/test_scripts/curl/cli -o cli
          chmod +x cli
          ./cli test_service ${{ needs.deploy-virtual-ap-instance.outputs.virtual_ap_serial_number }}
 
-     - name: Checkout wlan-cloud-ucentralsec repo and test OWSec
+     - name: Get OWSec CLI script and test service
        if: github.event.inputs.microservice == 'owsec' || github.event.inputs.microservice == 'all'
        run: |
          curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralsec/main/test_scripts/curl/cli -o cli
          chmod +x cli
          ./cli test_service
 
-     - name: Checkout wlan-cloud-ucentralfms repo and test OWFms
+     - name: Get OWFms CLI script and test service
        if: github.event.inputs.microservice == 'owfms' || github.event.inputs.microservice == 'all'
        run: |
          curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralfms/main/test_scripts/curl/cli -o cli
