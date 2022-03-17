@@ -2,6 +2,18 @@ name: Deploy virtual AP instance
 description: create EC2 instance running latest wlan-ap release and connect to gateway
 
 inputs:
+  virtual_ap_ssh_key:
+    description: SSH key which is used to connect to the virtual AP instance
+    required: true
+  virtual_ap_cert:
+    description: AP cert which is uploaded and used to connect to the gateway
+    required: true
+  virtual_ap_key:
+    description: AP key which is uploaded and used to connect to the gateway
+    required: true
+  virtual_ap_dev_id:
+    description: Dev-id associated with the AP cert
+    required: true
   gateway_url:
     description: URL of the gateway the virtual AP should connect to
     required: true
@@ -15,14 +27,10 @@ outputs:
     value: ${{ steps.get_virtual_ap_facts.outputs.instance_id }}
 
 env:
-  AWS_DEFAULT_REGION: us-east-1
-  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
-  VIRTUAL_AP_SSH_KEY: ${{ secrets.VIRTUAL_AP_SSH_KEY }}
-  VIRTUAL_AP_DEV_ID: ${{ secrets.VIRTUAL_AP_DEV_ID }}
-  VIRTUAL_AP_CERT: ${{ secrets.VIRTUAL_AP_CERT }}
-  VIRTUAL_AP_KEY: ${{ secrets.VIRTUAL_AP_KEY }}
+  VIRTUAL_AP_SSH_KEY: ${{ inputs.virtual_ap_ssh_key }}
+  VIRTUAL_AP_CERT: ${{ inputs.virtual_ap_cert }}
+  VIRTUAL_AP_KEY: ${{ inputs.virtual_ap_key }}
+  VIRTUAL_AP_DEV_ID: ${{ inputs.virtual_ap_dev_id }}
 
 runs:
   using: "composite"
