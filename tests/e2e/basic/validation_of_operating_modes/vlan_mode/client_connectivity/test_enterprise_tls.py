@@ -35,7 +35,6 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
-    @pytest.mark.amrit
     def test_wpa_enterprise_2g(self, get_ap_logs, get_lf_logs,
                                station_names_twog, lf_test,
                                update_report,
@@ -47,12 +46,12 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         mode = "VLAN"
         band = "twog"
         vlan = 100
-        ttls_passwd = radius_info["password"]
+        tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     eap=eap, ttls_passwd=tls_passwd, identity=identity,
                                      station_name=station_names_twog, vlan_id=vlan)
 
         assert passes
@@ -70,17 +69,17 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         mode = "VLAN"
         band = "fiveg"
         vlan = 100
-        ttls_passwd = radius_info["password"]
+        tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     eap=eap, ttls_passwd=tls_passwd, identity=identity,
                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         assert passes
 
-    @pytest.mark.sanity_light
+    # @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     def test_wpa2_enterprise_2g(self, get_ap_logs, get_lf_logs,
@@ -93,17 +92,17 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         mode = "VLAN"
         band = "twog"
         vlan = 100
-        ttls_passwd = radius_info["password"]
+        tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     eap=eap, ttls_passwd=tls_passwd, identity=identity,
                                      station_name=station_names_twog, vlan_id=vlan)
 
         assert passes
 
-    @pytest.mark.sanity_light
+    # @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     def test_wpa2_enterprise_5g(self, get_ap_logs, get_lf_logs,
@@ -116,12 +115,12 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         mode = "VLAN"
         band = "fiveg"
         vlan = 100
-        ttls_passwd = radius_info["password"]
+        tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     eap=eap, ttls_passwd=tls_passwd, identity=identity,
                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         assert passes
@@ -138,12 +137,12 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         mode = "VLAN"
         band = "twog"
         vlan = 100
-        ttls_passwd = radius_info["password"]
+        tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band, ieee80211w=2, key_mgmt="WPA-EAP-SHA256",
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     eap=eap, ttls_passwd=tls_passwd, identity=identity,
                                      station_name=station_names_twog, vlan_id=vlan)
 
         assert passes
@@ -160,12 +159,12 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         mode = "VLAN"
         band = "fiveg"
         vlan = 100
-        ttls_passwd = radius_info["password"]
+        tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band, ieee80211w=2, key_mgmt="WPA-EAP-SHA256",
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     eap=eap, ttls_passwd=tls_passwd, identity=identity,
                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         assert passes
@@ -194,7 +193,7 @@ setup_params_enterprise_two = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestVLANModeEnterpriseTTLSSuiteTwo(object):
+class TestVLANModeEnterpriseTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.twog
@@ -210,12 +209,12 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
         mode = "VLAN"
         band = "twog"
         vlan = 100
-        ttls_passwd = radius_info["password"]
+        tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     eap=eap, ttls_passwd=tls_passwd, identity=identity,
                                      station_name=station_names_twog, vlan_id=vlan)
 
         assert passes
@@ -234,12 +233,12 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
         mode = "VLAN"
         band = "fiveg"
         vlan = 100
-        ttls_passwd = radius_info["password"]
+        tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     eap=eap, ttls_passwd=tls_passwd, identity=identity,
                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         assert passes
@@ -257,12 +256,12 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
         mode = "VLAN"
         band = "twog"
         vlan = 100
-        ttls_passwd = radius_info["password"]
+        tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     eap=eap, ttls_passwd=tls_passwd, identity=identity,
                                      station_name=station_names_twog, vlan_id=vlan)
 
         assert passes
@@ -281,12 +280,12 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
         mode = "VLAN"
         band = "fiveg"
         vlan = 100
-        ttls_passwd = radius_info["password"]
+        tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     eap=eap, ttls_passwd=tls_passwd, identity=identity,
                                      station_name=station_names_fiveg, vlan_id=vlan)
 
         assert passes
