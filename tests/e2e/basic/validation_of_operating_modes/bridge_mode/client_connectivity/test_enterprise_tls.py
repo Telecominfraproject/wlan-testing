@@ -64,7 +64,7 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
-    def test_tls_wpa_enterprise_5g(self, station_names_twog, lf_test,
+    def test_tls_wpa_enterprise_5g(self, station_names_fiveg, lf_test,
                                     radius_info, exit_on_fail, lf_tools):
         """ wpa enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
@@ -119,7 +119,7 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
-    def test_tls_wpa2_enterprise_5g(self, station_names_twog, lf_test,
+    def test_tls_wpa2_enterprise_5g(self, station_names_fiveg, lf_test,
                                     radius_info, exit_on_fail, lf_tools):
         """ wpa enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
@@ -139,7 +139,7 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
         # lf_tools.add_vlan(vlan)
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
-                                     identity=identity, station_name=station_names_twog,
+                                     identity=identity, station_name=station_names_fiveg,
                                      key_mgmt=key_mgmt, vlan_id=vlan)
 
         assert passes
@@ -174,7 +174,7 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
-    def test_tls_wpa3_enterprise_5g(self, station_names_twog, lf_test,
+    def test_tls_wpa3_enterprise_5g(self, station_names_fiveg, lf_test,
                                     radius_info, exit_on_fail, lf_tools):
         """ wpa enterprise 5g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
@@ -194,7 +194,7 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
         # lf_tools.add_vlan(vlan)
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
-                                     identity=identity, station_name=station_names_twog,
+                                     identity=identity, station_name=station_names_fiveg,
                                      key_mgmt=key_mgmt, vlan_id=vlan)
 
         assert passes
