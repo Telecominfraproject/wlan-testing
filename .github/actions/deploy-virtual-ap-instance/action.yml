@@ -26,12 +26,6 @@ outputs:
     description: ID of the created virtual AP EC2 instance
     value: ${{ steps.get_virtual_ap_facts.outputs.instance_id }}
 
-env:
-  VIRTUAL_AP_SSH_KEY: ${{ inputs.virtual_ap_ssh_key }}
-  VIRTUAL_AP_CERT: ${{ inputs.virtual_ap_cert }}
-  VIRTUAL_AP_KEY: ${{ inputs.virtual_ap_key }}
-  VIRTUAL_AP_DEV_ID: ${{ inputs.virtual_ap_dev_id }}
-
 runs:
   using: "composite"
   steps:
