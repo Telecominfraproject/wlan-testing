@@ -55,6 +55,11 @@ runs:
         echo ::set-output name=instance_id::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_id }}' --query 'Reservations[*].Instances[*].InstanceId' --output text)"
 
     - name: Upload AP certificate, key and dev-id to instance
+      env:
+        VIRTUAL_AP_SSH_KEY: ${{ inputs.virtual_ap_ssh_key }}
+        VIRTUAL_AP_CERT: ${{ inputs.virtual_ap_cert }}
+        VIRTUAL_AP_KEY: ${{ inputs.virtual_ap_key }}
+        VIRTUAL_AP_DEV_ID: ${{ inputs.virtual_ap_dev_id }}
       shell: bash
       run: |
         echo "${{ env.VIRTUAL_AP_SSH_KEY }}" > openwifi-virtual-ap.pem
