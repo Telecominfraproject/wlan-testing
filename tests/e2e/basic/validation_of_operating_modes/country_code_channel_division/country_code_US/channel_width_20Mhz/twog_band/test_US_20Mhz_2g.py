@@ -10,8 +10,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.country_code, pytest.mark.Bridge, pytest.mark.wpa2, pytest.mark.US]
-              # pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.country_code, pytest.mark.bridge, pytest.mark.wpa2, pytest.mark.united_states]
 
 setup_params_general1 = {
     "mode": "BRIDGE",
