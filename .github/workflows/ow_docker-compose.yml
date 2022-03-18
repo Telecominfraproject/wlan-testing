@@ -342,12 +342,15 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AWS_DEFAULT_REGION: us-east-1
+    outputs:
+      serial_number: ${{ steps.deploy-virtual-ap-instance.outputs.serial_number }}
     steps:
       - uses: actions/checkout@v2
         with:
           ref: WIFI-7277-switch-to-dynamic-virtual-ap
 
       - name: Use deploy-virtual-ap-instance composite action
+        id: deploy-virtual-ap-instance
         uses: ./.github/actions/deploy-virtual-ap-instance
         with:
           virtual_ap_ssh_key: ${{ secrets.VIRTUAL_AP_SSH_KEY }}
@@ -370,7 +373,7 @@ jobs:
        run: |
          curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralgw/master/test_scripts/curl/cli -o cli
          chmod +x cli
-         ./cli test_service ${{ needs.deploy-virtual-ap-instance.outputs.virtual_ap_serial_number }}
+         ./cli test_service ${{ needs.deploy-virtual-ap-instance.outputs.serial_number }}
 
      - name: Get OWSec CLI script and test service
        if: github.event.inputs.microservice == 'owsec' || github.event.inputs.microservice == 'all'
