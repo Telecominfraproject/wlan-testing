@@ -63,4 +63,4 @@ runs:
     - name: Stop ucentral service on AP and connect manually to gateway
       shell: bash
       run: |
-        ssh -o StrictHostKeyChecking=accept-new -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} '/etc/init.d/ucentral stop; /usr/sbin/ucentral -S ${{ steps.get_virtual_ap_facts.outputs.serial_number }} -s ${{ inputs.gateway_url }} -P 15002 -d -f $(awk 'FNR == 8 {print $2,$3,$4,$5}' /etc/openwrt_release) &'
+        ssh -f -o StrictHostKeyChecking=accept-new -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} '/etc/init.d/ucentral stop; /usr/sbin/ucentral -S ${{ steps.get_virtual_ap_facts.outputs.serial_number }} -s ${{ inputs.gateway_url }} -P 15002 -d -f $(awk 'FNR == 8 {print $2,$3,$4,$5}' /etc/openwrt_release)'
