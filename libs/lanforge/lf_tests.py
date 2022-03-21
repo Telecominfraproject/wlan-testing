@@ -501,10 +501,10 @@ class RunTest:
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
 
         if mode == "BRIDGE":
-            self.upstream_port = self.upstream_port
+            upstream_port = self.upstream_port
         elif mode == "NAT":
 
-            self.upstream_port = self.upstream_port
+            upstream_port = self.upstream_port
         elif mode == "VLAN":
             # self.upstream_port = self.upstream_port + "." + str(vlan_id)
             upstream_port = self.upstream_port + "." + str(vlan_id)
@@ -513,7 +513,7 @@ class RunTest:
             raw_lines = [['pkts: 60;142;256;512;1024;MTU;4000'], ['directions: DUT Transmit;DUT Receive'],
                          ['traffic_types: UDP;TCP'],
                          ["show_3s: 1"], ["show_ll_graphs: 1"], ["show_log: 1"]]
-            self.client_connect.upstream_port = self.upstream_port
+            self.client_connect.upstream_port = upstream_port
         elif mode == "VLAN":
             self.client_connect.upstream_port = upstream_port + "." + str(vlan_id)
 
