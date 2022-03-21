@@ -64,10 +64,12 @@ class TestCountryIN20Mhz2GChannel1(object):
         band = "twog"
         vlan = 1
         channel = setup_params_general1['rf']['2G']['channel']
+        channel_width = setup_params_general1['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
@@ -126,10 +128,12 @@ class TestCountryIN20Mhz2GChannel2(object):
         band = "twog"
         vlan = 1
         channel = setup_params_general2['rf']['2G']['channel']
+        channel_width = setup_params_general2['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
@@ -188,10 +192,12 @@ class TestCountryIN20Mhz2GChannel3(object):
         band = "twog"
         vlan = 1
         channel = setup_params_general3['rf']['2G']['channel']
+        channel_width = setup_params_general3['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
@@ -249,10 +255,12 @@ class TestCountryIN20Mhz2GChannel4(object):
         band = "twog"
         vlan = 1
         channel = setup_params_general4['rf']['2G']['channel']
+        channel_width = setup_params_general4['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
@@ -310,10 +318,12 @@ class TestCountryIN20Mhz2GChannel5(object):
         band = "twog"
         vlan = 1
         channel = setup_params_general5['rf']['2G']['channel']
+        channel_width = setup_params_general5['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
@@ -371,10 +381,12 @@ class TestCountryIN20Mhz2GChannel6(object):
         band = "twog"
         vlan = 1
         channel = setup_params_general6['rf']['2G']['channel']
+        channel_width = setup_params_general6['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
@@ -432,10 +444,12 @@ class TestCountryIN20Mhz2GChannel7(object):
         band = "twog"
         vlan = 1
         channel = setup_params_general7['rf']['2G']['channel']
+        channel_width = setup_params_general7['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
@@ -493,10 +507,12 @@ class TestCountryIN20Mhz2GChannel8(object):
         band = "twog"
         vlan = 1
         channel = setup_params_general8['rf']['2G']['channel']
+        channel_width = setup_params_general8['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
@@ -554,10 +570,12 @@ class TestCountryIN20Mhz2GChannel9(object):
         band = "twog"
         vlan = 1
         channel = setup_params_general9['rf']['2G']['channel']
+        channel_width = setup_params_general9['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
@@ -615,10 +633,12 @@ class TestCountryIN20Mhz2GChannel10(object):
         band = "twog"
         vlan = 1
         channel = setup_params_general10['rf']['2G']['channel']
+        channel_width = setup_params_general10['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
@@ -676,10 +696,12 @@ class TestCountryIN20Mhz2GChannel11(object):
         band = "twog"
         vlan = 1
         channel = setup_params_general11['rf']['2G']['channel']
+        channel_width = setup_params_general11['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
