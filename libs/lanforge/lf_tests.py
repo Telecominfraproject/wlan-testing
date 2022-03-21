@@ -991,25 +991,25 @@ class RunTest:
         self.Client_disconnect(station_name=station_name)
         return atten_serial_radio
 
-    def set_radio_country_channel(self,_radio="wiphy0",_channel=0,_country_code=840):
+    def set_radio_country_channel(self,_radio="wiphy0",_channel=0,_country_num=840,): # 840 - US
         data = {
             "shelf": _radio[0],
             "resource": _radio[1],
             "radio": _radio[2],
             "mode": "NA",
             "channel": _channel,
-            "country": _country_code
+            "country": _country_num
         }
-        print(f"Lanforge-radio Country changed {_country_code}")
+        print(f"Lanforge-radio Country changed {_country_num}")
         self.local_realm.json_post("/cli-json/set_wifi_radio", _data=data)
 
     def country_code_channel_division(self, ssid = "[BLANK]", passkey='[BLANK]', security="wpa2", mode="BRIDGE",
                                       band='2G', station_name=[], vlan_id=100, channel='1', channel_width=20,
-                                      country_code=392, country='United States'):
+                                      country_num=392, country='United States(US)'):
         self.local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
         radio = (self.fiveg_radios[0] if band == "fiveg" else self.twog_radios[0]).split('.')
 
-        self.set_radio_country_channel(_radio=radio,_country_code=country_code)
+        self.set_radio_country_channel(_radio=radio,_country_num=country_num)
         station = self.Client_Connect(ssid=ssid, passkey=passkey, security=security, mode=mode, band=band,
                                          station_name=station_name, vlan_id=vlan_id)
         if station:
@@ -1024,12 +1024,16 @@ class RunTest:
                   f"and expected channel: {channel}")
             allure.attach(name="Definition",
                           body="Country code channel test intends to verify stability of Wi-Fi device " \
-                               "where the AP is configured with different countries with different channel.")
+                               "where the AP is configured with different countries with different channels.")
             allure.attach(name="Procedure",
                           body=f"This test case definition states that we push the basic {mode.lower()} mode config on the AP to "
                                f"be tested by configuring it with {country} on {channel_width}MHz channel width and "
                                f"channel {channel}. Create a client on {'5' if band=='fiveg' else '2.4'} GHz radio. Pass/ fail criteria: "
-                               f"the client created on {'5' if band=='fiveg' else '2.4'} GHz radio should get associated to the AP")
+                               f"The client created on {'5' if band=='fiveg' else '2.4'} GHz radio should get associated to the AP")
+            allure.attach(name="Details",
+                          body=f"Country code : {country[country.find('(')+1:-1]}\n"
+                               f"Bandwidth : {channel_width}Mhz\n"
+                               f"Channel : {channel}\n")
             station_data_str = ""
             for i in station_info["interface"]:
                 try:
@@ -1038,7 +1042,7 @@ class RunTest:
                     print(e)
             allure.attach(name=str(station_name[0]), body=str(station_data_str))
             station.station_profile.cleanup()
-            self.set_radio_country_channel(_radio=radio) # 840 - US
+            self.set_radio_country_channel(_radio=radio)
             if station_info['interface']['ip'] and station_info['interface']['channel'] == str(channel):
                 return True
             else:
