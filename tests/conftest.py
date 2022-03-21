@@ -777,3 +777,19 @@ def get_apnos_max_clients(get_apnos, get_configuration):
         except Exception as e:
             pass
     yield all_logs
+
+@pytest.fixture(scope="function")
+def get_ap_channel(get_apnos, get_configuration):
+    all_data = []
+    dict_band_channe = {}
+    for ap in get_configuration['access_point']:
+        ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
+        a = ap_ssh.run_generic_command(cmd="iw dev | grep channel")
+        print("aaaaaa", a)
+        try:
+            dict_band_channe["2G"] = int(re.findall('\d+', a[1])[0])
+            dict_band_channe["5G"] = int(re.findall('\d+', a[2])[0])
+            all_data.append(dict_band_channe)
+        except Exception as e:
+            pass
+    yield all_data
