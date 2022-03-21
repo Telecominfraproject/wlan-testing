@@ -22,7 +22,7 @@ pytestmark = [pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and,
 
 from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, get_ip_address_and
 
-setup_params_general = {
+setup_params_general1 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
@@ -44,20 +44,20 @@ setup_params_general = {
     "radius": False
 }
 
-for sec_modes in setup_params_general['ssid_modes'].keys():
-    for i in range(len(setup_params_general['ssid_modes'][sec_modes])):
+for sec_modes in setup_params_general1['ssid_modes'].keys():
+    for i in range(len(setup_params_general1['ssid_modes'][sec_modes])):
         N = 3
         rand_string = (''.join(random.choices(string.ascii_uppercase +
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
-        setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
+        setup_params_general1['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general1['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-@allure.suite(suite_name="interop sanity")
-@allure.sub_suite(sub_suite_name="Bridge Mode Client Connect : Suite-A")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code")
 @pytest.mark.InteropsuiteA
 @allure.feature("BRIDGE MODE CLIENT CONNECT")
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general],
+    [setup_params_general1],
     indirect=True,
     scope="class"
 )
@@ -70,9 +70,10 @@ class TestBridgeModeConnectSuiteOne(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
+    @pytest.mark.twentyMhz
     def test_ClientConnect_bridge_wpa2_chn36_20Mhz_US_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
@@ -104,9 +105,10 @@ class TestBridgeModeConnectSuiteOne(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ClientConnect_bridge_wpa2_chn36_20Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
+    @pytest.mark.twentyMhz
+    def test_ClientConnect_bridge_wpa2_chn31_20Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
+        profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
