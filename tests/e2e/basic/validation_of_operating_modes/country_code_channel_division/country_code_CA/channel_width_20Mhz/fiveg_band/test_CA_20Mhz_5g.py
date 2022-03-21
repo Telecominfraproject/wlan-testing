@@ -69,8 +69,8 @@ class TestCountryCA20Mhz5GChannel36(object):
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_code=124,
-                                                       country='Canada-CA')
+                                                       channel=channel,channel_width=channel_width,country_num=124,
+                                                       country='Canada(CA)')
         if result:
             assert True
         else:
