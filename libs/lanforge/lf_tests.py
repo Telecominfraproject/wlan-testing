@@ -30,6 +30,7 @@ import time
 import string
 import random
 import csv
+from datetime import datetime
 from report import Report
 from scp_util import SCP_File
 
@@ -53,6 +54,9 @@ from lf_atten_mod_test import CreateAttenuator
 from lf_mesh_test import MeshTest
 from LANforge.lfcli_base import LFCliBase
 from sta_scan_test import StaScan
+from lf_sniff_radio import SniffRadio
+cv_test_reports = importlib.import_module("py-json.cv_test_reports")
+lf_report = cv_test_reports.lanforge_reports
 realm = importlib.import_module("py-json.realm")
 Realm = realm.Realm
 
@@ -118,7 +122,7 @@ class RunTest:
 
 
     def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[],
-                            station_name=[], mode="BRIDGE", vlan_id=1, band="twog"):
+                            station_name=[], mode="BRIDGE", vlan_id=1, band="twog", ssid_channel=None):
         """SINGLE CLIENT CONNECTIVITY using test_connect2.py"""
         self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
 
@@ -148,8 +152,17 @@ class RunTest:
             self.staConnect.radio = self.fiveg_radios[0]
             self.staConnect.reset_port(self.staConnect.radio)
             self.staConnect.sta_prefix = self.fiveg_prefix
-        print("scand ssid radio", self.staConnect.radio.split(".")[2])
-        self.scan_ssid(radio=self.staConnect.radio.split(".")[2])
+        print("scan ssid radio", self.staConnect.radio.split(".")[2])
+        self.data_scan_ssid = self.scan_ssid(radio=self.staConnect.radio.split(".")[2])
+        print("ssid scan data :- ", self.data_scan_ssid)
+        result = self.check_ssid_available_scan_result(scan_ssid_data=self.data_scan_ssid, ssid=ssid)
+        print("ssid available:-", result)
+        if not result:
+            self.start_sniffer(radio_channel=ssid_channel, radio=self.staConnect.radio.split(".")[2], duration=30)
+            time.sleep(30)
+            self.stop_sniffer()
+            print("ssid not available in scan result")
+            return "ssid not available in scan result", False
         self.staConnect.resource = 1
         self.staConnect.dut_ssid = ssid
         self.staConnect.dut_passwd = passkey
@@ -159,6 +172,7 @@ class RunTest:
         self.staConnect.bringup_time_sec = 80
         self.staConnect.cleanup_on_exit = True
         self.staConnect.setup(extra_securities=extra_securities)
+        self.start_sniffer(radio_channel=ssid_channel, radio=self.staConnect.radio.split(".")[2], duration=15)
         self.staConnect.start()
         print("napping %f sec" % self.staConnect.runtime_secs)
         time.sleep(self.staConnect.runtime_secs)
@@ -213,6 +227,7 @@ class RunTest:
             print("client connection to", self.staConnect.dut_ssid, "unsuccessful. Test Failed")
             result = False
         time.sleep(3)
+        self.stop_sniffer()
         return self.staConnect.passes(), result
 
     def EAP_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", extra_securities=[],
@@ -220,7 +235,7 @@ class RunTest:
                     station_name=[], key_mgmt="WPA-EAP",
                     pairwise="NA", group="NA", wpa_psk="DEFAULT",
                     ttls_passwd="nolastart", ieee80211w=1,
-                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius",d_vlan=False,cleanup=True):
+                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius", d_vlan=False, cleanup=True, ssid_channel=None):
         self.eap_connect = TTLSTest(host=self.lanforge_ip, port=self.lanforge_port,
                                     sta_list=station_name, vap=False, _debug_on=self.debug)
 
@@ -254,8 +269,17 @@ class RunTest:
             self.eap_connect.admin_up(self.eap_connect.radio)
             # self.eap_connect.sta_prefix = self.fiveg_prefix
         # self.eap_connect.resource = 1
-        print("scand ssid radio", self.eap_connect.radio.split(".")[2])
-        self.scan_ssid(radio=self.eap_connect.radio.split(".")[2])
+        print("scan ssid radio", self.eap_connect.radio.split(".")[2])
+        self.data_scan_ssid = self.scan_ssid(radio=self.eap_connect.radio.split(".")[2])
+        print("ssid scan data :- ", self.data_scan_ssid)
+        result = self.check_ssid_available_scan_result(scan_ssid_data=self.data_scan_ssid, ssid=ssid)
+        print("ssid available:-", result)
+        if not result:
+            self.start_sniffer(radio_channel=ssid_channel, radio=self.eap_connect.radio.split(".")[2], duration=30)
+            time.sleep(30)
+            self.stop_sniffer()
+            print("ssid not available in scan result")
+            return False
         if eap == "TTLS":
             self.eap_connect.ieee80211w = ieee80211w
             self.eap_connect.key_mgmt = key_mgmt
@@ -281,6 +305,7 @@ class RunTest:
         self.eap_connect.security = security
         self.eap_connect.sta_list = station_name
         self.eap_connect.build(extra_securities=extra_securities)
+        self.start_sniffer(radio_channel=ssid_channel, radio=self.eap_connect.radio.split(".")[2], duration=30)
         self.eap_connect.start(station_name, True, True)
         if d_vlan:
            self.station_ip = {}
@@ -330,6 +355,7 @@ class RunTest:
         allure.attach(name="cx_data", body=str(cx_data))
         if cleanup:
            self.eap_connect.cleanup(station_name)
+        self.stop_sniffer()
         return self.eap_connect.passes()
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
@@ -418,7 +444,8 @@ class RunTest:
         if band == "ax":
             self.client_connect.radio = self.ax_radios[0]
         print("scan ssid radio", self.client_connect.radio.split(".")[2])
-        self.scan_ssid(radio=self.client_connect.radio.split(".")[2])
+        self.data_scan_ssid = self.scan_ssid(radio=self.client_connect.radio.split(".")[2])
+        print("ssid scan data :- ", self.data_scan_ssid)
         self.client_connect.build()
         self.client_connect.wait_for_ip(station_name)
         print(self.client_connect.wait_for_ip(station_name))
@@ -513,7 +540,7 @@ class RunTest:
             raw_lines = [['pkts: 60;142;256;512;1024;MTU;4000'], ['directions: DUT Transmit;DUT Receive'],
                          ['traffic_types: UDP;TCP'],
                          ["show_3s: 1"], ["show_ll_graphs: 1"], ["show_log: 1"]]
-            self.client_connect.upstream_port = upstream_port
+            self.client_connect.upstream_port = self.upstream_port
         elif mode == "VLAN":
             self.client_connect.upstream_port = upstream_port + "." + str(vlan_id)
 
@@ -1020,8 +1047,42 @@ class RunTest:
         csv_data_table = report_obj.table2(list_data)
         allure.attach(name="scan_ssid_data", body=csv_data_table)
         obj_scan.cleanup()
+        return list_data
 
+    def start_sniffer(self, radio_channel=None, radio=None, test_name="sniff_radio", duration=60):
+        self.pcap_name = test_name + str(datetime.now().strftime("%Y-%m-%d-%H-%M")).replace(':', '-') + ".pcap"
+        self.pcap_obj = SniffRadio(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port, radio=radio, channel=radio_channel)
+        self.pcap_obj.setup(0, 0, 0)
+        time.sleep(5)
+        self.pcap_obj.monitor.admin_up()
+        time.sleep(5)
+        self.pcap_obj.monitor.start_sniff(capname=self.pcap_name, duration_sec=duration)
 
+    def stop_sniffer(self):
+        self.pcap_obj.monitor.admin_down()
+        time.sleep(2)
+        self.pcap_obj.cleanup()
+        lf_report.pull_reports(hostname=self.lanforge_ip, port=self.lanforge_ssh_port, username="lanforge", password="lanforge",
+                               report_location="/home/lanforge/" + self.pcap_name,
+                               report_dir=".")
+        allure.attach.file(source=self.pcap_name,
+                           name="pcap_file", attachment_type=allure.attachment_type.PCAP)
+        print("pcap file name : ", self.pcap_name)
+        return self.pcap_name
+
+    def check_ssid_available_scan_result(self, scan_ssid_data=None, ssid=None):
+        '''This method will check ssid available or not in scan ssid data'''
+        try:
+            flag = False
+            for i in scan_ssid_data:
+                if ssid in i:
+                    flag = True
+            if flag:
+                return True
+            else:
+                return False
+        except Exception as e:
+            print(e)
 
     def country_code_channel_division(self, ssid = "[BLANK]", passkey='[BLANK]', security="wpa2", mode="BRIDGE",
                                       band='2G', station_name=[], vlan_id=100, channel='1',country=392):
