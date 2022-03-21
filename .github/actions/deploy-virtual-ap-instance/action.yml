@@ -63,4 +63,4 @@ runs:
         VIRTUAL_AP_PASSWORD: ${{ inputs.virtual_ap_password }}
       shell: bash
       run: |
-        sshpass -p ${{ env.VIRTUAL_AP_PASSWORD }} ssh -f -o StrictHostKeyChecking=accept-new root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} '/etc/init.d/ucentral stop; /usr/sbin/ucentral -S ${{ steps.get_virtual_ap_facts.outputs.serial_number }} -s ${{ inputs.gateway_url }} -P 15002 -d -f $(awk 'FNR == 8 {print $2,$3,$4,$5}' /etc/openwrt_release)'
+        sshpass -p ${{ env.VIRTUAL_AP_PASSWORD }} ssh -f -o StrictHostKeyChecking=accept-new root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} '/etc/init.d/ucentral stop; /usr/sbin/ucentral -S ${{ steps.get_virtual_ap_facts.outputs.serial_number }} -s ${{ inputs.gateway_url }} -P 15002 -d -f $(cat /etc/openwrt_release | grep -w DISTRIB_TIP | cut -d= -f2) &> /dev/null'

@@ -344,6 +344,7 @@ jobs:
       AWS_DEFAULT_REGION: us-east-1
     outputs:
       serial_number: ${{ steps.deploy-virtual-ap-instance.outputs.serial_number }}
+      instance_id: ${{ steps.deploy-virtual-ap-instance.outputs.instance_id }}
     steps:
       - uses: actions/checkout@v2
         with:
