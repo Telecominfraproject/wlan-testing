@@ -30,7 +30,7 @@ import time
 import string
 import random
 import csv
-from report import Report
+from pull_report import Report
 from scp_util import SCP_File
 
 
