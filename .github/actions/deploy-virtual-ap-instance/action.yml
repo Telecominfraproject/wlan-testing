@@ -2,8 +2,8 @@ name: Deploy virtual AP instance
 description: create EC2 instance running latest wlan-ap release and connect to gateway
 
 inputs:
-  virtual_ap_ssh_key:
-    description: SSH key which is used to connect to the virtual AP instance
+  virtual_ap_password:
+    description: SSH password used to connect to virtual AP instance
     required: true
   virtual_ap_cert:
     description: AP cert which is uploaded and used to connect to the gateway
@@ -50,17 +50,15 @@ runs:
 
     - name: Upload AP certificate, key and dev-id to instance
       env:
-        VIRTUAL_AP_SSH_KEY: ${{ inputs.virtual_ap_ssh_key }}
+        VIRTUAL_AP_PASSWORD: ${{ inputs.virtual_ap_password }}
         VIRTUAL_AP_CERT: ${{ inputs.virtual_ap_cert }}
         VIRTUAL_AP_KEY: ${{ inputs.virtual_ap_key }}
         VIRTUAL_AP_DEV_ID: ${{ inputs.virtual_ap_dev_id }}
       shell: bash
       run: |
-        echo "${{ env.VIRTUAL_AP_SSH_KEY }}" > openwifi-virtual-ap.pem
-        chmod 600 openwifi-virtual-ap.pem
-        ssh -o StrictHostKeyChecking=accept-new -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} 'echo "${{ env.VIRTUAL_AP_CERT }}" > /etc/ucentral/cert.pem; echo "${{ env.VIRTUAL_AP_KEY }}" > /etc/ucentral/key.pem && chmod 600 /etc/ucentral/key.pem; echo "${{ env.VIRTUAL_AP_DEV_ID }}" > /etc/ucentral/dev-id'
+        sshpass -p ${{ env.VIRTUAL_AP_PASSWORD }} ssh -o StrictHostKeyChecking=accept-new -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} 'echo "${{ env.VIRTUAL_AP_CERT }}" > /etc/ucentral/cert.pem; echo "${{ env.VIRTUAL_AP_KEY }}" > /etc/ucentral/key.pem && chmod 600 /etc/ucentral/key.pem; echo "${{ env.VIRTUAL_AP_DEV_ID }}" > /etc/ucentral/dev-id'
 
     - name: Stop ucentral service on AP and connect manually to gateway
       shell: bash
       run: |
-        ssh -f -o StrictHostKeyChecking=accept-new -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} '/etc/init.d/ucentral stop; /usr/sbin/ucentral -S ${{ steps.get_virtual_ap_facts.outputs.serial_number }} -s ${{ inputs.gateway_url }} -P 15002 -d -f $(awk 'FNR == 8 {print $2,$3,$4,$5}' /etc/openwrt_release)'
+        sshpass -p ${{ env.VIRTUAL_AP_PASSWORD }} ssh -f -o StrictHostKeyChecking=accept-new -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} '/etc/init.d/ucentral stop; /usr/sbin/ucentral -S ${{ steps.get_virtual_ap_facts.outputs.serial_number }} -s ${{ inputs.gateway_url }} -P 15002 -d -f $(awk 'FNR == 8 {print $2,$3,$4,$5}' /etc/openwrt_release)'
