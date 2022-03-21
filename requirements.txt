@@ -6,6 +6,7 @@ influxdb-client
 pandas
 paramiko
 perfecto-py37
+pyshark
 pytest==6.2.2
 requests
 scp
