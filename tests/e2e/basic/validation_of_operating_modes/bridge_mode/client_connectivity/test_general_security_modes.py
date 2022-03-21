@@ -49,10 +49,10 @@ class TestBridgeModeConnectivitySuiteA(object):
     @pytest.mark.open
     @pytest.mark.twog
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
-    def test_open_ssid_2g(self, get_vif_state, get_ap_logs, get_lf_logs, lf_test,
+    def test_open_ssid_2g(self, get_ap_logs, get_lf_logs, lf_test,
                           update_report,
                           station_names_twog,
-                          test_cases):
+                          test_cases, get_ap_channel):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and bridge and general and open and twog"
         """
@@ -62,14 +62,12 @@ class TestBridgeModeConnectivitySuiteA(object):
         security = "open"
         mode = "BRIDGE"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 1
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_twog, vlan_id=vlan)
+                                                     station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
         assert result
 
