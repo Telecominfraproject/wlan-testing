@@ -683,8 +683,8 @@ class Fixtures_2x:
         # Apply config
         instantiate_profile_obj.push_config(serial_number=get_equipment_ref[0])
 
-
         print(instantiate_profile_obj.base_profile_config)
+
         config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"').replace("True", "true"))
         config["uuid"] = 0
 

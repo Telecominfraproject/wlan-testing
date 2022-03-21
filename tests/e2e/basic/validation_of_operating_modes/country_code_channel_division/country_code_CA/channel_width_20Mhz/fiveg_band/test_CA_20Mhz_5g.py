@@ -58,6 +58,7 @@ class TestCountryCA20Mhz5GChannel36(object):
            pytest -m "country_code and twentyMhz and wpa2 and fiveg and channel36"
         """
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][1]
+
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
