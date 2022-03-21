@@ -416,4 +416,4 @@ jobs:
       - name: Terminate virtual AP EC2 instance
         continue-on-error: true
         run: |
-          aws terminate-instances --instance-ids ${{ needs.deploy-virtual-ap-instance.outputs.instance_id }}
+          aws ec2 terminate-instances --instance-ids ${{ needs.deploy-virtual-ap-instance.outputs.instance_id }}
