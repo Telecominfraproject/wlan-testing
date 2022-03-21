@@ -353,7 +353,7 @@ jobs:
         id: deploy-virtual-ap-instance
         uses: ./.github/actions/deploy-virtual-ap-instance
         with:
-          virtual_ap_ssh_key: ${{ secrets.VIRTUAL_AP_SSH_KEY }}
+          virtual_ap_password: ${{ secrets.VIRTUAL_AP_PASSWORD }}
           virtual_ap_cert: ${{ secrets.VIRTUAL_AP_CERT }}
           virtual_ap_key: ${{ secrets.VIRTUAL_AP_KEY }}
           virtual_ap_dev_id: ${{ secrets.VIRTUAL_AP_DEV_ID }}
