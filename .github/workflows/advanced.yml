@@ -1,8 +1,5 @@
 name: advanced testing
 
-env:
-  ALLURE_CLI_VERSION: 2.14.0
-
 on:
   workflow_dispatch:
 
@@ -42,11 +39,13 @@ jobs:
         - advanced-02
 
     steps:
+    - uses: actions/checkout@v2
     - name: install aws CLI tool
       run: |
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
         unzip awscliv2.zip
         sudo ./aws/install
+
     - name: install kubectl
       run: |
         curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -55,117 +54,21 @@ jobs:
     - name: get EKS access credentials
       run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-    - name: install Allure CLI tool
-      run: |
-        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${{ env.ALLURE_CLI_VERSION }}/allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-        tar -xzf allure-commandline-${{ env.ALLURE_CLI_VERSION }}.tgz
-        
-    - name: set job name
-      id: job
-      run: echo "::set-output name=name::advanced-ci-${{ github.run_number }}"
-
     - name: prepare namespace
       id: namespace
       run: |
         NAMESPACE="testing-${{ github.run_number }}-${{ matrix.testbed }}"
-        kubectl create ns $NAMESPACE
-        kubectl config set-context --current --namespace=$NAMESPACE
         echo "::set-output name=name::${NAMESPACE}"
 
-    - name: create configuration.py secret
-      run: |
-        cat << EOF > configuration.py
-        ${{ secrets.LAB_CONFIGURATION }}
-        EOF
-        kubectl create secret generic configuration --from-file=configuration=./configuration.py
-
     - name: run tests
-      run: |
-        cat <<EOF | kubectl apply -f -
-        apiVersion: batch/v1
-        kind: Job
-        metadata:
-          name: "${{ steps.job.outputs.name }}"
-        spec:
-          template:
-            metadata:
-              annotations:
-                cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
-            spec:
-              containers:
-              - name: tests
-                image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-                resources:
-                  requests:
-                    memory: "512Mi"
-                    cpu: "250m"
-                  limits:
-                    memory: "512Mi"
-                    cpu: "250m"
-                command:
-                  - /bin/bash
-                  - -c
-                  - |
-                    cd tests
-                    pytest -m "advance" -s -vvv --testbed=${{ matrix.testbed }} --alluredir=/tmp/allure-results
-                    ret=\$?
-                    # sleep some time to be able to download the Allure results
-                    sleep 60
-                    exit \$ret
-                volumeMounts:
-                - name: configuration
-                  mountPath: "/wlan-testing/tests/configuration.py"
-                  subPath: configuration
-                  readOnly: true
-              nodeSelector:
-                env: tests
-              tolerations:
-              - key: "tests"
-                operator: "Exists"
-                effect: "NoSchedule"
-              imagePullSecrets:
-              - name: tip-docker-registry-key
-              restartPolicy: Never
-              volumes:
-              - name: configuration
-                secret:
-                  secretName: configuration
-          backoffLimit: 0
-        EOF
-        # wait for pod to spawn
-        sleep 1
-
-        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
-
-        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
-        kubectl logs -f $podname &
-
-        until [ -s test_everything.xml ]
-        do
-          sleep 10
-          kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
-        done
-        echo "tests completed"
-        echo "downloading allure results..."
-        kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
-        echo "waiting for pod to exit"
-        kubectl logs -f $podname >/dev/null 2>&1
-
-        until [[ ! -z "$EXIT_CODE" ]]; do EXIT_CODE=$(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}"); sleep 1; done;
-        exit $EXIT_CODE
-
-    - name: upload Allure results as artifact
-      if: ${{ always() }}
-      uses: actions/upload-artifact@v2
+      uses: ./.github/actions/run-tests
       with:
-        name: allure-results-${{ matrix.testbed }}
-        path: allure-results
-
-    - name: cleanup
-      if: ${{ always() }}
-      run: |
-        kubectl delete ns "${{ steps.namespace.outputs.name }}" --wait=true
-
+        namespace: ${{ steps.namespace.outputs.name }}
+        testbed: ${{ matrix.testbed }}
+        marker_expression: advance
+        configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+        testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+        allure_results_artifact_name: allure-results-${{ matrix.testbed }}
 
   report:
     needs: [ test ]
@@ -178,9 +81,7 @@ jobs:
         - advanced-01
         - advanced-02
     steps:
-    - name: checkout testing repo
-      uses: actions/checkout@v2
-
+    -  uses: actions/checkout@v2
     - uses: actions/download-artifact@v2
       with:
         name: allure-results-${{ matrix.testbed }}

@@ -13,3 +13,4 @@ scp
 selenium
 tip-wlan-cloud
 xlsxwriter
+tabulate

@@ -31,6 +31,8 @@ from sta_connect2 import StaConnect2
 import time
 import string
 import random
+import csv
+from report import Report
 from scp_util import SCP_File
 
 S = 12
@@ -53,6 +55,7 @@ from lf_mesh_test import MeshTest
 from LANforge.lfcli_base import LFCliBase
 from lf_tr398_test import TR398Test
 from lf_pcap import LfPcap
+from sta_scan_test import StaScan
 realm = importlib.import_module("py-json.realm")
 Realm = realm.Realm
 
@@ -151,6 +154,8 @@ class RunTest:
             self.staConnect.radio = self.fiveg_radios[0]
             self.staConnect.reset_port(self.staConnect.radio)
             self.staConnect.sta_prefix = self.fiveg_prefix
+        print("scand ssid radio", self.staConnect.radio.split(".")[2])
+        self.scan_ssid(radio=self.staConnect.radio.split(".")[2])
         self.staConnect.resource = 1
         self.staConnect.dut_ssid = ssid
         self.staConnect.dut_passwd = passkey
@@ -159,7 +164,6 @@ class RunTest:
         self.staConnect.runtime_secs = 40
         self.staConnect.bringup_time_sec = 80
         self.staConnect.cleanup_on_exit = True
-        print("gopi: ", self.staConnect.dut_ssid, self.staConnect.dut_passwd)
         self.staConnect.setup(extra_securities=extra_securities)
         self.staConnect.start()
         print("napping %f sec" % self.staConnect.runtime_secs)
@@ -256,6 +260,8 @@ class RunTest:
             self.eap_connect.admin_up(self.eap_connect.radio)
             # self.eap_connect.sta_prefix = self.fiveg_prefix
         # self.eap_connect.resource = 1
+        print("scand ssid radio", self.eap_connect.radio.split(".")[2])
+        self.scan_ssid(radio=self.eap_connect.radio.split(".")[2])
         if eap == "TTLS":
             self.eap_connect.ieee80211w = ieee80211w
             self.eap_connect.key_mgmt = key_mgmt
@@ -265,11 +271,15 @@ class RunTest:
             self.eap_connect.pairwise = pairwise
             self.eap_connect.group = group
         if eap == "TLS":
-            self.eap_connect.key_mgmt = "WPA-EAP-SUITE-B"
+            self.eap_connect.key_mgmt = key_mgmt
             self.eap_connect.station_profile.set_command_flag("add_sta", "80211u_enable", 0)
-            self.eap_connect.pairwise = "TKIP"
-            self.eap_connect.group = "TKIP"
-            self.eap_connect.eap = "EAP-TLS"
+            self.eap_connect.eap = eap
+            self.eap_connect.identity = "user"
+            self.eap_connect.ttls_passwd = "password"
+            self.eap_connect.private_key = "/home/lanforge/client.p12"
+            self.eap_connect.ca_cert = "/home/lanforge/ca.pem"
+            self.eap_connect.pk_passwd = "whatever"
+            self.eap_connect.ieee80211w = 1
 
         # self.eap_connect.hs20_enable = False
         self.eap_connect.ssid = ssid
@@ -414,6 +424,8 @@ class RunTest:
             self.client_connect.radio = self.fiveg_radios[0]
         if band == "ax":
             self.client_connect.radio = self.ax_radios[0]
+        print("scan ssid radio", self.client_connect.radio.split(".")[2])
+        self.scan_ssid(radio=self.client_connect.radio.split(".")[2])
         self.client_connect.build()
         self.client_connect.wait_for_ip(station_name)
         print(self.client_connect.wait_for_ip(station_name))
@@ -501,7 +513,8 @@ class RunTest:
 
             self.upstream_port = self.upstream_port
         elif mode == "VLAN":
-            self.upstream_port = self.upstream_port + "." + str(vlan_id)
+            # self.upstream_port = self.upstream_port + "." + str(vlan_id)
+            upstream_port = self.upstream_port + "." + str(vlan_id)
 
         if raw_lines is None:
             raw_lines = [['pkts: 60;142;256;512;1024;MTU;4000'], ['directions: DUT Transmit;DUT Receive'],
@@ -509,7 +522,7 @@ class RunTest:
                          ["show_3s: 1"], ["show_ll_graphs: 1"], ["show_log: 1"]]
             self.client_connect.upstream_port = self.upstream_port
         elif mode == "VLAN":
-            self.client_connect.upstream_port = self.upstream_port + "." + str(vlan_id)
+            self.client_connect.upstream_port = upstream_port + "." + str(vlan_id)
 
         if raw_lines is None:
             raw_lines = [['pkts: 60;142;256;512;1024;MTU;4000'], ['directions: DUT Transmit;DUT Receive'],
@@ -524,7 +537,7 @@ class RunTest:
                                            lf_password="lanforge",
                                            instance_name=instance_name,
                                            config_name="dpt_config",
-                                           upstream="1.1." + self.upstream_port,
+                                           upstream="1.1." + upstream_port,
                                            pull_report=True,
                                            load_old_cfg=False,
                                            download_speed=download_rate,
@@ -1076,9 +1089,66 @@ class RunTest:
                              influx_token=self.influx_params["influx_token"],
                              influx_bucket=self.influx_params["influx_bucket"],
                              path=report_name)
-
         influx.glob()
         return self.cvtest_obj
+  
+    def scan_ssid(self, radio=""):
+        '''This method for scan ssid data'''
+        obj_scan = StaScan(host=self.lanforge_ip, port=self.lanforge_port, ssid="fake ssid", security="open", password="[BLANK]", radio=radio, sta_list=["sta0000"], csv_output="scan_ssid.csv")
+        obj_scan.pre_cleanup()
+        obj_scan.build()
+        obj_scan.start()
+        with open(obj_scan.csv_output, 'r') as file:
+            reader = csv.reader(file)
+            list_data = []
+            for row in reader:
+                list_data.append(row)
+        report_obj = Report()
+        csv_data_table = report_obj.table2(list_data)
+        allure.attach(name="scan_ssid_data", body=csv_data_table)
+        obj_scan.cleanup()
+
+
+
+    def country_code_channel_division(self, ssid = "[BLANK]", passkey='[BLANK]', security="wpa2", mode="BRIDGE",
+                                      band='2G', station_name=[], vlan_id=100, channel='1',country=392):
+        self.local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
+        radio = (self.fiveg_radios[0] if band == "fiveg" else self.twog_radios[0]).split('.')
+        data = {
+            "shelf": radio[0],
+            "resource": radio[1],
+            "radio": radio[2],
+            "mode": "NA",
+            "channel": "NA",
+            "country": country
+        }
+        print(f"Lanforge-radio Country changed {country}")
+        self.local_realm.json_post("/cli-json/set_wifi_radio", _data=data)
+        station = self.Client_Connect(ssid=ssid, passkey=passkey, security=security, mode=mode, band=band,
+                                         station_name=station_name, vlan_id=vlan_id)
+        if station:
+            for i in range(10):
+                station_info = station.json_get(f"/port/1/1/{station_name[0]}")
+                if station_info['interface']['ip'] == '0.0.0.0':
+                    time.sleep(5)
+                else:
+                    break
+            print(f"station {station_name[0]} IP: {station_info['interface']['ip']}\n"
+                  f"connected channel: {station_info['interface']['channel']}\n"
+                  f"and expected channel: {channel}")
+            station_data_str = ""
+            for i in station_info["interface"]:
+                try:
+                    station_data_str += i + "  :  " + str(station_info["interface"][i]) + "\n"
+                except Exception as e:
+                    print(e)
+            allure.attach(name=str(station_name[0]), body=str(station_data_str))
+            station.station_profile.cleanup()
+            if station_info['interface']['ip'] and station_info['interface']['channel'] == str(channel):
+                return True
+            else:
+                return False
+
 
 if __name__ == '__main__':
     influx_host = "influx.cicd.lab.wlan.tip.build"

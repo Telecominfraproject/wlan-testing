@@ -2483,7 +2483,7 @@ def ssid_Visible(driver,WifiName):
         return True
 
 #--------------------------------Gets ip address from ssid but it won't get disconnected from it------------------
-def get_ip_add_ios(request, WifiName, WifiPass, setup_perfectoMobile, connData):
+def gets_ip_add_and_does_not_forget_ssid_ios(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Select Wifi/Get IP Address IOS Connection")
     print("-------------------------------------")
@@ -2727,7 +2727,7 @@ def get_ip_add_ios(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
     return ip_address_element_text, is_internet
 #----------------Gets ip address of Enterprise ssids and won't forget it---------------
-def get_ip_add_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoMobile, connData):
+def gets_ip_add_eap_and_does_not_forget_ssid_ios(request, WifiName, User, ttls_passwd, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Get IP Address Enterprise IOS Connection")
     print("-------------------------------------")
@@ -2999,7 +2999,7 @@ def get_ip_add_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoMobil
 
 
 #------------------Gets the ip address of already connected ssid---------------------------------------
-def get_ip_add_check_ios(request, WifiName, WifiPass, setup_perfectoMobile, connData):
+def gets_ip_add_for_checking_and_forgets_ssid_ios(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Select Wifi/Get IP Address IOS Connection")
     print("-------------------------------------")
@@ -3135,3 +3135,71 @@ def get_ip_add_check_ios(request, WifiName, WifiPass, setup_perfectoMobile, conn
     # --------------------- close app-------------------------------
     closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
     return ip_address_element_text, is_internet
+
+def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobileDevice_data):
+    print("\n-------------------------------------")
+    print("Verify Upload & Download Speed")
+    print("-------------------------------------")
+
+    report = setup_perfectoMobile[1]
+    driver = setup_perfectoMobile[0]
+    connData = get_APToMobileDevice_data
+
+    contexts = driver.contexts
+    # print("Printing Context")
+    # print(contexts)
+
+    driver.switch_to.context('WEBVIEW_1')
+
+    try:
+        print("Launching Safari")
+        report.step_start("Google Home Page")
+        driver.get(connData["webURL"])
+        print("Enter Search Text")
+        elementFindTxt = driver.find_element_by_xpath(connData["lblSearch"])
+        elementFindTxt.send_keys("Internet Speed Test")
+    except Exception as e:
+        print("Launching Safari Failed")
+        print(e)
+
+    try:
+        print("Click Search Button")
+        report.step_start("Click Search Button")
+        time.sleep(2)
+        driver.implicitly_wait(2)
+        # elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']/li[1]/div[1]")
+        elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
+        elelSearch.click()
+    except NoSuchElementException:
+        currentResult = False
+        print("Search Drop Down not active...")
+
+    try:
+        print("Click Run Speed Test Button...")
+        report.step_start("Click Run Speed Test Button")
+        driver.find_element_by_xpath(connData["BtnRunSpeedTest"]).click()
+    except NoSuchElementException:
+        currentResult = False
+        print("Run Speed Test Button element not found", NoSuchElementException)
+        return currentResult
+
+    # Get upload/Download Speed
+    try:
+        report.step_start("Get upload/Download Speed")
+        time.sleep(60)
+        downloadMbps = driver.find_element_by_xpath(connData["downloadMbps"])
+        downloadSpeed = downloadMbps.text
+        print("Download: " + downloadSpeed + " Mbps")
+
+        UploadMbps = driver.find_element_by_xpath(connData["UploadMbps"])
+        uploadSpeed = UploadMbps.text
+        print("Upload: " + uploadSpeed + " Mbps")
+        allure.attach(name="Speed Test logs: ",
+                      body=str("Upload: " + uploadSpeed + " Mbps" + "  Download: " + downloadSpeed + " Mbps"))
+        print("Access Point Verification Completed Successfully")
+
+    except NoSuchElementException:
+        print("Access Point Verification NOT Completed, checking Connection....")
+
+
+    return downloadSpeed, uploadSpeed
