@@ -48,8 +48,9 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "twog"
+        print("output of get_ap_channel ", get_ap_channel)
         channel = get_ap_channel[0]["2G"]
-        print("ssid channel:- ", channel)
+        print("ssid 2G channel:- ", channel)
         vlan = 1
         tls_passwd = radius_info["password"]
         eap = "TLS"
@@ -78,8 +79,9 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "fiveg"
+        print("output of get_ap_channel ", get_ap_channel)
         channel = get_ap_channel[0]["5G"]
-        print("ssid channel:- ", channel)
+        print("ssid 5G channel:- ", channel)
         vlan = 100
         tls_passwd = radius_info["password"]
         eap = "TLS"
