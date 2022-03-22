@@ -38,7 +38,7 @@ runs:
     - name: Create openwifi-virtual-ap EC2 instance
       shell: bash
       run: |
-        aws ec2 run-instances --key-name openwifi-virtual-ap --security-groups openwifi-virtual-ap --instance-type t2.nano --image-id ${{ steps.get_ami_id.outputs.id }} --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=openwifi-virtual-ap-${{ github.run_id }}}]'
+        aws ec2 run-instances --key-name openwifi-virtual-ap --security-groups openwifi-virtual-ap --instance-type t2.nano --image-id ${{ steps.get_ami_id.outputs.id }} --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=openwifi-virtual-ap-${{ github.run_id }}},{Key=Owner,Value=gha-wlan-testing}]'
 
     - name: Get virtual AP instance facts
       shell: bash
