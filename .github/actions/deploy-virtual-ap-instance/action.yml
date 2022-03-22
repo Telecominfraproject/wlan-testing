@@ -56,11 +56,11 @@ runs:
         VIRTUAL_AP_DEV_ID: ${{ inputs.virtual_ap_dev_id }}
       shell: bash
       run: |
-        sshpass -p ${{ env.VIRTUAL_AP_PASSWORD }} ssh -o StrictHostKeyChecking=accept-new root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} 'echo "${{ env.VIRTUAL_AP_CERT }}" > /etc/ucentral/cert.pem; echo "${{ env.VIRTUAL_AP_KEY }}" > /etc/ucentral/key.pem && chmod 600 /etc/ucentral/key.pem; echo "${{ env.VIRTUAL_AP_DEV_ID }}" > /etc/ucentral/dev-id'
+        sshpass -p ${{ env.VIRTUAL_AP_PASSWORD }} ssh -o StrictHostKeyChecking=accept-new root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} 'echo "${{ env.VIRTUAL_AP_CERT }}" > /etc/ucentral/cert.pem; echo "${{ env.VIRTUAL_AP_KEY }}" > /etc/ucentral/key.pem && chmod 600 /etc/ucentral/key.pem; echo "${{ env.VIRTUAL_AP_DEV_ID }}" > /etc/ucentral/dev-id; sleep 10'
 
     - name: Stop ucentral service on AP and connect manually to gateway
       env:
         VIRTUAL_AP_PASSWORD: ${{ inputs.virtual_ap_password }}
       shell: bash
       run: |
-        sshpass -p ${{ env.VIRTUAL_AP_PASSWORD }} ssh -f -o StrictHostKeyChecking=accept-new root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} "/etc/init.d/ucentral stop; /usr/sbin/ucentral -S ${{ steps.get_virtual_ap_facts.outputs.serial_number }} -s ${{ inputs.gateway_url }} -P 15002 -d -f \$(awk 'FNR == 8 {print \$2,\$3,\$4,\$5}' /etc/openwrt_release) &> /dev/null"
+        sshpass -p ${{ env.VIRTUAL_AP_PASSWORD }} ssh -f -o StrictHostKeyChecking=accept-new root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} "/etc/init.d/ucentral stop; /usr/sbin/ucentral -S ${{ steps.get_virtual_ap_facts.outputs.serial_number }} -s ${{ inputs.gateway_url }} -P 15002 -d -f \$(awk -F '=' 'FNR == 8 {print \$2}' /etc/openwrt_release | tr -d \') &> /dev/null"
