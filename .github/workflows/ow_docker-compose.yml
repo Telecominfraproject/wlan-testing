@@ -9,6 +9,10 @@ env:
 on:
   workflow_dispatch:
     inputs:
+      deployment_version:
+        default: 'main'
+        description: 'OpenWIFI deployment repository version to be deployed.'
+        required: false
       owgw_version:
         default: 'master'
         description: 'OpenWIFI Gateway version to be deployed.'
@@ -232,6 +236,8 @@ jobs:
                 value: "127.0.0.1:2376"
               - name: DOCKER_CERT_PATH
                 value: "/certs/client"
+              - name: DEPLOY_VERSION
+                value: "${{ github.event.inputs.deployment_version }}"
               - name: OWGW_TAG
                 value: "${{ github.event.inputs.owgw_version }}"
               - name: OWGWUI_TAG
@@ -252,8 +258,6 @@ jobs:
                 value: "owfms.wlan.local"
               - name: INTERNAL_OWPROV_HOSTNAME
                 value: "owprov.wlan.local"
-              - name: DEPLOY_VERSION
-                value: "main"
               - name: SYSTEM_URI_UI
                 value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
               - name: DEFAULT_UCENTRALSEC_URL
