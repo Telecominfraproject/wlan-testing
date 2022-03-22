@@ -1050,7 +1050,7 @@ class RunTest:
         return list_data
 
     def start_sniffer(self, radio_channel=None, radio=None, test_name="sniff_radio", duration=60):
-        self.pcap_name = test_name + str(datetime.now().strftime("%Y-%m-%d-%H-%M")).replace(':', '-') + ".pcap"
+        self.pcap_name = test_name + ".pcap"
         self.pcap_obj = SniffRadio(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port, radio=radio, channel=radio_channel)
         self.pcap_obj.setup(0, 0, 0)
         time.sleep(5)
