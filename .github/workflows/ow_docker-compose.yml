@@ -347,8 +347,6 @@ jobs:
       instance_id: ${{ steps.deploy-virtual-ap-instance.outputs.instance_id }}
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: WIFI-7277-switch-to-dynamic-virtual-ap
 
       - name: Use deploy-virtual-ap-instance composite action
         id: deploy-virtual-ap-instance
