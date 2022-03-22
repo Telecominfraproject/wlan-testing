@@ -336,73 +336,57 @@ jobs:
             -e OWSEC_NEW_PASSWORD \
             tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo:main
 
-  set-redirector-url:
-    name: Get virtual AP instance facts and set redirector URL
-    needs: deploy-controller 
+  deploy-virtual-ap-instance:
+    name: Deploy virtual AP EC2 instance
+    needs: deploy-controller
     runs-on: ubuntu-latest
     env:
       AWS_DEFAULT_REGION: us-east-1
-      VIRTUAL_AP_SSH_KEY: ${{ secrets.VIRTUAL_AP_SSH_KEY }}
-      DIGICERT_API_KEY: ${{ secrets.DIGICERT_API_KEY }}
     outputs:
-      mac_address: ${{ steps.get_virtual_ap_mac_address.outputs.value }}
+      serial_number: ${{ steps.deploy-virtual-ap-instance.outputs.serial_number }}
+      instance_id: ${{ steps.deploy-virtual-ap-instance.outputs.instance_id }}
     steps:
-      - name: Checkout wlan-pki-cert-scripts repo
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+
+      - name: Use deploy-virtual-ap-instance composite action
+        id: deploy-virtual-ap-instance
+        uses: ./.github/actions/deploy-virtual-ap-instance
         with:
-          repository: Telecominfraproject/wlan-pki-cert-scripts
-          path: wlan-pki-cert-scripts
-
-      - name: Get public IP of virtual AP EC2 instance
-        id: get_virtual_ap_public_ip
-        run: |
-          echo ::set-output name=ip::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=tip-wlan-main OpenWifi virtual AP (WIFI-7204)' --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)"
-
-      - name: Get mac address of virtual AP EC2 instance
-        id: get_virtual_ap_mac_address
-        run: |
-          echo ::set-output name=value::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=tip-wlan-main OpenWifi virtual AP (WIFI-7204)' --query 'Reservations[*].Instances[*].NetworkInterfaces[*].MacAddress' --output text | sed 's/://g')"
-
-      - name: Set redirector URL
-        run: |
-          ./wlan-pki-cert-scripts/digicert-change-ap-redirector.sh 06:6f:df:5d:30:e2 ${{ needs.deploy-controller.outputs.gateway_url }}
-
-      # starting the firstcontact service applies a default config, which is why we need to re-apply our config modifications in order to add the SSH key
-      - name: Connect to virtual AP, start firstcontact service and re-apply AP config
-        run: |
-          echo "${{ env.VIRTUAL_AP_SSH_KEY }}" > openwifi-virtual-ap.pem
-          chmod 600 openwifi-virtual-ap.pem
-          ssh -o StrictHostKeyChecking=accept-new -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_public_ip.outputs.ip }} '/etc/init.d/firstcontact start; sleep 10; /usr/share/ucentral/ucentral.uc /root/config.json'
+          virtual_ap_password: ${{ secrets.VIRTUAL_AP_PASSWORD }}
+          virtual_ap_cert: ${{ secrets.VIRTUAL_AP_CERT }}
+          virtual_ap_key: ${{ secrets.VIRTUAL_AP_KEY }}
+          virtual_ap_dev_id: ${{ secrets.VIRTUAL_AP_DEV_ID }}
+          gateway_url: ${{ needs.deploy-controller.outputs.gateway_url }}
 
   test:
    name: Test specified microservice
-   needs: [deploy-controller, set-redirector-url]
+   needs: [deploy-controller, deploy-virtual-ap-instance]
    runs-on: ubuntu-latest
    env:
      OWSEC: "${{ needs.deploy-controller.outputs.sec_url }}:16001"
      OWSEC_USERNAME: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
      OWSEC_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
    steps:
-     - name: Checkout wlan-cloud-ucentralgw repo and test OWGW
+     - name: Get OWGW CLI script and test service
        if: github.event.inputs.microservice == 'owgw' || github.event.inputs.microservice == 'all'
        run: |
          curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralgw/master/test_scripts/curl/cli -o cli
          chmod +x cli
-         ./cli test_service ${{ needs.set-redirector-url.outputs.mac_address }}
+         ./cli test_service ${{ needs.deploy-virtual-ap-instance.outputs.serial_number }}
 
-     - name: Checkout wlan-cloud-ucentralsec repo and test OWSec
+     - name: Get OWSec CLI script and test service
        if: github.event.inputs.microservice == 'owsec' || github.event.inputs.microservice == 'all'
        run: |
          curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralsec/main/test_scripts/curl/cli -o cli
          chmod +x cli
          ./cli test_service
 
-     - name: Checkout wlan-cloud-ucentralfms repo and test OWFms
+     - name: Get OWFms CLI script and test service
        if: github.event.inputs.microservice == 'owfms' || github.event.inputs.microservice == 'all'
        run: |
          curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralfms/main/test_scripts/curl/cli -o cli
          chmod +x cli
-         ./cli test_service ${{ needs.set-redirector-url.outputs.mac_address }}
+         ./cli test_service ${{ needs.deploy-virtual-ap-instance.outputs.serial_number }}
 
   destroy-controller:
     name: Destroy controller namespace
@@ -412,14 +396,22 @@ jobs:
       AWS_DEFAULT_REGION: us-east-2
     if: always()
     steps:
-      - name: Checkout wlan-testing repo
-        uses: actions/checkout@v2
-        with:
-          path: wlan-testing
-
       - name: Fetch kubeconfig
         run: |
           aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
       - name: Delete namespace
         run: kubectl delete ns --ignore-not-found=true ${{ needs.deploy-controller.outputs.namespace }}
+
+  terminate-virtual-ap-instance:
+    name: Terminate virtual AP instance
+    needs: [deploy-virtual-ap-instance, test]
+    runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+    if: always()
+    steps:
+      - name: Terminate virtual AP EC2 instance
+        continue-on-error: true
+        run: |
+          aws ec2 terminate-instances --instance-ids ${{ needs.deploy-virtual-ap-instance.outputs.instance_id }}
