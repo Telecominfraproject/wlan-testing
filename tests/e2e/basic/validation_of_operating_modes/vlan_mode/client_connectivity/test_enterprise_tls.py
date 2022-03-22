@@ -35,8 +35,8 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
-    def test_tls_vlan_wpa_enterprise_2g(self, get_vif_state, station_names_twog, setup_profiles,  lf_test,
-                               test_cases, radius_info, exit_on_fail):
+    def test_tls_vlan_wpa_enterprise_2g(self, station_names_twog, setup_profiles,  lf_test,
+                               test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
@@ -47,6 +47,8 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         extra_secu = ["wpa2"]
         mode = "VLAN"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 100
         tls_passwd = radius_info["password"]
         eap = "TLS"
@@ -54,20 +56,17 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         identity = radius_info['user']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
                                      identity=identity, station_name=station_names_twog,
-                                     key_mgmt=key_mgmt, vlan_id=vlan)
+                                     key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
 
         assert passes
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
-    def test_tls_vlan_wpa_enterprise_5g(self, get_vif_state, station_names_fiveg, setup_profiles, lf_test,
-                                        test_cases, radius_info, exit_on_fail):
+    def test_tls_vlan_wpa_enterprise_5g(self, station_names_fiveg, setup_profiles, lf_test,
+                                        test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 5g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
@@ -78,6 +77,8 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         extra_secu = ["wpa2"]
         mode = "VLAN"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 100
         tls_passwd = radius_info["password"]
         eap = "TLS"
@@ -85,21 +86,18 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         identity = radius_info['user']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
                                      identity=identity, station_name=station_names_fiveg,
-                                     key_mgmt=key_mgmt, vlan_id=vlan)
+                                     key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
 
         assert passes
 
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
-    def test_tls_vlan_wpa2_enterprise_2g(self, get_vif_state, station_names_twog, setup_profiles,  lf_test,
-                               test_cases, radius_info, exit_on_fail):
+    def test_tls_vlan_wpa2_enterprise_2g(self, station_names_twog, setup_profiles,  lf_test,
+                               test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa2 enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
@@ -109,6 +107,8 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         security = "wpa2"
         mode = "VLAN"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 100
         tls_passwd = radius_info["password"]
         eap = "TLS"
@@ -116,20 +116,17 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         identity = radius_info['user']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
                                      identity=identity, station_name=station_names_twog,
-                                     key_mgmt=key_mgmt, vlan_id=vlan)
+                                     key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
 
         assert passes
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
-    def test_tls_vlan_wpa2_enterprise_5g(self, get_vif_state, station_names_fiveg, setup_profiles, lf_test,
-                                         test_cases, radius_info, exit_on_fail):
+    def test_tls_vlan_wpa2_enterprise_5g(self, station_names_fiveg, setup_profiles, lf_test,
+                                         test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa2 enterprise 5g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
@@ -139,6 +136,8 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         security = "wpa2"
         mode = "VLAN"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 100
         tls_passwd = radius_info["password"]
         eap = "TLS"
@@ -146,13 +145,10 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         identity = radius_info['user']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
                                      identity=identity, station_name=station_names_fiveg,
-                                     key_mgmt=key_mgmt, vlan_id=vlan)
+                                     key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
 
         assert passes
 
@@ -160,7 +156,7 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     def test_tls_vlan_wpa3_enterprise_2g(self, get_vif_state, station_names_twog, setup_profiles,  lf_test,
-                               test_cases, radius_info, exit_on_fail):
+                               test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa2 enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
@@ -170,6 +166,8 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         security = "wpa3"
         mode = "VLAN"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 100
         tls_passwd = radius_info["password"]
         eap = "TLS"
@@ -177,20 +175,17 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         identity = radius_info['user']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
                                      identity=identity, station_name=station_names_twog,
-                                     key_mgmt=key_mgmt, vlan_id=vlan)
+                                     key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
 
         assert passes
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
-    def test_tls_vlan_wpa3_enterprise_5g(self, get_vif_state, station_names_fiveg, setup_profiles, lf_test,
-                                        test_cases, radius_info, exit_on_fail):
+    def test_tls_vlan_wpa3_enterprise_5g(self, station_names_fiveg, setup_profiles, lf_test,
+                                        test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa3 enterprise 5g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
@@ -200,6 +195,8 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         security = "wpa3"
         mode = "VLAN"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 100
         tls_passwd = radius_info["password"]
         eap = "TLS"
@@ -207,13 +204,10 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         identity = radius_info['user']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
                                      identity=identity, station_name=station_names_fiveg,
-                                     key_mgmt=key_mgmt, vlan_id=vlan)
+                                     key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
 
         assert passes
 
