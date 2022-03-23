@@ -6,6 +6,7 @@ import os
 import random
 import string
 import sys
+import re
 
 import allure
 
@@ -781,15 +782,26 @@ def get_apnos_max_clients(get_apnos, get_configuration):
 @pytest.fixture(scope="function")
 def get_ap_channel(get_apnos, get_configuration):
     all_data = []
-    dict_band_channe = {}
+    dict_band_channel = {}
     for ap in get_configuration['access_point']:
         ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
         a = ap_ssh.run_generic_command(cmd="iw dev | grep channel")
-        print("aaaaaa", a)
+        print("ap command output:- ", a)
         try:
-            dict_band_channe["2G"] = int(re.findall('\d+', a[1])[0])
-            dict_band_channe["5G"] = int(re.findall('\d+', a[2])[0])
-            all_data.append(dict_band_channe)
+            a = a[1:]
+            for i in a:
+                if i == '':
+                    continue
+                j = int(re.findall('\d+', i)[0])
+                print(j)
+                if j >= 36:
+                    dict_band_channel["5G"] = j
+                    continue
+                elif j < 36:
+                    dict_band_channel["2G"] = j
+                    continue
+            all_data.append(dict_band_channel)
         except Exception as e:
             pass
+    print(all_data)
     yield all_data
