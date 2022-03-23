@@ -43,7 +43,7 @@ jobs:
         wget https://img.shields.io/badge/performance_tests-$(pytest --collect-only -m "performance" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/performance-count.svg
         wget https://img.shields.io/badge/advance_tests-$(pytest --collect-only -m "advance" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/advance-count.svg
         wget https://img.shields.io/badge/regression_tests-$(pytest --collect-only -m "regression and not interop" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/regression-count.svg
-        wget https://img.shields.io/badge/interop_regression_tests-$(pytest --collect-only -m "regression and interop" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/regression-interop-count.svg
+        wget https://img.shields.io/badge/interop_performance_tests-$(pytest --collect-only -m "interop_uc_sanity and client_connect" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/performance-interop-count.svg
         
     - name: commit changes
       working-directory: badges
