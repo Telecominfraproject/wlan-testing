@@ -40,14 +40,18 @@ setup_params_general = {
     "rf": {},
     "radius": False
 }
+class TestUniqueSSIDGeneralOneNATiOS(object):
 
-for sec_modes in setup_params_general['ssid_modes'].keys():
-    for i in range(len(setup_params_general['ssid_modes'][sec_modes])):
-        N = 3
-        rand_string = (''.join(random.choices(string.ascii_uppercase +
-                                     string.digits, k=N)))+str(int(time.time_ns())%10000)
-
-        setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
+    @pytest.mark.unique_ssid_general_one_nat_ios
+    def test_unique_ssid_general_one_nat_ios(self):
+        for sec_modes in setup_params_general['ssid_modes'].keys():
+            for i in range(len(setup_params_general['ssid_modes'][sec_modes])):
+                N = 3
+                rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                                      string.digits, k=N))) + str(int(time.time_ns()) % 10000)
+                setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = \
+                setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
+            assert True
 
 @allure.suite(suite_name="interop sanity")
 @allure.sub_suite(sub_suite_name="Nat Mode Client Connect : Suite-A")
@@ -299,12 +303,19 @@ setup_params_general_two = {
     "radius": False
 }
 
-for sec_modes in setup_params_general_two['ssid_modes'].keys():
-    for i in range(len(setup_params_general_two['ssid_modes'][sec_modes])):
-        N = 3
-        rand_string = (''.join(random.choices(string.ascii_uppercase +
-                                     string.digits, k=N)))+str(int(time.time_ns())%10000)
-        setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
+class TestUniqueSSIDGeneralTwoNAtiOS(object):
+
+    @pytest.mark.unique_ssid_general_two_nat_ios
+    def test_unique_ssid_general_two_nat_ios(self):
+        for sec_modes in setup_params_general_two['ssid_modes'].keys():
+            for i in range(len(setup_params_general_two['ssid_modes'][sec_modes])):
+                N = 3
+                rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                                      string.digits, k=N))) + str(int(time.time_ns()) % 10000)
+                setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] = \
+                setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
+
+        assert True
 
 @allure.suite(suite_name="interop sanity")
 @allure.sub_suite(sub_suite_name="Nat Mode Client Connect : Suite-B")
