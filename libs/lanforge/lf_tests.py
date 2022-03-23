@@ -6,7 +6,7 @@ import sys
 import os
 import time
 import datetime
-
+from datetime import datetime
 import allure
 import pytest
 import importlib
@@ -32,7 +32,7 @@ import time
 import string
 import random
 from scp_util import SCP_File
-
+import pyshark as ps
 
 S = 12
 # from eap_connect import EAPConnect
@@ -56,6 +56,12 @@ realm = importlib.import_module("py-json.realm")
 Realm = realm.Realm
 from LANforge import LFUtils
 from lf_cleanup import lf_clean
+from wifi_monitor_profile import WifiMonitor
+from sta_scan_test import StaScan
+from lf_sniff_radio import SniffRadio
+cv_test_reports = importlib.import_module("py-json.cv_test_reports")
+lf_report = cv_test_reports.lanforge_reports
+from lf_pcap import LfPcap
 
 @allure.step
 def nested_step_allure(bssid, rssi):
@@ -1001,7 +1007,7 @@ class RunTest:
         return atten_serial_radio
 
     def create_n_clients(self, start_id=0, sta_prefix=None, num_sta=None, dut_ssid=None,
-                         dut_security=None, dut_passwd=None, band=None, radio=None, lf_tools=None):
+                         dut_security=None, dut_passwd=None, band=None, radio=None, lf_tools=None, type=None):
 
         local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
         station_profile = local_realm.new_station_profile()
@@ -1034,6 +1040,18 @@ class RunTest:
         # self.station_profile.set_command_param("add_sta", "ap", self.bssid[0])
 
         station_profile.set_command_flag("set_port", "rpt_timer", 1)
+        if type == "11r":
+            station_profile.set_command_flag("add_sta", "80211u_enable", 0)
+            station_profile.set_command_flag("add_sta", "8021x_radius", 1)
+            station_profile.set_wifi_extra(key_mgmt="FT-PSK     ",
+                                           pairwise="",
+                                           group="",
+                                           psk="",
+                                           eap="",
+                                           identity="",
+                                           passwd="",
+                                           pin=""
+                                           )
         station_profile.create(radio=radio, sta_names_=station_list)
         local_realm.wait_until_ports_appear(sta_list=station_list)
         station_profile.admin_up()
@@ -1111,6 +1129,11 @@ class RunTest:
             allure.attach.file(name=str(name), source=str(filename))
         except FileNotFoundError:
             print("The 'docs' directory does not exist")
+
+    def nikita(self, lf_tools=None):
+        self.create_n_clients(sta_prefix="wlan1", num_sta=2, dut_ssid="RoamAP5g",
+                                  dut_security='wpa2', dut_passwd="something", radio="wiphy1",
+                                  lf_tools=lf_tools, type="11r")
 
     def basic_roam(self, run_lf, get_configuration, lf_tools, lf_reports,  instantiate_profile, ssid_name=None, security=None, security_key=None,
                    mode=None, band=None, station_name=None, vlan=None, test=None, iteration=2):
@@ -1561,7 +1584,7 @@ class RunTest:
         allure.attach(name="execution time", body=str(final_time))
 
     def multi_roam(self, run_lf, get_configuration, lf_tools, lf_reports,  instantiate_profile, ssid_name=None, security=None, security_key=None,
-                   mode=None, band=None, station_name=None, vlan=None, test=None, iteration=1, num_sta=2):
+                   mode=None, band=None, station_name=None, vlan=None, test=None, iteration=1, num_sta=4):
         # attach test definition
         allure.attach(name="Test Procedure", body="This test consists of creating a multiple  client which will be " \
                                                   " connected to the nearest ap, here the test automation will " \
@@ -1638,10 +1661,11 @@ class RunTest:
         if band == "twog":
             self.create_n_clients(sta_prefix="wlan1", num_sta=num_sta, dut_ssid=ssid_name,
                                   dut_security=security, dut_passwd=security_key, radio=self.twog_radios[0],
-                                  lf_tools=lf_tools)
+                                  lf_tools=lf_tools, type="11r")
         if band == "fiveg":
             self.create_n_clients(sta_prefix="wlan", num_sta=num_sta, dut_ssid=ssid_name,
-                         dut_security=security, dut_passwd=security_key, radio=self.fiveg_radios[0], lf_tools=lf_tools)
+                         dut_security=security, dut_passwd=security_key, radio=self.fiveg_radios[0], lf_tools=lf_tools,
+                                  type="11r")
 
 
         # check if all stations have ip
@@ -1652,8 +1676,8 @@ class RunTest:
                            sta_list=sta_list, traffic_type="lf_udp")
         cx_list =  self.get_cx_list()
         cx_list.reverse()
-        table_head = ["iteration", "client count", "bssid before", "bssid after", "Result"]
-        table_head_2 = ["iteration", "station name", "Rssi-1", "Rssi", "cx time", "rx packets", "rx rate"]
+        table_head = ["iteration", "client count", "bssid before", "bssid after", "min cx time", "max cx time", "avg cx time", "Result"]
+        table_head_2 = ["iteration", "station name",  "Rssi", "cx time", "rx packets", "rx rate"]
 
         table_global = []
         table2_global = []
@@ -1712,12 +1736,47 @@ class RunTest:
                         table_local.append(station_before)
                         status = ""
 
+                        ser_num = None
+                        ser_num2 = None
                         if number == "even":
+                            ser_num = ser_1
+                            ser_num2 = ser_2
+                        elif number == "odd":
+                            ser_num = ser_2
+                            ser_num2 = ser_1
                             # logic to decrease c2 attenuation till 10 db
-                            for atten_val2 in range(900, 100, -50):
-                                self.attenuator_modify(int(ser_1), "all", atten_val2)
+                        for atten_val2 in range(900, 100, -50):
+                            self.attenuator_modify(int(ser_num), "all", atten_val2)
+                            time.sleep(10)
+                            #  query bssid's of all stations
+                            bssid_list_1 = []
+                            for sta_name in sta_list:
+                                sta = sta_name.split(".")[2]
+                                time.sleep(5)
+                                bssid = lf_tools.station_data_query(station_name=str(sta), query="ap")
+                                bssid_list_1.append(bssid)
+                            print(bssid_list_1)
+                            # check if all are equal
+                            result = all(element == bssid_list_1[0] for element in bssid_list_1)
+                            if result:
+                                station_after = bssid_list_1[0].lower()
+                                if station_after == station_before:
+                                    status = "station did not roamed"
+                                    print("station did not roamed")
+                                    continue
+                                elif station_after != station_before:
+                                    print("client performed roam")
+                                    table_local.append(station_after)
+                                    table_local.append("PASS")
+                                    break
+
+                        if status == "station did not roamed":
+                            rssi_lst = []
+                            # set c1 to high
+                            for atten_val1 in (range(150, 950, 50)):
+                                print(atten_val1)
+                                self.attenuator_modify(int(ser_num2), "all", atten_val1)
                                 time.sleep(10)
-                                #  query bssid's of all stations
                                 bssid_list_1 = []
                                 for sta_name in sta_list:
                                     sta = sta_name.split(".")[2]
@@ -1732,127 +1791,112 @@ class RunTest:
                                     if station_after == station_before:
                                         status = "station did not roamed"
                                         print("station did not roamed")
+                                        rssi_local = []
+                                        for sta in sta_list:
+                                            client = sta.split(".")[2]
+                                            time.sleep(10)
+                                            rssi = lf_tools.station_data_query(station_name=str(client), query="signal")
+                                            rssi_local.append(rssi)
+                                        rssi_lst.append(rssi_local)
+                                        print("rssi list before roam ", rssi_lst)
                                         continue
                                     elif station_after != station_before:
                                         print("client performed roam")
+                                        time.sleep(15)
+                                        last_cx_time = [] # give list of all station cx time
+                                        # checking for rssi/rx_packets etc
+                                        # rssi_of_lastit = rssi_lst[-1]
+                                        for (sta, cx) in zip(sta_list, cx_list):
+                                            local_list = []
+                                            local_list.append(num)
+                                            client = sta.split(".")[2]
+                                            time.sleep(10)
+                                            local_list.append(client)
+                                            # local_list.append(rs)
+                                            rssi = lf_tools.station_data_query(station_name=str(client), query="signal")
+                                            local_list.append(rssi)
+                                            cx_time = lf_tools.station_data_query(station_name=str(client), query="cx time (us)")
+                                            local_list.append(cx_time)
+                                            last_cx_time.append(cx_time)
+                                            rate = self.get_layer3_values(query="bps rx b", cx_name=cx)
+                                            packets = self.get_layer3_values(query="pkt rx b", cx_name=cx)
+                                            local_list.append(packets)
+                                            local_list.append(rate)
+                                            table2_global.append(local_list)
+
+                                        print("list of cx time", last_cx_time)
+                                        # calculate min / max /average
+                                        min_val = min(last_cx_time)
+                                        max_val = max(last_cx_time)
+                                        avg_value = 0 if len(last_cx_time) == 0 else sum(last_cx_time) / len(last_cx_time)
                                         table_local.append(station_after)
+                                        table_local.append(min_val)
+                                        table_local.append(max_val)
+                                        table_local.append(avg_value)
                                         table_local.append("PASS")
                                         break
-
-                            if status == "station did not roamed":
-                                rssi_lst = []
-                                # set c1 to high
-                                for atten_val1 in (range(150, 950, 50)):
-                                    print(atten_val1)
-                                    self.attenuator_modify(int(ser_2), "all", atten_val1)
-                                    time.sleep(10)
-                                    bssid_list_1 = []
-                                    for sta_name in sta_list:
-                                        sta = sta_name.split(".")[2]
-                                        time.sleep(5)
-                                        bssid = lf_tools.station_data_query(station_name=str(sta), query="ap")
-                                        bssid_list_1.append(bssid)
-                                    print(bssid_list_1)
-                                    # check if all are equal
-                                    result = all(element == bssid_list_1[0] for element in bssid_list_1)
-                                    if result:
-                                        station_after = bssid_list_1[0].lower()
-                                        if station_after == station_before:
-                                            status = "station did not roamed"
-                                            print("station did not roamed")
-                                            rssi_local = []
-                                            for sta in sta_list:
-                                                client = sta.split(".")[2]
-                                                time.sleep(2)
-                                                rssi = lf_tools.station_data_query(station_name=str(client), query="signal")
-                                                rssi_local.append(rssi)
-                                            rssi_lst.append(rssi_local)
-                                            continue
-                                        elif station_after != station_before:
-                                            print("client performed roam")
-                                            # checking for rssi/rx_packets etc
-                                            rssi_of_lastit = rssi_lst[-1]
-                                            for (sta, cx, rs) in zip(sta_list, cx_list, rssi_of_lastit):
-                                                local_list = []
-                                                local_list.append(num)
-                                                client = sta.split(".")[2]
-                                                time.sleep(10)
-                                                local_list.append(client)
-                                                local_list.append(rs)
-                                                rssi = lf_tools.station_data_query(station_name=str(client), query="signal")
-                                                local_list.append(rssi)
-                                                cx_time = lf_tools.station_data_query(station_name=str(client), query="cx time (us)")
-                                                local_list.append(cx_time)
-                                                rate = self.get_layer3_values(query="bps rx b", cx_name=cx)
-                                                packets = self.get_layer3_values(query="pkt rx b", cx_name=cx)
-                                                local_list.append(packets)
-                                                local_list.append(rate)
-                                                table2_global.append(local_list)
-                                            table_local.append(station_after)
-                                            table_local.append("PASS")
-                                            break
-                                        elif station_after == station_before:
-                                            table_local.append(station_after)
-                                            table_local.append("FAIL")
-                            table_global.append(table_local)
-
-                        if number == "odd":
-                            # logic to decrease c2 attenuation till 10 db
-                            for atten_val2 in range(900, 100, -50):
-                                self.attenuator_modify(int(ser_2), "all", atten_val2)
-                                time.sleep(10)
-                                #  query bssid's of all stations
-                                bssid_list_1 = []
-                                for sta_name in sta_list:
-                                    sta = sta_name.split(".")[2]
-                                    time.sleep(5)
-                                    bssid = lf_tools.station_data_query(station_name=str(sta), query="ap")
-                                    bssid_list_1.append(bssid)
-                                print(bssid_list_1)
-                                # check if all are equal
-                                result = all(element == bssid_list_1[0] for element in bssid_list_1)
-                                if result:
-                                    station_after = bssid_list_1[0].lower()
-                                    if station_after == station_before:
-                                        status = "station did not roamed"
-                                        print("station did not roamed")
-                                        continue
-                                    elif station_after != station_before:
-                                        print("client performed roam")
+                                    elif station_after == station_before:
                                         table_local.append(station_after)
-                                        table_local.append("PASS")
-                                        break
+                                        table_local.append("FAIL")
+                        table_global.append(table_local)
 
-                            if status == "station did not roamed":
-                                # set c1 to high
-                                for atten_val1 in (range(150, 950, 50)):
-                                    print(atten_val1)
-                                    self.attenuator_modify(int(ser_1), "all", atten_val1)
-                                    time.sleep(10)
-                                    bssid_list_1 = []
-                                    for sta_name in sta_list:
-                                        sta = sta_name.split(".")[2]
-                                        time.sleep(5)
-                                        bssid = lf_tools.station_data_query(station_name=str(sta), query="ap")
-                                        bssid_list_1.append(bssid)
-                                    print(bssid_list_1)
-                                    # check if all are equal
-                                    result = all(element == bssid_list_1[0] for element in bssid_list_1)
-                                    if result:
-                                        station_after = bssid_list_1[0].lower()
-                                        if station_after == station_before:
-                                            status = "station did not roamed"
-                                            print("station did not roamed")
-                                            continue
-                                        elif station_after != station_before:
-                                            print("client performed roam")
-                                            table_local.append(station_after)
-                                            table_local.append("PASS")
-                                            break
-                                        elif station_after == station_before:
-                                            table_local.append(station_after)
-                                            table_local.append("FAIL")
-                            table_global.append(table_local)
+                        # if number == "odd":
+                        #     # logic to decrease c2 attenuation till 10 db
+                        #     for atten_val2 in range(900, 100, -50):
+                        #         self.attenuator_modify(int(ser_2), "all", atten_val2)
+                        #         time.sleep(10)
+                        #         #  query bssid's of all stations
+                        #         bssid_list_1 = []
+                        #         for sta_name in sta_list:
+                        #             sta = sta_name.split(".")[2]
+                        #             time.sleep(5)
+                        #             bssid = lf_tools.station_data_query(station_name=str(sta), query="ap")
+                        #             bssid_list_1.append(bssid)
+                        #         print(bssid_list_1)
+                        #         # check if all are equal
+                        #         result = all(element == bssid_list_1[0] for element in bssid_list_1)
+                        #         if result:
+                        #             station_after = bssid_list_1[0].lower()
+                        #             if station_after == station_before:
+                        #                 status = "station did not roamed"
+                        #                 print("station did not roamed")
+                        #                 continue
+                        #             elif station_after != station_before:
+                        #                 print("client performed roam")
+                        #                 table_local.append(station_after)
+                        #                 table_local.append("PASS")
+                        #                 break
+                        #
+                        #     if status == "station did not roamed":
+                        #         # set c1 to high
+                        #         for atten_val1 in (range(150, 950, 50)):
+                        #             print(atten_val1)
+                        #             self.attenuator_modify(int(ser_1), "all", atten_val1)
+                        #             time.sleep(10)
+                        #             bssid_list_1 = []
+                        #             for sta_name in sta_list:
+                        #                 sta = sta_name.split(".")[2]
+                        #                 time.sleep(5)
+                        #                 bssid = lf_tools.station_data_query(station_name=str(sta), query="ap")
+                        #                 bssid_list_1.append(bssid)
+                        #             print(bssid_list_1)
+                        #             # check if all are equal
+                        #             result = all(element == bssid_list_1[0] for element in bssid_list_1)
+                        #             if result:
+                        #                 station_after = bssid_list_1[0].lower()
+                        #                 if station_after == station_before:
+                        #                     status = "station did not roamed"
+                        #                     print("station did not roamed")
+                        #                     continue
+                        #                 elif station_after != station_before:
+                        #                     print("client performed roam")
+                        #                     table_local.append(station_after)
+                        #                     table_local.append("PASS")
+                        #                     break
+                        #                 elif station_after == station_before:
+                        #                     table_local.append(station_after)
+                        #                     table_local.append("FAIL")
+                        #     table_global.append(table_local)
 
                     else:
                         print("not all station connected to same ap")
@@ -1868,7 +1912,7 @@ class RunTest:
                                                           type=0)
             log= instantiate_profile_obj.show_11r_log()
             final1 = lf_reports.table2(table=table2_global)
-            allure.attach(name="iteration table", body=str(final1))
+            # allure.attach(name="iteration table", body=str(final1))
             print("table value", table_global)
             final = lf_reports.table2(table=table_global)
             allure.attach(name="Result table", body=str(final))
@@ -1879,6 +1923,42 @@ class RunTest:
         else:
             print("station's failed to get associate at the begining")
             allure.attach(name="FAIL", body="stations did not got ip at the start of test")
+
+    def start_sniffer(self, radio_channel=None, radio=None, test_name="sniff_radio", duration=60):
+        self.pcap_name = test_name + str(datetime.now().strftime("%Y-%m-%d-%H-%M")).replace(':', '-') + ".pcap"
+        self.pcap_obj = SniffRadio(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port, radio=radio,
+                                   channel=radio_channel)
+        self.pcap_obj.setup(0, 0, 0)
+        time.sleep(5)
+        self.pcap_obj.monitor.admin_up()
+        time.sleep(5)
+        self.pcap_obj.monitor.start_sniff(capname=self.pcap_name, duration_sec=duration)
+
+    def stop_sniffer(self):
+        self.pcap_obj.monitor.admin_down()
+        time.sleep(2)
+        self.pcap_obj.cleanup()
+        lf_report.pull_reports(hostname=self.lanforge_ip, port=self.lanforge_ssh_port, username="lanforge",
+                               password="lanforge",
+                               report_location="/home/lanforge/" + self.pcap_name,
+                               report_dir=".")
+        time.sleep(10)
+        allure.attach.file(source=self.pcap_name,
+                           name="pcap_file")
+        return self.pcap_name
+
+    def query_sniff_data(self, pcap_file, filter='wlan.vht.capabilities.mubeamformer == 1 &&  '
+                                                                       'wlan.fc.type_subtype==0x001'):
+        obj = LfPcap()
+        y = obj.read_pcap(pcap_file=pcap_file, apply_filter=filter)
+        # print(y)
+        data = []
+        for i in y:
+            print(i)
+            data.append(i)
+        return data
+
+
 
 
 
