@@ -17,10 +17,11 @@ import allure
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.client_connect
-              ,pytest.mark.interop_uc_sanity, pytest.mark.nat, pytest.mark.enterprise]
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and,
+              pytest.mark.client_connect, pytest.mark.interop_uc_sanity, pytest.mark.nat, pytest.mark.enterprise]
 
-from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, get_ip_address_eap_and
+from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, \
+    openApp, get_ip_address_eap_and
 
 setup_params_enterprise = {
     "mode": "NAT",
@@ -38,12 +39,20 @@ setup_params_enterprise = {
     "rf": {},
     "radius": True
 }
-for sec_modes in setup_params_enterprise['ssid_modes'].keys():
-    for i in range(len(setup_params_enterprise['ssid_modes'][sec_modes])):
-        N = 3
-        rand_string = (''.join(random.choices(string.ascii_uppercase +
-                                     string.digits, k=N)))+str(int(time.time_ns())%10000)
-        setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
+
+class TestUniqueSSIDEnterpriseNatAnd(object):
+
+    @pytest.mark.unique_ssid_enterprise_nat_and
+    def test_unique_ssid_enterprise_nat_and(self):
+        for sec_modes in setup_params_enterprise['ssid_modes'].keys():
+            for i in range(len(setup_params_enterprise['ssid_modes'][sec_modes])):
+                N = 3
+                rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                                      string.digits, k=N))) + str(int(time.time_ns()) % 10000)
+                setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] = \
+                    setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
+            assert True
+
 
 @allure.suite(suite_name="interop sanity")
 @allure.sub_suite(sub_suite_name="Nat Mode EAP Client Connectivity : Suite-A")
@@ -83,7 +92,8 @@ class TestNatModeEnterpriseTTLSSuiteA(object):
         connData = get_ToggleAirplaneMode_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_address_eap_and(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android, connData)
+        ip, is_internet = get_ip_address_eap_and(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_android,
+                                                 connData)
 
         if ip:
             if is_internet:
@@ -101,7 +111,7 @@ class TestNatModeEnterpriseTTLSSuiteA(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_enterprise
     def test_ClientConnect_2g_WPA2_enterprise_Nat(self, request, get_vif_state, get_ToggleAirplaneMode_data,
-                                              setup_perfectoMobile_android, radius_info, get_ap_logs):
+                                                  setup_perfectoMobile_android, radius_info, get_ap_logs):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][0]
         ssidName = profile_data["ssid_name"]
@@ -139,7 +149,7 @@ class TestNatModeEnterpriseTTLSSuiteA(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa3_enterprise
     def test_ClientConnect_5g_WPA3_enterprise_Nat(self, request, get_vif_state, get_ToggleAirplaneMode_data,
-                                              setup_perfectoMobile_android, radius_info, get_ap_logs):
+                                                  setup_perfectoMobile_android, radius_info, get_ap_logs):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][1]
         ssidName = profile_data["ssid_name"]
@@ -177,7 +187,7 @@ class TestNatModeEnterpriseTTLSSuiteA(object):
     @pytest.mark.twog
     @pytest.mark.wpa3_enterprise
     def test_ClientConnect_2g_WPA3_enterprise_Nat(self, request, get_vif_state, get_ToggleAirplaneMode_data,
-                                              setup_perfectoMobile_android, radius_info, get_ap_logs):
+                                                  setup_perfectoMobile_android, radius_info, get_ap_logs):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][0]
         ssidName = profile_data["ssid_name"]
@@ -215,7 +225,7 @@ class TestNatModeEnterpriseTTLSSuiteA(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa_enterprise
     def test_ClientConnect_5g_WPA_enterprise_Nat(self, request, get_vif_state, get_ToggleAirplaneMode_data,
-                                                  setup_perfectoMobile_android, radius_info, get_ap_logs):
+                                                 setup_perfectoMobile_android, radius_info, get_ap_logs):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa_enterprise"][1]
         ssidName = profile_data["ssid_name"]
@@ -253,7 +263,7 @@ class TestNatModeEnterpriseTTLSSuiteA(object):
     @pytest.mark.twog
     @pytest.mark.wpa_enterprise
     def test_ClientConnect_2g_WPA_enterprise_Nat(self, request, get_vif_state, get_ToggleAirplaneMode_data,
-                                                  setup_perfectoMobile_android, radius_info, get_ap_logs):
+                                                 setup_perfectoMobile_android, radius_info, get_ap_logs):
 
         profile_data = setup_params_enterprise["ssid_modes"]["wpa_enterprise"][0]
         ssidName = profile_data["ssid_name"]

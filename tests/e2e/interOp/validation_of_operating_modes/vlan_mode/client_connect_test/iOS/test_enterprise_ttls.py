@@ -29,24 +29,37 @@ setup_params_enterprise = {
     "mode": "VLAN",
     "ssid_modes": {
         "wpa2_enterprise": [
-            {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
-            {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"], "vlan": 100}],
+            {"ssid_name": "ssid_wpa2_eap_2g_vlan", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa2_eap_5g_vlan", "appliedRadios": ["5G"], "vlan": 100}],
         "wpa3_enterprise": [
-            {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
-            {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "vlan": 100}],
+            {"ssid_name": "ssid_wpa3_eap_2g_vlan", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa3_eap_5g_vlan", "appliedRadios": ["5G"], "vlan": 100}],
         "wpa_enterprise": [
-            {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
-            {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["5G"], "vlan": 100}]},
+            {"ssid_name": "ssid_wpa_eap_2g_vlan", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa_eap_5g_vlan", "appliedRadios": ["5G"], "vlan": 100}]},
 
     "rf": {},
     "radius": True
 }
-for sec_modes in setup_params_enterprise['ssid_modes'].keys():
-    for i in range(len(setup_params_enterprise['ssid_modes'][sec_modes])):
-        N = 3
-        rand_string = (''.join(random.choices(string.ascii_uppercase +
-                                     string.digits, k=N)))+str(int(time.time_ns())%10000)
-        setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
+class TestUniqueSSIDEnterpriseVLANiOS(object):
+
+    @pytest.mark.unique_ssid_enterprise_vlan_ios
+    def test_unique_ssid_enterprise_vlan_ios(self):
+        for sec_modes in setup_params_enterprise['ssid_modes'].keys():
+            for i in range(len(setup_params_enterprise['ssid_modes'][sec_modes])):
+                N = 3
+                rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                                      string.digits, k=N))) + str(int(time.time_ns()) % 10000)
+                setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] = \
+                    setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
+            assert True
+
+# for sec_modes in setup_params_enterprise['ssid_modes'].keys():
+#     for i in range(len(setup_params_enterprise['ssid_modes'][sec_modes])):
+#         N = 3
+#         rand_string = (''.join(random.choices(string.ascii_uppercase +
+#                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
+#         setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 @allure.suite(suite_name="interop sanity")
 @allure.sub_suite(sub_suite_name="Vlan Mode EAP Client Connect : Suite-A")
