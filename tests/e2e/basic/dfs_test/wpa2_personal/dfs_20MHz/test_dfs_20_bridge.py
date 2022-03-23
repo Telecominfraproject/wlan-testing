@@ -13,11 +13,16 @@ setup_params_general1 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 52,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 52
+        }
     },
-    "rf": {},
     "radius": False
 }
 @pytest.mark.parametrize(
@@ -38,7 +43,7 @@ class TestDFSChannel52Bw20(object):
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general1["dfs"]["channel"]
+        channel = setup_params_general1["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -87,11 +92,16 @@ setup_params_general2 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 100,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 100
+        }
     },
-    "rf": {},
     "radius": False
 }
 @pytest.mark.parametrize(
@@ -112,7 +122,7 @@ class TestDFSChannel100Bw20(object):
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general2["dfs"]["channel"]
+        channel = setup_params_general1["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -161,11 +171,16 @@ setup_params_general3 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 104,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 104
+        }
     },
-    "rf": {},
     "radius": False
 }
 @pytest.mark.parametrize(
@@ -186,7 +201,7 @@ class TestDFSChannel104Bw20(object):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general3["dfs"]["channel"]
+        channel = setup_params_general1["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -235,11 +250,16 @@ setup_params_general4 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 56,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 56
+        }
     },
-    "rf": {},
     "radius": False
 }
 @pytest.mark.parametrize(
@@ -260,7 +280,7 @@ class TestDFSChannel56Bw20(object):
         profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general4["dfs"]["channel"]
+        channel = setup_params_general1["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -309,11 +329,16 @@ setup_params_general5 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 60,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 60
+        }
     },
-    "rf": {},
     "radius": False
 }
 @pytest.mark.parametrize(
@@ -334,7 +359,7 @@ class TestDFSChannel60Bw20(object):
         profile_data = setup_params_general5["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general5["dfs"]["channel"]
+        channel = setup_params_general1["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -383,11 +408,16 @@ setup_params_general6 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 64,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 64
+        }
     },
-    "rf": {},
     "radius": False
 }
 @pytest.mark.parametrize(
@@ -408,7 +438,7 @@ class TestDFSChannel64Bw20(object):
         profile_data = setup_params_general6["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general6["dfs"]["channel"]
+        channel = setup_params_general1["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -457,11 +487,16 @@ setup_params_general7 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 108,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 108
+        }
     },
-    "rf": {},
     "radius": False
 }
 @pytest.mark.parametrize(
@@ -482,7 +517,7 @@ class TestDFSChannel108Bw20(object):
         profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general7["dfs"]["channel"]
+        channel = setup_params_general1["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -531,11 +566,16 @@ setup_params_general8 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 112,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 112
+        }
     },
-    "rf": {},
     "radius": False
 }
 @pytest.mark.parametrize(
@@ -556,7 +596,7 @@ class TestDFSChannel112Bw20(object):
         profile_data = setup_params_general8["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general8["dfs"]["channel"]
+        channel = setup_params_general1["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -679,11 +719,16 @@ setup_params_general10 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 132,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 132
+        }
     },
-    "rf": {},
     "radius": False
 }
 @pytest.mark.parametrize(
@@ -704,7 +749,7 @@ class TestDFSChannel132Bw20(object):
         profile_data = setup_params_general10["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general10["dfs"]["channel"]
+        channel = setup_params_general1["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -753,11 +798,16 @@ setup_params_general11 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 136,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 136
+        }
     },
-    "rf": {},
     "radius": False
 }
 @pytest.mark.parametrize(
@@ -778,7 +828,7 @@ class TestDFSChannel136Bw20(object):
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general11["dfs"]["channel"]
+        channel = setup_params_general1["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -827,11 +877,16 @@ setup_params_general12 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 140,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 140
+        }
     },
-    "rf": {},
     "radius": False
 }
 @pytest.mark.parametrize(
@@ -852,7 +907,7 @@ class TestDFSChannel140Bw20(object):
         profile_data = setup_params_general12["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general12["dfs"]["channel"]
+        channel = setup_params_general1["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -901,11 +956,16 @@ setup_params_general13 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 144,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 144
+        }
     },
-    "rf": {},
     "radius": False
 }
 @pytest.mark.parametrize(
@@ -926,7 +986,7 @@ class TestDFSChannel144Bw20(object):
         profile_data = setup_params_general13["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general13["dfs"]["channel"]
+        channel = setup_params_general1["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
