@@ -122,7 +122,7 @@ class TestDFSChannel100Bw20(object):
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general1["rf"]["5G"]["channel"]
+        channel = setup_params_general2["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -201,7 +201,7 @@ class TestDFSChannel104Bw20(object):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general1["rf"]["5G"]["channel"]
+        channel = setup_params_general3["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -280,7 +280,7 @@ class TestDFSChannel56Bw20(object):
         profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general1["rf"]["5G"]["channel"]
+        channel = setup_params_general4["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -359,7 +359,7 @@ class TestDFSChannel60Bw20(object):
         profile_data = setup_params_general5["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general1["rf"]["5G"]["channel"]
+        channel = setup_params_general5["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -438,7 +438,7 @@ class TestDFSChannel64Bw20(object):
         profile_data = setup_params_general6["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general1["rf"]["5G"]["channel"]
+        channel = setup_params_general6["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -517,7 +517,7 @@ class TestDFSChannel108Bw20(object):
         profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general1["rf"]["5G"]["channel"]
+        channel = setup_params_general7["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -596,7 +596,7 @@ class TestDFSChannel112Bw20(object):
         profile_data = setup_params_general8["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general1["rf"]["5G"]["channel"]
+        channel = setup_params_general8["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -749,7 +749,7 @@ class TestDFSChannel132Bw20(object):
         profile_data = setup_params_general10["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general1["rf"]["5G"]["channel"]
+        channel = setup_params_general10["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -828,7 +828,7 @@ class TestDFSChannel136Bw20(object):
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general1["rf"]["5G"]["channel"]
+        channel = setup_params_general11["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -907,7 +907,7 @@ class TestDFSChannel140Bw20(object):
         profile_data = setup_params_general12["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general1["rf"]["5G"]["channel"]
+        channel = setup_params_general12["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -986,7 +986,7 @@ class TestDFSChannel144Bw20(object):
         profile_data = setup_params_general13["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general1["rf"]["5G"]["channel"]
+        channel = setup_params_general13["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
