@@ -345,6 +345,7 @@ class TestVlanModeEnterpriseTTLSSuiteTwo(object):
         pytest -m "client_connectivity and bridge and enterprise and ttls and suiteB"
     """
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7426", name="WIFI-7426")
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.twog
     def test_ClientConnect_2g_wpa_wpa2_enterprise_mixed_Vlan(self, request, get_vif_state, get_ToggleAirplaneMode_data,
@@ -382,6 +383,7 @@ class TestVlanModeEnterpriseTTLSSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7425", name="WIFI-7425")
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.fiveg
     def test_ClientConnect_5g_wpa_wpa2_enterprise_mixed_Vlan(self, request, get_vif_state,
@@ -420,6 +422,7 @@ class TestVlanModeEnterpriseTTLSSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7428", name="WIFI-7428")
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.twog
     def test_ClientConnect_2g_wpa3_enterprise_mixed_Vlan(self, request, get_vif_state,
@@ -458,6 +461,7 @@ class TestVlanModeEnterpriseTTLSSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7420", name="WIFI-7420")
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.fiveg
     def test_ClientConnect_5g_wpa3_enterprise_mixed_Vlan(self, request, get_vif_state,
