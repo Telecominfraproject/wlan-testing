@@ -94,14 +94,6 @@ owlsui:
     operator: "Exists"
     effect: "NoSchedule"
 
-rttys:
-  nodeSelector:
-    env: tests
-  tolerations:
-  - key: "tests"
-    operator: "Exists"
-    effect: "NoSchedule"
-
 kafka:
   nodeSelector:
     env: tests

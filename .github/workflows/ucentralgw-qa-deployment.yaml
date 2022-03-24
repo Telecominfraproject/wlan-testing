@@ -104,7 +104,6 @@ jobs:
         export OWPROV_VERSION=${{ matrix.owprov_version }}
         export OWPROVUI_VERSION=${{ matrix.owprovui_version }}
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
-        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
         export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}

@@ -82,7 +82,6 @@ jobs:
         export OWPROV_VERSION=main
         export OWPROVUI_VERSION=main
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.test-nodes.yaml,values.ucentral-qa.owls-enabled.yaml
-        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
         export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
@@ -367,7 +366,6 @@ jobs:
     - name: Deploy CloudSDK using Docker-compose
       working-directory: wlan-testing/docker-compose/openwifi
       env:
-        RTTY_TOKEN: ${{ secrets.RTTY_TOKEN }}
         OWSEC_AUTHENTICATION_DEFAULT_USERNAME: ${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         OWSEC_AUTHENTICATION_DEFAULT_PASSWORD: ${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
         OWFMS_S3_SECRET: ${{ secrets.UCENTRALFMS_S3_SECRET }}
@@ -408,6 +406,13 @@ jobs:
             port: 16003
             targetPort: 16003
             protocol: TCP
+          - name: owgw-rttys
+            port: 5912
+            targetPort: 5912
+            protocol: TCP
+          - name: owgw-rttys-view
+            port: 5913
+            targetPort: 5913
           - name: owgw-ui-http
             port: 80
             targetPort: 80
@@ -443,13 +448,6 @@ jobs:
           - name: owprov-ui-https
             port: 8443
             targetPort: 8443
-          - name: rttys-dev
-            port: 5912
-            targetPort: 5912
-            protocol: TCP
-          - name: rttys-user
-            port: 5913
-            targetPort: 5913
         ---
         apiVersion: v1
         kind: Pod
@@ -520,8 +518,6 @@ jobs:
               value: "https://${{ steps.cloudsdk.outputs.url }}"
             - name: DEFAULT_UCENTRALSEC_URL
               value: "https://${{ steps.cloudsdk.outputs.url }}:16001"
-            - name: RTTY_TOKEN
-              value: "$RTTY_TOKEN"
             - name: OWGW_FILEUPLOADER_HOST_NAME
               value: "${{ steps.cloudsdk.outputs.url }}"
             - name: OWGW_FILEUPLOADER_URI

@@ -12,7 +12,6 @@ usage () {
   echo;
   echo "- DEFAULT_UCENTRALSEC_URL - public URL of the OWSec service"
   echo "- SYSTEM_URI_UI - public URL of the OWGW-UI service"
-  echo "- RTTY_TOKEN - token to be used for rttys and OWGW for remote tty sessions"
   echo;
   echo "- INTERNAL_OWGW_HOSTNAME - OWGW microservice hostname for Docker internal communication"
   echo "- INTERNAL_OWSEC_HOSTNAME - OWSec microservice hostname for Docker internal communication"
@@ -24,7 +23,6 @@ usage () {
   echo "- OWGW_SYSTEM_URI_PRIVATE - private URL to be used for OWGW";
   echo "- OWGW_SYSTEM_URI_PUBLIC - public URL to be used for OWGW";
   echo "- OWGW_RTTY_SERVER - public hostname of the RTTY server";
-  echo "- OWGW_RTTY_TOKEN - token to be used for rttys and OWGW for remote tty sessions";
   echo;
   echo "- OWSEC_SYSTEM_URI_PRIVATE - private URL to be used for OWSec";
   echo "- OWSEC_SYSTEM_URI_PUBLIC - public URL to be used for OWSec";
@@ -49,7 +47,6 @@ usage () {
 ## Configuration variables applying to multiple microservices
 [ -z ${DEFAULT_UCENTRALSEC_URL+x} ] && echo "DEFAULT_UCENTRALSEC_URL is unset" && usage && exit 1
 [ -z ${SYSTEM_URI_UI+x} ] && echo "SYSTEM_URI_UI is unset" && usage && exit 1
-[ -z ${RTTY_TOKEN+x} ] && echo "RTTY_TOKEN is unset" && usage && exit 1
 ## Internal microservice hostnames
 [ -z ${INTERNAL_OWGW_HOSTNAME+x} ] && echo "INTERNAL_OWGW_HOSTNAME is unset" && usage && exit 1
 [ -z ${INTERNAL_OWSEC_HOSTNAME+x} ] && echo "INTERNAL_OWSEC_HOSTNAME is unset" && usage && exit 1
@@ -96,7 +93,6 @@ sed -i "s~\(^SYSTEM_URI_PRIVATE=\).*~\1$OWGW_SYSTEM_URI_PRIVATE~" owgw.env
 sed -i "s~\(^SYSTEM_URI_PUBLIC=\).*~\1$OWGW_SYSTEM_URI_PUBLIC~" owgw.env
 sed -i "s~\(^SYSTEM_URI_UI=\).*~\1$SYSTEM_URI_UI~" owgw.env
 sed -i "s~\(^RTTY_SERVER=\).*~\1$OWGW_RTTY_SERVER~" owgw.env
-sed -i "s~.*RTTY_TOKEN=.*~RTTY_TOKEN=$RTTY_TOKEN~" owgw.env
 
 if [[ ! -z "$SIMULATORID" ]]; then
   sed -i "s~.*SIMULATORID=.*~SIMULATORID=$SIMULATORID~" owgw.env
@@ -121,8 +117,6 @@ sed -i "s~\(^SYSTEM_URI_PUBLIC=\).*~\1$OWPROV_SYSTEM_URI_PUBLIC~" owprov.env
 sed -i "s~\(^SYSTEM_URI_UI=\).*~\1$SYSTEM_URI_UI~" owprov.env
 
 sed -i "s~\(^DEFAULT_UCENTRALSEC_URL=\).*~\1$DEFAULT_UCENTRALSEC_URL~" owprov-ui.env
-
-sed -i "s~\(^token:\).*~\1 $RTTY_TOKEN~" rttys/rttys.conf
 
 # Run the deployment and attach to logs
 cat $WEBSOCKET_CERT > certs/websocket-cert.pem
