@@ -172,7 +172,7 @@ class RunTest:
         self.staConnect.bringup_time_sec = 80
         self.staConnect.cleanup_on_exit = True
         self.staConnect.setup(extra_securities=extra_securities)
-        self.start_sniffer(radio_channel=ssid_channel, radio=self.staConnect.radio.split(".")[2], duration=15)
+        self.start_sniffer(radio_channel=ssid_channel, radio=self.staConnect.radio.split(".")[2], duration=30)
         self.staConnect.start()
         print("napping %f sec" % self.staConnect.runtime_secs)
         time.sleep(self.staConnect.runtime_secs)
