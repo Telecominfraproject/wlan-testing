@@ -108,6 +108,7 @@ class Fixtures_3x:
         # lf dut data [{'ssid_name': 'ssid_wpa2_2g', 'appliedRadios': ['2G'], 'security_key': 'something', 'security': 'wpa2'}, {'ssid_name': 'ssid_wpa2_5g', 'appliedRadios': ['5G'], 'security_key': 'something', 'security': 'wpa2'}, {'ssid_name': 'ssid_wpa2_5g', 'appliedRadios': ['6G'], 'security_key': 'something', 'security': 'wpa3'}]
         print("lf dut data", lf_dut_data)
 
+
         # if parameter["roam"] == True:
         print("create 3 wlans on slot1,2 and 3")
         for ap_name in range(len(self.lab_info['access_point'])):
