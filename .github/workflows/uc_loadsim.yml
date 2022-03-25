@@ -81,6 +81,7 @@ jobs:
         export OWFMS_VERSION=main
         export OWPROV_VERSION=main
         export OWPROVUI_VERSION=main
+        export OWANALYTICS_VERSION=main
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.test-nodes.yaml,values.ucentral-qa.owls-enabled.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
@@ -443,6 +444,13 @@ jobs:
           - name: owprov-ui-https
             port: 8443
             targetPort: 8443
+          - name: owanalytics-restapi
+            port: 16009
+            targetPort: 16009
+            protocol: TCP
+          - name: owanalytics-alivecheck
+            port: 16109
+            targetPort: 16109
           - name: rttys-dev
             port: 5912
             targetPort: 5912
@@ -514,6 +522,8 @@ jobs:
               value: "owfms.wlan.local"
             - name: INTERNAL_OWPROV_HOSTNAME
               value: "owprov.wlan.local"
+            - name: INTERNAL_OWANALYTICS_HOSTNAME
+              value: "owanalytics.wlan.local"
             - name: DEPLOY_VERSION
               value: "${{ github.event.inputs.sdk_version }}"
             - name: SYSTEM_URI_UI
@@ -552,6 +562,10 @@ jobs:
               value: "https://owprov.wlan.local:17005"
             - name: OWPROV_SYSTEM_URI_PUBLIC
               value: "https://${{ steps.cloudsdk.outputs.url }}:16005"
+            - name: OWANALYTICS_SYSTEM_URI_PRIVATE
+              value: "https://owanalytics.wlan.local:17009"
+            - name: OWANALYTICS_SYSTEM_URI_PUBLIC
+              value: "https://${{ steps.cloudsdk.outputs.url }}:16009"
             - name: WEBSOCKET_CERT
               value: "/tip-cicd-wildcard-certs/websocket-cert.pem"
             - name: WEBSOCKET_KEY
