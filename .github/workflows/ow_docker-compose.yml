@@ -37,6 +37,10 @@ on:
         default: 'main'
         description: 'OpenWIFI Provisioning Web UI version to be deployed.'
         required: false
+      owanalytics_version:
+        default: 'main'
+        description: 'OpenWIFI Analytics version to be deployed.'
+        required: false
       id:
         description: 'run identifier'
         required: false
@@ -186,6 +190,13 @@ jobs:
             - name: owprov-ui-https
               port: 8443
               targetPort: 8443
+            - name: owanalytics-restapi
+              port: 16009
+              targetPort: 16009
+              protocol: TCP
+            - name: owanalytics-alivecheck
+              port: 16109
+              targetPort: 16109
             - name: rttys-dev
               port: 5912
               targetPort: 5912
@@ -250,6 +261,8 @@ jobs:
                 value: "${{ github.event.inputs.owprov_version }}"
               - name: OWPROVUI_TAG
                 value: "${{ github.event.inputs.owprovui_version }}"
+              - name: OWANALYTICS_TAG
+                value: "${{ github.event.inputs.owanalytics_version }}"
               - name: INTERNAL_OWGW_HOSTNAME
                 value: "owgw.wlan.local"
               - name: INTERNAL_OWSEC_HOSTNAME
@@ -258,6 +271,8 @@ jobs:
                 value: "owfms.wlan.local"
               - name: INTERNAL_OWPROV_HOSTNAME
                 value: "owprov.wlan.local"
+              - name: INTERNAL_OWANALYTICS_HOSTNAME
+                value: "owanalytics.wlan.local"
               - name: SYSTEM_URI_UI
                 value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
               - name: DEFAULT_UCENTRALSEC_URL
@@ -294,6 +309,10 @@ jobs:
                 value: "https://owprov.wlan.local:17005"
               - name: OWPROV_SYSTEM_URI_PUBLIC
                 value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16005"
+              - name: OWANALYTICS_SYSTEM_URI_PRIVATE
+                value: "https://owanalytics.wlan.local:17009"
+              - name: OWANALYTICS_SYSTEM_URI_PUBLIC
+                value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16009"
               - name: WEBSOCKET_CERT
                 value: "/tip-cicd-wildcard-certs/websocket-cert.pem"
               - name: WEBSOCKET_KEY

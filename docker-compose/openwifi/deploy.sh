@@ -18,6 +18,7 @@ usage () {
   echo "- INTERNAL_OWSEC_HOSTNAME - OWSec microservice hostname for Docker internal communication"
   echo "- INTERNAL_OWFMS_HOSTNAME - OWFms microservice hostname for Docker internal communication"
   echo "- INTERNAL_OWPROV_HOSTNAME - OWProv microservice hostname for Docker internal communication"
+  echo "- INTERNAL_OWANALYTICS_HOSTNAME - OWAnalytics microservice hostname for Docker internal communication"
   echo;
   echo "- OWGW_FILEUPLOADER_HOST_NAME - hostname to be used for OWGW fileupload";
   echo "- OWGW_FILEUPLOADER_URI - URL to be used for OWGW fileupload";
@@ -39,6 +40,9 @@ usage () {
   echo "- OWPROV_SYSTEM_URI_PRIVATE - private URL to be used for OWProv";
   echo "- OWPROV_SYSTEM_URI_PUBLIC - public URL to be used for OWProv";
   echo;
+  echo "- OWANALYTICS_SYSTEM_URI_PRIVATE - private URL to be used for OWAnalytics";
+  echo "- OWANALYTICS_SYSTEM_URI_PUBLIC - public URL to be used for OWAnalytics";
+  echo;
   echo "- WEBSOCKET_CERT - path to the websocket certificate";
   echo "- WEBSOCKET_KEY - path to the websocket key";
 }
@@ -55,6 +59,7 @@ usage () {
 [ -z ${INTERNAL_OWSEC_HOSTNAME+x} ] && echo "INTERNAL_OWSEC_HOSTNAME is unset" && usage && exit 1
 [ -z ${INTERNAL_OWFMS_HOSTNAME+x} ] && echo "INTERNAL_OWFMS_HOSTNAME is unset" && usage && exit 1
 [ -z ${INTERNAL_OWPROV_HOSTNAME+x} ] && echo "INTERNAL_OWPROV_HOSTNAME is unset" && usage && exit 1
+[ -z ${INTERNAL_OWANALYTICS_HOSTNAME+x} ] && echo "INTERNAL_OWANALYTICS_HOSTNAME is unset" && usage && exit 1
 ## OWGW configuration variables
 [ -z ${OWGW_FILEUPLOADER_HOST_NAME+x} ] && echo "OWGW_FILEUPLOADER_HOST_NAME is unset" && usage && exit 1
 [ -z ${OWGW_FILEUPLOADER_URI+x} ] && echo "OWGW_FILEUPLOADER_URI is unset" && usage && exit 1
@@ -74,6 +79,9 @@ usage () {
 ## OWProv configuration variables
 [ -z ${OWPROV_SYSTEM_URI_PRIVATE+x} ] && echo "OWPROV_SYSTEM_URI_PRIVATE is unset" && usage && exit 1
 [ -z ${OWPROV_SYSTEM_URI_PUBLIC+x} ] && echo "OWPROV_SYSTEM_URI_PUBLIC is unset" && usage && exit 1
+## OWAnalytics configuration variables
+[ -z ${OWANALYTICS_SYSTEM_URI_PRIVATE+x} ] && echo "OWANALYTICS_SYSTEM_URI_PRIVATE is unset" && usage && exit 1
+[ -z ${OWANALYTICS_SYSTEM_URI_PUBLIC+x} ] && echo "OWANALYTICS_SYSTEM_URI_PUBLIC is unset" && usage && exit 1
 ## cert related variables
 [ -z ${WEBSOCKET_CERT+x} ] && echo "WEBSOCKET_CERT is unset" && usage && exit 1
 [ -z ${WEBSOCKET_KEY+x} ] && echo "WEBSOCKET_KEY is unset" && usage && exit 1
@@ -89,6 +97,7 @@ sed -i "s~\(^INTERNAL_OWGW_HOSTNAME=\).*~\1$INTERNAL_OWGW_HOSTNAME~" .env
 sed -i "s~\(^INTERNAL_OWSEC_HOSTNAME=\).*~\1$INTERNAL_OWSEC_HOSTNAME~" .env
 sed -i "s~\(^INTERNAL_OWFMS_HOSTNAME=\).*~\1$INTERNAL_OWFMS_HOSTNAME~" .env
 sed -i "s~\(^INTERNAL_OWPROV_HOSTNAME=\).*~\1$INTERNAL_OWPROV_HOSTNAME~" .env
+sed -i "s~\(^INTERNAL_OWANALYTICS_HOSTNAME=\).*~\1$INTERNAL_OWANALYTICS_HOSTNAME~" .env
 
 sed -i "s~\(^FILEUPLOADER_HOST_NAME=\).*~\1$OWGW_FILEUPLOADER_HOST_NAME~" owgw.env
 sed -i "s~\(^FILEUPLOADER_URI=\).*~\1$OWGW_FILEUPLOADER_URI~" owgw.env
@@ -121,6 +130,10 @@ sed -i "s~\(^SYSTEM_URI_PUBLIC=\).*~\1$OWPROV_SYSTEM_URI_PUBLIC~" owprov.env
 sed -i "s~\(^SYSTEM_URI_UI=\).*~\1$SYSTEM_URI_UI~" owprov.env
 
 sed -i "s~\(^DEFAULT_UCENTRALSEC_URL=\).*~\1$DEFAULT_UCENTRALSEC_URL~" owprov-ui.env
+
+sed -i "s~\(^SYSTEM_URI_PRIVATE=\).*~\1$OWANALYTICS_SYSTEM_URI_PRIVATE~" owanalytics.env
+sed -i "s~\(^SYSTEM_URI_PUBLIC=\).*~\1$OWANALYTICS_SYSTEM_URI_PUBLIC~" owanalytics.env
+sed -i "s~\(^SYSTEM_URI_UI=\).*~\1$SYSTEM_URI_UI~" owanalytics.env
 
 sed -i "s~\(^token:\).*~\1 $RTTY_TOKEN~" rttys/rttys.conf
 
