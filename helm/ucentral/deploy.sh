@@ -143,10 +143,10 @@ for EXTRA_VALUE in ${EXTRA_VALUES_SPLITTED[*]}; do
 done
 
 if [[ "$USE_SEPARATE_OWGW_LB" == "true" ]]; then
-  export HAPROXY_SERVICE_DNS_RECORDS="sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,rtty-${NAMESPACE}.cicd.lab.wlan.tip.build,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build"
+  export HAPROXY_SERVICE_DNS_RECORDS="sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,rtty-${NAMESPACE}.cicd.lab.wlan.tip.build\,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build"
   export OWGW_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build"
 else
-  export HAPROXY_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build\,sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,rtty-${NAMESPACE}.cicd.lab.wlan.tip.build,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build"
+  export HAPROXY_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build\,sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,rtty-${NAMESPACE}.cicd.lab.wlan.tip.build\,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build"
   export OWGW_SERVICE_DNS_RECORDS=""
 fi
 
