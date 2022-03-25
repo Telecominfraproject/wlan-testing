@@ -35,7 +35,7 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
-    def test_tls_vlan_wpa_enterprise_2g(self, station_names_twog, setup_profiles,  lf_test,
+    def test_tls_vlan_wpa_enterprise_2g(self, station_names_twog, lf_test,
                                test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
@@ -65,7 +65,7 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
-    def test_tls_vlan_wpa_enterprise_5g(self, station_names_fiveg, setup_profiles, lf_test,
+    def test_tls_vlan_wpa_enterprise_5g(self, station_names_fiveg, lf_test,
                                         test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 5g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
@@ -96,7 +96,7 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
-    def test_tls_vlan_wpa2_enterprise_2g(self, station_names_twog, setup_profiles,  lf_test,
+    def test_tls_vlan_wpa2_enterprise_2g(self, station_names_twog, lf_test,
                                test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa2 enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
@@ -125,7 +125,7 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
-    def test_tls_vlan_wpa2_enterprise_5g(self, station_names_fiveg, setup_profiles, lf_test,
+    def test_tls_vlan_wpa2_enterprise_5g(self, station_names_fiveg, lf_test,
                                          test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa2 enterprise 5g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
@@ -155,7 +155,7 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
-    def test_tls_vlan_wpa3_enterprise_2g(self, get_vif_state, station_names_twog, setup_profiles,  lf_test,
+    def test_tls_vlan_wpa3_enterprise_2g(self, get_vif_state, station_names_twog, lf_test,
                                test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa2 enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
@@ -184,7 +184,7 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
-    def test_tls_vlan_wpa3_enterprise_5g(self, station_names_fiveg, setup_profiles, lf_test,
+    def test_tls_vlan_wpa3_enterprise_5g(self, station_names_fiveg, lf_test,
                                         test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa3 enterprise 5g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"

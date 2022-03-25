@@ -73,7 +73,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
     def test_wpa_enterprise_5g(self, station_names_fiveg, get_ap_logs, get_lf_logs,
-                               setup_profiles,  lf_test, update_report,
+                               lf_test, update_report,
                                test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 5g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa_enterprise and fiveg"
@@ -152,7 +152,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     def test_wpa3_enterprise_2g(self,  get_ap_logs, get_lf_logs,
-                                station_names_twog, setup_profiles,  lf_test, update_report,
+                                station_names_twog, lf_test, update_report,
                                 test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa3_enterprise and twog"
@@ -178,7 +178,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
     def test_wpa3_enterprise_5g(self,  get_ap_logs, get_lf_logs,
-                                station_names_fiveg, setup_profiles,  lf_test, update_report,
+                                station_names_fiveg, lf_test, update_report,
                                 test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa3_enterprise and fiveg"

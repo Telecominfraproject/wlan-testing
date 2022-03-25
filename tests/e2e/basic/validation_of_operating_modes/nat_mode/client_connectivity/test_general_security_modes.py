@@ -49,7 +49,7 @@ class TestNATModeConnectivitySuiteA(object):
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
     def test_open_ssid_2g(self, get_ap_logs, get_lf_logs,
-                          setup_profiles,  lf_test, update_report,
+                          lf_test, update_report,
                           station_names_twog,
                           test_cases, get_ap_channel):
         """Client Connectivity open ssid 2.4G
@@ -234,7 +234,7 @@ class TestNATModeConnectivitySuiteB(object):
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
     def test_wpa3_personal_ssid_2g(self, get_ap_logs, get_lf_logs,
-                                   station_names_twog, setup_profiles,  lf_test,
+                                   station_names_twog, lf_test,
                                    update_report,
                                    test_cases, get_ap_channel):
         """Client Connectivity open ssid 2.4G
@@ -283,7 +283,7 @@ class TestNATModeConnectivitySuiteB(object):
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
     def test_wpa3_personal_mixed_ssid_2g(self, get_ap_logs,
-                                         station_names_twog, setup_profiles, 
+                                         station_names_twog,
                                          lf_test, get_lf_logs,
                                          update_report,
                                          test_cases, get_ap_channel):
@@ -334,7 +334,7 @@ class TestNATModeConnectivitySuiteB(object):
     @pytest.mark.twog
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
     def test_wpa_wpa2_personal_ssid_2g(self, get_ap_logs, get_lf_logs,
-                                       station_names_twog, setup_profiles, 
+                                       station_names_twog,
                                        lf_test,
                                        update_report,
                                        test_cases, get_ap_channel):
