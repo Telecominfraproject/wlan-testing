@@ -157,7 +157,7 @@ class RunTest:
         print("ssid scan data :- ", self.data_scan_ssid)
         result = self.check_ssid_available_scan_result(scan_ssid_data=self.data_scan_ssid, ssid=ssid)
         print("ssid available:-", result)
-        if not result:
+        if not result and ssid_channel:
             self.start_sniffer(radio_channel=ssid_channel, radio=self.staConnect.radio.split(".")[2], duration=30)
             time.sleep(30)
             self.stop_sniffer()
@@ -172,7 +172,8 @@ class RunTest:
         self.staConnect.bringup_time_sec = 80
         self.staConnect.cleanup_on_exit = True
         self.staConnect.setup(extra_securities=extra_securities)
-        self.start_sniffer(radio_channel=ssid_channel, radio=self.staConnect.radio.split(".")[2], duration=30)
+        if ssid_channel:
+            self.start_sniffer(radio_channel=ssid_channel, radio=self.staConnect.radio.split(".")[2], duration=30)
         self.staConnect.start()
         print("napping %f sec" % self.staConnect.runtime_secs)
         time.sleep(self.staConnect.runtime_secs)
@@ -227,7 +228,8 @@ class RunTest:
             print("client connection to", self.staConnect.dut_ssid, "unsuccessful. Test Failed")
             result = False
         time.sleep(3)
-        self.stop_sniffer()
+        if ssid_channel:
+            self.stop_sniffer()
         return self.staConnect.passes(), result
 
     def EAP_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", extra_securities=[],
@@ -274,7 +276,7 @@ class RunTest:
         print("ssid scan data :- ", self.data_scan_ssid)
         result = self.check_ssid_available_scan_result(scan_ssid_data=self.data_scan_ssid, ssid=ssid)
         print("ssid available:-", result)
-        if not result:
+        if not result and ssid_channel:
             self.start_sniffer(radio_channel=ssid_channel, radio=self.eap_connect.radio.split(".")[2], duration=30)
             time.sleep(30)
             self.stop_sniffer()
@@ -305,7 +307,8 @@ class RunTest:
         self.eap_connect.security = security
         self.eap_connect.sta_list = station_name
         self.eap_connect.build(extra_securities=extra_securities)
-        self.start_sniffer(radio_channel=ssid_channel, radio=self.eap_connect.radio.split(".")[2], duration=30)
+        if ssid_channel:
+            self.start_sniffer(radio_channel=ssid_channel, radio=self.eap_connect.radio.split(".")[2], duration=30)
         self.eap_connect.start(station_name, True, True)
         if d_vlan:
            self.station_ip = {}
@@ -355,7 +358,8 @@ class RunTest:
         allure.attach(name="cx_data", body=str(cx_data))
         if cleanup:
            self.eap_connect.cleanup(station_name)
-        self.stop_sniffer()
+        if ssid_channel:
+            self.stop_sniffer()
         return self.eap_connect.passes()
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
@@ -1034,15 +1038,18 @@ class RunTest:
 
     def scan_ssid(self, radio=""):
         '''This method for scan ssid data'''
+        list_data = []
         obj_scan = StaScan(host=self.lanforge_ip, port=self.lanforge_port, ssid="fake ssid", security="open", password="[BLANK]", radio=radio, sta_list=["sta0000"], csv_output="scan_ssid.csv")
         obj_scan.pre_cleanup()
         obj_scan.build()
         obj_scan.start()
-        with open(obj_scan.csv_output, 'r') as file:
-            reader = csv.reader(file)
-            list_data = []
-            for row in reader:
-                list_data.append(row)
+        try:
+            with open(obj_scan.csv_output, 'r') as file:
+                reader = csv.reader(file)
+                for row in reader:
+                    list_data.append(row)
+        except Exception as e:
+            print(e)
         report_obj = Report()
         csv_data_table = report_obj.table2(list_data)
         allure.attach(name="scan_ssid_data", body=csv_data_table)
