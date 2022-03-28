@@ -307,11 +307,11 @@ setup_params_enterprise_two = {
     "mode": "VLAN",
     "ssid_modes": {
         "wpa_wpa2_enterprise_mixed": [
-            {"ssid_name": "ssid_wpa_wpa2_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
-            {"ssid_name": "ssid_wpa_wpa2_eap_5g", "appliedRadios": ["5G"], "vlan": 100}],
+            {"ssid_name": "wpa_wpa2_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "wpa_wpa2_eap_5g", "appliedRadios": ["5G"], "vlan": 100}],
         "wpa3_enterprise_mixed": [
-            {"ssid_name": "ssid_wpa3_mixed_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
-            {"ssid_name": "ssid_wpa3_mixed_eap_5g", "appliedRadios": ["5G"], "vlan": 100}]
+            {"ssid_name": "wpa3_m_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "wpa3_m_eap_5g", "appliedRadios": ["5G"], "vlan": 100}]
     },
     "rf": {},
     "radius": True
@@ -331,7 +331,7 @@ class TestUniqueSSIDVlanEnterpriseTwoAnd(object):
 
 
 @allure.suite(suite_name="interop sanity")
-@allure.sub_suite(sub_suite_name="Vlan Mode EAP Client Connectivity : Suite-B")
+@allure.sub_suite(sub_suite_name="Vlan Mode EAP Client Connect: Suite-B")
 @pytest.mark.suiteB
 @pytest.mark.parametrize(
     'setup_profiles',
@@ -342,7 +342,7 @@ class TestUniqueSSIDVlanEnterpriseTwoAnd(object):
 @pytest.mark.usefixtures("setup_profiles")
 class TestVlanModeEnterpriseTTLSSuiteTwo(object):
     """ SuiteA Enterprise Test Cases
-        pytest -m "client_connectivity and bridge and enterprise and ttls and suiteB"
+        pytest -m "client_connect and bridge and enterprise and ttls and suiteB"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7426", name="WIFI-7426")
