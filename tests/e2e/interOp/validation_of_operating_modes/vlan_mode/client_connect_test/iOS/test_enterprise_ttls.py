@@ -355,7 +355,7 @@ class TestVlanModeEnterpriseTTLSSuiteTwo(object):
     def test_ClientConnect_2g_wpa_wpa2_eap_mixed_Vlan(self, request, get_vif_state, get_ToggleAirplaneMode_data,
                                        setup_perfectoMobile_iOS, radius_info, get_ap_logs):
 
-        profile_data = setup_params_enterprise["ssid_modes"]["wpa_wpa2_enterprise_mixed"][0]
+        profile_data = setup_params_enterprise_two["ssid_modes"]["wpa_wpa2_enterprise_mixed"][0]
         ssidName = profile_data["ssid_name"]
         # ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
@@ -392,7 +392,7 @@ class TestVlanModeEnterpriseTTLSSuiteTwo(object):
     def test_ClientConnect_5g_wpa_wpa2_eap_mixed_Vlan(self, request, get_vif_state, get_ToggleAirplaneMode_data,
                                                         setup_perfectoMobile_iOS, radius_info, get_ap_logs):
 
-        profile_data = setup_params_enterprise["ssid_modes"]["wpa_wpa2_enterprise_mixed"][1]
+        profile_data = setup_params_enterprise_two["ssid_modes"]["wpa_wpa2_enterprise_mixed"][1]
         ssidName = profile_data["ssid_name"]
         # ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
@@ -430,7 +430,7 @@ class TestVlanModeEnterpriseTTLSSuiteTwo(object):
     def test_ClientConnect_2g_wpa3_eap_mixed_Vlan(self, request, get_vif_state, get_ToggleAirplaneMode_data,
                                                    setup_perfectoMobile_iOS, radius_info, get_ap_logs):
 
-        profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise_mixed"][0]
+        profile_data = setup_params_enterprise_two["ssid_modes"]["wpa3_enterprise_mixed"][0]
         ssidName = profile_data["ssid_name"]
         # ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
@@ -468,7 +468,7 @@ class TestVlanModeEnterpriseTTLSSuiteTwo(object):
     def test_ClientConnect_5g_wpa3_eap_mixed_Vlan(self, request, get_vif_state, get_ToggleAirplaneMode_data,
                                                     setup_perfectoMobile_iOS, radius_info, get_ap_logs):
 
-        profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise_mixed"][1]
+        profile_data = setup_params_enterprise_two["ssid_modes"]["wpa3_enterprise_mixed"][1]
         ssidName = profile_data["ssid_name"]
         # ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
