@@ -301,11 +301,11 @@ setup_params_enterprise_two = {
     "mode": "NAT",
     "ssid_modes": {
         "wpa_wpa2_enterprise_mixed": [
-            {"ssid_name": "ssid_wpa_wpa2_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "ssid_wpa_wpa2_eap_5g", "appliedRadios": ["5G"]}],
+            {"ssid_name": "wpa_wpa2_eap_2g", "appliedRadios": ["2G"]},
+            {"ssid_name": "wpa_wpa2_eap_5g", "appliedRadios": ["5G"]}],
         "wpa3_enterprise_mixed": [
-            {"ssid_name": "ssid_wpa3_mixed_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "ssid_wpa3_mixed_eap_5g", "appliedRadios": ["5G"]}]
+            {"ssid_name": "wpa3_m_eap_2g", "appliedRadios": ["2G"]},
+            {"ssid_name": "wpa3_m_eap_5g", "appliedRadios": ["5G"]}]
     },
     "rf": {},
     "radius": True
@@ -325,7 +325,7 @@ class TestUniqueSSIDNatEnterpriseTwoAnd(object):
 
 
 @allure.suite(suite_name="interop sanity")
-@allure.sub_suite(sub_suite_name="Nat Mode EAP Client Connectivity : Suite-B")
+@allure.sub_suite(sub_suite_name="Nat Mode EAP Client Connect : Suite-B")
 @pytest.mark.suiteB
 @pytest.mark.parametrize(
     'setup_profiles',
