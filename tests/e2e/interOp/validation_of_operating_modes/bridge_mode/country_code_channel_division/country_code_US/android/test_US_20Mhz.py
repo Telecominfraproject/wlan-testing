@@ -51,10 +51,10 @@ for sec_modes in setup_params_general1['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general1['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general1['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-@allure.suite(suite_name="interop country code")
-@allure.sub_suite(sub_suite_name="Bridge Mode country code")
-@pytest.mark.InteropsuiteA
-@allure.feature("BRIDGE MODE CLIENT CONNECT")
+# @allure.suite(suite_name="interop country code")
+# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
+# @pytest.mark.InteropsuiteA
+# @allure.feature("BRIDGE MODE CLIENT CONNECT")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general1],
