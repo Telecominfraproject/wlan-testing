@@ -92,9 +92,9 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_CONFIGURATION_JSON }}
           EOF
-          sed -i 's/interop/g' lab_info.json
+          sed -i 's/interop-01/interop/g' lab_info.json
           DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-          jq ".CONFIGURATION.basic=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
+          jq ".CONFIGURATION.interop=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
 
       - name: run tests
         uses: ./.github/actions/run-tests
