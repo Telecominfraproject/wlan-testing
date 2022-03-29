@@ -44,7 +44,7 @@ setup_params_general1 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP40Mhz5GChannel36(object):
+class TestCountrySG40Mhz5GChannel36(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -53,7 +53,7 @@ class TestCountryJP40Mhz5GChannel36(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel36
-    def test_client_bridge_wpa2_chn36_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
+    def test_client_bridge_wpa2_chn36_40Mhz_SG_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel36"
         """
@@ -109,7 +109,7 @@ setup_params_general2 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP40Mhz5GChannel44(object):
+class TestCountrySG40Mhz5GChannel44(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -118,7 +118,7 @@ class TestCountryJP40Mhz5GChannel44(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel44
-    def test_client_bridge_wpa2_chn44_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
+    def test_client_bridge_wpa2_chn44_40Mhz_SG_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel44"
         """
@@ -174,7 +174,7 @@ setup_params_general3 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP40Mhz5GChannel52(object):
+class TestCountrySG40Mhz5GChannel52(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -183,7 +183,7 @@ class TestCountryJP40Mhz5GChannel52(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel52
-    def test_client_bridge_wpa2_chn52_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
+    def test_client_bridge_wpa2_chn52_40Mhz_SG_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel52"
         """
@@ -237,7 +237,7 @@ setup_params_general4 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP40Mhz5GChannel60(object):
+class TestCountrySG40Mhz5GChannel60(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -246,7 +246,7 @@ class TestCountryJP40Mhz5GChannel60(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel60
-    def test_client_bridge_wpa2_chn60_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
+    def test_client_bridge_wpa2_chn60_40Mhz_SG_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel60"
         """
@@ -301,7 +301,7 @@ setup_params_general5 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP40Mhz5GChannel100(object):
+class TestCountrySG40Mhz5GChannel100(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -310,7 +310,7 @@ class TestCountryJP40Mhz5GChannel100(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel100
-    def test_client_bridge_wpa2_chn100_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
+    def test_client_bridge_wpa2_chn100_40Mhz_SG_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel100"
         """
@@ -365,7 +365,7 @@ setup_params_general6 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP40Mhz5GChannel108(object):
+class TestCountrySG40Mhz5GChannel108(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -374,7 +374,7 @@ class TestCountryJP40Mhz5GChannel108(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel108
-    def test_client_bridge_wpa2_chn108_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
+    def test_client_bridge_wpa2_chn108_40Mhz_SG_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel108"
         """
@@ -429,7 +429,7 @@ setup_params_general7 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP40Mhz5GChannel116(object):
+class TestCountrySG40Mhz5GChannel116(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -438,7 +438,7 @@ class TestCountryJP40Mhz5GChannel116(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel116
-    def test_client_bridge_wpa2_chn116_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
+    def test_client_bridge_wpa2_chn116_40Mhz_SG_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel116"
         """
@@ -493,7 +493,7 @@ setup_params_general8 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP40Mhz5GChannel124(object):
+class TestCountrySG40Mhz5GChannel124(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -502,7 +502,7 @@ class TestCountryJP40Mhz5GChannel124(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel124
-    def test_client_bridge_wpa2_chn124_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
+    def test_client_bridge_wpa2_chn124_40Mhz_SG_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel124"
         """
@@ -557,7 +557,7 @@ setup_params_general9 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP40Mhz5GChannel132(object):
+class TestCountrySG40Mhz5GChannel132(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -566,7 +566,7 @@ class TestCountryJP40Mhz5GChannel132(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel132
-    def test_client_bridge_wpa2_chn132_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
+    def test_client_bridge_wpa2_chn132_40Mhz_SG_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel132"
         """
@@ -621,7 +621,7 @@ setup_params_general10 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP40Mhz5GChannel140(object):
+class TestCountrySG40Mhz5GChannel140(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -631,7 +631,7 @@ class TestCountryJP40Mhz5GChannel140(object):
     @pytest.mark.fiveg
     @pytest.mark.channel140
     @pytest.mark.checkchannel
-    def test_client_bridge_wpa2_chn140_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
+    def test_client_bridge_wpa2_chn140_40Mhz_SG_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel140"
         """
@@ -686,7 +686,7 @@ setup_params_general11 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP40Mhz5GChannel149(object):
+class TestCountrySG40Mhz5GChannel149(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -696,7 +696,7 @@ class TestCountryJP40Mhz5GChannel149(object):
     @pytest.mark.fiveg
     @pytest.mark.channel149
     @pytest.mark.checkchannel
-    def test_client_bridge_wpa2_chn149_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
+    def test_client_bridge_wpa2_chn149_40Mhz_SG_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel149"
         """
@@ -751,7 +751,7 @@ setup_params_general12 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryJP40Mhz5GChannel157(object):
+class TestCountrySG40Mhz5GChannel157(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -761,7 +761,7 @@ class TestCountryJP40Mhz5GChannel157(object):
     @pytest.mark.fiveg
     @pytest.mark.channel157
     @pytest.mark.checkchannel
-    def test_client_bridge_wpa2_chn157_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
+    def test_client_bridge_wpa2_chn157_40Mhz_SG_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel157"
         """
