@@ -1073,14 +1073,25 @@ class RunTest:
         self.cvtest_obj.setup()
         t1 = threading.Thread(target=self.cvtest_obj.run)
         t1.start()
-        # t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 60))
-        # if t1.is_alive():
-        #     time.sleep(180)
-        #     t2.start()
+        t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 30))
+        if t1.is_alive():
+            time.sleep(480)
+            t2.start()
         while t1.is_alive():
             time.sleep(1)
         if os.path.exists("mu-mimo-config.txt"):
             os.remove("mu-mimo-config.txt")
+
+        if self.pcap_obj.pcap_name is not None:
+            self.pcap_obj.move_pcap(pcap_name=self.pcap_obj.pcap_name)
+            #attach pcap file to allure
+            allure.attach.file(source=self.pcap_obj.pcap_name,
+                               name="pcap_file", attachment_type=allure.attachment_type.PCAP)
+
+            #check for mu-mimo bearmformer association response
+            assoc_res = self.pcap_obj.check_beamformer_association_response(pcap_file=self.pcap_obj.pcap_name)
+            allure.attach(body=assoc_res, name="Check Bearmformer Association Response")
+
 
         report_name = self.cvtest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
