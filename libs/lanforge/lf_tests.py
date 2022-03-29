@@ -1085,9 +1085,9 @@ class RunTest:
         if self.pcap_obj.pcap_name is not None:
             self.pcap_obj.move_pcap(pcap_name=self.pcap_obj.pcap_name)
 
-            #check for mu-mimo bearmformer association response
-            response_flag = self.pcap_obj.check_beamformer_association_response(pcap_file=self.pcap_obj.pcap_name)
-            allure.attach(body=response_flag, name="Check Bearmformer Association Response")
+            #check for mu-mimo bearmformee association request
+            assoc_req = self.pcap_obj.check_beamformee_association_request(pcap_file=self.pcap_obj.pcap_name)
+            allure.attach(body=assoc_req, name="Check Bearmformee Association Request")
         
         report_name = self.cvtest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
