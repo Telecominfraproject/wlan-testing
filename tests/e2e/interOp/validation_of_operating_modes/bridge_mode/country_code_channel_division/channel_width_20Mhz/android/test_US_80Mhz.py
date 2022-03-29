@@ -343,7 +343,7 @@ class TestBridgeModeConnectSuiteThree(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    @pytest.mark.secondrun
+    @pytest.mark.positive
     def test_ClientConnect_bridge_wpa2_chn3_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][0]
@@ -424,7 +424,7 @@ class TestBridgeModeConnectSuiteFour(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    @pytest.mark.secondrun
+    @pytest.mark.positive
     def test_ClientConnect_bridge_wpa2_chn48_80Mhz_US_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][1]
@@ -460,7 +460,7 @@ class TestBridgeModeConnectSuiteFour(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    @pytest.mark.secondrun
+    @pytest.mark.positive
     def test_ClientConnect_bridge_wpa2_chn4_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][0]
@@ -523,11 +523,21 @@ for sec_modes in setup_params_general5['ssid_modes'].keys():
         setup_params_general5['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general5['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general4],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestBridgeModeConnectSuiteFour(object):
+
+
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    @pytest.mark.thirdrun
+    @pytest.mark.positive
     def test_ClientConnect_bridge_wpa2_chn5_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general5["ssid_modes"]["wpa2_personal"][0]
@@ -590,11 +600,21 @@ for sec_modes in setup_params_general6['ssid_modes'].keys():
         setup_params_general6['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general6['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general4],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestBridgeModeConnectSuiteFour(object):
+
+
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    @pytest.mark.thirdrun
+    @pytest.mark.positive
     def test_ClientConnect_bridge_wpa2_chn6_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general6["ssid_modes"]["wpa2_personal"][0]
@@ -656,11 +676,21 @@ for sec_modes in setup_params_general7['ssid_modes'].keys():
         setup_params_general7['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general7['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general4],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestBridgeModeConnectSuiteFour(object):
+
+
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    @pytest.mark.thirdrun
+    @pytest.mark.positive
     def test_ClientConnect_bridge_wpa2_chn7_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][0]
@@ -722,11 +752,21 @@ for sec_modes in setup_params_general8['ssid_modes'].keys():
         setup_params_general8['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general8['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general4],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestBridgeModeConnectSuiteFour(object):
+
+
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    @pytest.mark.thirdrun
+    @pytest.mark.positive
     def test_ClientConnect_bridge_wpa2_chn8_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general8["ssid_modes"]["wpa2_personal"][0]
@@ -788,11 +828,21 @@ for sec_modes in setup_params_general9['ssid_modes'].keys():
         setup_params_general9['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general9['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general4],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestBridgeModeConnectSuiteFour(object):
+
+
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    @pytest.mark.thirdrun
+    @pytest.mark.positive
     def test_ClientConnect_bridge_wpa2_chn9_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general9["ssid_modes"]["wpa2_personal"][0]
@@ -855,11 +905,21 @@ for sec_modes in setup_params_general10['ssid_modes'].keys():
         setup_params_general10['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general10['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general4],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestBridgeModeConnectSuiteFour(object):
+
+
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    @pytest.mark.thirdrun
+    @pytest.mark.positive
     def test_ClientConnect_bridge_wpa2_chn10_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general10["ssid_modes"]["wpa2_personal"][0]
@@ -921,10 +981,20 @@ for sec_modes in setup_params_general11['ssid_modes'].keys():
         setup_params_general11['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general11['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general4],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestBridgeModeConnectSuiteFour(object):
+
+
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    @pytest.mark.eightyMhz
+    @pytest.mark.positive
     def test_ClientConnect_bridge_wpa2_chn11_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
