@@ -186,6 +186,7 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set owprovui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=provui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owprovui.ingresses.default.hosts={provui-${NAMESPACE}.cicd.lab.wlan.tip.build} \
   --set owprovui.public_env_variables.DEFAULT_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
+  --set owprovui.public_env_variables.REACT_APP_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owanalytics.services.owanalytics.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=analytics-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owanalytics.configProperties."openwifi\.system\.uri\.public"=https://analytics-${NAMESPACE}.cicd.lab.wlan.tip.build:16009 \
   --set owanalytics.configProperties."openwifi\.system\.uri\.private"=https://owanalytics-owanalytics:17009 \
