@@ -130,6 +130,7 @@ sed -i "s~\(^SYSTEM_URI_PUBLIC=\).*~\1$OWPROV_SYSTEM_URI_PUBLIC~" owprov.env
 sed -i "s~\(^SYSTEM_URI_UI=\).*~\1$SYSTEM_URI_UI~" owprov.env
 
 sed -i "s~\(^DEFAULT_UCENTRALSEC_URL=\).*~\1$DEFAULT_UCENTRALSEC_URL~" owprov-ui.env
+sed -i "s~\(^REACT_APP_UCENTRALSEC_URL=\).*~\1$REACT_APP_UCENTRALSEC_URL~" owprov-ui.env
 
 sed -i "s~\(^SYSTEM_URI_PRIVATE=\).*~\1$OWANALYTICS_SYSTEM_URI_PRIVATE~" owanalytics.env
 sed -i "s~\(^SYSTEM_URI_PUBLIC=\).*~\1$OWANALYTICS_SYSTEM_URI_PUBLIC~" owanalytics.env
