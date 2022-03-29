@@ -13,7 +13,6 @@ usage () {
   echo "- CHART_VERSION - version of chart to be deployed from assembly chart (for 'git' method git ref may be passed, for 'bundle' method version of chart may be passed)";
   echo;
   echo "- VALUES_FILE_LOCATION - path to file with override values that may be used for deployment";
-  echo "- RTTY_TOKEN - token to be used for rttys and OpenWIFI Gateway for remote tty sessions";
   echo "- OWGW_AUTH_USERNAME - username to be used for requests to OpenWIFI Security";
   echo "- OWGW_AUTH_PASSWORD - hashed password for OpenWIFI Security (details on this may be found in https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/#authenticationdefaultpassword)";
   echo "- OWFMS_S3_SECRET - secret key that is used for OpenWIFI Firmware access to firmwares S3 bucket";
@@ -74,7 +73,6 @@ fi
 [ -z ${NAMESPACE+x} ] && echo "NAMESPACE is unset" && usage && exit 1
 ## Variables specifics
 [ -z ${VALUES_FILE_LOCATION+x} ] && echo "VALUES_FILE_LOCATION is unset" && usage && exit 1
-[ -z ${RTTY_TOKEN+x} ] && echo "RTTY_TOKEN is unset" && usage && exit 1
 [ -z ${OWGW_AUTH_USERNAME+x} ] && echo "OWGW_AUTH_USERNAME is unset" && usage && exit 1
 [ -z ${OWGW_AUTH_PASSWORD+x} ] && echo "OWGW_AUTH_PASSWORD is unset" && usage && exit 1
 [ -z ${OWFMS_S3_SECRET+x} ] && echo "OWFMS_S3_SECRET is unset" && usage && exit 1
@@ -143,10 +141,10 @@ for EXTRA_VALUE in ${EXTRA_VALUES_SPLITTED[*]}; do
 done
 
 if [[ "$USE_SEPARATE_OWGW_LB" == "true" ]]; then
-  export HAPROXY_SERVICE_DNS_RECORDS="sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,rtty-${NAMESPACE}.cicd.lab.wlan.tip.build\,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build"
+  export HAPROXY_SERVICE_DNS_RECORDS="sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build"
   export OWGW_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build"
 else
-  export HAPROXY_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build\,sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,rtty-${NAMESPACE}.cicd.lab.wlan.tip.build\,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build"
+  export HAPROXY_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build\,sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build"
   export OWGW_SERVICE_DNS_RECORDS=""
 fi
 
@@ -156,11 +154,10 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   ${VALUES_FILES_FLAGS[*]} \
   --set owgw.services.owgw.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=gw-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owgw.configProperties."openwifi\.fileuploader\.host\.0\.name"=gw-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owgw.configProperties."rtty\.server"=rtty-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owgw.configProperties."rtty\.server"=gw-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owgw.configProperties."openwifi\.system\.uri\.public"=https://gw-${NAMESPACE}.cicd.lab.wlan.tip.build:16002 \
   --set owgw.configProperties."openwifi\.system\.uri\.private"=https://owgw-owgw:17002 \
   --set owgw.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owgw.configProperties."rtty\.token"=${RTTY_TOKEN} \
   --set owgw.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owsec.configProperties."authentication\.default\.username"=${OWGW_AUTH_USERNAME} \
   --set owsec.configProperties."authentication\.default\.password"=${OWGW_AUTH_PASSWORD} \
@@ -192,8 +189,6 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set owanalytics.configProperties."openwifi\.system\.uri\.private"=https://owanalytics-owanalytics:17009 \
   --set owanalytics.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owanalytics.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
-  --set rttys.config.token=${RTTY_TOKEN} \
-  --set rttys.services.rttys.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=rtty-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set clustersysteminfo.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set clustersysteminfo.secret_env_variables.OWSEC_NEW_PASSWORD=${OWSEC_NEW_PASSWORD} \
   --set owls.services.owls.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=ls-${NAMESPACE}.cicd.lab.wlan.tip.build \
@@ -210,8 +205,6 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set-file owgw.certs."restapi-key\.pem"=$KEY_LOCATION \
   --set-file owgw.certs."websocket-cert\.pem"=$CERT_LOCATION \
   --set-file owgw.certs."websocket-key\.pem"=$KEY_LOCATION \
-  --set-file rttys.certs."restapi-cert\.pem"=$CERT_LOCATION \
-  --set-file rttys.certs."restapi-key\.pem"=$KEY_LOCATION \
   --set-file owsec.certs."restapi-cert\.pem"=$CERT_LOCATION \
   --set-file owsec.certs."restapi-key\.pem"=$KEY_LOCATION \
   --set-file owfms.certs."restapi-cert\.pem"=$CERT_LOCATION \
