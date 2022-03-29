@@ -189,18 +189,6 @@ owsec:
           secret:
             secretName: {{ include "owsec.fullname" . }}-owsec-restapi-tls
 
-rttys:
-  resources:
-    requests:
-      cpu: 10m
-      memory: 15Mi
-    limits:
-      cpu: 100m
-      memory: 100Mi
-
-  podAnnotations:
-    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
-
 owgwui:
   ingresses:
     default:
