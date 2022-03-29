@@ -21,13 +21,13 @@ setup_params_general1 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'JP',
+        'country': 'SG',
         "channel-mode": "VHT",
         'channel-width': 40,
         "channel": 36},
         "2G":
         {'band': '2G',
-        'country': 'JP',
+        'country': 'SG',
         "channel-mode": "VHT",
         'channel-width': 40,
         "channel": 1}
@@ -86,13 +86,13 @@ setup_params_general2 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'JP',
+        'country': 'SG',
         'channel-mode': 'VHT',
         'channel-width': 40,
         "channel": 44},
         "2G":
         {'band': '2G',
-        'country': 'JP',
+        'country': 'SG',
         "channel-mode": "VHT",
         'channel-width': 40,
         "channel": 1}
@@ -151,13 +151,13 @@ setup_params_general3 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'JP',
+        'country': 'SG',
         'channel-mode': 'VHT',
         'channel-width': 40,
         "channel": 52},
         "2G":
         {'band': '2G',
-        'country': 'JP',
+        'country': 'SG',
         "channel-mode": "VHT",
         'channel-width': 40,
         "channel": 1}
@@ -215,13 +215,13 @@ setup_params_general4 = {
                           ]},
     "rf": {"5G":
         {'band': '5G',
-        'country': 'JP',
+        'country': 'SG',
         'channel-mode': 'VHT',
         'channel-width': 40,
         "channel": 60},
         "2G":
         {'band': '2G',
-        'country': 'JP',
+        'country': 'SG',
         "channel-mode": "VHT",
         'channel-width': 40,
         "channel": 1}
@@ -279,13 +279,13 @@ setup_params_general5 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'JP',
+        'country': 'SG',
         'channel-mode': 'VHT',
         'channel-width': 40,
         "channel": 100},
         "2G":
         {'band': '2G',
-        'country': 'JP',
+        'country': 'SG',
         "channel-mode": "VHT",
         'channel-width': 40,
         "channel": 1}
@@ -343,13 +343,13 @@ setup_params_general6 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'JP',
+        'country': 'SG',
         'channel-mode': 'VHT',
         'channel-width': 40,
         "channel": 108},
         "2G":
         {'band': '2G',
-        'country': 'JP',
+        'country': 'SG',
         "channel-mode": "VHT",
         'channel-width': 40,
         "channel": 1}
@@ -407,13 +407,13 @@ setup_params_general7 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'JP',
+        'country': 'SG',
         'channel-mode': 'VHT',
         'channel-width': 40,
         "channel": 116},
         "2G":
         {'band': '2G',
-        'country': 'JP',
+        'country': 'SG',
         "channel-mode": "VHT",
         'channel-width': 40,
         "channel": 1}
@@ -471,13 +471,13 @@ setup_params_general8 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'JP',
+        'country': 'SG',
         'channel-mode': 'VHT',
         'channel-width': 40,
         "channel": 124},
         "2G":
         {'band': '2G',
-        'country': 'JP',
+        'country': 'SG',
         "channel-mode": "VHT",
         'channel-width': 40,
         "channel": 1}
@@ -535,13 +535,13 @@ setup_params_general9 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'JP',
+        'country': 'SG',
         'channel-mode': 'VHT',
         'channel-width': 40,
         "channel": 132},
         "2G":
         {'band': '2G',
-        'country': 'JP',
+        'country': 'SG',
         "channel-mode": "VHT",
         'channel-width': 40,
         "channel": 1}
@@ -599,13 +599,13 @@ setup_params_general10 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'JP',
+        'country': 'SG',
         'channel-mode': 'VHT',
         'channel-width': 40,
         "channel": 140},
         "2G":
         {'band': '2G',
-        'country': 'JP',
+        'country': 'SG',
         "channel-mode": "VHT",
         'channel-width': 40,
         "channel": 1}
@@ -630,6 +630,7 @@ class TestCountryJP40Mhz5GChannel140(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel140
+    @pytest.mark.checkchannel
     def test_client_bridge_wpa2_chn140_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel140"
@@ -663,13 +664,13 @@ setup_params_general11 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'JP',
+        'country': 'SG',
         'channel-mode': 'VHT',
         'channel-width': 40,
         "channel": 149},
         "2G":
         {'band': '2G',
-        'country': 'JP',
+        'country': 'SG',
         "channel-mode": "VHT",
         'channel-width': 40,
         "channel": 1}
@@ -694,6 +695,7 @@ class TestCountryJP40Mhz5GChannel149(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel149
+    @pytest.mark.checkchannel
     def test_client_bridge_wpa2_chn149_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel149"
@@ -727,13 +729,13 @@ setup_params_general12 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'JP',
+        'country': 'SG',
         'channel-mode': 'VHT',
         'channel-width': 40,
         "channel": 157},
         "2G":
         {'band': '2G',
-        'country': 'JP',
+        'country': 'SG',
         "channel-mode": "VHT",
         'channel-width': 40,
         "channel": 1}
@@ -758,6 +760,7 @@ class TestCountryJP40Mhz5GChannel157(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel157
+    @pytest.mark.checkchannel
     def test_client_bridge_wpa2_chn157_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel157"
