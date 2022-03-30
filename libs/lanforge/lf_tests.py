@@ -1015,7 +1015,7 @@ class RunTest:
         raw_line = []
         skip_twog = '1' if skip_2g else '0'
         skip_fiveg = '1' if skip_5g else '0'
-        sniff_radio = 'wiphy6'
+        sniff_radio = 'wiphy0'
         channel = 149 if skip_2g else 11
         upstream_port = self.upstream_port
 
@@ -1025,13 +1025,31 @@ class RunTest:
                 ['Multiple STAs Performance', '0'], ['Multiple Assoc Stability', '0'], ['Downlink MU-MIMO', '1'],
                 ['AP Coexistence', '0'], ['Long Term Stability', '0'], ['Skip 2.4Ghz Tests', f'{skip_twog}'],
                 ['Skip 5Ghz Tests', f'{skip_fiveg}'], ['2.4Ghz Channel', 'AUTO'], ['5Ghz Channel', 'AUTO']]
-        for i in range(6):
-            if i == 0 or i == 2:
-                raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
-            if i == 1 or i == 3:
-                raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
-            if i == 4 or i == 5:
-                raw_line.append([f'radio-{i}: {radios_ax[0] if i == 4 else radios_ax[1]}'])
+        if len(radios_2g) >= 3 and len(radios_5g) >= 3:
+            for i in range(6):
+                if i == 0 or i == 2:
+                    raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
+                if i == 1 or i == 3:
+                    raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
+                if i == 4 or i == 5:
+                    raw_line.append([f'radio-{i}: {radios_5g[2] if i == 4 else radios_2g[2]}'])
+            if len(radios_ax) >= 1:
+                temp_ax = str(radios_ax[0]).split(" ")
+                if len(temp_ax) >= 2:
+                    sniff_radio = str(temp_ax[1])
+                    print("----------radio used to sniff--------", sniff_radio)
+        elif len(radios_2g) >= 2 and len(radios_5g) >= 2 and len(radios_ax) >= 2:
+            for i in range(6):
+                if i == 0 or i == 2:
+                    raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
+                if i == 1 or i == 3:
+                    raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
+                if i == 4 or i == 5:
+                    raw_line.append([f'radio-{i}: {radios_ax[0] if i == 4 else radios_ax[1]}'])
+            if len(radios_ax) >= 3:
+                temp_ax = str(radios_ax[2]).split(" ")
+                if len(temp_ax) >= 2:
+                    sniff_radio = str(temp_ax[1])
 
         if len(raw_line) != 6:
             raw_line = [['radio-0: 1.1.5 wiphy1'], ['radio-1: 1.1.4 wiphy0'], ['radio-2: 1.1.7 wiphy3'],
@@ -1049,7 +1067,7 @@ class RunTest:
         else:
             upstream_port = self.upstream_port + "." + str(vlan_id)
         print("Upstream Port: ", self.upstream_port)
-
+        print("----------radio used to sniff--------", sniff_radio)
         self.pcap_obj = LfPcap(host=self.lanforge_ip, port=self.lanforge_port)
         self.cvtest_obj = TR398Test(lf_host=self.lanforge_ip,
                                     lf_port=self.lanforge_port,
@@ -1075,7 +1093,7 @@ class RunTest:
         t1.start()
         t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 30))
         if t1.is_alive():
-            time.sleep(90)
+            time.sleep(450)
             t2.start()
         while t1.is_alive():
             time.sleep(1)
