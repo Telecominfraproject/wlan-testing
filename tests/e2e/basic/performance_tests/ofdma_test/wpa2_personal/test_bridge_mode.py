@@ -34,7 +34,6 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 @pytest.mark.wpa2_personal
 @pytest.mark.twog
-@pytest.mark.twog_band
 class TestOfdmabridgeMode(object):
     """
         OFDMA Test bridge mode
@@ -42,23 +41,21 @@ class TestOfdmabridgeMode(object):
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7112", name="WIFI-7112")
-    @pytest.mark.tcp_download
-    def test_ofdma_he_capability_wpa2_bridge_twog(self, lf_tools, setup_profiles,
+    @pytest.mark.twog
+    def test_ofdma_he_capability_wpa2_bridge_twog(self, lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                   get_configuration):
-        """ Wifi Capacity Test bridge mode
+        """ ofdma Test bridge mode
             pytest -m "ofdma_test and bridge and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
-        ssid_2g = profile_data['ssid_name'][0]
-        ssid_5g = profile_data['ssid_name'][1]
+        ssid_2g = setup_params_general["ssid_modes"]["wpa2_personal"]['ssid_name'][1]
         mode = "bridge"
         vlan = 1
-        lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_2g)
-        lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_5g)
+        lf_tools.add_stations(band="2G", num_stations="4", dut=lf_tools.dut_name, ssid_name=ssid_2g)
         lf_tools.Chamber_View()
+        influx_tags = ["ofdma", "download", "2.4G"]
         wct_obj = lf_test.wifi_capacity(instance_name="ofdma_wpa2_bridge", mode=mode, vlan_id=vlan,
-                                        download_rate="300Mbps",
+                                        download_rate="300Mbps", batch_size='4',
                                         upload_rate="0", protocol="TCP-IPv4", duration="60000")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -68,23 +65,22 @@ class TestOfdmabridgeMode(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7112", name="WIFI-7112")
-    @pytest.mark.udp_download
+    @pytest.mark.fiveg
     def test_ofdma_he_capability_wpa2_bridge_fiveg(self, lf_tools,
                                                    lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                    get_configuration):
         """ Wifi Capacity Test bridge mode
             pytest -m "ofdma_test and bridge and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
-        ssid_name = profile_data["ssid_name"]
+        ssid_5g = setup_params_general["ssid_modes"]["wpa2_personal"]['ssid_name'][1]
         mode = "bridge"
         vlan = 1
-        lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="5G", num_stations="4", dut=lf_tools.dut_name, ssid_name=ssid_5g)
         lf_tools.Chamber_View()
-        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_bridge_udp_dl", mode=mode, vlan_id=vlan,
-                                        download_rate="1Gbps",
-                                        upload_rate="0", protocol="UDP-IPv4", duration="60000")
+        influx_tags = ["ofdma", "download", "5G"]
+        wct_obj = lf_test.wifi_capacity(instance_name="ofdma_wpa2_bridge", mode=mode, vlan_id=vlan,
+                                        download_rate="300Mbps", batch_size='4',
+                                        upload_rate="0", protocol="TCP-IPv4", duration="60000")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
