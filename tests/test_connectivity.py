@@ -9,8 +9,7 @@ import requests
 import json
 
 pytestmark = [pytest.mark.test_resources, pytest.mark.sanity, pytest.mark.uc_sanity,
-              pytest.mark.sanity_55, pytest.mark.interop_uc_sanity, pytest.mark.android, pytest.mark.ios,
-              pytest.mark.client_connect]
+              pytest.mark.sanity_55, pytest.mark.interop_uc_sanity, pytest.mark.android, pytest.mark.ios]
 
 state = True
 sdk_expected = True
