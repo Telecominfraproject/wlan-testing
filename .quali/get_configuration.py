@@ -146,7 +146,7 @@ def main():
             else:
                 continue
 
-        entire_config = {"interop": config, "PERFECTO_DETAILS": pf_details}
+        entire_config = {"interop-01": config, "PERFECTO_DETAILS": pf_details}
         if args.json:
             print(json.dumps(entire_config))
         else:
