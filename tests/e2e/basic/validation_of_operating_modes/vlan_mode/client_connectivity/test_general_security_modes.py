@@ -46,7 +46,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.open
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    def test_open_ssid_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
+    def test_open_ssid_2g(self, get_ap_logs, get_lf_logs,
                           setup_profiles, lf_test, update_report,
                           station_names_twog,
                           test_cases):
@@ -60,10 +60,6 @@ class TestvlanModeConnectivitySuiteA(object):
         mode = "VLAN"
         band = "twog"
         vlan = 100
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
@@ -72,7 +68,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.open
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
-    def test_open_ssid_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
+    def test_open_ssid_5g(self, get_ap_logs, get_lf_logs,
                           lf_test, test_cases, station_names_fiveg,
                           update_report):
         """Client Connectivity open ssid 5G
@@ -85,10 +81,6 @@ class TestvlanModeConnectivitySuiteA(object):
         mode = "VLAN"
         band = "fiveg"
         vlan = 100
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
@@ -99,7 +91,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.wpa
     @pytest.mark.twog
     @allure.story('wpa 2.4 GHZ Band')
-    def test_wpa_ssid_2g(self, get_vif_state, get_ap_logs,
+    def test_wpa_ssid_2g(self, get_ap_logs,
                          update_report, get_lf_logs,
                          lf_test, test_cases, station_names_twog):
         """Client Connectivity wpa ssid 2.4G
@@ -112,10 +104,6 @@ class TestvlanModeConnectivitySuiteA(object):
         mode = "VLAN"
         band = "twog"
         vlan = 100
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
@@ -126,7 +114,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.wpa
     @pytest.mark.fiveg
     @allure.story('wpa 5 GHZ Band')
-    def test_wpa_ssid_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
+    def test_wpa_ssid_5g(self, get_ap_logs, get_lf_logs,
                          lf_test, update_report, test_cases, station_names_fiveg):
         """Client Connectivity wpa ssid 5G
            pytest -m "client_connectivity and vlan and general and wpa and fiveg"
@@ -138,10 +126,6 @@ class TestvlanModeConnectivitySuiteA(object):
         mode = "VLAN"
         band = "fiveg"
         vlan = 100
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
@@ -152,7 +136,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    def test_wpa2_personal_ssid_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
+    def test_wpa2_personal_ssid_2g(self, get_ap_logs, get_lf_logs,
                                    lf_test, update_report, test_cases,
                                    station_names_twog):
         """Client Connectivity wpa2_personal ssid 2.4G
@@ -165,10 +149,6 @@ class TestvlanModeConnectivitySuiteA(object):
         mode = "VLAN"
         band = "twog"
         vlan = 100
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
@@ -179,7 +159,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @allure.story('wpa2_personal 5 GHZ Band')
-    def test_wpa2_personal_ssid_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
+    def test_wpa2_personal_ssid_5g(self, get_ap_logs, get_lf_logs,
                                    update_report, test_cases,
                                    station_names_fiveg,
                                    lf_test):
@@ -193,10 +173,6 @@ class TestvlanModeConnectivitySuiteA(object):
         mode = "VLAN"
         band = "fiveg"
         vlan = 100
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
@@ -243,7 +219,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    def test_wpa3_personal_ssid_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
+    def test_wpa3_personal_ssid_2g(self, get_ap_logs, get_lf_logs,
                                    station_names_twog, setup_profiles, lf_test,
                                    update_report,
                                    test_cases):
@@ -257,10 +233,6 @@ class TestvlanModeConnectivitySuiteTwo(object):
         mode = "VLAN"
         band = "twog"
         vlan = 100
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
@@ -271,7 +243,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
-    def test_wpa3_personal_ssid_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
+    def test_wpa3_personal_ssid_5g(self, get_ap_logs, get_lf_logs,
                                    station_names_fiveg, lf_test, test_cases,
                                    update_report):
         """Client Connectivity open ssid 2.4G
@@ -284,10 +256,6 @@ class TestvlanModeConnectivitySuiteTwo(object):
         mode = "VLAN"
         band = "fiveg"
         vlan = 100
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
@@ -297,7 +265,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    def test_wpa3_personal_mixed_ssid_2g(self, get_vif_state, get_ap_logs,
+    def test_wpa3_personal_mixed_ssid_2g(self, get_ap_logs,
                                          station_names_twog, setup_profiles,
                                          lf_test, get_lf_logs,
                                          update_report,
@@ -312,10 +280,6 @@ class TestvlanModeConnectivitySuiteTwo(object):
         mode = "VLAN"
         band = "twog"
         vlan = 100
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
@@ -325,7 +289,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
-    def test_wpa3_personal_mixed_ssid_5g(self, get_vif_state, get_ap_logs,
+    def test_wpa3_personal_mixed_ssid_5g(self, get_ap_logs,
                                          station_names_fiveg, lf_test,
                                          test_cases, get_lf_logs,
                                          update_report):
@@ -339,10 +303,6 @@ class TestvlanModeConnectivitySuiteTwo(object):
         mode = "VLAN"
         band = "fiveg"
         vlan = 100
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
@@ -352,7 +312,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
-    def test_wpa_wpa2_personal_ssid_2g(self, get_vif_state, get_ap_logs,
+    def test_wpa_wpa2_personal_ssid_2g(self, get_ap_logs,
                                        station_names_twog, setup_profiles,
                                        lf_test, get_lf_logs,
                                        update_report,
@@ -368,10 +328,6 @@ class TestvlanModeConnectivitySuiteTwo(object):
         mode = "VLAN"
         band = "twog"
         vlan = 100
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
@@ -381,7 +337,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
-    def test_wpa_wpa2_personal_ssid_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
+    def test_wpa_wpa2_personal_ssid_5g(self, get_ap_logs, get_lf_logs,
                                        station_names_fiveg, lf_test, test_cases,
                                        update_report):
         """Client Connectivity open ssid 2.4G
@@ -395,10 +351,6 @@ class TestvlanModeConnectivitySuiteTwo(object):
         mode = "VLAN"
         band = "fiveg"
         vlan = 100
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
