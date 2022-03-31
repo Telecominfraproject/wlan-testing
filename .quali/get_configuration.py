@@ -77,7 +77,6 @@ def main():
             tf_config = {}
             for attribute in details.ResourceAttributes:
                 key = attribute.Name.replace(f"{resource.ResourceModelName}.", '')
-
                 tf_config[key] = get_attribute_value(session, attribute)
 
             config['traffic_generator'] = {
@@ -98,59 +97,59 @@ def main():
                 }
             }
 
-        # Perfecto Details
+    # Perfecto Details
 
-        input_map = {}
-        inputs = session.GetReservationInputs(reservationId=res_id).GlobalInputs
-        for given_input in inputs:
-            input_map[given_input.ParamName] = given_input.Value
+    input_map = {}
+    inputs = session.GetReservationInputs(reservationId=res_id).GlobalInputs
+    for given_input in inputs:
+        input_map[given_input.ParamName] = given_input.Value
 
-        pf_details['securityToken'] = input_map['securityToken']
-        pf_details["projectName"]: "TIP-PyTest-Execution"
-        pf_details["projectVersion"] = "1.0"
-        pf_details["reportTags"] = "TestTag"
-        pf_details["perfectoURL"] = input_map["perfectoURL"]
-        for resource in session.GetReservationDetails(reservationId=res_id).ReservationDescription.Resources:
-            if resource.ResourceModelName == 'Phone':
-                details = session.GetResourceDetails(resource.Name)
-                phone_config = {}
-                for attribute in details.ResourceAttributes:
-                    key = attribute.Name.replace(f"{resource.ResourceModelName}.", '')
-                    phone_config[key] = get_attribute_value(session, attribute)
-                if phone_config["OS"] == "iOS":
-                    pf_details[phone_config['model']] = \
-                        {
-                            "model-iOS": phone_config['model'],
-                            "bundleId-iOS": "com.apple.Preferences",
-                            "platformName-iOS": phone_config['OS'],
-                            "bundleId-iOS-Settings": "com.apple.Preferences",
-                            "bundleId-iOS-Ping": "com.deftapps.ping",
-                            "browserType-iOS": "Safari",
-                            "bundleId-iOS-Safari": "com.apple.mobilesafari",
-                            "platformName-android": "Android",
-                            "appPackage-android": "com.android.settings",
-                            "jobName": "Interop-" + phone_config['model'],
-                            "jobNumber": 38
-                        }
-                elif phone_config["OS"] == "Android":
-                    pf_details[phone_config['model']] = \
-                        {
-                            "platformName-android": phone_config["OS"],
-                            "model-android": phone_config["model"],
-                            "appPackage-android": "com.android.settings",
-                            "bundleId-iOS-Settings": "com.apple.Preferences",
-                            "bundleId-iOS-Safari": "com.apple.mobilesafari",
-                            "jobName": "Interop-" + refine(phone_config['model']),
-                            "jobNumber": 38
-                        }
-            else:
-                continue
-
-        entire_config = {"interop-01": config, "PERFECTO_DETAILS": pf_details}
-        if args.json:
-            print(json.dumps(entire_config))
+    pf_details['securityToken'] = input_map['securityToken']
+    pf_details["projectName"]: "TIP-PyTest-Execution"
+    pf_details["projectVersion"] = "1.0"
+    pf_details["reportTags"] = "TestTag"
+    pf_details["perfectoURL"] = input_map["perfectoURL"]
+    for resource in session.GetReservationDetails(reservationId=res_id).ReservationDescription.Resources:
+        if resource.ResourceModelName == 'Phone':
+            details = session.GetResourceDetails(resource.Name)
+            phone_config = {}
+            for attribute in details.ResourceAttributes:
+                key = attribute.Name.replace(f"{resource.ResourceModelName}.", '')
+                phone_config[key] = get_attribute_value(session, attribute)
+            if phone_config["OS"] == "iOS":
+                pf_details[phone_config['model']] = \
+                    {
+                        "model-iOS": phone_config['model'],
+                        "bundleId-iOS": "com.apple.Preferences",
+                        "platformName-iOS": phone_config['OS'],
+                        "bundleId-iOS-Settings": "com.apple.Preferences",
+                        "bundleId-iOS-Ping": "com.deftapps.ping",
+                        "browserType-iOS": "Safari",
+                        "bundleId-iOS-Safari": "com.apple.mobilesafari",
+                        "platformName-android": "Android",
+                        "appPackage-android": "com.android.settings",
+                        "jobName": "Interop-" + phone_config['model'],
+                        "jobNumber": 38
+                    }
+            elif phone_config["OS"] == "Android":
+                pf_details[phone_config['model']] = \
+                    {
+                        "platformName-android": phone_config["OS"],
+                        "model-android": phone_config["model"],
+                        "appPackage-android": "com.android.settings",
+                        "bundleId-iOS-Settings": "com.apple.Preferences",
+                        "bundleId-iOS-Safari": "com.apple.mobilesafari",
+                        "jobName": "Interop-" + refine(phone_config['model']),
+                        "jobNumber": 38
+                    }
         else:
-            print(repr(config))
+            continue
+
+    entire_config = {"interop-01": config, "PERFECTO_DETAILS": pf_details}
+    if args.json:
+        print(json.dumps(entire_config))
+    else:
+        print(repr(config))
 
 
 if __name__ == '__main__':
