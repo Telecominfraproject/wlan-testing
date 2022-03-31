@@ -147,7 +147,7 @@ def main():
 
     entire_config = {"interop": config, "PERFECTO_DETAILS": pf_details}
     if args.json:
-        print(json.dumps(entire_config))
+        print(json.dumps(config))
     else:
         print(repr(config))
 
