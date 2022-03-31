@@ -111,7 +111,7 @@ jobs:
           cat lab_info.json
 
           echo "Merging files:"
-          jq ".CONFIGURATION=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
+          jq ".CONFIGURATION.interop=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
 
       - name: run tests
         uses: ./.github/actions/run-tests
