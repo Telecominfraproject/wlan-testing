@@ -56,7 +56,7 @@ jobs:
 
   # interop-01
   test-galaxy-s9:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, small]
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
@@ -103,6 +103,8 @@ jobs:
 
           echo "Merging files:"
           jq ".CONFIGURATION=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
+
+          sleep 999
 
       - name: run tests
         uses: ./.github/actions/run-tests
