@@ -1035,21 +1035,44 @@ class RunTest:
                     raw_line.append([f'radio-{i}: {radios_5g[2] if i == 4 else radios_2g[2]}'])
             if len(radios_ax) >= 1:
                 temp_ax = str(radios_ax[0]).split(" ")
-                if len(temp_ax) >= 2:
+                if len(temp_ax) == 2:
                     sniff_radio = str(temp_ax[1])
                     print("----------radio used to sniff--------", sniff_radio)
+            elif skip_2g:
+                temp = str(radios_5g[0]).split(" ")
+                if len(temp) == 2:
+                    sniff_radio = str(temp[1])
+                    print("----------radio used to sniff--------", sniff_radio)
+            elif skip_5g:
+                temp = str(radios_2g[0]).split(" ")
+                if len(temp) == 2:
+                    sniff_radio = str(temp[1])
+                    print("----------radio used to sniff--------", sniff_radio)
         elif len(radios_2g) >= 2 and len(radios_5g) >= 2 and len(radios_ax) >= 2:
-            for i in range(6):
-                if i == 0 or i == 2:
-                    raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
-                if i == 1 or i == 3:
-                    raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
-                if i == 4 or i == 5:
-                    raw_line.append([f'radio-{i}: {radios_ax[0] if i == 4 else radios_ax[1]}'])
-            if len(radios_ax) >= 3:
-                temp_ax = str(radios_ax[2]).split(" ")
-                if len(temp_ax) >= 2:
-                    sniff_radio = str(temp_ax[1])
+            if len(radios_2g) >= 3 and len(radios_5g) >= 3:
+                for i in range(6):
+                    if i == 0 or i == 2:
+                        raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
+                    if i == 1 or i == 3:
+                        raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
+                    if i == 4 or i == 5:
+                        raw_line.append([f'radio-{i}: {radios_5g[2] if i == 4 else radios_2g[2]}'])
+                if len(radios_ax) >= 1:
+                    temp_ax = str(radios_ax[0]).split(" ")
+                    if len(temp_ax) == 2:
+                        sniff_radio = str(temp_ax[1])
+            else:
+                for i in range(6):
+                    if i == 0 or i == 2:
+                        raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
+                    if i == 1 or i == 3:
+                        raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
+                    if i == 4 or i == 5:
+                        raw_line.append([f'radio-{i}: {radios_ax[0] if i == 4 else radios_ax[1]}'])
+                if len(radios_ax) >= 3:
+                    temp_ax = str(radios_ax[2]).split(" ")
+                    if len(temp_ax) == 2:
+                        sniff_radio = str(temp_ax[1])
 
         if len(raw_line) != 6:
             raw_line = [['radio-0: 1.1.5 wiphy1'], ['radio-1: 1.1.4 wiphy0'], ['radio-2: 1.1.7 wiphy3'],
@@ -1093,7 +1116,7 @@ class RunTest:
         t1.start()
         t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 30))
         if t1.is_alive():
-            time.sleep(450)
+            time.sleep(500)
             t2.start()
         while t1.is_alive():
             time.sleep(1)
