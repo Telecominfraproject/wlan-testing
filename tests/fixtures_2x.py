@@ -751,8 +751,6 @@ class Fixtures_2x:
         else:
             print("AP is Not Broadcasting Applied Config")
             allure.attach(name="Failed to Apply Config : Active Config in AP : ", body=str(ap_config_active))
-        time.sleep(10)
-        ap_ssh.run_generic_command(cmd="wifi")
         time.sleep(50)
         try:
             iwinfo = ap_ssh.iwinfo()
