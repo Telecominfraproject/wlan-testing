@@ -65,7 +65,9 @@ jobs:
       - name: install dependencies
         run: |
           pip install -r .quali/requirements.txt
-          pip install aws
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
 
       - name: start reservation
         env:
@@ -105,8 +107,6 @@ jobs:
 
           echo "Merging files:"
           jq ".CONFIGURATION=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-
-          sleep 999
 
       - name: run tests
         uses: ./.github/actions/run-tests
