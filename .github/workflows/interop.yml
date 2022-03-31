@@ -93,6 +93,8 @@ jobs:
           ${{ secrets.LAB_CONFIGURATION_JSON }}
           EOF
           DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
+          echo $DYN_CONFIG
+          cat lab_info.json
           jq ".CONFIGURATION=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
 
       - name: run tests
