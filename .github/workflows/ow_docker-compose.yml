@@ -17,10 +17,6 @@ on:
         default: 'master'
         description: 'OpenWIFI Gateway version to be deployed.'
         required: false
-      owgwui_version:
-        default: 'main'
-        description: 'OpenWIFI Web UI version to be deployed.'
-        required: false
       owsec_version:
         default: 'main'
         description: 'OpenWIFI Security version to be deployed.'
@@ -32,10 +28,6 @@ on:
       owprov_version:
         default: 'main'
         description: 'OpenWIFI Provisioning version to be deployed.'
-        required: false
-      owprovui_version:
-        default: 'main'
-        description: 'OpenWIFI Provisioning Web UI version to be deployed.'
         required: false
       owanalytics_version:
         default: 'main'
@@ -269,7 +261,7 @@ jobs:
               - name: OWGW_TAG
                 value: "${{ github.event.inputs.owgw_version }}"
               - name: OWGWUI_TAG
-                value: "${{ github.event.inputs.owgwui_version }}"
+                value: "main"
               - name: OWSEC_TAG
                 value: "${{ github.event.inputs.owsec_version }}"
               - name: OWFMS_TAG
@@ -277,7 +269,7 @@ jobs:
               - name: OWPROV_TAG
                 value: "${{ github.event.inputs.owprov_version }}"
               - name: OWPROVUI_TAG
-                value: "${{ github.event.inputs.owprovui_version }}"
+                value: "main"
               - name: OWANALYTICS_TAG
                 value: "${{ github.event.inputs.owanalytics_version }}"
               - name: OWSUB_TAG
