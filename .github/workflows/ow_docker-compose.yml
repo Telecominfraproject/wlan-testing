@@ -362,12 +362,14 @@ jobs:
           OWSEC_DEFAULT_USERNAME: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
           OWSEC_DEFAULT_PASSWORD: ${{ secrets.OWSEC_DEFAULT_PASSWORD }}
           OWSEC_NEW_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
+          CHECK_RETRIES: 60
         run: |
           docker run --rm \
             -e OWSEC \
             -e OWSEC_DEFAULT_USERNAME \
             -e OWSEC_DEFAULT_PASSWORD \
             -e OWSEC_NEW_PASSWORD \
+            -e CHECK_RETRIES \
             tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo:main
 
   deploy-virtual-ap-instance:
