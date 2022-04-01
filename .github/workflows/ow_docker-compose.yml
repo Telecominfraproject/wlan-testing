@@ -41,6 +41,10 @@ on:
         default: 'main'
         description: 'OpenWIFI Analytics version to be deployed.'
         required: false
+      owsub_version:
+        default: 'main'
+        description: 'OpenWIFI Subscription (Userportal) version to be deployed.'
+        required: false
       id:
         description: 'run identifier'
         required: false
@@ -130,7 +134,7 @@ jobs:
               external-dns.alpha.kubernetes.io/hostname: ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build
               service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
               service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285"
-              service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002,16003,443,16001,16004,16005,8443,5912,5913"
+              service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002,16003,443,16001,16004,16005,8443,5912,5913,16009,16006"
             labels:
               app: ow-docker-compose-${{ github.run_id }}
           spec:
@@ -168,6 +172,7 @@ jobs:
             - name: owgw-ui-https
               port: 443
               targetPort: 443
+              protocol: TCP
             - name: owsec-restapi
               port: 16001
               targetPort: 16001
@@ -175,6 +180,7 @@ jobs:
             - name: owsec-alivecheck
               port: 16101
               targetPort: 16101
+              protocol: TCP
             - name: owfms-restapi
               port: 16004
               targetPort: 16004
@@ -182,6 +188,7 @@ jobs:
             - name: owfms-alivecheck
               port: 16104
               targetPort: 16104
+              protocol: TCP
             - name: owprov-restapi
               port: 16005
               targetPort: 16005
@@ -189,6 +196,7 @@ jobs:
             - name: owprov-alivecheck
               port: 16105
               targetPort: 16105
+              protocol: TCP
             - name: owprov-ui-http
               port: 8080
               targetPort: 8080
@@ -196,6 +204,7 @@ jobs:
             - name: owprov-ui-https
               port: 8443
               targetPort: 8443
+              protocol: TCP
             - name: owanalytics-restapi
               port: 16009
               targetPort: 16009
@@ -203,6 +212,15 @@ jobs:
             - name: owanalytics-alivecheck
               port: 16109
               targetPort: 16109
+              protocol: TCP
+            - name: owsub-restapi
+              port: 16006
+              targetPort: 16006
+              protocol: TCP
+            - name: owsub-alivecheck
+              port: 16106
+              targetPort: 16106
+              protocol: TCP
           ---
           apiVersion: v1
           kind: Pod
@@ -262,6 +280,8 @@ jobs:
                 value: "${{ github.event.inputs.owprovui_version }}"
               - name: OWANALYTICS_TAG
                 value: "${{ github.event.inputs.owanalytics_version }}"
+              - name: OWSUB_TAG
+                value: "${{ github.event.inputs.owsub_version }}"
               - name: INTERNAL_OWGW_HOSTNAME
                 value: "owgw.wlan.local"
               - name: INTERNAL_OWSEC_HOSTNAME
@@ -272,6 +292,8 @@ jobs:
                 value: "owprov.wlan.local"
               - name: INTERNAL_OWANALYTICS_HOSTNAME
                 value: "owanalytics.wlan.local"
+              - name: INTERNAL_OWSUB_HOSTNAME
+                value: "owsub.wlan.local"
               - name: SYSTEM_URI_UI
                 value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
               - name: DEFAULT_UCENTRALSEC_URL
@@ -310,6 +332,10 @@ jobs:
                 value: "https://owanalytics.wlan.local:17009"
               - name: OWANALYTICS_SYSTEM_URI_PUBLIC
                 value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16009"
+              - name: OWSUB_SYSTEM_URI_PRIVATE
+                value: "https://owsub.wlan.local:17006"
+              - name: OWSUB_SYSTEM_URI_PUBLIC
+                value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16006"
               - name: WEBSOCKET_CERT
                 value: "/tip-cicd-wildcard-certs/websocket-cert.pem"
               - name: WEBSOCKET_KEY
