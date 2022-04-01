@@ -68,7 +68,8 @@ def main():
                 key = 'username' if key == 'uname' else key
                 key = 'password' if key == 'passkey' else key
 
-                ap_config[key] = get_attribute_value(session, attribute)
+                if get_attribute_value(session, attribute) != "":
+                    ap_config[key] = get_attribute_value(session, attribute)
 
             config['access_point'].append(ap_config)
 
@@ -108,7 +109,11 @@ def main():
     pf_details["projectName"]: "TIP-PyTest-Execution"
     pf_details["projectVersion"] = "1.0"
     pf_details["reportTags"] = "TestTag"
-    pf_details["perfectoURL"] = input_map["perfectoURL"]
+    if input_map["perfectoURL"] == "":
+        pf_details["perfectoURL"] = "tip"
+    else:
+        pf_details["perfectoURL"] = input_map["perfectoURL"]
+
     for resource in session.GetReservationDetails(reservationId=res_id).ReservationDescription.Resources:
         if resource.ResourceModelName == 'Phone':
             details = session.GetResourceDetails(resource.Name)
