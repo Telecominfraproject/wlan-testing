@@ -173,6 +173,10 @@ jobs:
         if: failure()
         run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
 
+      - name: show subscription (userportal) logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+
       - name: show sec logs
         if: failure()
         run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
@@ -277,6 +281,10 @@ jobs:
       - name: show analytics logs
         if: failure()
         run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+
+      - name: show subscription (userportal) logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
@@ -383,6 +391,10 @@ jobs:
         if: failure()
         run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
 
+      - name: show subscription (userportal) logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+
       - name: show sec logs
         if: failure()
         run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
@@ -487,6 +499,10 @@ jobs:
       - name: show analytics logs
         if: failure()
         run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+
+      - name: show subscription (userportal) logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
@@ -593,6 +609,10 @@ jobs:
         if: failure()
         run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
 
+      - name: show subscription (userportal) logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+
       - name: show sec logs
         if: failure()
         run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
@@ -697,6 +717,10 @@ jobs:
       - name: show analytics logs
         if: failure()
         run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+
+      - name: show subscription (userportal) logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
@@ -803,6 +827,10 @@ jobs:
         if: failure()
         run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
 
+      - name: show subscription (userportal) logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+
       - name: show sec logs
         if: failure()
         run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
@@ -908,6 +936,10 @@ jobs:
         if: failure()
         run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
 
+      - name: show subscription (userportal) logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+
       - name: show sec logs
         if: failure()
         run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
@@ -1012,6 +1044,10 @@ jobs:
       - name: show analytics logs
         if: failure()
         run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+
+      - name: show subscription (userportal) logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
