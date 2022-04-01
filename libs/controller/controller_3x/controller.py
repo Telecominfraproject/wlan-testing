@@ -440,6 +440,14 @@ class CController:
         en = self.cc.enable_ft_psk_cc()
         return en
 
+    def enable_ftotd_psk(self, ssid, key):
+        # ft over the ds
+        self.cc.wlan = ssid
+        self.cc.security_key = key
+        en = self.cc.enable_ftotd_psk_cc()
+        print(en)
+        return en
+
     def enable_ft_sae(self, ssid, key):
         self.cc.wlan = ssid
         self.cc.security_key = key
