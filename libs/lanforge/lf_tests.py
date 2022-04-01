@@ -2195,7 +2195,7 @@ class RunTest:
                         query_reasso_response = self.query_sniff_data(pcap_file=str(file_name), filter="(wlan.fc.type_subtype==3) && (wlan.tag.number==55)")
                         print("query", query_reasso_response)
                         allure.attach(name="Reassociation response", body=str(query_reasso_response))
-                        if query_reasso_response[0] == "failed":
+                        if query_reasso_response[0] == "failed" or (not query_reasso_response):
                             allure.attach.file(source=file_name,
                                                name="pcap_file for fail instance")
                     table_global.append(table_local)
