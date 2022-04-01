@@ -18,14 +18,6 @@ def get_attribute_value(cloudshell_session, attribute):
         return attribute.Value
 
 
-def refine(s):
-    parts = s.split(" ")
-    part1 = parts[0]
-    part2 = parts[-1]
-    part2_clean = ''.join(e for e in part2 if e.isalnum())
-    return part1 + "-" + part2_clean
-
-
 def main():
     argparser = argparse.ArgumentParser()
     argparser.add_argument('--json', default=False, help="render configuration as JSON instead of Python dict", action='store_true')
@@ -44,9 +36,6 @@ def main():
         'access_point': [],
         'traffic_generator': {}
     }
-
-    pf_details = {}
-
 
     for service in services_in_reservation:
         if service.ServiceName != 'Helm Service V2':
@@ -68,8 +57,7 @@ def main():
                 key = 'username' if key == 'uname' else key
                 key = 'password' if key == 'passkey' else key
 
-                if get_attribute_value(session, attribute) != "":
-                    ap_config[key] = get_attribute_value(session, attribute)
+                ap_config[key] = get_attribute_value(session, attribute)
 
             config['access_point'].append(ap_config)
 
@@ -78,6 +66,7 @@ def main():
             tf_config = {}
             for attribute in details.ResourceAttributes:
                 key = attribute.Name.replace(f"{resource.ResourceModelName}.", '')
+
                 tf_config[key] = get_attribute_value(session, attribute)
 
             config['traffic_generator'] = {
@@ -97,60 +86,9 @@ def main():
                     'AX-Station-Name': tf_config['AX_Station_Name']
                 }
             }
-
-    # Perfecto Details
-
-    input_map = {}
-    inputs = session.GetReservationInputs(reservationId=res_id).GlobalInputs
-    for given_input in inputs:
-        input_map[given_input.ParamName] = given_input.Value
-
-    pf_details['securityToken'] = input_map['securityToken']
-    pf_details["projectName"]: "TIP-PyTest-Execution"
-    pf_details["projectVersion"] = "1.0"
-    pf_details["reportTags"] = "TestTag"
-    if input_map["perfectoURL"] == "":
-        pf_details["perfectoURL"] = "tip"
-    else:
-        pf_details["perfectoURL"] = input_map["perfectoURL"]
-
-    for resource in session.GetReservationDetails(reservationId=res_id).ReservationDescription.Resources:
-        if resource.ResourceModelName == 'Phone':
-            details = session.GetResourceDetails(resource.Name)
-            phone_config = {}
-            for attribute in details.ResourceAttributes:
-                key = attribute.Name.replace(f"{resource.ResourceModelName}.", '')
-                phone_config[key] = get_attribute_value(session, attribute)
-            if phone_config["OS"] == "iOS":
-                pf_details[phone_config['model']] = \
-                    {
-                        "model-iOS": phone_config['model'],
-                        "bundleId-iOS": "com.apple.Preferences",
-                        "platformName-iOS": phone_config['OS'],
-                        "bundleId-iOS-Settings": "com.apple.Preferences",
-                        "bundleId-iOS-Ping": "com.deftapps.ping",
-                        "browserType-iOS": "Safari",
-                        "bundleId-iOS-Safari": "com.apple.mobilesafari",
-                        "platformName-android": "Android",
-                        "appPackage-android": "com.android.settings",
-                        "jobName": "Interop-" + phone_config['model'],
-                        "jobNumber": 38
-                    }
-            elif phone_config["OS"] == "Android":
-                pf_details[phone_config['model']] = \
-                    {
-                        "platformName-android": phone_config["OS"],
-                        "model-android": phone_config["model"],
-                        "appPackage-android": "com.android.settings",
-                        "bundleId-iOS-Settings": "com.apple.Preferences",
-                        "bundleId-iOS-Safari": "com.apple.mobilesafari",
-                        "jobName": "Interop-" + refine(phone_config['model']),
-                        "jobNumber": 38
-                    }
         else:
             continue
 
-    entire_config = {"interop": config, "PERFECTO_DETAILS": pf_details}
     if args.json:
         print(json.dumps(config))
     else:
