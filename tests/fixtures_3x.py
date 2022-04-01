@@ -45,7 +45,6 @@ class Fixtures_3x:
         parameter = dict(param)
         print("parameter", parameter)
 
-
         test_cases = {}
         profile_data= {}
         var = ""
@@ -153,7 +152,12 @@ class Fixtures_3x:
                                                                    key=lf_dut_data[0]['security_key'])
                         instantiate_profile_obj.enable_ap_2ghz()
                         if parameter["ft+psk"] == True:
-                            instantiate_profile_obj.enable_ft_psk(ssid=lf_dut_data[0]['ssid_name'], key=lf_dut_data[0]['security_key'])
+                            instantiate_profile_obj.enable_ft_psk(ssid=lf_dut_data[0]['ssid_name'],
+                                                                  key=lf_dut_data[0]['security_key'])
+                        if parameter["ft-otd"] == True:
+                            instantiate_profile_obj.enable_ftotd_psk(ssid=lf_dut_data[0]['ssid_name'],
+                                                                  key=lf_dut_data[0]['security_key'])
+
                         if 'dtim' in list_key:
                             instantiate_profile_obj.set_dtim_2ghz(wlan=lf_dut_data[0]['ssid_name'], value=parameter["dtim"])
                         instantiate_profile_obj.get_ssids()
@@ -194,7 +198,11 @@ class Fixtures_3x:
                                                                    key=lf_dut_data[1]['security_key'])
                         instantiate_profile_obj.enable_ap_5ghz()
                         if parameter["ft+psk"] == True:
-                            instantiate_profile_obj.enable_ft_psk(ssid=lf_dut_data[1]['ssid_name'], key=lf_dut_data[1]['security_key'])
+                            instantiate_profile_obj.enable_ft_psk(ssid=lf_dut_data[1]['ssid_name'],
+                                                                  key=lf_dut_data[1]['security_key'])
+                        if parameter["ft-otd"] == True:
+                            instantiate_profile_obj.enable_ftotd_psk(ssid=lf_dut_data[1]['ssid_name'],
+                                                                  key=lf_dut_data[1]['security_key'])
                         if 'dtim' in list_key:
                             instantiate_profile_obj.set_dtim_5ghz(wlan=lf_dut_data[1]['ssid_name'], value=parameter["dtim"])
 
