@@ -495,12 +495,6 @@ owanalytics:
             secretName: {{ include "owanalytics.fullname" . }}-owanalytics-restapi-tls
 
 owsub:
-  checks:
-    owsub:
-      readiness:
-        exec:
-          command: ["true"]
-
   resources:
     requests:
       cpu: 10m
