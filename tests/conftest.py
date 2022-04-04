@@ -164,6 +164,21 @@ def pytest_addoption(parser):
         help="Option to run Test Cases on cc version 1"
 
     )
+    parser.addoption(
+        "--roaming_delay",
+        default=1,
+        help="Roaming delay interval"
+    )
+    parser.addoption(
+        "--iteration",
+        default=1,
+        help="Roaming iterations"
+    )
+    parser.addoption(
+        "--client",
+        default=1,
+        help="Number of clients to be created"
+    )
 
     # Perfecto Parameters
     parser.addini("perfectoURL", "Cloud URL")
@@ -232,6 +247,23 @@ def cc_1(request):
     var = request.config.getoption("--cc.1")
     yield var
 
+@pytest.fixture(scope="session")
+def roaming_delay(request):
+    """yields the --roaming_delay  option """
+    var = request.config.getoption("--roaming_delay")
+    yield var
+
+@pytest.fixture(scope="session")
+def iteration(request):
+    """yields the --iteration  option for a test to provide how frequenty roam should happen """
+    var = request.config.getoption("--iteration")
+    yield var
+
+@pytest.fixture(scope="session")
+def client(request):
+    """yields the --client  option for getting user specified client number"""
+    var = request.config.getoption("--client")
+    yield var
 
 
 @pytest.fixture(scope="session")
