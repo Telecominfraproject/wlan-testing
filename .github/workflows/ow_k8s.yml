@@ -211,7 +211,7 @@ jobs:
       - name: Delete Cloud SDK
         run: |
           helm delete -n openwifi-${{ needs.deploy-controller.outputs.namespace }} tip-openwifi
-          kubectl delete namespace--ignore-not-found=true openwifi-${{ needs.deploy-controller.outputs.namespace }}
+          kubectl delete namespace --ignore-not-found=true openwifi-${{ needs.deploy-controller.outputs.namespace }}
 
   terminate-virtual-ap-instance:
     name: Terminate virtual AP instance
