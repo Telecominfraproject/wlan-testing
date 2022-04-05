@@ -56,7 +56,7 @@ jobs:
 
   # interop-01
   test-galaxy-s9:
-    runs-on: [self-hosted, small]
+    runs-on: ubuntu-latest
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
