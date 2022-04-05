@@ -1,3 +1,5 @@
+name: 2.x testing with Kubernetes deployment
+
 env:
   AWS_EKS_NAME: tip-wlan-main
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
