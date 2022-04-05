@@ -25,6 +25,8 @@ env:
   # - owsec_version - OpenWIFI Security version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
   # - owfms_version - OpenWIFI Firmware version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
   # - owprov_version - OpenWIFI Provisioning version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+  # - owanalytics_version - OpenWIFI Analytics version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+  # - owsub_version - OpenWIFI Subscription (Userportal) version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
   # - owgwui_version - OpenWIFI Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
   # - owprovui_version - OpenWIFI Provisioning Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
   testbeds: '[
@@ -36,6 +38,8 @@ env:
       "owsec_version": "main",
       "owfms_version": "main",
       "owprov_version": "main",
+      "owanalytics_version": "main",
+      "owsub_version": "main",
       "owgwui_version": "main",
       "owprovui_version": "main"
     }
@@ -92,8 +96,9 @@ jobs:
         export OWFMS_VERSION=${{ matrix.owfms_version }}
         export OWPROV_VERSION=${{ matrix.owprov_version }}
         export OWPROVUI_VERSION=${{ matrix.owprovui_version }}
+        export OWANALYTICS_VERSION=${{ matrix.owanalytics_version }}
+        export OWSUB_VERSION=${{ matrix.owsub_version }}
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
-        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
         export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}

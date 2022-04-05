@@ -81,8 +81,9 @@ jobs:
         export OWFMS_VERSION=main
         export OWPROV_VERSION=main
         export OWPROVUI_VERSION=main
+        export OWANALYTICS_VERSION=main
+        export OWSUB_VERSION=main
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.test-nodes.yaml,values.ucentral-qa.owls-enabled.yaml
-        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
         export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
@@ -367,7 +368,6 @@ jobs:
     - name: Deploy CloudSDK using Docker-compose
       working-directory: wlan-testing/docker-compose/openwifi
       env:
-        RTTY_TOKEN: ${{ secrets.RTTY_TOKEN }}
         OWSEC_AUTHENTICATION_DEFAULT_USERNAME: ${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         OWSEC_AUTHENTICATION_DEFAULT_PASSWORD: ${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
         OWFMS_S3_SECRET: ${{ secrets.UCENTRALFMS_S3_SECRET }}
@@ -384,7 +384,7 @@ jobs:
             external-dns.alpha.kubernetes.io/hostname: ${{ steps.cloudsdk.outputs.url }}
             service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
             service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285"
-            service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002,16003,443,16001,16004,16005,8443,5912,5913"
+            service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002,16003,443,16001,16004,16005,8443,5912,5913,16009,16006"
           labels:
             app: cloudsdk
         spec:
@@ -408,6 +408,13 @@ jobs:
             port: 16003
             targetPort: 16003
             protocol: TCP
+          - name: owgw-rttys
+            port: 5912
+            targetPort: 5912
+            protocol: TCP
+          - name: owgw-rttys-view
+            port: 5913
+            targetPort: 5913
           - name: owgw-ui-http
             port: 80
             targetPort: 80
@@ -415,6 +422,7 @@ jobs:
           - name: owgw-ui-https
             port: 443
             targetPort: 443
+            protocol: TCP
           - name: owsec-restapi
             port: 16001
             targetPort: 16001
@@ -422,6 +430,7 @@ jobs:
           - name: owsec-alivecheck
             port: 16101
             targetPort: 16101
+            protocol: TCP
           - name: owfms-restapi
             port: 16004
             targetPort: 16004
@@ -429,6 +438,7 @@ jobs:
           - name: owfms-alivecheck
             port: 16104
             targetPort: 16104
+            protocol: TCP
           - name: owprov-restapi
             port: 16005
             targetPort: 16005
@@ -436,6 +446,7 @@ jobs:
           - name: owprov-alivecheck
             port: 16105
             targetPort: 16105
+            protocol: TCP
           - name: owprov-ui-http
             port: 8080
             targetPort: 8080
@@ -443,13 +454,23 @@ jobs:
           - name: owprov-ui-https
             port: 8443
             targetPort: 8443
-          - name: rttys-dev
-            port: 5912
-            targetPort: 5912
             protocol: TCP
-          - name: rttys-user
-            port: 5913
-            targetPort: 5913
+          - name: owanalytics-restapi
+            port: 16009
+            targetPort: 16009
+            protocol: TCP
+          - name: owanalytics-alivecheck
+            port: 16109
+            targetPort: 16109
+            protocol: TCP
+          - name: owsub-restapi
+            port: 16006
+            targetPort: 16006
+            protocol: TCP
+          - name: owsub-alivecheck
+            port: 16106
+            targetPort: 16106
+            protocol: TCP
         ---
         apiVersion: v1
         kind: Pod
@@ -514,14 +535,16 @@ jobs:
               value: "owfms.wlan.local"
             - name: INTERNAL_OWPROV_HOSTNAME
               value: "owprov.wlan.local"
+            - name: INTERNAL_OWANALYTICS_HOSTNAME
+              value: "owanalytics.wlan.local"
+            - name: INTERNAL_OWSUB_HOSTNAME
+              value: "owsub.wlan.local"
             - name: DEPLOY_VERSION
               value: "${{ github.event.inputs.sdk_version }}"
             - name: SYSTEM_URI_UI
               value: "https://${{ steps.cloudsdk.outputs.url }}"
             - name: DEFAULT_UCENTRALSEC_URL
               value: "https://${{ steps.cloudsdk.outputs.url }}:16001"
-            - name: RTTY_TOKEN
-              value: "$RTTY_TOKEN"
             - name: OWGW_FILEUPLOADER_HOST_NAME
               value: "${{ steps.cloudsdk.outputs.url }}"
             - name: OWGW_FILEUPLOADER_URI
@@ -552,6 +575,14 @@ jobs:
               value: "https://owprov.wlan.local:17005"
             - name: OWPROV_SYSTEM_URI_PUBLIC
               value: "https://${{ steps.cloudsdk.outputs.url }}:16005"
+            - name: OWANALYTICS_SYSTEM_URI_PRIVATE
+              value: "https://owanalytics.wlan.local:17009"
+            - name: OWANALYTICS_SYSTEM_URI_PUBLIC
+              value: "https://${{ steps.cloudsdk.outputs.url }}:16009"
+            - name: OWSUB_SYSTEM_URI_PRIVATE
+              value: "https://owsub.wlan.local:17006"
+            - name: OWSUB_SYSTEM_URI_PUBLIC
+              value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16006"
             - name: WEBSOCKET_CERT
               value: "/tip-cicd-wildcard-certs/websocket-cert.pem"
             - name: WEBSOCKET_KEY

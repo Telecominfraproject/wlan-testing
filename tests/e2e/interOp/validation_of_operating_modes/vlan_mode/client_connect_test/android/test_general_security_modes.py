@@ -288,16 +288,16 @@ setup_params_general_two = {
     "mode": "VLAN",
     "ssid_modes": {
         "wpa3_personal": [
-            {"ssid_name": "ssid_wpa3_p_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
-            {"ssid_name": "ssid_wpa3_p_5g_vlan", "appliedRadios": ["5G"],
+            {"ssid_name": "wpa3_p_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
+            {"ssid_name": "wpa3_p_5g_vlan", "appliedRadios": ["5G"],
              "security_key": "something", "vlan": 100}],
         "wpa3_personal_mixed": [
-            {"ssid_name": "ssid_wpa3_p_m_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
-            {"ssid_name": "ssid_wpa3_p_m_5g_vlan", "appliedRadios": ["5G"],
+            {"ssid_name": "wpa3_p_m_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
+            {"ssid_name": "wpa3_p_m_5g_vlan", "appliedRadios": ["5G"],
              "security_key": "something", "vlan": 100}],
         "wpa_wpa2_personal_mixed": [
-            {"ssid_name": "ssid_wpa_wpa2_p_m_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
-            {"ssid_name": "ssid_wpa_wpa2_p_m_5g_vlan", "appliedRadios": ["5G"],
+            {"ssid_name": "wpa_wpa2_p_m_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
+            {"ssid_name": "wpa_wpa2_p_m_5g_vlan", "appliedRadios": ["5G"],
              "security_key": "something", "vlan": 100}]
     },
     "rf": {},

@@ -189,18 +189,6 @@ owsec:
           secret:
             secretName: {{ include "owsec.fullname" . }}-owsec-restapi-tls
 
-rttys:
-  resources:
-    requests:
-      cpu: 10m
-      memory: 15Mi
-    limits:
-      cpu: 100m
-      memory: 100Mi
-
-  podAnnotations:
-    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
-
 owgwui:
   ingresses:
     default:
@@ -321,7 +309,7 @@ owprov:
       readiness:
         exec:
           command: ["true"]
- 
+
   resources:
     requests:
       cpu: 10m
@@ -420,6 +408,173 @@ owprovui:
   podAnnotations:
     cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
 
+owanalytics:
+  checks:
+    owanalytics:
+      readiness:
+        exec:
+          command: ["true"]
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 100Mi
+    limits:
+      cpu: 100m
+      memory: 500Mi
+
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+
+  certs:
+    restapi-ca.pem: |
+      -----BEGIN CERTIFICATE-----
+      MIIDojCCAoqgAwIBAgIUPVYBpqNbcLYygF6Mx+qxSWwQyFowDQYJKoZIhvcNAQEL
+      BQAwaTELMAkGA1UEBhMCVVMxJDAiBgNVBAoTG1RlbGVjb20gSW5mcmEgUHJvamVj
+      dCwgSW5jLjEMMAoGA1UECxMDVElQMSYwJAYDVQQDEx1UZWxlY29tIEluZnJhIFBy
+      b2plY3QgUm9vdCBDQTAeFw0yMTA0MTMyMjQyNDRaFw0zMTA0MTMyMjM4NDZaMGkx
+      CzAJBgNVBAYTAlVTMSQwIgYDVQQKExtUZWxlY29tIEluZnJhIFByb2plY3QsIElu
+      Yy4xDDAKBgNVBAsTA1RJUDEmMCQGA1UEAxMdVGVsZWNvbSBJbmZyYSBQcm9qZWN0
+      IFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDIGCibwf5u
+      AAwZ+1H8U0e3u2V+0d2gSctucoK86XwUmfe1V2a/qlCYZd29r80IuN1IIeB0naIm
+      KnK/MzXW87clF6tFd1+HzEvmlY/W4KyIXalVCTEzirFSvBEG2oZpM0yC3AefytAO
+      aOpA00LaM3xTfTqMKIRhJBuLy0I4ANUVG6ixVebbGuc78IodleqiLoWy2Q9QHyEO
+      t/7hZndJhiVogh0PveRhho45EbsACu7ymDY+JhlIleevqwlE3iQoq0YcmYADHno6
+      Eq8vcwLpZFxihupUafkd1T3WJYQAJf9coCjBu2qIhNgrcrGD8R9fGswwNRzMRMpX
+      720+GjcDW3bJAgMBAAGjQjBAMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFAJG
+      lmB5sVP2qfL3xZ8hQOTpkQH6MA4GA1UdDwEB/wQEAwIBhjANBgkqhkiG9w0BAQsF
+      AAOCAQEAVjl9dm4epG9NUYnagT9sg7scVQEPfz3Lt6w1NXJXgD8mAUlK0jXmEyvM
+      dCPD4514n+8+lM7US8fh+nxc7jO//LwK17Wm9FblgjNFR7+anv0Q99T9fP19DLlF
+      PSNHL2emogy1bl1lLTAoj8nxg2wVKPDSHBGviQ5LR9fsWUIJDv9Bs5k0qWugWYSj
+      19S6qnHeskRDB8MqRLhKMG82oDVLerSnhD0P6HjySBHgTTU7/tYS/OZr1jI6MPbG
+      L+/DtiR5fDVMNdBSGU89UNTi0wHY9+RFuNlIuvZC+x/swF0V9R5mN+ywquTPtDLA
+      5IOM7ItsRmen6u3qu+JXros54e4juQ==
+      -----END CERTIFICATE-----
+
+  public_env_variables:
+    SELFSIGNED_CERTS: "true"
+
+  configProperties:
+    openwifi.internal.restapi.host.0.rootca: $OWANALYTICS_ROOT/certs/restapi-certs/ca.crt
+    openwifi.internal.restapi.host.0.cert: $OWANALYTICS_ROOT/certs/restapi-certs/tls.crt
+    openwifi.internal.restapi.host.0.key: $OWANALYTICS_ROOT/certs/restapi-certs/tls.key
+    openwifi.restapi.host.0.rootca: $OWANALYTICS_ROOT/certs/restapi-certs/ca.crt
+    openwifi.restapi.host.0.cert: $OWANALYTICS_ROOT/certs/restapi-certs/tls.crt
+    openwifi.restapi.host.0.key: $OWANALYTICS_ROOT/certs/restapi-certs/tls.key
+
+  volumes:
+    owanalytics:
+      - name: config
+        mountPath: /owanalytics-data/owanalytics.properties
+        subPath: owanalytics.properties
+        # Template below will be rendered in template
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owanalytics.fullname" . }}-config
+      - name: certs
+        mountPath: /owanalytics-data/certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owanalytics.fullname" . }}-certs
+      - name: persist
+        mountPath: /owanalytics-data/persist
+        volumeDefinition: |
+          persistentVolumeClaim:
+            claimName: {{ template "owanalytics.fullname" . }}-pvc
+
+      - name: restapi-certs
+        mountPath: /owanalytics-data/certs/restapi-certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owanalytics.fullname" . }}-owanalytics-restapi-tls
+      - name: restapi-ca
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.pem
+        subPath: ca.crt
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owanalytics.fullname" . }}-owanalytics-restapi-tls
+
+owsub:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 100Mi
+    limits:
+      cpu: 100m
+      memory: 500Mi
+
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+
+  certs:
+    restapi-ca.pem: |
+      -----BEGIN CERTIFICATE-----
+      MIIDojCCAoqgAwIBAgIUPVYBpqNbcLYygF6Mx+qxSWwQyFowDQYJKoZIhvcNAQEL
+      BQAwaTELMAkGA1UEBhMCVVMxJDAiBgNVBAoTG1RlbGVjb20gSW5mcmEgUHJvamVj
+      dCwgSW5jLjEMMAoGA1UECxMDVElQMSYwJAYDVQQDEx1UZWxlY29tIEluZnJhIFBy
+      b2plY3QgUm9vdCBDQTAeFw0yMTA0MTMyMjQyNDRaFw0zMTA0MTMyMjM4NDZaMGkx
+      CzAJBgNVBAYTAlVTMSQwIgYDVQQKExtUZWxlY29tIEluZnJhIFByb2plY3QsIElu
+      Yy4xDDAKBgNVBAsTA1RJUDEmMCQGA1UEAxMdVGVsZWNvbSBJbmZyYSBQcm9qZWN0
+      IFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDIGCibwf5u
+      AAwZ+1H8U0e3u2V+0d2gSctucoK86XwUmfe1V2a/qlCYZd29r80IuN1IIeB0naIm
+      KnK/MzXW87clF6tFd1+HzEvmlY/W4KyIXalVCTEzirFSvBEG2oZpM0yC3AefytAO
+      aOpA00LaM3xTfTqMKIRhJBuLy0I4ANUVG6ixVebbGuc78IodleqiLoWy2Q9QHyEO
+      t/7hZndJhiVogh0PveRhho45EbsACu7ymDY+JhlIleevqwlE3iQoq0YcmYADHno6
+      Eq8vcwLpZFxihupUafkd1T3WJYQAJf9coCjBu2qIhNgrcrGD8R9fGswwNRzMRMpX
+      720+GjcDW3bJAgMBAAGjQjBAMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFAJG
+      lmB5sVP2qfL3xZ8hQOTpkQH6MA4GA1UdDwEB/wQEAwIBhjANBgkqhkiG9w0BAQsF
+      AAOCAQEAVjl9dm4epG9NUYnagT9sg7scVQEPfz3Lt6w1NXJXgD8mAUlK0jXmEyvM
+      dCPD4514n+8+lM7US8fh+nxc7jO//LwK17Wm9FblgjNFR7+anv0Q99T9fP19DLlF
+      PSNHL2emogy1bl1lLTAoj8nxg2wVKPDSHBGviQ5LR9fsWUIJDv9Bs5k0qWugWYSj
+      19S6qnHeskRDB8MqRLhKMG82oDVLerSnhD0P6HjySBHgTTU7/tYS/OZr1jI6MPbG
+      L+/DtiR5fDVMNdBSGU89UNTi0wHY9+RFuNlIuvZC+x/swF0V9R5mN+ywquTPtDLA
+      5IOM7ItsRmen6u3qu+JXros54e4juQ==
+      -----END CERTIFICATE-----
+
+  public_env_variables:
+    SELFSIGNED_CERTS: "true"
+
+  configProperties:
+    openwifi.internal.restapi.host.0.rootca: $OWSUB_ROOT/certs/restapi-certs/ca.crt
+    openwifi.internal.restapi.host.0.cert: $OWSUB_ROOT/certs/restapi-certs/tls.crt
+    openwifi.internal.restapi.host.0.key: $OWSUB_ROOT/certs/restapi-certs/tls.key
+    openwifi.restapi.host.0.rootca: $OWSUB_ROOT/certs/restapi-certs/ca.crt
+    openwifi.restapi.host.0.cert: $OWSUB_ROOT/certs/restapi-certs/tls.crt
+    openwifi.restapi.host.0.key: $OWSUB_ROOT/certs/restapi-certs/tls.key
+
+  volumes:
+    owsub:
+      - name: config
+        mountPath: /owsub-data/owsub.properties
+        subPath: owsub.properties
+        # Template below will be rendered in template
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owsub.fullname" . }}-config
+      - name: certs
+        mountPath: /owsub-data/certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owsub.fullname" . }}-certs
+      - name: persist
+        mountPath: /owsub-data/persist
+        volumeDefinition: |
+          persistentVolumeClaim:
+            claimName: {{ template "owsub.fullname" . }}-pvc
+
+      - name: restapi-certs
+        mountPath: /owsub-data/certs/restapi-certs
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owsub.fullname" . }}-owsub-restapi-tls
+      - name: restapi-ca
+        mountPath: /usr/local/share/ca-certificates/restapi-ca-selfsigned.pem
+        subPath: ca.crt
+        volumeDefinition: |
+          secret:
+            secretName: {{ include "owsub.fullname" . }}-owsub-restapi-tls
+
+
 kafka:
   commonAnnotations:
     cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
@@ -458,7 +613,7 @@ haproxy:
       service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "8080"
       service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
       service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285
-      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16004,17004,16002,16003,17002,16005,17005,16001,17001,5912,5913"
+      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16004,17004,16002,16003,17002,16005,17005,16001,17001,5912,5913,16009"
       service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
 
 restapiCerts:

@@ -51,6 +51,14 @@ on:
         default: 'main'
         description: 'OpenWIFI Provisioning Web UI version to be deployed (git tag or helm package version may be used, main is default)'
         required: true
+      owanalytics_version:
+        default: 'main'
+        description: 'OpenWIFI Analytics version to be deployed (git tag or helm package version may be used, main is default)'
+        required: true
+      owsub_version:
+        default: 'main'
+        description: 'OpenWIFI Subscription (Userportal) version to be deployed (git tag or helm package version may be used, main is default)'
+        required: true
 
 jobs:
   deploy:
@@ -85,8 +93,9 @@ jobs:
         export OWFMS_VERSION=${{ github.event.inputs.owfms_version }}
         export OWPROV_VERSION=${{ github.event.inputs.owprov_version }}
         export OWPROVUI_VERSION=${{ github.event.inputs.owprovui_version }}
+        export OWANALYTICS_VERSION=${{ github.event.inputs.owanalytics_version }}
+        export OWSUB_VERSION=${{ github.event.inputs.owsub_version }}
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
-        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
         export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
