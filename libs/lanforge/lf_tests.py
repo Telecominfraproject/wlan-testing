@@ -57,7 +57,10 @@ from lf_tr398_test import TR398Test
 from lf_pcap import LfPcap
 from sta_scan_test import StaScan
 realm = importlib.import_module("py-json.realm")
+cv_test_reports = importlib.import_module("py-json.cv_test_reports")
+lf_report = cv_test_reports.lanforge_reports
 Realm = realm.Realm
+
 
 
 class RunTest:
@@ -1090,7 +1093,7 @@ class RunTest:
         else:
             upstream_port = self.upstream_port + "." + str(vlan_id)
         print("Upstream Port: ", self.upstream_port)
-        print("----------radio used to sniff--------", sniff_radio)
+        print("radio used to sniff :", sniff_radio)
         self.pcap_obj = LfPcap(host=self.lanforge_ip, port=self.lanforge_port)
         self.cvtest_obj = TR398Test(lf_host=self.lanforge_ip,
                                     lf_port=self.lanforge_port,
@@ -1114,21 +1117,25 @@ class RunTest:
         self.cvtest_obj.setup()
         t1 = threading.Thread(target=self.cvtest_obj.run)
         t1.start()
-        t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 30))
         if t1.is_alive():
-            time.sleep(500)
+            time.sleep(270)
+            t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 45))
             t2.start()
         while t1.is_alive():
             time.sleep(1)
         if os.path.exists("mu-mimo-config.txt"):
             os.remove("mu-mimo-config.txt")
-
+        # pull pcap from lanforge to current directory
         if self.pcap_obj.pcap_name is not None:
-            self.pcap_obj.move_pcap(pcap_name=self.pcap_obj.pcap_name)
+            lf_report.pull_reports(hostname=self.lanforge_ip, port=self.lanforge_ssh_port, username="lanforge", password="lanforge", report_location="/home/lanforge/" + self.pcap_obj.pcap_name, report_dir=".")
+        else:
+            raise ValueError("pcap_name should not be None")
 
-            #check for mu-mimo bearmformee association request
-            assoc_req = self.pcap_obj.check_beamformee_association_request(pcap_file=self.pcap_obj.pcap_name)
-            allure.attach(body=assoc_req, name="Check Bearmformee Association Request")
+        #check for mu-mimo bearmformee association request
+        assoc_req = self.pcap_obj.check_beamformee_association_request(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=assoc_req, name="Check Bearmformee Association Request")
+        allure.attach.file(source=self.pcap_obj.pcap_name,
+                           name="pcap_file", attachment_type=allure.attachment_type.PCAP)
         
         report_name = self.cvtest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
