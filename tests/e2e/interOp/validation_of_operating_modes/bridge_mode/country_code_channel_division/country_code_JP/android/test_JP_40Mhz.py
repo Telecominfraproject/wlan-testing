@@ -71,7 +71,7 @@ class TestBridgeModeConnectSuiteOne(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
-    @pytest.mark.runfirst
+    @pytest.mark.pilot
     def test_ClientConnect_bridge_wpa2_chn36_40Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][1]
@@ -991,6 +991,17 @@ for sec_modes in setup_params_general9['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general9['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general9['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
+
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general8],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestBridgeModeConnectSuiteNine(object):
+
+
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
@@ -1058,6 +1069,15 @@ for sec_modes in setup_params_general10['ssid_modes'].keys():
         setup_params_general10['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general10['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general8],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestBridgeModeConnectSuiteTen(object):
+
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
     @pytest.mark.twog
@@ -1123,6 +1143,16 @@ for sec_modes in setup_params_general11['ssid_modes'].keys():
         rand_string = (''.join(random.choices(string.ascii_uppercase +
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general11['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general11['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
+
+
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general8],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestBridgeModeConnectSuiteEleven(object):
 
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")

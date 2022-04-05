@@ -17,7 +17,7 @@ import allure
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-pytestmark = [pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.interop_country_codejp
+pytestmark = [pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.interop_country_codejp1
               ,pytest.mark.interop_uc_sanity, pytest.mark.bridge]
 
 from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, get_ip_address_and
@@ -71,7 +71,7 @@ class TestBridgeModeConnectSuiteOne(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.firstrun
+    @pytest.mark.japan
     def test_ClientConnect_bridge_wpa2_chn36_20Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][1]
@@ -107,7 +107,7 @@ class TestBridgeModeConnectSuiteOne(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.firstrun
+    @pytest.mark.japan
     def test_ClientConnect_bridge_wpa2_chn1_20Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
@@ -189,7 +189,7 @@ class TestBridgeModeConnectSuiteTwo(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.secondrun
+    @pytest.mark.japan
     def test_ClientConnect_bridge_wpa2_chn40_20Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][1]
@@ -225,7 +225,7 @@ class TestBridgeModeConnectSuiteTwo(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.secondrun
+    @pytest.mark.japan
     def test_ClientConnect_bridge_wpa2_chn2_20Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
@@ -307,7 +307,7 @@ class TestBridgeModeConnectSuiteThree(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.secondrun
+    @pytest.mark.japan1
     def test_ClientConnect_bridge_wpa2_chn44_20Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][1]
@@ -343,7 +343,7 @@ class TestBridgeModeConnectSuiteThree(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.secondrun
+    @pytest.mark.japan1
     def test_ClientConnect_bridge_wpa2_chn3_20Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][0]
@@ -424,7 +424,7 @@ class TestBridgeModeConnectSuiteFour(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.secondrun
+    @pytest.mark.japan
     def test_ClientConnect_bridge_wpa2_chn48_20Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][1]
@@ -460,7 +460,7 @@ class TestBridgeModeConnectSuiteFour(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.secondrun
+    @pytest.mark.japan
     def test_ClientConnect_bridge_wpa2_chn4_20Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][0]
@@ -542,7 +542,7 @@ class TestBridgeModeConnectSuiteFive(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
+    @pytest.mark.japan2
     def test_ClientConnect_bridge_wpa2_chn52_20Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general5["ssid_modes"]["wpa2_personal"][1]
@@ -578,7 +578,7 @@ class TestBridgeModeConnectSuiteFive(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
+    @pytest.mark.japan2
     def test_ClientConnect_bridge_wpa2_chn5_20Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general5["ssid_modes"]["wpa2_personal"][0]
@@ -656,14 +656,14 @@ class TestBridgeModeConnectSuiteSix(object):
         pytest -m "client_connect and bridge and InteropsuiteA"
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
-    @pytest.mark.fiveg
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
+    @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
+    @pytest.mark.japan2
     def test_ClientConnect_bridge_wpa2_chn56_20Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
-                                                   get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
-        profile_data = setup_params_general6["ssid_modes"]["wpa2_personal"][1]
+                                                         get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+        profile_data = setup_params_general6["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
@@ -696,7 +696,7 @@ class TestBridgeModeConnectSuiteSix(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
+    @pytest.mark.japan
     def test_ClientConnect_bridge_wpa2_chn6_20Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general6["ssid_modes"]["wpa2_personal"][0]
@@ -773,14 +773,14 @@ class TestBridgeModeConnectSuiteSeven(object):
         pytest -m "client_connect and bridge and InteropsuiteA"
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
-    @pytest.mark.fiveg
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
+    @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
+    @pytest.mark.japan2
     def test_ClientConnect_bridge_wpa2_chn60_20Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
-                                                   get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
-        profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][1]
+                                                         get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+        profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
         ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
@@ -813,7 +813,7 @@ class TestBridgeModeConnectSuiteSeven(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
+    @pytest.mark.japan
     def test_ClientConnect_bridge_wpa2_chn7_20Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][0]
@@ -894,7 +894,7 @@ class TestBridgeModeConnectSuiteEight(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
+    @pytest.mark.japan
     def test_ClientConnect_bridge_wpa2_chn64_20Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general8["ssid_modes"]["wpa2_personal"][1]
@@ -930,7 +930,7 @@ class TestBridgeModeConnectSuiteEight(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
+    @pytest.mark.japan
     def test_ClientConnect_bridge_wpa2_chn8_20Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general8["ssid_modes"]["wpa2_personal"][0]
@@ -1011,7 +1011,7 @@ class TestBridgeModeConnectSuiteNine(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
+    @pytest.mark.japan
     def test_ClientConnect_bridge_wpa2_chn100_20Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general9["ssid_modes"]["wpa2_personal"][1]
@@ -1047,7 +1047,7 @@ class TestBridgeModeConnectSuiteNine(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
+    @pytest.mark.japan
     def test_ClientConnect_bridge_wpa2_chn9_20Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general9["ssid_modes"]["wpa2_personal"][0]
@@ -1129,7 +1129,7 @@ class TestBridgeModeConnectSuiteTen(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
+    @pytest.mark.japan2
     def test_ClientConnect_bridge_wpa2_chn104_20Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general10["ssid_modes"]["wpa2_personal"][1]
@@ -1165,7 +1165,7 @@ class TestBridgeModeConnectSuiteTen(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
+    @pytest.mark.japan2
     def test_ClientConnect_bridge_wpa2_chn10_20Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general10["ssid_modes"]["wpa2_personal"][0]
@@ -1246,7 +1246,7 @@ class TestBridgeModeConnectSuiteEleven(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.plot
+    @pytest.mark.japan2
     def test_ClientConnect_bridge_wpa2_chn108_20Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][1]
@@ -1282,7 +1282,7 @@ class TestBridgeModeConnectSuiteEleven(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.plot
+    @pytest.mark.japan2
     def test_ClientConnect_bridge_wpa2_chn11_20Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
@@ -1364,7 +1364,7 @@ class TestBridgeModeConnectSuiteTwelve(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.subbu
+    @pytest.mark.japan2
     def test_ClientConnect_bridge_wpa2_chn112_20Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general12["ssid_modes"]["wpa2_personal"][1]
@@ -1436,7 +1436,7 @@ for sec_modes in setup_params_general13['ssid_modes'].keys():
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestBridgeModeConnectSuiteTwelve(object):
+class TestBridgeModeConnectSuiteThirteen(object):
     """ Client Connect SuiteA
         pytest -m "client_connect and bridge and InteropsuiteA"
     """
@@ -1445,7 +1445,7 @@ class TestBridgeModeConnectSuiteTwelve(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.subbu
+    @pytest.mark.japan2
     def test_ClientConnect_bridge_wpa2_chn116_20Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general13["ssid_modes"]["wpa2_personal"][1]
@@ -1526,7 +1526,7 @@ class TestBridgeModeConnectSuiteFourteen(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.subbu
+    @pytest.mark.japan
     def test_ClientConnect_bridge_wpa2_chn132_20Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general14["ssid_modes"]["wpa2_personal"][1]
@@ -1607,7 +1607,7 @@ class TestBridgeModeConnectSuiteFifteen(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.subbu
+    @pytest.mark.japan2
     def test_ClientConnect_bridge_wpa2_chn136_20Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general15["ssid_modes"]["wpa2_personal"][1]
@@ -1680,15 +1680,12 @@ for sec_modes in setup_params_general16['ssid_modes'].keys():
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectSuiteSixteen(object):
-    """ Client Connect SuiteA
-        pytest -m "client_connect and bridge and InteropsuiteA"
-    """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.twenty
+    @pytest.mark.japan2
     def test_ClientConnect_bridge_wpa2_chn140_20Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general16["ssid_modes"]["wpa2_personal"][1]
@@ -1719,6 +1716,7 @@ class TestBridgeModeConnectSuiteSixteen(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
+
 
 setup_params_general17 = {
     "mode": "BRIDGE",
@@ -1769,6 +1767,7 @@ class TestBridgeModeConnectSuiteSeventeen(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
+    @pytest.mark.japan
     def test_ClientConnect_bridge_wpa2_chn144_20Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general17["ssid_modes"]["wpa2_personal"][1]
