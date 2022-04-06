@@ -32,14 +32,14 @@ env:
     {
       "namespace": "qa01",
       "deploy_method": "git",
-      "chart_version": "v2.5.0-RC1",
-      "owgw_version": "v2.5.0-RC1",
-      "owsec_version": "v2.5.0-RC1",
-      "owfms_version": "v2.5.0-RC1",
-      "owprov_version": "v2.5.0-RC1",
+      "chart_version": "v2.5.0",
+      "owgw_version": "v2.5.0",
+      "owsec_version": "v2.5.0",
+      "owfms_version": "v2.5.0",
+      "owprov_version": "v2.5.0",
       "owanalytics_version": "main",
-      "owgwui_version": "v2.5.0-RC1",
-      "owprovui_version": "v2.5.0-RC1"
+      "owgwui_version": "v2.5.0",
+      "owprovui_version": "v2.5.0"
     },
     {
       "namespace": "qa02",
@@ -83,6 +83,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         path: wlan-testing
+        ref: temp/wifi-7512--pre-rttys-changes
 
     - name: Prepare certificates from secrets
       working-directory: wlan-testing/helm/ucentral
