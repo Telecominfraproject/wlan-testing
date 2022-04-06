@@ -61,6 +61,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y default-jre
 
+      - name: install tshark
+        run: |
+          sudo apt install tshark
+
       - name: install aws CLI tool
         run: |
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
