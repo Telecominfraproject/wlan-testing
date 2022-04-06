@@ -383,11 +383,7 @@ class Fixtures_2x:
 
         list_key = list(parameter.keys())
 
-        if "dfs" in list_key:
-            print("In dfs")
-            instantiate_profile_obj.set_radio_config(DFS=True, channel=parameter["dfs"]["channel"], bw=parameter["dfs"]["channel_bandwidth"])
         if len(parameter['rf']) > 0:
-            print("In country code channel division")
             instantiate_profile_obj.set_radio_config(radio_config=parameter['rf'])
         else:
             instantiate_profile_obj.set_radio_config()
@@ -682,6 +678,8 @@ class Fixtures_2x:
         time_1 = time.time()
 
         # Apply config
+        print(instantiate_profile_obj.base_profile_config)
+
         instantiate_profile_obj.push_config(serial_number=get_equipment_ref[0])
 
         config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"').replace("True", "true"))
