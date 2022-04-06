@@ -1,16 +1,14 @@
 owgw:
-
   configProperties:
     storage.type: postgresql
     storage.type.postgresql.host: owgw-pgsql
     storage.type.postgresql.database: owgw
+    storage.type.postgresql.username: owgw
+    storage.type.postgresql.password: owgw
 
   postgresql:
     enabled: true
     fullnameOverride: owgw-pgsql
-
     postgresqlDatabase: owgw
-    # Based on default values of keys storage.type.postgresql.username and storage.type.postgresql.password
-    # from https://github.com/Telecominfraproject/wlan-cloud-ucentralgw/blob/master/helm/values.yaml
-    postgresqlUsername: stephb
-    postgresqlPassword: snoopy99
+    postgresqlUsername: owgw
+    postgresqlPassword: owgw
