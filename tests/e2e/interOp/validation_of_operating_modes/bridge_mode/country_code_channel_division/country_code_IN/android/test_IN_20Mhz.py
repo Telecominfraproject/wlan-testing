@@ -17,7 +17,7 @@ import allure
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-pytestmark = [pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.interop_country_code
+pytestmark = [pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.interop_country_codeIN1
               ,pytest.mark.interop_uc_sanity, pytest.mark.bridge]
 
 from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, get_ip_address_and
@@ -1436,10 +1436,7 @@ for sec_modes in setup_params_general13['ssid_modes'].keys():
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestBridgeModeConnectSuiteTwelve(object):
-    """ Client Connect SuiteA
-        pytest -m "client_connect and bridge and InteropsuiteA"
-    """
+class TestBridgeModeConnectSuiteThirteen(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
     @pytest.mark.fiveg
