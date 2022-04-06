@@ -63,7 +63,8 @@ jobs:
 
       - name: install tshark
         run: |
-          sudo apt install -y tshark
+          sudo apt-get update
+          sudo apt-get install -y tshark
 
       - name: install aws CLI tool
         run: |
