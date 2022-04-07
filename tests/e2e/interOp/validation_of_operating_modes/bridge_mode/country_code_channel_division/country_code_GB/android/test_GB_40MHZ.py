@@ -17,7 +17,7 @@ import allure
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-pytestmark = [pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.interop_country_code5
+pytestmark = [pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.interop_country_codeGB2
               ,pytest.mark.interop_uc_sanity, pytest.mark.bridge]
 
 from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, get_ip_address_and
@@ -63,15 +63,12 @@ for sec_modes in setup_params_general1['ssid_modes'].keys():
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectSuiteOne(object):
-    """ Client Connect SuiteA
-        pytest -m "client_connect and bridge and InteropsuiteA"
-    """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
-    @pytest.mark.runfirst
+    @pytest.mark.pilot
     def test_ClientConnect_bridge_wpa2_chn36_40Mhz_GB_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][1]
@@ -181,9 +178,6 @@ for sec_modes in setup_params_general2['ssid_modes'].keys():
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectSuiteTwo(object):
-    """ Client Connect SuiteA
-        pytest -m "client_connect and bridge and InteropsuiteA"
-    """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
     @pytest.mark.fiveg
@@ -299,10 +293,6 @@ for sec_modes in setup_params_general3['ssid_modes'].keys():
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectSuiteThree(object):
-    """ Client Connect SuiteA
-        pytest -m "client_connect and bridge and InteropsuiteA"
-    """
-
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
@@ -416,9 +406,6 @@ for sec_modes in setup_params_general4['ssid_modes'].keys():
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectSuiteFour(object):
-    """ Client Connect SuiteA
-        pytest -m "client_connect and bridge and InteropsuiteA"
-    """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
     @pytest.mark.fiveg
@@ -534,9 +521,6 @@ for sec_modes in setup_params_general5['ssid_modes'].keys():
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectSuiteFive(object):
-    """ Client Connect SuiteA
-        pytest -m "client_connect and bridge and InteropsuiteA"
-    """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
     @pytest.mark.fiveg
@@ -652,9 +636,6 @@ for sec_modes in setup_params_general6['ssid_modes'].keys():
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectSuiteSix(object):
-    """ Client Connect SuiteA
-        pytest -m "client_connect and bridge and InteropsuiteA"
-    """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
     @pytest.mark.fiveg
@@ -769,9 +750,6 @@ for sec_modes in setup_params_general7['ssid_modes'].keys():
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectSuiteSeven(object):
-    """ Client Connect SuiteA
-        pytest -m "client_connect and bridge and InteropsuiteA"
-    """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
     @pytest.mark.fiveg
@@ -886,9 +864,6 @@ for sec_modes in setup_params_general8['ssid_modes'].keys():
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectSuiteEight(object):
-    """ Client Connect SuiteA
-        pytest -m "client_connect and bridge and InteropsuiteA"
-    """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
     @pytest.mark.fiveg
@@ -991,6 +966,17 @@ for sec_modes in setup_params_general9['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general9['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general9['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
+
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general8],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestBridgeModeConnectSuiteNine(object):
+
+
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
@@ -1058,6 +1044,15 @@ for sec_modes in setup_params_general10['ssid_modes'].keys():
         setup_params_general10['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general10['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general8],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestBridgeModeConnectSuiteTen(object):
+
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
     @pytest.mark.twog
@@ -1123,6 +1118,16 @@ for sec_modes in setup_params_general11['ssid_modes'].keys():
         rand_string = (''.join(random.choices(string.ascii_uppercase +
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general11['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general11['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
+
+
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general8],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestBridgeModeConnectSuiteEleven(object):
 
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
