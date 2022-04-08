@@ -1,5 +1,5 @@
 FROM python:3.8
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     tshark \
     && rm -rf /var/lib/apt/lists/*
 RUN mkdir ~/.pip
