@@ -1,4 +1,7 @@
 FROM python:3.8
+RUN apt-get update && apt-get install -y \
+    tshark \
+    && rm -rf /var/lib/apt/lists/*
 RUN mkdir ~/.pip
 RUN echo "[global]" > ~/.pip/pip.conf
 RUN echo "index-url = https://pypi.org/simple" >> ~/.pip/pip.conf
