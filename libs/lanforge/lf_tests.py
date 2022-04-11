@@ -1040,17 +1040,14 @@ class RunTest:
                 temp_ax = str(radios_ax[0]).split(" ")
                 if len(temp_ax) == 2:
                     sniff_radio = str(temp_ax[1])
-                    print("----------radio used to sniff--------", sniff_radio)
             elif skip_2g:
                 temp = str(radios_5g[0]).split(" ")
                 if len(temp) == 2:
                     sniff_radio = str(temp[1])
-                    print("----------radio used to sniff--------", sniff_radio)
             elif skip_5g:
                 temp = str(radios_2g[0]).split(" ")
                 if len(temp) == 2:
                     sniff_radio = str(temp[1])
-                    print("----------radio used to sniff--------", sniff_radio)
         elif len(radios_2g) >= 2 and len(radios_5g) >= 2 and len(radios_ax) >= 2:
             if len(radios_2g) >= 3 and len(radios_5g) >= 3:
                 for i in range(6):
@@ -1118,8 +1115,8 @@ class RunTest:
         t1 = threading.Thread(target=self.cvtest_obj.run)
         t1.start()
         if t1.is_alive():
-            time.sleep(270)
-            t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 45))
+            time.sleep(240)
+            t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 90))
             t2.start()
         while t1.is_alive():
             time.sleep(1)
