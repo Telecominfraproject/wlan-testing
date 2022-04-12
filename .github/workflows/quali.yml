@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "hfcl_ion4xe,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4,indio_um-305ac"
+        default: "hfcl_ion4xe,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4,indio_um-305ac,hfcl_ion4xi,udaya_a5-id2"
         description: "the AP models to test"
       ap_version:
         required: true
@@ -1656,7 +1656,7 @@ jobs:
   # Report for hfcl_ion4xi
   report-hfcl-ion4xi:
     runs-on: ubuntu-latest
-    needs: [ vars, test--hfcl-ion4xi ]
+    needs: [ vars, test-hfcl-ion4xi ]
     if: always()
     env:
       AP_MODEL: hfcl_ion4xi
@@ -1711,7 +1711,7 @@ jobs:
 
   # Cleanup
   cleanup:
-    needs: [test-hfcl-ion4xe, test-edgecore-eap101, test-tp-link-ec420-g1, test-edgecore-ecw5211, test-cig-wf188n, test-edgecore-eap102, test-cig-wf194c, test-hfcl-ion4, test-indio-um-305ac]
+    needs: [test-hfcl-ion4xe, test-edgecore-eap101, test-tp-link-ec420-g1, test-edgecore-ecw5211, test-cig-wf188n, test-edgecore-eap102, test-cig-wf194c, test-hfcl-ion4, test-indio-um-305ac, test-hfcl-ion4xi]
     runs-on: ubuntu-latest
     if: always()
     steps:
