@@ -1818,59 +1818,59 @@ jobs:
           s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
           s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
     # Report for udaya_a5-id2
-    report-udaya-a5-id2:
-      runs-on: ubuntu-latest
-      needs: [ vars, test-udaya-a5-id2 ]
-      if: always()
-      env:
-        AP_MODEL: udaya_a5-id2
-      steps:
-        - name: Set AP model output
-          id: ap_model
-          run: |
-            echo "::set-output name=model::${AP_MODEL}"
+  report-udaya-a5-id2:
+    runs-on: ubuntu-latest
+    needs: [ vars, test-udaya-a5-id2 ]
+    if: always()
+    env:
+      AP_MODEL: udaya_a5-id2
+    steps:
+      - name: Set AP model output
+        id: ap_model
+        run: |
+          echo "::set-output name=model::${AP_MODEL}"
 
-        - name: checkout testing repo
-          uses: actions/checkout@v2
+      - name: checkout testing repo
+        uses: actions/checkout@v2
 
-        - uses: actions/download-artifact@v2
-          with:
-            name: allure-results-${{ steps.ap_model.outputs.model }}
-            path: allure-results
+      - uses: actions/download-artifact@v2
+        with:
+          name: allure-results-${{ steps.ap_model.outputs.model }}
+          path: allure-results
 
-        - name: download history of previous run
-          continue-on-error: true
-          run: |
-            LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key sanity/${{ steps.ap_model.outputs.model }}/latest/index.html | jq -r .Metadata.latest)
-            aws s3 cp --recursive s3://openwifi-allure-reports/sanity/${{ steps.ap_model.outputs.model }}/$LAST_RUN_ID/history history
+      - name: download history of previous run
+        continue-on-error: true
+        run: |
+          LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key sanity/${{ steps.ap_model.outputs.model }}/latest/index.html | jq -r .Metadata.latest)
+          aws s3 cp --recursive s3://openwifi-allure-reports/sanity/${{ steps.ap_model.outputs.model }}/$LAST_RUN_ID/history history
 
-        - name: generate Allure report
-          uses: ./.github/actions/generate-allure-report
-          with:
-            results_path: ./allure-results
-            history_path: ./history
-            additional_metadata: |
-              Ap.Model=${{ steps.ap_model.outputs.model }}
+      - name: generate Allure report
+        uses: ./.github/actions/generate-allure-report
+        with:
+          results_path: ./allure-results
+          history_path: ./history
+          additional_metadata: |
+            Ap.Model=${{ steps.ap_model.outputs.model }}
 
-        - name: upload Allure report as artifact
-          uses: actions/upload-artifact@v2
-          with:
-            name: allure-report-hfcl_ion4xe
-            path: allure-report
+      - name: upload Allure report as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: allure-report-hfcl_ion4xe
+          path: allure-report
 
-        # doing this to be able to aggregate multiple reports together later on
-        - name: copy results into report
-          run: cp -r allure-results allure-report/results
+      # doing this to be able to aggregate multiple reports together later on
+      - name: copy results into report
+        run: cp -r allure-results allure-report/results
 
-        - name: upload to S3
-          if: github.ref == 'refs/heads/master' && needs.vars.outputs.marker_expression == 'uc_sanity'
-          uses: ./.github/actions/allure-report-to-s3
-          with:
-            test_type: sanity
-            testbed: ${{ steps.ap_model.outputs.model }}
-            report_path: allure-report
-            s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
-            s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
+      - name: upload to S3
+        if: github.ref == 'refs/heads/master' && needs.vars.outputs.marker_expression == 'uc_sanity'
+        uses: ./.github/actions/allure-report-to-s3
+        with:
+          test_type: sanity
+          testbed: ${{ steps.ap_model.outputs.model }}
+          report_path: allure-report
+          s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
+          s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
 
   # Cleanup
   cleanup:
