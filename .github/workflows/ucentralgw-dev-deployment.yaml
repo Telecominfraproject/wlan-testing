@@ -46,7 +46,12 @@ env:
   ]'
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      force_latest:
+        default: 'false'
+        description: 'Force deployment of the latest versions of all microservices ignoring matrix versions'
+        required: true
 
 jobs:
   generate-matrix:
@@ -87,26 +92,49 @@ jobs:
     - name: Deploy OpenWIFI Cloud SDK
       working-directory: wlan-testing/helm/ucentral
       run: |
-        export NAMESPACE=${{ matrix.namespace }}
-        export DEPLOY_METHOD=${{ matrix.deploy_method }}
-        export CHART_VERSION=${{ matrix.chart_version }}
-        export OWGW_VERSION=${{ matrix.owgw_version }}
-        export OWGWUI_VERSION=${{ matrix.owgwui_version }}
-        export OWSEC_VERSION=${{ matrix.owsec_version }}
-        export OWFMS_VERSION=${{ matrix.owfms_version }}
-        export OWPROV_VERSION=${{ matrix.owprov_version }}
-        export OWPROVUI_VERSION=${{ matrix.owprovui_version }}
-        export OWANALYTICS_VERSION=${{ matrix.owanalytics_version }}
-        export OWSUB_VERSION=${{ matrix.owsub_version }}
-        export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
-        export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
-        export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
-        export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
-        export OWFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
-        export CERT_LOCATION=cert.pem
-        export KEY_LOCATION=key.pem
-        export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
-        ./deploy.sh
+        if [[ "${{ github.event.inputs.force_latest }}" == "false" ]]; then
+          export NAMESPACE=${{ matrix.namespace }}
+          export DEPLOY_METHOD=${{ matrix.deploy_method }}
+          export CHART_VERSION=${{ matrix.chart_version }}
+          export OWGW_VERSION=${{ matrix.owgw_version }}
+          export OWGWUI_VERSION=${{ matrix.owgwui_version }}
+          export OWSEC_VERSION=${{ matrix.owsec_version }}
+          export OWFMS_VERSION=${{ matrix.owfms_version }}
+          export OWPROV_VERSION=${{ matrix.owprov_version }}
+          export OWPROVUI_VERSION=${{ matrix.owprovui_version }}
+          export OWANALYTICS_VERSION=${{ matrix.owanalytics_version }}
+          export OWSUB_VERSION=${{ matrix.owsub_version }}
+          export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
+          export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
+          export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
+          export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
+          export OWFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
+          export CERT_LOCATION=cert.pem
+          export KEY_LOCATION=key.pem
+          export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
+          ./deploy.sh
+        else
+          export NAMESPACE=${{ matrix.namespace }}
+          export DEPLOY_METHOD=git
+          export CHART_VERSION=main
+          export OWGW_VERSION=master
+          export OWGWUI_VERSION=main
+          export OWSEC_VERSION=main
+          export OWFMS_VERSION=main
+          export OWPROV_VERSION=main
+          export OWPROVUI_VERSION=main
+          export OWANALYTICS_VERSION=main
+          export OWSUB_VERSION=main
+          export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
+          export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
+          export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
+          export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
+          export OWFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
+          export CERT_LOCATION=cert.pem
+          export KEY_LOCATION=key.pem
+          export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
+          ./deploy.sh
+        fi
 
     - name: Show resource state on deployment failure
       if: failure()
