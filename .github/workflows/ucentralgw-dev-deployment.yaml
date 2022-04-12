@@ -57,9 +57,18 @@ on:
         required: false
 
 jobs:
+  id:
+    name: Workflow ID Provider
+    runs-on: ubuntu-latest
+    steps:
+      - name: ${{ github.event.inputs.id }}
+        run: echo run identifier ${{ inputs.id }}
+
   generate-matrix:
     name: Generate matrix for build
     runs-on: ubuntu-latest
+    needs:
+      - id
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -71,7 +80,9 @@ jobs:
   deploy:
     name: Update OpenWIFI Cloud SDK instances
     runs-on: ubuntu-latest
-    needs: [ generate-matrix ]
+    needs:
+      - id
+      - generate-matrix
     strategy:
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
       fail-fast: false
