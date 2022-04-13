@@ -20,23 +20,24 @@ setup_params_general = {
 }
 @allure.suite("Hard Roam 5g")
 @allure.feature("Roam Test")
-# @pytest.mark.parametrize(
-#     'setup_profiles',
-#     [setup_params_general],
-#     indirect=True,
-#     scope="class"
-# )
-# @pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
 
 
 class TestRoamOTAFiveg(object):
 
     @pytest.mark.hard_roam_5g_ota
     @pytest.mark.wpa2_personal
+    @pytest.mark.wpa3_personal
     def test_multi_hard_roam_5g_to_5g(self, get_configuration, lf_test, lf_reports, lf_tools,
                                       run_lf, add_env_properties,
                                       instantiate_profile, get_controller_logs, get_ap_config_slots, get_lf_logs,
-                                      roaming_delay, iteration, client):
+                                      roaming_delay, iteration, client, duration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -71,6 +72,6 @@ class TestRoamOTAFiveg(object):
                                 ssid_name=ssid_name, security=security, security_key=security_key,
                                 band=band, test="5g",
                                 iteration=int(iteration), num_sta=int(client), roaming_delay=roaming_delay,
-                                option="ota", channel=ch)
+                                option="ota", channel=ch, duration=duration)
 
 
