@@ -106,7 +106,7 @@ class Fixtures_3x:
 
         # lf dut data [{'ssid_name': 'ssid_wpa2_2g', 'appliedRadios': ['2G'], 'security_key': 'something', 'security': 'wpa2'}, {'ssid_name': 'ssid_wpa2_5g', 'appliedRadios': ['5G'], 'security_key': 'something', 'security': 'wpa2'}, {'ssid_name': 'ssid_wpa2_5g', 'appliedRadios': ['6G'], 'security_key': 'something', 'security': 'wpa3'}]
         print("lf dut data", lf_dut_data)
-
+        allure.attach(name="wlan data passing", body=str(parameter))
 
         # if parameter["roam"] == True:
         print("create 3 wlans on slot1,2 and 3")
@@ -243,9 +243,17 @@ class Fixtures_3x:
                                                                    wlanssid=lf_dut_data[2]['ssid_name'],
                                                                    key=lf_dut_data[2]['security_key'])
                         instantiate_profile_obj.enable_ap_6ghz()
-                        # if parameter["ft+psk"] == True:
-                        #      instantiate_profile_obj.enable_ft_sae(ssid=lf_dut_data[2]['ssid_name'], key=lf_dut_data[2]['security_key'])
+                        if parameter["ft+psk"] == True:
+                             instantiate_profile_obj.enable_ft_sae(ssid=lf_dut_data[2]['ssid_name'], key=lf_dut_data[2]['security_key'])
                         instantiate_profile_obj.get_ssids()
+            sumy = instantiate_profile_obj.get_ssids()
+            allure.attach(name="wlan summary after creating test wlan", body=str(sumy))
+            twog_sum = instantiate_profile_obj.show_2ghz_summary()
+            fiveg_sum = instantiate_profile_obj.show_5ghz_summary()
+            sixg_sum = instantiate_profile_obj.show_6ghz_summary()
+            allure.attach(name="ap 2ghz summary", body=str(twog_sum))
+            allure.attach(name="ap 5ghz summary", body=str(fiveg_sum))
+            allure.attach(name="ap 6ghz summary", body=str(sixg_sum))
 
         if "roam_type" in list_key:
             print("after creating wlan's assign wlan to respective tag policy")
@@ -264,6 +272,7 @@ class Fixtures_3x:
                     if ap_name == 1:
                         # add 6g ssid to 6g ap
                         instantiate_profile_obj.config_wireless_tag_policy_and_policy_profile(wlan=lf_dut_data[2]['ssid_name'])
+
                 else:
                     instantiate_profile_obj.config_wireless_tag_policy_and_policy_profile(
                         wlan=lf_dut_data[0]['ssid_name'])
@@ -271,6 +280,8 @@ class Fixtures_3x:
                         wlan=lf_dut_data[1]['ssid_name'])
                     instantiate_profile_obj.config_wireless_tag_policy_and_policy_profile(
                         wlan=lf_dut_data[2]['ssid_name'])
+
+
 
 
         bssid_list_2g = []
@@ -282,6 +293,13 @@ class Fixtures_3x:
             # instantiate controller object
             instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'], timeout="10",
                                                       ssid_data=lf_dut_data, ap_data=self.lab_info['access_point'], type=ap_name)
+            bss2_info = instantiate_profile_obj.get_ap_bssid_2g()
+            allure.attach(name="wlan 2g bssid info", body=str(bss2_info))
+            bss5_info = instantiate_profile_obj.get_ap_bssid_5g()
+            allure.attach(name="wlan 5g bssid info", body=str(bss5_info))
+            bss6_info = instantiate_profile_obj.get_ap_bssid_6g()
+            allure.attach(name="wlan 6g bssid info", body=str(bss6_info))
+
             bssid_2g = instantiate_profile_obj.cal_bssid_2g()
             print("bssid 2g", bssid_2g)
             lst_2g = bssid_list_2g.append(bssid_2g)
