@@ -113,7 +113,7 @@ jobs:
           namespace: interop-${{ github.run_id }}-galaxy-s9
           testbed: interop
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and android and not wpa3_personal' }}"
-          configuration: "lab_info.json"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "--device='Galaxy S9' --skip-lanforge"
           allure_results_artifact_name: allure-results-galaxy-s9
