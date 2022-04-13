@@ -175,6 +175,11 @@ def pytest_addoption(parser):
         help="Roaming iterations"
     )
     parser.addoption(
+        "--duration",
+        default=1,
+        help="Roaming duration in minutes"
+    )
+    parser.addoption(
         "--client",
         default=1,
         help="Number of clients to be created"
@@ -226,6 +231,7 @@ def test_cases():
 def testbed(request):
     """yields the testbed option selection"""
     var = request.config.getoption("--testbed")
+    allure.attach(name="testbed name", body=var)
     yield var
 
 
@@ -251,18 +257,28 @@ def cc_1(request):
 def roaming_delay(request):
     """yields the --roaming_delay  option """
     var = request.config.getoption("--roaming_delay")
+    allure.attach(name="roaming delay provided in seconds", body=var)
     yield var
 
 @pytest.fixture(scope="session")
 def iteration(request):
     """yields the --iteration  option for a test to provide how frequenty roam should happen """
     var = request.config.getoption("--iteration")
+    allure.attach(name="iteration", body=var)
+    yield var
+
+@pytest.fixture(scope="session")
+def duration(request):
+    """yields the --duration  option for a test to provide how long roam should happen """
+    var = request.config.getoption("--duration")
+    allure.attach(name="duration in minutes", body=var)
     yield var
 
 @pytest.fixture(scope="session")
 def client(request):
     """yields the --client  option for getting user specified client number"""
     var = request.config.getoption("--client")
+    allure.attach(name="number of clients", body=var)
     yield var
 
 
@@ -748,10 +764,12 @@ def add_env_properties(get_configuration, get_sdk_version, get_apnos, fixtures_v
         pass
     if cc_1:
         add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
+        add_allure_environment_property('Controller-Version', get_configuration["controller"]["version"])
         for i in range(len(get_configuration["access_point"])):
             add_allure_environment_property(str('AP-Name-' + str(i+1)), get_configuration["access_point"][i]["ap_name"])
         for i in range(len(get_configuration["access_point"])):
             add_allure_environment_property(str('AP-Serial-Number-'+str(i+1)), get_configuration["access_point"][i]["serial"])
+        add_allure_environment_property('LANforge-Chipset-Info', get_configuration["traffic_generator"]["details"]["Chip-set-info"])
     else:
         add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
         add_allure_environment_property('AP-Serial-Number', get_configuration["access_point"][0]["serial"] + "\n")
@@ -847,8 +865,6 @@ def get_apnos_logs(get_apnos, get_configuration):
 
 @pytest.fixture(scope="function")
 def get_controller_logs(get_configuration, ):
-    print("hi")
-
     obj = CController(controller_data=get_configuration['controller'], ap_data=get_configuration['access_point'])
     summary = obj.show_ap_summary()
     print(summary)
