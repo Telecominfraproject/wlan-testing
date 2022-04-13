@@ -29,6 +29,12 @@ inputs:
     default: 'main'
     description: 'OpenWIFI Subscription (Userportal) version to be deployed.'
     required: false
+  websocket_cert:
+    description: 'Certificate for OWGW websocket endpoint'
+    required: true
+  websocket_key:
+    description: 'Key for OWGW websocket endpoint'
+    required: true
   owsec_authentication_default_username:
     description: 'OpenWIFI default username'
     required: true

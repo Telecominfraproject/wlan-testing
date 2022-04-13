@@ -87,11 +87,13 @@ jobs:
           owprov_version: ${{ github.event.inputs.owprov_version }}
           owanalytics_version: ${{ github.event.inputs.owanalytics_version }}
           owsub_version: ${{ github.event.inputs.owsub_version }}
-          owsec_authentication_default_username: ${{ github.event.inputs.owsec_authentication_default_username }}
-          owsec_authentication_default_password: ${{ github.event.inputs.owsec_authentication_default_password }}
-          owsec_authentication_new_password: ${{ github.event.inputs.owsec_authentication_new_password }}
-          owfms_s3_secret: ${{ github.event.inputs.owfms_s3_secret }}
-          owfms_s3_key: ${{ github.event.inputs.owfms_s3_key }}
+          websocket_cert: ${{ secrets.DIGICERT_CERT }}
+          websocket_key: ${{ secrets.DIGICERT_KEY }}
+          owsec_authentication_default_username: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
+          owsec_authentication_default_password: ${{ secrets.OWSEC_DEFAULT_PASSWORD }}
+          owsec_authentication_new_password: ${{ secrets.OWSEC_NEW_PASSWORD }}
+          owfms_s3_secret: ${{ secrets.UCENTRALFMS_S3_SECRET }}
+          owfms_s3_key: ${{ secrets.UCENTRALFMS_S3_KEY }}
 
   deploy-virtual-ap-instance:
     name: Deploy virtual AP EC2 instance
