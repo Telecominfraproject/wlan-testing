@@ -1015,6 +1015,8 @@ class RunTest:
             radio = self.fiveg_radios[0]
         if band == "twog":
             radio = self.twog_radios[0]
+        if band == "sixg":
+            radio = self.ax_radios[0]
 
         # pre clean
         sta_list = lf_tools.get_station_list()
@@ -1049,6 +1051,20 @@ class RunTest:
             station_profile.set_command_flag("add_sta", "8021x_radius", 1)
             station_profile.set_command_flag("add_sta", "disable_roam", 1)
             station_profile.set_wifi_extra(key_mgmt="FT-PSK     ",
+                                           pairwise="",
+                                           group="",
+                                           psk="",
+                                           eap="",
+                                           identity="",
+                                           passwd="",
+                                           pin=""
+                                           )
+        if type == "11r-sae":
+            station_profile.set_command_flag("add_sta", "ieee80211w", 2)
+            station_profile.set_command_flag("add_sta", "80211u_enable", 0)
+            station_profile.set_command_flag("add_sta", "8021x_radius", 1)
+            station_profile.set_command_flag("add_sta", "disable_roam", 1)
+            station_profile.set_wifi_extra(key_mgmt="FT-SAE     ",
                                            pairwise="",
                                            group="",
                                            psk="",
@@ -1974,13 +1990,13 @@ class RunTest:
     def sniff_full_data(self, pcap_file, filter):
         obj = LfPcap()
         status = obj.get_packet_info(pcap_file=pcap_file, filter=filter)
-        allure.attach(name="pack", body=str(status))
+        # allure.attach(name="pack", body=str(status))
         return status
 
 
     def multi_hard_roam(self, run_lf, get_configuration, lf_tools, lf_reports,  instantiate_profile, ssid_name=None,
                         security=None, security_key=None, band=None,  test=None, iteration=1, num_sta=1,
-                        roaming_delay=None, option=None, channel=36):
+                        roaming_delay=None, option=None, channel=36, duration=None):
         allure.attach(name="Test Procedure", body="This test consists of creating a multiple  client which will be " \
                                                   " connected to the nearest ap, here the test automation will " \
                                                   "do hard roam based on forced roam method" \
@@ -2042,6 +2058,28 @@ class RunTest:
             c1_bssid = c1_5g_bssid
             c2_bssid = c2_5g_bssid
 
+        elif test == "6g":
+            c1_6g_bssid = ""
+            c2_6g_bssid = ""
+            if run_lf:
+                c1_6g_bssid = get_configuration["access_point"][0]["ssid"]["6g-bssid"]
+                allure.attach(name="bssid of ap1", body=c1_6g_bssid)
+                c2_6g_bssid = get_configuration["access_point"][1]["ssid"]["6g-bssid"]
+                allure.attach(name="bssid of ap2", body=c2_6g_bssid)
+            else:
+                for ap_name in range(len(get_configuration['access_point'])):
+                    instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
+                                                                  timeout="10",
+                                                                  ap_data=get_configuration['access_point'],
+                                                                  type=ap_name)
+                    bssid_6g = instantiate_profile_obj.cal_bssid_6g()
+                    if ap_name == 0:
+                        c1_6g_bssid = bssid_6g
+                    if ap_name == 1:
+                        c2_6g_bssid = bssid_6g
+            c1_bssid = c1_6g_bssid
+            c2_bssid = c2_6g_bssid
+
         print("bssid of c1 ", c1_bssid)
         allure.attach(name="bssid of ap1", body=c1_bssid)
         print("bssid of c2", c2_bssid)
@@ -2078,6 +2116,13 @@ class RunTest:
                                   type="11r")
             radio_ =  self.ax_radios[0]
             radio = radio_.split(".")[2]
+        if band == "sixg":
+            self.create_n_clients(sta_prefix="wlan", num_sta=num_sta, dut_ssid=ssid_name,
+                                  dut_security=security, dut_passwd=security_key, radio=self.ax_radios[0],
+                                  lf_tools=lf_tools,
+                                  type="11r-sae")
+            radio_ = self.ax_radios[1]
+            radio = radio_.split(".")[2]
 
         # check if all stations have ip
         sta_list = lf_tools.get_station_list()
@@ -2090,9 +2135,17 @@ class RunTest:
         table_head = ["iteration", "client count", "bssid before", "bssid after", "Result"]
         table_global = []
         table_global.append(table_head)
+        if duration != None:
+            timeout = time.time() + 60 * float(duration)
+            # iteration = 50000000
 
         if val:
+            # while True:
             for num in range(iteration):
+                time.sleep(1)
+                if duration != None:
+                    if time.time() > timeout:
+                        break
                 table_local = []
                 table_local.append(num)
                 sta_list = lf_tools.get_station_list()
@@ -2178,6 +2231,8 @@ class RunTest:
                                 time.sleep(2)
                                 cli_base.json_post("/cli-json/wifi_cli_cmd", wifi_cli_cmd_data)
 
+                        time.sleep(40)
+                        station = self.wait_for_ip(station=sta_list)
                         bssid_list_1 = []
                         for sta_name in sta_list:
                             sta = sta_name.split(".")[2]
@@ -2190,14 +2245,15 @@ class RunTest:
                         res = ""
                         if result:
                             station_after = bssid_list_1[0].lower()
-                            if station_after == station_before:
+                            if station_after == station_before or station_after == "na":
                                 print("station did not roamed")
                                 res = "FAIL"
-                                table_local.append(res)
                             elif station_after != station_before :
                                 print("client performed roam")
                                 res = "PASS"
                             table_local.append(station_after)
+                            if res == "FAIL":
+                                table_local.append(res)
 
                         #stop sniff and attach data
                         print("stop sniff")
@@ -2217,6 +2273,9 @@ class RunTest:
                                         if query_auth_response[0] == "Successful":
                                             print("authentcation is present")
                                             table_local.append(res)
+                                            snif = self.sniff_full_data(pcap_file=file_name, filter="(wlan.fixed.auth.alg == 2 && wlan.fixed.status_code == 0x0000 && wlan.fixed.auth_seq == 0x0002) || (wlan.fc.type_subtype eq 3 && wlan.fixed.status_code == 0x0000 && wlan.tag.number == 55)")
+                                            allure.attach(name="pass sniffer for iteration "+ str(num), body=str(snif))
+
                                     else:
                                         allure.attach.file(source=file_name,
                                                            name="pcap_file for fail instance of iteration value " + str(
@@ -2229,6 +2288,9 @@ class RunTest:
                                            name="pcap_file for fail instance of iteration value " + str(num))
                         print("make client connected for " + str(roaming_delay)+ " secs" )
                     table_global.append(table_local)
+            # if duration != None:
+            #     if time.time() > timeout:
+            #         break
 
             print("table value", table_global)
             final = lf_reports.table2(table=table_global)
@@ -2239,6 +2301,16 @@ class RunTest:
                                                           type=0)
             log = instantiate_profile_obj.show_11r_log()
             allure.attach(name="11r logs after roam test", body=str(log))
+            try:
+                supplicant = "/home/lanforge/wifi/wpa_supplicant_log_" + self.staConnect.radio.split(".")[2] + ".txt"
+                obj = SCP_File(ip=self.lanforge_ip, port=self.lanforge_ssh_port, username="root", password="lanforge",
+                               remote_path=supplicant,
+                               local_path=".")
+                obj.pull_file()
+                allure.attach.file(source="wpa_supplicant_log_" + self.staConnect.radio.split(".")[2] + ".txt",
+                                   name="supplicant_log")
+            except Exception as e:
+                print(e)
         else:
             print("station's failed to get associate at the begining")
             allure.attach(name="FAIL", body="stations did not got ip at the start of test")
