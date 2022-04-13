@@ -235,6 +235,14 @@ class CController:
         sum= self.cc.show_ap_dot11_5gz_summary()
         return sum
 
+    def show_2ghz_summary(self):
+        sum= self.cc.show_ap_dot11_24gz_summary()
+        return sum
+
+    def show_6ghz_summary(self):
+        sum= self.cc.show_ap_dot11_6gz_summary()
+        return sum
+
     def create_wlan_open(self):
         open = self.cc.config_wlan_open()
         return open
@@ -315,6 +323,10 @@ class CController:
     def get_ap_bssid_5g(self):
         bssid_5g = self.cc.show_ap_bssid_5ghz()
         return bssid_5g
+
+    def get_ap_bssid_6g(self):
+        bssid_6g = self.cc.show_ap_bssid_6ghz()
+        return bssid_6g
 
     def cal_bssid_2g(self):
         wlan_sumry = self.get_ap_bssid_2g()
@@ -401,6 +413,53 @@ class CController:
                     wlan_bssid.append(id_list3[1])
                 else:
                     print("no wlan on slot 2 present")
+        y = wlan_bssid[0].replace(".", '')
+        bssid = ':'.join(a + b for a, b in zip(y[::2], y[1::2]))
+        return bssid
+
+    def cal_bssid_6g(self):
+        wlan_sumry = self.get_ap_bssid_6g()
+        print(wlan_sumry)
+        ele_list = [y for y in (x.strip() for x in wlan_sumry.splitlines()) if y]
+        indices = [i for i, s in enumerate(ele_list) if 'BSSID' in s]
+        data = indices[1]
+        data2 = data + 1
+        data3 = data + 2
+        data4 = data + 3
+        data5 = data + 4
+        data6 = data + 5
+        acc_data = ele_list[int(data)]
+        acc_data2 = ele_list[int(data2)]
+        acc_data3 = ele_list[int(data3)]
+        acc_data4 = ele_list[int(data4)]
+        acc_data5 = ele_list[int(data5)]
+        acc_data6 = ele_list[int(data6)]
+        id_list = acc_data3.split()
+        id_list1 = acc_data4.split()
+        id_list2 = acc_data5.split()
+        id_list3 = acc_data6.split()
+        wlan_id_list = []
+        wlan_bssid = []
+        print(id_list, id_list1 , id_list2)
+        if acc_data == "WLAN ID    BSSID":
+            if acc_data2 == "-------------------------":
+
+                print(id_list)
+                if id_list[0] == "3":
+                    print("yes")
+                    wlan_id_list.append(id_list)
+                    wlan_bssid.append(id_list[1])
+                elif id_list1[0] == "3":
+                    wlan_id_list.append(id_list1)
+                    wlan_bssid.append(id_list1[1])
+                elif id_list2[0] == "3":
+                    wlan_id_list.append(id_list2)
+                    wlan_bssid.append(id_list2[1])
+                elif id_list3[0] == "3":
+                    wlan_id_list.append(id_list3)
+                    wlan_bssid.append(id_list3[1])
+                else:
+                    print("no wlan on slot 3 present")
         y = wlan_bssid[0].replace(".", '')
         bssid = ':'.join(a + b for a, b in zip(y[::2], y[1::2]))
         return bssid
