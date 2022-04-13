@@ -64,313 +64,34 @@ jobs:
 
   deploy-controller:
     name: Deploy OpenWIFI Cloud SDK
+    needs: id
+    runs-on: ubuntu-latest
     env:
       AWS_DEFAULT_OUTPUT: json
       AWS_DEFAULT_REGION: us-east-2
-    runs-on: ubuntu-latest
-    needs: id
     outputs:
-      gateway_url: ${{ steps.gateway_url.outputs.value }}
-      sec_url: ${{ steps.sec_url.outputs.value }}
-      namespace: ${{ steps.namespace.outputs.value }}
+      gateway_url: ${{ steps.deploy-sdk-docker-compose-in-k8s.outputs.gateway_url }}
+      sec_url: ${{ steps.deploy-sdk-docker-compose-in-k8s.outputs.sec_url }}
+      namespace: ${{ steps.deploy-sdk-docker-compose-in-k8s.outputs.namespace }}
     steps:
-      - name: Checkout wlan-testing repo
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+
+      - name: Use deploy-sdk-docker-compose-in-k8s composite action
+        id: deploy-sdk-docker-compose-in-k8s
+        uses: ./.github/actions/deploy-sdk-docker-compose-in-k8s
         with:
-          path: wlan-testing
-
-      - name: Prepare certificates from secrets
-        working-directory: wlan-testing/docker-compose/openwifi
-        run: |
-          echo "${{ secrets.DIGICERT_CERT }}" | base64 -d > websocket-cert.pem
-          echo "${{ secrets.DIGICERT_KEY }}" | base64 -d > websocket-key.pem
-
-      - name: Fetch kubeconfig
-        run: |
-          aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
-
-      - name: Set namespace output
-        id: namespace
-        run: echo "::set-output name=value::ow-docker-compose-${{ github.run_id }}"
-
-      - name: Set gateway URL output
-        id: gateway_url
-        run: echo "::set-output name=value::ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
-
-      - name: Set sec service URL output
-        id: sec_url
-        run: echo "::set-output name=value::ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
-
-      - name: Create Kubernetes namespace and secret
-        working-directory: wlan-testing/docker-compose/openwifi
-        run: |
-          kubectl create ns ow-docker-compose-${{ github.run_id }}
-          kubectl create secret generic tip-cicd-wildcard-certs --from-file=websocket-cert.pem=websocket-cert.pem --from-file=websocket-key.pem=websocket-key.pem -n ow-docker-compose-${{ github.run_id }}
-
-      - name: Deploy OpenWIFI Cloud SDK
-        working-directory: wlan-testing/docker-compose/openwifi
-        env:
-          OWSEC_AUTHENTICATION_DEFAULT_USERNAME: ${{ secrets.UCENTRALGW_AUTH_USERNAME }}
-          OWSEC_AUTHENTICATION_DEFAULT_PASSWORD: ${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
-          OWFMS_S3_SECRET: ${{ secrets.UCENTRALFMS_S3_SECRET }}
-          OWFMS_S3_KEY: ${{ secrets.UCENTRALFMS_S3_KEY }}
-        run: |
-          cat <<EOF | kubectl create -f - -n ow-docker-compose-${{ github.run_id }}
-          apiVersion: v1
-          kind: Service
-          metadata:
-            name: ow-docker-compose-${{ github.run_id }}
-            annotations:
-              service.beta.kubernetes.io/aws-load-balancer-type: "nlb-ip"
-              service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
-              external-dns.alpha.kubernetes.io/hostname: ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build
-              service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
-              service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285"
-              service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002,16003,443,16001,16004,16005,8443,5912,5913,16009,16006"
-            labels:
-              app: ow-docker-compose-${{ github.run_id }}
-          spec:
-            selector:
-              app: ow-docker-compose-${{ github.run_id }}
-            type: LoadBalancer
-            ports:
-            - name: owgw-websocket
-              port: 15002
-              targetPort: 15002
-              protocol: TCP
-            - name: owgw-restapi
-              port: 16002
-              targetPort: 16002
-              protocol: TCP
-            - name: owgw-alivecheck
-              port: 16102
-              targetPort: 16102
-              protocol: TCP
-            - name: owgw-fileupload
-              port: 16003
-              targetPort: 16003
-              protocol: TCP
-            - name: owgw-rttys
-              port: 5912
-              targetPort: 5912
-              protocol: TCP
-            - name: owgw-rttys-view
-              port: 5913
-              targetPort: 5913
-            - name: owgw-ui-http
-              port: 80
-              targetPort: 80
-              protocol: TCP
-            - name: owgw-ui-https
-              port: 443
-              targetPort: 443
-              protocol: TCP
-            - name: owsec-restapi
-              port: 16001
-              targetPort: 16001
-              protocol: TCP
-            - name: owsec-alivecheck
-              port: 16101
-              targetPort: 16101
-              protocol: TCP
-            - name: owfms-restapi
-              port: 16004
-              targetPort: 16004
-              protocol: TCP
-            - name: owfms-alivecheck
-              port: 16104
-              targetPort: 16104
-              protocol: TCP
-            - name: owprov-restapi
-              port: 16005
-              targetPort: 16005
-              protocol: TCP
-            - name: owprov-alivecheck
-              port: 16105
-              targetPort: 16105
-              protocol: TCP
-            - name: owprov-ui-http
-              port: 8080
-              targetPort: 8080
-              protocol: TCP
-            - name: owprov-ui-https
-              port: 8443
-              targetPort: 8443
-              protocol: TCP
-            - name: owanalytics-restapi
-              port: 16009
-              targetPort: 16009
-              protocol: TCP
-            - name: owanalytics-alivecheck
-              port: 16109
-              targetPort: 16109
-              protocol: TCP
-            - name: owsub-restapi
-              port: 16006
-              targetPort: 16006
-              protocol: TCP
-            - name: owsub-alivecheck
-              port: 16106
-              targetPort: 16106
-              protocol: TCP
-          ---
-          apiVersion: v1
-          kind: Pod
-          metadata:
-            name: ow-docker-compose-${{ github.run_id }}
-            annotations:
-              cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
-            labels:
-              app: ow-docker-compose-${{ github.run_id }}
-          spec:
-            volumes:
-            - name: client-certs
-              emptyDir: {}
-            - name: deploy-repo
-              emptyDir: {}
-            - name: tip-cicd-wildcard-certs
-              secret:
-                secretName: tip-cicd-wildcard-certs
-            containers:
-            - name: docker-daemon
-              image: docker:dind
-              env:
-              - name: DOCKER_TLS_CERTDIR
-                value: "/certs"
-              securityContext:
-                privileged: true
-              volumeMounts:
-              - name: client-certs
-                mountPath: /certs/client
-              - name: deploy-repo
-                mountPath: /wlan-cloud-ucentral-deploy
-          
-            - name: docker-compose-deployment
-              image: docker/compose:latest
-              command: ["/bin/sh", "-c"]
-              args: ["apk add git; wget https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/master/docker-compose/openwifi/deploy.sh; chmod +x deploy.sh; sh deploy.sh"]
-              env:
-              - name: DOCKER_TLS_VERIFY
-                value: "true"
-              - name: DOCKER_HOST
-                value: "127.0.0.1:2376"
-              - name: DOCKER_CERT_PATH
-                value: "/certs/client"
-              - name: DEPLOY_VERSION
-                value: "${{ github.event.inputs.deployment_version }}"
-              - name: OWGW_TAG
-                value: "${{ github.event.inputs.owgw_version }}"
-              - name: OWGWUI_TAG
-                value: "main"
-              - name: OWSEC_TAG
-                value: "${{ github.event.inputs.owsec_version }}"
-              - name: OWFMS_TAG
-                value: "${{ github.event.inputs.owfms_version }}"
-              - name: OWPROV_TAG
-                value: "${{ github.event.inputs.owprov_version }}"
-              - name: OWPROVUI_TAG
-                value: "main"
-              - name: OWANALYTICS_TAG
-                value: "${{ github.event.inputs.owanalytics_version }}"
-              - name: OWSUB_TAG
-                value: "${{ github.event.inputs.owsub_version }}"
-              - name: INTERNAL_OWGW_HOSTNAME
-                value: "owgw.wlan.local"
-              - name: INTERNAL_OWSEC_HOSTNAME
-                value: "owsec.wlan.local"
-              - name: INTERNAL_OWFMS_HOSTNAME
-                value: "owfms.wlan.local"
-              - name: INTERNAL_OWPROV_HOSTNAME
-                value: "owprov.wlan.local"
-              - name: INTERNAL_OWANALYTICS_HOSTNAME
-                value: "owanalytics.wlan.local"
-              - name: INTERNAL_OWSUB_HOSTNAME
-                value: "owsub.wlan.local"
-              - name: SYSTEM_URI_UI
-                value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
-              - name: DEFAULT_UCENTRALSEC_URL
-                value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16001"
-              - name: OWGW_FILEUPLOADER_HOST_NAME
-                value: "ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
-              - name: OWGW_FILEUPLOADER_URI
-                value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16003"
-              - name: OWGW_SYSTEM_URI_PRIVATE
-                value: "https://owgw.wlan.local:17002"
-              - name: OWGW_SYSTEM_URI_PUBLIC
-                value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16002"
-              - name: OWGW_RTTY_SERVER
-                value: "ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
-              - name: OWSEC_AUTHENTICATION_DEFAULT_USERNAME
-                value: "$OWSEC_AUTHENTICATION_DEFAULT_USERNAME"
-              - name: OWSEC_AUTHENTICATION_DEFAULT_PASSWORD
-                value: "$OWSEC_AUTHENTICATION_DEFAULT_PASSWORD"
-              - name: OWSEC_SYSTEM_URI_PRIVATE
-                value: "https://owsec.wlan.local:17001"
-              - name: OWSEC_SYSTEM_URI_PUBLIC
-                value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16001"
-              - name: OWFMS_SYSTEM_URI_PRIVATE
-                value: "https://owfms.wlan.local:17004"
-              - name: OWFMS_SYSTEM_URI_PUBLIC
-                value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16004"
-              - name: OWFMS_S3_SECRET
-                value: "$OWFMS_S3_SECRET"
-              - name: OWFMS_S3_KEY
-                value: "$OWFMS_S3_KEY"
-              - name: OWPROV_SYSTEM_URI_PRIVATE
-                value: "https://owprov.wlan.local:17005"
-              - name: OWPROV_SYSTEM_URI_PUBLIC
-                value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16005"
-              - name: OWANALYTICS_SYSTEM_URI_PRIVATE
-                value: "https://owanalytics.wlan.local:17009"
-              - name: OWANALYTICS_SYSTEM_URI_PUBLIC
-                value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16009"
-              - name: OWSUB_SYSTEM_URI_PRIVATE
-                value: "https://owsub.wlan.local:17006"
-              - name: OWSUB_SYSTEM_URI_PUBLIC
-                value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16006"
-              - name: WEBSOCKET_CERT
-                value: "/tip-cicd-wildcard-certs/websocket-cert.pem"
-              - name: WEBSOCKET_KEY
-                value: "/tip-cicd-wildcard-certs/websocket-key.pem"
-              volumeMounts:
-              - name: client-certs
-                mountPath: /certs/client
-              - name: deploy-repo
-                mountPath: /wlan-cloud-ucentral-deploy
-              - name: tip-cicd-wildcard-certs
-                readOnly: true
-                mountPath: "/tip-cicd-wildcard-certs"
-          EOF
-
-      - name: Show resource state on deployment failure
-        if: failure()
-        run: |
-          kubectl get pods --namespace ow-docker-compose-${{ github.run_id }}
-          kubectl get services --namespace ow-docker-compose-${{ github.run_id }}
-      - name: Describe pods on deployment failure
-        if: failure()
-        run: |
-          kubectl describe pods --namespace ow-docker-compose-${{ github.run_id }}
-      - name: Describe services on deployment failure
-        if: failure()
-        run: |
-          kubectl describe services --namespace ow-docker-compose-${{ github.run_id }}
-
-      - name: Change password and check if deployment is ready using clustersysteminfo image
-        env:
-          OWSEC: "ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16001"
-          OWSEC_DEFAULT_USERNAME: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
-          OWSEC_DEFAULT_PASSWORD: ${{ secrets.OWSEC_DEFAULT_PASSWORD }}
-          OWSEC_NEW_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
-          CHECK_RETRIES: 60
-        run: |
-          docker run --rm \
-            -e OWSEC \
-            -e OWSEC_DEFAULT_USERNAME \
-            -e OWSEC_DEFAULT_PASSWORD \
-            -e OWSEC_NEW_PASSWORD \
-            -e CHECK_RETRIES \
-            tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo:main
+          deployment_version: ${{ github.event.inputs.deployment_version }}
+          owgw_version: ${{ github.event.inputs.owgw_version }}
+          owsec_version: ${{ github.event.inputs.owsec_version }}
+          owfms_version: ${{ github.event.inputs.owfms_version }}
+          owprov_version: ${{ github.event.inputs.owprov_version }}
+          owanalytics_version: ${{ github.event.inputs.owanalytics_version }}
+          owsub_version: ${{ github.event.inputs.owsub_version }}
+          owsec_authentication_default_username: ${{ github.event.inputs.owsec_authentication_default_username }}
+          owsec_authentication_default_password: ${{ github.event.inputs.owsec_authentication_default_password }}
+          owsec_authentication_new_password: ${{ github.event.inputs.owsec_authentication_new_password }}
+          owfms_s3_secret: ${{ github.event.inputs.owfms_s3_secret }}
+          owfms_s3_key: ${{ github.event.inputs.owfms_s3_key }}
 
   deploy-virtual-ap-instance:
     name: Deploy virtual AP EC2 instance
