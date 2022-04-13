@@ -11,7 +11,8 @@
             "series": "9800",
             "prompt" : "WLC2",
             "band": ["5g"],
-            "scheme": "ssh"
+            "scheme": "ssh",
+            "version": "17.9.0.292"
         },
         "access_point": [
             {
@@ -31,9 +32,9 @@
                 "version": "17.7.1.11"
             },
             {
-                "ap_name": "APCC9C.3EF4.DDE0",
+                "ap_name": "APCC9C.3EF1.0DB0",
                 "chamber": "C2",
-                "model": "cw9166i",
+                "model": "cw9164",
                 "mode": "wifi6",
                 "serial": "FJC2428146G",
                 "tag_policy": "RM204-TB2",
@@ -65,7 +66,8 @@
                 "uplink": "1.1.eth3",
                 "2.4G-Station-Name": "wlan0",
                 "5G-Station-Name": "wlan0",
-                "AX-Station-Name": "ax"
+                "AX-Station-Name": "ax",
+                "Chip-set-info": "xyz"
             }
         }
     },
