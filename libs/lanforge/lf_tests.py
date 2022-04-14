@@ -68,11 +68,7 @@ Realm = realm.Realm
 class RunTest:
 
     def __init__(self, configuration_data=None, local_report_path="../reports/", influx_params=None, run_lf=False,
-<<<<<<< HEAD
                  debug=False, skip_pcap=False):
-=======
-                 debug=False):
->>>>>>> c034dfdd (Wifi 7233 (#438))
         if "type" in configuration_data['traffic_generator'].keys():
             if lanforge_data["type"] == "mesh":
                 self.lanforge_ip = lanforge_data["ip"]
@@ -171,18 +167,11 @@ class RunTest:
         result = self.check_ssid_available_scan_result(scan_ssid_data=self.data_scan_ssid, ssid=ssid)
         print("ssid available:-", result)
         if not result and ssid_channel:
-<<<<<<< HEAD
             if not self.skip_pcap:
                 print("sniff radio", self.ax_radios[0].split(".")[2])
                 self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
                 time.sleep(30)
                 self.stop_sniffer()
-=======
-            print("sniff radio", self.ax_radios[0].split(".")[2])
-            self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
-            time.sleep(30)
-            self.stop_sniffer()
->>>>>>> c034dfdd (Wifi 7233 (#438))
             print("ssid not available in scan result")
             return "FAIL", "ssid not available in scan result"
         self.staConnect.resource = 1
@@ -206,14 +195,9 @@ class RunTest:
             except Exception as e:
                 print(e)
         if ssid_channel:
-<<<<<<< HEAD
             if not self.skip_pcap:
                 print("sniff radio", self.ax_radios[0].split(".")[2])
                 self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
-=======
-            print("sniff radio", self.ax_radios[0].split(".")[2])
-            self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
->>>>>>> c034dfdd (Wifi 7233 (#438))
         self.staConnect.start()
         print("napping %f sec" % self.staConnect.runtime_secs)
         time.sleep(self.staConnect.runtime_secs)
@@ -283,12 +267,8 @@ class RunTest:
             result = "FAIL"
         time.sleep(3)
         if ssid_channel:
-<<<<<<< HEAD
             if not self.skip_pcap:
                 self.stop_sniffer()
-=======
-            self.stop_sniffer()
->>>>>>> c034dfdd (Wifi 7233 (#438))
         self.set_radio_channel(radio=self.staConnect.radio, channel="AUTO")
         return result, description
 
@@ -339,18 +319,11 @@ class RunTest:
         result = self.check_ssid_available_scan_result(scan_ssid_data=self.data_scan_ssid, ssid=ssid)
         print("ssid available:-", result)
         if not result and ssid_channel:
-<<<<<<< HEAD
             if not self.skip_pcap:
                 print("sniff radio", self.ax_radios[0].split(".")[2])
                 self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
                 time.sleep(30)
                 self.stop_sniffer()
-=======
-            print("sniff radio", self.ax_radios[0].split(".")[2])
-            self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
-            time.sleep(30)
-            self.stop_sniffer()
->>>>>>> c034dfdd (Wifi 7233 (#438))
             print("ssid not available in scan result")
             return "FAIL", "ssid not available in scan result"
         if eap == "TTLS":
@@ -390,14 +363,9 @@ class RunTest:
             except Exception as e:
                 print(e)
         if ssid_channel:
-<<<<<<< HEAD
             if not self.skip_pcap:
                 print("sniff radio", self.ax_radios[0].split(".")[2])
                 self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
-=======
-            print("sniff radio", self.ax_radios[0].split(".")[2])
-            self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
->>>>>>> c034dfdd (Wifi 7233 (#438))
         self.eap_connect.start(station_name, True, True)
         if d_vlan:
             self.station_ip = {}
@@ -466,12 +434,8 @@ class RunTest:
         else:
             result = "FAIL"
         if ssid_channel:
-<<<<<<< HEAD
             if not self.skip_pcap:
                 self.stop_sniffer()
-=======
-            self.stop_sniffer()
->>>>>>> c034dfdd (Wifi 7233 (#438))
         self.set_radio_channel(radio=self.eap_connect.radio, channel="AUTO")
         return result, description
 
@@ -1198,94 +1162,6 @@ class RunTest:
             "channel": _channel,
             "country": _country_num
         }
-<<<<<<< HEAD
-=======
-        print(f"Lanforge-radio Country changed {_country_num}")
-        self.local_realm.json_post("/cli-json/set_wifi_radio", _data=data)
-
-    def downlink_mu_mimo(self, radios_2g=[], radios_5g=[], radios_ax=[], dut_name="TIP", dut_5g="", dut_2g="",
-                         mode="BRIDGE", vlan_id=1, skip_2g=True, skip_5g=False):
-        raw_line = []
-        skip_twog = '1' if skip_2g else '0'
-        skip_fiveg = '1' if skip_5g else '0'
-        sniff_radio = 'wiphy6'
-        channel = 149 if skip_2g else 11
-        upstream_port = self.upstream_port
-
-        sets = [['Calibrate Attenuators', '0'], ['Receiver Sensitivity', '0'], ['Maximum Connection', '0'],
-                ['Maximum Throughput', '0'], ['Airtime Fairness', '0'], ['Range Versus Rate', '0'],
-                ['Spatial Consistency', '0'],
-                ['Multiple STAs Performance', '0'], ['Multiple Assoc Stability', '0'], ['Downlink MU-MIMO', '1'],
-                ['AP Coexistence', '0'], ['Long Term Stability', '0'], ['Skip 2.4Ghz Tests', f'{skip_twog}'],
-                ['Skip 5Ghz Tests', f'{skip_fiveg}'], ['2.4Ghz Channel', 'AUTO'], ['5Ghz Channel', 'AUTO']]
-        for i in range(6):
-            if i == 0 or i == 2:
-                raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
-            if i == 1 or i == 3:
-                raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
-            if i == 4 or i == 5:
-                raw_line.append([f'radio-{i}: {radios_ax[0] if i == 4 else radios_ax[1]}'])
-
-        if len(raw_line) != 6:
-            raw_line = [['radio-0: 1.1.5 wiphy1'], ['radio-1: 1.1.4 wiphy0'], ['radio-2: 1.1.7 wiphy3'],
-                        ['radio-3: 1.1.6 wiphy2'], ['radio-4: 1.1.8 wiphy4'], ['radio-5: 1.1.9 wiphy5']]
-        instance_name = "tr398-instance-{}".format(str(random.randint(0, 100000)))
-
-        if not os.path.exists("mu-mimo-config.txt"):
-            with open("mu-mimo-config.txt", "wt") as f:
-                for i in raw_line:
-                    f.write(str(i[0]) + "\n")
-                f.close()
-
-        if mode == "BRIDGE" or mode == "NAT":
-            upstream_port = self.upstream_port
-        else:
-            upstream_port = self.upstream_port + "." + str(vlan_id)
-        print("Upstream Port: ", self.upstream_port)
-
-        self.pcap_obj = LfPcap(host=self.lanforge_ip, port=self.lanforge_port)
-        self.cvtest_obj = TR398Test(lf_host=self.lanforge_ip,
-                                    lf_port=self.lanforge_port,
-                                    lf_user="lanforge",
-                                    lf_password="lanforge",
-                                    instance_name=instance_name,
-                                    config_name="cv_dflt_cfg",
-                                    upstream="1.1." + upstream_port,
-                                    pull_report=True,
-                                    local_lf_report_dir=self.local_report_path,
-                                    load_old_cfg=False,
-                                    dut2=dut_2g,
-                                    dut5=dut_5g,
-                                    raw_lines_file="mu-mimo-config.txt",
-                                    enables=[],
-                                    disables=[],
-                                    raw_lines=[],
-                                    sets=sets,
-                                    test_rig=dut_name
-                                    )
-        self.cvtest_obj.setup()
-        t1 = threading.Thread(target=self.cvtest_obj.run)
-        t1.start()
-        # t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 60))
-        # if t1.is_alive():
-        #     time.sleep(180)
-        #     t2.start()
-        while t1.is_alive():
-            time.sleep(1)
-        if os.path.exists("mu-mimo-config.txt"):
-            os.remove("mu-mimo-config.txt")
-
-        report_name = self.cvtest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
-                             influx_port=self.influx_params["influx_port"],
-                             influx_org=self.influx_params["influx_org"],
-                             influx_token=self.influx_params["influx_token"],
-                             influx_bucket=self.influx_params["influx_bucket"],
-                             path=report_name)
-        influx.glob()
-        return self.cvtest_obj
-
->>>>>>> c034dfdd (Wifi 7233 (#438))
         print(f"Lanforge-radio Country changed {_country_num}")
         self.local_realm.json_post("/cli-json/set_wifi_radio", _data=data)
 
