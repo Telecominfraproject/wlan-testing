@@ -1149,6 +1149,29 @@ class RunTest:
             else:
                 return False
 
+    def ofdma(self, mode="BRIDGE", vlan_id=1, inst_name="ofdma", batch_size='1', rawlines=None, sniffer_channel=0,
+              sniffer_radio="wiphy0", wct_stations=None):
+        if inst_name == "ofdma":
+            inst_name = "ofdma-instance-{}".format(str(random.randint(0, 100000)))
+
+        if rawlines is None:
+            rawlines = [['pdu_sz: 300']]
+
+        self.pcap_obj = LfPcap(host=self.lanforge_ip, port=self.lanforge_port)
+        sniffer = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniffer_radio, "ofdma", sniffer_channel, 180))
+        sniffer.start()
+        ofdma_obj = self.wifi_capacity(instance_name=inst_name, mode=mode, vlan_id=vlan_id, download_rate="10 Mbps",
+                                       batch_size=batch_size, stations=wct_stations, create_stations=False, sort="interleave",
+                                       upload_rate="0", protocol="TCP-IPv4", duration="150000", raw_lines=rawlines)
+        report_name = ofdma_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                             influx_port=self.influx_params["influx_port"],
+                             influx_org=self.influx_params["influx_org"],
+                             influx_token=self.influx_params["influx_token"],
+                             influx_bucket=self.influx_params["influx_bucket"],
+                             path=report_name)
+        influx.glob()
+        return self.cvtest_obj
 
 if __name__ == '__main__':
     influx_host = "influx.cicd.lab.wlan.tip.build"
