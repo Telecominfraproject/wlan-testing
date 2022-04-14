@@ -181,7 +181,6 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
-        ref: feature/wifi-wifi-6851--cli-loadtest-command
 
     - name: Run simulation
       working-directory: wlan-cloud-owls/test_scripts/curl
