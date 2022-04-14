@@ -48,6 +48,15 @@ runs:
         echo ::set-output name=serial_number::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_id }}' --query 'Reservations[*].Instances[*].NetworkInterfaces[*].MacAddress' --output text | sed 's/://g')"
         echo ::set-output name=instance_id::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_id }}' --query 'Reservations[*].Instances[*].InstanceId' --output text)"
 
+    - name: Wait for virtual AP instance to get ready
+      shell: bash
+      run: |
+        INSTANCE_STATE=$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_id }}' --query 'Reservations[*].Instances[*].State.Name' --output text)
+        until [[ "$INSTANCE_STATE" == "running" ]]; do
+          echo "Virtual AP instance state is $INSTANCE_STATE, waiting for the instance to get ready."
+          INSTANCE_STATE=$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_id }}' --query 'Reservations[*].Instances[*].State.Name' --output text)
+        done
+
     - name: Upload AP certificate, key and dev-id to instance
       env:
         VIRTUAL_AP_PASSWORD: ${{ inputs.virtual_ap_password }}
