@@ -72,8 +72,8 @@ runs:
 
     - name: Prepare certificates from secrets
       env:
-        WEBSOCKET_CERT: ${{ github.event.inputs.websocket_cert }}
-        WEBSOCKET_KEY: ${{ github.event.inputs.websocket_key }}
+        WEBSOCKET_CERT: ${{ inputs.websocket_cert }}
+        WEBSOCKET_KEY: ${{ inputs.websocket_key }}
       shell: bash
       working-directory: wlan-testing/docker-compose/openwifi
       run: |
@@ -103,10 +103,10 @@ runs:
     - name: Deploy OpenWIFI Cloud SDK
       working-directory: wlan-testing/docker-compose/openwifi
       env:
-        OWSEC_DEFAULT_USERNAME: ${{ github.event.inputs.owsec_default_username }}
-        OWSEC_HASHED_DEFAULT_PASSWORD: ${{ github.event.inputs.owsec_hashed_default_password }}
-        OWFMS_S3_SECRET: ${{ github.event.inputs.owfms_s3_secret }}
-        OWFMS_S3_KEY: ${{ github.event.inputs.owfms_s3_key }}
+        OWSEC_DEFAULT_USERNAME: ${{ inputs.owsec_default_username }}
+        OWSEC_HASHED_DEFAULT_PASSWORD: ${{ inputs.owsec_hashed_default_password }}
+        OWFMS_S3_SECRET: ${{ inputs.owfms_s3_secret }}
+        OWFMS_S3_KEY: ${{ inputs.owfms_s3_key }}
       shell: bash
       run: |
         cat <<EOF | kubectl create -f - -n ow-docker-compose-${{ github.run_id }}
@@ -251,23 +251,23 @@ runs:
             - name: DOCKER_CERT_PATH
               value: "/certs/client"
             - name: DEPLOY_VERSION
-              value: "${{ github.event.inputs.deployment_version }}"
+              value: "${{ inputs.deployment_version }}"
             - name: OWGW_TAG
-              value: "${{ github.event.inputs.owgw_version }}"
+              value: "${{ inputs.owgw_version }}"
             - name: OWGWUI_TAG
               value: "main"
             - name: OWSEC_TAG
-              value: "${{ github.event.inputs.owsec_version }}"
+              value: "${{ inputs.owsec_version }}"
             - name: OWFMS_TAG
-              value: "${{ github.event.inputs.owfms_version }}"
+              value: "${{ inputs.owfms_version }}"
             - name: OWPROV_TAG
-              value: "${{ github.event.inputs.owprov_version }}"
+              value: "${{ inputs.owprov_version }}"
             - name: OWPROVUI_TAG
               value: "main"
             - name: OWANALYTICS_TAG
-              value: "${{ github.event.inputs.owanalytics_version }}"
+              value: "${{ inputs.owanalytics_version }}"
             - name: OWSUB_TAG
-              value: "${{ github.event.inputs.owsub_version }}"
+              value: "${{ inputs.owsub_version }}"
             - name: INTERNAL_OWGW_HOSTNAME
               value: "owgw.wlan.local"
             - name: INTERNAL_OWSEC_HOSTNAME
@@ -358,9 +358,9 @@ runs:
     - name: Change password and check if deployment is ready using clustersysteminfo image
       env:
         OWSEC: "${{ steps.set_outputs.outputs.sec_url }}:16001"
-        OWSEC_DEFAULT_USERNAME: ${{ github.event.inputs.owsec_default_username }}
-        OWSEC_DEFAULT_PASSWORD: ${{ github.event.inputs.owsec_default_password }}
-        OWSEC_NEW_PASSWORD: ${{ github.event.inputs.owsec_new_password }}
+        OWSEC_DEFAULT_USERNAME: ${{ inputs.owsec_default_username }}
+        OWSEC_DEFAULT_PASSWORD: ${{ inputs.owsec_default_password }}
+        OWSEC_NEW_PASSWORD: ${{ inputs.owsec_new_password }}
         CHECK_RETRIES: 60
       shell: bash
       run: |
