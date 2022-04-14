@@ -35,13 +35,16 @@ inputs:
   websocket_key:
     description: 'Key for OWGW websocket endpoint'
     required: true
-  owsec_authentication_default_username:
+  owsec_default_username:
     description: 'OpenWIFI default username'
     required: true
-  owsec_authentication_default_password:
+  owsec_default_password:
     description: 'OpenWIFI default password'
     required: true
-  owsec_authentication_new_password:
+  owsec_hashed_default_password:
+    description: 'OpenWIFI hashed default password'
+    required: true
+  owsec_new_password:
     description: 'New OpenWIFI to set for the deployment'
     required: true
   owfms_s3_secret:
@@ -100,8 +103,8 @@ runs:
     - name: Deploy OpenWIFI Cloud SDK
       working-directory: wlan-testing/docker-compose/openwifi
       env:
-        OWSEC_AUTHENTICATION_DEFAULT_USERNAME: ${{ github.event.inputs.owsec_authentication_default_username }}
-        OWSEC_AUTHENTICATION_DEFAULT_PASSWORD: ${{ github.event.inputs.owsec_authentication_default_password }}
+        OWSEC_DEFAULT_USERNAME: ${{ github.event.inputs.owsec_default_username }}
+        OWSEC_HASHED_DEFAULT_PASSWORD: ${{ github.event.inputs.owsec_hashed_default_password }}
         OWFMS_S3_SECRET: ${{ github.event.inputs.owfms_s3_secret }}
         OWFMS_S3_KEY: ${{ github.event.inputs.owfms_s3_key }}
       shell: bash
@@ -292,9 +295,9 @@ runs:
             - name: OWGW_RTTY_SERVER
               value: "${{ steps.set_outputs.outputs.gateway_url }}"
             - name: OWSEC_AUTHENTICATION_DEFAULT_USERNAME
-              value: "$OWSEC_AUTHENTICATION_DEFAULT_USERNAME"
+              value: "$OWSEC_DEFAULT_USERNAME"
             - name: OWSEC_AUTHENTICATION_DEFAULT_PASSWORD
-              value: "$OWSEC_AUTHENTICATION_DEFAULT_PASSWORD"
+              value: "$OWSEC_HASHED_DEFAULT_PASSWORD"
             - name: OWSEC_SYSTEM_URI_PRIVATE
               value: "https://owsec.wlan.local:17001"
             - name: OWSEC_SYSTEM_URI_PUBLIC
@@ -355,9 +358,9 @@ runs:
     - name: Change password and check if deployment is ready using clustersysteminfo image
       env:
         OWSEC: "${{ steps.set_outputs.outputs.sec_url }}:16001"
-        OWSEC_DEFAULT_USERNAME: ${{ github.event.inputs.owsec_authentication_default_username }}
-        OWSEC_DEFAULT_PASSWORD: ${{ github.event.inputs.owsec_authentication_default_password }}
-        OWSEC_NEW_PASSWORD: ${{ github.event.inputs.owsec_authentication_new_password }}
+        OWSEC_DEFAULT_USERNAME: ${{ github.event.inputs.owsec_default_username }}
+        OWSEC_DEFAULT_PASSWORD: ${{ github.event.inputs.owsec_default_password }}
+        OWSEC_NEW_PASSWORD: ${{ github.event.inputs.owsec_new_password }}
         CHECK_RETRIES: 60
       shell: bash
       run: |

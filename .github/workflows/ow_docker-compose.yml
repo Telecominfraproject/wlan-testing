@@ -89,9 +89,10 @@ jobs:
           owsub_version: ${{ github.event.inputs.owsub_version }}
           websocket_cert: ${{ secrets.DIGICERT_CERT }}
           websocket_key: ${{ secrets.DIGICERT_KEY }}
-          owsec_authentication_default_username: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
-          owsec_authentication_default_password: ${{ secrets.OWSEC_DEFAULT_PASSWORD }}
-          owsec_authentication_new_password: ${{ secrets.OWSEC_NEW_PASSWORD }}
+          owsec_default_username: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
+          owsec_default_password: ${{ secrets.OWSEC_DEFAULT_PASSWORD }}
+          owsec_hashed_default_password: ${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
+          owsec_new_password: ${{ secrets.OWSEC_NEW_PASSWORD }}
           owfms_s3_secret: ${{ secrets.UCENTRALFMS_S3_SECRET }}
           owfms_s3_key: ${{ secrets.UCENTRALFMS_S3_KEY }}
 
