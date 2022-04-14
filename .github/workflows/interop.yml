@@ -65,9 +65,9 @@ jobs:
       - name: install dependencies
         run: |
           pip install -r .quali/requirements.txt
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
+        #  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        #  unzip awscliv2.zip
+        #  sudo ./aws/install
 
       - name: start reservation
         env:
