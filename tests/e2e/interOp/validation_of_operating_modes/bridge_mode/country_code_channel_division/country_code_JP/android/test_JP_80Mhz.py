@@ -525,7 +525,7 @@ for sec_modes in setup_params_general5['ssid_modes'].keys():
 
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general4],
+    [setup_params_general5],
     indirect=True,
     scope="class"
 )
@@ -602,7 +602,7 @@ for sec_modes in setup_params_general6['ssid_modes'].keys():
 
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general4],
+    [setup_params_general6],
     indirect=True,
     scope="class"
 )
@@ -678,7 +678,7 @@ for sec_modes in setup_params_general7['ssid_modes'].keys():
 
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general4],
+    [setup_params_general7],
     indirect=True,
     scope="class"
 )
@@ -754,7 +754,7 @@ for sec_modes in setup_params_general8['ssid_modes'].keys():
 
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general4],
+    [setup_params_general8],
     indirect=True,
     scope="class"
 )
@@ -830,7 +830,7 @@ for sec_modes in setup_params_general9['ssid_modes'].keys():
 
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general4],
+    [setup_params_general9],
     indirect=True,
     scope="class"
 )
@@ -907,7 +907,7 @@ for sec_modes in setup_params_general10['ssid_modes'].keys():
 
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general4],
+    [setup_params_general10],
     indirect=True,
     scope="class"
 )
@@ -983,7 +983,7 @@ for sec_modes in setup_params_general11['ssid_modes'].keys():
 
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general8],
+    [setup_params_general11],
     indirect=True,
     scope="class"
 )
