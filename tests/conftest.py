@@ -56,7 +56,7 @@ from lanforge.scp_util import SCP_File
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
 from lf_tools import ChamberView
-from report import Report
+from libs.lanforge.report import Report
 from os import path
 from typing import Any, Callable, Optional
 

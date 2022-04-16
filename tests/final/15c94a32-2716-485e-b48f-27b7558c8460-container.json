@@ -1,1 +1,0 @@
-{"uuid": "47b4461a-cbd0-493d-88ab-86457d96a77c", "children": ["8beb8465-1713-4966-8238-56ee407ff2e9"], "befores": [{"name": "get_equipment_ref", "status": "passed", "start": 1645099412357, "stop": 1645099412357}], "afters": [{"name": "get_equipment_ref::0", "status": "passed", "start": 1645099999124, "stop": 1645099999124}], "start": 1645099412357, "stop": 1645099999124}

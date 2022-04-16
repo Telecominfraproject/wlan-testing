@@ -1,1 +1,0 @@
-{"uuid": "748343da-8a7c-4437-81b8-a1962392ea02", "children": ["9805b711-bdc0-4060-be2b-9d09d34ccbca"], "befores": [{"name": "get_ap_config_slots", "status": "passed", "attachments": [{"name": "ap_slots", "source": "6de70d87-4cc1-4561-a8ed-177dbb8d38ad-attachment.attach"}], "start": 1645013051584, "stop": 1645013080678}], "start": 1645013051584, "stop": 1645013707475}

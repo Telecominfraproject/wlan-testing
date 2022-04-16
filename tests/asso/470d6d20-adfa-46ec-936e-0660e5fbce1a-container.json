@@ -1,1 +1,0 @@
-{"uuid": "cc917006-1363-4e0e-bf00-0f0943044cd0", "children": ["a81fafbe-f5de-4da9-b3e9-78b76ee8aa47"], "befores": [{"name": "get_controller_logs", "status": "passed", "attachments": [{"name": "controller_log", "source": "9575c6c2-1cba-46ae-a6ed-62bee57a0b73-attachment.attach"}], "start": 1645083004364, "stop": 1645083008957}], "start": 1645083004364, "stop": 1645083387295}
