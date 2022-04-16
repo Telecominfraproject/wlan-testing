@@ -339,9 +339,9 @@ class RunTest:
         return self.eap_connect.passes()
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
-                      instance_name="wct_instance", download_rate="1Gbps", influx_tags=[],
+                      instance_name="wct_instance", download_rate="1Gbps", influx_tags="",
                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", stations="", create_stations=True,
-                      sort="interleave", raw_lines=[]):
+                      sort="interleave", raw_lines=[], sets=[]):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         if mode == "BRIDGE":
             upstream_port = self.upstream_port
@@ -378,7 +378,8 @@ class RunTest:
                                             disables=[],
                                             raw_lines=raw_lines,
                                             raw_lines_file="",
-                                            sets=[])
+                                            test_tag=influx_tags,
+                                            sets=sets)
         wificapacity_obj.setup()
         wificapacity_obj.run()
         for tag in influx_tags:
@@ -504,7 +505,7 @@ class RunTest:
         return True
 
     def dataplane(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
-                  upload_rate="0", duration="15s", instance_name="test_demo", raw_lines=None):
+                  upload_rate="0", duration="15s", instance_name="test_demo", raw_lines=None, influx_tags=""):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
 
         if mode == "BRIDGE":
@@ -545,6 +546,7 @@ class RunTest:
                                            duration=duration,
                                            dut=dut_name,
                                            station="1.1." + station_name[0],
+                                           test_tag=influx_tags,
                                            raw_lines=raw_lines)
 
         self.dataplane_obj.setup()
@@ -563,7 +565,7 @@ class RunTest:
         return self.dataplane_obj
 
     def dualbandperformancetest(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
-                                instance_name="test_demo", dut_5g="", dut_2g=""):
+                                instance_name="test_demo", dut_5g="", dut_2g="", influx_tags=""):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
 
         if mode == "BRIDGE":
@@ -591,6 +593,7 @@ class RunTest:
                                             max_stations_dual=124,
                                             radio2=[self.twog_radios],
                                             radio5=[self.fiveg_radios],
+                                            test_tag=influx_tags,
                                             sets=[['Basic Client Connectivity', '0'], ['Multi Band Performance', '1'],
                                                   ['Throughput vs Pkt Size', '0'], ['Capacity', '0'],
                                                   ['Skip 2.4Ghz Tests', '1'],
