@@ -219,7 +219,7 @@ class RunTest:
             print("client connection to", self.staConnect.dut_ssid, "unsuccessful. Test Failed")
             result = False
         time.sleep(3)
-        return self.staConnect.passes(), result
+        return self.staConnect.passes(), result, station_info["interface"]["ip"]
 
     def EAP_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", extra_securities=[],
                     mode="BRIDGE", band="twog", vlan_id=100,
