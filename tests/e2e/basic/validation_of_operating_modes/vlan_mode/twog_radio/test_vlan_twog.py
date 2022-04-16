@@ -7,26 +7,21 @@ import time
 import allure
 import pytest
 
+pytestmark = [pytest.mark.vlan, pytest.mark.TestVlanConfigRadioTwog, pytest.mark.vlan,pytest.mark.twog]
+
 setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
-        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"], "vlan": 100},
-                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"], "vlan": 100}],
+        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"], "vlan": 100}],
 
-        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 125},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
-                 "security_key": "something", "vlan": 125}],
+        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 125}],
 
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 200},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"],
-             "security_key": "something", "vlan": 200}],
+            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 200}],
 
         "wpa_wpa2_personal_mixed": [
             {"ssid_name": "ssid_wpa_wpa2_p_m_2g", "appliedRadios": ["2G"], "security_key": "something",
-             "vlan": 150},
-            {"ssid_name": "ssid_wpa_wpa2_p_m_5g", "appliedRadios": ["5G"],
-             "security_key": "something", "vlan": 150}],
+             "vlan": 150}],
     },
     "rf": {},
     "radius": False
@@ -39,13 +34,7 @@ setup_params_general = {
     indirect=True,
     scope="class"
 )
-@pytest.mark.parametrize(
-    "create_vlan",
-    [setup_params_general],
-    indirect=True,
-    scope="class"
-)
-@pytest.mark.TestVlanConfigRadioTwog
+@pytest.mark.usefixtures("setup_profiles")
 class TestVlanConfigTwogRadio(object):
 
     @pytest.mark.wpa
@@ -53,7 +42,7 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.valid_client_ip_twog_wpa
     @allure.testcase(name="test_station_ip_wpa_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2168")
-    def test_station_ip_wpa_ssid_2g(self, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_station_ip_wpa_ssid_2g(self, lf_test, lf_tools,
                                     get_vlan_list, update_report, station_names_twog,
                                     test_cases, get_configuration):
         """
@@ -73,12 +62,12 @@ class TestVlanConfigTwogRadio(object):
         vlan_list = get_vlan_list
         print(vlan_list)
         lf_test.Client_disconnect(station_names_twog)
-        passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
+        passes, result, station_ip = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_twog, vlan_id=vlan, cleanup=False)
+                                                     station_name=station_names_twog, vlan_id=vlan)
         if result:
-            station_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
-                                           station_names_twog[0])["interface"]["ip"]
+            # station_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
+            #                                station_names_twog[0])["interface"]["ip"]
             vlan_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
                                         port_resources[2] + "." + str(vlan))["interface"]["ip"]
 
@@ -108,7 +97,7 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.valid_client_ip_twog_wpa2  # wifi-2156
     @allure.testcase(name="test_station_ip_wpa2_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2156")
-    def test_station_ip_wpa2_ssid_2g(self, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_station_ip_wpa2_ssid_2g(self, lf_test, lf_tools,
                                      update_report, station_names_twog,
                                      test_cases, get_configuration):
         """
@@ -128,7 +117,7 @@ class TestVlanConfigTwogRadio(object):
 
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_twog, vlan_id=vlan, cleanup=False)
+                                                     station_name=station_names_twog, vlan_id=vlan)
         if result:
             station_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
                                            station_names_twog[0])["interface"]["ip"]
@@ -156,7 +145,7 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.disable_vlan_twog  # wifi-2158
     @allure.testcase(name="test_disable_vlan_wpa2_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2158")
-    def test_disable_vlan_wpa2_ssid_2g(self, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_disable_vlan_wpa2_ssid_2g(self, lf_test, lf_tools,
                                        update_report, station_names_twog,
                                        test_cases, get_configuration):
         """
@@ -207,7 +196,7 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.valid_client_ip_twog_open
     @allure.testcase(name="test_station_ip_open_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2160")
-    def test_station_ip_open_ssid_2g(self, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_station_ip_open_ssid_2g(self, lf_test, lf_tools,
                                      get_vlan_list, update_report, station_names_twog,
                                      test_cases, get_configuration):
         """
@@ -229,7 +218,7 @@ class TestVlanConfigTwogRadio(object):
         lf_test.Client_disconnect(station_names_twog)
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_twog, vlan_id=vlan, cleanup=False)
+                                                     station_name=station_names_twog, vlan_id=vlan)
         if result:
             station_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
                                            station_names_twog[0])["interface"]["ip"]
@@ -262,7 +251,7 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.test_station_ip_twog_wpa_wpa2
     @allure.testcase(name="test_station_ip_wpa_wpa2_personal_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2166")
-    def test_station_ip_wpa_wpa2_personal_ssid_2g(self, setup_profiles, create_vlan, lf_test,
+    def test_station_ip_wpa_wpa2_personal_ssid_2g(self, lf_test,
                                                   lf_tools, get_vlan_list, update_report, station_names_twog,
                                                   test_cases, get_configuration):
         """
@@ -285,7 +274,7 @@ class TestVlanConfigTwogRadio(object):
         lf_test.Client_disconnect(station_names_twog)
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_twog, vlan_id=vlan, cleanup=False)
+                                                     station_name=station_names_twog, vlan_id=vlan)
         if result:
             station_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
                                            station_names_twog[0])["interface"]["ip"]
@@ -318,7 +307,7 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.valid_client_ip_twog_wpa2  # wifi-2172
     @allure.testcase(name="test_station_ip_wpa2_personal_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2172")
-    def test_station_ip_wpa2_personal_ssid_2g(self, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_station_ip_wpa2_personal_ssid_2g(self, lf_test, lf_tools,
                                               get_vlan_list, update_report, station_names_twog,
                                               test_cases, get_configuration):
         """
@@ -340,7 +329,7 @@ class TestVlanConfigTwogRadio(object):
         lf_test.Client_disconnect(station_names_twog)
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_twog, vlan_id=vlan, cleanup=False)
+                                                     station_name=station_names_twog, vlan_id=vlan)
         if result:
             station_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
                                            station_names_twog[0])["interface"]["ip"]
