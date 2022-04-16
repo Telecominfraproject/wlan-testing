@@ -210,7 +210,7 @@ class ChamberView:
                 self.dut_name = testbed
                 self.ap_model = access_point_data[0]["model"]
                 self.ap_hw_info = access_point_data[0]["mode"]
-                self.version = self.ap_version[0].split("\n")[1]
+                self.version = self.ap_version[0].split(" / ")[1].split("\r\n\n")[0]
                 print("AP version", self.version)
                 self.serial = access_point_data[0]["serial"]
                 self.ssid_data = None
