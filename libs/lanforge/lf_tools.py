@@ -43,7 +43,7 @@ LOGGER.addHandler(stdout_handler)
 
 class ChamberView:
 
-    def __init__(self, lanforge_data=None, access_point_data=None, run_lf=False, debug=True, testbed=None):
+    def __init__(self, lanforge_data=None, access_point_data=None, run_lf=False, debug=True, testbed=None, ap_version=None):
         print("lanforge data", lanforge_data)
         print("access point data", access_point_data)
         self.access_point_data = access_point_data
@@ -192,6 +192,7 @@ class ChamberView:
             self.exit_on_error = False
             self.dut_idx_mapping = {}
             self.ssid_list = []
+            self.ap_version = ap_version
             self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
             self.raw_line = [
                 ["profile_link " + self.upstream_resources + " upstream-dhcp 1 NA NA " + self.upstream_port.split(".")
@@ -208,7 +209,9 @@ class ChamberView:
                 # for DUT
                 self.dut_name = testbed
                 self.ap_model = access_point_data[0]["model"]
-                self.version = access_point_data[0]["version"].split("/")[-1]
+                self.ap_hw_info = access_point_data[0]["mode"]
+                self.version = self.ap_version[0].split(" / ")[1].split("\r\n\n")[0]
+                print("AP version", self.version)
                 self.serial = access_point_data[0]["serial"]
                 self.ssid_data = None
                 if self.run_lf:
@@ -217,7 +220,7 @@ class ChamberView:
                                      port=self.lanforge_port,
                                      dut_name=self.testbed,
                                      sw_version=self.version,
-                                     hw_version=self.ap_model,
+                                     hw_version=self.ap_hw_info,
                                      model_num=self.ap_model,
                                      serial_num=self.serial
                                      )

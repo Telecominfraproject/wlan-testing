@@ -51,6 +51,7 @@ class TestDualbandPerformanceNat(object):
         print(lf_tools.dut_idx_mapping)
         dut_5g = ""
         dut_2g = ""
+        influx_tags = "nat-wpa2"
         for i in lf_tools.dut_idx_mapping:
             if lf_tools.dut_idx_mapping[i][3] == "5G":
                 dut_5g = dut_name + ' ' + lf_tools.dut_idx_mapping[i][0] + ' ' + lf_tools.dut_idx_mapping[i][4]
@@ -64,7 +65,7 @@ class TestDualbandPerformanceNat(object):
 
         dbpt_obj = lf_test.dualbandperformancetest(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
                                                    instance_name="dbp_instance_wpa2p_nat_p",
-                                                   vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
+                                                   vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g, influx_tags=influx_tags)
         report_name = dbpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dual Band Performance Test Wpa2 Nat")
         assert True
