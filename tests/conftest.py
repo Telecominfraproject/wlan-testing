@@ -293,6 +293,10 @@ def get_uci_show(fixtures_ver, get_apnos, get_configuration):
     uci_show = fixtures_ver.get_uci_show(get_apnos, get_configuration)
     yield uci_show
 
+@pytest.fixture(scope="session")
+def get_ap_version(fixtures_ver, get_apnos, get_configuration):
+    ap_version = fixtures_ver.get_ap_version(get_apnos, get_configuration)
+    yield ap_version
 
 @pytest.fixture(scope="session")
 def skip_lf(request):
@@ -601,12 +605,12 @@ def create_lanforge_chamberview_dut(lf_tools, skip_lf, run_lf):
 
 
 @pytest.fixture(scope="session")
-def lf_tools(get_configuration, testbed, skip_lf, run_lf):
+def lf_tools(get_configuration, testbed, skip_lf, run_lf, get_ap_version):
     """ Create a DUT on LANforge"""
     if not skip_lf:
         obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
                           testbed=testbed, run_lf=run_lf,
-                          access_point_data=get_configuration["access_point"])
+                          access_point_data=get_configuration["access_point"], ap_version=get_ap_version)
     else:
         obj = False
     yield obj

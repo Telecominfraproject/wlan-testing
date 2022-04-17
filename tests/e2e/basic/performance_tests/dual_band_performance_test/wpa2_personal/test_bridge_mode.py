@@ -39,7 +39,7 @@ class TestDualbandPerformanceBRIDGE(object):
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3918", name="WIFI-3918")
     @pytest.mark.wpa2_personal
-    @pytest.mark.twogp
+    @pytest.mark.twog
     @pytest.mark.fiveg
     def test_client_wpa2_personal_bridge(self, get_vif_state, lf_tools,
                                   create_lanforge_chamberview_dut, lf_test, get_configuration):
@@ -52,6 +52,7 @@ class TestDualbandPerformanceBRIDGE(object):
         print(lf_tools.dut_idx_mapping)
         dut_5g = ""
         dut_2g = ""
+        influx_tags = "bridge-wpa2"
         for i in lf_tools.dut_idx_mapping:
             if lf_tools.dut_idx_mapping[i][3] == "5G":
                 dut_5g = dut_name + ' ' + lf_tools.dut_idx_mapping[i][0] + ' ' + lf_tools.dut_idx_mapping[i][4]
@@ -62,7 +63,7 @@ class TestDualbandPerformanceBRIDGE(object):
 
         dbpt_obj = lf_test.dualbandperformancetest(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
                                                    instance_name="dbp_instance_wpa2p_BRIDGE_p",
-                                                   vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
+                                                   vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g, influx_tags=influx_tags)
         report_name = dbpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dual Band Performance Test Wpa2 Bridge")
         assert True
