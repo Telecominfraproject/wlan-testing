@@ -114,7 +114,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and android and not wpa3_personal' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='Galaxy S9' --skip-lanforge"
+          additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
           allure_results_artifact_name: allure-results-galaxy-s9
 
       - name: stop reservation
@@ -190,7 +190,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='iPhone-11' --skip-lanforge"
+          additional_args: "-o model-iOS='iPhone-11' -o 'jobName=Github-Interop-iphone-11' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
           allure_results_artifact_name: allure-results-iphone-11
 
       - name: stop reservation
