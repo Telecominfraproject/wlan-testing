@@ -63,6 +63,18 @@ class TestResources(object):
         if fms_system_status != 200:
             pytest.exit("fms_status_check response from fms: " + str(fms_system_status))
 
+        # Provisioning system info
+        prov_system_info = setup_controller.get_system_prov()
+        request_url = prov_system_info.request.url
+        allure.attach(name="get_system_prov_request: ", body=str(request_url))
+        prov_system_status = prov_system_info.status_code
+        prov_system_status_json = prov_system_info.json()
+        print("prov_status_check response from fms: ", prov_system_status)
+        allure.attach(name="prov_status_check response from Prov:", body=str(prov_system_status) +
+                                                                       str(prov_system_status_json))
+        if prov_system_status != 200:
+            pytest.exit("Prov_status_check response from Prov: " + str(prov_system_status))
+
         # if gw_status_check != 200:
         #     for i in range(10):
         #         if setup_controller.get_system_gw().status_code != 200 and i < 9:
