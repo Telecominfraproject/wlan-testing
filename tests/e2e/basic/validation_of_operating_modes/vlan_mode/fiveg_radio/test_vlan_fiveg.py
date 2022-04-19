@@ -10,20 +10,16 @@ import pytest
 setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
-        "open": [{"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"], "vlan": 100},
-                 {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"], "vlan": 100}],
+        "open": [{"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"], "vlan": 100}],
 
-        "wpa": [{"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 125},
-                {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
+        "wpa": [{"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"],
                  "security_key": "something", "vlan": 125}],
 
-        "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something" , "vlan": 200},
+        "wpa2_personal":[
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"],
              "security_key": "something", "vlan": 200}],
 
         "wpa_wpa2_personal_mixed": [
-            {"ssid_name": "ssid_wpa_wpa2_p_m_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 150},
             {"ssid_name": "ssid_wpa_wpa2_p_m_5g", "appliedRadios": ["5G"],
              "security_key": "something", "vlan": 150}],
     },
@@ -38,12 +34,6 @@ setup_params_general = {
     indirect=True,
     scope="class"
 )
-@pytest.mark.parametrize(
-    "create_vlan",
-    [setup_params_general],
-    indirect=True,
-    scope="class"
-)
 @pytest.mark.TestVlanConfigRadioFiveg
 class TestVlanConfigFivegRadio(object):
 
@@ -52,7 +42,7 @@ class TestVlanConfigFivegRadio(object):
     @pytest.mark.valid_client_ip_wpa_fiveg  # wifi-2169
     @allure.testcase(name="test_station_ip_wpa_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2169")
-    def test_station_ip_wpa_ssid_5g(self, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_station_ip_wpa_ssid_5g(self, lf_test, lf_tools,
                                     get_vlan_list, update_report, station_names_fiveg,
                                     test_cases, get_configuration):
         """
@@ -75,7 +65,7 @@ class TestVlanConfigFivegRadio(object):
         lf_test.Client_disconnect(station_names_fiveg)
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_fiveg, vlan_id=vlan, cleanup=False)
+                                                     station_name=station_names_fiveg, vlan_id=vlan)
         if result:
             station_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
                                            station_names_fiveg[0])["interface"]["ip"]
@@ -108,7 +98,7 @@ class TestVlanConfigFivegRadio(object):
     @pytest.mark.valid_client_ip_wpa2_fiveg  # wifi-2157
     @allure.testcase(name="test_station_ip_wpa2_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2157")
-    def test_station_ip_wpa2_ssid_5g(self, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_station_ip_wpa2_ssid_5g(self, lf_test, lf_tools,
                                      update_report, station_names_fiveg,
                                      test_cases, get_configuration):
         """
@@ -128,7 +118,7 @@ class TestVlanConfigFivegRadio(object):
 
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_fiveg, vlan_id=vlan, cleanup=False)
+                                                     station_name=station_names_fiveg, vlan_id=vlan)
         if result:
             station_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
                                            station_names_fiveg[0])["interface"]["ip"]
@@ -157,7 +147,7 @@ class TestVlanConfigFivegRadio(object):
     @pytest.mark.disable_vlan_fiveg  # wifi-2174
     @allure.testcase(name="test_disable_vlan_wpa2_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2174")
-    def test_disable_vlan_wpa2_ssid_5g(self, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_disable_vlan_wpa2_ssid_5g(self, lf_test, lf_tools,
                                        update_report, station_names_fiveg,
                                        test_cases, get_configuration):
         """
@@ -208,7 +198,7 @@ class TestVlanConfigFivegRadio(object):
     @pytest.mark.valid_client_ip_open_fiveg  # wifi-2161
     @allure.testcase(name="test_station_ip_open_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2161")
-    def test_station_ip_open_ssid_5g(self, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_station_ip_open_ssid_5g(self, lf_test, lf_tools,
                                      get_vlan_list, update_report, station_names_fiveg,
                                      test_cases, get_configuration):
         """
@@ -230,7 +220,7 @@ class TestVlanConfigFivegRadio(object):
         lf_test.Client_disconnect(station_names_fiveg)
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_fiveg, vlan_id=vlan, cleanup=False)
+                                                     station_name=station_names_fiveg, vlan_id=vlan)
         if result:
             station_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
                                            station_names_fiveg[0])["interface"]["ip"]
@@ -263,7 +253,7 @@ class TestVlanConfigFivegRadio(object):
     @pytest.mark.test_station_ip_wpa_wpa2_ssid_5g  # wifi-2167
     @allure.testcase(name="test_station_ip_wpa_wpa2_personal_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2167")
-    def test_station_ip_wpa_wpa2_personal_ssid_5g(self, setup_profiles, create_vlan, lf_test,
+    def test_station_ip_wpa_wpa2_personal_ssid_5g(self, lf_test,
                                                   lf_tools, get_vlan_list, update_report, station_names_fiveg,
                                                   test_cases, get_configuration):
         """
@@ -286,7 +276,7 @@ class TestVlanConfigFivegRadio(object):
         lf_test.Client_disconnect(station_names_fiveg)
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_fiveg, vlan_id=vlan, cleanup=False)
+                                                     station_name=station_names_fiveg, vlan_id=vlan)
         if result:
             station_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
                                            station_names_fiveg[0])["interface"]["ip"]
@@ -319,7 +309,7 @@ class TestVlanConfigFivegRadio(object):
     @pytest.mark.valid_client_ip_wpa2_personal  # wifi-2172
     @allure.testcase(name="test_station_ip_wpa2_personal_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2172")
-    def test_station_ip_wpa2_personal_ssid_5g(self, setup_profiles, create_vlan, lf_test, lf_tools,
+    def test_station_ip_wpa2_personal_ssid_5g(self, lf_test, lf_tools,
                                               get_vlan_list, update_report, station_names_fiveg,
                                               test_cases, get_configuration):
         """
@@ -341,7 +331,7 @@ class TestVlanConfigFivegRadio(object):
         lf_test.Client_disconnect(station_names_fiveg)
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_fiveg, vlan_id=vlan, cleanup=False)
+                                                     station_name=station_names_fiveg, vlan_id=vlan)
         if result:
             station_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
                                            station_names_fiveg[0])["interface"]["ip"]
