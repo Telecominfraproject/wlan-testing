@@ -36,13 +36,13 @@ class ConfigureController:
         self.access_token = ""
         # self.session = requests.Session()
         self.login_resp = self.login()
-        self.gw_host, self.fms_host = self.get_gw_endpoint()
-        if self.gw_host == "" or self.fms_host == "":
+        self.gw_host, self.fms_host, self.prov_host = self.get_gw_endpoint()
+        if self.gw_host == "" or self.fms_host == "" or self.prov_host == "":
             time.sleep(60)
-            self.gw_host, self.fms_host = self.get_gw_endpoint()
-            if self.gw_host == "" or self.fms_host == "":
+            self.gw_host, self.fms_host, self.prov_host = self.get_gw_endpoint()
+            if self.gw_host == "" or self.fms_host == "" or self.prov_host == "":
                 self.logout()
-                print(self.gw_host, self.fms_host)
+                print(self.gw_host, self.fms_host, self.prov_host)
                 pytest.exit("All Endpoints not available in Controller Service")
                 sys.exit()
 
@@ -62,6 +62,11 @@ class ConfigureController:
         print(new_uri)
         return new_uri
 
+    def build_url_prov(self, path):
+        new_uri = 'https://%s:%d/api/v1/%s' % (self.prov_host.hostname, self.prov_host.port, path)
+        print(new_uri)
+        return new_uri
+
     def request(self, service, command, method, params, payload):
         if service == "sec":
             uri = self.build_uri_sec(command)
@@ -69,6 +74,8 @@ class ConfigureController:
             uri = self.build_uri(command)
         elif service == "fms":
             uri = self.build_url_fms(command)
+        elif service == "prov":
+            uri = self.build_url_prov(command)
         else:
             raise NameError("Invalid service code for request.")
 
@@ -120,7 +127,9 @@ class ConfigureController:
                 gw_host = urlparse(service["uri"])
             if service['type'] == "owfms":
                 fms_host = urlparse(service["uri"])
-        return gw_host, fms_host
+            if service['type'] == "owprov":
+                prov_host = urlparse(service["uri"])
+        return gw_host, fms_host, prov_host
 
     def logout(self):
         uri = self.build_uri_sec('oauth2/%s' % self.access_token)
@@ -199,6 +208,12 @@ class Controller(ConfigureController):
     def get_device_uuid(self, serial_number):
         device_info = self.get_device_by_serial_number(serial_number=serial_number)
         return device_info["UUID"]
+
+    def get_system_prov(self):
+        uri = self.build_url_prov("system/?command=info")
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
 
 
 class FMSUtils:
@@ -282,6 +297,22 @@ class FMSUtils:
             # print(data)
 
         return "error"
+
+class ProvUtils:
+
+    def __init__(self, sdk_client=None, controller_data=None):
+        if sdk_client is None:
+            self.sdk_client = Controller(controller_data=controller_data)
+        self.sdk_client = sdk_client
+
+
+    def get_inventory(self):
+        response = self.sdk_client.request(service="prov", command="inventory/", method="GET", params=None,
+                                           payload="")
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return {}
 
 
 class UProfileUtility:
