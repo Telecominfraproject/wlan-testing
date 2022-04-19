@@ -556,6 +556,7 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.max_download_user1
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7619", name="WIFI-7619")
