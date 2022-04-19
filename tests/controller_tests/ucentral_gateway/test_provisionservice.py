@@ -17,6 +17,7 @@ import allure
 class TestUcentralProvisionService(object):
 
     @pytest.mark.sdk_restapi
+    @pytest.mark.prov_api
     def test_provservice_inventorylist(self, setup_controller):
         """
             Test the list devices endpoint
