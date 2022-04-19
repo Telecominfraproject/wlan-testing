@@ -1,13 +1,13 @@
 """
     Create VLAN ,connect stations and flow traffic through it : vlan Mode
-    pytest -m TestVlanConfigRadioTwog
+    pytest -m test_vlan_config_2g_radio
 """
 
 import time
 import allure
 import pytest
 
-pytestmark = [pytest.mark.vlan, pytest.mark.TestVlanConfigRadioTwog, pytest.mark.vlan,pytest.mark.twog]
+pytestmark = [pytest.mark.vlan, pytest.mark.test_vlan_config_2g_radio, pytest.mark.vlan, pytest.mark.twog]
 
 setup_params_general = {
     "mode": "VLAN",

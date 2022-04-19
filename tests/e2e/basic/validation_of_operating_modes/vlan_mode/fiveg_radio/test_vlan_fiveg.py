@@ -1,11 +1,13 @@
 """
     Create VLAN ,connect stations and flow traffic through it : vlan Mode
-    pytest -m TestVlanConfigRadioFiveg
+    pytest -m test_vlan_config_5g_radio
 """
 
 import time
 import allure
 import pytest
+
+pytestmark = [pytest.mark.vlan, pytest.mark.test_vlan_config_5g_radio, pytest.mark.vlan, pytest.mark.fiveg]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -34,7 +36,7 @@ setup_params_general = {
     indirect=True,
     scope="class"
 )
-@pytest.mark.TestVlanConfigRadioFiveg
+@pytest.mark.usefixtures("setup_profiles")
 class TestVlanConfigFivegRadio(object):
 
     @pytest.mark.wpa
