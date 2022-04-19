@@ -4,7 +4,7 @@ inputs:
   deployment_version:
     default: 'main'
     description: 'OpenWIFI deployment repository version to be deployed.'
-    required: false
+    required: true
   owgw_version:
     default: 'master'
     description: 'OpenWIFI Gateway version to be deployed.'
