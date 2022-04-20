@@ -725,6 +725,10 @@ def get_ap_logs(request, get_apnos, get_configuration, run_lf):
             ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
             ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
 
+        # Adding memory Profile code before every test start
+        output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+        allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
+
         def collect_logs():
             for ap in get_configuration['access_point']:
                 ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
@@ -732,7 +736,10 @@ def get_ap_logs(request, get_apnos, get_configuration, run_lf):
                 ap_logs = ap_ssh.get_logread(start_ref="start testcase: " + instance_name,
                                              stop_ref="stop testcase: " + instance_name)
                 allure.attach(name='logread', body=str(ap_logs))
-            pass
+
+            # Adding memory Profile code after every test completion
+            output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+            allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
 
         request.addfinalizer(collect_logs)
 
