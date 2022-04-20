@@ -41,13 +41,12 @@ class TestUcentralProvisionService(object):
         device_name = device_mac.replace(":", "")
         # device_name = "deadbeef0011" + testbed.replace("-","")
         payload = {'serialNumber': device_name,
-                   'UUID': '123456',
-                   'configuration': self.configuration,
-                   'deviceType': 'AP',
+                   'devClass': 'any',
+                   'rrm': 'off',
+                   'deviceConfiguration': self.configuration,
+                   'deviceType': 'edgecore_eap101',
                    'location': '',
-                   'macAddress': device_mac,
-                   'manufacturer': 'Testing',
-                   'owner': ''}
+                   'name': 'Testing'}
         print(json.dumps(payload))
         resp = setup_controller.request("prov", "inventory/" + device_name, "POST", None, json.dumps(payload))
         allure.attach(name="response: ", body=str(resp.json()))
