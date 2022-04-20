@@ -59,6 +59,7 @@ jobs:
           owsec_new_password: ${{ secrets.OWSEC_NEW_PASSWORD }}
           owfms_s3_secret: ${{ secrets.UCENTRALFMS_S3_SECRET }}
           owfms_s3_key: ${{ secrets.UCENTRALFMS_S3_KEY }}
+          rtty_token: ${{ secrets.RTTY_TOKEN }}
 
   deploy-virtual-ap-instance:
     name: Deploy virtual AP EC2 instance

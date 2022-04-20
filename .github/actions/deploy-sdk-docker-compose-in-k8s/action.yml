@@ -53,6 +53,8 @@ inputs:
   owfms_s3_key:
     description: 'Access key ID to access S3 firmware bucket'
     required: true
+  rtty_token:
+    required: true
 
 outputs:
   gateway_url:
@@ -107,6 +109,7 @@ runs:
         OWSEC_HASHED_DEFAULT_PASSWORD: ${{ inputs.owsec_hashed_default_password }}
         OWFMS_S3_SECRET: ${{ inputs.owfms_s3_secret }}
         OWFMS_S3_KEY: ${{ inputs.owfms_s3_key }}
+        RTTY_TOKEN: ${{ inputs.rtty_token }}
       shell: bash
       run: |
         cat <<EOF | kubectl create -f - -n ow-docker-compose-${{ github.run_id }}
@@ -294,6 +297,8 @@ runs:
               value: "https://${{ steps.set_outputs.outputs.gateway_url }}:16002"
             - name: OWGW_RTTY_SERVER
               value: "${{ steps.set_outputs.outputs.gateway_url }}"
+            - name: RTTY_TOKEN
+              value: "$RTTY_TOKEN"
             - name: OWSEC_AUTHENTICATION_DEFAULT_USERNAME
               value: "$OWSEC_DEFAULT_USERNAME"
             - name: OWSEC_AUTHENTICATION_DEFAULT_PASSWORD
