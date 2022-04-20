@@ -31,7 +31,7 @@ class TestUcentralProvisionService(object):
         print(inven)
 
     @pytest.mark.prov_api_test
-    def test_gwservice_create_inventory_device(self, setup_controller, testbed):
+    def test_prov_service_create_inventory_device(self, setup_controller, testbed):
         """
             Test the create device in provision Inventory
         """
