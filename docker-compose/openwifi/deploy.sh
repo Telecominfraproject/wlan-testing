@@ -40,9 +40,6 @@ usage () {
   echo "- OWPROV_SYSTEM_URI_PRIVATE - private URL to be used for OWProv";
   echo "- OWPROV_SYSTEM_URI_PUBLIC - public URL to be used for OWProv";
   echo;
-  echo "- OWANALYTICS_SYSTEM_URI_PRIVATE - private URL to be used for OWAnalytics";
-  echo "- OWANALYTICS_SYSTEM_URI_PUBLIC - public URL to be used for OWAnalytics";
-  echo;
   echo "- WEBSOCKET_CERT - path to the websocket certificate";
   echo "- WEBSOCKET_KEY - path to the websocket key";
 }
@@ -79,9 +76,6 @@ usage () {
 ## OWProv configuration variables
 [ -z ${OWPROV_SYSTEM_URI_PRIVATE+x} ] && echo "OWPROV_SYSTEM_URI_PRIVATE is unset" && usage && exit 1
 [ -z ${OWPROV_SYSTEM_URI_PUBLIC+x} ] && echo "OWPROV_SYSTEM_URI_PUBLIC is unset" && usage && exit 1
-## OWAnalytics configuration variables
-[ -z ${OWANALYTICS_SYSTEM_URI_PRIVATE+x} ] && echo "OWANALYTICS_SYSTEM_URI_PRIVATE is unset" && usage && exit 1
-[ -z ${OWANALYTICS_SYSTEM_URI_PUBLIC+x} ] && echo "OWANALYTICS_SYSTEM_URI_PUBLIC is unset" && usage && exit 1
 ## cert related variables
 [ -z ${WEBSOCKET_CERT+x} ] && echo "WEBSOCKET_CERT is unset" && usage && exit 1
 [ -z ${WEBSOCKET_KEY+x} ] && echo "WEBSOCKET_KEY is unset" && usage && exit 1
@@ -97,7 +91,6 @@ sed -i "s~\(^INTERNAL_OWGW_HOSTNAME=\).*~\1$INTERNAL_OWGW_HOSTNAME~" .env
 sed -i "s~\(^INTERNAL_OWSEC_HOSTNAME=\).*~\1$INTERNAL_OWSEC_HOSTNAME~" .env
 sed -i "s~\(^INTERNAL_OWFMS_HOSTNAME=\).*~\1$INTERNAL_OWFMS_HOSTNAME~" .env
 sed -i "s~\(^INTERNAL_OWPROV_HOSTNAME=\).*~\1$INTERNAL_OWPROV_HOSTNAME~" .env
-sed -i "s~\(^INTERNAL_OWANALYTICS_HOSTNAME=\).*~\1$INTERNAL_OWANALYTICS_HOSTNAME~" .env
 
 sed -i "s~\(^FILEUPLOADER_HOST_NAME=\).*~\1$OWGW_FILEUPLOADER_HOST_NAME~" owgw.env
 sed -i "s~\(^FILEUPLOADER_URI=\).*~\1$OWGW_FILEUPLOADER_URI~" owgw.env
@@ -131,10 +124,6 @@ sed -i "s~\(^SYSTEM_URI_UI=\).*~\1$SYSTEM_URI_UI~" owprov.env
 
 sed -i "s~\(^DEFAULT_UCENTRALSEC_URL=\).*~\1$DEFAULT_UCENTRALSEC_URL~" owprov-ui.env
 sed -i "s~\(^REACT_APP_UCENTRALSEC_URL=\).*~\1$REACT_APP_UCENTRALSEC_URL~" owprov-ui.env
-
-sed -i "s~\(^SYSTEM_URI_PRIVATE=\).*~\1$OWANALYTICS_SYSTEM_URI_PRIVATE~" owanalytics.env
-sed -i "s~\(^SYSTEM_URI_PUBLIC=\).*~\1$OWANALYTICS_SYSTEM_URI_PUBLIC~" owanalytics.env
-sed -i "s~\(^SYSTEM_URI_UI=\).*~\1$SYSTEM_URI_UI~" owanalytics.env
 
 sed -i "s~\(^token:\).*~\1 $RTTY_TOKEN~" rttys/rttys.conf
 
