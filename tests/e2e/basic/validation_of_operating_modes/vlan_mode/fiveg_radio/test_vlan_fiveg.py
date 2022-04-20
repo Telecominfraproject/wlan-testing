@@ -7,7 +7,7 @@ import time
 import allure
 import pytest
 
-pytestmark = [pytest.mark.vlan, pytest.mark.test_vlan_config_5g_radio, pytest.mark.vlan, pytest.mark.fiveg]
+pytestmark = [pytest.mark.vlan, pytest.mark.multi_vlan, pytest.mark.test_vlan_config_5g_radio, pytest.mark.fiveg]
 
 setup_params_general = {
     "mode": "VLAN",
