@@ -673,6 +673,12 @@ class Fixtures_2x:
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
 
+
+
+        # Adding memory Profile code before applying config
+        output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+        allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
+
         time_1 = time.time()
 
         # Apply config
@@ -801,6 +807,10 @@ class Fixtures_2x:
         except Exception as e:
             print(e)
             pass
+
+        # Adding memory Profile code after applying config
+        output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+        allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
 
         def teardown_session():
             wifi_status = ap_ssh.get_wifi_status()
