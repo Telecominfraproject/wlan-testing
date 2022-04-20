@@ -211,6 +211,7 @@ class Controller(ConfigureController):
 
     def get_system_prov(self):
         uri = self.build_url_prov("system/?command=info")
+        allure.attach(name="Url of Prov UI=", body=str(uri))
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
