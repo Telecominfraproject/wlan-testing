@@ -162,7 +162,7 @@ class RunTest:
             time.sleep(30)
             self.stop_sniffer()
             print("ssid not available in scan result")
-            return "ssid not available in scan result", False
+            return "FAIL", "ssid not available in scan result"
         self.staConnect.resource = 1
         self.staConnect.dut_ssid = ssid
         self.staConnect.dut_passwd = passkey
@@ -177,17 +177,21 @@ class RunTest:
         self.staConnect.start()
         print("napping %f sec" % self.staConnect.runtime_secs)
         time.sleep(self.staConnect.runtime_secs)
+        dict_table = {}
+        report_obj = Report()
+        data_table = ""
         for sta_name in self.staConnect.station_names:
             try:
-                station_data_str = ""
                 sta_url = self.staConnect.get_station_url(sta_name)
                 station_info = self.staConnect.json_get(sta_url)
-                for i in station_info["interface"]:
-                    try:
-                        station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
-                    except Exception as e:
-                        print(e)
-                allure.attach(name=str(sta_name), body=str(station_data_str))
+                dict_data = station_info["interface"]
+                dict_table["key"] = list(dict_data.keys())
+                dict_table["value"] = list(dict_data.values())
+                try:
+                    data_table = report_obj.table2(table=dict_table, headers='keys')
+                except Exception as e:
+                    print(e)
+                allure.attach(name=str(sta_name), body=data_table)
             except Exception as e:
                 print(e)
         self.staConnect.stop()
@@ -211,26 +215,36 @@ class RunTest:
 
         for result in run_results:
             print("test result: " + result)
-        result = True
+        result = "PASS"
+        description = ""
         print("Client Connectivity :", self.staConnect.passes)
         endp_data = []
         for i in self.staConnect.resulting_endpoints:
             endp_data.append(self.staConnect.resulting_endpoints[i]["endpoint"])
-        cx_data = ""
-        for i in endp_data:
-            for j in i:
-                cx_data = cx_data + str(j) + " : " + str(i[j]) + "\n"
-            cx_data = cx_data + "\n"
-        allure.attach(name="cx_data", body=str(cx_data))
+        dict_table["key"] = list(endp_data[0].keys())
+        dict_table["value"] = list(endp_data[0].values())
+        data_table = report_obj.table2(table=dict_table, headers='keys')
+        allure.attach(name="cx_data", body=data_table)
+        for i in range(len(run_results)):
+            if i == 0:
+                if "FAILED" in run_results[i]:
+                    result = "FAIL"
+                    description = "Station did not get an ip"
+                    break
+            else:
+                if "FAILED" in run_results[i]:
+                    result = "FAIL"
+                    description = "did not report traffic"
+
         if self.staConnect.passes():
             print("client connection to", self.staConnect.dut_ssid, "successful. Test Passed")
+            result = "PASS"
         else:
             print("client connection to", self.staConnect.dut_ssid, "unsuccessful. Test Failed")
-            result = False
         time.sleep(3)
         if ssid_channel:
             self.stop_sniffer()
-        return self.staConnect.passes(), result
+        return result, description
 
     def EAP_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", extra_securities=[],
                     mode="BRIDGE", band="twog", vlan_id=100,
@@ -281,7 +295,7 @@ class RunTest:
             time.sleep(30)
             self.stop_sniffer()
             print("ssid not available in scan result")
-            return False
+            return "FAIL", "ssid not available in scan result"
         if eap == "TTLS":
             self.eap_connect.ieee80211w = ieee80211w
             self.eap_connect.key_mgmt = key_mgmt
@@ -312,6 +326,9 @@ class RunTest:
         self.eap_connect.start(station_name, True, True)
         if d_vlan:
            self.station_ip = {}
+        dict_table = {}
+        report_obj = Report()
+        data_table = ""
         for sta_name in station_name:
             # try:
             station_data_str = ""
@@ -319,19 +336,19 @@ class RunTest:
             # station_info = self.eap_connect.json_get(sta_url)
             station_info = self.eap_connect.json_get("port/1/1/" + sta_name)
 
-            for i in station_info["interface"]:
-                try:
-                    station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
-                    if d_vlan:
-                        if i == "ip":
-                            self.station_ip[sta_name] = station_info["interface"][i]
-                except Exception as e:
-                    print(e)
-            allure.attach(name=str(sta_name), body=str(station_data_str))
+            dict_data = station_info["interface"]
+            dict_table["key"] = list(dict_data.keys())
+            dict_table["value"] = list(dict_data.values())
+            try:
+                data_table = report_obj.table2(table=dict_table, headers='keys')
+            except Exception as e:
+                print(e)
+            allure.attach(name=str(sta_name), body=data_table)
             # except Exception as e:
             #     print(e)
 
         self.eap_connect.stop()
+        run_results = self.eap_connect.get_result_list()[1:]
         try:
             supplicant = "/home/lanforge/wifi/wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt"
             obj = SCP_File(ip=self.lanforge_ip, port=self.lanforge_ssh_port, username="root", password="lanforge",
@@ -348,19 +365,32 @@ class RunTest:
                 print("test result: " + self.eap_connect.passes())
                 pytest.exit("Test Failed: Debug True")
         endp_data = []
+        result = "PASS"
+        description = ""
         for i in self.eap_connect.resulting_endpoints:
             endp_data.append(self.eap_connect.resulting_endpoints[i]["endpoint"])
-        cx_data = ""
-        for i in endp_data:
-            for j in i:
-                cx_data = cx_data + str(j) + " : " + str(i[j]) + "\n"
-            cx_data = cx_data + "\n"
-        allure.attach(name="cx_data", body=str(cx_data))
+        #finding all keys and values
+        dict_table["key"] = [i for s in [d.keys() for d in endp_data] for i in s]
+        dict_table["value"] = [i for s in [d.values() for d in endp_data] for i in s]
+        data_table = report_obj.table2(table=dict_table, headers='keys')
+        allure.attach(name="cx_data", body=data_table)
+        for i in range(len(run_results)):
+            if i == 0:
+                if "FAILED" in run_results[i]:
+                    result = "FAIL"
+                    description = "Station did not get an ip"
+                    break
+            else:
+                if "FAILED" in run_results[i]:
+                    result = "FAIL"
+                    description = "did not report traffic"
         if cleanup:
            self.eap_connect.cleanup(station_name)
+        if self.eap_connect.passes():
+            result = "PASS"
         if ssid_channel:
             self.stop_sniffer()
-        return self.eap_connect.passes()
+        return result, description
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
                       instance_name="wct_instance", download_rate="1Gbps", influx_tags=[],
