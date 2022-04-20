@@ -48,12 +48,12 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
@@ -72,12 +72,12 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
@@ -96,12 +96,12 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
@@ -120,12 +120,12 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
@@ -143,12 +143,12 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band, ieee80211w=2, key_mgmt="WPA-EAP-SHA256",
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
@@ -166,12 +166,12 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band, ieee80211w=2, key_mgmt="WPA-EAP-SHA256",
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
 
 setup_params_enterprise_two = {
@@ -216,12 +216,12 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.fiveg
@@ -240,12 +240,12 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.twog
@@ -263,12 +263,12 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.fiveg
@@ -287,9 +287,9 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result

@@ -55,12 +55,12 @@ class TestNATModeEnterpriseTLSSuiteOne(object):
         identity = radius_info['user']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
                                      identity=identity, station_name=station_names_twog,
                                      key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
@@ -85,7 +85,7 @@ class TestNATModeEnterpriseTLSSuiteOne(object):
         identity = radius_info['user']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
                                      identity=identity, station_name=station_names_twog,
                                      key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
@@ -101,7 +101,7 @@ class TestNATModeEnterpriseTLSSuiteOne(object):
         #                                   msg='2G WPA Client Connectivity Failed - NAT mode' + str(
         #                                       passes))
 
-        assert passes
+        assert passes == "PASS", result
 
 
 
@@ -127,12 +127,12 @@ class TestNATModeEnterpriseTLSSuiteOne(object):
         identity = radius_info['user']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
                                      identity=identity, station_name=station_names_twog,
                                      key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
@@ -156,7 +156,7 @@ class TestNATModeEnterpriseTLSSuiteOne(object):
         identity = radius_info['user']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
                                      identity=identity, station_name=station_names_twog,
                                      key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
@@ -172,7 +172,7 @@ class TestNATModeEnterpriseTLSSuiteOne(object):
         #                                   msg='2G WPA Client Connectivity Failed - NAT mode' + str(
         #                                       passes))
 
-        assert passes
+        assert passes == "PASS", result
 
 
 
@@ -198,12 +198,12 @@ class TestNATModeEnterpriseTLSSuiteOne(object):
         identity = radius_info['user']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
                                      identity=identity, station_name=station_names_twog,
                                      key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
@@ -227,12 +227,12 @@ class TestNATModeEnterpriseTLSSuiteOne(object):
         identity = radius_info['user']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
                                      identity=identity, station_name=station_names_twog,
                                      key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
 
 #

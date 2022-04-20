@@ -69,7 +69,7 @@ class TestBridgeModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
     @pytest.mark.open
     @pytest.mark.fiveg
@@ -92,7 +92,7 @@ class TestBridgeModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa
@@ -166,7 +166,7 @@ class TestBridgeModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_personal
@@ -191,7 +191,7 @@ class TestBridgeModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
 
 setup_params_general_two = {
@@ -253,7 +253,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
@@ -302,7 +302,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.fiveg
@@ -326,7 +326,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
@@ -352,7 +352,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
@@ -376,7 +376,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
-        assert result
+        assert passes == "PASS", result
 
 # WEP Security Feature not available
 # setup_params_wep = {
