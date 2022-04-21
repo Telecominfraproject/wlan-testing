@@ -299,22 +299,6 @@ class FMSUtils:
 
         return "error"
 
-class ProvUtils:
-
-    def __init__(self, sdk_client=None, controller_data=None):
-        if sdk_client is None:
-            self.sdk_client = Controller(controller_data=controller_data)
-        self.sdk_client = sdk_client
-
-
-    def get_inventory(self):
-        response = self.sdk_client.request(service="prov", command="inventory/", method="GET", params=None,
-                                           payload="")
-        if response.status_code == 200:
-            return response.json()
-        else:
-            return {}
-
 
 class UProfileUtility:
 
