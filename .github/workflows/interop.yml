@@ -98,7 +98,7 @@ jobs:
         run: |
           curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-          
+
       - name: prepare configuration
         env:
           CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
@@ -112,11 +112,10 @@ jobs:
           DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
 
           jq ".CONFIGURATION.interop=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
+          
 
-          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-          then
-            jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-          fi
+
+
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -194,10 +193,6 @@ jobs:
           
           jq ".CONFIGURATION.interop=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
 
-          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-          then
-            jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-          fi
 
       - name: run tests
         uses: ./.github/actions/run-tests
