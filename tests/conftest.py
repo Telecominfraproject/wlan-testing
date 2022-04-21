@@ -802,6 +802,7 @@ def get_ap_channel(get_apnos, get_configuration):
                     continue
             all_data.append(dict_band_channel)
         except Exception as e:
+            print(e)
             pass
     print(all_data)
     yield all_data
