@@ -171,22 +171,30 @@ class RunTest:
         self.staConnect.runtime_secs = 40
         self.staConnect.bringup_time_sec = 80
         self.staConnect.cleanup_on_exit = True
-        self.staConnect.setup(extra_securities=extra_securities)
-        if ssid_channel:
-            self.start_sniffer(radio_channel=ssid_channel, radio=self.staConnect.radio.split(".")[2], duration=30)
-        self.staConnect.start()
-        print("napping %f sec" % self.staConnect.runtime_secs)
-        time.sleep(self.staConnect.runtime_secs)
-        dict_table = {}
-        report_obj = Report()
         data_table = ""
+        dict_table = {}
+        self.staConnect.setup(extra_securities=extra_securities)
         for sta_name in self.staConnect.station_names:
             try:
                 sta_url = self.staConnect.get_station_url(sta_name)
                 station_info = self.staConnect.json_get(sta_url)
                 dict_data = station_info["interface"]
-                dict_table["key"] = list(dict_data.keys())
-                dict_table["value"] = list(dict_data.values())
+                dict_table[""] = list(dict_data.keys())
+                dict_table["Before"] = list(dict_data.values())
+            except Exception as e:
+                print(e)
+        if ssid_channel:
+            self.start_sniffer(radio_channel=ssid_channel, radio=self.staConnect.radio.split(".")[2], duration=30)
+        self.staConnect.start()
+        print("napping %f sec" % self.staConnect.runtime_secs)
+        time.sleep(self.staConnect.runtime_secs)
+        report_obj = Report()
+        for sta_name in self.staConnect.station_names:
+            try:
+                sta_url = self.staConnect.get_station_url(sta_name)
+                station_info = self.staConnect.json_get(sta_url)
+                dict_data = station_info["interface"]
+                dict_table["After"] = list(dict_data.values())
                 try:
                     data_table = report_obj.table2(table=dict_table, headers='keys')
                 except Exception as e:
@@ -217,6 +225,7 @@ class RunTest:
             print("test result: " + result)
         result = "PASS"
         description = ""
+        dict_table = {}
         print("Client Connectivity :", self.staConnect.passes)
         endp_data = []
         for i in self.staConnect.resulting_endpoints:
@@ -321,14 +330,22 @@ class RunTest:
         self.eap_connect.security = security
         self.eap_connect.sta_list = station_name
         self.eap_connect.build(extra_securities=extra_securities)
+        dict_table = {}
+        report_obj = Report()
+        data_table = ""
+        for sta_name in station_name:
+            try:
+                station_info = self.eap_connect.json_get("port/1/1/" + sta_name)
+                dict_data = station_info["interface"]
+                dict_table[""] = list(dict_data.keys())
+                dict_table["Before"] = list(dict_data.values())
+            except Exception as e:
+                print(e)
         if ssid_channel:
             self.start_sniffer(radio_channel=ssid_channel, radio=self.eap_connect.radio.split(".")[2], duration=30)
         self.eap_connect.start(station_name, True, True)
         if d_vlan:
            self.station_ip = {}
-        dict_table = {}
-        report_obj = Report()
-        data_table = ""
         for sta_name in station_name:
             # try:
             station_data_str = ""
@@ -337,8 +354,7 @@ class RunTest:
             station_info = self.eap_connect.json_get("port/1/1/" + sta_name)
 
             dict_data = station_info["interface"]
-            dict_table["key"] = list(dict_data.keys())
-            dict_table["value"] = list(dict_data.values())
+            dict_table["After"] = list(dict_data.values())
             try:
                 data_table = report_obj.table2(table=dict_table, headers='keys')
             except Exception as e:
@@ -367,6 +383,7 @@ class RunTest:
         endp_data = []
         result = "PASS"
         description = ""
+        dict_table = {}
         for i in self.eap_connect.resulting_endpoints:
             endp_data.append(self.eap_connect.resulting_endpoints[i]["endpoint"])
         #finding all keys and values
