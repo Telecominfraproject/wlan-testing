@@ -173,6 +173,7 @@ class RunTest:
                 station_data_str = ""
                 sta_url = self.staConnect.get_station_url(sta_name)
                 station_info = self.staConnect.json_get(sta_url)
+                self.station_ip = station_info["interface"]["ip"]
                 for i in station_info["interface"]:
                     try:
                         station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
@@ -219,7 +220,7 @@ class RunTest:
             print("client connection to", self.staConnect.dut_ssid, "unsuccessful. Test Failed")
             result = False
         time.sleep(3)
-        return self.staConnect.passes(), result, station_info["interface"]["ip"]
+        return self.staConnect.passes(), result
 
     def EAP_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", extra_securities=[],
                     mode="BRIDGE", band="twog", vlan_id=100,
