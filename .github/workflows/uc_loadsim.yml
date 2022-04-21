@@ -125,6 +125,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
+        ref: ${{ github.event.inputs.deployment_version }}
 
     - name: Get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -378,6 +379,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
+        ref: ${{ github.event.inputs.deployment_version }}
 
     - name: Get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -550,6 +552,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
+        ref: ${{ github.event.inputs.deployment_version }}
 
     - name: Get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -703,6 +706,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
+        ref: ${{ github.event.inputs.deployment_version }}
 
     - name: Get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}

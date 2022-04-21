@@ -12,7 +12,7 @@ on:
       deployment_version:
         default: 'main'
         description: 'OpenWIFI deployment repository version to be deployed.'
-        required: false
+        required: true
       owgw_version:
         default: 'master'
         description: 'OpenWIFI Gateway version to be deployed'
@@ -79,6 +79,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
+        ref: ${{ github.event.inputs.deployment_version }}
 
     - name: Prepare certificates from secrets
       working-directory: wlan-cloud-ucentral-deploy/chart/environment-values

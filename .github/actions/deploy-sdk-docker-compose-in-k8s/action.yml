@@ -67,18 +67,11 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Checkout wlan-cloud-ucentral-deploy repo
-      uses: actions/checkout@v2
-      with:
-        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
-        path: wlan-cloud-ucentral-deploy
-
     - name: Prepare certificates from secrets
       env:
         WEBSOCKET_CERT: ${{ inputs.websocket_cert }}
         WEBSOCKET_KEY: ${{ inputs.websocket_key }}
       shell: bash
-      working-directory: wlan-cloud-ucentral-deploy/docker-compose
       run: |
         echo "${{ env.WEBSOCKET_CERT }}" | base64 -d > websocket-cert.pem
         echo "${{ env.WEBSOCKET_KEY }}" | base64 -d > websocket-key.pem
@@ -104,7 +97,6 @@ runs:
         kubectl create secret generic tip-cicd-wildcard-certs --from-file=websocket-cert.pem=websocket-cert.pem --from-file=websocket-key.pem=websocket-key.pem -n ${{ steps.set_outputs.outputs.namespace }}
 
     - name: Deploy OpenWIFI Cloud SDK
-      working-directory: wlan-cloud-ucentral-deploy/docker-compose
       env:
         OWSEC_DEFAULT_USERNAME: ${{ inputs.owsec_default_username }}
         OWSEC_HASHED_DEFAULT_PASSWORD: ${{ inputs.owsec_hashed_default_password }}
