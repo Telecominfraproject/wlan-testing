@@ -60,7 +60,7 @@ class TestVlanConfigTwogRadio(object):
         upstream_port = lanforge_data["upstream"]
         port_resources = upstream_port.split(".")
         lf_test.Client_disconnect(station_names_twog)
-        passes, result, station_ip = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
+        passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
         if result:
@@ -69,6 +69,7 @@ class TestVlanConfigTwogRadio(object):
             vlan_list = list(map(lambda y : int(list(y.values())[0]['alias'][list(y.values())[0]['alias'].find('.')+1:]),
                                  list(filter(lambda x: x if list(x.values())[0]['port type'].endswith('VLAN') else None
                                              ,lf_tools.json_get("/port/?fields=port+type,alias")['interfaces']))))
+            station_ip = lf_test.station_ip
             station_ip = station_ip.split(".")
             vlan_ip = vlan_ip.split(".")
 
@@ -113,13 +114,14 @@ class TestVlanConfigTwogRadio(object):
         upstream_port = lanforge_data["upstream"]
         port_resources = upstream_port.split(".")
 
-        passes, result, station_ip = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
+        passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
         if result:
             vlan_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
                                         port_resources[2] + "." + str(vlan))["interface"]["ip"]
 
+            station_ip = lf_test.station_ip
             station_ip = station_ip.split(".")
             vlan_ip = vlan_ip.split(".")
 
@@ -165,10 +167,14 @@ class TestVlanConfigTwogRadio(object):
         req_url = "cli-json/set_port"
         lf_tools.json_post(req_url, port_resources[0], port_resources[1], vlan_alias, 1, 8388608)
         down = False
+        count = 0
         while not down:
             down = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
                                      port_resources[2] + "." + str(vlan))["interface"]["down"]
             time.sleep(1)
+            count += 1
+            if count == 30:
+                break
 
         passes = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                         passkey=security_key, mode=mode, band=band,
@@ -210,7 +216,7 @@ class TestVlanConfigTwogRadio(object):
         upstream_port = lanforge_data["upstream"]
         port_resources = upstream_port.split(".")
         lf_test.Client_disconnect(station_names_twog)
-        passes, result, station_ip = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
+        passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
         if result:
@@ -219,6 +225,7 @@ class TestVlanConfigTwogRadio(object):
             vlan_list = list(map(lambda y: int(list(y.values())[0]['alias'][list(y.values())[0]['alias'].find('.') + 1:]),
                                  list(filter(lambda x: x if list(x.values())[0]['port type'].endswith('VLAN') else None,
                                             lf_tools.json_get("/port/?fields=port+type,alias")['interfaces']))))
+            station_ip = lf_test.station_ip
             station_ip = station_ip.split(".")
             vlan_ip = vlan_ip.split(".")
 
@@ -264,7 +271,7 @@ class TestVlanConfigTwogRadio(object):
         upstream_port = lanforge_data["upstream"]
         port_resources = upstream_port.split(".")
         lf_test.Client_disconnect(station_names_twog)
-        passes, result, station_ip = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
+        passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
         if result:
@@ -274,6 +281,7 @@ class TestVlanConfigTwogRadio(object):
                 map(lambda y: int(list(y.values())[0]['alias'][list(y.values())[0]['alias'].find('.') + 1:]),
                     list(filter(lambda x: x if list(x.values())[0]['port type'].endswith('VLAN') else None,
                                 lf_tools.json_get("/port/?fields=port+type,alias")['interfaces']))))
+            station_ip = lf_test.station_ip
             station_ip = station_ip.split(".")
             vlan_ip = vlan_ip.split(".")
 
@@ -297,15 +305,15 @@ class TestVlanConfigTwogRadio(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.valid_client_ip_twog_wpa2_personal  # wifi-2172
+    @pytest.mark.enable_vlan_twog  # wifi-2172
     @allure.testcase(name="test_station_ip_wpa2_personal_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2172")
-    def test_station_ip_wpa2_personal_ssid_2g(self, lf_test, lf_tools,
+    def test_enable_vlan_wpa2_ssid_2g(self, lf_test, lf_tools,
                                               update_report, station_names_twog,
                                               test_cases, get_configuration):
         """
             Client connectivity using vlan, wpa2, twog
-            pytest -m valid_client_ip_twog_wpa2_personal
+            pytest -m enable_vlan_twog
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -318,7 +326,11 @@ class TestVlanConfigTwogRadio(object):
         upstream_port = lanforge_data["upstream"]
         port_resources = upstream_port.split(".")
         lf_test.Client_disconnect(station_names_twog)
-        passes, result,station_ip = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
+        vlan_alias = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
+                                       port_resources[2] + "." + str(vlan))["interface"]["alias"]
+        lf_tools.json_post("cli-json/set_port", port_resources[0], port_resources[1], vlan_alias, 0, 8388610)
+
+        passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
         if result:
@@ -328,6 +340,7 @@ class TestVlanConfigTwogRadio(object):
                 map(lambda y: int(list(y.values())[0]['alias'][list(y.values())[0]['alias'].find('.') + 1:]),
                     list(filter(lambda x: x if list(x.values())[0]['port type'].endswith('VLAN') else None,
                                 lf_tools.json_get("/port/?fields=port+type,alias")['interfaces']))))
+            station_ip = lf_test.station_ip
             station_ip = station_ip.split(".")
             vlan_ip = vlan_ip.split(".")
 
