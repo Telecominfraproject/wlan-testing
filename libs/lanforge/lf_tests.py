@@ -221,8 +221,8 @@ class RunTest:
         endp_data = []
         for i in self.staConnect.resulting_endpoints:
             endp_data.append(self.staConnect.resulting_endpoints[i]["endpoint"])
-        dict_table["key"] = list(endp_data[0].keys())
-        dict_table["value"] = list(endp_data[0].values())
+        dict_table["key"] = [i for s in [d.keys() for d in endp_data] for i in s]
+        dict_table["value"] = [i for s in [d.values() for d in endp_data] for i in s]
         data_table = report_obj.table2(table=dict_table, headers='keys')
         allure.attach(name="cx_data", body=data_table)
         for i in range(len(run_results)):
