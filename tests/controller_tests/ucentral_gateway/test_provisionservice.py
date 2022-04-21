@@ -13,6 +13,7 @@ import allure
 
 
 @pytest.mark.uc_sanity
+@pytest.mark.prov_all_api
 @allure.feature("SDK PROV REST API")
 class TestUcentralProvisionService(object):
 
@@ -138,13 +139,24 @@ class TestUcentralProvisionService(object):
                                      random.randint(0, 255))
         device_name = device_mac.replace(":", "")
         # device_name = "deadbeef0011" + testbed.replace("-","")
-        payload = {'serialNumber': device_name,
-                   'devClass': 'any',
-                   'rrm': 'off',
-                   'deviceConfiguration': self.configuration,
-                   'deviceType': 'edgecore_eap101',
-                   'location': '',
-                   'name': 'Testing'}
+        payload = {"serialNumber": device_name,
+                   "name": "Testing_to_add_device_through_automation",
+                   "rrm": "inherit",
+                   "deviceType": "edgecore_eap101",
+                   "devClass": "any",
+                   "description": "For testing API through automation",
+                   "entity": "",
+                   "venue": "",
+                   "subscriber": "",
+                   "__newConfig":
+                       {"rrm": "inherit",
+                        "firmwareUpgrade": "no",
+                        "configuration": [],
+                        "name": "Device added through automation",
+                        "description": "Created from the Edit Tag menu",
+                        "deviceTypes": ["edgecore_eap101"]
+                        }
+                   }
         print(json.dumps(payload))
         resp = setup_controller.request("prov", "inventory/" + device_name, "POST", None, json.dumps(payload))
         allure.attach(name="response: ", body=str(resp.json()))
