@@ -106,6 +106,12 @@ class Fixtures_2x:
                 firmware_list.reverse()
 
                 for firmware in firmware_list:
+                    if firmware['image'] == "":
+                        continue
+                    temp = firmware['image'].split("-")
+                    temp.pop(-1)
+                    temp = "-".join(temp)
+                    firmware['image'] = temp
                     if ap['version'].split('-')[0] == 'release':
                         if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1].__contains__('v2.'):
                             print("Target Firmware: \n", firmware)
@@ -148,6 +154,7 @@ class Fixtures_2x:
                                 upgrade_status.append([ap['serial'], target_revision, current_version])
                                 print("firmware upgraded failed: ", target_revision)
                             break
+                    print("shivam", firmware['image'].split("-"), ap['version'].split('-')[0])
                     if firmware['image'].split("-")[-2] == ap['version'].split('-')[0]:
                         print("Target Firmware: \n", firmware)
                         allure.attach(name="Target firmware : ", body=str(firmware))
