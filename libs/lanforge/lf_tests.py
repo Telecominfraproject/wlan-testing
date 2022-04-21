@@ -173,6 +173,7 @@ class RunTest:
                 station_data_str = ""
                 sta_url = self.staConnect.get_station_url(sta_name)
                 station_info = self.staConnect.json_get(sta_url)
+                self.station_ip = station_info["interface"]["ip"]
                 for i in station_info["interface"]:
                     try:
                         station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
