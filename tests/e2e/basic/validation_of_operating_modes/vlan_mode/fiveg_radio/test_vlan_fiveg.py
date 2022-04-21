@@ -51,7 +51,7 @@ class TestVlanConfigFivegRadio(object):
             Client connectivity using vlan, wpa, fiveg
             pytest -m valid_client_ip_wpa_fiveg
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -106,7 +106,7 @@ class TestVlanConfigFivegRadio(object):
             Client connectivity using vlan, wpa2, fiveg
             pytest -m valid_client_ip_wpa2_fiveg
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -153,7 +153,7 @@ class TestVlanConfigFivegRadio(object):
             Client connectivity using vlan, wpa2, fiveg
             pytest -m disable_vlan_fiveg
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -204,7 +204,7 @@ class TestVlanConfigFivegRadio(object):
             Client connectivity using vlan, open, fiveg
             pytest -m valid_client_ip_open_fiveg
         """
-        profile_data = setup_params_general["ssid_modes"]["open"][1]
+        profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = "[BLANK]"
         security = "open"
@@ -258,7 +258,7 @@ class TestVlanConfigFivegRadio(object):
             Client connectivity using vlan, wpa, wpa2, fiveg
             pytest -m test_station_ip_wpa_wpa2_ssid_5g
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -314,7 +314,7 @@ class TestVlanConfigFivegRadio(object):
             Client connectivity using vlan, wpa2, fiveg
             pytest -m valid_client_ip_wpa2_personal
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
