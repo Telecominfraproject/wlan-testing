@@ -91,7 +91,6 @@ runs:
 
     - name: Create Kubernetes namespace and secret
       shell: bash
-      working-directory: wlan-cloud-ucentral-deploy/docker-compose
       run: |
         kubectl create ns ${{ steps.set_outputs.outputs.namespace }}
         kubectl create secret generic tip-cicd-wildcard-certs --from-file=websocket-cert.pem=websocket-cert.pem --from-file=websocket-key.pem=websocket-key.pem -n ${{ steps.set_outputs.outputs.namespace }}
