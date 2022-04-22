@@ -33,15 +33,15 @@ env:
     {
       "namespace": "qa01",
       "deploy_method": "git",
-      "chart_version": "v2.5.0",
-      "owgw_version": "v2.5.0",
-      "owsec_version": "v2.5.0",
-      "owfms_version": "v2.5.0",
-      "owprov_version": "v2.5.0",
+      "chart_version": "main",
+      "owgw_version": "main",
+      "owsec_version": "main",
+      "owfms_version": "main",
+      "owprov_version": "main",
       "owanalytics_version": "main",
       "owsub_version": "main",
-      "owgwui_version": "v2.5.0",
-      "owprovui_version": "v2.5.0"
+      "owgwui_version": "main",
+      "owprovui_version": "main"
     }
   ]'
 
