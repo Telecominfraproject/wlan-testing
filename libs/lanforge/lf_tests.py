@@ -152,6 +152,7 @@ class RunTest:
             self.staConnect.radio = self.fiveg_radios[0]
             self.staConnect.reset_port(self.staConnect.radio)
             self.staConnect.sta_prefix = self.fiveg_prefix
+        self.set_radio_channel(radio=self.staConnect.radio, channel=ssid_channel)
         print("scan ssid radio", self.staConnect.radio.split(".")[2])
         self.data_scan_ssid = self.scan_ssid(radio=self.staConnect.radio.split(".")[2])
         print("ssid scan data :- ", self.data_scan_ssid)
@@ -224,7 +225,7 @@ class RunTest:
         for result in run_results:
             print("test result: " + result)
         result = "PASS"
-        description = ""
+        description = "Unknown error"
         dict_table = {}
         print("Client Connectivity :", self.staConnect.passes)
         endp_data = []
@@ -250,9 +251,11 @@ class RunTest:
             result = "PASS"
         else:
             print("client connection to", self.staConnect.dut_ssid, "unsuccessful. Test Failed")
+            result = "FAIL"
         time.sleep(3)
         if ssid_channel:
             self.stop_sniffer()
+        self.set_radio_channel(radio=self.staConnect.radio, channel="AUTO")
         return result, description
 
     def EAP_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", extra_securities=[],
@@ -294,6 +297,7 @@ class RunTest:
             self.eap_connect.admin_up(self.eap_connect.radio)
             # self.eap_connect.sta_prefix = self.fiveg_prefix
         # self.eap_connect.resource = 1
+        self.set_radio_channel(radio=self.eap_connect.radio, channel=ssid_channel)
         print("scan ssid radio", self.eap_connect.radio.split(".")[2])
         self.data_scan_ssid = self.scan_ssid(radio=self.eap_connect.radio.split(".")[2])
         print("ssid scan data :- ", self.data_scan_ssid)
@@ -382,7 +386,7 @@ class RunTest:
                 pytest.exit("Test Failed: Debug True")
         endp_data = []
         result = "PASS"
-        description = ""
+        description = "Unknown error"
         dict_table = {}
         for i in self.eap_connect.resulting_endpoints:
             endp_data.append(self.eap_connect.resulting_endpoints[i]["endpoint"])
@@ -405,8 +409,11 @@ class RunTest:
            self.eap_connect.cleanup(station_name)
         if self.eap_connect.passes():
             result = "PASS"
+        else:
+            result = "FAIL"
         if ssid_channel:
             self.stop_sniffer()
+        self.set_radio_channel(radio=self.eap_connect.radio, channel="AUTO")
         return result, description
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
@@ -1177,6 +1184,25 @@ class RunTest:
             else:
                 return False
 
+    def set_radio_channel(self, radio="1.1.wiphy0", channel="AUTO"):
+        try:
+            radio = radio.split(".")
+            shelf = radio[0]
+            resource = radio[1]
+            radio_ = radio[2]
+            print("radio %s channel %s" % (radio, channel))
+            local_realm_obj = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
+            data = {
+                "shelf": shelf,
+                "resource": resource,
+                "radio": radio_,
+                "mode": "NA",
+                "channel": channel
+            }
+            local_realm_obj.json_post("/cli-json/set_wifi_radio", _data=data)
+            time.sleep(2)
+        except Exception as e:
+            print(e)
 
 if __name__ == '__main__':
     influx_host = "influx.cicd.lab.wlan.tip.build"
