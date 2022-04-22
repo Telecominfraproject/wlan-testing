@@ -47,6 +47,11 @@ jobs:
           DEVICES="${{ github.event.inputs.devices || 'galaxy-s9,galaxy-s10,galaxy-s20,pixel-4,iphone-7,iphone-11,iphone-xr,iphone-12' }}"
           DEVICES=$(echo $DEVICES | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           echo "::set-output name=devices::${DEVICES}"
+          echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'main' }}")
+          echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4' }}")
+          echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'next-latest' }}")
+          echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'uc_sanity' }}")
+          echo ::set-output name=existing_controller::$(echo "${{ github.event.inputs.existing_controller || 'qa01' }}")
 
   build:
     runs-on: ubuntu-latest
