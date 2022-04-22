@@ -42,6 +42,19 @@ env:
       "owsub_version": "main",
       "owgwui_version": "main",
       "owprovui_version": "main"
+    },
+    {
+      "namespace": "qa02",
+      "deploy_method": "git",
+      "chart_version": "main",
+      "owgw_version": "main",
+      "owsec_version": "main",
+      "owfms_version": "main",
+      "owprov_version": "main",
+      "owanalytics_version": "main",
+      "owsub_version": "main",
+      "owgwui_version": "main",
+      "owprovui_version": "main"
     }
   ]'
 
