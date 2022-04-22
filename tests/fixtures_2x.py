@@ -108,10 +108,11 @@ class Fixtures_2x:
                 for firmware in firmware_list:
                     if firmware['image'] == "":
                         continue
-                    temp = firmware['image'].split("-")
-                    temp.pop(-1)
-                    temp = "-".join(temp)
-                    firmware['image'] = temp
+                    if str(firmware['image']).__contains__("upgrade.bin"):
+                        temp = firmware['image'].split("-")
+                        temp.pop(-1)
+                        temp = "-".join(temp)
+                        firmware['image'] = temp
                     if ap['version'].split('-')[0] == 'release':
                         if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1].__contains__('v2.'):
                             print("Target Firmware: \n", firmware)
