@@ -67,17 +67,11 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Checkout wlan-testing repo
-      uses: actions/checkout@v2
-      with:
-        path: wlan-testing
-
     - name: Prepare certificates from secrets
       env:
         WEBSOCKET_CERT: ${{ inputs.websocket_cert }}
         WEBSOCKET_KEY: ${{ inputs.websocket_key }}
       shell: bash
-      working-directory: wlan-testing/docker-compose/openwifi
       run: |
         echo "${{ env.WEBSOCKET_CERT }}" | base64 -d > websocket-cert.pem
         echo "${{ env.WEBSOCKET_KEY }}" | base64 -d > websocket-key.pem
@@ -97,13 +91,12 @@ runs:
 
     - name: Create Kubernetes namespace and secret
       shell: bash
-      working-directory: wlan-testing/docker-compose/openwifi
+      working-directory: wlan-cloud-ucentral-deploy/docker-compose
       run: |
         kubectl create ns ${{ steps.set_outputs.outputs.namespace }}
         kubectl create secret generic tip-cicd-wildcard-certs --from-file=websocket-cert.pem=websocket-cert.pem --from-file=websocket-key.pem=websocket-key.pem -n ${{ steps.set_outputs.outputs.namespace }}
 
     - name: Deploy OpenWIFI Cloud SDK
-      working-directory: wlan-testing/docker-compose/openwifi
       env:
         OWSEC_DEFAULT_USERNAME: ${{ inputs.owsec_default_username }}
         OWSEC_HASHED_DEFAULT_PASSWORD: ${{ inputs.owsec_hashed_default_password }}
@@ -245,7 +238,7 @@ runs:
           - name: docker-compose-deployment
             image: docker/compose:latest
             command: ["/bin/sh", "-c"]
-            args: ["apk add git; wget https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/temp/wifi-7512--pre-rttys-changes/docker-compose/openwifi/deploy.sh; chmod +x deploy.sh; sh deploy.sh"]
+            args: ["apk add git; wget https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentral-deploy/${{ inputs.deployment_version }}/docker-compose/deploy.sh; chmod +x deploy.sh; sh deploy.sh"]
             env:
             - name: DOCKER_TLS_VERIFY
               value: "true"
