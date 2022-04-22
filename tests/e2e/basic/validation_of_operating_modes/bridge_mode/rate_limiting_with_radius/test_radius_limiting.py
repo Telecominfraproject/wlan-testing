@@ -50,7 +50,6 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-@pytest.mark.wpa2_enterprise
 class TestRateLimitingWithRadiusBridge(object):
 
     @pytest.mark.wpa2_enterprise
@@ -559,8 +558,13 @@ class TestRateLimitingWithRadiusBridge(object):
 
     @pytest.mark.twog
     @pytest.mark.max_upload_user1
+    @pytest.mark.wpa2_enterprise
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7618", name="WIFI-7618")
     def test_radius_server_ratelimit_maxupload_groupuser1_2g(self, lf_test, lf_tools, station_names_twog):
+        """
+            Test: check max-upload ratelimit of group - user1
+            pytest -m "wpa2_enterprise and twog and max_upload_user1"
+        """
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
