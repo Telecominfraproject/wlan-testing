@@ -72,10 +72,12 @@ jobs:
     - name: Checkout repo with Helm values
       uses: actions/checkout@v2
       with:
-        path: wlan-testing
+        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
+        path: wlan-cloud-ucentral-deploy
+        ref: ${{ matrix.chart_version }}
 
     - name: Prepare certificates from secrets
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         echo "${{ env.DIGICERT_CERT }}" | base64 -d > cert.pem
         echo "${{ env.DIGICERT_KEY }}" | base64 -d > key.pem
@@ -91,7 +93,7 @@ jobs:
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: Deploy OpenWIFI Cloud SDK
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         export NAMESPACE=${{ matrix.namespace }}
         export DEPLOY_METHOD=${{ matrix.deploy_method }}
