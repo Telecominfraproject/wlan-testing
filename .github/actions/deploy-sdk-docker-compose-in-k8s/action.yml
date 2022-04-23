@@ -247,21 +247,17 @@ runs:
               value: "/certs/client"
             - name: DEPLOY_VERSION
               value: "${{ inputs.deployment_version }}"
-            - name: OWGW_TAG
+            - name: OWGW_VERSION
               value: "${{ inputs.owgw_version }}"
-            - name: OWGWUI_TAG
-              value: "main"
-            - name: OWSEC_TAG
+            - name: OWSEC_VERSION
               value: "${{ inputs.owsec_version }}"
-            - name: OWFMS_TAG
+            - name: OWFMS_VERSION
               value: "${{ inputs.owfms_version }}"
-            - name: OWPROV_TAG
+            - name: OWPROV_VERSION
               value: "${{ inputs.owprov_version }}"
-            - name: OWPROVUI_TAG
-              value: "main"
-            - name: OWANALYTICS_TAG
+            - name: OWANALYTICS_VERSION
               value: "${{ inputs.owanalytics_version }}"
-            - name: OWSUB_TAG
+            - name: OWSUB_VERSION
               value: "${{ inputs.owsub_version }}"
             - name: INTERNAL_OWGW_HOSTNAME
               value: "owgw.wlan.local"
