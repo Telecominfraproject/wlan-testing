@@ -117,7 +117,7 @@ class TestBridgeModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa
@@ -141,7 +141,7 @@ class TestBridgeModeConnectivitySuiteA(object):
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_personal
