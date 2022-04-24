@@ -179,22 +179,6 @@ runs:
             port: 8443
             targetPort: 8443
             protocol: TCP
-#          - name: owanalytics-restapi
-#            port: 16009
-#            targetPort: 16009
-#            protocol: TCP
-#          - name: owanalytics-alivecheck
-#            port: 16109
-#            targetPort: 16109
-#            protocol: TCP
-#          - name: owsub-restapi
-#            port: 16006
-#            targetPort: 16006
-#            protocol: TCP
-#          - name: owsub-alivecheck
-#            port: 16106
-#            targetPort: 16106
-#            protocol: TCP
         ---
         apiVersion: v1
         kind: Pod
