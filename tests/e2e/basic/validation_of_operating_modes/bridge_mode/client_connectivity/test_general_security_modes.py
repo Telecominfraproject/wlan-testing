@@ -48,7 +48,6 @@ class TestBridgeModeConnectivitySuiteA(object):
 
     @pytest.mark.open
     @pytest.mark.twog
-    @pytest.mark.hari
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
     def test_open_ssid_2g(self, get_ap_logs, get_lf_logs, lf_test,
                           update_report,
