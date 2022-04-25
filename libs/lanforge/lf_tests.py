@@ -1035,6 +1035,8 @@ class RunTest:
                                                             end_id_=num_sta - 1, padding_number_=10000,
                                                             radio=radio)
 
+        if type == "11r-sae-802.1x":
+            dut_passwd = "[BLANK]"
         station_profile.use_security(dut_security, dut_ssid, dut_passwd)
         station_profile.set_number_template("00")
 
@@ -1071,6 +1073,23 @@ class RunTest:
                                            eap="",
                                            identity="",
                                            passwd="",
+                                           pin=""
+                                           )
+
+        if type == "11r-sae-802.1x":
+            station_profile.set_command_flag("set_port", "rpt_timer", 1)
+            station_profile.set_command_flag("add_sta", "ieee80211w", 2)
+            station_profile.set_command_flag("add_sta", "80211u_enable", 0)
+            station_profile.set_command_flag("add_sta", "8021x_radius", 1)
+            station_profile.set_command_flag("add_sta", "disable_roam", 1)
+            # station_profile.set_command_flag("add_sta", "ap", "68:7d:b4:5f:5c:3f")
+            station_profile.set_wifi_extra(key_mgmt="FT-EAP     ",
+                                           pairwise="[BLANK]",
+                                           group="[BLANK]",
+                                           psk="[BLANK]",
+                                           eap="TTLS",
+                                           identity="testuser",
+                                           passwd="testpasswd",
                                            pin=""
                                            )
         station_profile.create(radio=radio, sta_names_=station_list)
@@ -2098,6 +2117,7 @@ class RunTest:
                        port=self.lanforge_port,
                        clean_cxs=True,
                        clean_endp=True)
+        obj.resource = "all"
         obj.cxs_clean()
         obj.endp_clean()
         start_time = time.time()
@@ -2118,9 +2138,9 @@ class RunTest:
             radio = radio_.split(".")[2]
         if band == "sixg":
             self.create_n_clients(sta_prefix="wlan", num_sta=num_sta, dut_ssid=ssid_name,
-                                  dut_security=security, dut_passwd=security_key, radio=self.ax_radios[0],
+                                  dut_security=security, radio=self.ax_radios[0],
                                   lf_tools=lf_tools,
-                                  type="11r-sae")
+                                  type="11r-sae-802.1x")
             radio_ = self.ax_radios[1]
             radio = radio_.split(".")[2]
 
