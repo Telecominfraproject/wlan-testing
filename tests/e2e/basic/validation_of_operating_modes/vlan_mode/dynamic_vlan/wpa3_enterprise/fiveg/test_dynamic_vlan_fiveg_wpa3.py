@@ -138,6 +138,7 @@ class TestDynamicVlan5GWpa3(object):
         lf_test.EAP_Connect(ssid=ssid_5G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                             mode=mode, band="fiveg", vlan_id=vlan_id,
                             station_name=station_names_fiveg, key_mgmt="WPA-EAP-SHA256",
+
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordinvalidvlanuser", ieee80211w=0,
                             wep_key="NA", ca_cert="NA", eap="TTLS", identity="invalidvlanuser", d_vlan=True)
@@ -647,4 +648,3 @@ class TestDynamicVlan5GWpa3(object):
                 assert False
             lf_tools.admin_up_down([station_list[sta]], option="up")
             time.sleep(5)
-
