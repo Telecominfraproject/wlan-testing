@@ -62,10 +62,7 @@ class ConfigureController:
         print(new_uri)
         return new_uri
 
-    def build_url_prov(self, path):
-        new_uri = 'https://%s:%d/api/v1/%s' % (self.prov_host.hostname, self.prov_host.port, path)
-        print(new_uri)
-        return new_uri
+
 
     def request(self, service, command, method, params, payload):
         if service == "sec":
@@ -209,13 +206,6 @@ class Controller(ConfigureController):
         device_info = self.get_device_by_serial_number(serial_number=serial_number)
         return device_info["UUID"]
 
-    def get_system_prov(self):
-        uri = self.build_url_prov("system/?command=info")
-        allure.attach(name="Url of Prov UI:", body=str(uri))
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("GET", resp, self.make_headers(), "", uri)
-        return resp
-
 
 class FMSUtils:
 
@@ -299,6 +289,53 @@ class FMSUtils:
 
         return "error"
 
+class ProvUtils(ConfigureController):
+
+    def __init__(self, controller_data=None):
+        super().__init__(controller_data)
+
+    def build_url_prov(self, path):
+        new_uri = 'https://%s:%d/api/v1/%s' % (self.prov_host.hostname, self.prov_host.port, path)
+        print(new_uri)
+        return new_uri
+
+    def get_inventory(self):
+        uri = self.build_url_prov("inventory")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_inventory_by_device(self, device_name):
+        uri = self.build_url_prov("inventory/" + device_name)
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_system_prov(self):
+        uri = self.build_url_prov("system/?command=info")
+        allure.attach(name="Url of Prov UI:", body=str(uri))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def add_device_to_inventory(self, device_name, payload):
+        uri = self.build_url_prov("inventory/" + device_name)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_device_from_inventory(self, device_name):
+        uri = self.build_url_prov("inventory/" + device_name)
+        print(uri)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
 
 class UProfileUtility:
 
