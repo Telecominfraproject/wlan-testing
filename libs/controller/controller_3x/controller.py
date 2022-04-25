@@ -519,6 +519,34 @@ class CController:
         dtim = self.cc.config_dtim_dot11_5ghz()
         return dtim
 
+    def set_channel(self, band=None, channel=None, slot=None):
+        self.cc.channel = channel
+        self.cc.ap_band_slot = slot
+        if band == "6g":
+            channel = self.cc.config_dot11_6ghz_channel()
+        if band == "5g":
+            channel = self.cc.config_dot11_5ghz_channel()
+        if band == "2g":
+            channel = self.cc.config_dot11_24ghz_channel()
+        return channel
+
+    def set_channel_width(self, band=None, width=None, slot=None):
+        self.cc.bandwidth = width
+        self.cc.ap_band_slot = slot
+        if band == "6g":
+            bdwth = self.cc.config_dot11_6ghz_channel_width()
+        if band == "5g":
+            bdwth = self.cc.config_dot11_5ghz_channel_width()
+        if band == "2g":
+            bdwth = self.cc.config_dot11_24ghz_channel_width()
+        return bdwth
+
+    def enable_ft_dot1x_wpa3(self, ssid):
+        self.cc.wlan = ssid
+        en = self.cc.enable_ft_dot1x_wpa3_cc()
+        print(en)
+        return en
+
 
 if __name__ == '__main__':
     controller = {
