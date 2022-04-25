@@ -389,7 +389,6 @@ class Fixtures_2x:
         profile_data = {}
         var = ""
         if len(parameter['rf']) > 0:
-            print("Country code channel division")
             instantiate_profile_obj.set_radio_config(radio_config=parameter['rf'])
         else:
             instantiate_profile_obj.set_radio_config()
