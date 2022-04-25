@@ -10,8 +10,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.country_code, pytest.mark.bridge, pytest.mark.wpa2, pytest.mark.united_kingdom]
-
+pytestmark = [pytest.mark.country_code, pytest.mark.bridge, pytest.mark.wpa2, pytest.mark.russia]
 
 setup_params_general1 = {
     "mode": "BRIDGE",
@@ -22,15 +21,15 @@ setup_params_general1 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'GB',
+        'country': 'RU',
         "channel-mode": "VHT",
-        'channel-width': 40,
+        'channel-width': 20,
         "channel": 36},
         "2G":
         {'band': '2G',
-        'country': 'GB',
+        'country': 'RU',
         "channel-mode": "VHT",
-        'channel-width': 40,
+        'channel-width': 20,
         "channel": 1}
            },
     "radius": False
@@ -45,33 +44,33 @@ setup_params_general1 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryGB40Mhz5GChannel36(object):
+class TestCountryRU20Mhz2GChannel1(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fourtyMhz
-    @pytest.mark.fiveg
-    @pytest.mark.channel36
-    def test_client_bridge_wpa2_chn36_40Mhz_GB_5g(self, lf_test, station_names_fiveg, get_configuration):
+    @pytest.mark.twentyMhz
+    @pytest.mark.twog
+    @pytest.mark.channel1
+    def test_client_bridge_wpa2_chn1_20Mhz_RU_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel36"
+           pytest -m "country_code and twentyMhz and wpa2 and twog and channel1"
         """
-        profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
-        band = "fiveg"
+        band = "twog"
         vlan = 1
-        channel = setup_params_general1['rf']['5G']['channel']
-        channel_width = setup_params_general1['rf']['5G']['channel-width']
+        channel = setup_params_general1['rf']['2G']['channel']
+        channel_width = setup_params_general1['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=826,
-                                                       country='United Kingdom(GB)')
+                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
+                                                       channel=channel,channel_width=channel_width,country_num=643,
+                                                       country='Russia(RU)')
         if result:
             assert True
         else:
@@ -87,16 +86,16 @@ setup_params_general2 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'GB',
-        'channel-mode': 'VHT',
-        'channel-width': 40,
-        "channel": 44},
+        'country': 'RU',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 36},
         "2G":
         {'band': '2G',
-        'country': 'GB',
-        "channel-mode": "VHT",
-        'channel-width': 40,
-        "channel": 1}
+        'country': 'RU',
+        'channel-mode': 'VHT',
+        'channel-width': 20,
+        "channel": 2}
            },
     "radius": False
 }
@@ -110,33 +109,33 @@ setup_params_general2 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryGB40Mhz5GChannel44(object):
+class TestCountryRU20Mhz2GChannel2(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fourtyMhz
-    @pytest.mark.fiveg
-    @pytest.mark.channel44
-    def test_client_bridge_wpa2_chn44_40Mhz_GB_5g(self, lf_test, station_names_fiveg, get_configuration):
+    @pytest.mark.twentyMhz
+    @pytest.mark.twog
+    @pytest.mark.channel2
+    def test_client_bridge_wpa2_chn2_20Mhz_RU_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel44"
+           pytest -m "country_code and twentyMhz and wpa2 and twog and channel2"
         """
-        profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
-        band = "fiveg"
+        band = "twog"
         vlan = 1
-        channel = setup_params_general2['rf']['5G']['channel']
-        channel_width = setup_params_general2['rf']['5G']['channel-width']
+        channel = setup_params_general2['rf']['2G']['channel']
+        channel_width = setup_params_general2['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=826,
-                                                       country='United Kingdom(GB)')
+                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
+                                                       channel=channel,channel_width=channel_width,country_num=643,
+                                                       country='Russia(RU)')
         if result:
             assert True
         else:
@@ -152,16 +151,16 @@ setup_params_general3 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'GB',
-        'channel-mode': 'VHT',
-        'channel-width': 40,
-        "channel": 52},
+        'country': 'RU',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 36},
         "2G":
         {'band': '2G',
-        'country': 'GB',
-        "channel-mode": "VHT",
-        'channel-width': 40,
-        "channel": 1}
+        'country': 'RU',
+        'channel-mode': 'VHT',
+        'channel-width': 20,
+        "channel": 3}
            },
     "radius": False
 }
@@ -175,33 +174,33 @@ setup_params_general3 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryGB40Mhz5GChannel52(object):
+class TestCountryRU20Mhz2GChannel3(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fourtyMhz
-    @pytest.mark.fiveg
-    @pytest.mark.channel52
-    def test_client_bridge_wpa2_chn52_40Mhz_GB_5g(self, lf_test, station_names_fiveg, get_configuration):
+    @pytest.mark.twentyMhz
+    @pytest.mark.twog
+    @pytest.mark.channel3
+    def test_client_bridge_wpa2_chn3_20Mhz_RU_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel52"
+           pytest -m "country_code and twentyMhz and wpa2 and twog and channel3"
         """
-        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
-        band = "fiveg"
+        band = "twog"
         vlan = 1
-        channel = setup_params_general3['rf']['5G']['channel']
-        channel_width = setup_params_general3['rf']['5G']['channel-width']
+        channel = setup_params_general3['rf']['2G']['channel']
+        channel_width = setup_params_general3['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=826,
-                                                       country='United Kingdom(GB)')
+                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
+                                                       channel=channel,channel_width=channel_width,country_num=643,
+                                                       country='Russia(RU)')
         if result:
             assert True
         else:
@@ -214,18 +213,19 @@ setup_params_general4 = {
         "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
                           {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
-    "rf": {"5G":
+    "rf": {
+        "5G":
         {'band': '5G',
-        'country': 'GB',
-        'channel-mode': 'VHT',
-        'channel-width': 40,
-        "channel": 60},
+        'country': 'RU',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 36},
         "2G":
         {'band': '2G',
-        'country': 'GB',
-        "channel-mode": "VHT",
-        'channel-width': 40,
-        "channel": 1}
+        'country': 'RU',
+        'channel-mode': 'VHT',
+        'channel-width': 20,
+        "channel": 4}
            },
     "radius": False
 }
@@ -238,33 +238,33 @@ setup_params_general4 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryGB40Mhz5GChannel60(object):
+class TestCountryRU20Mhz2GChannel4(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fourtyMhz
-    @pytest.mark.fiveg
-    @pytest.mark.channel60
-    def test_client_bridge_wpa2_chn60_40Mhz_GB_5g(self, lf_test, station_names_fiveg, get_configuration):
+    @pytest.mark.twentyMhz
+    @pytest.mark.twog
+    @pytest.mark.channel4
+    def test_client_bridge_wpa2_chn4_20Mhz_RU_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel60"
+           pytest -m "country_code and twentyMhz and wpa2 and twog and channel4"
         """
-        profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
-        band = "fiveg"
+        band = "twog"
         vlan = 1
-        channel = setup_params_general4['rf']['5G']['channel']
-        channel_width = setup_params_general4['rf']['5G']['channel-width']
+        channel = setup_params_general4['rf']['2G']['channel']
+        channel_width = setup_params_general4['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=826,
-                                                       country='United Kingdom(GB)')
+                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
+                                                       channel=channel,channel_width=channel_width,country_num=643,
+                                                       country='Russia(RU)')
         if result:
             assert True
         else:
@@ -280,16 +280,16 @@ setup_params_general5 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'GB',
-        'channel-mode': 'VHT',
-        'channel-width': 40,
-        "channel": 100},
+        'country': 'RU',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 36},
         "2G":
         {'band': '2G',
-        'country': 'GB',
-        "channel-mode": "VHT",
-        'channel-width': 40,
-        "channel": 1}
+        'country': 'RU',
+        'channel-mode': 'VHT',
+        'channel-width': 20,
+        "channel": 5}
            },
     "radius": False
 }
@@ -302,33 +302,33 @@ setup_params_general5 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryGB40Mhz5GChannel100(object):
+class TestCountryRU20Mhz2GChannel5(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fourtyMhz
-    @pytest.mark.fiveg
-    @pytest.mark.channel100
-    def test_client_bridge_wpa2_chn100_40Mhz_GB_5g(self, lf_test, station_names_fiveg, get_configuration):
+    @pytest.mark.twentyMhz
+    @pytest.mark.twog
+    @pytest.mark.channel5
+    def test_client_bridge_wpa2_chn5_20Mhz_RU_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel100"
+           pytest -m "country_code and twentyMhz and wpa2 and twog and channel5"
         """
-        profile_data = setup_params_general5["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general5["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
-        band = "fiveg"
+        band = "twog"
         vlan = 1
-        channel = setup_params_general5['rf']['5G']['channel']
-        channel_width = setup_params_general5['rf']['5G']['channel-width']
+        channel = setup_params_general5['rf']['2G']['channel']
+        channel_width = setup_params_general5['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=826,
-                                                       country='United Kingdom(GB)')
+                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
+                                                       channel=channel,channel_width=channel_width,country_num=643,
+                                                       country='Russia(RU)')
         if result:
             assert True
         else:
@@ -344,16 +344,16 @@ setup_params_general6 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'GB',
-        'channel-mode': 'VHT',
-        'channel-width': 40,
-        "channel": 108},
+        'country': 'RU',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 36},
         "2G":
         {'band': '2G',
-        'country': 'GB',
-        "channel-mode": "VHT",
-        'channel-width': 40,
-        "channel": 1}
+        'country': 'RU',
+        'channel-mode': 'VHT',
+        'channel-width': 20,
+        "channel": 6}
            },
     "radius": False
 }
@@ -366,33 +366,33 @@ setup_params_general6 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryGB40Mhz5GChannel108(object):
+class TestCountryRU20Mhz2GChannel6(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fourtyMhz
-    @pytest.mark.fiveg
-    @pytest.mark.channel108
-    def test_client_bridge_wpa2_chn108_40Mhz_GB_5g(self, lf_test, station_names_fiveg, get_configuration):
+    @pytest.mark.twentyMhz
+    @pytest.mark.twog
+    @pytest.mark.channel6
+    def test_client_bridge_wpa2_chn6_20Mhz_RU_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel108"
+           pytest -m "country_code and twentyMhz and wpa2 and twog and channel6"
         """
-        profile_data = setup_params_general6["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general6["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
-        band = "fiveg"
+        band = "twog"
         vlan = 1
-        channel = setup_params_general6['rf']['5G']['channel']
-        channel_width = setup_params_general6['rf']['5G']['channel-width']
+        channel = setup_params_general6['rf']['2G']['channel']
+        channel_width = setup_params_general6['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=826,
-                                                       country='United Kingdom(GB)')
+                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
+                                                       channel=channel,channel_width=channel_width,country_num=643,
+                                                       country='Russia(RU)')
         if result:
             assert True
         else:
@@ -408,16 +408,16 @@ setup_params_general7 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'GB',
-        'channel-mode': 'VHT',
-        'channel-width': 40,
-        "channel": 116},
+        'country': 'RU',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 36},
         "2G":
         {'band': '2G',
-        'country': 'GB',
-        "channel-mode": "VHT",
-        'channel-width': 40,
-        "channel": 1}
+        'country': 'RU',
+        'channel-mode': 'VHT',
+        'channel-width': 20,
+        "channel": 7}
            },
     "radius": False
 }
@@ -430,33 +430,33 @@ setup_params_general7 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryGB40Mhz5GChannel116(object):
+class TestCountryRU20Mhz2GChannel7(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fourtyMhz
-    @pytest.mark.fiveg
-    @pytest.mark.channel116
-    def test_client_bridge_wpa2_chn116_40Mhz_GB_5g(self, lf_test, station_names_fiveg, get_configuration):
+    @pytest.mark.twentyMhz
+    @pytest.mark.twog
+    @pytest.mark.channel7
+    def test_client_bridge_wpa2_chn7_20Mhz_RU_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel116"
+           pytest -m "country_code and twentyMhz and wpa2 and twog and channel7"
         """
-        profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
-        band = "fiveg"
+        band = "twog"
         vlan = 1
-        channel = setup_params_general7['rf']['5G']['channel']
-        channel_width = setup_params_general7['rf']['5G']['channel-width']
+        channel = setup_params_general7['rf']['2G']['channel']
+        channel_width = setup_params_general7['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=826,
-                                                       country='United Kingdom(GB)')
+                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
+                                                       channel=channel,channel_width=channel_width,country_num=643,
+                                                       country='Russia(RU)')
         if result:
             assert True
         else:
@@ -472,16 +472,16 @@ setup_params_general8 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'GB',
-        'channel-mode': 'VHT',
-        'channel-width': 40,
-        "channel": 124},
+        'country': 'RU',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 36},
         "2G":
         {'band': '2G',
-        'country': 'GB',
-        "channel-mode": "VHT",
-        'channel-width': 40,
-        "channel": 1}
+        'country': 'RU',
+        'channel-mode': 'VHT',
+        'channel-width': 20,
+        "channel": 8}
            },
     "radius": False
 }
@@ -494,33 +494,33 @@ setup_params_general8 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryGB40Mhz5GChannel124(object):
+class TestCountryRU20Mhz2GChannel8(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fourtyMhz
-    @pytest.mark.fiveg
-    @pytest.mark.channel124
-    def test_client_bridge_wpa2_chn124_40Mhz_GB_5g(self, lf_test, station_names_fiveg, get_configuration):
+    @pytest.mark.twentyMhz
+    @pytest.mark.twog
+    @pytest.mark.channel8
+    def test_client_bridge_wpa2_chn8_20Mhz_RU_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel124"
+           pytest -m "country_code and twentyMhz and wpa2 and twog and channel8"
         """
-        profile_data = setup_params_general8["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general8["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
-        band = "fiveg"
+        band = "twog"
         vlan = 1
-        channel = setup_params_general8['rf']['5G']['channel']
-        channel_width = setup_params_general8['rf']['5G']['channel-width']
+        channel = setup_params_general8['rf']['2G']['channel']
+        channel_width = setup_params_general8['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=826,
-                                                       country='United Kingdom(GB)')
+                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
+                                                       channel=channel,channel_width=channel_width,country_num=643,
+                                                       country='Russia(RU)')
         if result:
             assert True
         else:
@@ -536,16 +536,16 @@ setup_params_general9 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'GB',
-        'channel-mode': 'VHT',
-        'channel-width': 40,
-        "channel": 132},
+        'country': 'RU',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 36},
         "2G":
         {'band': '2G',
-        'country': 'GB',
-        "channel-mode": "VHT",
-        'channel-width': 40,
-        "channel": 1}
+        'country': 'RU',
+        'channel-mode': 'VHT',
+        'channel-width': 20,
+        "channel": 9}
            },
     "radius": False
 }
@@ -558,33 +558,33 @@ setup_params_general9 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryGB40Mhz5GChannel132(object):
+class TestCountryRU20Mhz2GChannel9(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fourtyMhz
-    @pytest.mark.fiveg
-    @pytest.mark.channel132
-    def test_client_bridge_wpa2_chn132_40Mhz_GB_5g(self, lf_test, station_names_fiveg, get_configuration):
+    @pytest.mark.twentyMhz
+    @pytest.mark.twog
+    @pytest.mark.channel9
+    def test_client_bridge_wpa2_chn9_20Mhz_RU_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel132"
+           pytest -m "country_code and twentyMhz and wpa2 and twog and channel9"
         """
-        profile_data = setup_params_general9["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general9["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
-        band = "fiveg"
+        band = "twog"
         vlan = 1
-        channel = setup_params_general9['rf']['5G']['channel']
-        channel_width = setup_params_general9['rf']['5G']['channel-width']
+        channel = setup_params_general9['rf']['2G']['channel']
+        channel_width = setup_params_general9['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=826,
-                                                       country='United Kingdom(GB)')
+                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
+                                                       channel=channel,channel_width=channel_width,country_num=643,
+                                                       country='Russia(RU)')
         if result:
             assert True
         else:
@@ -600,16 +600,16 @@ setup_params_general10 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'GB',
-        'channel-mode': 'VHT',
-        'channel-width': 40,
-        "channel": 140},
+        'country': 'RU',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 36},
         "2G":
         {'band': '2G',
-        'country': 'GB',
-        "channel-mode": "VHT",
-        'channel-width': 40,
-        "channel": 1}
+        'country': 'RU',
+        'channel-mode': 'VHT',
+        'channel-width': 20,
+        "channel": 10}
            },
     "radius": False
 }
@@ -622,33 +622,33 @@ setup_params_general10 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryGB40Mhz5GChannel140(object):
+class TestCountryRU20Mhz2GChannel10(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fourtyMhz
-    @pytest.mark.fiveg
-    @pytest.mark.channel140
-    def test_client_bridge_wpa2_chn140_40Mhz_GB_5g(self, lf_test, station_names_fiveg, get_configuration):
+    @pytest.mark.twentyMhz
+    @pytest.mark.twog
+    @pytest.mark.channel10
+    def test_client_bridge_wpa2_chn10_20Mhz_RU_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel140"
+           pytest -m "country_code and twentyMhz and wpa2 and twog and channel10"
         """
-        profile_data = setup_params_general10["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general10["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
-        band = "fiveg"
+        band = "twog"
         vlan = 1
-        channel = setup_params_general10['rf']['5G']['channel']
-        channel_width = setup_params_general10['rf']['5G']['channel-width']
+        channel = setup_params_general10['rf']['2G']['channel']
+        channel_width = setup_params_general10['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=826,
-                                                       country='United Kingdom(GB)')
+                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
+                                                       channel=channel,channel_width=channel_width,country_num=643,
+                                                       country='Russia(RU)')
         if result:
             assert True
         else:
@@ -664,16 +664,16 @@ setup_params_general11 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'GB',
-        'channel-mode': 'VHT',
-        'channel-width': 40,
-        "channel": 149},
+        'country': 'RU',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 36},
         "2G":
         {'band': '2G',
-        'country': 'GB',
-        "channel-mode": "VHT",
-        'channel-width': 40,
-        "channel": 1}
+        'country': 'RU',
+        'channel-mode': 'VHT',
+        'channel-width': 20,
+        "channel": 11}
            },
     "radius": False
 }
@@ -686,33 +686,33 @@ setup_params_general11 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryGB40Mhz5GChannel149(object):
+class TestCountryRU20Mhz2GChannel11(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fourtyMhz
-    @pytest.mark.fiveg
-    @pytest.mark.channel149
-    def test_client_bridge_wpa2_chn149_40Mhz_GB_5g(self, lf_test, station_names_fiveg, get_configuration):
+    @pytest.mark.twentyMhz
+    @pytest.mark.twog
+    @pytest.mark.channel11
+    def test_client_bridge_wpa2_chn11_20Mhz_RU_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel149"
+           pytest -m "country_code and twentyMhz and wpa2 and twog and channel11"
         """
-        profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
-        band = "fiveg"
+        band = "twog"
         vlan = 1
-        channel = setup_params_general11['rf']['5G']['channel']
-        channel_width = setup_params_general11['rf']['5G']['channel-width']
+        channel = setup_params_general11['rf']['2G']['channel']
+        channel_width = setup_params_general11['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=826,
-                                                       country='United Kingdom(GB)')
+                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
+                                                       channel=channel,channel_width=channel_width,country_num=643,
+                                                       country='Russia(RU)')
         if result:
             assert True
         else:
@@ -728,16 +728,16 @@ setup_params_general12 = {
     "rf": {
         "5G":
         {'band': '5G',
-        'country': 'GB',
-        'channel-mode': 'VHT',
-        'channel-width': 40,
-        "channel": 157},
+        'country': 'RU',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 36},
         "2G":
         {'band': '2G',
-        'country': 'GB',
-        "channel-mode": "VHT",
-        'channel-width': 40,
-        "channel": 1}
+        'country': 'RU',
+        'channel-mode': 'VHT',
+        'channel-width': 20,
+        "channel": 12}
            },
     "radius": False
 }
@@ -750,35 +750,98 @@ setup_params_general12 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestCountryGB40Mhz5GChannel157(object):
+class TestCountryRU20Mhz2GChannel12(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fourtyMhz
-    @pytest.mark.fiveg
-    @pytest.mark.channel157
-    def test_client_bridge_wpa2_chn157_40Mhz_GB_5g(self, lf_test, station_names_fiveg, get_configuration):
+    @pytest.mark.twentyMhz
+    @pytest.mark.twog
+    @pytest.mark.channel12
+    def test_client_bridge_wpa2_chn12_20Mhz_RU_2g(self, lf_test, station_names_twog, get_configuration):
         """Country code Bridge Mode
-           pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel157"
+           pytest -m "country_code and twentyMhz and wpa2 and twog and channel12"
         """
-        profile_data = setup_params_general12["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general12["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
-        band = "fiveg"
+        band = "twog"
         vlan = 1
-        channel = setup_params_general12['rf']['5G']['channel']
-        channel_width = setup_params_general12['rf']['5G']['channel-width']
+        channel = setup_params_general12['rf']['2G']['channel']
+        channel_width = setup_params_general12['rf']['2G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=826,
-                                                       country='United Kingdom(GB)')
+                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
+                                                       channel=channel,channel_width=channel_width,country_num=643,
+                                                       country='Russia(RU)')
         if result:
             assert True
         else:
             assert False
 
+
+setup_params_general13 = {
+    "mode": "BRIDGE",
+    "ssid_modes": {
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
+                          ]},
+    "rf": {
+        "5G":
+        {'band': '5G',
+        'country': 'RU',
+        "channel-mode": "VHT",
+        'channel-width': 20,
+        "channel": 36},
+        "2G":
+        {'band': '2G',
+        'country': 'RU',
+        'channel-mode': 'VHT',
+        'channel-width': 20,
+        "channel": 13}
+           },
+    "radius": False
+}
+
+@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general13],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestCountryRU20Mhz2GChannel13(object):
+    """Country code along with Channel and Channel-width Test Bridge mode
+       pytest -m "country_code and Bridge"
+    """
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @pytest.mark.wpa2_personal
+    @pytest.mark.twentyMhz
+    @pytest.mark.twog
+    @pytest.mark.channel13
+    def test_client_bridge_wpa2_chn13_20Mhz_RU_2g(self, lf_test, station_names_twog, get_configuration):
+        """Country code Bridge Mode
+           pytest -m "country_code and twentyMhz and wpa2 and twog and channel13"
+        """
+        profile_data = setup_params_general13["ssid_modes"]["wpa2_personal"][0]
+        ssid = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+        security = "wpa2"
+        mode = "BRIDGE"
+        band = "twog"
+        vlan = 1
+        channel = setup_params_general13['rf']['2G']['channel']
+        channel_width = setup_params_general13['rf']['2G']['channel-width']
+
+        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
+                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
+                                                       channel=channel,channel_width=channel_width,country_num=643,
+                                                       country='Russia(RU)')
+        if result:
+            assert True
+        else:
+            assert False
