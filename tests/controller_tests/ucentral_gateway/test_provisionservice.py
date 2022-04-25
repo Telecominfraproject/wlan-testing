@@ -20,20 +20,18 @@ class TestUcentralProvisionService(object):
 
     @pytest.mark.sdk_restapi
     @pytest.mark.prov_api
-    def test_provservice_inventorylist(self, setup_controller):
+    def test_provservice_inventorylist(self, setup_prov_controller, get_configuration):
         """
             Test the list of devices present in Provisioning UI
         """
-        resp = setup_controller.request("prov", "inventory", "GET", None, None)
-        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="prov inventory list", body=body)
-        if resp.status_code != 200:
-            assert False
-        inven = json.loads(resp.text)
-        print(inven)
+        device_name = get_configuration['access_point'][0]['serial']
+        resp = setup_prov_controller.get_inventory_by_device(device_name)
+        print(resp.json())
+        allure.attach(name="Inventory", body=str(resp.json()),attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
 
     @pytest.mark.prov_api_test
-    def test_prov_service_create_inventory_device(self, setup_controller, testbed):
+    def test_prov_service_create_inventory_device(self, setup_prov_controller, testbed):
         """
             Test the create device in provision Inventory
         """
@@ -61,7 +59,7 @@ class TestUcentralProvisionService(object):
                         }
                    }
         print(json.dumps(payload))
-        resp = setup_controller.request("prov", "inventory/" + device_name, "POST", None, json.dumps(payload))
+        resp = setup_prov_controller.add_device_to_inventory(device_name, payload)
         allure.attach(name="response: ", body=str(resp.json()))
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov create devices", body=body)
@@ -70,21 +68,21 @@ class TestUcentralProvisionService(object):
         devices = json.loads(resp.text)
         print(devices)
 
-        resp = setup_controller.request("prov", "inventory/" + device_name, "GET", None, None)
+        resp = setup_prov_controller.get_inventory_by_device(device_name)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov create device verify", body=body)
         if resp.status_code != 200:
             assert False
 
-        resp = setup_controller.request("prov", "inventory/" + device_name, "DELETE", None, None)
+        resp = setup_prov_controller.request("prov", "inventory/" + device_name, "DELETE", None, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov create device delete", body=body)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.system_info_prov
-    def test_system_info_prov(self, setup_controller):
-        system_info = setup_controller.get_system_prov()
+    def test_system_info_prov(self, setup_prov_controller):
+        system_info = setup_prov_controller.get_system_prov()
         print(system_info.json())
         allure.attach(name="system info", body=str(system_info.json()), attachment_type=allure.attachment_type.JSON)
         assert system_info.status_code == 200
