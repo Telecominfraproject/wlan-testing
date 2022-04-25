@@ -17,7 +17,7 @@ import allure
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-pytestmark = [pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.interop_country_codeCAI1,
+pytestmark = [pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.interop_country_code_CA, pytest.mark.interop_country_code,
                pytest.mark.interop_uc_sanity, pytest.mark.bridge]
 
 
@@ -55,10 +55,9 @@ for sec_modes in setup_params_general1['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general1['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general1['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(CA)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE CA")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general1],
@@ -70,11 +69,10 @@ class TestBridgeModeConnectSuiteOne(object):
     """ Client Connect SuiteOne
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7657", name="WIFI-7657")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.firstrun
     def test_ClientConnect_bridge_wpa2_chn36_20Mhz_CA_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][1]
@@ -106,11 +104,10 @@ class TestBridgeModeConnectSuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7644", name="WIFI-7644")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.firstrun
     def test_ClientConnect_bridge_wpa2_chn1_20Mhz_CA_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
@@ -172,10 +169,9 @@ for sec_modes in setup_params_general2['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general2['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general2['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(CA)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE CA")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general2],
@@ -187,11 +183,10 @@ class TestBridgeModeConnectSuiteTwo(object):
     """ Client Connect SuiteTwo
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7657", name="WIFI-7657")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.secondrun
     def test_ClientConnect_bridge_wpa2_chn40_20Mhz_CA_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][1]
@@ -223,11 +218,10 @@ class TestBridgeModeConnectSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7644", name="WIFI-7644")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.secondrun
     def test_ClientConnect_bridge_wpa2_chn2_20Mhz_CA_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
@@ -289,10 +283,9 @@ for sec_modes in setup_params_general3['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general3['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general3['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(CA)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE CA")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general3],
@@ -303,11 +296,10 @@ for sec_modes in setup_params_general3['ssid_modes'].keys():
 class TestBridgeModeConnectSuiteThree(object):
     """ Client Connect SuiteThree    """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7657", name="WIFI-7657")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.secondrun
     def test_ClientConnect_bridge_wpa2_chn44_20Mhz_CA_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][1]
@@ -339,11 +331,10 @@ class TestBridgeModeConnectSuiteThree(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7644", name="WIFI-7644")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.secondrun
     def test_ClientConnect_bridge_wpa2_chn3_20Mhz_CA_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][0]
@@ -404,10 +395,9 @@ for sec_modes in setup_params_general4['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general4['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general4['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(CA)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE CA")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general4],
@@ -418,11 +408,10 @@ for sec_modes in setup_params_general4['ssid_modes'].keys():
 class TestBridgeModeConnectSuiteFour(object):
     """ Client Connect SuiteFour    """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7657", name="WIFI-7657")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.secondrun
     def test_ClientConnect_bridge_wpa2_chn48_20Mhz_CA_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][1]
@@ -454,11 +443,10 @@ class TestBridgeModeConnectSuiteFour(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7644", name="WIFI-7644")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.secondrun
     def test_ClientConnect_bridge_wpa2_chn4_20Mhz_CA_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][0]
@@ -520,10 +508,9 @@ for sec_modes in setup_params_general5['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general5['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general5['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(CA)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE CA")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general5],
@@ -534,11 +521,10 @@ for sec_modes in setup_params_general5['ssid_modes'].keys():
 class TestBridgeModeConnectSuiteFive(object):
     """ Client Connect SuiteFive    """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7657", name="WIFI-7657")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
     def test_ClientConnect_bridge_wpa2_chn52_20Mhz_CA_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general5["ssid_modes"]["wpa2_personal"][1]
@@ -570,11 +556,10 @@ class TestBridgeModeConnectSuiteFive(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7644", name="WIFI-7644")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
     def test_ClientConnect_bridge_wpa2_chn5_20Mhz_CA_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general5["ssid_modes"]["wpa2_personal"][0]
@@ -636,10 +621,9 @@ for sec_modes in setup_params_general6['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general6['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general6['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(CA)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE CA")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general6],
@@ -650,11 +634,10 @@ for sec_modes in setup_params_general6['ssid_modes'].keys():
 class TestBridgeModeConnectSuiteSix(object):
     """ Client Connect SuiteSix    """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7657", name="WIFI-7657")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
     def test_ClientConnect_bridge_wpa2_chn56_20Mhz_CA_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general6["ssid_modes"]["wpa2_personal"][1]
@@ -686,11 +669,10 @@ class TestBridgeModeConnectSuiteSix(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7644", name="WIFI-7644")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
     def test_ClientConnect_bridge_wpa2_chn6_20Mhz_CA_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general6["ssid_modes"]["wpa2_personal"][0]
@@ -751,10 +733,9 @@ for sec_modes in setup_params_general7['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general7['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general7['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(CA)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE CA")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general7],
@@ -765,11 +746,10 @@ for sec_modes in setup_params_general7['ssid_modes'].keys():
 class TestBridgeModeConnectSuiteSeven(object):
     """ Client Connect SuiteSeven    """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7657", name="WIFI-7657")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
     def test_ClientConnect_bridge_wpa2_chn60_20Mhz_CA_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][1]
@@ -801,11 +781,10 @@ class TestBridgeModeConnectSuiteSeven(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7644", name="WIFI-7644")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
     def test_ClientConnect_bridge_wpa2_chn7_20Mhz_CA_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][0]
@@ -866,10 +845,9 @@ for sec_modes in setup_params_general8['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general8['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general8['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(CA)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE CA")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general8],
@@ -880,11 +858,10 @@ for sec_modes in setup_params_general8['ssid_modes'].keys():
 class TestBridgeModeConnectSuiteEight(object):
     """ Client Connect SuiteEight    """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7657", name="WIFI-7657")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
     def test_ClientConnect_bridge_wpa2_chn64_20Mhz_CA_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general8["ssid_modes"]["wpa2_personal"][1]
@@ -916,11 +893,10 @@ class TestBridgeModeConnectSuiteEight(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7644", name="WIFI-7644")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
     def test_ClientConnect_bridge_wpa2_chn8_20Mhz_CA_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general8["ssid_modes"]["wpa2_personal"][0]
@@ -981,10 +957,9 @@ for sec_modes in setup_params_general9['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general9['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general9['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(CA)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE CA")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general9],
@@ -995,11 +970,10 @@ for sec_modes in setup_params_general9['ssid_modes'].keys():
 class TestBridgeModeConnectSuiteNine(object):
     """ Client Connect SuiteNine    """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7657", name="WIFI-7657")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
     def test_ClientConnect_bridge_wpa2_chn100_20Mhz_CA_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general9["ssid_modes"]["wpa2_personal"][1]
@@ -1031,11 +1005,10 @@ class TestBridgeModeConnectSuiteNine(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7644", name="WIFI-7644")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
     def test_ClientConnect_bridge_wpa2_chn9_20Mhz_CA_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general9["ssid_modes"]["wpa2_personal"][0]
@@ -1097,10 +1070,9 @@ for sec_modes in setup_params_general10['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general10['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general10['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(CA)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE CA")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general10],
@@ -1111,11 +1083,10 @@ for sec_modes in setup_params_general10['ssid_modes'].keys():
 class TestBridgeModeConnectSuiteTen(object):
     """ Client Connect SuiteTen    """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7657", name="WIFI-7657")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
     def test_ClientConnect_bridge_wpa2_chn104_20Mhz_CA_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general10["ssid_modes"]["wpa2_personal"][1]
@@ -1147,11 +1118,10 @@ class TestBridgeModeConnectSuiteTen(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7644", name="WIFI-7644")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.thirdrun
     def test_ClientConnect_bridge_wpa2_chn10_20Mhz_CA_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general10["ssid_modes"]["wpa2_personal"][0]
@@ -1212,10 +1182,9 @@ for sec_modes in setup_params_general11['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general11['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general11['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(CA)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE CA")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general11],
@@ -1226,11 +1195,10 @@ for sec_modes in setup_params_general11['ssid_modes'].keys():
 class TestBridgeModeConnectSuiteEleven(object):
     """ Client Connect SuiteEleven    """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7657", name="WIFI-7657")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.plot
     def test_ClientConnect_bridge_wpa2_chn108_20Mhz_CA_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][1]
@@ -1262,11 +1230,10 @@ class TestBridgeModeConnectSuiteEleven(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7290", name="WIFI-7290")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7644", name="WIFI-7644")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.plot
     def test_ClientConnect_bridge_wpa2_chn11_20Mhz_CA_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
@@ -1328,10 +1295,9 @@ for sec_modes in setup_params_general12['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general12['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general12['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(CA)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE CA")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general12],
@@ -1342,11 +1308,10 @@ for sec_modes in setup_params_general12['ssid_modes'].keys():
 class TestBridgeModeConnectSuiteTwelve(object):
     """ Client Connect SuiteTwelve    """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7657", name="WIFI-7657")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.subbu
     def test_ClientConnect_bridge_wpa2_chn112_20Mhz_CA_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general12["ssid_modes"]["wpa2_personal"][1]
@@ -1407,10 +1372,9 @@ for sec_modes in setup_params_general13['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general13['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general13['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(CA)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE CA")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general13],
@@ -1421,11 +1385,10 @@ for sec_modes in setup_params_general13['ssid_modes'].keys():
 class TestBridgeModeConnectSuiteThirteen(object):
     """ Client Connect SuiteThirteen    """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7657", name="WIFI-7657")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.subbu
     def test_ClientConnect_bridge_wpa2_chn116_20Mhz_CA_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general13["ssid_modes"]["wpa2_personal"][1]
@@ -1486,10 +1449,9 @@ for sec_modes in setup_params_general14['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general14['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general14['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(CA)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE CA")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general14],
@@ -1500,11 +1462,10 @@ for sec_modes in setup_params_general14['ssid_modes'].keys():
 class TestBridgeModeConnectSuiteFourteen(object):
     """ Client Connect SuiteFourteen    """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7657", name="WIFI-7657")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.subbu
     def test_ClientConnect_bridge_wpa2_chn132_20Mhz_CA_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general14["ssid_modes"]["wpa2_personal"][1]
@@ -1565,10 +1526,9 @@ for sec_modes in setup_params_general15['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general15['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general15['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(CA)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE CA")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general15],
@@ -1579,11 +1539,10 @@ for sec_modes in setup_params_general15['ssid_modes'].keys():
 class TestBridgeModeConnectSuiteFifteen(object):
     """ Client Connect SuiteFifteen    """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7657", name="WIFI-7657")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.subbu
     def test_ClientConnect_bridge_wpa2_chn136_20Mhz_CA_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general15["ssid_modes"]["wpa2_personal"][1]
@@ -1644,10 +1603,9 @@ for sec_modes in setup_params_general16['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general16['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general16['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(CA)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE CA")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general16],
@@ -1658,11 +1616,10 @@ for sec_modes in setup_params_general16['ssid_modes'].keys():
 class TestBridgeModeConnectSuiteSixteen(object):
     """ Client Connect SuiteSixteen    """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7657", name="WIFI-7657")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
-    @pytest.mark.twenty
     def test_ClientConnect_bridge_wpa2_chn140_20Mhz_CA_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general16["ssid_modes"]["wpa2_personal"][1]
@@ -1723,10 +1680,9 @@ for sec_modes in setup_params_general17['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general17['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general17['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(CA)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE CA")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general17],
@@ -1737,7 +1693,7 @@ for sec_modes in setup_params_general17['ssid_modes'].keys():
 class TestBridgeModeConnectSuiteSeventeen(object):
     """ Client Connect SuiteSeventeen    """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7292", name="WIFI-7292")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7657", name="WIFI-7657")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
