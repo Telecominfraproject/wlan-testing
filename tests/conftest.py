@@ -271,7 +271,7 @@ def iteration(request):
 def duration(request):
     """yields the --duration  option for a test to provide how long roam should happen """
     var = request.config.getoption("--duration")
-    allure.attach(name="duration in minutes", body=var)
+    allure.attach(name="duration in minutes", body=str(var))
     yield var
 
 @pytest.fixture(scope="session")
