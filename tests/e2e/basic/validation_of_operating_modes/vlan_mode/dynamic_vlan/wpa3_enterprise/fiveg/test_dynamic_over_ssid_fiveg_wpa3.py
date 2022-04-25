@@ -16,7 +16,6 @@ pytestmark = [pytest.mark.ow_regression_lf,
               pytest.mark.wpa3_enterprise,
               pytest.mark.fiveg]
 
-
 setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
@@ -42,7 +41,6 @@ setup_params_general = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestDynamicVlanOverSsid5GWpa3(object):
-
     @pytest.mark.dynamic_precedence_over_ssid
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
@@ -69,7 +67,7 @@ class TestDynamicVlanOverSsid5GWpa3(object):
 
         lf_test.EAP_Connect(ssid=ssid_5G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                             mode=mode, band="fiveg", vlan_id=vlan[0],
-                            station_name=station_names_fiveg, key_mgmt="WPA-EAP-SHA256",
+                            station_name=station_names_fiveg, key_mgmt="WPA-EAP",
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordB", ieee80211w=0,
                             wep_key="NA", ca_cert="NA", eap="TTLS", identity="userB", d_vlan=True)
