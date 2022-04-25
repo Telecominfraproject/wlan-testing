@@ -22,7 +22,7 @@ class TestUcentralProvisionService(object):
     @pytest.mark.prov_api
     def test_provservice_inventorylist(self, setup_prov_controller, get_configuration):
         """
-            Test the list of devices present in Provisioning UI
+            Test the device present in Provisioning UI
         """
         device_name = get_configuration['access_point'][0]['serial']
         resp = setup_prov_controller.get_inventory_by_device(device_name)
@@ -62,7 +62,7 @@ class TestUcentralProvisionService(object):
         resp = setup_prov_controller.add_device_to_inventory(device_name, payload)
         allure.attach(name="response: ", body=str(resp.json()))
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="Prov create devices", body=body)
+        allure.attach(name="Prov create device", body=body)
         if resp.status_code != 200:
             assert False
         devices = json.loads(resp.text)
@@ -70,13 +70,13 @@ class TestUcentralProvisionService(object):
 
         resp = setup_prov_controller.get_inventory_by_device(device_name)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="Prov create device verify", body=body)
+        allure.attach(name="Prov create device-verify", body=body)
         if resp.status_code != 200:
             assert False
 
         resp = setup_prov_controller.request("prov", "inventory/" + device_name, "DELETE", None, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="Prov create device delete", body=body)
+        allure.attach(name="Prov created device-delete", body=body)
         if resp.status_code != 200:
             assert False
 
