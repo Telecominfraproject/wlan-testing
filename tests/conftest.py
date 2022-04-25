@@ -316,6 +316,14 @@ def setup_controller(request, get_configuration, add_env_properties, fixtures_ve
     request.addfinalizer(fixtures_ver.disconnect)
     yield sdk_client
 
+# Prov Controller Fixture
+@pytest.fixture(scope="session")
+def setup_prov_controller(request, get_configuration, add_env_properties, fixtures_ver):
+    """sets up the prov controller connection and yields the sdk_client object"""
+    sdk_client = fixtures_ver.prov_controller_obj
+    request.addfinalizer(fixtures_ver.disconnect)
+    yield sdk_client
+
 
 @pytest.fixture(scope="session")
 def setup_firmware(setup_controller):
