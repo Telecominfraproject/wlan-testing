@@ -68,7 +68,7 @@ class TestDynamicVlan5GWpa3(object):
         lf_tools.add_vlan(vlan_ids=[vlan_id])
         lf_test.EAP_Connect(ssid=ssid_5G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                             mode=mode, band="fiveg",
-                            station_name=station_names_fiveg, key_mgmt="WPA-EAP-SHA256",
+                            station_name=station_names_fiveg, key_mgmt="WPA-EAP",
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordvlannotsentuser", ieee80211w=0,
                             wep_key="NA", ca_cert="NA", eap="TTLS", identity="vlannotsentuser", d_vlan=True)
@@ -136,7 +136,7 @@ class TestDynamicVlan5GWpa3(object):
 
         lf_test.EAP_Connect(ssid=ssid_5G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                             mode=mode, band="fiveg", vlan_id=vlan_id,
-                            station_name=station_names_fiveg, key_mgmt="WPA-EAP-SHA256",
+                            station_name=station_names_fiveg, key_mgmt="WPA-EAP",
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordinvalidvlanuser", ieee80211w=0,
                             wep_key="NA", ca_cert="NA", eap="TTLS", identity="invalidvlanuser", d_vlan=True)
@@ -202,7 +202,7 @@ class TestDynamicVlan5GWpa3(object):
 
         lf_test.EAP_Connect(ssid=ssid_5G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                             mode=mode, band="fiveg", vlan_id=vlan[1],
-                            station_name=station_names_fiveg, key_mgmt="WPA-EAP-SHA256",
+                            station_name=station_names_fiveg, key_mgmt="WPA-EAP",
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordB", ieee80211w=0,
                             wep_key="NA", ca_cert="NA", eap="TTLS", identity="userB", d_vlan=True, cleanup=False)
@@ -285,7 +285,7 @@ class TestDynamicVlan5GWpa3(object):
 
         lf_test.EAP_Connect(ssid=ssid_5G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                             mode=mode, band="fiveg", vlan_id=vlan,
-                            station_name=station_names_fiveg, key_mgmt="WPA-EAP-SHA256",
+                            station_name=station_names_fiveg, key_mgmt="WPA-EAP",
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordvlannotsentuser", ieee80211w=0,
                             wep_key="NA", ca_cert="NA", eap="TTLS", identity="vlannotsentuser", d_vlan=True)
@@ -331,10 +331,14 @@ class TestDynamicVlan5GWpa3(object):
     @pytest.mark.fiveg
     @allure.testcase(name="test_dynamic_unsupported_vlan",
 <<<<<<< HEAD
+<<<<<<< HEAD
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6102")
 =======
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5710")
 >>>>>>> 5353d886f... Created testcases for WAP3_eap security
+=======
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5710")
+>>>>>>> c2673ef01... Created testcases for WAP3_eap security
     def test_dynamic_unsupported_vlan(self, get_vif_state, lf_tools,
                                       create_lanforge_chamberview_dut, lf_test, get_configuration,
                                       station_names_fiveg):
@@ -409,7 +413,7 @@ class TestDynamicVlan5GWpa3(object):
 
         lf_test.EAP_Connect(ssid=ssid_5G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                             mode=mode, band="fiveg", vlan_id=vlan,
-                            station_name=station_names_fiveg, key_mgmt="WPA-EAP-SHA256",
+                            station_name=station_names_fiveg, key_mgmt="WPA-EAP",
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordoutofboundvlanuser", ieee80211w=0,
                             wep_key="NA", ca_cert="NA", eap="TTLS", identity="outofboundvlanuser", d_vlan=True)
@@ -456,7 +460,7 @@ class TestDynamicVlan5GWpa3(object):
 
         lf_test.EAP_Connect(ssid=ssid_5G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                             mode=mode, band="fiveg", vlan_id=vlan[0],
-                            station_name=station_names_fiveg, key_mgmt="WPA-EAP-SHA256",
+                            station_name=station_names_fiveg, key_mgmt="WPA-EAP",
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordB", ieee80211w=0,
                             wep_key="NA", ca_cert="NA", eap="TTLS", identity="userB", d_vlan=True)
@@ -536,7 +540,7 @@ class TestDynamicVlan5GWpa3(object):
         for m in range(0, len(station_list)):
             lf_test.EAP_Connect(ssid=ssid_5G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                                 mode=mode, band="fiveg", vlan_id=100,
-                                station_name=[station_list[m]], key_mgmt="WPA-EAP-SHA256",
+                                station_name=[station_list[m]], key_mgmt="WPA-EAP",
                                 pairwise="NA", group="NA", wpa_psk="DEFAULT",
                                 ttls_passwd="passwordA", ieee80211w=0,
                                 wep_key="NA", ca_cert="NA", eap="TTLS", identity="userA", d_vlan=True, cleanup=False)
@@ -611,7 +615,7 @@ class TestDynamicVlan5GWpa3(object):
         for user_id, user_pass, sta in zip(dynamic_vlan_user, dynamic_vlan_pass, range(0, len(station_list))):
             lf_test.EAP_Connect(ssid=ssid_5G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                                 mode=mode, band="fiveg", vlan_id=vlan[sta],
-                                station_name=[station_list[sta]], key_mgmt="WPA-EAP-SHA256",
+                                station_name=[station_list[sta]], key_mgmt="WPA-EAP",
                                 pairwise="NA", group="NA", wpa_psk="DEFAULT",
                                 ttls_passwd=user_pass, ieee80211w=0,
                                 wep_key="NA", ca_cert="NA", eap="TTLS", identity=user_id, d_vlan=True, cleanup=False)
