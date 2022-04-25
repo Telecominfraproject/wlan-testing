@@ -355,10 +355,14 @@ class TestDynamicVlan2GWpa3(object):
         lf_test.EAP_Connect(ssid=ssid_2G, passkey="[BLANK]", security="wpa2", extra_securities=[],
                             mode=mode, band="twog", vlan_id=100,
 <<<<<<< HEAD
+<<<<<<< HEAD
                             station_name=station_names_twog, key_mgmt="WPA-EAP-SHA256",
 =======
                             station_name=station_names_twog, key_mgmt="WPA-EAP",
 >>>>>>> 5353d886f... Created testcases for WAP3_eap security
+=======
+                            station_name=station_names_twog, key_mgmt="WPA-EAP-SHA256",
+>>>>>>> fe5176c02... changed key_mgmt param value
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordinvalidvlanuser", ieee80211w=0,
                             wep_key="NA", ca_cert="NA", eap="TTLS", identity="invalidvlanuser", d_vlan=True)
