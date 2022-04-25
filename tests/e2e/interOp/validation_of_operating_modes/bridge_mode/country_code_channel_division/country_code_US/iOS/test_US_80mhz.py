@@ -404,7 +404,8 @@ for sec_modes in setup_params_general4['ssid_modes'].keys():
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectSuiteFour(object):
-    """ Client Connect SuiteFour    """
+    """ Client Connect SuiteFour
+       """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7666", name="WIFI-7666")
     @pytest.mark.fiveg
