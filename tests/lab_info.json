@@ -1,7 +1,7 @@
 {
 
 "CONFIGURATION" : {
-    "cisco-lab-02": {
+    "lab-02": {
         "controller": {
             "url": "https://172.16.0.2",
             "ip": "localhost",
@@ -29,6 +29,15 @@
                 "password": "lanforge",
                 "port": 22,
                 "jumphost_tty": "/dev/ttyAP1",
+                "6g_slot": "3",
+                "5g_slot": "1",
+                "2g_slot": "0",
+                "channel_5g": 40,
+                "channel_2g": 6,
+                "channel_6g": 1,
+                "channel_width_5g": 40,
+                "channel_width_2g": 20,
+                "channel_width": 40,
                 "version": "17.7.1.11"
             },
             {
@@ -45,11 +54,17 @@
                 "password": "lanforge",
                 "port": 22,
                 "jumphost_tty": "/dev/ttyAP2",
+                "6g_slot": "2",
+                "5g_slot": "1",
+                "2g_slot": "0",
+                 "channel_5g": 36,
+                "channel_2g": 6,
+                "channel_6g": 1,
+                "channel_width_5g": 40,
+                "channel_width_2g": 20,
+                "channel_width": 40,
                 "version": "17.7.1.11"
             }
-
-
-
         ],
         "traffic_generator": {
             "name": "lanforge",
@@ -71,7 +86,7 @@
             }
         }
     },
-     "cisco-testbed-0": {
+     "testbed-0": {
         "controller": {
             "url": "https://172.16.0.2",
             "ip": "localhost",
@@ -120,7 +135,7 @@
             }
         }
     },
-    "cisco-testbed-02": {
+    "testbed-02": {
         "controller": {
             "url": "https://172.16.0.2",
             "ip": "localhost",
