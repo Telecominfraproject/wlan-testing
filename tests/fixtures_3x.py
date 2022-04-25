@@ -113,9 +113,21 @@ class Fixtures_3x:
         for ap_name in range(len(self.lab_info['access_point'])):
             print("ap ", ap_name)
             # instantiate controller object
+
+            print("set channel and bandwidth")
             instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
                                                           timeout="10", ssid_data=lf_dut_data,
                                                           ap_data=self.lab_info['access_point'], type=ap_name)
+            instantiate_profile_obj.set_channel(band="6g", channel=self.lab_info['access_point'][ap_name]["channel_6g"],
+                                                slot=self.lab_info['access_point'][ap_name]["6g_slot"])
+            allure.attach(name="set 6g channel", body=str(self.lab_info['access_point'][ap_name]["channel_6g"]))
+            instantiate_profile_obj.set_channel(band="5g", channel=self.lab_info['access_point'][ap_name]["channel_5g"],
+                                                slot=self.lab_info['access_point'][ap_name]["5g_slot"])
+            allure.attach(name="set 5g channel", body=str(self.lab_info['access_point'][ap_name]["channel_5g"]))
+            instantiate_profile_obj.set_channel(band="2g", channel=self.lab_info['access_point'][ap_name]["channel_2g"],
+                                                slot=self.lab_info['access_point'][ap_name]["2g_slot"])
+            allure.attach(name="set 5g channel", body=str(self.lab_info['access_point'][ap_name]["channel_2g"]))
+
             if ap_name == 0:
                 for band in range(len(lf_dut_data)):
                     if lf_dut_data[band]["appliedRadios"] == ["2G"]:
@@ -243,8 +255,10 @@ class Fixtures_3x:
                                                                    wlanssid=lf_dut_data[2]['ssid_name'],
                                                                    key=lf_dut_data[2]['security_key'])
                         instantiate_profile_obj.enable_ap_6ghz()
-                        if parameter["ft+psk"] == True:
-                             instantiate_profile_obj.enable_ft_sae(ssid=lf_dut_data[2]['ssid_name'], key=lf_dut_data[2]['security_key'])
+                        # if parameter["ft+psk"] == True:
+                        #      instantiate_profile_obj.enable_ft_sae(ssid=lf_dut_data[2]['ssid_name'], key=lf_dut_data[2]['security_key'])
+                        if parameter["ft-dot1x"] == True:
+                            instantiate_profile_obj.enable_ft_dot1x_wpa3(ssid=lf_dut_data[2]['ssid_name'])
                         instantiate_profile_obj.get_ssids()
             sumy = instantiate_profile_obj.get_ssids()
             allure.attach(name="wlan summary after creating test wlan", body=str(sumy))
