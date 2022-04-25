@@ -17,7 +17,7 @@ import allure
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-pytestmark = [pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.interop_country_codeIN
+pytestmark = [pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.interop_country_code_IN, pytest.mark.interop_country_code
               , pytest.mark.bridge]
 
 from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, get_ip_address_and
