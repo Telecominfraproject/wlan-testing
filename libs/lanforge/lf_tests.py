@@ -2016,9 +2016,9 @@ class RunTest:
     def multi_hard_roam(self, run_lf, get_configuration, lf_tools, lf_reports,  instantiate_profile, ssid_name=None,
                         security=None, security_key=None, band=None,  test=None, iteration=1, num_sta=1,
                         roaming_delay=None, option=None, channel=36, duration=None):
-        allure.attach(name="Test Procedure", body="This test consists of creating a multiple  client which will be " \
+        allure.attach(name="Test Procedure", body="This test consists of creating a multiple  client which will be "\
                                                   " connected to the nearest ap, here the test automation will " \
-                                                  "do hard roam based on forced roam method" \
+                                                  "do hard roam based on forced roam method"\
                                                    "check if client performed roam by monitoring client bssid, for n number of iterions")
 
         # attaching 11r log before tart of test
@@ -2294,7 +2294,7 @@ class RunTest:
                                             print("authentcation is present")
                                             table_local.append(res)
                                             snif = self.sniff_full_data(pcap_file=file_name, filter="(wlan.fixed.auth.alg == 2 && wlan.fixed.status_code == 0x0000 && wlan.fixed.auth_seq == 0x0002) || (wlan.fc.type_subtype eq 3 && wlan.fixed.status_code == 0x0000 && wlan.tag.number == 55)")
-                                            allure.attach(name="pass sniffer for iteration "+ str(num), body=str(snif))
+                                            allure.attach(name="pass sniffer for iteration " + str(num), body=str(snif))
 
                                     else:
                                         allure.attach.file(source=file_name,
@@ -2306,7 +2306,7 @@ class RunTest:
                         else:
                             allure.attach.file(source=file_name,
                                            name="pcap_file for fail instance of iteration value " + str(num))
-                        print("make client connected for " + str(roaming_delay)+ " secs" )
+                        print("make client connected for " + str(roaming_delay) + " secs")
                     table_global.append(table_local)
             # if duration != None:
             #     if time.time() > timeout:
