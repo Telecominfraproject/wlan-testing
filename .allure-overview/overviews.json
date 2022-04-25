@@ -15,6 +15,6 @@
 
     "performance": {
         "OVERVIEW_TITLE": "'OpenWifi performance results'",
-        "OVERVIEW_TESTBEDS": ["basic-01","basic-02","basic-03","basic-04","basic-05","basic-06","basic-07","basic-08"]
+        "OVERVIEW_TESTBEDS": ["basic-01","basic-02","basic-03","basic-04","basic-05","basic-06","basic-07","basic-08","basic-08a"]
     }
 }
