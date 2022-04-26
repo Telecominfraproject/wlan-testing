@@ -18,7 +18,7 @@ if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
 pytestmark = [pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.interop_country_code_GB, pytest.mark.interop_country_code,
-               pytest.mark.interop_uc_sanity, pytest.mark.bridge]
+           pytest.mark.bridge]
 
 
 from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnection, ping_deftapps_iOS, \
