@@ -556,11 +556,89 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.twog
+    @pytest.mark.max_upload_user1
+    @pytest.mark.wpa2_enterprise
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7618", name="WIFI-7618")
+    def test_radius_server_ratelimit_maxupload_groupuser1_2g(self, lf_test, lf_tools, station_names_twog):
+        """
+            Test: check max-upload ratelimit of group - user1
+            pytest -m "wpa2_enterprise and twog and max_upload_user1"
+        """
+        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        vlan = 1
+        security = "wpa2"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = 'password'
+        identity = 'user1'
+        allure.attach(name="Max-Upload-User1", body=str(profile_data["rate-limit"]))
+        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+                                     mode=mode, band=band,
+                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     station_name=station_names_twog, ieee80211w=0, vlan_id=vlan, cleanup=False)
+        print(passes)
+        if passes:
+            raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel: Per-Total Download Rate:"]]
+            wct_obj = lf_test.wifi_capacity(instance_name="Ratelimit_Radius_group_user1", mode=mode, vlan_id=vlan,
+                                            download_rate="0bps", batch_size="1",
+                                            upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                            raw_lines=raw_lines)
+
+            report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+
+            lf_tools.attach_report_graphs(report_name=report_name)
+            print("Test Completed... Cleaning up Stations")
+        assert True
+
+    @pytest.mark.wpa2_enterprise
+    @pytest.mark.twog
+    @pytest.mark.max_download_user1
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7619", name="WIFI-7619")
+    def test_radius_server_ratelimit_maxdownload_groupuser1_2g(self, lf_test, lf_tools, station_names_twog):
+        """
+            Test: check max-download ratelimit of group - user1
+            pytest -m "wpa2_enterprise and twog and max_download_user1"
+        """
+        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        vlan = 1
+        security = "wpa2"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = 'password'
+        identity = 'user1'
+        allure.attach(name="Max-Download-User1", body=str(profile_data["rate-limit"]))
+        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+                                     mode=mode, band=band,
+                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     station_name=station_names_twog, ieee80211w=0, vlan_id=vlan, cleanup=False)
+        print(passes)
+        if passes:
+            raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel: Per-Total Download Rate:"]]
+            wct_obj = lf_test.wifi_capacity(instance_name="Ratelimit_Radius_group_user1", mode=mode, vlan_id=vlan,
+                                            download_rate="1Gbps", batch_size="1",
+                                            upload_rate="0bps", protocol="TCP-IPv4", duration="60000",
+                                            raw_lines=raw_lines)
+
+            report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+
+            lf_tools.attach_report_graphs(report_name=report_name)
+            print("Test Completed... Cleaning up Stations")
+        assert True
+
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.max_upload_user2
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7619", name="WIFI-7619")
     def test_radius_server_ratelimit_maxupload_groupuser2_2g(self, lf_test, lf_tools, station_names_twog):
+        """
+            Test: check max-upload ratelimit of group - user2
+            pytest -m "wpa2_enterprise and twog and max_upload_user2"
+        """
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
