@@ -89,10 +89,11 @@ runs:
         EC2_INSTANCE_TYPE: t2.nano
         EC2_SECURITY_GROUP_ID: sg-012299a8201a0761c
         EC2_KEY_NAME: loadsim
+        VPC_SUBNET_ID: subnet-08ef4ccda4af94c38
       shell: bash
       id: ec2_instance
       run: |
-        aws ec2 run-instances --key-name $EC2_KEY_NAME --security-group-ids $EC2_SECURITY_GROUP_ID --instance-type $EC2_INSTANCE_TYPE --image-id ${{ steps.ec2_facts.outputs.ami }} --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=${{ steps.ec2_facts.outputs.instance_name }}},{Key=Owner,Value=gha-wlan-testing}]" --output text
+        aws ec2 run-instances --key-name $EC2_KEY_NAME --subnet-id $VPC_SUBNET_ID --security-group-ids $EC2_SECURITY_GROUP_ID --instance-type $EC2_INSTANCE_TYPE --image-id ${{ steps.ec2_facts.outputs.ami }} --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=${{ steps.ec2_facts.outputs.instance_name }}},{Key=Owner,Value=gha-wlan-testing}]" --output text
         INSTANCE_PUBLIC_IP=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.ec2_facts.outputs.instance_name }}" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
         INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.ec2_facts.outputs.instance_name }}" --query 'Reservations[*].Instances[*].InstanceId' --output text)
         echo "::set-output name=instance_public_ip::${INSTANCE_PUBLIC_IP}"
@@ -178,8 +179,8 @@ runs:
         OWFMS_S3_SECRET: ${{ inputs.owfms_s3_secret }}
         OWFMS_S3_KEY: ${{ inputs.owfms_s3_key }}
         OWPROV_SYSTEM_URI_PUBLIC: https://{{ steps.set_outputs.outputs.gateway_url }}:16005
-        OWANALYTICS_SYSTEM_URI_PUBLIC: https://{{ steps.set_outputs.outputs.gateway_url }}:16005
-        OWSUB_SYSTEM_URI_PUBLIC: https://{{ steps.set_outputs.outputs.gateway_url }}:16005
+        OWANALYTICS_SYSTEM_URI_PUBLIC: https://{{ steps.set_outputs.outputs.gateway_url }}:16009
+        OWSUB_SYSTEM_URI_PUBLIC: https://{{ steps.set_outputs.outputs.gateway_url }}:16006
       shell: bash
       run: |
         ssh -i ssh_key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }} << EOF
