@@ -116,7 +116,7 @@ jobs:
 
           jq ".CONFIGURATION.interop=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           
-          jq ".CONFIGURATION.PERFECTO_DETAILS.galaxy-s9.jobNumber=${{ github.run_id }}" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
+          jq ".CONFIGURATION.PERFECTO_DETAILS."Galaxy S9".jobNumber=${{ github.run_id }}" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           
 
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
