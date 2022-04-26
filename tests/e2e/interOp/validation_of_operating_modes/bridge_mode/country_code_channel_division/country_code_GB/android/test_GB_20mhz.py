@@ -18,7 +18,7 @@ if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
 pytestmark = [pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.interop_country_code_GB, pytest.mark.interop_country_code
-              ,pytest.mark.interop_uc_sanity, pytest.mark.bridge]
+              , pytest.mark.bridge]
 
 from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, get_ip_address_and
 
@@ -51,10 +51,9 @@ for sec_modes in setup_params_general1['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general1['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general1['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(GB)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE GB")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general1],
@@ -164,10 +163,9 @@ for sec_modes in setup_params_general2['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general2['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general2['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(GB)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE GB")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general2],
@@ -277,10 +275,9 @@ for sec_modes in setup_params_general3['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general3['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general3['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(GB)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE GB")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general3],
@@ -388,10 +385,9 @@ for sec_modes in setup_params_general4['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general4['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general4['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(GB)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE GB")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general4],
@@ -501,10 +497,9 @@ for sec_modes in setup_params_general5['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general5['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general5['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(GB)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE GB")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general5],
@@ -614,10 +609,9 @@ for sec_modes in setup_params_general6['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general6['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general6['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(GB)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE GB")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general6],
@@ -726,10 +720,9 @@ for sec_modes in setup_params_general7['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general7['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general7['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(GB)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE GB")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general7],
@@ -838,10 +831,9 @@ for sec_modes in setup_params_general8['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general8['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general8['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(GB)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE GB")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general8],
@@ -949,10 +941,9 @@ for sec_modes in setup_params_general9['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general9['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general9['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(GB)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE GB")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general9],
@@ -1062,10 +1053,9 @@ for sec_modes in setup_params_general10['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general10['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general10['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(GB)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE GB")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general10],
@@ -1174,10 +1164,9 @@ for sec_modes in setup_params_general11['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general11['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general11['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(GB)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE GB")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general11],
@@ -1287,10 +1276,9 @@ for sec_modes in setup_params_general12['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general12['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general12['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(GB)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE GB")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general12],
@@ -1364,10 +1352,9 @@ for sec_modes in setup_params_general13['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general13['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general13['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(GB)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE GB")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general13],
@@ -1441,10 +1428,9 @@ for sec_modes in setup_params_general14['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general14['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general14['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(GB)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE GB")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general14],
@@ -1518,10 +1504,9 @@ for sec_modes in setup_params_general15['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general15['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general15['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(GB)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE GB")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general15],
@@ -1595,10 +1580,9 @@ for sec_modes in setup_params_general16['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general16['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general16['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(GB)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE GB")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general16],
@@ -1673,10 +1657,9 @@ for sec_modes in setup_params_general17['ssid_modes'].keys():
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
         setup_params_general17['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general17['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-# @allure.suite(suite_name="interop country code")
-# @allure.sub_suite(sub_suite_name="Bridge Mode country code")
-# @pytest.mark.InteropsuiteA
-# @allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.suite(suite_name="interop country code")
+@allure.sub_suite(sub_suite_name="Bridge Mode country code(GB)")
+@allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE GB")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general17],
