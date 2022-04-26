@@ -55,8 +55,7 @@ class TestOfdmabridgeMode(object):
             for i in range(len(radios_ax)):
                 if '1.1.' in radios_ax[i]:
                     radios_ax[i] = str(radios_ax[i]).replace('1.1.', '')
-            print('------ax radios----', radios_ax)
-            sta_mode, sta = 13, 'ax00'
+            sta_mode, sta = 13, 'sta000'
             sta_list = []
             sta_names = ''
             for j in range(len(radios_ax) - 1):
@@ -69,11 +68,15 @@ class TestOfdmabridgeMode(object):
             sniffer_radio = radios_ax[-1]
             influx_tags = ["ofdma", "download", "2.4G"]
             print("ax station names: ", station_names_ax)
-            for i in sta_list:
-                sta_names += str(i) + ","
+            res_data = lf_tools.json_get(_req_url='port?fields=port+type')['interfaces']
+            temp_sta =[]
+            for i in res_data:
+                for item in i:
+                    for key in i[item]:
+                        if i[item][key]['port type'] == 'WIFI-STA':
+                            sta_names += key + ","
             if sta_names.endswith(','):
-                sta_names.rstrip(',')
-            print(sta_names)
+                sta_names.removesuffix(',')
             ofdma_obj = lf_test.ofdma(mode=mode, vlan_id=vlan, inst_name="ofdma", batch_size='1', rawlines=None,
                                       sniffer_channel=sniffer_channel, sniffer_radio=sniffer_radio, wct_stations=sta_names)
             report_name = ofdma_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
