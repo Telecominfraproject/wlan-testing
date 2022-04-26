@@ -181,10 +181,10 @@ jobs:
           EOF
           aws route53 change-resource-record-sets --hosted-zone-id $ROUTE_53_ZONE_ID --change-batch file://changeset.json
 
-    - name: Delete EC2 instance
-      continue-on-error: true
-      run: |
-        aws ec2 terminate-instances --instance-ids ${{ needs.deploy-controller.outputs.instance_id }}
+      - name: Delete EC2 instance
+        continue-on-error: true
+        run: |
+          aws ec2 terminate-instances --instance-ids ${{ needs.deploy-controller.outputs.instance_id }}
 
   terminate-virtual-ap-instance:
     name: Terminate virtual AP instance
