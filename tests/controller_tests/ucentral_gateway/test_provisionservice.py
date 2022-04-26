@@ -74,7 +74,7 @@ class TestUcentralProvisionService(object):
         if resp.status_code != 200:
             assert False
 
-        resp = setup_prov_controller.request("prov", "inventory/" + device_name, "DELETE", None, None)
+        resp = setup_prov_controller.delete_device_from_inventory(device_name)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov created device-delete", body=body)
         if resp.status_code != 200:
@@ -86,3 +86,45 @@ class TestUcentralProvisionService(object):
         print(system_info.json())
         allure.attach(name="system info", body=str(system_info.json()), attachment_type=allure.attachment_type.JSON)
         assert system_info.status_code == 200
+
+    @pytest.mark.prov_api_entity_test
+    def test_prov_service_create_entity(self, setup_prov_controller, testbed):
+        """
+            Test the create Entity in provision Inventory
+        """
+        payload = {"name": "Testing_prov",
+                    "rrm": "inherit",
+                    "description": "For testing Purposes through Automation",
+                    "notes": [{"note": "For testing Purposes through Automation"}],
+                    "parent": "0000-0000-0000"
+                   }
+        print(json.dumps(payload))
+        resp = setup_prov_controller.add_entity(payload)
+        allure.attach(name="response: ", body=str(resp.json()))
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov create entity", body=body)
+        if resp.status_code != 200:
+            assert False
+        entitiy = json.loads(resp.text)
+        print(entitiy)
+        entity_id = entitiy['id']
+
+        resp = setup_prov_controller.get_entity_by_id(entity_id)
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov create device-verify", body=body)
+        if resp.status_code != 200:
+            assert False
+
+        resp = setup_prov_controller.delete_entity(entity_id)
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov created device-delete", body=body)
+        if resp.status_code != 200:
+            assert False
+
+    @pytest.mark.prov_api_entity
+    def test_get_entities(self, setup_prov_controller):
+        resp = setup_prov_controller.get_entity()
+        print(resp.json())
+        allure.attach(name="Entities", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
