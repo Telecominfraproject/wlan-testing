@@ -158,7 +158,6 @@ runs:
         scp -i ssh_key.pem key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }}:/tmp/websocket-key.pem
 
     - name: Deploy target CloudSDK in EC2
-      env:
       shell: bash
       run: |
         ssh -i ssh_key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }} << EOF
