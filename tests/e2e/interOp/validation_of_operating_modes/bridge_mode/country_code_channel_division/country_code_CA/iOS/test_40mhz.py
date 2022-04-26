@@ -17,8 +17,8 @@ import allure
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-pytestmark = [pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.interop_country_codeCAI2,
-               pytest.mark.interop_uc_sanity, pytest.mark.bridge]
+pytestmark = [pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.interop_country_code_CA, pytest.mark.interop_country_code,
+               pytest.mark.bridge]
 
 
 from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnection, ping_deftapps_iOS, \
