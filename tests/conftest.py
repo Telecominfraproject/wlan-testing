@@ -316,6 +316,14 @@ def setup_controller(request, get_configuration, add_env_properties, fixtures_ve
     request.addfinalizer(fixtures_ver.disconnect)
     yield sdk_client
 
+# Prov Controller Fixture
+@pytest.fixture(scope="session")
+def setup_prov_controller(request, get_configuration, add_env_properties, fixtures_ver):
+    """sets up the prov controller connection and yields the sdk_client object"""
+    sdk_client = fixtures_ver.prov_controller_obj
+    request.addfinalizer(fixtures_ver.disconnect)
+    yield sdk_client
+
 
 @pytest.fixture(scope="session")
 def setup_firmware(setup_controller):
@@ -725,6 +733,10 @@ def get_ap_logs(request, get_apnos, get_configuration, run_lf):
             ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
             ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
 
+        # Adding memory Profile code before every test start
+        output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+        allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
+
         def collect_logs():
             for ap in get_configuration['access_point']:
                 ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
@@ -732,7 +744,10 @@ def get_ap_logs(request, get_apnos, get_configuration, run_lf):
                 ap_logs = ap_ssh.get_logread(start_ref="start testcase: " + instance_name,
                                              stop_ref="stop testcase: " + instance_name)
                 allure.attach(name='logread', body=str(ap_logs))
-            pass
+
+            # Adding memory Profile code after every test completion
+            output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+            allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
 
         request.addfinalizer(collect_logs)
 

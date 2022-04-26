@@ -1,7 +1,7 @@
 {
     "sanity": {
         "OVERVIEW_TITLE": "'OpenWifi sanity results'",
-        "OVERVIEW_TESTBEDS": ["hfcl_ion4","tp-link_ec420-g1","hfcl_ion4xe","edgecore_ecw5211","edgecore_eap101","edgecore_eap102","cig_wf194c","cig_wf188n","indio_um-305ac"]
+        "OVERVIEW_TESTBEDS": ["hfcl_ion4","tp-link_ec420-g1","hfcl_ion4xe","edgecore_ecw5211","edgecore_eap101","edgecore_eap102","cig_wf194c","cig_wf188n","indio_um-305ac","hfcl_ion4xi","udaya_a5-id2"]
     },
     "interop": {
         "OVERVIEW_TITLE": "'OpenWifi interop results'",
@@ -15,6 +15,6 @@
 
     "performance": {
         "OVERVIEW_TITLE": "'OpenWifi performance results'",
-        "OVERVIEW_TESTBEDS": ["basic-01","basic-02","basic-03","basic-04","basic-05","basic-06","basic-07","basic-08"]
+        "OVERVIEW_TESTBEDS": ["basic-01","basic-02","basic-03","basic-04","basic-05","basic-06","basic-07","basic-08","basic-08a"]
     }
 }
