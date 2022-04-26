@@ -1059,7 +1059,7 @@ jobs:
 
   # Adding test hfcl_ion4xi
   test-hfcl-ion4xi:
-    needs: [ "vars", "build", "test-indio-um-305ac" ]
+    needs: [ "vars", "build", "test-edgecore-ecw5211" ]
     runs-on: ubuntu-latest
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'hfcl_ion4xi')"
     env:
