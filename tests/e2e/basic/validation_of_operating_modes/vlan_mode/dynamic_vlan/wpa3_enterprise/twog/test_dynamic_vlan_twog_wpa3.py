@@ -67,7 +67,7 @@ class TestDynamicVlan(object):
         lf_tools.add_vlan(vlan_ids=[vlan_id])
         lf_test.EAP_Connect(ssid=ssid_2G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                             mode=mode, band="twog",
-                            station_name=station_names_twog, key_mgmt="WPA-EAP",
+                            station_name=station_names_twog, key_mgmt="WPA-EAP-SHA256",
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordvlannotsentuser", ieee80211w=0,
                             wep_key="NA", ca_cert="NA", eap="TTLS", identity="vlannotsentuser", d_vlan=True)
@@ -135,7 +135,7 @@ class TestDynamicVlan(object):
 
         lf_test.EAP_Connect(ssid=ssid_2G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                             mode=mode, band="twog", vlan_id=vlan_id,
-                            station_name=station_names_twog, key_mgmt="WPA-EAP",
+                            station_name=station_names_twog, key_mgmt="WPA-EAP-SHA256",
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordinvalidvlanuser", ieee80211w=0,
                             wep_key="NA", ca_cert="NA", eap="TTLS", identity="invalidvlanuser", d_vlan=True)
@@ -201,7 +201,7 @@ class TestDynamicVlan(object):
 
         lf_test.EAP_Connect(ssid=ssid_2G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                             mode=mode, band="twog", vlan_id=vlan[1],
-                            station_name=station_names_twog, key_mgmt="WPA-EAP",
+                            station_name=station_names_twog, key_mgmt="WPA-EAP-SHA256",
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordB", ieee80211w=0,
                             wep_key="NA", ca_cert="NA", eap="TTLS", identity="userB", d_vlan=True, cleanup=False)
@@ -284,7 +284,7 @@ class TestDynamicVlan(object):
 
         lf_test.EAP_Connect(ssid=ssid_2G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                             mode=mode, band="twog", vlan_id=vlan,
-                            station_name=station_names_twog, key_mgmt="WPA-EAP",
+                            station_name=station_names_twog, key_mgmt="WPA-EAP-SHA256",
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordvlannotsentuser", ieee80211w=0,
                             wep_key="NA", ca_cert="NA", eap="TTLS", identity="vlannotsentuser", d_vlan=True)
@@ -350,7 +350,7 @@ class TestDynamicVlan(object):
 
         lf_test.EAP_Connect(ssid=ssid_2G, passkey="[BLANK]", security="wpa2", extra_securities=[],
                             mode=mode, band="twog", vlan_id=100,
-                            station_name=station_names_twog, key_mgmt="WPA-EAP",
+                            station_name=station_names_twog, key_mgmt="WPA-EAP-SHA256",
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordinvalidvlanuser", ieee80211w=0,
                             wep_key="NA", ca_cert="NA", eap="TTLS", identity="invalidvlanuser", d_vlan=True)
@@ -404,7 +404,7 @@ class TestDynamicVlan(object):
 
         lf_test.EAP_Connect(ssid=ssid_2G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                             mode=mode, band="twog", vlan_id=vlan,
-                            station_name=station_names_twog, key_mgmt="WPA-EAP",
+                            station_name=station_names_twog, key_mgmt="WPA-EAP-SHA256",
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordoutofboundvlanuser", ieee80211w=0,
                             wep_key="NA", ca_cert="NA", eap="TTLS", identity="outofboundvlanuser", d_vlan=True)
@@ -451,7 +451,7 @@ class TestDynamicVlan(object):
 
         lf_test.EAP_Connect(ssid=ssid_2G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                             mode=mode, band="twog", vlan_id=vlan[0],
-                            station_name=station_names_twog, key_mgmt="WPA-EAP",
+                            station_name=station_names_twog, key_mgmt="WPA-EAP-SHA256",
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordB", ieee80211w=0,
                             wep_key="NA", ca_cert="NA", eap="TTLS", identity="userB", d_vlan=True)
@@ -531,7 +531,7 @@ class TestDynamicVlan(object):
         for m in range(0, len(station_list)):
             lf_test.EAP_Connect(ssid=ssid_2G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                                 mode=mode, band="twog", vlan_id=100,
-                                station_name=[station_list[m]], key_mgmt="WPA-EAP",
+                                station_name=[station_list[m]], key_mgmt="WPA-EAP-SHA256",
                                 pairwise="NA", group="NA", wpa_psk="DEFAULT",
                                 ttls_passwd="passwordA", ieee80211w=0,
                                 wep_key="NA", ca_cert="NA", eap="TTLS", identity="userA", d_vlan=True, cleanup=False)
@@ -606,7 +606,7 @@ class TestDynamicVlan(object):
         for user_id, user_pass, sta in zip(dynamic_vlan_user, dynamic_vlan_pass, range(0, len(station_list))):
             lf_test.EAP_Connect(ssid=ssid_2G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                                 mode=mode, band="twog", vlan_id=vlan[sta],
-                                station_name=[station_list[sta]], key_mgmt="WPA-EAP",
+                                station_name=[station_list[sta]], key_mgmt="WPA-EAP-SHA256",
                                 pairwise="NA", group="NA", wpa_psk="DEFAULT",
                                 ttls_passwd=user_pass, ieee80211w=0,
                                 wep_key="NA", ca_cert="NA", eap="TTLS", identity=user_id, d_vlan=True, cleanup=False)
