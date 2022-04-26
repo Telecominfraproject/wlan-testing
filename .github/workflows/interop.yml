@@ -66,7 +66,7 @@ jobs:
 
   # interop-01
   test-galaxy-s9:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, small]
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
@@ -123,6 +123,8 @@ jobs:
           then
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
+          
+          sleep 999
 
       - name: run tests
         uses: ./.github/actions/run-tests
