@@ -1117,7 +1117,6 @@ class TestBridgeModeConnectSuiteEleven(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7732", name="WIFI-7732")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    @pytest.mark.plott
     def test_ClientConnect_bridge_wpa2_chn11_40Mhz_RU_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
