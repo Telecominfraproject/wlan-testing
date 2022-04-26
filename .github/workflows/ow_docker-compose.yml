@@ -13,27 +13,21 @@ on:
         description: 'OpenWIFI deployment repository version to be deployed.'
         required: true
       owgw_version:
-        default: 'master'
         description: 'OpenWIFI Gateway version to be deployed.'
         required: false
       owsec_version:
-        default: 'main'
         description: 'OpenWIFI Security version to be deployed.'
         required: false
       owfms_version:
-        default: 'main'
         description: 'OpenWIFI Firmware version to be deployed.'
         required: false
       owprov_version:
-        default: 'main'
         description: 'OpenWIFI Provisioning version to be deployed.'
         required: false
       owanalytics_version:
-        default: 'main'
         description: 'OpenWIFI Analytics version to be deployed.'
         required: false
       owsub_version:
-        default: 'main'
         description: 'OpenWIFI Subscription (Userportal) version to be deployed.'
         required: false
       id:
