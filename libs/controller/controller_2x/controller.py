@@ -337,6 +337,13 @@ class ProvUtils(ConfigureController):
         self.check_response("DELETE", resp, self.make_headers(), "", uri)
         return resp
 
+    def get_entity(self):
+        uri = self.build_url_prov("entity")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
 class UProfileUtility:
 
     def __init__(self, sdk_client=None, controller_data=None):
