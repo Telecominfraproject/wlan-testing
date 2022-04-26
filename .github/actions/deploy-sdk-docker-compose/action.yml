@@ -184,12 +184,12 @@ runs:
           export OWSEC_SYSTEM_URI_PUBLIC="https://${{ steps.set_outputs.outputs.sec_url }}:16001";
           export OWSEC_AUTHENTICATION_DEFAULT_USERNAME="${{ inputs.owsec_default_username }}";
           export OWSEC_AUTHENTICATION_DEFAULT_PASSWORD="${{ inputs.owsec_hashed_default_password }}";
-          export OWFMS_SYSTEM_URI_PUBLIC="https://{{ steps.set_outputs.outputs.gateway_url }}:16004";
+          export OWFMS_SYSTEM_URI_PUBLIC="https://${{ steps.set_outputs.outputs.gateway_url }}:16004";
           export OWFMS_S3_SECRET="${{ inputs.owfms_s3_secret }}";
           export OWFMS_S3_KEY="${{ inputs.owfms_s3_key }}";
-          export OWPROV_SYSTEM_URI_PUBLIC="https://{{ steps.set_outputs.outputs.gateway_url }}:16005";
-          export OWANALYTICS_SYSTEM_URI_PUBLIC="https://{{ steps.set_outputs.outputs.gateway_url }}:16009";
-          export OWSUB_SYSTEM_URI_PUBLIC="https://{{ steps.set_outputs.outputs.gateway_url }}:16006";
+          export OWPROV_SYSTEM_URI_PUBLIC="https://${{ steps.set_outputs.outputs.gateway_url }}:16005";
+          export OWANALYTICS_SYSTEM_URI_PUBLIC="https://${{ steps.set_outputs.outputs.gateway_url }}:16009";
+          export OWSUB_SYSTEM_URI_PUBLIC="https://${{ steps.set_outputs.outputs.gateway_url }}:16006";
           ./deploy.sh
         EOF
 
