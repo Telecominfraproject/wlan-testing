@@ -344,6 +344,37 @@ class ProvUtils(ConfigureController):
         self.check_response("DELETE", resp, self.make_headers(), "", uri)
         return resp
 
+    def get_entity(self):
+        uri = self.build_url_prov("entity")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_entity_by_id(self,entity_id):
+        uri = self.build_url_prov("entity/" + entity_id)
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def add_entity(self, payload):
+        uri = self.build_url_prov("entity/1")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_entity(self, entity_id):
+        uri = self.build_url_prov("entity/" + entity_id)
+        print(uri)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
 class UProfileUtility:
 
     def __init__(self, sdk_client=None, controller_data=None):
