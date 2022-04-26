@@ -1,7 +1,6 @@
 name: 2.x testing with Docker Compose deployment
 
 env:
-  AWS_EKS_NAME: tip-wlan-main
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}

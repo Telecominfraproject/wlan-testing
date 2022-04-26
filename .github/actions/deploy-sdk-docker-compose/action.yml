@@ -159,28 +159,6 @@ runs:
 
     - name: Deploy target CloudSDK in EC2
       env:
-        OWGW_VERSION: ${{ inputs.owgw_version }}
-        OWSEC_VERSION: ${{ inputs.owsec_version }}
-        OWFMS_VERSION: ${{ inputs.owfms_version }}
-        OWPROV_VERSION: ${{ inputs.owprov_version }}
-        OWANALYTICS_VERSION: ${{ inputs.owanalytics_version }}
-        OWSUB_VERSION: ${{ inputs.owsub_version }}
-        DEFAULT_UCENTRALSEC_URL: https://${{ steps.set_outputs.outputs.sec_url }}:16001
-        SYSTEM_URI_UI: https://${{ steps.set_outputs.outputs.gateway_url }}
-        RTTY_TOKEN: ${{ inputs.rtty_token }}
-        OWGW_FILEUPLOADER_HOST_NAME: ${{ steps.set_outputs.outputs.gateway_url }}
-        OWGW_FILEUPLOADER_URI: https://${{ steps.set_outputs.outputs.gateway_url }}:16003
-        OWGW_SYSTEM_URI_PUBLIC: https://${{ steps.set_outputs.outputs.gateway_url }}:16002
-        OWGW_RTTY_SERVER: ${{ steps.set_outputs.outputs.gateway_url }}
-        OWSEC_SYSTEM_URI_PUBLIC: https://${{ steps.set_outputs.outputs.sec_url }}:16001
-        OWSEC_AUTHENTICATION_DEFAULT_USERNAME: ${{ inputs.owsec_default_username }}
-        OWSEC_AUTHENTICATION_DEFAULT_PASSWORD: ${{ inputs.owsec_hashed_default_password }}
-        OWFMS_SYSTEM_URI_PUBLIC: https://{{ steps.set_outputs.outputs.gateway_url }}:16004
-        OWFMS_S3_SECRET: ${{ inputs.owfms_s3_secret }}
-        OWFMS_S3_KEY: ${{ inputs.owfms_s3_key }}
-        OWPROV_SYSTEM_URI_PUBLIC: https://{{ steps.set_outputs.outputs.gateway_url }}:16005
-        OWANALYTICS_SYSTEM_URI_PUBLIC: https://{{ steps.set_outputs.outputs.gateway_url }}:16009
-        OWSUB_SYSTEM_URI_PUBLIC: https://{{ steps.set_outputs.outputs.gateway_url }}:16006
       shell: bash
       run: |
         ssh -i ssh_key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }} << EOF
@@ -191,6 +169,28 @@ runs:
           cd docker-compose;
           cp /tmp/websocket-cert.pem certs/websocket-cert.pem;
           cp /tmp/websocket-key.pem certs/websocket-key.pem;
+          export OWGW_VERSION="${{ inputs.owgw_version }}";
+          export OWSEC_VERSION="${{ inputs.owsec_version }}";
+          export OWFMS_VERSION="${{ inputs.owfms_version }}";
+          export OWPROV_VERSION="${{ inputs.owprov_version }}";
+          export OWANALYTICS_VERSION="${{ inputs.owanalytics_version }}";
+          export OWSUB_VERSION="${{ inputs.owsub_version }}";
+          export DEFAULT_UCENTRALSEC_URL="https://${{ steps.set_outputs.outputs.sec_url }}:16001";
+          export SYSTEM_URI_UI="https://${{ steps.set_outputs.outputs.gateway_url }}";
+          export RTTY_TOKEN="${{ inputs.rtty_token }}";
+          export OWGW_FILEUPLOADER_HOST_NAME="${{ steps.set_outputs.outputs.gateway_url }}";
+          export OWGW_FILEUPLOADER_URI="https://${{ steps.set_outputs.outputs.gateway_url }}:16003";
+          export OWGW_SYSTEM_URI_PUBLIC="https://${{ steps.set_outputs.outputs.gateway_url }}:16002";
+          export OWGW_RTTY_SERVER="${{ steps.set_outputs.outputs.gateway_url }}";
+          export OWSEC_SYSTEM_URI_PUBLIC="https://${{ steps.set_outputs.outputs.sec_url }}:16001";
+          export OWSEC_AUTHENTICATION_DEFAULT_USERNAME="${{ inputs.owsec_default_username }}";
+          export OWSEC_AUTHENTICATION_DEFAULT_PASSWORD="${{ inputs.owsec_hashed_default_password }}";
+          export OWFMS_SYSTEM_URI_PUBLIC="https://{{ steps.set_outputs.outputs.gateway_url }}:16004";
+          export OWFMS_S3_SECRET="${{ inputs.owfms_s3_secret }}";
+          export OWFMS_S3_KEY="${{ inputs.owfms_s3_key }}";
+          export OWPROV_SYSTEM_URI_PUBLIC="https://{{ steps.set_outputs.outputs.gateway_url }}:16005";
+          export OWANALYTICS_SYSTEM_URI_PUBLIC="https://{{ steps.set_outputs.outputs.gateway_url }}:16009";
+          export OWSUB_SYSTEM_URI_PUBLIC="https://{{ steps.set_outputs.outputs.gateway_url }}:16006";
           ./deploy.sh
         EOF
 
