@@ -66,7 +66,7 @@ jobs:
 
   # interop-01
   test-galaxy-s9:
-    runs-on: [self-hosted, small]
+    runs-on: ubuntu-latest
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
@@ -75,9 +75,9 @@ jobs:
       - name: install dependencies
         run: |
           pip install -r .quali/requirements.txt
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
+#          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+#          unzip awscliv2.zip
+#          sudo ./aws/install
 
       - name: start reservation
         env:
@@ -116,7 +116,7 @@ jobs:
 
           jq ".CONFIGURATION.interop=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           
-          jq ".CONFIGURATION.PERFECTO_DETAILS."Galaxy S9".jobNumber=${{ github.run_id }}" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
+          jq --arg git_run "${{ github.run_id }}" '.PERFECTO_DETAILS."Galaxy S9".jobNumber=$git_run' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           
 
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
@@ -124,7 +124,6 @@ jobs:
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
           
-          sleep 999
 
       - name: run tests
         uses: ./.github/actions/run-tests
