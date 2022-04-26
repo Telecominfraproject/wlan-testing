@@ -17,7 +17,7 @@ import allure
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-pytestmark = [pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.interop_country_code_JP, pytest.mark.interop_country_code
+pytestmark = [pytest.mark.interop, pytest.mark.iOS, pytest.mark.interop_iOS, pytest.mark.interop_country_code_JP, pytest.mark.interop_country_code
               , pytest.mark.bridge]
 
 from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnection, ping_deftapps_iOS, \
@@ -32,13 +32,13 @@ setup_params_general1 = {
                           ]},
     "rf": {"5G":
         {'band': '5G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 36},
         "2G":
         {'band': '2G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 1}
@@ -70,7 +70,7 @@ class TestBridgeModeConnectSuiteOne(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    def test_ClientConnect_bridge_wpa2_chn36_80Mhz_US_5g(self, request, get_vif_state, get_ap_logs,
+    def test_ClientConnect_bridge_wpa2_chn36_80Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
@@ -105,7 +105,7 @@ class TestBridgeModeConnectSuiteOne(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    def test_ClientConnect_bridge_wpa2_chn1_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
+    def test_ClientConnect_bridge_wpa2_chn1_80Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -145,13 +145,13 @@ setup_params_general2 = {
                           ]},
     "rf": {"5G":
         {'band': '5G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 52},
         "2G":
         {'band': '2G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 2}
@@ -183,7 +183,7 @@ class TestBridgeModeConnectSuiteTwo(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    def test_ClientConnect_bridge_wpa2_chn52_80Mhz_US_5g(self, request, get_vif_state, get_ap_logs,
+    def test_ClientConnect_bridge_wpa2_chn52_80Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
@@ -217,7 +217,7 @@ class TestBridgeModeConnectSuiteTwo(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7652", name="WIFI-7652")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    def test_ClientConnect_bridge_wpa2_chn2_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
+    def test_ClientConnect_bridge_wpa2_chn2_80Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -257,13 +257,13 @@ setup_params_general3 = {
                           ]},
     "rf": {"5G":
         {'band': '5G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 100},
         "2G":
         {'band': '2G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 3}
@@ -295,7 +295,7 @@ class TestBridgeModeConnectSuiteThree(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    def test_ClientConnect_bridge_wpa2_chn100_80Mhz_US_5g(self, request, get_vif_state, get_ap_logs,
+    def test_ClientConnect_bridge_wpa2_chn100_80Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
@@ -330,7 +330,7 @@ class TestBridgeModeConnectSuiteThree(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    def test_ClientConnect_bridge_wpa2_chn3_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
+    def test_ClientConnect_bridge_wpa2_chn3_80Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -369,13 +369,13 @@ setup_params_general4 = {
                           ]},
     "rf": {"5G":
         {'band': '5G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 132},
         "2G":
         {'band': '2G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 4}
@@ -407,7 +407,7 @@ class TestBridgeModeConnectSuiteFour(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    def test_ClientConnect_bridge_wpa2_chn48_80Mhz_US_5g(self, request, get_vif_state, get_ap_logs,
+    def test_ClientConnect_bridge_wpa2_chn48_80Mhz_JP_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][1]
         ssidName = profile_data["ssid_name"]
@@ -442,7 +442,7 @@ class TestBridgeModeConnectSuiteFour(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    def test_ClientConnect_bridge_wpa2_chn4_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
+    def test_ClientConnect_bridge_wpa2_chn4_80Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -482,13 +482,13 @@ setup_params_general5 = {
                           ]},
     "rf": {"5G":
         {'band': '5G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 52},
         "2G":
         {'band': '2G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 5}
@@ -509,7 +509,7 @@ for sec_modes in setup_params_general5['ssid_modes'].keys():
 @allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE JP")
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general4],
+    [setup_params_general5],
     indirect=True,
     scope="class"
 )
@@ -521,8 +521,7 @@ class TestBridgeModeConnectSuiteFive(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    @pytest.mark.thirdrun
-    def test_ClientConnect_bridge_wpa2_chn5_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
+    def test_ClientConnect_bridge_wpa2_chn5_80Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general5["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -562,13 +561,13 @@ setup_params_general6 = {
                           ]},
     "rf": {"5G":
         {'band': '5G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 56},
         "2G":
         {'band': '2G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 6}
@@ -589,7 +588,7 @@ for sec_modes in setup_params_general6['ssid_modes'].keys():
 @allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE JP")
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general4],
+    [setup_params_general6],
     indirect=True,
     scope="class"
 )
@@ -601,8 +600,7 @@ class TestBridgeModeConnectSuiteSix(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    @pytest.mark.thirdrun
-    def test_ClientConnect_bridge_wpa2_chn6_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
+    def test_ClientConnect_bridge_wpa2_chn6_80Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general6["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -641,13 +639,13 @@ setup_params_general7 = {
                           ]},
     "rf": {"5G":
         {'band': '5G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 60},
         "2G":
         {'band': '2G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 7}
@@ -668,7 +666,7 @@ for sec_modes in setup_params_general7['ssid_modes'].keys():
 @allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE JP")
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general4],
+    [setup_params_general7],
     indirect=True,
     scope="class"
 )
@@ -680,8 +678,7 @@ class TestBridgeModeConnectSuiteSeven(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    @pytest.mark.thirdrun
-    def test_ClientConnect_bridge_wpa2_chn7_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
+    def test_ClientConnect_bridge_wpa2_chn7_80Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -720,13 +717,13 @@ setup_params_general8 = {
                           ]},
     "rf": {"5G":
         {'band': '5G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 64},
         "2G":
         {'band': '2G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 8}
@@ -747,7 +744,7 @@ for sec_modes in setup_params_general8['ssid_modes'].keys():
 @allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE JP")
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general4],
+    [setup_params_general8],
     indirect=True,
     scope="class"
 )
@@ -759,8 +756,7 @@ class TestBridgeModeConnectSuiteEight(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    @pytest.mark.thirdrun
-    def test_ClientConnect_bridge_wpa2_chn8_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
+    def test_ClientConnect_bridge_wpa2_chn8_80Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general8["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -799,13 +795,13 @@ setup_params_general9 = {
                           ]},
     "rf": {"5G":
         {'band': '5G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 100},
         "2G":
         {'band': '2G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 9}
@@ -826,7 +822,7 @@ for sec_modes in setup_params_general9['ssid_modes'].keys():
 @allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE JP")
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general4],
+    [setup_params_general9],
     indirect=True,
     scope="class"
 )
@@ -838,8 +834,7 @@ class TestBridgeModeConnectSuiteNine(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    @pytest.mark.thirdrun
-    def test_ClientConnect_bridge_wpa2_chn9_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
+    def test_ClientConnect_bridge_wpa2_chn9_80Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general9["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -879,13 +874,13 @@ setup_params_general10 = {
                           ]},
     "rf": {"5G":
         {'band': '5G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 104},
         "2G":
         {'band': '2G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 10}
@@ -906,7 +901,7 @@ for sec_modes in setup_params_general10['ssid_modes'].keys():
 @allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE JP")
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general4],
+    [setup_params_general10],
     indirect=True,
     scope="class"
 )
@@ -918,7 +913,7 @@ class TestBridgeModeConnectSuiteTen(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    def test_ClientConnect_bridge_wpa2_chn10_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
+    def test_ClientConnect_bridge_wpa2_chn10_80Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general10["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
@@ -957,13 +952,13 @@ setup_params_general11 = {
                           ]},
     "rf": {"5G":
         {'band': '5G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 108},
         "2G":
         {'band': '2G',
-        'country': 'US',
+        'country': 'JP',
         "channel-mode": "VHT",
         'channel-width': 80,
         "channel": 11}
@@ -984,7 +979,7 @@ for sec_modes in setup_params_general11['ssid_modes'].keys():
 @allure.feature("BRIDGE MODE CLIENT CONNECT WITH COUNTRY CODE JP")
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general4],
+    [setup_params_general11],
     indirect=True,
     scope="class"
 )
@@ -996,7 +991,7 @@ class TestBridgeModeConnectSuiteEleven(object):
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.eightyMhz
-    def test_ClientConnect_bridge_wpa2_chn11_80Mhz_US_2g(self, request, get_vif_state, get_ap_logs,
+    def test_ClientConnect_bridge_wpa2_chn11_80Mhz_JP_2g(self, request, get_vif_state, get_ap_logs,
                                                          get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
         ssidName = profile_data["ssid_name"]
