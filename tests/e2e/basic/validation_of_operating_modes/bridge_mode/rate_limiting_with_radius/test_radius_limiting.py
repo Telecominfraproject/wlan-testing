@@ -556,11 +556,15 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
-    @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
-    @pytest.mark.max_download_user4
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7625", name="WIFI-7625")
-    def test_radius_server_ratelimit_maxdownload_groupuser4_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.max_upload_user1
+    @pytest.mark.wpa2_enterprise
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7618", name="WIFI-7618")
+    def test_radius_server_ratelimit_maxupload_groupuser1_2g(self, lf_test, lf_tools, station_names_twog):
+        """
+            Test: check max-upload ratelimit of group - user1
+            pytest -m "wpa2_enterprise and twog and max_upload_user1"
+        """
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -569,8 +573,8 @@ class TestRateLimitingWithRadiusBridge(object):
         band = "twog"
         eap = "TTLS"
         ttls_passwd = 'password'
-        identity = 'user4'
-        allure.attach(name="Max-Download-User4", body=str(profile_data["rate-limit"]))
+        identity = 'user1'
+        allure.attach(name="Max-Upload-User1", body=str(profile_data["rate-limit"]))
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
@@ -578,9 +582,9 @@ class TestRateLimitingWithRadiusBridge(object):
         print(passes)
         if passes:
             raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel: Per-Total Download Rate:"]]
-            wct_obj = lf_test.wifi_capacity(instance_name="Ratelimit_Radius_group_user4", mode=mode, vlan_id=vlan,
-                                            download_rate="1Gbps", batch_size="1",
-                                            upload_rate="0bps", protocol="TCP-IPv4", duration="60000",
+            wct_obj = lf_test.wifi_capacity(instance_name="Ratelimit_Radius_group_user1", mode=mode, vlan_id=vlan,
+                                            download_rate="0bps", batch_size="1",
+                                            upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                             raw_lines=raw_lines)
 
             report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
