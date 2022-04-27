@@ -209,4 +209,5 @@ runs:
           -e OWSEC_DEFAULT_PASSWORD \
           -e OWSEC_NEW_PASSWORD \
           -e CHECK_RETRIES \
+          -e FLAGS \
           tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo:main
