@@ -71,15 +71,15 @@ runs:
       shell: bash
       id: set_outputs
       run: |
-        echo "::set-output name=gateway_url::ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
-        echo "::set-output name=sec_url::ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
+        echo "::set-output name=gateway_url::ow-docker-compose-${{ github.run_number }}.cicd.lab.wlan.tip.build"
+        echo "::set-output name=sec_url::ow-docker-compose-${{ github.run_number }}.cicd.lab.wlan.tip.build"
 
     - name: Set EC2 facts
       shell: bash
       id: ec2_facts
       run: |
         AMI=$(aws ec2 describe-images --filters '[{"Name":"description","Values":["Canonical, Ubuntu, 20.04 LTS, amd64*"]},{"Name":"owner-id","Values":["099720109477"]}]' --query 'sort_by(Images, &CreationDate)[-1].ImageId' --output text)
-        INSTANCE_NAME=ow-docker-compose-${{ github.run_id }}
+        INSTANCE_NAME=ow-docker-compose-${{ github.run_number }}
         echo "::set-output name=ami::${AMI}"
         echo "::set-output name=instance_name::${INSTANCE_NAME}"
 
