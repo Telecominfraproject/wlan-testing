@@ -151,6 +151,7 @@ runs:
           curl https://get.docker.com -o docker.sh;
           chmod +x docker.sh;
           bash docker.sh;
+          systemctl start docker;
           apt-get update && apt install -y python3-pip jq git;
           pip3 install docker-compose;
         EOF
