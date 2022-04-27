@@ -1,0 +1,10 @@
+name: Test cloud SDK Docker Compose deployment upgrade
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo 'Test cloud SDK Docker Compose deployment upgrade'

@@ -35,6 +35,7 @@ if 'py-json' not in sys.path:
 from apnos.apnos import APNOS
 from controller.controller_2x.controller import Controller
 from controller.controller_2x.controller import FMSUtils
+from controller.controller_2x.controller import ProvUtils
 from configuration import CONFIGURATION
 from configuration import RADIUS_SERVER_DATA
 from configuration import RADIUS_ACCOUNTING_DATA
@@ -51,6 +52,7 @@ class Fixtures_2x:
         if not run_lf:
             try:
                 self.controller_obj = Controller(controller_data=self.lab_info["controller"])
+                self.prov_controller_obj = ProvUtils(controller_data=self.lab_info["controller"])
                 self.fw_client = FMSUtils(sdk_client=self.controller_obj)
             except Exception as e:
                 print(e)
@@ -106,6 +108,13 @@ class Fixtures_2x:
                 firmware_list.reverse()
 
                 for firmware in firmware_list:
+                    if firmware['image'] == "":
+                        continue
+                    if str(firmware['image']).__contains__("upgrade.bin"):
+                        temp = firmware['image'].split("-")
+                        temp.pop(-1)
+                        temp = "-".join(temp)
+                        firmware['image'] = temp
                     if ap['version'].split('-')[0] == 'release':
                         if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1].__contains__('v2.'):
                             print("Target Firmware: \n", firmware)
@@ -148,6 +157,7 @@ class Fixtures_2x:
                                 upgrade_status.append([ap['serial'], target_revision, current_version])
                                 print("firmware upgraded failed: ", target_revision)
                             break
+                    print("shivam", firmware['image'].split("-"), ap['version'].split('-')[0])
                     if firmware['image'].split("-")[-2] == ap['version'].split('-')[0]:
                         print("Target Firmware: \n", firmware)
                         allure.attach(name="Target firmware : ", body=str(firmware))
@@ -381,7 +391,6 @@ class Fixtures_2x:
         profile_data = {}
         var = ""
         if len(parameter['rf']) > 0:
-            print("Country code channel division")
             instantiate_profile_obj.set_radio_config(radio_config=parameter['rf'])
         else:
             instantiate_profile_obj.set_radio_config()
@@ -673,6 +682,12 @@ class Fixtures_2x:
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
 
+
+
+        # Adding memory Profile code before applying config
+        output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+        allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
+
         time_1 = time.time()
 
         # Apply config
@@ -801,6 +816,10 @@ class Fixtures_2x:
         except Exception as e:
             print(e)
             pass
+
+        # Adding memory Profile code after applying config
+        output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+        allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
 
         def teardown_session():
             wifi_status = ap_ssh.get_wifi_status()
