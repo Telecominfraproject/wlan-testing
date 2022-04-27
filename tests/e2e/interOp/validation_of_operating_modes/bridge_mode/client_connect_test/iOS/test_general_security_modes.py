@@ -556,3 +556,4 @@ class TestBridgeModeConnectSuiteTwo(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
+
