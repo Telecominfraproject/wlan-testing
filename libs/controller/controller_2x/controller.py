@@ -504,6 +504,92 @@ class UProfileUtility:
             self.base_profile_config['services']['lldp']['describe'] = "OpenWiFi - expressWiFi"
             self.base_profile_config['services']['lldp']['location'] = "Hotspot"
 
+    def set_pass_point(self):
+        if self.mode == "NAT":
+            radius = {
+                "nas-identifier": "TIPLABAP101",
+                "chargeable-user-id": True,
+                "authentication": {
+                    "host": "IP Address of RADIUS",
+                    "port": 11812,
+                    "secret": "passphrase",
+                    "request-attribute": [
+                        {
+                            "id": 126,
+                            "value": "s:TIP"
+                        }
+                    ]
+                },
+                "accounting": {
+                    "host": "IP Address of RADIUS",
+                    "port": 11813,
+                    "secret": "passphrase",
+                    "request-attribute": [
+                        {
+                            "id": 126,
+                            "value": "s:TIP"
+                        }
+                    ],
+                    "interval": 600
+                }
+            }
+            pass_point = {
+                        "venue-name": [
+                                      "eng:Example passpoint_venue",
+                                      "fra:Exemple de lieu"
+                                    ],
+                        "domain-name": [
+                          "onboard.almondlabs.net",
+                          "test.com"
+                        ],
+                        "asra": False,
+                        "internet": True,
+                        "esr": False,
+                        "uesa": False,
+                        "access-network-type": 0,
+                        "hessid": "11:22:33:44:55:66",
+                        "venue-group": 2,
+                        "venue-type": 8,
+                        "connection-capability": [
+                          "1:0:2",
+                          "6:22:1",
+                          "17:5060:0"
+                        ],
+                        "roaming-consortium": [
+                          "F4F5E8F5F4",
+                          "BAA2D00100",
+                          "BAA2D00000",
+                          "DEADBEEF01"
+                        ],
+                        "disable-dgaf": True,
+                        "anqp-domain": 8888,
+                        "ipaddr-type-available": 14,
+                        "nai-realm": [
+                          "0,oss.ameriband.com,21[5:7][2:4],13[5:-1]",
+                          "0,test.com,21[5:7][2:4]"
+                        ],
+                        "osen": False,
+                        "anqp-3gpp-cell-net": [
+                          "310,260",
+                          "310,410"
+                        ],
+                        "friendly-name": [
+                          "eng:AlmondLabs",
+                          "fra:AlmondLabs"
+                        ],
+                        "venue-url": [
+                          "http://www.example.com/info-fra",
+                          "http://www.example.com/info-eng"
+                        ],
+                        "auth-type": {
+                          "type": "terms-and-conditions"
+                        }
+            }
+            self.base_profile_config["interfaces"][1]["ipv4"]["subnet"] = "192.168.97.1/24"
+            self.base_profile_config["interfaces"][1]["ipv4"]["dhcp"]["lease-count"] = 100
+            self.base_profile_config["interfaces"][0]["ssids"][0]["radius"] = radius
+            self.base_profile_config["interfaces"][0]["ssids"][0]["passpoint"] = pass_point
+
     def set_captive_portal(self):
 
         if self.mode == "NAT":
