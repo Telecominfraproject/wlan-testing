@@ -173,6 +173,7 @@ class RunTest:
                 station_data_str = ""
                 sta_url = self.staConnect.get_station_url(sta_name)
                 station_info = self.staConnect.json_get(sta_url)
+                self.station_ip = station_info["interface"]["ip"]
                 for i in station_info["interface"]:
                     try:
                         station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
@@ -339,9 +340,9 @@ class RunTest:
         return self.eap_connect.passes()
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
-                      instance_name="wct_instance", download_rate="1Gbps", influx_tags=[],
+                      instance_name="wct_instance", download_rate="1Gbps", influx_tags="",
                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", stations="", create_stations=True,
-                      sort="interleave", raw_lines=[]):
+                      sort="interleave", raw_lines=[], sets=[]):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         if mode == "BRIDGE":
             upstream_port = self.upstream_port
@@ -378,7 +379,8 @@ class RunTest:
                                             disables=[],
                                             raw_lines=raw_lines,
                                             raw_lines_file="",
-                                            sets=[])
+                                            test_tag=influx_tags,
+                                            sets=sets)
         wificapacity_obj.setup()
         wificapacity_obj.run()
         for tag in influx_tags:
@@ -504,7 +506,7 @@ class RunTest:
         return True
 
     def dataplane(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
-                  upload_rate="0", duration="15s", instance_name="test_demo", raw_lines=None):
+                  upload_rate="0", duration="15s", instance_name="test_demo", raw_lines=None, influx_tags=""):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
 
         if mode == "BRIDGE":
@@ -545,6 +547,7 @@ class RunTest:
                                            duration=duration,
                                            dut=dut_name,
                                            station="1.1." + station_name[0],
+                                           test_tag=influx_tags,
                                            raw_lines=raw_lines)
 
         self.dataplane_obj.setup()
@@ -563,7 +566,7 @@ class RunTest:
         return self.dataplane_obj
 
     def dualbandperformancetest(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
-                                instance_name="test_demo", dut_5g="", dut_2g=""):
+                                instance_name="test_demo", dut_5g="", dut_2g="", influx_tags=""):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
 
         if mode == "BRIDGE":
@@ -591,6 +594,7 @@ class RunTest:
                                             max_stations_dual=124,
                                             radio2=[self.twog_radios],
                                             radio5=[self.fiveg_radios],
+                                            test_tag=influx_tags,
                                             sets=[['Basic Client Connectivity', '0'], ['Multi Band Performance', '1'],
                                                   ['Throughput vs Pkt Size', '0'], ['Capacity', '0'],
                                                   ['Skip 2.4Ghz Tests', '1'],
@@ -1011,6 +1015,19 @@ class RunTest:
         self.Client_disconnect(station_name=station_name)
         return atten_serial_radio
 
+    def set_radio_country_channel(self,_radio="wiphy0",_channel=0,_country_num=840,): # 840 - US
+        data = {
+            "shelf": _radio[0],
+            "resource": _radio[1],
+            "radio": _radio[2],
+            "mode": "NA",
+            "channel": _channel,
+            "country": _country_num
+        }
+
+        print(f"Lanforge-radio Country changed {_country_num}")
+        self.local_realm.json_post("/cli-json/set_wifi_radio", _data=data)
+
     def downlink_mu_mimo(self, radios_2g=[], radios_5g=[], radios_ax=[], dut_name="TIP", dut_5g="", dut_2g="", mode="BRIDGE", vlan_id=1, skip_2g=True, skip_5g=False):
         raw_line = []
         skip_twog = '1' if skip_2g else '0'
@@ -1108,22 +1125,12 @@ class RunTest:
         allure.attach(name="scan_ssid_data", body=csv_data_table)
         obj_scan.cleanup()
 
-
-
     def country_code_channel_division(self, ssid = "[BLANK]", passkey='[BLANK]', security="wpa2", mode="BRIDGE",
-                                      band='2G', station_name=[], vlan_id=100, channel='1',country=392):
+                                      band='2G', station_name=[], vlan_id=100, channel='1', channel_width=20,
+                                      country_num=392, country='United States(US)'):
         self.local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
         radio = (self.fiveg_radios[0] if band == "fiveg" else self.twog_radios[0]).split('.')
-        data = {
-            "shelf": radio[0],
-            "resource": radio[1],
-            "radio": radio[2],
-            "mode": "NA",
-            "channel": "NA",
-            "country": country
-        }
-        print(f"Lanforge-radio Country changed {country}")
-        self.local_realm.json_post("/cli-json/set_wifi_radio", _data=data)
+        self.set_radio_country_channel(_radio=radio,_country_num=country_num)
         station = self.Client_Connect(ssid=ssid, passkey=passkey, security=security, mode=mode, band=band,
                                          station_name=station_name, vlan_id=vlan_id)
         if station:
@@ -1136,6 +1143,18 @@ class RunTest:
             print(f"station {station_name[0]} IP: {station_info['interface']['ip']}\n"
                   f"connected channel: {station_info['interface']['channel']}\n"
                   f"and expected channel: {channel}")
+            allure.attach(name="Definition",
+                          body="Country code channel test intends to verify stability of Wi-Fi device " \
+                               "where the AP is configured with different countries with different channels.")
+            allure.attach(name="Procedure",
+                          body=f"This test case definition states that we push the basic {mode.lower()} mode config on the AP to "
+                               f"be tested by configuring it with {country} on {channel_width}MHz channel width and "
+                               f"channel {channel}. Create a client on {'5' if band=='fiveg' else '2.4'} GHz radio. Pass/ fail criteria: "
+                               f"The client created on {'5' if band=='fiveg' else '2.4'} GHz radio should get associated to the AP")
+            allure.attach(name="Details",
+                          body=f"Country code : {country[country.find('(')+1:-1]}\n"
+                               f"Bandwidth : {channel_width}Mhz\n"
+                               f"Channel : {channel}\n")
             station_data_str = ""
             for i in station_info["interface"]:
                 try:
@@ -1144,6 +1163,7 @@ class RunTest:
                     print(e)
             allure.attach(name=str(station_name[0]), body=str(station_data_str))
             station.station_profile.cleanup()
+            self.set_radio_country_channel(_radio=radio)
             if station_info['interface']['ip'] and station_info['interface']['channel'] == str(channel):
                 return True
             else:
@@ -1196,7 +1216,3 @@ if __name__ == '__main__':
     # print(a)
     # print(obj.eap_connect.json_get("port/1/1/sta0000?fields=ap,ip"))
     # obj.EAP_Connect(station_name=["sta0000", "sta0001"], eap="TTLS", ssid="testing_radius")
-
-
-# TODO: create new funtion
-#  --> attach details to allure (ref:client_connectivity)
