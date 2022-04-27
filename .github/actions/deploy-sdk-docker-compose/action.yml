@@ -88,7 +88,7 @@ runs:
       env:
         EC2_INSTANCE_TYPE: t2.nano
         EC2_SECURITY_GROUP_ID: sg-012299a8201a0761c
-        EC2_KEY_NAME: johann-hoffmann-opsfleet
+        EC2_KEY_NAME: loadsim
         VPC_SUBNET_ID: subnet-08ef4ccda4af94c38
       shell: bash
       id: ec2_instance
