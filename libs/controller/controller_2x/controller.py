@@ -588,7 +588,7 @@ class UProfileUtility:
             self.base_profile_config["interfaces"][1]["ipv4"]["subnet"] = "192.168.97.1/24"
             self.base_profile_config["interfaces"][1]["ipv4"]["dhcp"]["lease-count"] = 100
             self.base_profile_config["interfaces"][0]["ssids"][0]["radius"] = radius
-            self.base_profile_config["interfaces"][0]["ssids"][0]["passpoint"] = pass_point
+            self.base_profile_config["interfaces"][0]["ssids"][0]["pass-point"] = pass_point
 
     def set_captive_portal(self):
 

@@ -648,6 +648,12 @@ class Fixtures_2x:
             pass
 
         try:
+            if parameter['pass-point']:
+                instantiate_profile_obj.set_pass_point()
+        except Exception as e:
+            pass
+
+        try:
             if parameter['captive_portal']:
                 instantiate_profile_obj.set_captive_portal()
                 # print(json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"')))
