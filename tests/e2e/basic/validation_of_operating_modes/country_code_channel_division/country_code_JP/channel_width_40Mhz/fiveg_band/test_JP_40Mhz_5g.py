@@ -10,7 +10,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.country_code, pytest.mark.Bridge, pytest.mark.wpa2, pytest.mark.JP]
+pytestmark = [pytest.mark.country_code, pytest.mark.bridge, pytest.mark.wpa2, pytest.mark.japan]
 
 setup_params_general1 = {
     "mode": "BRIDGE",
@@ -65,10 +65,12 @@ class TestCountryJP40Mhz5GChannel36(object):
         band = "fiveg"
         vlan = 1
         channel = setup_params_general1['rf']['5G']['channel']
+        channel_width = setup_params_general1['rf']['5G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,country=392)
+                                                       channel=channel,channel_width=channel_width,country_num=392,
+                                                       country='Japan(JP)')
         if result:
             assert True
         else:
@@ -128,10 +130,12 @@ class TestCountryJP40Mhz5GChannel44(object):
         band = "fiveg"
         vlan = 1
         channel = setup_params_general2['rf']['5G']['channel']
+        channel_width = setup_params_general2['rf']['5G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,country=392)
+                                                       channel=channel,channel_width=channel_width,country_num=392,
+                                                       country='Japan(JP)')
         if result:
             assert True
         else:
@@ -191,10 +195,12 @@ class TestCountryJP40Mhz5GChannel52(object):
         band = "fiveg"
         vlan = 1
         channel = setup_params_general3['rf']['5G']['channel']
+        channel_width = setup_params_general3['rf']['5G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,country=392)
+                                                       channel=channel,channel_width=channel_width,country_num=392,
+                                                       country='Japan(JP)')
         if result:
             assert True
         else:
@@ -252,10 +258,12 @@ class TestCountryJP40Mhz5GChannel60(object):
         band = "fiveg"
         vlan = 1
         channel = setup_params_general4['rf']['5G']['channel']
+        channel_width = setup_params_general4['rf']['5G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,country=392)
+                                                       channel=channel,channel_width=channel_width,country_num=392,
+                                                       country='Japan(JP)')
         if result:
             assert True
         else:
@@ -314,10 +322,12 @@ class TestCountryJP40Mhz5GChannel100(object):
         band = "fiveg"
         vlan = 1
         channel = setup_params_general5['rf']['5G']['channel']
+        channel_width = setup_params_general5['rf']['5G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,country=392)
+                                                       channel=channel,channel_width=channel_width,country_num=392,
+                                                       country='Japan(JP)')
         if result:
             assert True
         else:
@@ -376,10 +386,12 @@ class TestCountryJP40Mhz5GChannel108(object):
         band = "fiveg"
         vlan = 1
         channel = setup_params_general6['rf']['5G']['channel']
+        channel_width = setup_params_general6['rf']['5G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,country=392)
+                                                       channel=channel,channel_width=channel_width,country_num=392,
+                                                       country='Japan(JP)')
         if result:
             assert True
         else:
@@ -438,10 +450,12 @@ class TestCountryJP40Mhz5GChannel116(object):
         band = "fiveg"
         vlan = 1
         channel = setup_params_general7['rf']['5G']['channel']
+        channel_width = setup_params_general7['rf']['5G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,country=392)
+                                                       channel=channel,channel_width=channel_width,country_num=392,
+                                                       country='Japan(JP)')
         if result:
             assert True
         else:
@@ -500,10 +514,12 @@ class TestCountryJP40Mhz5GChannel124(object):
         band = "fiveg"
         vlan = 1
         channel = setup_params_general8['rf']['5G']['channel']
+        channel_width = setup_params_general8['rf']['5G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,country=392)
+                                                       channel=channel,channel_width=channel_width,country_num=392,
+                                                       country='Japan(JP)')
         if result:
             assert True
         else:
@@ -562,10 +578,12 @@ class TestCountryJP40Mhz5GChannel132(object):
         band = "fiveg"
         vlan = 1
         channel = setup_params_general9['rf']['5G']['channel']
+        channel_width = setup_params_general9['rf']['5G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,country=392)
+                                                       channel=channel,channel_width=channel_width,country_num=392,
+                                                       country='Japan(JP)')
         if result:
             assert True
         else:
@@ -624,11 +642,144 @@ class TestCountryJP40Mhz5GChannel140(object):
         band = "fiveg"
         vlan = 1
         channel = setup_params_general10['rf']['5G']['channel']
+        channel_width = setup_params_general10['rf']['5G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,country=392)
+                                                       channel=channel,channel_width=channel_width,country_num=392,
+                                                       country='Japan(JP)')
         if result:
             assert True
         else:
             assert False
+
+
+setup_params_general11 = {
+    "mode": "BRIDGE",
+    "ssid_modes": {
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
+                          ]},
+    "rf": {
+        "5G":
+        {'band': '5G',
+        'country': 'JP',
+        'channel-mode': 'VHT',
+        'channel-width': 40,
+        "channel": 149},
+        "2G":
+        {'band': '2G',
+        'country': 'JP',
+        "channel-mode": "VHT",
+        'channel-width': 40,
+        "channel": 1}
+           },
+    "radius": False
+}
+
+@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general11],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestCountryJP40Mhz5GChannel149(object):
+    """Country code along with Channel and Channel-width Test Bridge mode
+       pytest -m "country_code and Bridge"
+    """
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @pytest.mark.wpa2_personal
+    @pytest.mark.fourtyMhz
+    @pytest.mark.fiveg
+    @pytest.mark.channel149
+    @pytest.mark.checkchannel
+    def test_client_bridge_wpa2_chn149_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
+        """Country code Bridge Mode
+           pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel149"
+        """
+        profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][1]
+        ssid = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+        security = "wpa2"
+        mode = "BRIDGE"
+        band = "fiveg"
+        vlan = 1
+        channel = setup_params_general11['rf']['5G']['channel']
+        channel_width = setup_params_general11['rf']['5G']['channel-width']
+
+        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
+                                                       band=band, station_name=station_names_fiveg, vlan_id=vlan,
+                                                       channel=channel,channel_width=channel_width,country_num=392,
+                                                       country='Japan(JP)')
+        if result:
+            assert True
+        else:
+            assert False
+
+
+setup_params_general12 = {
+    "mode": "BRIDGE",
+    "ssid_modes": {
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
+                          ]},
+    "rf": {
+        "5G":
+        {'band': '5G',
+        'country': 'JP',
+        'channel-mode': 'VHT',
+        'channel-width': 40,
+        "channel": 157},
+        "2G":
+        {'band': '2G',
+        'country': 'JP',
+        "channel-mode": "VHT",
+        'channel-width': 40,
+        "channel": 1}
+           },
+    "radius": False
+}
+
+@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general12],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestCountryJP40Mhz5GChannel157(object):
+    """Country code along with Channel and Channel-width Test Bridge mode
+       pytest -m "country_code and Bridge"
+    """
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @pytest.mark.wpa2_personal
+    @pytest.mark.fourtyMhz
+    @pytest.mark.fiveg
+    @pytest.mark.channel157
+    @pytest.mark.checkchannel
+    def test_client_bridge_wpa2_chn157_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
+        """Country code Bridge Mode
+           pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel157"
+        """
+        profile_data = setup_params_general12["ssid_modes"]["wpa2_personal"][1]
+        ssid = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+        security = "wpa2"
+        mode = "BRIDGE"
+        band = "fiveg"
+        vlan = 1
+        channel = setup_params_general12['rf']['5G']['channel']
+        channel_width = setup_params_general12['rf']['5G']['channel-width']
+
+        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
+                                                       band=band, station_name=station_names_fiveg, vlan_id=vlan,
+                                                       channel=channel,channel_width=channel_width,country_num=392,
+                                                       country='Japan(JP)')
+        if result:
+            assert True
+        else:
+            assert False
+

@@ -1126,7 +1126,8 @@ for sec_modes in setup_params_general11['ssid_modes'].keys():
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectSuiteEleven(object):
-    """ Client Connect SuiteEleven    """
+    """ Client Connect SuiteEleven
+       """
 
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7642", name="WIFI-7642")
@@ -1162,5 +1163,3 @@ class TestBridgeModeConnectSuiteEleven(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
-

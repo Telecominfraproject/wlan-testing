@@ -60,14 +60,16 @@ class TestWifiCapacityNATModeDualBand(object):
         mode = "NAT"
         vlan = 1
         max = int(get_apnos_max_clients[0])
+        sets = [["DUT_NAME", lf_tools.dut_name]]
+        print("sets", sets)
         lf_tools.add_stations(band="2G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        influx_tags = ["tcp", "download", "2.4G-5G Combined"]
+        influx_tags = "tcp-download-nat-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_tcp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                        influx_tags=influx_tags,
+                                        influx_tags=influx_tags, sets=sets,
                                         upload_rate="0", protocol="TCP-IPv4", duration="60000")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -90,14 +92,16 @@ class TestWifiCapacityNATModeDualBand(object):
         mode = "NAT"
         vlan = 1
         max = int(get_apnos_max_clients[0])
+        sets = [["DUT_NAME", lf_tools.dut_name]]
+        print("sets", sets)
         lf_tools.add_stations(band="2G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        influx_tags = ["udp", "download", "2.4G-5G Combined"]
+        influx_tags = "udp-download-nat-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_udp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                        influx_tags=influx_tags,
+                                        influx_tags=influx_tags, sets=sets,
                                         upload_rate="100Mbps", protocol="UDP-IPv4", duration="60000")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -120,14 +124,16 @@ class TestWifiCapacityNATModeDualBand(object):
         mode = "NAT"
         vlan = 1
         max = int(get_apnos_max_clients[0])
+        sets = [["DUT_NAME", lf_tools.dut_name]]
+        print("sets", sets)
         lf_tools.add_stations(band="2G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        influx_tags = ["tcp", "bidirectional", "2.4G-5G Combined"]
+        influx_tags = "tcp-bidirectional-nat-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_tcp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                        influx_tags=influx_tags,
+                                        influx_tags=influx_tags, sets=sets,
                                         upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -150,14 +156,16 @@ class TestWifiCapacityNATModeDualBand(object):
         mode = "NAT"
         vlan = 1
         max = int(get_apnos_max_clients[0])
+        sets = [["DUT_NAME", lf_tools.dut_name]]
+        print("sets", sets)
         lf_tools.add_stations(band="2G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        influx_tags = ["udp", "bidirectional", "2.4G-5G Combined"]
+        influx_tags = "udp-bidirectional-nat-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_udp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                        influx_tags=influx_tags,
+                                        influx_tags=influx_tags, sets=sets,
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -180,14 +188,16 @@ class TestWifiCapacityNATModeDualBand(object):
         mode = "NAT"
         vlan = 1
         max = int(get_apnos_max_clients[0])
+        sets = [["DUT_NAME", lf_tools.dut_name]]
+        print("sets", sets)
         lf_tools.add_stations(band="2G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        influx_tags = ["tcp", "download", "2.4G-5G Combined"]
+        influx_tags = "tcp-upload-nat-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_tcp_ul", mode=mode, vlan_id=vlan,
                                         download_rate="0", batch_size="1,5,10,20,40,64,128,256",
-                                        influx_tags=influx_tags,
+                                        influx_tags=influx_tags, sets=sets,
                                         upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -210,14 +220,16 @@ class TestWifiCapacityNATModeDualBand(object):
         mode = "NAT"
         vlan = 1
         max = int(get_apnos_max_clients[0])
+        sets = [["DUT_NAME", lf_tools.dut_name]]
+        print("sets", sets)
         lf_tools.add_stations(band="2G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        influx_tags = ["udp", "download", "2.4G-5G Combined"]
+        influx_tags = "udp-upload-nat-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_udp_ul", mode=mode, vlan_id=vlan,
                                         download_rate="0", batch_size="1,5,10,20,40,64,128,256",
-                                        influx_tags=influx_tags,
+                                        influx_tags=influx_tags, sets=sets,
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
