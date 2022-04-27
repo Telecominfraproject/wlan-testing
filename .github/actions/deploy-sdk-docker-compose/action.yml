@@ -200,6 +200,7 @@ runs:
         OWSEC_DEFAULT_PASSWORD: ${{ inputs.owsec_default_password }}
         OWSEC_NEW_PASSWORD: ${{ inputs.owsec_new_password }}
         CHECK_RETRIES: 60
+        FLAGS: "-s -k"
       shell: bash
       run: |
         docker run --rm \
