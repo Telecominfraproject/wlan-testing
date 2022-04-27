@@ -1095,13 +1095,22 @@ class RunTest:
         list_data = []
         obj_scan = StaScan(host=self.lanforge_ip, port=self.lanforge_port, ssid="fake ssid", security="open", password="[BLANK]", radio=radio, sta_list=["sta0000"], csv_output="scan_ssid.csv")
         obj_scan.pre_cleanup()
+        time1 = datetime.now()
+        first = time.mktime(time1.timetuple()) * 1000
         obj_scan.build()
         obj_scan.start()
+        time2 = datetime.now()
+        second = time.mktime(time2.timetuple()) * 1000
+        diff = int(second - first)
         try:
             with open(obj_scan.csv_output, 'r') as file:
                 reader = csv.reader(file)
                 for row in reader:
-                    list_data.append(row)
+                    if row[1] == "age":
+                        list_data.append(row)
+                        continue
+                    elif int(row[1]) < diff:
+                        list_data.append(row)
         except Exception as e:
             print(e)
         report_obj = Report()
