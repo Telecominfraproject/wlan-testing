@@ -62,6 +62,11 @@ class ConfigureController:
         print(new_uri)
         return new_uri
 
+    def build_url_prov(self, path):
+        new_uri = 'https://%s:%d/api/v1/%s' % (self.prov_host.hostname, self.prov_host.port, path)
+        print(new_uri)
+        return new_uri
+
 
 
     def request(self, service, command, method, params, payload):
