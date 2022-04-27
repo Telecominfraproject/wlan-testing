@@ -77,7 +77,7 @@ jobs:
 
   # Run tests on APs
   test-hfcl-ion4xe:
-    needs: ["vars", "build"]
+    needs: ["vars", "build", "test-edgecore-eap102"]
     runs-on: ubuntu-latest
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'hfcl_ion4xe')"
     env:
