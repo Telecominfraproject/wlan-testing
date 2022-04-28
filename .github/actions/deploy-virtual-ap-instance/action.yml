@@ -38,24 +38,25 @@ runs:
     - name: Create openwifi-virtual-ap EC2 instance
       shell: bash
       run: |
-        aws ec2 run-instances --key-name openwifi-virtual-ap --security-groups openwifi-virtual-ap --instance-type t2.nano --image-id ${{ steps.get_ami_id.outputs.id }} --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=openwifi-virtual-ap-${{ github.run_id }}},{Key=Owner,Value=gha-wlan-testing}]'
+        aws ec2 run-instances --key-name openwifi-virtual-ap --security-groups openwifi-virtual-ap --instance-type t2.nano --image-id ${{ steps.get_ami_id.outputs.id }} --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=openwifi-virtual-ap-${{ github.run_number }}},{Key=Owner,Value=gha-wlan-testing}]'
 
     - name: Wait for virtual AP instance to get ready
       shell: bash
       run: |
-        INSTANCE_STATE=$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_id }}' --query 'Reservations[*].Instances[*].State.Name' --output text)
+        INSTANCE_STATE=$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_number }}' --query 'Reservations[*].Instances[*].State.Name' --output text)
         until [[ "$INSTANCE_STATE" == "running" ]]; do
           echo "Virtual AP instance state is $INSTANCE_STATE, waiting for the instance to get ready."
-          INSTANCE_STATE=$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_id }}' --query 'Reservations[*].Instances[*].State.Name' --output text)
+          INSTANCE_STATE=$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_number }}' --query 'Reservations[*].Instances[*].State.Name' --output text)
         done
 
     - name: Get virtual AP instance facts
       shell: bash
       id: get_virtual_ap_facts
       run: |
-        echo ::set-output name=public_ip::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_id }}' --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)"
-        echo ::set-output name=serial_number::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_id }}' --query 'Reservations[*].Instances[*].NetworkInterfaces[*].MacAddress' --output text | sed 's/://g')"
-        echo ::set-output name=instance_id::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_id }}' --query 'Reservations[*].Instances[*].InstanceId' --output text)"
+        echo ::set-output name=public_ip::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_number }}' --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)"
+        echo ::set-output name=serial_number::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_number }}' --query 'Reservations[*].Instances[*].NetworkInterfaces[*].MacAddress' --output text | sed 's/://g')"
+        echo ::set-output name=instance_id::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_number }}' --query 'Reservations[*].Instances[*].InstanceId' --output text)"
+        echo ::set-output name=selfsigned_restapi_ca::"$(curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentral-deploy/main/docker-compose/certs/restapi-ca.pem)"
 
     - name: Upload AP certificate, key and dev-id to instance
       env:
@@ -72,4 +73,4 @@ runs:
         VIRTUAL_AP_PASSWORD: ${{ inputs.virtual_ap_password }}
       shell: bash
       run: |
-        sshpass -p ${{ env.VIRTUAL_AP_PASSWORD }} ssh -f -o StrictHostKeyChecking=accept-new root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} "/etc/init.d/ucentral stop; /usr/sbin/ucentral -S ${{ steps.get_virtual_ap_facts.outputs.serial_number }} -s ${{ inputs.gateway_url }} -P 15002 -d -f \$(awk -F '=' 'FNR == 8 {print \$2}' /etc/openwrt_release | tr -d \') &> /dev/null"
+        sshpass -p ${{ env.VIRTUAL_AP_PASSWORD }} ssh -f -o StrictHostKeyChecking=accept-new root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} "echo ${{ steps.get_virtual_ap_facts.outputs.selfsigned_restapi_ca }} >> /etc/ssl/cert.pem; /etc/init.d/ucentral stop; /usr/sbin/ucentral -S ${{ steps.get_virtual_ap_facts.outputs.serial_number }} -s ${{ inputs.gateway_url }} -P 15002 -d -f \$(awk -F '=' 'FNR == 8 {print \$2}' /etc/openwrt_release | tr -d \') &> /dev/null"

@@ -1,7 +1,6 @@
 name: 2.x testing with Docker Compose deployment
 
 env:
-  AWS_EKS_NAME: tip-wlan-main
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
@@ -14,27 +13,21 @@ on:
         description: 'OpenWIFI deployment repository version to be deployed.'
         required: true
       owgw_version:
-        default: 'master'
         description: 'OpenWIFI Gateway version to be deployed.'
         required: false
       owsec_version:
-        default: 'main'
         description: 'OpenWIFI Security version to be deployed.'
         required: false
       owfms_version:
-        default: 'main'
         description: 'OpenWIFI Firmware version to be deployed.'
         required: false
       owprov_version:
-        default: 'main'
         description: 'OpenWIFI Provisioning version to be deployed.'
         required: false
       owanalytics_version:
-        default: 'main'
         description: 'OpenWIFI Analytics version to be deployed.'
         required: false
       owsub_version:
-        default: 'main'
         description: 'OpenWIFI Subscription (Userportal) version to be deployed.'
         required: false
       id:
@@ -70,15 +63,17 @@ jobs:
       AWS_DEFAULT_OUTPUT: json
       AWS_DEFAULT_REGION: us-east-2
     outputs:
-      gateway_url: ${{ steps.deploy-sdk-docker-compose-in-k8s.outputs.gateway_url }}
-      sec_url: ${{ steps.deploy-sdk-docker-compose-in-k8s.outputs.sec_url }}
-      namespace: ${{ steps.deploy-sdk-docker-compose-in-k8s.outputs.namespace }}
+      gateway_url: ${{ steps.deploy-sdk-docker-compose.outputs.gateway_url }}
+      sec_url: ${{ steps.deploy-sdk-docker-compose.outputs.sec_url }}
+      instance_id: ${{ steps.deploy-sdk-docker-compose.outputs.instance_id }}
+      instance_name: ${{ steps.deploy-sdk-docker-compose.outputs.instance_name }}
+      instance_public_ip: ${{ steps.deploy-sdk-docker-compose.outputs.instance_public_ip }}
     steps:
       - uses: actions/checkout@v2
 
-      - name: Use deploy-sdk-docker-compose-in-k8s composite action
-        id: deploy-sdk-docker-compose-in-k8s
-        uses: ./.github/actions/deploy-sdk-docker-compose-in-k8s
+      - name: Use deploy-sdk-docker-compose composite action
+        id: deploy-sdk-docker-compose
+        uses: ./.github/actions/deploy-sdk-docker-compose
         with:
           deployment_version: ${{ github.event.inputs.deployment_version }}
           owgw_version: ${{ github.event.inputs.owgw_version }}
@@ -95,6 +90,8 @@ jobs:
           owsec_new_password: ${{ secrets.OWSEC_NEW_PASSWORD }}
           owfms_s3_secret: ${{ secrets.UCENTRALFMS_S3_SECRET }}
           owfms_s3_key: ${{ secrets.UCENTRALFMS_S3_KEY }}
+          rtty_token: ${{ secrets.RTTY_TOKEN }}
+          instance_ssh_key: ${{ secrets.SSH_LOADSIM }}
 
   deploy-virtual-ap-instance:
     name: Deploy virtual AP EC2 instance
@@ -126,6 +123,7 @@ jobs:
      OWSEC: "${{ needs.deploy-controller.outputs.sec_url }}:16001"
      OWSEC_USERNAME: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
      OWSEC_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
+     FLAGS: "-s -k"
    steps:
      - name: Get OWGW CLI script and test service
        if: github.event.inputs.microservice == 'owgw' || github.event.inputs.microservice == 'all'
@@ -149,25 +147,38 @@ jobs:
          ./cli test_service ${{ needs.deploy-virtual-ap-instance.outputs.serial_number }}
 
   destroy-controller:
-    name: Destroy controller namespace
+    name: Destroy OpenWiFi cloud SDK instance
     needs: [deploy-controller, test]
     runs-on: ubuntu-latest
     env:
       AWS_DEFAULT_REGION: us-east-2
+      ROUTE_53_ZONE_ID: Z09534373UTXT2L1YL912
     if: always()
     steps:
-      - name: Fetch kubeconfig
+      - name: Delete Route53 record
+        continue-on-error: true
         run: |
-          aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+          cat > changeset.json << EOF
+          {
+               "Comment": "Deleting A for ${{ needs.deploy-controller.outputs.instance_name }}",
+               "Changes": [{
+                          "Action": "DELETE",
+                          "ResourceRecordSet": {
+                                      "Name": "${{ needs.deploy-controller.outputs.instance_name }}.cicd.lab.wlan.tip.build",
+                                      "Type": "A",
+                                      "TTL": 600,
+                                      "ResourceRecords":[{
+                                              "Value": "${{ needs.deploy-controller.outputs.instance_public_ip }}"
+                                        }]}
+                                    }]
+          }
+          EOF
+          aws route53 change-resource-record-sets --hosted-zone-id $ROUTE_53_ZONE_ID --change-batch file://changeset.json
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
-      - name: install kubectl
+      - name: Delete EC2 instance
+        continue-on-error: true
         run: |
-          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
-      - name: Delete namespace
-        run: kubectl delete ns --ignore-not-found=true ${{ needs.deploy-controller.outputs.namespace }}
+          aws ec2 terminate-instances --instance-ids ${{ needs.deploy-controller.outputs.instance_id }}
 
   terminate-virtual-ap-instance:
     name: Terminate virtual AP instance
