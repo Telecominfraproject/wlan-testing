@@ -591,8 +591,10 @@ class TestRateLimitingWithRadiusBridge(object):
 
             lf_tools.attach_report_graphs(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
+            assert True
+        else:
+            assert False
 
-        assert True
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
@@ -629,5 +631,6 @@ class TestRateLimitingWithRadiusBridge(object):
 
             lf_tools.attach_report_graphs(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
-        assert True
-
+            assert True
+        else:
+            assert False
