@@ -146,7 +146,7 @@ runs:
             sleep 5
         done
         ssh -i ssh_key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }} << EOF
-          sudo -i
+          sudo -i;
           apt-get update && apt-get install -y ca-certificates curl gnupg lsb-release python3-pip jq git;
           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg;
           echo \
