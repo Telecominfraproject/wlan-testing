@@ -58,7 +58,7 @@ runs:
         echo ::set-output name=instance_id::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_number }}' --query 'Reservations[*].Instances[*].InstanceId' --output text)"
         echo ::set-output name=selfsigned_restapi_ca::"$(curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentral-deploy/main/docker-compose/certs/restapi-ca.pem)"
 
-    - name: Upload AP certificate, key and dev-id to instance
+    - name: Upload AP certificate, key and dev-id to instance and stop ucentral service
       env:
         VIRTUAL_AP_PASSWORD: ${{ inputs.virtual_ap_password }}
         VIRTUAL_AP_CERT: ${{ inputs.virtual_ap_cert }}
@@ -70,16 +70,16 @@ runs:
           echo "${{ env.VIRTUAL_AP_CERT }}" > /etc/ucentral/cert.pem;
           echo "${{ env.VIRTUAL_AP_KEY }}" > /etc/ucentral/key.pem && chmod 600 /etc/ucentral/key.pem;
           echo "${{ env.VIRTUAL_AP_DEV_ID }}" > /etc/ucentral/dev-id;
+          echo "${{ steps.get_virtual_ap_facts.outputs.selfsigned_restapi_ca }}" >> /etc/ssl/cert.pem;
           sleep 10;
+          /etc/init.d/ucentral stop;
         EOF
 
-    - name: Stop ucentral service on AP and connect manually to gateway
+    - name  manually to gateway
       env:
         VIRTUAL_AP_PASSWORD: ${{ inputs.virtual_ap_password }}
       shell: bash
       run: |
         sshpass -p ${{ env.VIRTUAL_AP_PASSWORD }} ssh -f -o StrictHostKeyChecking=accept-new root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} << EOF
-          echo "${{ steps.get_virtual_ap_facts.outputs.selfsigned_restapi_ca }}" >> /etc/ssl/cert.pem;
-          /etc/init.d/ucentral stop;
-          /usr/sbin/ucentral -S ${{ steps.get_virtual_ap_facts.outputs.serial_number }} -s ${{ inputs.gateway_url }} -P 15002 -d -f "\$(awk -F '=' 'FNR == 8 {print \$2}' /etc/openwrt_release | tr -d \')" &> /dev/null;
+          /usr/sbin/ucentral -S ${{ steps.get_virtual_ap_facts.outputs.serial_number }} -s ${{ inputs.gateway_url }} -P 15002 -d -f \$(awk -F '=' 'FNR == 8 {print \$2}' /etc/openwrt_release | tr -d \') &> /dev/null;
         EOF
