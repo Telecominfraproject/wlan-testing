@@ -58,7 +58,7 @@ runs:
         echo ::set-output name=instance_id::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_number }}' --query 'Reservations[*].Instances[*].InstanceId' --output text)"
         echo ::set-output name=selfsigned_restapi_ca::"$(curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentral-deploy/main/docker-compose/certs/restapi-ca.pem)"
 
-    - name: Upload AP certificate, key and dev-id to instance and stop ucentral service
+    - name: Upload AP certificate, key and dev-id to instance
       env:
         VIRTUAL_AP_PASSWORD: ${{ inputs.virtual_ap_password }}
         VIRTUAL_AP_CERT: ${{ inputs.virtual_ap_cert }}
@@ -68,7 +68,7 @@ runs:
       run: |
         sshpass -p ${{ env.VIRTUAL_AP_PASSWORD }} ssh -o StrictHostKeyChecking=accept-new root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} 'echo "${{ env.VIRTUAL_AP_CERT }}" > /etc/ucentral/cert.pem; echo "${{ env.VIRTUAL_AP_KEY }}" > /etc/ucentral/key.pem && chmod 600 /etc/ucentral/key.pem; echo "${{ env.VIRTUAL_AP_DEV_ID }}" > /etc/ucentral/dev-id; sleep 10'
 
-    - name: Connect manually to gateway
+    - name: Stop ucentral service on AP and connect manually to gateway
       env:
         VIRTUAL_AP_PASSWORD: ${{ inputs.virtual_ap_password }}
       shell: bash
