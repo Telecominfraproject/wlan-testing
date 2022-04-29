@@ -75,7 +75,7 @@ runs:
           /etc/init.d/ucentral stop;
         EOF
 
-    - name  manually to gateway
+    - name: Connect manually to gateway
       env:
         VIRTUAL_AP_PASSWORD: ${{ inputs.virtual_ap_password }}
       shell: bash
