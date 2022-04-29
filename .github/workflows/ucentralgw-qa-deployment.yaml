@@ -33,7 +33,7 @@ env:
       "namespace": "qa02",
       "deploy_method": "git",
       "chart_version": "v2.5.0",
-      "owgw_version": "v2.5.1-RC1",
+      "owgw_version": "v2.5.0",
       "owsec_version": "v2.5.0",
       "owfms_version": "v2.5.0",
       "owprov_version": "v2.5.0",
