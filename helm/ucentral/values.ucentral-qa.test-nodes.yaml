@@ -94,7 +94,7 @@ owlsui:
     operator: "Exists"
     effect: "NoSchedule"
 
-rttys:
+owanalytics:
   nodeSelector:
     env: tests
   tolerations:

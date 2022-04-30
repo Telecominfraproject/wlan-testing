@@ -4,6 +4,7 @@ import pytest
 pytestmark = [pytest.mark.client_connectivity,
               pytest.mark.bridge, pytest.mark.enterprise, pytest.mark.tls, pytest.mark.uc_sanity]
 
+
 setup_params_enterprise = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -97,6 +98,7 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
                                      mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
                                      identity=identity, station_name=station_names_fiveg,
                                      key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
+
 
         assert passes == "PASS", result
 
@@ -329,3 +331,4 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
                                      station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
         assert passes == "PASS", result
+

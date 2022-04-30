@@ -238,7 +238,6 @@ class TestNATModeEnterpriseTLSSuiteOne(object):
                                      identity=identity, station_name=station_names_fiveg,
                                      key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
 
-
         assert passes == "PASS", result
 
 setup_params_enterprise_two = {
@@ -297,7 +296,7 @@ class TestNATModeEnterpriseTLSSuiteTwo(object):
                                      station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
         assert passes == "PASS", result
-
+    
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.fiveg
     def test_wpa_wpa2_enterprise_5g(self, get_ap_logs, get_lf_logs,
@@ -340,6 +339,7 @@ class TestNATModeEnterpriseTLSSuiteTwo(object):
         band = "twog"
         channel = get_ap_channel[0]["2G"]
         print("ssid channel:- ", channel)
+
         vlan = 1
         tls_passwd = radius_info["password"]
         eap = "TLS"
@@ -367,6 +367,7 @@ class TestNATModeEnterpriseTLSSuiteTwo(object):
         band = "fiveg"
         channel = get_ap_channel[0]["5G"]
         print("ssid channel:- ", channel)
+
         vlan = 1
         tls_passwd = radius_info["password"]
         eap = "TLS"
@@ -377,4 +378,5 @@ class TestNATModeEnterpriseTLSSuiteTwo(object):
                                      station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
         assert passes == "PASS", result
+
 

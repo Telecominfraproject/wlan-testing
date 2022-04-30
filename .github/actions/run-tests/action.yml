@@ -144,14 +144,14 @@ runs:
         exit $EXIT_CODE
 
     - name: upload Allure results as artifact
-      if: ${{ always() }}
+      if: always()
       uses: actions/upload-artifact@v2
       with:
         name: ${{ inputs.allure_results_artifact_name }}
         path: allure-results
 
     - name: cleanup
-      if: ${{ always() }}
+      if: always()
       shell: bash
       run: |
         kubectl delete ns "${{ inputs.namespace }}" --wait=true

@@ -9,13 +9,13 @@ env:
 on:
   workflow_dispatch:
     inputs:
+      deployment_version:
+        default: 'main'
+        description: 'OpenWIFI deployment repository version to be deployed.'
+        required: false
       owgw_version:
         default: 'master'
         description: 'OpenWIFI Gateway version to be deployed.'
-        required: false
-      owgwui_version:
-        default: 'main'
-        description: 'OpenWIFI Web UI version to be deployed.'
         required: false
       owsec_version:
         default: 'main'
@@ -29,9 +29,13 @@ on:
         default: 'main'
         description: 'OpenWIFI Provisioning version to be deployed.'
         required: false
-      owprovui_version:
+      owanalytics_version:
         default: 'main'
-        description: 'OpenWIFI Provisioning Web UI version to be deployed.'
+        description: 'OpenWIFI Analytics version to be deployed.'
+        required: false
+      owsub_version:
+        default: 'main'
+        description: 'OpenWIFI Subscription (Userportal) version to be deployed.'
         required: false
       id:
         description: 'run identifier'
@@ -106,7 +110,6 @@ jobs:
       - name: Deploy OpenWIFI Cloud SDK
         working-directory: wlan-testing/docker-compose/openwifi
         env:
-          RTTY_TOKEN: ${{ secrets.RTTY_TOKEN }}
           OWSEC_AUTHENTICATION_DEFAULT_USERNAME: ${{ secrets.UCENTRALGW_AUTH_USERNAME }}
           OWSEC_AUTHENTICATION_DEFAULT_PASSWORD: ${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
           OWFMS_S3_SECRET: ${{ secrets.UCENTRALFMS_S3_SECRET }}
@@ -123,7 +126,7 @@ jobs:
               external-dns.alpha.kubernetes.io/hostname: ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build
               service.beta.kubernetes.io/aws-load-balancer-backend-protocol: ssl
               service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:289708231103:certificate/bfa89c7a-5b64-4a8a-bcfe-ffec655b5285"
-              service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002,16003,443,16001,16004,16005,8443,5912,5913"
+              service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "16002,16003,443,16001,16004,16005,8443,5912,5913,16009,16006"
             labels:
               app: ow-docker-compose-${{ github.run_id }}
           spec:
@@ -147,6 +150,13 @@ jobs:
               port: 16003
               targetPort: 16003
               protocol: TCP
+            - name: owgw-rttys
+              port: 5912
+              targetPort: 5912
+              protocol: TCP
+            - name: owgw-rttys-view
+              port: 5913
+              targetPort: 5913
             - name: owgw-ui-http
               port: 80
               targetPort: 80
@@ -154,6 +164,7 @@ jobs:
             - name: owgw-ui-https
               port: 443
               targetPort: 443
+              protocol: TCP
             - name: owsec-restapi
               port: 16001
               targetPort: 16001
@@ -161,6 +172,7 @@ jobs:
             - name: owsec-alivecheck
               port: 16101
               targetPort: 16101
+              protocol: TCP
             - name: owfms-restapi
               port: 16004
               targetPort: 16004
@@ -168,6 +180,7 @@ jobs:
             - name: owfms-alivecheck
               port: 16104
               targetPort: 16104
+              protocol: TCP
             - name: owprov-restapi
               port: 16005
               targetPort: 16005
@@ -175,6 +188,7 @@ jobs:
             - name: owprov-alivecheck
               port: 16105
               targetPort: 16105
+              protocol: TCP
             - name: owprov-ui-http
               port: 8080
               targetPort: 8080
@@ -182,13 +196,23 @@ jobs:
             - name: owprov-ui-https
               port: 8443
               targetPort: 8443
-            - name: rttys-dev
-              port: 5912
-              targetPort: 5912
               protocol: TCP
-            - name: rttys-user
-              port: 5913
-              targetPort: 5913
+            - name: owanalytics-restapi
+              port: 16009
+              targetPort: 16009
+              protocol: TCP
+            - name: owanalytics-alivecheck
+              port: 16109
+              targetPort: 16109
+              protocol: TCP
+            - name: owsub-restapi
+              port: 16006
+              targetPort: 16006
+              protocol: TCP
+            - name: owsub-alivecheck
+              port: 16106
+              targetPort: 16106
+              protocol: TCP
           ---
           apiVersion: v1
           kind: Pod
@@ -232,10 +256,12 @@ jobs:
                 value: "127.0.0.1:2376"
               - name: DOCKER_CERT_PATH
                 value: "/certs/client"
+              - name: DEPLOY_VERSION
+                value: "${{ github.event.inputs.deployment_version }}"
               - name: OWGW_TAG
                 value: "${{ github.event.inputs.owgw_version }}"
               - name: OWGWUI_TAG
-                value: "${{ github.event.inputs.owgwui_version }}"
+                value: "main"
               - name: OWSEC_TAG
                 value: "${{ github.event.inputs.owsec_version }}"
               - name: OWFMS_TAG
@@ -243,7 +269,11 @@ jobs:
               - name: OWPROV_TAG
                 value: "${{ github.event.inputs.owprov_version }}"
               - name: OWPROVUI_TAG
-                value: "${{ github.event.inputs.owprovui_version }}"
+                value: "main"
+              - name: OWANALYTICS_TAG
+                value: "${{ github.event.inputs.owanalytics_version }}"
+              - name: OWSUB_TAG
+                value: "${{ github.event.inputs.owsub_version }}"
               - name: INTERNAL_OWGW_HOSTNAME
                 value: "owgw.wlan.local"
               - name: INTERNAL_OWSEC_HOSTNAME
@@ -252,14 +282,14 @@ jobs:
                 value: "owfms.wlan.local"
               - name: INTERNAL_OWPROV_HOSTNAME
                 value: "owprov.wlan.local"
-              - name: DEPLOY_VERSION
-                value: "main"
+              - name: INTERNAL_OWANALYTICS_HOSTNAME
+                value: "owanalytics.wlan.local"
+              - name: INTERNAL_OWSUB_HOSTNAME
+                value: "owsub.wlan.local"
               - name: SYSTEM_URI_UI
                 value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
               - name: DEFAULT_UCENTRALSEC_URL
                 value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16001"
-              - name: RTTY_TOKEN
-                value: "$RTTY_TOKEN"
               - name: OWGW_FILEUPLOADER_HOST_NAME
                 value: "ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build"
               - name: OWGW_FILEUPLOADER_URI
@@ -290,6 +320,14 @@ jobs:
                 value: "https://owprov.wlan.local:17005"
               - name: OWPROV_SYSTEM_URI_PUBLIC
                 value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16005"
+              - name: OWANALYTICS_SYSTEM_URI_PRIVATE
+                value: "https://owanalytics.wlan.local:17009"
+              - name: OWANALYTICS_SYSTEM_URI_PUBLIC
+                value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16009"
+              - name: OWSUB_SYSTEM_URI_PRIVATE
+                value: "https://owsub.wlan.local:17006"
+              - name: OWSUB_SYSTEM_URI_PUBLIC
+                value: "https://ow-docker-compose-${{ github.run_id }}.cicd.lab.wlan.tip.build:16006"
               - name: WEBSOCKET_CERT
                 value: "/tip-cicd-wildcard-certs/websocket-cert.pem"
               - name: WEBSOCKET_KEY
@@ -324,81 +362,67 @@ jobs:
           OWSEC_DEFAULT_USERNAME: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
           OWSEC_DEFAULT_PASSWORD: ${{ secrets.OWSEC_DEFAULT_PASSWORD }}
           OWSEC_NEW_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
+          CHECK_RETRIES: 60
         run: |
           docker run --rm \
             -e OWSEC \
             -e OWSEC_DEFAULT_USERNAME \
             -e OWSEC_DEFAULT_PASSWORD \
             -e OWSEC_NEW_PASSWORD \
+            -e CHECK_RETRIES \
             tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo:main
 
-  set-redirector-url:
-    name: Get virtual AP instance facts and set redirector URL
-    needs: deploy-controller 
+  deploy-virtual-ap-instance:
+    name: Deploy virtual AP EC2 instance
+    needs: deploy-controller
     runs-on: ubuntu-latest
     env:
       AWS_DEFAULT_REGION: us-east-1
-      VIRTUAL_AP_SSH_KEY: ${{ secrets.VIRTUAL_AP_SSH_KEY }}
-      DIGICERT_API_KEY: ${{ secrets.DIGICERT_API_KEY }}
     outputs:
-      mac_address: ${{ steps.get_virtual_ap_mac_address.outputs.value }}
+      serial_number: ${{ steps.deploy-virtual-ap-instance.outputs.serial_number }}
+      instance_id: ${{ steps.deploy-virtual-ap-instance.outputs.instance_id }}
     steps:
-      - name: Checkout wlan-pki-cert-scripts repo
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+
+      - name: Use deploy-virtual-ap-instance composite action
+        id: deploy-virtual-ap-instance
+        uses: ./.github/actions/deploy-virtual-ap-instance
         with:
-          repository: Telecominfraproject/wlan-pki-cert-scripts
-          path: wlan-pki-cert-scripts
-
-      - name: Get public IP of virtual AP EC2 instance
-        id: get_virtual_ap_public_ip
-        run: |
-          echo ::set-output name=ip::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=tip-wlan-main OpenWifi virtual AP (WIFI-7204)' --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)"
-
-      - name: Get mac address of virtual AP EC2 instance
-        id: get_virtual_ap_mac_address
-        run: |
-          echo ::set-output name=value::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=tip-wlan-main OpenWifi virtual AP (WIFI-7204)' --query 'Reservations[*].Instances[*].NetworkInterfaces[*].MacAddress' --output text | sed 's/://g')"
-
-      - name: Set redirector URL
-        run: |
-          ./wlan-pki-cert-scripts/digicert-change-ap-redirector.sh 06:6f:df:5d:30:e2 ${{ needs.deploy-controller.outputs.gateway_url }}
-
-      # starting the firstcontact service applies a default config, which is why we need to re-apply our config modifications in order to add the SSH key
-      - name: Connect to virtual AP, start firstcontact service and re-apply AP config
-        run: |
-          echo "${{ env.VIRTUAL_AP_SSH_KEY }}" > openwifi-virtual-ap.pem
-          chmod 600 openwifi-virtual-ap.pem
-          ssh -o StrictHostKeyChecking=accept-new -i openwifi-virtual-ap.pem root@${{ steps.get_virtual_ap_public_ip.outputs.ip }} '/etc/init.d/firstcontact start; sleep 10; /usr/share/ucentral/ucentral.uc /root/config.json'
+          virtual_ap_password: ${{ secrets.VIRTUAL_AP_PASSWORD }}
+          virtual_ap_cert: ${{ secrets.VIRTUAL_AP_CERT }}
+          virtual_ap_key: ${{ secrets.VIRTUAL_AP_KEY }}
+          virtual_ap_dev_id: ${{ secrets.VIRTUAL_AP_DEV_ID }}
+          gateway_url: ${{ needs.deploy-controller.outputs.gateway_url }}
 
   test:
    name: Test specified microservice
-   needs: [deploy-controller, set-redirector-url]
+   needs: [deploy-controller, deploy-virtual-ap-instance]
    runs-on: ubuntu-latest
    env:
      OWSEC: "${{ needs.deploy-controller.outputs.sec_url }}:16001"
      OWSEC_USERNAME: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
      OWSEC_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
    steps:
-     - name: Checkout wlan-cloud-ucentralgw repo and test OWGW
+     - name: Get OWGW CLI script and test service
        if: github.event.inputs.microservice == 'owgw' || github.event.inputs.microservice == 'all'
        run: |
          curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralgw/master/test_scripts/curl/cli -o cli
          chmod +x cli
-         ./cli test_service ${{ needs.set-redirector-url.outputs.mac_address }}
+         ./cli test_service ${{ needs.deploy-virtual-ap-instance.outputs.serial_number }}
 
-     - name: Checkout wlan-cloud-ucentralsec repo and test OWSec
+     - name: Get OWSec CLI script and test service
        if: github.event.inputs.microservice == 'owsec' || github.event.inputs.microservice == 'all'
        run: |
          curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralsec/main/test_scripts/curl/cli -o cli
          chmod +x cli
          ./cli test_service
 
-     - name: Checkout wlan-cloud-ucentralfms repo and test OWFms
+     - name: Get OWFms CLI script and test service
        if: github.event.inputs.microservice == 'owfms' || github.event.inputs.microservice == 'all'
        run: |
          curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralfms/main/test_scripts/curl/cli -o cli
          chmod +x cli
-         ./cli test_service ${{ needs.set-redirector-url.outputs.mac_address }}
+         ./cli test_service ${{ needs.deploy-virtual-ap-instance.outputs.serial_number }}
 
   destroy-controller:
     name: Destroy controller namespace
@@ -408,14 +432,22 @@ jobs:
       AWS_DEFAULT_REGION: us-east-2
     if: always()
     steps:
-      - name: Checkout wlan-testing repo
-        uses: actions/checkout@v2
-        with:
-          path: wlan-testing
-
       - name: Fetch kubeconfig
         run: |
           aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
       - name: Delete namespace
         run: kubectl delete ns --ignore-not-found=true ${{ needs.deploy-controller.outputs.namespace }}
+
+  terminate-virtual-ap-instance:
+    name: Terminate virtual AP instance
+    needs: [deploy-virtual-ap-instance, test]
+    runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+    if: always()
+    steps:
+      - name: Terminate virtual AP EC2 instance
+        continue-on-error: true
+        run: |
+          aws ec2 terminate-instances --instance-ids ${{ needs.deploy-virtual-ap-instance.outputs.instance_id }}

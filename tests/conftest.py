@@ -294,6 +294,10 @@ def get_uci_show(fixtures_ver, get_apnos, get_configuration):
     uci_show = fixtures_ver.get_uci_show(get_apnos, get_configuration)
     yield uci_show
 
+@pytest.fixture(scope="session")
+def get_ap_version(fixtures_ver, get_apnos, get_configuration):
+    ap_version = fixtures_ver.get_ap_version(get_apnos, get_configuration)
+    yield ap_version
 
 @pytest.fixture(scope="session")
 def skip_lf(request):
@@ -310,6 +314,14 @@ def get_openflow():
 def setup_controller(request, get_configuration, add_env_properties, fixtures_ver):
     """sets up the controller connection and yields the sdk_client object"""
     sdk_client = fixtures_ver.controller_obj
+    request.addfinalizer(fixtures_ver.disconnect)
+    yield sdk_client
+
+# Prov Controller Fixture
+@pytest.fixture(scope="session")
+def setup_prov_controller(request, get_configuration, add_env_properties, fixtures_ver):
+    """sets up the prov controller connection and yields the sdk_client object"""
+    sdk_client = fixtures_ver.prov_controller_obj
     request.addfinalizer(fixtures_ver.disconnect)
     yield sdk_client
 
@@ -602,12 +614,12 @@ def create_lanforge_chamberview_dut(lf_tools, skip_lf, run_lf):
 
 
 @pytest.fixture(scope="session")
-def lf_tools(get_configuration, testbed, skip_lf, run_lf):
+def lf_tools(get_configuration, testbed, skip_lf, run_lf, get_ap_version):
     """ Create a DUT on LANforge"""
     if not skip_lf:
         obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
                           testbed=testbed, run_lf=run_lf,
-                          access_point_data=get_configuration["access_point"])
+                          access_point_data=get_configuration["access_point"], ap_version=get_ap_version)
     else:
         obj = False
     yield obj
@@ -722,6 +734,10 @@ def get_ap_logs(request, get_apnos, get_configuration, run_lf):
             ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
             ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
 
+        # Adding memory Profile code before every test start
+        output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+        allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
+
         def collect_logs():
             for ap in get_configuration['access_point']:
                 ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
@@ -729,7 +745,10 @@ def get_ap_logs(request, get_apnos, get_configuration, run_lf):
                 ap_logs = ap_ssh.get_logread(start_ref="start testcase: " + instance_name,
                                              stop_ref="stop testcase: " + instance_name)
                 allure.attach(name='logread', body=str(ap_logs))
-            pass
+
+            # Adding memory Profile code after every test completion
+            output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+            allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
 
         request.addfinalizer(collect_logs)
 
