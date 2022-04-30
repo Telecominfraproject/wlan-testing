@@ -129,7 +129,7 @@ class TestVLANModeEnterpriseTLSSuiteOne(object):
         passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=tls_passwd, identity=identity,
-                                     station_name=station_names_fiveg, vlan_id=vlan)
+                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
         assert passes == "PASS", result
 
