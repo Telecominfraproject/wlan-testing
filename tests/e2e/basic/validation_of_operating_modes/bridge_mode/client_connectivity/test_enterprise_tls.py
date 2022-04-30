@@ -225,6 +225,35 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
 
         assert passes == "PASS", result
 
+setup_params_enterprise_two = {
+    "mode": "BRIDGE",
+    "ssid_modes": {
+        "wpa_wpa2_enterprise_mixed": [
+            {"ssid_name": "tls_ssid_wpa_wpa2_eap_2g", "appliedRadios": ["2G"]},
+            {"ssid_name": "tls_ssid_wpa_wpa2_eap_5g", "appliedRadios": ["5G"]}],
+        "wpa3_enterprise_mixed": [
+            {"ssid_name": "tls_ssid_wpa3_mixed_eap_2g", "appliedRadios": ["2G"]},
+            {"ssid_name": "tls_ssid_wpa3_mixed_eap_5g", "appliedRadios": ["5G"]}]
+    },
+    "rf": {},
+    "radius": True
+}
+
+@allure.suite(suite_name="sanity")
+@allure.sub_suite(sub_suite_name="Bridge Mode EAP Client Connectivity : Suite-B")
+@pytest.mark.suiteB
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_enterprise_two],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestBridgeModeEnterpriseTLSSuiteTwo(object):
+    """ SuiteA Enterprise Test Cases
+        pytest -m "client_connectivity and bridge and enterprise and ttls and suiteB"
+    """
+
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.twog
     def test_wpa_wpa2_enterprise_2g(self, get_ap_logs, get_lf_logs,
