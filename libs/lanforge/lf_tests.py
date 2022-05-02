@@ -2341,7 +2341,8 @@ class RunTest:
 
     def hard_roam(self, run_lf, instantiate_profile, lf_tools, lf_reports, get_configuration, test=None, band=None, num_sta=1,
                   security=None, security_key=None,  iteration=1, ssid_name=None,
-                  roaming_delay=None, option=None, channel=36, duration=None, duration_based=False, iteration_based=True ):
+                  roaming_delay=None, option=None, channel=36, duration=None, duration_based=False,
+                  iteration_based=True, dut_name=None ):
         allure.attach(name="Test Procedure", body="This test consists of creating a multiple  client which will be " \
                                                   " connected to the nearest ap, here the test automation will " \
                                                   "do hard roam based on forced roam method" \
@@ -2435,25 +2436,27 @@ class RunTest:
             radio_ = self.ax_radios[0]
             sniff_radio = radio_.split(".")[2]
         obj = HardRoam(lanforge_ip=self.lanforge_ip,
-                   lanforge_port=self.lanforge_port,
-                   c1_bssid=c1_bssid,
-                   c2_bssid=c2_bssid,
-                   fiveg_radio=fiveg_radio,
-                   twog_radio=None,
-                   sixg_radio=None,
-                   band=band,
-                   sniff_radio=sniff_radio,
-                   num_sta=num_sta,
-                   security=security,
-                   security_key=security_key,
-                   ssid=ssid_name,
-                   upstream=self.upstream,
-                   duration=duration,
-                   iteration=iteration,
-                   channel=channel,
-                   option=option,
-                   duration_based=duration_based,
-                   iteration_based=iteration_based)
+                       lanforge_port=self.lanforge_port,
+                       lanforge_ssh_port = 22,
+                       c1_bssid=c1_bssid,
+                       c2_bssid=c2_bssid,
+                       fiveg_radio=fiveg_radio,
+                       twog_radio=None,
+                       sixg_radio=None,
+                       band=band,
+                       sniff_radio=sniff_radio,
+                       num_sta=num_sta,
+                       security=security,
+                       security_key=security_key,
+                       ssid=ssid_name,
+                       upstream=self.upstream,
+                       duration=duration,
+                       iteration=iteration,
+                       channel=channel,
+                       option=option,
+                       duration_based=duration_based,
+                       iteration_based=iteration_based,
+                       dut_name = dut_name )
         x = os.getcwd()
         print(x)
 
