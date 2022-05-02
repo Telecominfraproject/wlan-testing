@@ -176,6 +176,11 @@ class TestRoamOTA(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
+        dut_name = []
+        for i in range(len(get_configuration["access_point"])):
+            dut_name.append(get_configuration["access_point"][i]["ap_name"])
+
+        print("dut names", dut_name)
         # check channel
 
         lf_test.create_n_clients(sta_prefix="wlan1", num_sta=1, dut_ssid=ssid_name,
@@ -203,4 +208,4 @@ class TestRoamOTA(object):
                           band=band, test="5g",
                           iteration=int(iteration), num_sta=int(client), roaming_delay=roaming_delay,
                           option="ota", channel=ch, duration=duration, duration_based=False,
-                          iteration_based=True)
+                          iteration_based=True, dut_name=dut_name)
