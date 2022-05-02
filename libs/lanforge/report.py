@@ -1,4 +1,5 @@
 from tabulate import tabulate
+import pandas as pd
 
 class Report:
     def __init__(self, key1=None,
@@ -20,3 +21,8 @@ class Report:
         x = tabulate(self.table, headers='firstrow', tablefmt='fancy_grid')
         return x
 
+
+    def table_pandas(self, csv_file=None):
+        data = pd.read_csv(str(csv_file))
+        df = pd.DataFrame(data)
+        return df
