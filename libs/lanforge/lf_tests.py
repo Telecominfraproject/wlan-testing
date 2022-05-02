@@ -166,7 +166,8 @@ class RunTest:
         result = self.check_ssid_available_scan_result(scan_ssid_data=self.data_scan_ssid, ssid=ssid)
         print("ssid available:-", result)
         if not result and ssid_channel:
-            self.start_sniffer(radio_channel=ssid_channel, radio=self.staConnect.radio.split(".")[2], duration=30)
+            print("sniff radio", self.ax_radios[0].split(".")[2])
+            self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
             time.sleep(30)
             self.stop_sniffer()
             print("ssid not available in scan result")
@@ -192,7 +193,8 @@ class RunTest:
             except Exception as e:
                 print(e)
         if ssid_channel:
-            self.start_sniffer(radio_channel=ssid_channel, radio=self.staConnect.radio.split(".")[2], duration=30)
+            print("sniff radio", self.ax_radios[0].split(".")[2])
+            self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
         self.staConnect.start()
         print("napping %f sec" % self.staConnect.runtime_secs)
         time.sleep(self.staConnect.runtime_secs)
@@ -313,7 +315,8 @@ class RunTest:
         result = self.check_ssid_available_scan_result(scan_ssid_data=self.data_scan_ssid, ssid=ssid)
         print("ssid available:-", result)
         if not result and ssid_channel:
-            self.start_sniffer(radio_channel=ssid_channel, radio=self.eap_connect.radio.split(".")[2], duration=30)
+            print("sniff radio", self.ax_radios[0].split(".")[2])
+            self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
             time.sleep(30)
             self.stop_sniffer()
             print("ssid not available in scan result")
@@ -355,7 +358,8 @@ class RunTest:
             except Exception as e:
                 print(e)
         if ssid_channel:
-            self.start_sniffer(radio_channel=ssid_channel, radio=self.eap_connect.radio.split(".")[2], duration=30)
+            print("sniff radio", self.ax_radios[0].split(".")[2])
+            self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
         self.eap_connect.start(station_name, True, True)
         if d_vlan:
             self.station_ip = {}
