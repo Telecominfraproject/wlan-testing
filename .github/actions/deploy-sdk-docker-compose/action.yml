@@ -169,5 +169,5 @@ runs:
           -e OWSEC_NEW_PASSWORD \
           -e CHECK_RETRIES \
           -e FLAGS \
-          --add-host ow-docker-compose-${{ github.run_number.wlan.local:${{ steps.ec2_instance.outputs.instance_public_ip }} \
+          --add-host ow-docker-compose-${{ github.run_number }}.wlan.local:${{ steps.ec2_instance.outputs.instance_public_ip }} \
           tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo:main
