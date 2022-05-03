@@ -114,7 +114,7 @@ jobs:
           virtual_ap_key: ${{ secrets.VIRTUAL_AP_KEY }}
           virtual_ap_dev_id: ${{ secrets.VIRTUAL_AP_DEV_ID }}
           gateway_url: ${{ needs.deploy-controller.outputs.gateway_url }}
-          gateway_public_ip: ${{ needs.deploy-controller.outputs.gateway_public_ip }}
+          gateway_public_ip: ${{ needs.deploy-controller.outputs.instance_public_ip }}
 
   test:
    name: Test specified microservice
