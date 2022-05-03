@@ -41,7 +41,8 @@ setup_params_eap = {
             {"ssid_name": "ssid_wpa2_only_eap_passpoint_2g", "appliedRadios": ["is2dot4GHz"]},
             {"ssid_name": "ssid_wpa2_only_eap_passpoint_5g", "appliedRadios": ["is5GHz"]}
         ]
-    }
+    },
+    "pass-point": True
 }
  
 @allure.feature("BRIDGE MODE EAP PASSPOINT SETUP")
