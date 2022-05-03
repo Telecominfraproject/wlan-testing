@@ -191,7 +191,7 @@ owsec:
 
 owgwui:
   services:
-    owprovui:
+    owgwui:
       type: NodePort
 
   ingresses:
