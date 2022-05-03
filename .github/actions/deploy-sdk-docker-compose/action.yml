@@ -169,5 +169,5 @@ runs:
           -e OWSEC_NEW_PASSWORD \
           -e CHECK_RETRIES \
           -e FLAGS \
-          --add-host openwifi.wlan.local:${{ steps.ec2_facts.outputs.instance_public_ip }} \
+          --add-host openwifi.wlan.local:${{ steps.ec2_instance.outputs.instance_public_ip }} \
           tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo:main

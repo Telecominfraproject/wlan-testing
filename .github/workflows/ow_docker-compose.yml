@@ -82,8 +82,6 @@ jobs:
           owprov_version: ${{ github.event.inputs.owprov_version }}
           owanalytics_version: ${{ github.event.inputs.owanalytics_version }}
           owsub_version: ${{ github.event.inputs.owsub_version }}
-          websocket_cert: ${{ secrets.DIGICERT_CERT }}
-          websocket_key: ${{ secrets.DIGICERT_KEY }}
           owsec_default_username: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
           owsec_default_password: ${{ secrets.OWSEC_DEFAULT_PASSWORD }}
           owsec_hashed_default_password: ${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
