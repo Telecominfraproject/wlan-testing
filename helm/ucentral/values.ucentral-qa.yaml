@@ -190,6 +190,10 @@ owsec:
             secretName: {{ include "owsec.fullname" . }}-owsec-restapi-tls
 
 owgwui:
+  services:
+    owprovui:
+      type: NodePort
+
   ingresses:
     default:
       enabled: true
@@ -390,6 +394,10 @@ owprov:
             secretName: {{ include "owprov.fullname" . }}-owprov-restapi-tls
 
 owprovui:
+  services:
+    owprovui:
+      type: NodePort
+
   ingresses:
     default:
       enabled: true
