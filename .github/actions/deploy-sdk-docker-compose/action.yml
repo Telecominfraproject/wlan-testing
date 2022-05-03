@@ -65,8 +65,8 @@ runs:
       shell: bash
       id: set_outputs
       run: |
-        echo "::set-output name=gateway_url::openwifi.wlan.local"
-        echo "::set-output name=sec_url::openwifi.wlan.local"
+        echo "::set-output name=gateway_url::ow-docker-compose-${{ github.run_number }}.wlan.local"
+        echo "::set-output name=sec_url::ow-docker-compose-${{ github.run_number }}.wlan.local"
 
     - name: Set EC2 facts
       shell: bash
@@ -169,5 +169,5 @@ runs:
           -e OWSEC_NEW_PASSWORD \
           -e CHECK_RETRIES \
           -e FLAGS \
-          --add-host openwifi.wlan.local:${{ steps.ec2_instance.outputs.instance_public_ip }} \
+          --add-host ow-docker-compose-${{ github.run_number.wlan.local:${{ steps.ec2_instance.outputs.instance_public_ip }} \
           tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo:main

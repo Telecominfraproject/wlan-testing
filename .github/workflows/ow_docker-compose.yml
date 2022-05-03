@@ -124,9 +124,9 @@ jobs:
      OWSEC_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
      FLAGS: "-s -k"
    steps:
-     - name: Add hostname for openwifi.wlan.local
+     - name: Add hostname for ${{ needs.deploy-controller.outputs.sec_url }}
        run: |
-         echo ${{ needs.deploy-controller.outputs.sec_url }} >> /etc/hosts
+         echo ${{ needs.deploy-controller.outputs.sec_url }} | sudo tee -a /etc/hosts
 
      - name: Get OWGW CLI script and test service
        if: github.event.inputs.microservice == 'owgw' || github.event.inputs.microservice == 'all'
