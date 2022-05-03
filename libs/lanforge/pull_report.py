@@ -15,7 +15,7 @@ class Report:
         x = tabulate(table, headers="keys", tablefmt="fancy_grid")
         return x
 
-    def table2(self, table):
+    def table2(self, table=None, headers='firstrow', tablefmt='fancy_grid'):
         self.table = table
-        x = tabulate(self.table, headers='firstrow', tablefmt='fancy_grid')
+        x = tabulate(self.table, headers=headers, tablefmt=tablefmt)
         return x

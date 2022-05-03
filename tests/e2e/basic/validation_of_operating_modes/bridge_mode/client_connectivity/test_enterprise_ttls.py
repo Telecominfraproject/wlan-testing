@@ -47,7 +47,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
     @pytest.mark.twog
     def test_wpa_enterprise_2g(self,  get_ap_logs, get_lf_logs,
                                station_names_twog,  lf_test, update_report,
-                               test_cases, radius_info, exit_on_fail):
+                               test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa_enterprise and twog"
         """
@@ -57,22 +57,24 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_twog, vlan_id=vlan)
+                                     station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
     def test_wpa_enterprise_5g(self, station_names_fiveg, get_ap_logs, get_lf_logs,
-                               setup_profiles,  lf_test, update_report,
-                               test_cases, radius_info, exit_on_fail):
+                               lf_test, update_report,
+                               test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 5g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa_enterprise and fiveg"
         """
@@ -82,22 +84,24 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_fiveg, vlan_id=vlan)
-        assert passes
+                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
+        assert passes == "PASS", result
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     def test_wpa2_enterprise_2g(self,  get_ap_logs, get_lf_logs,
                                 station_names_twog,  lf_test, update_report,
-                                test_cases, radius_info, exit_on_fail):
+                                test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa2_enterprise and twog"
         """
@@ -106,22 +110,24 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         security = "wpa2"
         mode = "BRIDGE"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_twog, vlan_id=vlan)
-        assert passes
+                                     station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
+        assert passes == "PASS", result
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     def test_wpa2_enterprise_5g(self,  get_ap_logs, get_lf_logs,
                                 station_names_fiveg,  lf_test, update_report,
-                                test_cases, radius_info, exit_on_fail):
+                                test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa2_enterprise and fiveg"
         """
@@ -130,22 +136,24 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         security = "wpa2"
         mode = "BRIDGE"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_fiveg, vlan_id=vlan)
+                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     def test_wpa3_enterprise_2g(self,  get_ap_logs, get_lf_logs,
-                                station_names_twog, setup_profiles,  lf_test, update_report,
-                                test_cases, radius_info, exit_on_fail):
+                                station_names_twog, lf_test, update_report,
+                                test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa3_enterprise and twog"
         """
@@ -154,22 +162,24 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         security = "wpa3"
         mode = "BRIDGE"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band, ieee80211w=2, key_mgmt="WPA-EAP-SHA256",
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_twog, vlan_id=vlan)
+                                     station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
     def test_wpa3_enterprise_5g(self,  get_ap_logs, get_lf_logs,
-                                station_names_fiveg, setup_profiles,  lf_test, update_report,
-                                test_cases, radius_info, exit_on_fail):
+                                station_names_fiveg, lf_test, update_report,
+                                test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa3_enterprise and fiveg"
         """
@@ -178,16 +188,18 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         security = "wpa3"
         mode = "BRIDGE"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band, ieee80211w=2, key_mgmt="WPA-EAP-SHA256",
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_fiveg, vlan_id=vlan)
+                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
 
 setup_params_enterprise_two = {
@@ -224,7 +236,7 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
     @pytest.mark.twog
     def test_wpa_wpa2_enterprise_2g(self,  get_ap_logs, get_lf_logs,
                                     station_names_twog,  lf_test, update_report,
-                                    test_cases, radius_info, exit_on_fail):
+                                    test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa_wpa2_enterprise_mixed and twog"
         """
@@ -234,22 +246,24 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_twog, vlan_id=vlan)
+                                     station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.fiveg
     def test_wpa_wpa2_enterprise_5g(self,  get_ap_logs, get_lf_logs,
                                     station_names_fiveg,  lf_test,
-                                    update_report, test_cases, radius_info, exit_on_fail):
+                                    update_report, test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa_wpa2_enterprise_mixed and fiveg"
         """
@@ -259,22 +273,24 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_fiveg, vlan_id=vlan)
+                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.twog
     def test_wpa3_enterprise_mixed_2g(self,  get_ap_logs, get_lf_logs,
                                       station_names_twog,  lf_test,
-                                      update_report, test_cases, radius_info, exit_on_fail):
+                                      update_report, test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa3_enterprise_mixed and twog"
         """
@@ -283,23 +299,25 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
         security = "wpa3"
         mode = "BRIDGE"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_twog, vlan_id=vlan)
+                                     station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.fiveg
     def test_wpa3_enterprise_mixed_5g(self,  get_ap_logs, get_lf_logs,
                                       station_names_fiveg,  lf_test,
                                       update_report, exit_on_fail,
-                                      test_cases, radius_info):
+                                      test_cases, radius_info, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa3_enterprise_mixed and fiveg"
         """
@@ -308,13 +326,15 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
         security = "wpa3"
         mode = "BRIDGE"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_fiveg, vlan_id=vlan)
+                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
