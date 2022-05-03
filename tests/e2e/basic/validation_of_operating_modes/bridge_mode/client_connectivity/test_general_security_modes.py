@@ -52,7 +52,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     def test_open_ssid_2g(self, get_ap_logs, get_lf_logs, lf_test,
                           update_report,
                           station_names_twog,
-                          test_cases):
+                          test_cases, get_ap_channel):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and bridge and general and open and twog"
         """
@@ -62,18 +62,20 @@ class TestBridgeModeConnectivitySuiteA(object):
         security = "open"
         mode = "BRIDGE"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_twog, vlan_id=vlan)
+                                                     station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
     @pytest.mark.open
     @pytest.mark.fiveg
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
     def test_open_ssid_5g(self, get_ap_logs,  lf_test, test_cases, station_names_fiveg, get_lf_logs,
-                          update_report):
+                          update_report, get_ap_channel):
         """Client Connectivity open ssid 5G
            pytest -m "client_connectivity and bridge and general and open and fiveg"
         """
@@ -83,12 +85,14 @@ class TestBridgeModeConnectivitySuiteA(object):
         security = "open"
         mode = "BRIDGE"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_fiveg, vlan_id=vlan)
+                                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa
@@ -96,7 +100,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @allure.story('wpa 2.4 GHZ Band')
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
     def test_wpa_ssid_2g(self, get_ap_logs, update_report, get_lf_logs,
-                         lf_test, test_cases, station_names_twog):
+                         lf_test, test_cases, station_names_twog, get_ap_channel):
         """Client Connectivity wpa ssid 2.4G
            pytest -m "client_connectivity and bridge and general and wpa and twog"
         """
@@ -106,19 +110,21 @@ class TestBridgeModeConnectivitySuiteA(object):
         security = "wpa"
         mode = "BRIDGE"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_twog, vlan_id=vlan)
+                                                     station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa
     @pytest.mark.fiveg
     @allure.story('wpa 5 GHZ Band')
     def test_wpa_ssid_5g(self, get_ap_logs, lf_test, update_report, get_lf_logs,
-                         test_cases, station_names_fiveg):
+                         test_cases, station_names_fiveg, get_ap_channel):
         """Client Connectivity wpa ssid 5G
            pytest -m "client_connectivity and bridge and general and wpa and fiveg"
         """
@@ -128,12 +134,14 @@ class TestBridgeModeConnectivitySuiteA(object):
         security = "wpa"
         mode = "BRIDGE"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_fiveg, vlan_id=vlan)
+                                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_personal
@@ -141,7 +149,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @allure.story('wpa2_personal 2.4 GHZ Band')
     def test_wpa2_personal_ssid_2g(self, get_ap_logs,  get_lf_logs,
                                    lf_test, update_report, test_cases,
-                                   station_names_twog):
+                                   station_names_twog, get_ap_channel):
         """Client Connectivity wpa2_personal ssid 2.4G
            pytest -m "client_connectivity and bridge and general and wpa2_personal and twog"
         """
@@ -151,12 +159,14 @@ class TestBridgeModeConnectivitySuiteA(object):
         security = "wpa2"
         mode = "BRIDGE"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_twog, vlan_id=vlan)
+                                                     station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_personal
@@ -164,7 +174,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @allure.story('wpa2_personal 5 GHZ Band')
     def test_wpa2_personal_ssid_5g(self, get_ap_logs,  update_report, test_cases,
                                    station_names_fiveg, get_lf_logs,
-                                   lf_test):
+                                   lf_test, get_ap_channel):
         """Client Connectivity wpa2_personal ssid 5G
            pytest -m "client_connectivity and bridge and general and wpa2_personal and fiveg"
         """
@@ -174,12 +184,14 @@ class TestBridgeModeConnectivitySuiteA(object):
         security = "wpa2"
         mode = "BRIDGE"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_fiveg, vlan_id=vlan)
+                                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
 
 setup_params_general_two = {
@@ -224,7 +236,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @allure.story('open 2.4 GHZ Band')
     def test_wpa3_personal_ssid_2g(self, get_ap_logs, station_names_twog,  lf_test,
                                    update_report,
-                                   test_cases):
+                                   test_cases, get_ap_channel):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and bridge and general and wpa3_personal and twog"
         """
@@ -234,19 +246,21 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         security = "wpa3"
         mode = "BRIDGE"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_twog, vlan_id=vlan)
+                                                     station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
     def test_wpa3_personal_ssid_5g(self, get_ap_logs, station_names_fiveg,
                                    lf_test, test_cases, get_lf_logs,
-                                   update_report):
+                                   update_report, get_ap_channel):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and bridge and general and wpa3_personal and fiveg"
         """
@@ -256,10 +270,12 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         security = "wpa3"
         mode = "BRIDGE"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_fiveg, vlan_id=vlan)
+                                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
         assert result
 
@@ -269,7 +285,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     def test_wpa3_personal_mixed_ssid_2g(self, get_ap_logs, station_names_twog,
                                          lf_test, get_lf_logs,
                                          update_report,
-                                         test_cases):
+                                         test_cases, get_ap_channel):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and bridge and general and wpa3_personal_mixed and twog"
         """
@@ -279,19 +295,21 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         security = "wpa3"
         mode = "BRIDGE"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_twog, vlan_id=vlan)
+                                                     station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
     def test_wpa3_personal_mixed_ssid_5g(self, get_ap_logs, station_names_fiveg,  lf_test,
                                          test_cases, get_lf_logs,
-                                         update_report):
+                                         update_report, get_ap_channel):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and bridge and general and wpa3_personal_mixed and fiveg"
         """
@@ -301,12 +319,14 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         security = "wpa3"
         mode = "BRIDGE"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_fiveg, vlan_id=vlan)
+                                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
@@ -314,7 +334,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     def test_wpa_wpa2_personal_ssid_2g(self, get_ap_logs, station_names_twog,
                                        lf_test, get_lf_logs,
                                        update_report,
-                                       test_cases):
+                                       test_cases, get_ap_channel):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and bridge and general and wpa_wpa2_personal_mixed and twog"
         """
@@ -325,19 +345,21 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_twog, vlan_id=vlan)
+                                                     station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert result
+        assert passes == "PASS", result
 
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
     def test_wpa_wpa2_personal_ssid_5g(self, get_ap_logs, station_names_fiveg, get_lf_logs,
                                        lf_test, test_cases,
-                                       update_report):
+                                       update_report, get_ap_channel):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and bridge and general and wpa_wpa2_personal_mixed and fiveg"
         """
@@ -348,11 +370,13 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_fiveg, vlan_id=vlan)
-        assert result
+                                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
+        assert passes == "PASS", result
 
 # WEP Security Feature not available
 # setup_params_wep = {
