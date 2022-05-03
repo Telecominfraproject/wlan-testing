@@ -144,7 +144,6 @@ jobs:
           then
             jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
-          else
 
       - name: run tests
         uses: ./.github/actions/run-tests
