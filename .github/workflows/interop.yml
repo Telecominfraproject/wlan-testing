@@ -205,8 +205,6 @@ jobs:
 
           jq --arg git_run "${{ github.run_number }}" '.PERFECTO_DETAILS."iPhone-11".jobNumber=$git_run' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
 
-          
-
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
