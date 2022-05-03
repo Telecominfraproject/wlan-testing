@@ -22,12 +22,6 @@ inputs:
   owsub_version:
     description: 'OpenWIFI Subscription (Userportal) version to be deployed.'
     required: false
-  websocket_cert:
-    description: 'Certificate for OWGW websocket endpoint'
-    required: true
-  websocket_key:
-    description: 'Key for OWGW websocket endpoint'
-    required: true
   owsec_default_username:
     description: 'OpenWIFI default username'
     required: true
@@ -71,8 +65,8 @@ runs:
       shell: bash
       id: set_outputs
       run: |
-        echo "::set-output name=gateway_url::ow-docker-compose-${{ github.run_number }}.cicd.lab.wlan.tip.build"
-        echo "::set-output name=sec_url::ow-docker-compose-${{ github.run_number }}.cicd.lab.wlan.tip.build"
+        echo "::set-output name=gateway_url::openwifi.wlan.local"
+        echo "::set-output name=sec_url::openwifi.wlan.local"
 
     - name: Set EC2 facts
       shell: bash
@@ -99,38 +93,7 @@ runs:
         echo "::set-output name=instance_public_ip::${INSTANCE_PUBLIC_IP}"
         echo "::set-output name=instance_id::${INSTANCE_ID}"
 
-    - name: Create Route53 record
-      env:
-        ROUTE_53_ZONE_ID: Z09534373UTXT2L1YL912
-      shell: bash
-      run: |
-        cat > changeset.json << EOF
-        {
-             "Comment": "Creating A for ${{ steps.ec2_facts.outputs.instance_name }}",
-             "Changes": [{
-                        "Action": "CREATE",
-                        "ResourceRecordSet": {
-                                    "Name": "${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build",
-                                    "Type": "A",
-                                    "TTL": 600,
-                                    "ResourceRecords":[{
-                                            "Value": "${{ steps.ec2_instance.outputs.instance_public_ip }}"
-                                      }]}
-                                  }]
-        }
-        EOF
-        aws route53 change-resource-record-sets --hosted-zone-id $ROUTE_53_ZONE_ID --change-batch file://changeset.json
-
     # Deploy target CloudSDK into EC2 instance
-    - name: Get DigiCert certificates
-      env:
-        WEBSOCKET_CERT: ${{ inputs.websocket_cert }}
-        WEBSOCKET_KEY: ${{ inputs.websocket_key }}
-      shell: bash
-      run: |
-        echo "${{ env.WEBSOCKET_CERT }}" | base64 -d > cert.pem
-        echo "${{ env.WEBSOCKET_KEY }}" | base64 -d > key.pem
-
     - name: Save SSH key for access to EC2 instance
       env:
         INSTANCE_SSH_KEY: ${{ inputs.instance_ssh_key }}
@@ -154,8 +117,6 @@ runs:
           $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null;
           apt-get update && apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-compose;
         EOF
-        scp -i ssh_key.pem cert.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }}:/tmp/websocket-cert.pem
-        scp -i ssh_key.pem key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }}:/tmp/websocket-key.pem
 
     - name: Deploy target CloudSDK in EC2
       shell: bash
@@ -166,8 +127,6 @@ runs:
           cd wlan-cloud-ucentral-deploy;
           git checkout ${{ inputs.deployment_version }};
           cd docker-compose;
-          cp /tmp/websocket-cert.pem certs/websocket-cert.pem;
-          cp /tmp/websocket-key.pem certs/websocket-key.pem;
           export OWGW_VERSION="${{ inputs.owgw_version }}";
           export OWSEC_VERSION="${{ inputs.owsec_version }}";
           export OWFMS_VERSION="${{ inputs.owfms_version }}";
@@ -210,4 +169,5 @@ runs:
           -e OWSEC_NEW_PASSWORD \
           -e CHECK_RETRIES \
           -e FLAGS \
+          --add-host openwifi.wlan.local:${{ steps.ec2_facts.outputs.instance_public_ip }} \
           tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo:main

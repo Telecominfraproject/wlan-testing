@@ -114,6 +114,7 @@ jobs:
           virtual_ap_key: ${{ secrets.VIRTUAL_AP_KEY }}
           virtual_ap_dev_id: ${{ secrets.VIRTUAL_AP_DEV_ID }}
           gateway_url: ${{ needs.deploy-controller.outputs.gateway_url }}
+          gateway_public_ip: ${{ needs.deploy-controller.outputs.gateway_public_ip }}
 
   test:
    name: Test specified microservice
@@ -125,6 +126,10 @@ jobs:
      OWSEC_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
      FLAGS: "-s -k"
    steps:
+     - name: Add hostname for openwifi.wlan.local
+       run: |
+         echo ${{ needs.deploy-controller.outputs.sec_url }} >> /etc/hosts
+
      - name: Get OWGW CLI script and test service
        if: github.event.inputs.microservice == 'owgw' || github.event.inputs.microservice == 'all'
        run: |
@@ -146,49 +151,28 @@ jobs:
          chmod +x cli
          ./cli test_service ${{ needs.deploy-virtual-ap-instance.outputs.serial_number }}
 
-#  destroy-controller:
-#    name: Destroy OpenWiFi cloud SDK instance
-#    needs: [deploy-controller, test]
-#    runs-on: ubuntu-latest
-#    env:
-#      AWS_DEFAULT_REGION: us-east-2
-#      ROUTE_53_ZONE_ID: Z09534373UTXT2L1YL912
-#    if: always()
-#    steps:
-#      - name: Delete Route53 record
-#        continue-on-error: true
-#        run: |
-#          cat > changeset.json << EOF
-#          {
-#               "Comment": "Deleting A for ${{ needs.deploy-controller.outputs.instance_name }}",
-#               "Changes": [{
-#                          "Action": "DELETE",
-#                          "ResourceRecordSet": {
-#                                      "Name": "${{ needs.deploy-controller.outputs.instance_name }}.cicd.lab.wlan.tip.build",
-#                                      "Type": "A",
-#                                      "TTL": 600,
-#                                      "ResourceRecords":[{
-#                                              "Value": "${{ needs.deploy-controller.outputs.instance_public_ip }}"
-#                                        }]}
-#                                    }]
-#          }
-#          EOF
-#          aws route53 change-resource-record-sets --hosted-zone-id $ROUTE_53_ZONE_ID --change-batch file://changeset.json
-#
-#      - name: Delete EC2 instance
-#        continue-on-error: true
-#        run: |
-#          aws ec2 terminate-instances --instance-ids ${{ needs.deploy-controller.outputs.instance_id }}
-#
-#  terminate-virtual-ap-instance:
-#    name: Terminate virtual AP instance
-#    needs: [deploy-virtual-ap-instance, test]
-#    runs-on: ubuntu-latest
-#    env:
-#      AWS_DEFAULT_REGION: us-east-1
-#    if: always()
-#    steps:
-#      - name: Terminate virtual AP EC2 instance
-#        continue-on-error: true
-#        run: |
-#          aws ec2 terminate-instances --instance-ids ${{ needs.deploy-virtual-ap-instance.outputs.instance_id }}
+  destroy-controller:
+    name: Destroy OpenWiFi cloud SDK instance
+    needs: [deploy-controller, test]
+    runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: us-east-2
+    if: always()
+    steps:
+      - name: Delete EC2 instance
+        continue-on-error: true
+        run: |
+          aws ec2 terminate-instances --instance-ids ${{ needs.deploy-controller.outputs.instance_id }}
+
+  terminate-virtual-ap-instance:
+    name: Terminate virtual AP instance
+    needs: [deploy-virtual-ap-instance, test]
+    runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+    if: always()
+    steps:
+      - name: Terminate virtual AP EC2 instance
+        continue-on-error: true
+        run: |
+          aws ec2 terminate-instances --instance-ids ${{ needs.deploy-virtual-ap-instance.outputs.instance_id }}
