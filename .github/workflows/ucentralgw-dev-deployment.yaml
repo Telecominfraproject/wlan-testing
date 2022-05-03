@@ -118,7 +118,7 @@ jobs:
           export OWPROVUI_VERSION=${{ matrix.owprovui_version }}
           export OWANALYTICS_VERSION=${{ matrix.owanalytics_version }}
           export OWSUB_VERSION=${{ matrix.owsub_version }}
-          export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
+          export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.external-db.yaml
           export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
           export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
           export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
@@ -139,7 +139,7 @@ jobs:
           export OWPROVUI_VERSION=main
           export OWANALYTICS_VERSION=main
           export OWSUB_VERSION=main
-          export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
+          export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.external-db.yaml
           export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
           export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
           export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
