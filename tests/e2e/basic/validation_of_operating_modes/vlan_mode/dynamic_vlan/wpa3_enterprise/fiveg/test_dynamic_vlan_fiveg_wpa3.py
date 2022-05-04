@@ -648,4 +648,3 @@ class TestDynamicVlan5GWpa3(object):
                 assert False
             lf_tools.admin_up_down([station_list[sta]], option="up")
             time.sleep(5)
-
