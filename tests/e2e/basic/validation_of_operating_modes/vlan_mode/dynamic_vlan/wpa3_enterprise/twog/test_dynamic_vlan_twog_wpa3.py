@@ -46,7 +46,11 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @allure.testcase(name="test_ssid_vlan_in_the_absence_of_radius_vlan_identifier",
+<<<<<<< HEAD
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6095")
+=======
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5704")
+>>>>>>> Changed class and function names
     def test_ssid_vlan_in_the_absence_of_radius_vlan_identifier_2g_wpa3(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
                                                                 create_lanforge_chamberview_dut, lf_test,
                                                                 get_configuration,
@@ -114,7 +118,11 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @allure.testcase(name="test_dynamic_invalid_vlan",
+<<<<<<< HEAD
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6097")
+=======
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5706")
+>>>>>>> Changed class and function names
     def test_dynamic_invalid_vlan_2g_wpa3(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
                                   create_lanforge_chamberview_dut, lf_test, get_configuration,
                                   station_names_twog):
@@ -179,7 +187,11 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @allure.testcase(name="test_radius_vlan_info_retained_after_periodic_reauthentication",
+<<<<<<< HEAD
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6098")
+=======
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5707")
+>>>>>>> Changed class and function names
     def test_radius_vlan_info_retained_after_periodic_reauthentication_2g_wpa3(self, get_vif_state, lf_tools, get_lf_logs,
                                                                        get_ap_logs,
                                                                        create_lanforge_chamberview_dut, lf_test,
@@ -263,7 +275,11 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @allure.testcase(name="test_ssid_vlan_used_in_absence_of_radius_vlan",
+<<<<<<< HEAD
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6100")
+=======
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5708")
+>>>>>>> Changed class and function names
     def test_ssid_vlan_used_in_absence_of_radius_vlan_2g_wpa3(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
                                                       create_lanforge_chamberview_dut, lf_test, get_configuration,
                                                       station_names_twog):
@@ -383,7 +399,11 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @allure.testcase(name="test_outof_bound_vlanid",
+<<<<<<< HEAD
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6103")
+=======
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5711")
+>>>>>>> Changed class and function names
     def test_out_of_bound_vlanid_2g_wpa3(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
                                 create_lanforge_chamberview_dut, lf_test, get_configuration,
                                 station_names_twog):
@@ -429,7 +449,11 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @allure.testcase(name="test_client_association_ap_with_dynamic_vlan",
+<<<<<<< HEAD
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6104")
+=======
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5712")
+>>>>>>> Changed class and function names
     def test_client_association_ap_with_dynamic_vlan_2g_wpa3(self, get_vif_state, lf_tools, get_ap_logs, get_lf_logs,
                                                      create_lanforge_chamberview_dut, lf_test, get_configuration,
                                                      station_names_twog):
@@ -499,7 +523,11 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @allure.testcase(name="test_subsequent_user_for_same_user_account",
+<<<<<<< HEAD
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6105")
+=======
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5713")
+>>>>>>> Changed class and function names
     def test_subsequent_user_for_same_user_account_2g_wpa3(self, get_vif_state, lf_tools, get_lf_logs,
                                                         get_ap_logs,
                                                         create_lanforge_chamberview_dut, lf_test,
@@ -574,7 +602,11 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @allure.testcase(name="test_subsequent_user_for_different_user_account_vlan",
+<<<<<<< HEAD
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6106")
+=======
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5714")
+>>>>>>> Changed class and function names
     def test_subsequent_user_for_different_user_account_2g_wpa3(self, get_vif_state, lf_tools, get_lf_logs,
                                                         get_ap_logs,
                                                         create_lanforge_chamberview_dut, lf_test,
