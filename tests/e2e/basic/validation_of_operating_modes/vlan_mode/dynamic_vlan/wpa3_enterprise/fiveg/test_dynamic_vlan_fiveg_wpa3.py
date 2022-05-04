@@ -39,14 +39,14 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestDynamicVlanWpa3(object):
+class TestDynamicVlan5GWpa3(object):
 
     @pytest.mark.absence_of_radius_vlan_identifier
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
     @allure.testcase(name="test_ssid_vlan_in_the_absence_of_radius_vlan_identifier",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5704")
-    def test_ssid_vlan_in_the_absence_of_radius_vlan_identifier(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
+    def test_ssid_vlan_in_the_absence_of_radius_vlan_identifier_5g_wpa3(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
                                                                 create_lanforge_chamberview_dut, lf_test,
                                                                 get_configuration,
                                                                 station_names_fiveg):
@@ -114,7 +114,7 @@ class TestDynamicVlanWpa3(object):
     @pytest.mark.fiveg
     @allure.testcase(name="test_dynamic_invalid_vlan",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5706")
-    def test_dynamic_invalid_vlan(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
+    def test_dynamic_invalid_vlan_5g_wpa3(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
                                   create_lanforge_chamberview_dut, lf_test, get_configuration,
                                   station_names_fiveg):
         """
@@ -179,7 +179,7 @@ class TestDynamicVlanWpa3(object):
     @pytest.mark.fiveg
     @allure.testcase(name="test_radius_vlan_info_retained_after_periodic_reauthentication",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5707")
-    def test_radius_vlan_info_retained_after_periodic_reauthentication(self, get_vif_state, lf_tools, get_lf_logs,
+    def test_radius_vlan_info_retained_after_periodic_reauthentication_5g_wpa3(self, get_vif_state, lf_tools, get_lf_logs,
                                                                        get_ap_logs,
                                                                        create_lanforge_chamberview_dut, lf_test,
                                                                        get_configuration,
@@ -263,7 +263,7 @@ class TestDynamicVlanWpa3(object):
     @pytest.mark.fiveg
     @allure.testcase(name="test_ssid_vlan_used_in_absence_of_radius_vlan",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5708")
-    def test_ssid_vlan_used_in_absence_of_radius_vlan(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
+    def test_ssid_vlan_used_in_absence_of_radius_vlan_5g_wpa3(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
                                                       create_lanforge_chamberview_dut, lf_test, get_configuration,
                                                       station_names_fiveg):
         """
@@ -384,7 +384,7 @@ class TestDynamicVlanWpa3(object):
     @pytest.mark.fiveg
     @allure.testcase(name="test_outof_bound_vlanid",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5711")
-    def test_out_of_bound_vlanid(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
+    def test_out_of_bound_vlanid_5g_wpa3(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
                                 create_lanforge_chamberview_dut, lf_test, get_configuration,
                                 station_names_fiveg):
         """
@@ -430,7 +430,7 @@ class TestDynamicVlanWpa3(object):
     @pytest.mark.fiveg
     @allure.testcase(name="test_client_association_ap_with_dynamic_vlan",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5712")
-    def test_client_association_ap_with_dynamic_vlan(self, get_vif_state, lf_tools, get_ap_logs, get_lf_logs,
+    def test_client_association_ap_with_dynamic_vlan_5g_wpa3(self, get_vif_state, lf_tools, get_ap_logs, get_lf_logs,
                                                      create_lanforge_chamberview_dut, lf_test, get_configuration,
                                                      station_names_fiveg):
         """
@@ -500,7 +500,7 @@ class TestDynamicVlanWpa3(object):
     @pytest.mark.fiveg
     @allure.testcase(name="test_subsequent_user_for_same_user_account",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5713")
-    def test_subsequent_user_for_same_user_account(self, get_vif_state, lf_tools, get_lf_logs,
+    def test_subsequent_user_for_same_user_account_5g_wpa3(self, get_vif_state, lf_tools, get_lf_logs,
                                                    get_ap_logs,
                                                    create_lanforge_chamberview_dut, lf_test,
                                                    get_configuration,
@@ -575,7 +575,7 @@ class TestDynamicVlanWpa3(object):
     @pytest.mark.fiveg
     @allure.testcase(name="test_subsequent_user_for_different_user_account_vlan",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5714")
-    def test_subsequent_user_for_different_user_account(self, get_vif_state, lf_tools, get_lf_logs,
+    def test_subsequent_user_for_different_user_account_5g_wpa3(self, get_vif_state, lf_tools, get_lf_logs,
                                                         get_ap_logs,
                                                         create_lanforge_chamberview_dut, lf_test,
                                                         get_configuration,
