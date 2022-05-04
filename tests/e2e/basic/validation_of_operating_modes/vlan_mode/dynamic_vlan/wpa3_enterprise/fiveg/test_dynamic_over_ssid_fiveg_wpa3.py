@@ -111,4 +111,3 @@ class TestDynamicVlanOverSsid5GWpa3(object):
         elif not val:
             print("Station ip not assigned as per dynamic vlan")
             assert False
-
