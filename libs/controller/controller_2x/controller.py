@@ -380,6 +380,26 @@ class ProvUtils(ConfigureController):
         self.check_response("DELETE", resp, self.make_headers(), "", uri)
         return resp
 
+    def edit_device_from_inventory(self, device_name, payload):
+        uri = self.build_url_prov("inventory/" + device_name)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def edit_entity(self, payload, entity_id):
+        uri = self.build_url_prov("entity/" + entity_id)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
 class UProfileUtility:
 
     def __init__(self, sdk_client=None, controller_data=None):
