@@ -74,6 +74,33 @@ class TestUcentralProvisionService(object):
         if resp.status_code != 200:
             assert False
 
+        # This is for Edititng the information fo device in Inventory
+        editing_payload = {
+                          "description": "For testing API through automation after editing",
+                          "devClass": "any",
+                          "deviceType": "edgecore_eap101",
+                          "entity": "",
+                          "name": "Testing_to_add_device_through_automation",
+                          "notes": [],
+                          "rrm": "inherit",
+                          "venue": ""
+                        }
+        print(json.dumps(editing_payload))
+        resp = setup_prov_controller.edit_device_from_inventory(device_name, editing_payload)
+        allure.attach(name="response: ", body=str(resp.json()))
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov create device", body=body)
+        if resp.status_code != 200:
+            assert False
+        devices = json.loads(resp.text)
+        print(devices)
+
+        resp = setup_prov_controller.get_inventory_by_device(device_name)
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov create device-verify", body=body)
+        if resp.status_code != 200:
+            assert False
+
         resp = setup_prov_controller.delete_device_from_inventory(device_name)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov created device-delete", body=body)
@@ -108,6 +135,32 @@ class TestUcentralProvisionService(object):
         entitiy = json.loads(resp.text)
         print(entitiy)
         entity_id = entitiy['id']
+
+        resp = setup_prov_controller.get_entity_by_id(entity_id)
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov create device-verify", body=body)
+        if resp.status_code != 200:
+            assert False
+
+        # This to edit Entity
+        editing_payload = {
+                          "description": "For testing Purposes through Automation after edit",
+                          "deviceConfiguration": [],
+                          "name": "Testing_prov",
+                          "notes": [],
+                          "rrm": "inherit",
+                          "sourceIP": [],
+                          "uuid": entity_id
+                        }
+        print(json.dumps(editing_payload))
+        resp = setup_prov_controller.edit_entity(editing_payload, entity_id)
+        allure.attach(name="response: ", body=str(resp.json()))
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov create entity", body=body)
+        if resp.status_code != 200:
+            assert False
+        entitiy = json.loads(resp.text)
+        print(entitiy)
 
         resp = setup_prov_controller.get_entity_by_id(entity_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
