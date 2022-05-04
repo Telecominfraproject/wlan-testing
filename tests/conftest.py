@@ -819,6 +819,10 @@ def get_ap_channel(get_apnos, get_configuration):
                 elif j < 36:
                     dict_band_channel["2G"] = j
                     continue
+            if not "2G" in dict_band_channel:
+                dict_band_channel["2G"] = "AUTO"
+            if not "5G" in dict_band_channel:
+                dict_band_channel["5G"] = "AUTO"
             all_data.append(dict_band_channel)
         except Exception as e:
             print(e)
