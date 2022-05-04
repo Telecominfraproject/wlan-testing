@@ -42,6 +42,7 @@ setup_params_general = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestDynamicVlan5GWpa3(object):
+
     @pytest.mark.absence_of_radius_vlan_identifier
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg

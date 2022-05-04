@@ -330,7 +330,6 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.twog
     @allure.testcase(name="test_dynamic_unsupported_vlan",
 <<<<<<< HEAD
-<<<<<<< HEAD
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6102")
 =======
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5710")

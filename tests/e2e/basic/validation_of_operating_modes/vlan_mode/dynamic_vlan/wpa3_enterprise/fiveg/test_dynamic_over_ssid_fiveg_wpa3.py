@@ -41,6 +41,7 @@ setup_params_general = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestDynamicVlanOverSsid5GWpa3(object):
+
     @pytest.mark.dynamic_precedence_over_ssid
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
