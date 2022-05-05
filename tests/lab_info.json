@@ -759,6 +759,102 @@
     }
 },
 
+"PERFECTO_DETAILS" : {
+    "securityToken":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJpYXQiOjE2MzI4Mzc2NDEsImp0aSI6IjAwZGRiYWY5LWQwYjMtNDRjNS1hYjVlLTkyNzFlNzc5ZGUzNiIsImlzcyI6Imh0dHBzOi8vYXV0aDIucGVyZmVjdG9tb2JpbGUuY29tL2F1dGgvcmVhbG1zL3RpcC1wZXJmZWN0b21vYmlsZS1jb20iLCJhdWQiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwic3ViIjoiODNkNjUxMWQtNTBmZS00ZWM5LThkNzAtYTA0ZjBkNTdiZDUyIiwidHlwIjoiT2ZmbGluZSIsImF6cCI6Im9mZmxpbmUtdG9rZW4tZ2VuZXJhdG9yIiwibm9uY2UiOiI2ZjE1YzYxNy01YTU5LTQyOWEtODc2Yi1jOTQxMTQ1ZDFkZTIiLCJzZXNzaW9uX3N0YXRlIjoiYmRjZTFmYTMtMjlkYi00MmFmLWI5YWMtYjZjZmJkMDEyOTFhIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.5R85_1R38ZFXv_wIjjCIsj8NJm1p66dCsLJI5DBEmks",
+    "projectName": "TIP-PyTest-Execution",
+    "projectVersion": "1.0",
+    "reportTags": "TestTag",
+    "perfectoURL":"tip",
+    "iPhone-11": {
+        "model-iOS": "iPhone-11",
+        "bundleId-iOS": "com.apple.Preferences",
+        "platformName-iOS": "iOS",
+        "bundleId-iOS-Settings": "com.apple.Preferences",
+        "bundleId-iOS-Ping": "com.deftapps.ping",
+        "browserType-iOS": "Safari",
+        "bundleId-iOS-Safari": "com.apple.mobilesafari",
+        "platformName-android": "Android",
+        "appPackage-android": "com.android.settings",
+        "jobName": "Interop-iphone-11",
+        "jobNumber": 38
+    },
+    "iPhone-12": {
+        "model-iOS": "iPhone-12",
+        "bundleId-iOS": "com.apple.Preferences",
+        "platformName-iOS": "iOS",
+        "bundleId-iOS-Settings": "com.apple.Preferences",
+        "bundleId-iOS-Ping": "com.deftapps.ping",
+        "browserType-iOS": "Safari",
+        "bundleId-iOS-Safari": "com.apple.mobilesafari",
+        "platformName-android": "Android",
+        "appPackage-android": "com.android.settings",
+        "jobName": "Interop-iphone-12",
+        "jobNumber": 38
+    },
+    "iPhone-7": {
+        "model-iOS": "iPhone-7",
+        "bundleId-iOS": "com.apple.Preferences",
+        "platformName-iOS": "iOS",
+        "bundleId-iOS-Settings": "com.apple.Preferences",
+        "bundleId-iOS-Ping": "com.deftapps.ping",
+        "browserType-iOS": "Safari",
+        "bundleId-iOS-Safari": "com.apple.mobilesafari",
+        "platformName-android": "Android",
+        "appPackage-android": "com.android.settings",
+        "jobName": "Interop-iphone-7",
+        "jobNumber": 38
+    },
+    "iPhone-XR": {
+        "model-iOS": "iPhone-XR",
+        "bundleId-iOS": "com.apple.Preferences",
+        "platformName-iOS": "iOS",
+        "bundleId-iOS-Settings": "com.apple.Preferences",
+        "bundleId-iOS-Ping": "com.deftapps.ping",
+        "browserType-iOS": "Safari",
+        "bundleId-iOS-Safari": "com.apple.mobilesafari",
+        "platformName-android": "Android",
+        "appPackage-android": "com.android.settings",
+        "jobName": "Interop-iphone-XR",
+        "jobNumber": 38
+    },
+    "Galaxy S20": {
+        "platformName-android": "Android",
+        "model-android": "Galaxy S20",
+        "appPackage-android": "com.android.settings",
+        "bundleId-iOS-Settings": "com.apple.Preferences",
+        "bundleId-iOS-Safari": "com.apple.mobilesafari",
+        "jobName": "Interop-Galaxy-S20",
+        "jobNumber": 38
+    },
+    "Galaxy S10.*": {
+        "platformName-android": "Android",
+        "model-android": "Galaxy S10.*",
+        "appPackage-android": "com.android.settings",
+        "bundleId-iOS-Settings": "com.apple.Preferences",
+        "bundleId-iOS-Safari": "com.apple.mobilesafari",
+        "jobName": "Interop-Galaxy-S10",
+        "jobNumber": 38
+    },
+    "Galaxy S9": {
+        "platformName-android": "Android",
+        "model-android": "Galaxy S9",
+        "appPackage-android": "com.android.settings",
+        "bundleId-iOS-Settings": "com.apple.Preferences",
+        "bundleId-iOS-Safari": "com.apple.mobilesafari",
+        "jobName": "Interop-Galaxy-S9",
+        "jobNumber": 38
+    },
+    "Pixel 4": {
+        "platformName-android": "Android",
+        "model-android": "Pixel 4",
+        "appPackage-android": "com.android.settings",
+        "bundleId-iOS-Settings": "com.apple.Preferences",
+        "bundleId-iOS-Safari": "com.apple.mobilesafari",
+        "jobName": "Interop-pixel-4",
+        "jobNumber": 38
+    }
+},
+
 "RADIUS_SERVER_DATA" : {
     "ip": "10.10.1.221",
     "port": 1812,
