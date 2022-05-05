@@ -84,6 +84,7 @@ class TestMultipskBridge(object):
         station_name.append("sta" + str(vlan_id[0]))
         station_name.append("sta00")
         print(station_name)
+        allure.attach(name="multipsk-config", body=str(setup_params_general["ssid_modes"]["wpa"][0]["multi-psk"]))
         multipsk_obj = lf_test.multipsk(ssid=ssid_name,  security="wpa", mode="BRIDGE",
                                         vlan_id=vlan_id, key1=key1, key2=key2, band=band, station_name=station_name, n_vlan="1")
         if multipsk_obj == True:
@@ -122,6 +123,7 @@ class TestMultipskBridge(object):
 
         station_name.append("sta00")
         print(station_name)
+        allure.attach(name="multipsk-config", body=str(setup_params_general["ssid_modes"]["wpa"][0]["multi-psk"]))
         multipsk_obj = lf_test.multipsk(ssid=ssid_name, security="wpa", mode="BRIDGE",
                                         vlan_id=vlan_id, key1=key1, key2=key2, band=band,
                                         station_name=station_name, n_vlan="2", key3=key3)
