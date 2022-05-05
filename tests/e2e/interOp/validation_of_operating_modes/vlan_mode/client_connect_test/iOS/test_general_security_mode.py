@@ -39,6 +39,19 @@ setup_params_general = {
     "rf": {},
     "radius": False
 }
+# class TestUniqueSSIDGeneralOneVLANiOS(object):
+#
+#     @pytest.mark.unique_ssid_general_one_vlan_ios
+#     def test_unique_ssid_general_one_vlan_ios(self):
+#         for sec_modes in setup_params_general['ssid_modes'].keys():
+#             for i in range(len(setup_params_general['ssid_modes'][sec_modes])):
+#                 N = 3
+#                 rand_string = (''.join(random.choices(string.ascii_uppercase +
+#                                                       string.digits, k=N))) + str(int(time.time_ns()) % 10000)
+#                 setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = \
+#                 setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
+#             assert True
+
 for sec_modes in setup_params_general['ssid_modes'].keys():
     for i in range(len(setup_params_general['ssid_modes'][sec_modes])):
         N = 3
@@ -271,21 +284,36 @@ setup_params_general_two = {
     "mode": "VLAN",
     "ssid_modes": {
         "wpa3_personal": [
-            {"ssid_name": "ssid_wpa3_p_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
-            {"ssid_name": "ssid_wpa3_p_5g_vlan", "appliedRadios": ["5G"],
+            {"ssid_name": "wpa3_p_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
+            {"ssid_name": "wpa3_p_5g_vlan", "appliedRadios": ["5G"],
              "security_key": "something", "vlan": 100}],
         "wpa3_personal_mixed": [
-            {"ssid_name": "ssid_wpa3_p_m_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
-            {"ssid_name": "ssid_wpa3_p_m_5g_vlan", "appliedRadios": ["5G"],
+            {"ssid_name": "wpa3_p_m_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
+            {"ssid_name": "wpa3_p_m_5g_vlan", "appliedRadios": ["5G"],
              "security_key": "something", "vlan": 100}],
         "wpa_wpa2_personal_mixed": [
-            {"ssid_name": "ssid_wpa_wpa2_p_m_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
-            {"ssid_name": "ssid_wpa_wpa2_p_m_5g_vlan", "appliedRadios": ["5G"],
+            {"ssid_name": "wpa_wpa2_p_m_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
+            {"ssid_name": "wpa_wpa2_p_m_5g_vlan", "appliedRadios": ["5G"],
              "security_key": "something", "vlan": 100}]
     },
     "rf": {},
     "radius": False
 }
+
+# class TestUniqueSSIDGeneralTwoVLANiOS(object):
+#
+#     @pytest.mark.unique_ssid_general_two_vlan_ios
+#     def test_unique_ssid_general_two_vlan_ios(self):
+#         for sec_modes in setup_params_general_two['ssid_modes'].keys():
+#             for i in range(len(setup_params_general_two['ssid_modes'][sec_modes])):
+#                 N = 3
+#                 rand_string = (''.join(random.choices(string.ascii_uppercase +
+#                                                       string.digits, k=N))) + str(int(time.time_ns()) % 10000)
+#                 setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] = \
+#                 setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
+#
+#         assert True
+
 for sec_modes in setup_params_general_two['ssid_modes'].keys():
     for i in range(len(setup_params_general_two['ssid_modes'][sec_modes])):
         N = 2

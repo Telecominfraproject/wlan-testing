@@ -97,9 +97,10 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: prepare configuration
@@ -124,6 +125,7 @@ jobs:
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
           
+
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -183,9 +185,10 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: prepare configuration
@@ -209,6 +212,7 @@ jobs:
           then
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
+
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -269,9 +273,10 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: prepare configuration
@@ -294,6 +299,7 @@ jobs:
           then
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
+
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -353,9 +359,11 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: prepare configuration
@@ -380,6 +388,7 @@ jobs:
           then
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
+
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -440,9 +449,10 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: prepare configuration
@@ -465,6 +475,7 @@ jobs:
           then
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
+
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -524,9 +535,10 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: prepare configuration
@@ -549,6 +561,7 @@ jobs:
           then
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
+
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -608,9 +621,10 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: prepare configuration
@@ -634,6 +648,7 @@ jobs:
           then
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
+
 
 
       - name: run tests
@@ -693,9 +708,10 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: prepare configuration
@@ -718,6 +734,7 @@ jobs:
           then
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
+
 
       - name: run tests
         uses: ./.github/actions/run-tests

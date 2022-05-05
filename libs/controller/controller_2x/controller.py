@@ -36,13 +36,13 @@ class ConfigureController:
         self.access_token = ""
         # self.session = requests.Session()
         self.login_resp = self.login()
-        self.gw_host, self.fms_host = self.get_gw_endpoint()
-        if self.gw_host == "" or self.fms_host == "":
+        self.gw_host, self.fms_host, self.prov_host = self.get_gw_endpoint()
+        if self.gw_host == "" or self.fms_host == "" or self.prov_host == "":
             time.sleep(60)
-            self.gw_host, self.fms_host = self.get_gw_endpoint()
-            if self.gw_host == "" or self.fms_host == "":
+            self.gw_host, self.fms_host, self.prov_host = self.get_gw_endpoint()
+            if self.gw_host == "" or self.fms_host == "" or self.prov_host == "":
                 self.logout()
-                print(self.gw_host, self.fms_host)
+                print(self.gw_host, self.fms_host, self.prov_host)
                 pytest.exit("All Endpoints not available in Controller Service")
                 sys.exit()
 
@@ -62,6 +62,13 @@ class ConfigureController:
         print(new_uri)
         return new_uri
 
+    def build_url_prov(self, path):
+        new_uri = 'https://%s:%d/api/v1/%s' % (self.prov_host.hostname, self.prov_host.port, path)
+        print(new_uri)
+        return new_uri
+
+
+
     def request(self, service, command, method, params, payload):
         if service == "sec":
             uri = self.build_uri_sec(command)
@@ -69,6 +76,8 @@ class ConfigureController:
             uri = self.build_uri(command)
         elif service == "fms":
             uri = self.build_url_fms(command)
+        elif service == "prov":
+            uri = self.build_url_prov(command)
         else:
             raise NameError("Invalid service code for request.")
 
@@ -120,7 +129,9 @@ class ConfigureController:
                 gw_host = urlparse(service["uri"])
             if service['type'] == "owfms":
                 fms_host = urlparse(service["uri"])
-        return gw_host, fms_host
+            if service['type'] == "owprov":
+                prov_host = urlparse(service["uri"])
+        return gw_host, fms_host, prov_host
 
     def logout(self):
         uri = self.build_uri_sec('oauth2/%s' % self.access_token)
@@ -192,6 +203,13 @@ class Controller(ConfigureController):
 
     def get_system_fms(self):
         uri = self.build_url_fms("system/?command=info")
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_system_prov(self):
+        uri = self.build_url_prov("system/?command=info")
+        allure.attach(name="Url of Prov UI:", body=str(uri))
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
@@ -283,6 +301,104 @@ class FMSUtils:
 
         return "error"
 
+class ProvUtils(ConfigureController):
+
+    def __init__(self, controller_data=None):
+        super().__init__(controller_data)
+
+    def build_url_prov(self, path):
+        new_uri = 'https://%s:%d/api/v1/%s' % (self.prov_host.hostname, self.prov_host.port, path)
+        print(new_uri)
+        return new_uri
+
+    def get_inventory(self):
+        uri = self.build_url_prov("inventory")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_inventory_by_device(self, device_name):
+        uri = self.build_url_prov("inventory/" + device_name)
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_system_prov(self):
+        uri = self.build_url_prov("system/?command=info")
+        allure.attach(name="Url of Prov UI:", body=str(uri))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def add_device_to_inventory(self, device_name, payload):
+        uri = self.build_url_prov("inventory/" + device_name)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_device_from_inventory(self, device_name):
+        uri = self.build_url_prov("inventory/" + device_name)
+        print(uri)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_entity(self):
+        uri = self.build_url_prov("entity")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_entity_by_id(self,entity_id):
+        uri = self.build_url_prov("entity/" + entity_id)
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def add_entity(self, payload):
+        uri = self.build_url_prov("entity/1")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_entity(self, entity_id):
+        uri = self.build_url_prov("entity/" + entity_id)
+        print(uri)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def edit_device_from_inventory(self, device_name, payload):
+        uri = self.build_url_prov("inventory/" + device_name)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def edit_entity(self, payload, entity_id):
+        uri = self.build_url_prov("entity/" + entity_id)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
 
 class UProfileUtility:
 
@@ -468,7 +584,7 @@ class UProfileUtility:
                         ssid_info.append(temp)
         return ssid_info
 
-    def set_radio_config(self, radio_config={}, DFS=False, channel=None, bw=None):
+    def set_radio_config(self, radio_config={}):
         base_radio_config_2g = {
             "band": "2G",
             "country": "CA",
@@ -493,17 +609,9 @@ class UProfileUtility:
             #     for keys in radio_config[band]:
             #         base_radio_config_6g[keys] = radio_config[band][keys]
 
-        if DFS:
-            self.base_profile_config["radios"].append({
-                "band": "5G",
-                "country": "CA",
-                "channel-mode": "VHT",
-                "channel-width": bw,
-                "channel": channel
-            })
-        else:
-            self.base_profile_config["radios"].append(base_radio_config_2g)
-            self.base_profile_config["radios"].append(base_radio_config_5g)
+
+        self.base_profile_config["radios"].append(base_radio_config_2g)
+        self.base_profile_config["radios"].append(base_radio_config_5g)
         print(self.base_profile_config)
         self.vlan_section["ssids"] = []
         self.vlan_ids = []

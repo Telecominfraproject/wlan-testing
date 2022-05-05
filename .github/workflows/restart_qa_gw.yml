@@ -1,0 +1,33 @@
+name: Restart OWGW on QA
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  AWS_EKS_NAME: tip-wlan-main
+  AWS_DEFAULT_OUTPUT: json
+  AWS_DEFAULT_REGION: us-east-2
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+
+on:
+  workflow_dispatch: {}
+
+
+jobs:
+  restart-owgw:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Fetch kubeconfig
+      run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+    - name: Restart OWGW in QA01
+      run: kubectl delete pod -n openwifi-qa01 -l app.kubernetes.io/name=owgw
