@@ -378,6 +378,7 @@ class RunTest:
             if d_vlan:
                 if "ip" in station_info["interface"].keys():
                     self.station_ip[sta_name] = station_info["interface"]["ip"]
+
             dict_data = station_info["interface"]
             dict_table["After"] = list(dict_data.values())
             try:
