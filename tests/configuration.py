@@ -37,6 +37,7 @@ with open('lab_info.json', 'r') as f:
 
 CONFIGURATION = data["CONFIGURATION"]
 
+PERFECTO_DETAILS = data["PERFECTO_DETAILS"]
 
 RADIUS_SERVER_DATA = data["RADIUS_SERVER_DATA"]
 
