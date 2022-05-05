@@ -591,7 +591,9 @@ class TestRateLimitingWithRadiusBridge(object):
 
             lf_tools.attach_report_graphs(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
-        assert True
+            assert True
+        else:
+            assert False
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
@@ -628,12 +630,14 @@ class TestRateLimitingWithRadiusBridge(object):
 
             lf_tools.attach_report_graphs(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
-        assert True
+            assert True
+        else:
+            assert False
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.max_upload_user2
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7619", name="WIFI-7619")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7619", name="WIFI-7620")
     def test_radius_server_ratelimit_maxupload_groupuser2_2g(self, lf_test, lf_tools, station_names_twog):
         """
             Test: check max-upload ratelimit of group - user2
@@ -662,7 +666,10 @@ class TestRateLimitingWithRadiusBridge(object):
                                             raw_lines=raw_lines)
 
             report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
+            kpi_data = lf_tools.read_kpi_file(dir_name=report_name)
+            print(kpi_data)
             lf_tools.attach_report_graphs(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
-        assert True
+            assert True
+        else:
+            assert False
