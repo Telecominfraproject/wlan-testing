@@ -35,7 +35,7 @@ setup_params_general = {
         "wpa2_personal": [
             {"ssid_name": "ssid_wpa2_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
             {"ssid_name": "ssid_wpa2_5g_vlan", "appliedRadios": ["5G"],
-             "security_key": "something_vlan", "vlan": 100}]},
+             "security_key": "something", "vlan": 100}]},
     "rf": {},
     "radius": False
 }
