@@ -128,6 +128,12 @@ jobs:
     - name: Get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
+    # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
     - name: Set gateway URL output
       id: gateway
       run: echo "::set-output name=url::gw-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build"
@@ -380,6 +386,12 @@ jobs:
     - name: Get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
+    # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
     - name: Set gateway URL output
       id: gateway
       run: echo "::set-output name=url::gw-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build"
@@ -551,6 +563,12 @@ jobs:
     - name: Get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
+    # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
     - name: Prepare namespace
       id: namespace
       run: |
@@ -702,6 +720,12 @@ jobs:
 
     - name: Get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: Prepare namespace
       id: namespace
