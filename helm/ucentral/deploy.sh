@@ -13,7 +13,6 @@ usage () {
   echo "- CHART_VERSION - version of chart to be deployed from assembly chart (for 'git' method git ref may be passed, for 'bundle' method version of chart may be passed)";
   echo;
   echo "- VALUES_FILE_LOCATION - path to file with override values that may be used for deployment";
-  echo "- RTTY_TOKEN - token to be used for rttys and OpenWIFI Gateway for remote tty sessions";
   echo "- OWGW_AUTH_USERNAME - username to be used for requests to OpenWIFI Security";
   echo "- OWGW_AUTH_PASSWORD - hashed password for OpenWIFI Security (details on this may be found in https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/#authenticationdefaultpassword)";
   echo "- OWFMS_S3_SECRET - secret key that is used for OpenWIFI Firmware access to firmwares S3 bucket";
@@ -30,6 +29,8 @@ usage () {
   echo "- OWFMS_VERSION - OpenWIFI Firmware version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)";
   echo "- OWPROV_VERSION - OpenWIFI Provisioning version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)";
   echo "- OWPROVUI_VERSION - OpenWIFI Provisioning Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)";
+  echo "- OWANALYTICS_VERSION - OpenWIFI Analytics version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)";
+  echo "- OWSUB_VERSION - OpenWIFI Subscription (Userportal) version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)";
   echo;
   echo "Optional environment variables:"
   echo;
@@ -67,12 +68,13 @@ else
   [ -z ${OWFMS_VERSION+x} ] && echo "OWFMS_VERSION is unset" && usage && exit 1
   [ -z ${OWPROV_VERSION+x} ] && echo "OWPROV_VERSION is unset" && usage && exit 1
   [ -z ${OWPROVUI_VERSION+x} ] && echo "OWPROVUI_VERSION is unset" && usage && exit 1
+  [ -z ${OWANALYTICS_VERSION+x} ] && echo "OWANALYTICS_VERSION is unset" && usage && exit 1
+  [ -z ${OWSUB_VERSION+x} ] && echo "OWSUB_VERSION is unset" && usage && exit 1
 fi
 ## Environment specifics
 [ -z ${NAMESPACE+x} ] && echo "NAMESPACE is unset" && usage && exit 1
 ## Variables specifics
 [ -z ${VALUES_FILE_LOCATION+x} ] && echo "VALUES_FILE_LOCATION is unset" && usage && exit 1
-[ -z ${RTTY_TOKEN+x} ] && echo "RTTY_TOKEN is unset" && usage && exit 1
 [ -z ${OWGW_AUTH_USERNAME+x} ] && echo "OWGW_AUTH_USERNAME is unset" && usage && exit 1
 [ -z ${OWGW_AUTH_PASSWORD+x} ] && echo "OWGW_AUTH_PASSWORD is unset" && usage && exit 1
 [ -z ${OWFMS_S3_SECRET+x} ] && echo "OWFMS_S3_SECRET is unset" && usage && exit 1
@@ -91,6 +93,8 @@ export OWSEC_VERSION_TAG=$(echo ${OWSEC_VERSION} | tr '/' '-')
 export OWFMS_VERSION_TAG=$(echo ${OWFMS_VERSION} | tr '/' '-')
 export OWPROV_VERSION_TAG=$(echo ${OWPROV_VERSION} | tr '/' '-')
 export OWPROVUI_VERSION_TAG=$(echo ${OWPROVUI_VERSION} | tr '/' '-')
+export OWANALYTICS_VERSION_TAG=$(echo ${OWANALYTICS_VERSION} | tr '/' '-')
+export OWSUB_VERSION_TAG=$(echo ${OWSUB_VERSION} | tr '/' '-')
 
 # Debug get bash version
 bash --version > /dev/stderr
@@ -111,6 +115,8 @@ if [[ "$DEPLOY_METHOD" == "git" ]]; then
     sed -i '/wlan-cloud-ucentralfms@/s/ref=.*/ref='${OWFMS_VERSION}'\"/g' Chart.yaml
     sed -i '/wlan-cloud-owprov@/s/ref=.*/ref='${OWPROV_VERSION}'\"/g' Chart.yaml
     sed -i '/wlan-cloud-owprov-ui@/s/ref=.*/ref='${OWPROVUI_VERSION}'\"/g' Chart.yaml
+    sed -i '/wlan-cloud-analytics@/s/ref=.*/ref='${OWANALYTICS_VERSION}'\"/g' Chart.yaml
+    sed -i '/wlan-cloud-userportal@/s/ref=.*/ref='${OWSUB_VERSION}'\"/g' Chart.yaml
   fi
   helm repo add bitnami https://charts.bitnami.com/bitnami
   helm repo update
@@ -139,10 +145,10 @@ for EXTRA_VALUE in ${EXTRA_VALUES_SPLITTED[*]}; do
 done
 
 if [[ "$USE_SEPARATE_OWGW_LB" == "true" ]]; then
-  export HAPROXY_SERVICE_DNS_RECORDS="sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,rtty-${NAMESPACE}.cicd.lab.wlan.tip.build"
+  export HAPROXY_SERVICE_DNS_RECORDS="sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build\,sub-${NAMESPACE}.cicd.lab.wlan.tip.build"
   export OWGW_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build"
 else
-  export HAPROXY_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build\,sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,rtty-${NAMESPACE}.cicd.lab.wlan.tip.build"
+  export HAPROXY_SERVICE_DNS_RECORDS="gw-${NAMESPACE}.cicd.lab.wlan.tip.build\,sec-${NAMESPACE}.cicd.lab.wlan.tip.build\,fms-${NAMESPACE}.cicd.lab.wlan.tip.build\,prov-${NAMESPACE}.cicd.lab.wlan.tip.build\,analytics-${NAMESPACE}.cicd.lab.wlan.tip.build\,sub-${NAMESPACE}.cicd.lab.wlan.tip.build"
   export OWGW_SERVICE_DNS_RECORDS=""
 fi
 
@@ -152,11 +158,10 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   ${VALUES_FILES_FLAGS[*]} \
   --set owgw.services.owgw.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=gw-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owgw.configProperties."openwifi\.fileuploader\.host\.0\.name"=gw-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owgw.configProperties."rtty\.server"=rtty-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owgw.configProperties."rtty\.server"=gw-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owgw.configProperties."openwifi\.system\.uri\.public"=https://gw-${NAMESPACE}.cicd.lab.wlan.tip.build:16002 \
   --set owgw.configProperties."openwifi\.system\.uri\.private"=https://owgw-owgw:17002 \
   --set owgw.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
-  --set owgw.configProperties."rtty\.token"=${RTTY_TOKEN} \
   --set owgw.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owsec.configProperties."authentication\.default\.username"=${OWGW_AUTH_USERNAME} \
   --set owsec.configProperties."authentication\.default\.password"=${OWGW_AUTH_PASSWORD} \
@@ -182,8 +187,17 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set owprovui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=provui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owprovui.ingresses.default.hosts={provui-${NAMESPACE}.cicd.lab.wlan.tip.build} \
   --set owprovui.public_env_variables.DEFAULT_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
-  --set rttys.config.token=${RTTY_TOKEN} \
-  --set rttys.services.rttys.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=rtty-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owprovui.public_env_variables.REACT_APP_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
+  --set owanalytics.services.owanalytics.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=analytics-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owanalytics.configProperties."openwifi\.system\.uri\.public"=https://analytics-${NAMESPACE}.cicd.lab.wlan.tip.build:16009 \
+  --set owanalytics.configProperties."openwifi\.system\.uri\.private"=https://owanalytics-owanalytics:17009 \
+  --set owanalytics.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owanalytics.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
+  --set owsub.services.owsub.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=sub-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owsub.configProperties."openwifi\.system\.uri\.public"=https://sub-${NAMESPACE}.cicd.lab.wlan.tip.build:16006 \
+  --set owsub.configProperties."openwifi\.system\.uri\.private"=https://owsub-owsub:17006 \
+  --set owsub.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owsub.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set clustersysteminfo.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set clustersysteminfo.secret_env_variables.OWSEC_NEW_PASSWORD=${OWSEC_NEW_PASSWORD} \
   --set owls.services.owls.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=ls-${NAMESPACE}.cicd.lab.wlan.tip.build \
@@ -200,8 +214,6 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set-file owgw.certs."restapi-key\.pem"=$KEY_LOCATION \
   --set-file owgw.certs."websocket-cert\.pem"=$CERT_LOCATION \
   --set-file owgw.certs."websocket-key\.pem"=$KEY_LOCATION \
-  --set-file rttys.certs."restapi-cert\.pem"=$CERT_LOCATION \
-  --set-file rttys.certs."restapi-key\.pem"=$KEY_LOCATION \
   --set-file owsec.certs."restapi-cert\.pem"=$CERT_LOCATION \
   --set-file owsec.certs."restapi-key\.pem"=$KEY_LOCATION \
   --set-file owfms.certs."restapi-cert\.pem"=$CERT_LOCATION \
@@ -212,4 +224,8 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set-file owls.certs."restapi-key\.pem"=$KEY_LOCATION \
   --set-file owls.certs."device-cert\.pem"=$DEVICE_CERT_LOCATION \
   --set-file owls.certs."device-key\.pem"=$DEVICE_KEY_LOCATION \
+  --set-file owanalytics.certs."restapi-cert\.pem"=$CERT_LOCATION \
+  --set-file owanalytics.certs."restapi-key\.pem"=$KEY_LOCATION \
+  --set-file owsub.certs."restapi-cert\.pem"=$CERT_LOCATION \
+  --set-file owsub.certs."restapi-key\.pem"=$KEY_LOCATION \
   tip-openwifi $DEPLOY_SOURCE

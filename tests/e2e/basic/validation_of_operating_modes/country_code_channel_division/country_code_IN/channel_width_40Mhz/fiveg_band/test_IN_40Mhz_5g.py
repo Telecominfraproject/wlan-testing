@@ -10,7 +10,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.country_code, pytest.mark.Bridge, pytest.mark.wpa2, pytest.mark.IN]
+pytestmark = [pytest.mark.country_code, pytest.mark.bridge, pytest.mark.wpa2, pytest.mark.india]
 
 setup_params_general1 = {
     "mode": "BRIDGE",
@@ -64,10 +64,12 @@ class TestCountryIN40Mhz5GChannel36(object):
         band = "fiveg"
         vlan = 1
         channel = setup_params_general1['rf']['5G']['channel']
+        channel_width = setup_params_general1['rf']['5G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
@@ -126,10 +128,12 @@ class TestCountryIN40Mhz5GChannel44(object):
         band = "fiveg"
         vlan = 1
         channel = setup_params_general2['rf']['5G']['channel']
+        channel_width = setup_params_general2['rf']['5G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
@@ -188,10 +192,12 @@ class TestCountryIN40Mhz5GChannel52(object):
         band = "fiveg"
         vlan = 1
         channel = setup_params_general3['rf']['5G']['channel']
+        channel_width = setup_params_general3['rf']['5G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
@@ -249,10 +255,12 @@ class TestCountryIN40Mhz5GChannel60(object):
         band = "fiveg"
         vlan = 1
         channel = setup_params_general4['rf']['5G']['channel']
+        channel_width = setup_params_general4['rf']['5G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
@@ -310,10 +318,12 @@ class TestCountryIN40Mhz5GChannel100(object):
         band = "fiveg"
         vlan = 1
         channel = setup_params_general5['rf']['5G']['channel']
+        channel_width = setup_params_general5['rf']['5G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
@@ -371,10 +381,12 @@ class TestCountryIN40Mhz5GChannel108(object):
         band = "fiveg"
         vlan = 1
         channel = setup_params_general6['rf']['5G']['channel']
+        channel_width = setup_params_general6['rf']['5G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
@@ -432,10 +444,12 @@ class TestCountryIN40Mhz5GChannel132(object):
         band = "fiveg"
         vlan = 1
         channel = setup_params_general7['rf']['5G']['channel']
+        channel_width = setup_params_general7['rf']['5G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
@@ -493,13 +507,14 @@ class TestCountryIN40Mhz5GChannel140(object):
         band = "fiveg"
         vlan = 1
         channel = setup_params_general8['rf']['5G']['channel']
+        channel_width = setup_params_general8['rf']['5G']['channel-width']
 
         result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
                                                        band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,country=356)
+                                                       channel=channel,channel_width=channel_width,country_num=356,
+                                                       country='India(IN)')
         if result:
             assert True
         else:
             assert False
-
 

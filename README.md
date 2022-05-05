@@ -83,8 +83,8 @@ http://pythontesting.net/framework/pytest/pytest-introduction/
 [![regression testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/regression.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/regression.yml)
 ![Regression test count](https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/badges/regression-count.svg)
 
-[![interop regression testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/interop_regression.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/interop_regression.yml)
-![Interop Regression test count](https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/badges/regression-interop-count.svg)
+[![interop performance testing](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/interop_performance.yml/badge.svg)](https://github.com/Telecominfraproject/wlan-testing/actions/workflows/interop_performance.yml)
+![Interop Performance test count](https://raw.githubusercontent.com/Telecominfraproject/wlan-testing/badges/performance-interop-count.svg)
 
 ### Best Practice
 

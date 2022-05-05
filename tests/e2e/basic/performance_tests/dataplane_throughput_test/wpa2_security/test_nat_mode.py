@@ -40,7 +40,7 @@ class TestDataplaneThroughputNAT(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3913", name="WIFI-3913")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    def test_tcp_upd_wpa2_personal_nat_2g_band_ac_station(self, lf_tools,
+    def test_tcp_udp_wpa2_personal_nat_2g_band_ac_station(self, lf_tools,
                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
                              get_configuration):
         """Dataplane THroughput nat Mode
@@ -54,6 +54,7 @@ class TestDataplaneThroughputNAT(object):
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
+        influx_tags = "tcp-udp-nat-wpa2-2.4G-ac"
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -61,7 +62,7 @@ class TestDataplaneThroughputNAT(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
                                        instance_name="TIP_DPT_DPT_WPA2_2G_NAT",
-                                       vlan_id=vlan, dut_name=dut_name)
+                                       vlan_id=vlan, dut_name=dut_name, influx_tags=influx_tags)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dataplane Throughput Test - TCP-UDP 2.4G")
             lf_test.Client_disconnect(station_name=station_names_twog)
@@ -72,7 +73,7 @@ class TestDataplaneThroughputNAT(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3914", name="WIFI-3914")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    def test_tcp_upd_wpa2_personal_nat_5g_band_ac_station(self, lf_tools,
+    def test_tcp_udp_wpa2_personal_nat_5g_band_ac_station(self, lf_tools,
                              lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
         """Dataplane THroughput nat Mode
            pytest -m "dataplane_throughput_test and nat and wpa2_personal and fiveg"
@@ -85,6 +86,7 @@ class TestDataplaneThroughputNAT(object):
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
+        influx_tags = "tcp-udp-nat-wpa2-5G-ac"
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -92,7 +94,7 @@ class TestDataplaneThroughputNAT(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
                                        instance_name="TIP_DPT_DPT_WPA2_5G_NAT",
-                                       vlan_id=vlan, dut_name=dut_name)
+                                       vlan_id=vlan, dut_name=dut_name, influx_tags=influx_tags)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dataplane Throughput Test - TCP-UDP 5G")
             print("Test Completed... Cleaning up Stations")
@@ -103,7 +105,7 @@ class TestDataplaneThroughputNAT(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    def test_tcp_upd_wpa2_personal_nat_2g_band_ax_station(self, lf_tools,
+    def test_tcp_udp_wpa2_personal_nat_2g_band_ax_station(self, lf_tools,
                                                           lf_test, station_names_ax, create_lanforge_chamberview_dut,
                                                           get_configuration):
         """Dataplane THroughput nat Mode
@@ -117,6 +119,7 @@ class TestDataplaneThroughputNAT(object):
         band = "ax"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
+        influx_tags = "tcp-udp-nat-wpa2-2.4G-ax"
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_ax, vlan_id=vlan)
@@ -124,7 +127,7 @@ class TestDataplaneThroughputNAT(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_ax, mode=mode,
                                        instance_name="TIP_DPT_DPT_WPA2_2G_NAT_AX",
-                                       vlan_id=vlan, dut_name=dut_name)
+                                       vlan_id=vlan, dut_name=dut_name, influx_tags=influx_tags)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dataplane Throughput Test - TCP-UDP 2.4G")
             lf_test.Client_disconnect(station_name=station_names_ax)
@@ -134,7 +137,7 @@ class TestDataplaneThroughputNAT(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    def test_tcp_upd_wpa2_personal_nat_5g_band_aX_station(self, lf_tools,
+    def test_tcp_udp_wpa2_personal_nat_5g_band_aX_station(self, lf_tools,
                                                           lf_test, station_names_ax, create_lanforge_chamberview_dut,
                                                           get_configuration):
         """Dataplane THroughput nat Mode
@@ -148,6 +151,7 @@ class TestDataplaneThroughputNAT(object):
         band = "ax"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
+        influx_tags = "tcp-udp-nat-wpa2-5G-ax"
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_ax, vlan_id=vlan)
@@ -155,7 +159,7 @@ class TestDataplaneThroughputNAT(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_ax, mode=mode,
                                        instance_name="TIP_DPT_DPT_WPA2_5G_NAT_AX",
-                                       vlan_id=vlan, dut_name=dut_name)
+                                       vlan_id=vlan, dut_name=dut_name, influx_tags=influx_tags)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dataplane Throughput Test - TCP-UDP 5G")
             print("Test Completed... Cleaning up Stations")

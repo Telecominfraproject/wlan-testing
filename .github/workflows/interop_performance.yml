@@ -1,0 +1,2546 @@
+name: interop performance testing
+
+env:
+  # AWS credentials
+  AWS_EKS_NAME: tip-wlan-main
+  AWS_DEFAULT_OUTPUT: json
+  AWS_DEFAULT_REGION: us-east-2
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      devices:
+        description: comma-separated list of devices to test
+        default: galaxy-s9,galaxy-s10,galaxy-s20,pixel-4,iphone-7,iphone-11,iphone-xr,iphone-12
+        required: false
+      marker_overwrite:
+        description: overwrite the Pytest markers that will be selected, will disable report uploading
+        required: false
+      testbed:
+        description: Testbed to run on
+        default: interop-02
+        required: false
+#  schedule:
+#    - cron: "0 2 ? * SAT"
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  vars:
+    runs-on: ubuntu-latest
+    outputs:
+      devices: ${{ steps.vars.outputs.devices }}
+      marker_overwrite: ${{ steps.vars.outputs.marker_overwrite }}
+      testbed: ${{ steps.vars.output.devices }}
+
+    steps:
+      - name: set variables
+        id: vars
+        run: |
+          echo "::set-output name=marker_overwrite::${{ github.event.inputs.marker_overwrite || '' }}"
+
+          DEVICES="${{ github.event.inputs.devices || 'galaxy-s9,galaxy-s10,galaxy-s20,pixel-4,iphone-7,iphone-11,iphone-xr,iphone-12' }}"
+          DEVICES=$(echo $DEVICES | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
+          echo "::set-output name=devices::${DEVICES}"
+          echo "::set-output name=testbed::${{ github.event.inputs.testbed || '' }}"
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: build and push Docker image
+        uses: ./.github/actions/build-and-push-docker
+        with:
+          registry: tip-tip-wlan-cloud-docker-repo.jfrog.io
+          registry_user: wlan-testing-cicd
+          registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
+
+  # interop-01
+  test-galaxy-s10-bridge-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ vars, build ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s10
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S10.*' -o 'jobName=Github-Interop-galaxy-s10' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-galaxy-s10
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s10
+
+  # interop-01
+  test-galaxy-s9-bridge-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [vars, build]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s9
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-galaxy-s9
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s9
+
+  test-iphone-11-bridge-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [vars, build]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-11
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-11' -o 'jobName=Github-Interop-iphone-11' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-11
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-11
+
+
+  test-iphone-7-bridge-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [vars, build]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-7
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-7' -o 'jobName=Github-Interop-iphone-7' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-7
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-7
+
+  # interop-03
+  test-galaxy-s20-bridge-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [vars, build]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s20
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S20' -o 'jobName=Github-Interop-galaxy-s20' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-galaxy-s20
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s20
+
+  test-iphone-xr-bridge-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [vars, build]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-xr
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-XR' -o 'jobName=Github-Interop-iphone-xr' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-xr
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-xr
+
+  #interop-04
+  test-pixel-4-bridge-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [vars, build]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-pixel-4
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Pixel 4' -o 'jobName=Github-Interop-pixel-4' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-pixel-4
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-pixel-4
+
+  test-iphone-12-bridge-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [vars, build]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-12
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-12' -o 'jobName=Github-Interop-iphone-12' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-12
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-12
+  #----------------------------
+  # InteropbridgesuiteB
+  test-galaxy-s10-bridge-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s10
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S10.*' -o 'jobName=Github-Interop-galaxy-s10' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-galaxy-s10
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s10
+
+  # interop-01
+  test-galaxy-s9-bridge-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s9
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (InteropsuiteB) and interop_and and not wpa3_personal' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-galaxy-s9
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s9
+
+  test-iphone-11-bridge-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-11
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-11' -o 'jobName=Github-Interop-iphone-11' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-11
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-11
+
+
+  test-iphone-7-bridge-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-7
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-7' -o 'jobName=Github-Interop-iphone-7' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-7
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-7
+
+  # interop-03
+  test-galaxy-s20-bridge-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s20
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S20' -o 'jobName=Github-Interop-galaxy-s20' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-galaxy-s20
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s20
+
+  test-iphone-xr-bridge-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-xr
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-XR' -o 'jobName=Github-Interop-iphone-xr' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-xr
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-xr
+
+  #interop-04
+  test-pixel-4-bridge-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-pixel-4
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Pixel 4' -o 'jobName=Github-Interop-pixel-4' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-pixel-4
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-pixel-4
+
+  test-iphone-12-bridge-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-12
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-12' -o 'jobName=Github-Interop-iphone-12' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-12
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-12
+  #----------------------------
+  # Interop_bridge_EAP_suiteA
+  test-galaxy-s10-bridge-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s10
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (suiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S10.*' -o 'jobName=Github-Interop-galaxy-s10' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-galaxy-s10
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s10
+
+  # interop-01
+  test-galaxy-s9-bridge-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s9
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (suiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-galaxy-s9
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s9
+
+  test-iphone-11-bridge-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-11
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (suiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-11' -o 'jobName=Github-Interop-iphone-11' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-11
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-11
+
+
+  test-iphone-7-bridge-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-7
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (suiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-7' -o 'jobName=Github-Interop-iphone-7' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-7
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-7
+
+  # interop-03
+  test-galaxy-s20-bridge-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s20
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (suiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S20' -o 'jobName=Github-Interop-galaxy-s20' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-galaxy-s20
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s20
+
+  test-iphone-xr-bridge-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-xr
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (suiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-XR' -o 'jobName=Github-Interop-iphone-xr' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-xr
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-xr
+
+  #interop-04
+  test-pixel-4-bridge-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-pixel-4
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (suiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Pixel 4' -o 'jobName=Github-Interop-pixel-4' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-pixel-4
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-pixel-4
+
+  test-iphone-12-bridge-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-12
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (bridge) and interop_uc_sanity and (suiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-12' -o 'jobName=Github-Interop-iphone-12' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-12
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-12
+ #-------------Nat mode -----------------------------------------------------------
+  # interop-01
+  test-galaxy-s10-nat-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s10
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S10.*' -o 'jobName=Github-Interop-galaxy-s10' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-galaxy-s10
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s10
+
+  # interop-01
+  test-galaxy-s9-nat-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s9
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-galaxy-s9
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s9
+
+  test-iphone-11-nat-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-11
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-11' -o 'jobName=Github-Interop-iphone-11' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-11
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-11
+
+
+  test-iphone-7-nat-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-7
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-7' -o 'jobName=Github-Interop-iphone-7' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-7
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-7
+
+  # interop-03
+  test-galaxy-s20-nat-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s20
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S20' -o 'jobName=Github-Interop-galaxy-s20' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-galaxy-s20
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s20
+
+  test-iphone-xr-nat-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-xr
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-XR' -o 'jobName=Github-Interop-iphone-xr' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-xr
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-xr
+
+  #interop-04
+  test-pixel-4-nat-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-pixel-4
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Pixel 4' -o 'jobName=Github-Interop-pixel-4' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-pixel-4
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-pixel-4
+
+  test-iphone-12-nat-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-12
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-12' -o 'jobName=Github-Interop-iphone-12' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-12
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-12
+  #----------------------------
+  # InteropsuiteB
+  test-galaxy-s10-nat-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s10
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S10.*' -o 'jobName=Github-Interop-galaxy-s10' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-galaxy-s10
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s10
+
+  # interop-01
+  test-galaxy-s9-nat-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s9
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (InteropsuiteB) and interop_and and not wpa3_personal' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-galaxy-s9
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s9
+
+  test-iphone-11-nat-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-11
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-11' -o 'jobName=Github-Interop-iphone-11' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-11
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-11
+
+
+  test-iphone-7-nat-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-7
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-7' -o 'jobName=Github-Interop-iphone-7' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-7
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-7
+
+  # interop-03
+  test-galaxy-s20-nat-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s20
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S20' -o 'jobName=Github-Interop-galaxy-s20' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-galaxy-s20
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s20
+
+  test-iphone-xr-nat-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-xr
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-XR' -o 'jobName=Github-Interop-iphone-xr' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-xr
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-xr
+
+  #interop-04
+  test-pixel-4-nat-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-pixel-4
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Pixel 4' -o 'jobName=Github-Interop-pixel-4' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-pixel-4
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-pixel-4
+
+  test-iphone-12-nat-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-12
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-12' -o 'jobName=Github-Interop-iphone-12' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-12
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-12
+  #----------------------------
+  # Interop_EAP_suiteA
+  test-galaxy-s10-nat-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s10
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (suiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S10.*' -o 'jobName=Github-Interop-galaxy-s10' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-galaxy-s10
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s10
+
+  # interop-01
+  test-galaxy-s9-nat-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s9
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (suiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-galaxy-s9
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s9
+
+  test-iphone-11-nat-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-11
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (suiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-11' -o 'jobName=Github-Interop-iphone-11' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-11
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-11
+
+
+  test-iphone-7-nat-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-7
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (suiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-7' -o 'jobName=Github-Interop-iphone-7' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-7
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-7
+
+  # interop-03
+  test-galaxy-s20-nat-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s20
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (suiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S20' -o 'jobName=Github-Interop-galaxy-s20' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-galaxy-s20
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s20
+
+  test-iphone-xr-nat-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-xr
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (suiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-XR' -o 'jobName=Github-Interop-iphone-xr' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-xr
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-xr
+
+  #interop-04
+  test-pixel-4-nat-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-pixel-4
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (suiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Pixel 4' -o 'jobName=Github-Interop-pixel-4' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-pixel-4
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-pixel-4
+
+  test-iphone-12-nat-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-12
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (nat) and interop_uc_sanity and (suiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-12' -o 'jobName=Github-Interop-iphone-12' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-12
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-12
+#-------------------Vlan mode-----------------------------------------
+  # interop-01
+  test-galaxy-s10-vlan-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s10
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S10.*' -o 'jobName=Github-Interop-galaxy-s10' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-galaxy-s10
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s10
+
+  # interop-01
+  test-galaxy-s9-vlan-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s9
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-galaxy-s9
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s9
+
+  test-iphone-11-vlan-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-11
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-11' -o 'jobName=Github-Interop-iphone-11' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-11
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-11
+
+
+  test-iphone-7-vlan-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-7
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-7' -o 'jobName=Github-Interop-iphone-7' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-7
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-7
+
+  # interop-03
+  test-galaxy-s20-vlan-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s20
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S20' -o 'jobName=Github-Interop-galaxy-s20' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-galaxy-s20
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s20
+
+  test-iphone-xr-vlan-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-xr
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-XR' -o 'jobName=Github-Interop-iphone-xr' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-xr
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-xr
+
+  #interop-04
+  test-pixel-4-vlan-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-pixel-4
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (InteropsuiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Pixel 4' -o 'jobName=Github-Interop-pixel-4' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-pixel-4
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-pixel-4
+
+  test-iphone-12-vlan-gen-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-12
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (InteropsuiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-12' -o 'jobName=Github-Interop-iphone-12' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-12
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-12
+  #----------------------------
+  # InteropsuiteB
+  test-galaxy-s10-vlan-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s10
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S10.*' -o 'jobName=Github-Interop-galaxy-s10' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-galaxy-s10
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s10
+
+  # interop-01
+  test-galaxy-s9-vlan-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s9
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (InteropsuiteB) and interop_and and not wpa3_personal' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-galaxy-s9
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s9
+
+  test-iphone-11-vlan-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-11
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-11' -o 'jobName=Github-Interop-iphone-11' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-11
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-11
+
+
+  test-iphone-7-vlan-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-7
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-7' -o 'jobName=Github-Interop-iphone-7' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-7
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-7
+
+  # interop-03
+  test-galaxy-s20-vlan-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s20
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S20' -o 'jobName=Github-Interop-galaxy-s20' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-galaxy-s20
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s20
+
+  test-iphone-xr-vlan-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-xr
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-XR' -o 'jobName=Github-Interop-iphone-xr' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-xr
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-xr
+
+  #interop-04
+  test-pixel-4-vlan-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-pixel-4
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (InteropsuiteB) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Pixel 4' -o 'jobName=Github-Interop-pixel-4' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-pixel-4
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-pixel-4
+
+  test-iphone-12-vlan-gen-suiteB:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-12
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (InteropsuiteB) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-12' -o 'jobName=Github-Interop-iphone-12' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-12
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-12
+  #----------------------------
+  # Interop_EAP_suiteA
+  test-galaxy-s10-vlan-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s10
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (suiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S10.*' -o 'jobName=Github-Interop-galaxy-s10' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge"
+          allure_results_artifact_name: allure-results-galaxy-s10
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s10
+
+  # interop-01
+  test-galaxy-s9-vlan-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s9
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (suiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S9' -o 'jobName=Github-Interop-galaxy-s9' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-galaxy-s9
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s9
+
+  test-iphone-11-vlan-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-11
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (suiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-11' -o 'jobName=Github-Interop-iphone-11' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-11
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-11
+
+
+  test-iphone-7-vlan-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-7
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (suiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-7' -o 'jobName=Github-Interop-iphone-7' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-7
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-7
+
+  # interop-03
+  test-galaxy-s20-vlan-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-galaxy-s20
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (suiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Galaxy S20' -o 'jobName=Github-Interop-galaxy-s20' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-galaxy-s20
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s20
+
+  test-iphone-xr-vlan-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-xr
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (suiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-XR' -o 'jobName=Github-Interop-iphone-xr' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-xr
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-xr
+
+  #interop-04
+  test-pixel-4-vlan-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-pixel-4
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (suiteA) and interop_and' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-android='Pixel 4' -o 'jobName=Github-Interop-pixel-4' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-pixel-4
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-pixel-4
+
+  test-iphone-12-vlan-eap-suiteA:
+    runs-on: ubuntu-latest
+    needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: interop-${{ github.run_id }}-iphone-12
+          testbed: "${{ needs.vars.outputs.testbed || 'interop-02'}}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'client_connectivity and (vlan) and interop_uc_sanity and (suiteA) and interop_ios' }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o model-iOS='iPhone-12' -o 'jobName=Github-Interop-iphone-12' -o 'jobNumber=${{ github.run_number }}' --skip-lanforge --run-lf"
+          allure_results_artifact_name: allure-results-iphone-12
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-12
+
+  report:
+    needs: [ test-iphone-11-vlan-eap-suiteA, test-iphone-xr-vlan-eap-suiteA, test-iphone-12-vlan-eap-suiteA, test-iphone-7-vlan-eap-suiteA, test-pixel-4-vlan-eap-suiteA, test-galaxy-s20-vlan-eap-suiteA, test-galaxy-s10-vlan-eap-suiteA, test-galaxy-s9-vlan-eap-suiteA ]
+    if: "!cancelled()"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        device: ${{ fromJson( needs.vars.outputs.devices ) }}
+
+    steps:
+      - name: checkout testing repo
+        uses: actions/checkout@v2
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: allure-results-${{ matrix.device }}-performance
+          path: allure-results
+
+      - name: download history of previous run
+        continue-on-error: true
+        run: |
+          LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key interop-performance/${{ matrix.device }}/latest/index.html | jq -r .Metadata.latest)
+          aws s3 cp --recursive s3://openwifi-allure-reports/interop-performance/${{ matrix.device }}/$LAST_RUN_ID/history history
+
+      - name: generate Allure report
+        uses: ./.github/actions/generate-allure-report
+        with:
+          results_path: ./allure-results
+          history_path: ./history
+          additional_metadata: |
+            Device=${{ matrix.device }}
+
+      - name: upload Allure report as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: allure-report-${{ matrix.device }}-performance
+          path: allure-report
+
+      # doing this to be able to aggregate multiple reports together later on
+      - name: copy results into report
+        run: cp -r allure-results allure-report/results
+
+      - name: upload to S3
+        if: github.ref == 'refs/heads/master' && needs.vars.outputs.marker_overwrite == ''
+        uses: ./.github/actions/allure-report-to-s3
+        with:
+          test_type: interop-performance
+          testbed: ${{ matrix.device }}
+          report_path: allure-report
+          s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
+          s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
+
+  cleanup:
+    needs: [ test-iphone-11-vlan-eap-suiteA, test-iphone-xr-vlan-eap-suiteA, test-iphone-12-vlan-eap-suiteA, test-iphone-7-vlan-eap-suiteA, test-pixel-4-vlan-eap-suiteA, test-galaxy-s20-vlan-eap-suiteA, test-galaxy-s10-vlan-eap-suiteA, test-galaxy-s9-vlan-eap-suiteA ]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v2
+      - name: cleanup Docker image
+        uses: ./.github/actions/cleanup-docker
+        with:
+          registry_user: wlan-testing-cicd
+          registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
