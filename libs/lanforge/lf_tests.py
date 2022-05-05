@@ -369,6 +369,9 @@ class RunTest:
             # sta_url = self.eap_connect.get_station_url(sta_name)
             # station_info = self.eap_connect.json_get(sta_url)
             station_info = self.eap_connect.json_get("port/1/1/" + sta_name)
+            if d_vlan:
+                if "ip" in station_info["interface"].keys():
+                    self.station_ip[sta_name] = station_info["interface"]["ip"]
 
             dict_data = station_info["interface"]
             dict_table["After"] = list(dict_data.values())
