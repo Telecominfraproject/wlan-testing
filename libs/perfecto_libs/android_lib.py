@@ -1497,25 +1497,25 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                 closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
                             report.step_start("Scrolling for ip address - 1")
-                            if deviceModelName == "Galaxy S20":
-                                print("Scrolling for S20")
-                                driver.swipe(470, 1400, 470, 1000, 400)
-                            else:
-                                scrollDown(setup_perfectoMobile)
+                            # if deviceModelName == "Galaxy S20":
+                            #     print("Scrolling for S20")
+                            driver.swipe(470, 1400, 470, 1000, 400)
+                            # else:
+                            #     scrollDown(setup_perfectoMobile)
 
                             report.step_start("Scrolling for ip address - 2")
-                            if deviceModelName == "Galaxy S20":
-                                print("Scrolling for S20")
-                                driver.swipe(470, 1400, 470, 1000, 400)
-                            else:
-                                scrollDown(setup_perfectoMobile)
+                            # if deviceModelName == "Galaxy S20":
+                            #     print("Scrolling for S20")
+                            driver.swipe(470, 1400, 470, 1000, 400)
+                            # else:
+                            #     scrollDown(setup_perfectoMobile)
 
                             report.step_start("Scrolling for ip address - 3")
-                            if deviceModelName == "Galaxy S20":
-                                print("Scrolling for S20")
-                                driver.swipe(470, 1400, 470, 1000, 400)
-                            else:
-                                scrollDown(setup_perfectoMobile)
+                            # if deviceModelName == "Galaxy S20":
+                            #     print("Scrolling for S20")
+                            driver.swipe(470, 1400, 470, 1000, 400)
+                            # else:
+                            #     scrollDown(setup_perfectoMobile)
                             report.step_start("looking for ip address")
 
                             try:
