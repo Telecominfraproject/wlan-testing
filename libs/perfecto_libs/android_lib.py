@@ -4802,25 +4802,25 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                 closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
                             report.step_start("Scrolling for ip address - 1")
-                            if deviceModelName == "Galaxy S20":
-                                print("Scrolling for S20")
-                                driver.swipe(470, 1400, 470, 1000, 400)
-                            else:
-                                scrollDown(setup_perfectoMobile)
+                            # if deviceModelName == "Galaxy S20":
+                            #     print("Scrolling for S20")
+                            driver.swipe(470, 1400, 470, 1000, 400)
+                            # else:
+                            #     scrollDown(setup_perfectoMobile)
 
                             report.step_start("Scrolling for ip address - 2")
-                            if deviceModelName == "Galaxy S20":
-                                print("Scrolling for S20")
-                                driver.swipe(470, 1400, 470, 1000, 400)
-                            else:
-                                scrollDown(setup_perfectoMobile)
+                            # if deviceModelName == "Galaxy S20":
+                            #     print("Scrolling for S20")
+                            driver.swipe(470, 1400, 470, 1000, 400)
+                            # else:
+                            #     scrollDown(setup_perfectoMobile)
 
                             report.step_start("Scrolling for ip address - 3")
-                            if deviceModelName == "Galaxy S20":
-                                print("Scrolling for S20")
-                                driver.swipe(470, 1400, 470, 1000, 400)
-                            else:
-                                scrollDown(setup_perfectoMobile)
+                            # if deviceModelName == "Galaxy S20":
+                            #     print("Scrolling for S20")
+                            driver.swipe(470, 1400, 470, 1000, 400)
+                            # else:
+                            #     scrollDown(setup_perfectoMobile)
                             report.step_start("looking for ip address")
 
                             try:
@@ -4832,29 +4832,29 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                 print("Unable to get IP address")
                                 pass
 
-                            # report.step_start("Forget SSID")
-                            #
-                            # try:
-                            #     check_if_no_internet_popup(driver)
-                            #     forget_ssid = driver.find_element_by_xpath(
-                            #         "//*[@text='Forget']")
-                            #     forget_ssid.click()
-                            #     print("Forgetting ssid")
-                            #
-                            #     # ------------------------------- Wifi Switch ----------------
-                            #     # try:
-                            #     #     print("clicking on wifi switch")
-                            #     #     get_switch_element = driver.find_element_by_xpath(
-                            #     #         "//*[@resource-id='com.android.settings:id/switch_widget']")
-                            #     #     driver.implicitly_wait(2)
-                            #     #     get_switch_element.click()
-                            #     # except:
-                            #     #     print("couldn't click on wifi switch")
-                            #     #    #allure.attach(name= body=str("couldn't click on wifi switch"))
-                            # except:
-                            #     print("Couldn't forget ssid")
-                            #     closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                            #     return ip_address_element_text, ssid_with_internet
+                            report.step_start("Forget SSID")
+
+                            try:
+                                check_if_no_internet_popup(driver)
+                                forget_ssid = driver.find_element_by_xpath(
+                                    "//*[@text='Forget']")
+                                forget_ssid.click()
+                                print("Forgetting ssid")
+
+                                # ------------------------------- Wifi Switch ----------------
+                                # try:
+                                #     print("clicking on wifi switch")
+                                #     get_switch_element = driver.find_element_by_xpath(
+                                #         "//*[@resource-id='com.android.settings:id/switch_widget']")
+                                #     driver.implicitly_wait(2)
+                                #     get_switch_element.click()
+                                # except:
+                                #     print("couldn't click on wifi switch")
+                                #    #allure.attach(name= body=str("couldn't click on wifi switch"))
+                            except:
+                                print("Couldn't forget ssid")
+                                closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                                return ip_address_element_text, ssid_with_internet
                         except:
                             print("Couldn't get into Additional settings")
                         # -------------------------------------------------------
