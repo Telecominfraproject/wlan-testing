@@ -88,6 +88,12 @@ jobs:
           additional_args: "-o firmware=${{ github.event.inputs.firmware }} ${{ github.event.inputs.additional_args }}"
           allure_results_artifact_name: allure-results
 
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait manual-${{ github.run_id }}-${{ github.event.inputs.testbed }}
+
       - name: upload Allure results as artifact
         if: always()
         uses: actions/upload-artifact@v2
