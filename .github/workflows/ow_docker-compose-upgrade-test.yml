@@ -10,10 +10,10 @@ on:
     inputs:
       deployment_version:
         default: 'main'
-        description: 'OpenWIFI deployment repository version to be deployed.'
+        description: 'OpenWiFi deployment repository version to be deployed.'
         required: true
       deployment_upgrade_version:
-        description: 'OpenWIFI deployment repository upgrade version.'
+        description: 'OpenWiFi deployment repository upgrade version.'
         required: true
       id:
         description: 'run identifier'
@@ -32,7 +32,7 @@ jobs:
         run: echo run identifier ${{ inputs.id }}
 
   deploy-controller:
-    name: Deploy OpenWIFI Cloud SDK
+    name: Deploy OpenWiFi cloud SDK
     needs: id
     runs-on: ubuntu-latest
     env:
@@ -84,6 +84,7 @@ jobs:
           virtual_ap_key: ${{ secrets.VIRTUAL_AP_KEY }}
           virtual_ap_dev_id: ${{ secrets.VIRTUAL_AP_DEV_ID }}
           gateway_url: ${{ needs.deploy-controller.outputs.gateway_url }}
+          gateway_public_ip: ${{ needs.deploy-controller.outputs.instance_public_ip }}
 
   test:
    name: Test all microservices
@@ -93,7 +94,12 @@ jobs:
      OWSEC: "${{ needs.deploy-controller.outputs.sec_url }}:16001"
      OWSEC_USERNAME: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
      OWSEC_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
+     FLAGS: "-s -k"
    steps:
+     - name: Add hostname for ${{ needs.deploy-controller.outputs.sec_url }}
+       run: |
+         echo "${{ needs.deploy-controller.outputs.instance_public_ip }} ${{ needs.deploy-controller.outputs.sec_url }}" | sudo tee -a /etc/hosts
+
      - name: Get OWGW CLI script and test service
        run: |
          curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralgw/master/test_scripts/curl/cli -o cli
@@ -113,13 +119,28 @@ jobs:
          ./cli test_service ${{ needs.deploy-virtual-ap-instance.outputs.serial_number }}
 
   upgrade-controller-deployment:
-    name: Upgrade OpenWIFI Cloud SDK
+    name: Upgrade OpenWiFi Cloud SDK
+    env:
+      AWS_DEFAULT_REGION: us-east-2
     needs: [deploy-controller, test]
     runs-on: ubuntu-latest
     steps:
+      - name: Save SSH key for access to EC2 instance
+        env:
+          INSTANCE_SSH_KEY: ${{ secrets.SSH_LOADSIM }}
+        run: |
+          echo "${{ env.INSTANCE_SSH_KEY" >> ssh_key.pem
+          chmod 600 ssh_key.pem
+
       - name: Upgrade Docker Compose cloud SDK deployment
         run: |
-          kubectl exec ${{ needs.deploy-controller.outputs.namespace }} -n ${{ needs.deploy-controller.outputs.namespace }} -c docker-compose-deployment -- sh -c 'docker-compose down; git checkout ${{ github.event.inputs.deployment_upgrade_version }}; docker-compose up -d'
+          ssh -i ssh_key.pem ubuntu@${{ needs.deploy-controller.outputs.instance_public_ip }} << EOF
+            sudo -i;
+            cd wlan-cloud-ucentral-deploy/docker-compose;
+            docker-compose down;
+            git checkout ${{ github.event.inputs.deployment_upgrade_version }};
+            docker-compose up -d;
+          EOF
 
   test-after-upgrade:
    name: Test all microservices after deployment upgrade
@@ -129,7 +150,12 @@ jobs:
      OWSEC: "${{ needs.deploy-controller.outputs.sec_url }}:16001"
      OWSEC_USERNAME: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
      OWSEC_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
+     FLAGS: "-s -k"
    steps:
+     - name: Add hostname for ${{ needs.deploy-controller.outputs.sec_url }}
+       run: |
+         echo "${{ needs.deploy-controller.outputs.instance_public_ip }} ${{ needs.deploy-controller.outputs.sec_url }}" | sudo tee -a /etc/hosts
+
      - name: Get OWGW CLI script and test service
        run: |
          curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralgw/master/test_scripts/curl/cli -o cli
@@ -154,29 +180,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AWS_DEFAULT_REGION: us-east-2
-      ROUTE_53_ZONE_ID: Z09534373UTXT2L1YL912
     if: always()
     steps:
-      - name: Delete Route53 record
-        run: |
-          cat > changeset.json << EOF
-          {
-               "Comment": "Deleting A for ${{ needs.deploy-controller.outputs.instance_name }}",
-               "Changes": [{
-                          "Action": "DELETE",
-                          "ResourceRecordSet": {
-                                      "Name": "${{ needs.deploy-controller.outputs.instance_name }}.cicd.lab.wlan.tip.build",
-                                      "Type": "A",
-                                      "TTL": 600,
-                                      "ResourceRecords":[{
-                                              "Value": "${{ needs.deploy-controller.outputs.instance_public_ip }}"
-                                        }]}
-                                    }]
-          }
-          EOF
-          aws route53 change-resource-record-sets --hosted-zone-id $ROUTE_53_ZONE_ID --change-batch file://changeset.json
-
       - name: Delete EC2 instance
+        continue-on-error: true
         if: always()
         run: |
           aws ec2 terminate-instances --instance-ids ${{ needs.deploy-controller.outputs.instance_id }}
