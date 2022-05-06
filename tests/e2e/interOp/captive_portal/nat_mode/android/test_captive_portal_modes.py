@@ -55,13 +55,13 @@ for sec_modes in setup_params_general['ssid_modes'].keys():
 @allure.sub_suite(sub_suite_name="Nat Mode Captive Portal : Suite-A")
 @pytest.mark.InteropsuiteA
 @allure.feature("NAT MODE CAPTIVE PORTAL")
-# @pytest.mark.parametrize(
-#     'setup_profiles',
-#     [setup_params_general],
-#     indirect=True,
-#     scope="class"
-# )
-# @pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
 class TestNATModeCaptivePortalSuiteOneNAT(object):
     """ Captive Portal SuiteA
         pytest -m "captive portal and nat and InteropsuiteA"
