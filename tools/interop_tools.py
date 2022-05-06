@@ -21,20 +21,20 @@ import time
 import warnings
 from _pytest.outcomes import xfail
 import urllib3
-from perfecto.model.model import Job, Project
-from perfecto import (PerfectoExecutionContext, PerfectoReportiumClient, TestContext, TestResultFactory)
-import pytest
-import logging
-import re
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from appium.webdriver.common.mobileby import MobileBy
-from selenium.webdriver.support import expected_conditions as EC
+# from perfecto.model.model import Job, Project
+# from perfecto import (PerfectoExecutionContext, PerfectoReportiumClient, TestContext, TestResultFactory)
+# import pytest
+# import logging
+# import re
+# from selenium.common.exceptions import NoSuchElementException, TimeoutException
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.support.ui import WebDriverWait
+# from appium.webdriver.common.mobileby import MobileBy
+# from selenium.webdriver.support import expected_conditions as EC
 from appium import webdriver
 
-from android_lib import *
-from iOS_lib import *
+# from android_lib import *
+# from iOS_lib import *
 import json
 import ast
 
@@ -107,10 +107,10 @@ def main():
     perfecto_tool = perfecto_tools()
 
     def rebool_all(platform, device_name):
+        capabilities = perfecto_tool.get_capabilities(platform_name=platform, device=device_name,
+                                                      browser_name="mobileOS")
+        driver = perfecto_tool.get_driver(capabilities=capabilities)
         try:
-            capabilities = perfecto_tool.get_capabilities(platform_name=platform, device=device_name,
-                                                          browser_name="mobileOS")
-            driver = perfecto_tool.get_driver(capabilities=capabilities)
             perfecto_tool.reboot(driver=driver, device_model_name=device_name)
         except:
             print("Reboot Failed !")
