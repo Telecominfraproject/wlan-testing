@@ -144,6 +144,12 @@ jobs:
         allure_results_artifact_name: allure-results
         dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
+      # necessary because if conditionals in composite actions are currently not respected
+    - name: delete namespace
+      if: always()
+      continue-on-error: true
+      run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}
+
     - name: stop reservation
       if: always()
       run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
