@@ -6,6 +6,7 @@ import os
 import random
 import string
 import sys
+import re
 
 import allure
 
@@ -38,6 +39,7 @@ import pytest
 from lanforge.lf_tests import RunTest
 from cv_test_manager import cv_test
 from configuration import CONFIGURATION
+from configuration import PERFECTO_DETAILS
 from configuration import open_flow
 from configuration import RADIUS_SERVER_DATA
 from configuration import RADIUS_ACCOUNTING_DATA
@@ -146,6 +148,12 @@ def pytest_addoption(parser):
         default=False,
         help="skip cloud controller and AP, run only lanforge tests on a ssid preconfigured"
     )
+    parser.addoption(
+        "--device",
+        default="iPhone-11",
+        help="Device Model which is needed to test"
+    )
+
 
     # Perfecto Parameters
     parser.addini("perfectoURL", "Cloud URL")
@@ -195,6 +203,11 @@ def testbed(request):
     var = request.config.getoption("--testbed")
     yield var
 
+@pytest.fixture(scope="session")
+def device(request):
+    """yields the device option selection"""
+    var = request.config.getoption("--device")
+    yield var
 
 @pytest.fixture(scope="session")
 def should_upload_firmware(request):
@@ -257,6 +270,14 @@ def get_configuration(testbed, request):
             CONFIGURATION[testbed]["access_point"][i]["version"] = version_list[0]
     LOGGER.info("Selected the lab Info data: " + str((CONFIGURATION[testbed])))
     yield CONFIGURATION[testbed]
+
+@pytest.fixture(scope="session")
+def get_device_configuration(device, request):
+    """yields the selected device information from lab info file (configuration.py)"""
+
+    LOGGER.info("Selected the lab Info data: " + str((PERFECTO_DETAILS[device])))
+    print(PERFECTO_DETAILS[device])
+    yield PERFECTO_DETAILS[device]
 
 
 @pytest.fixture(scope="session")
@@ -796,3 +817,35 @@ def get_apnos_max_clients(get_apnos, get_configuration):
         except Exception as e:
             pass
     yield all_logs
+
+@pytest.fixture(scope="function")
+def get_ap_channel(get_apnos, get_configuration):
+    all_data = []
+    dict_band_channel = {}
+    for ap in get_configuration['access_point']:
+        ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
+        a = ap_ssh.run_generic_command(cmd="iw dev | grep channel")
+        print("ap command output:- ", a)
+        try:
+            a = a[1:]
+            for i in a:
+                if i == '':
+                    continue
+                j = int(re.findall('\d+', i)[0])
+                print(j)
+                if j >= 36:
+                    dict_band_channel["5G"] = j
+                    continue
+                elif j < 36:
+                    dict_band_channel["2G"] = j
+                    continue
+            if not "2G" in dict_band_channel:
+                dict_band_channel["2G"] = "AUTO"
+            if not "5G" in dict_band_channel:
+                dict_band_channel["5G"] = "AUTO"
+            all_data.append(dict_band_channel)
+        except Exception as e:
+            print(e)
+            pass
+    print(all_data)
+    yield all_data

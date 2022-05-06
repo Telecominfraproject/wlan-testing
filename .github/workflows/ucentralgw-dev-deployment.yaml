@@ -103,6 +103,12 @@ jobs:
       run: |
         aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
+    # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
     - name: Deploy OpenWIFI Cloud SDK
       working-directory: wlan-testing/helm/ucentral
       run: |
@@ -118,7 +124,7 @@ jobs:
           export OWPROVUI_VERSION=${{ matrix.owprovui_version }}
           export OWANALYTICS_VERSION=${{ matrix.owanalytics_version }}
           export OWSUB_VERSION=${{ matrix.owsub_version }}
-          export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
+          export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.external-db.yaml
           export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
           export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
           export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
@@ -139,7 +145,7 @@ jobs:
           export OWPROVUI_VERSION=main
           export OWANALYTICS_VERSION=main
           export OWSUB_VERSION=main
-          export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
+          export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.external-db.yaml
           export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
           export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
           export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}

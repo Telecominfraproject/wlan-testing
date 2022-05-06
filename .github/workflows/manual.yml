@@ -72,10 +72,12 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          # TODO WIFI-7839 revert to using stable when issue is resolved on AWS CLI side
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
+        continue-on-error: true
         uses: ./.github/actions/run-tests
         with:
           namespace: "manual-${{ github.run_id }}-${{ github.event.inputs.testbed }}"
