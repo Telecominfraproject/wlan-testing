@@ -63,6 +63,7 @@ class TestMultipskBridge(object):
     @pytest.mark.wpa
     @pytest.mark.twog
     @pytest.mark.twogvlan1
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3492", name="WIFI-3492")
     def test_client_wpa_2g_vlan1(self, lf_test, lf_tools):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
@@ -96,6 +97,7 @@ class TestMultipskBridge(object):
     @pytest.mark.wpa
     @pytest.mark.twog
     @pytest.mark.twogvlan2
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3492", name="WIFI-3492")
     def test_client_wpa_2g_vlan2(self, lf_test, lf_tools):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]

@@ -954,7 +954,7 @@ class RunTest:
                     except Exception as e:
                         print(e)
                 print("sta name", sta_name)
-                allure.attach(name=str(sta_name), body=str(station_data_str))
+                allure.attach(name=str(sta_name), body=str(station_data_str))   
             except Exception as e:
                 print(e)
         if result1 == "Pass":
