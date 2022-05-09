@@ -129,7 +129,7 @@ jobs:
         env:
           INSTANCE_SSH_KEY: ${{ secrets.SSH_LOADSIM }}
         run: |
-          echo "${{ env.INSTANCE_SSH_KEY" >> ssh_key.pem
+          echo "${{ env.INSTANCE_SSH_KEY }}" >> ssh_key.pem
           chmod 600 ssh_key.pem
 
       - name: Upgrade Docker Compose cloud SDK deployment
