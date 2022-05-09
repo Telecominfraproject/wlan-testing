@@ -96,6 +96,7 @@ class TestMaxSsidBridge2G(object):
         security = "wpa"
         mode = "BRIDGE"
         band = "twog"
+        vlan = 1
 
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
