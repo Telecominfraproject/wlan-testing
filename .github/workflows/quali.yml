@@ -121,6 +121,12 @@ jobs:
             echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
           fi
 
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
@@ -156,6 +162,12 @@ jobs:
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+        # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}
 
       - name: show gw logs
         if: failure()
@@ -230,6 +242,12 @@ jobs:
             echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
           fi
 
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
@@ -265,6 +283,12 @@ jobs:
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+        # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}
 
       - name: show gw logs
         if: failure()
@@ -339,6 +363,12 @@ jobs:
             echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
           fi
 
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
@@ -374,6 +404,12 @@ jobs:
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+        # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}
 
       - name: show gw logs
         if: failure()
@@ -448,6 +484,12 @@ jobs:
             echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
           fi
 
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
@@ -483,6 +525,12 @@ jobs:
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+        # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}
 
       - name: show gw logs
         if: failure()
@@ -557,6 +605,12 @@ jobs:
             echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
           fi
 
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
@@ -592,6 +646,12 @@ jobs:
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+        # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}
 
       - name: show gw logs
         if: failure()
@@ -666,6 +726,12 @@ jobs:
             echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
           fi
 
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
@@ -701,6 +767,12 @@ jobs:
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+        # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}
 
       - name: show gw logs
         if: failure()
@@ -775,6 +847,12 @@ jobs:
             echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
           fi
 
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
@@ -810,6 +888,12 @@ jobs:
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+        # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}
 
       - name: show gw logs
         if: failure()
@@ -884,6 +968,12 @@ jobs:
             echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
           fi
 
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
@@ -919,6 +1009,12 @@ jobs:
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+        # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}
 
       - name: show gw logs
         if: failure()
@@ -993,6 +1089,12 @@ jobs:
             echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
           fi
 
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
@@ -1028,6 +1130,12 @@ jobs:
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+        # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}
 
       - name: show gw logs
         if: failure()
@@ -1103,6 +1211,12 @@ jobs:
             echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
           fi
 
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
@@ -1138,6 +1252,12 @@ jobs:
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+        # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}
 
       - name: show gw logs
         if: failure()
@@ -1213,6 +1333,12 @@ jobs:
             echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
           fi
 
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
@@ -1248,6 +1374,12 @@ jobs:
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+        # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}
 
       - name: show gw logs
         if: failure()

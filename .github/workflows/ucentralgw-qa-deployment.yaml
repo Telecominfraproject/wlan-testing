@@ -31,7 +31,7 @@ env:
   # - owprovui_version - OpenWIFI Provisioning Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
   testbeds: '[
     {
-      "namespace": "qa02",
+      "namespace": "qa01",
       "deploy_method": "git",
       "chart_version": "main",
       "owgw_version": "master",
@@ -83,6 +83,12 @@ jobs:
     - name: Fetch kubeconfig
       run: |
         aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: Deploy OpenWIFI Cloud SDK
       working-directory: wlan-testing/helm/ucentral
