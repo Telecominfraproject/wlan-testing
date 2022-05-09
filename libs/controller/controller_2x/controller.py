@@ -102,7 +102,7 @@ class ConfigureController:
         uri = self.build_uri_sec("oauth2")
         # self.session.mount(uri, HTTPAdapter(max_retries=15))
         payload = json.dumps({"userId": self.username, "password": self.password})
-        resp = requests.post(uri, data=payload, verify=False, timeout=100)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, "", payload, uri)
         token = resp.json()
         self.access_token = token["access_token"]
@@ -143,6 +143,7 @@ class ConfigureController:
     def make_headers(self):
         headers = {'Authorization': 'Bearer %s' % self.access_token,
                    "Connection": "keep-alive",
+                   "Content-Type": "application/json",
                    "Keep-Alive": "timeout=10, max=1000"
                    }
         return headers
@@ -761,12 +762,12 @@ if __name__ == '__main__':
         'password': 'OpenWifi%123',
     }
     obj = Controller(controller_data=controller)
-    up = UProfileUtility(sdk_client=obj, controller_data=controller)
-    up.set_mode(mode="BRIDGE")
-    up.set_radio_config()
-    up.add_ssid(ssid_data={"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something", "security": "psk2"})
-    up.push_config(serial_number="3c2c99f44e77")
-    print(obj.get_device_by_serial_number(serial_number="3c2c99f44e77"))
+    # up = UProfileUtility(sdk_client=obj, controller_data=controller)
+    # up.set_mode(mode="BRIDGE")
+    # up.set_radio_config()
+    # up.add_ssid(ssid_data={"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something", "security": "psk2"})
+    # up.push_config(serial_number="3c2c99f44e77")
+    # print(obj.get_device_by_serial_number(serial_number="3c2c99f44e77"))
     # print(datetime.datetime.utcnow())
     # fms = FMSUtils(sdk_client=obj)
     # new = fms.get_firmwares(model='ecw5410')
