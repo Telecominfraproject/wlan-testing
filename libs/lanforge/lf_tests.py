@@ -2342,11 +2342,14 @@ class RunTest:
     def hard_roam(self, run_lf, instantiate_profile, lf_tools, lf_reports, get_configuration, test=None, band=None, num_sta=1,
                   security=None, security_key=None,  iteration=1, ssid_name=None,
                   roaming_delay=None, option=None, channel=36, duration=None, duration_based=False,
-                  iteration_based=True, dut_name=None ):
+                  iteration_based=True, dut_name=None):
         allure.attach(name="Test Procedure", body="This test consists of creating a multiple  client which will be " \
                                                   " connected to the nearest ap, here the test automation will " \
                                                   "do hard roam based on forced roam method" \
                                                   "check if client performed roam by monitoring client bssid, for n number of iterions")
+        allure.attach(name="Pass Fail Criteria",
+                      body="Test is said to be pass if it satisfy 4 criterias as - 1 after roam bssid should change , 2- reassociation respone should be present, 3- auth request should be present, 4- roaming time should be less then 50 ms " \
+                           "other wise the test is said to be failed ")
 
         # attaching 11r log before tart of test
         instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
@@ -2431,9 +2434,18 @@ class RunTest:
         print("bssid of c2", c2_bssid)
         allure.attach(name="bssid of ap2", body=c2_bssid)
         allure.attach(name="11r logs before roam test", body=str(log))
+        fiveg_radio, sixg_radio, twog_radio  = None, None, None
+        if band == "twog":
+            twog_radio = self.twog_radios[0]
+            radio_ = self.ax_radios[0]
+            sniff_radio = radio_.split(".")[2]
         if band == "fiveg":
             fiveg_radio = self.fiveg_radios[0]
             radio_ = self.ax_radios[0]
+            sniff_radio = radio_.split(".")[2]
+        if band == "sixg":
+            sixg_radio = self.ax_radios[0]
+            radio_ = self.ax_radios[1]
             sniff_radio = radio_.split(".")[2]
         obj = HardRoam(lanforge_ip=self.lanforge_ip,
                        lanforge_port=self.lanforge_port,
@@ -2442,7 +2454,7 @@ class RunTest:
                        c2_bssid=c2_bssid,
                        fiveg_radio=fiveg_radio,
                        twog_radio=None,
-                       sixg_radio=None,
+                       sixg_radio=sixg_radio,
                        band=band,
                        sniff_radio=sniff_radio,
                        num_sta=num_sta,
@@ -2462,7 +2474,8 @@ class RunTest:
 
 
         file = obj.generate_csv()
-        obj.run(file_n=file)
+        message = obj.run(file_n=file)
+        allure.attach(name="message", body=str(message))
         # file = ["test_client_0.csv"]
         report_dir_name = obj.generate_report(csv_list=file, current_path=str(x)+ "/tests")
         print(report_dir_name)
