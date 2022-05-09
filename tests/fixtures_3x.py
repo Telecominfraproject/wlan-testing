@@ -259,6 +259,8 @@ class Fixtures_3x:
                         #      instantiate_profile_obj.enable_ft_sae(ssid=lf_dut_data[2]['ssid_name'], key=lf_dut_data[2]['security_key'])
                         if parameter["ft-dot1x"] == True:
                             instantiate_profile_obj.enable_ft_dot1x_wpa3(ssid=lf_dut_data[2]['ssid_name'])
+                        if parameter["ft-dot1x_sha256"] == True:
+                            instantiate_profile_obj.enable_ft_dot1x_sha256_wpa3(ssid=lf_dut_data[2]['ssid_name'])
                         instantiate_profile_obj.get_ssids()
             sumy = instantiate_profile_obj.get_ssids()
             allure.attach(name="wlan summary after creating test wlan", body=str(sumy))
