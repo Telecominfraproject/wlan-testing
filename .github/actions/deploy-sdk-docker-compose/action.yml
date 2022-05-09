@@ -126,6 +126,7 @@ runs:
           }
           EOF;
           systemctl restart docker
+        EOF
 
     - name: Deploy target CloudSDK in EC2
       shell: bash
