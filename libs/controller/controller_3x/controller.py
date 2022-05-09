@@ -547,6 +547,12 @@ class CController:
         print(en)
         return en
 
+    def enable_ft_dot1x_sha256_wpa3(self, ssid):
+        self.cc.wlan = ssid
+        en = self.cc.enable_ft_dot1x_sha256_wpa3_cc()
+        print(en)
+        return en
+
 
 if __name__ == '__main__':
     controller = {
