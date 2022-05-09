@@ -57,7 +57,7 @@
                 "6g_slot": "2",
                 "5g_slot": "1",
                 "2g_slot": "0",
-                 "channel_5g": 36,
+                 "channel_5g": 40,
                 "channel_2g": 6,
                 "channel_6g": 1,
                 "channel_width_5g": 40,
@@ -75,7 +75,7 @@
                 "ssh_port": 22,
                 "2.4G-Radio": ["1.1.wiphy0"],
                 "5G-Radio": ["1.1.wiphy1"],
-                "AX-Radio": ["1.1.wiphy2", "1.1.wiphy3", "1.1.wiphy4", "1.1.wiphy5"],
+                "AX-Radio": ["1.1.wiphy2", "1.1.wiphy3", "1.1.wiphy6"],
                 "upstream": "1.1.eth2",
                 "upstream_subnet": "192.168.100.1/24",
                 "uplink": "1.1.eth3",
@@ -233,12 +233,13 @@
 },
 
 "RADIUS_SERVER_DATA" : {
-    "ip": "10.10.1.221",
+    "ip": "17.16.0.1",
     "port": 1812,
     "secret": "testing123",
-    "user": "user",
-    "password": "password",
-    "pk_password": "whatever"
+    "user": "testuser",
+    "password": "testpasswd",
+    "pk_password": "whatever",
+    "aaa_method_lit": "default"
 },
 
 "RADIUS_ACCOUNTING_DATA" : {
