@@ -61,7 +61,7 @@ class TestMaxSsidBridge2G(object):
     """Config AP with maximum no.of SSIDs Test Bridge mode
        pytest -m "max_ssid and bridge"
     """
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.open
     @pytest.mark.twog
     def test_client_bridge_open_2g(self, lf_test, station_names_twog, get_configuration):
@@ -88,7 +88,7 @@ class TestMaxSsidBridge2G(object):
         else:
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa
     @pytest.mark.twog
     def test_client_bridge_wpa_2g(self, lf_test, station_names_twog, get_configuration):
@@ -116,7 +116,7 @@ class TestMaxSsidBridge2G(object):
         else:
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     def test_client_bridge_wpa2_2g(self, lf_test, station_names_twog, get_configuration):
@@ -144,7 +144,7 @@ class TestMaxSsidBridge2G(object):
         else:
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
     def test_client_bridge_wpa_wpa2_2g(self, lf_test, station_names_twog, get_configuration):
@@ -173,7 +173,7 @@ class TestMaxSsidBridge2G(object):
         else:
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     def test_client_bridge_wpa3_2g(self, lf_test, station_names_twog, get_configuration):
@@ -201,7 +201,7 @@ class TestMaxSsidBridge2G(object):
         else:
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     def test_client_bridge_wpa2_eap_2g(self, get_ap_logs, get_lf_logs, station_names_twog, setup_profiles,  lf_test,
@@ -235,7 +235,7 @@ class TestMaxSsidBridge2G(object):
         else:
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     def test_client_bridge_wpa3_eap_2g(self, get_ap_logs, get_lf_logs, station_names_twog, setup_profiles,  lf_test,
@@ -269,7 +269,7 @@ class TestMaxSsidBridge2G(object):
         else:
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
     def test_client_bridge_wpa_eap_2g(self, get_ap_logs, get_lf_logs, station_names_twog, setup_profiles,  lf_test,
@@ -361,7 +361,7 @@ class TestAdditionalSsidBridge2G(object):
        pytest -m "max_ssid and bridge"
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.add_ssid
@@ -385,7 +385,7 @@ class TestAdditionalSsidBridge2G(object):
         else:
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa
     @pytest.mark.twog
     @pytest.mark.add_ssid
@@ -410,7 +410,7 @@ class TestAdditionalSsidBridge2G(object):
         else:
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.add_ssid
@@ -435,7 +435,7 @@ class TestAdditionalSsidBridge2G(object):
         else:
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
     @pytest.mark.add_ssid
@@ -461,7 +461,7 @@ class TestAdditionalSsidBridge2G(object):
         else:
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.add_ssid
@@ -486,7 +486,7 @@ class TestAdditionalSsidBridge2G(object):
         else:
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.add_ssid
@@ -517,7 +517,7 @@ class TestAdditionalSsidBridge2G(object):
         else:
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @pytest.mark.add_ssid
@@ -548,7 +548,7 @@ class TestAdditionalSsidBridge2G(object):
         else:
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
     @pytest.mark.add_ssid
@@ -580,7 +580,7 @@ class TestAdditionalSsidBridge2G(object):
             assert False
 
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2546", name="WIFI-6938")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.twog
     @pytest.mark.add_ssid
