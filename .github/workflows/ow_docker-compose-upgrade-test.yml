@@ -134,7 +134,7 @@ jobs:
 
       - name: Upgrade Docker Compose cloud SDK deployment
         run: |
-          ssh -i ssh_key.pem ubuntu@${{ needs.deploy-controller.outputs.instance_public_ip }} << EOF
+          ssh -o "StrictHostKeyChecking accept-new" -i ssh_key.pem ubuntu@${{ needs.deploy-controller.outputs.instance_public_ip }} << EOF
             sudo -i;
             cd wlan-cloud-ucentral-deploy/docker-compose;
             docker-compose down;
