@@ -72,17 +72,12 @@ class TestMaxSsidBridge5G(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
-        lf_test.station_ip = '0.0.0.0'
 
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
         if passes == 'PASS':
-            if lf_test.station_ip != '0.0.0.0':
-                print(f"{station_names_fiveg}---{lf_test.station_ip}\nstation got IP. Test passed")
-                assert True
-            else:
-                assert False
+            assert True
         else:
             assert False
 
@@ -100,17 +95,12 @@ class TestMaxSsidBridge5G(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
-        lf_test.station_ip = '0.0.0.0'
 
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
         if passes == 'PASS':
-            if lf_test.station_ip != '0.0.0.0':
-                print(f"{station_names_fiveg}---{lf_test.station_ip}\nstation got IP. Test passed")
-                assert True
-            else:
-                assert False
+            assert True
         else:
             assert False
 
@@ -128,17 +118,12 @@ class TestMaxSsidBridge5G(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
-        lf_test.station_ip = '0.0.0.0'
 
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
         if passes == 'PASS':
-            if lf_test.station_ip != '0.0.0.0':
-                print(f"{station_names_fiveg}---{lf_test.station_ip}\nstation got IP. Test passed")
-                assert True
-            else:
-                assert False
+            assert True
         else:
             assert False
 
@@ -157,17 +142,12 @@ class TestMaxSsidBridge5G(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
-        lf_test.station_ip = '0.0.0.0'
 
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,extra_securities=extra_secu,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
         if passes == 'PASS':
-            if lf_test.station_ip != '0.0.0.0':
-                print(f"{station_names_fiveg}---{lf_test.station_ip}\nstation got IP. Test passed")
-                assert True
-            else:
-                assert False
+            assert True
         else:
             assert False
 
@@ -185,17 +165,12 @@ class TestMaxSsidBridge5G(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
-        lf_test.station_ip = '0.0.0.0'
 
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan)
         if passes == 'PASS':
-            if lf_test.station_ip != '0.0.0.0':
-                print(f"{station_names_fiveg}---{lf_test.station_ip}\nstation got IP. Test passed")
-                assert True
-            else:
-                assert False
+            assert True
         else:
             assert False
 
@@ -225,11 +200,7 @@ class TestMaxSsidBridge5G(object):
                                              key_mgmt=key_mgmt, vlan_id=vlan)
 
         if passes == "PASS":
-            if lf_test.station_ip != '0.0.0.0':
-                print(f"{station_names_fiveg}---{lf_test.station_ip}\nstation got IP. Test passed")
-                assert True
-            else:
-                assert False
+            assert True
         else:
             assert False
 
@@ -251,7 +222,6 @@ class TestMaxSsidBridge5G(object):
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
-        lf_test.station_ip = '0.0.0.0'
 
         passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                              mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
@@ -259,11 +229,7 @@ class TestMaxSsidBridge5G(object):
                                              key_mgmt=key_mgmt, vlan_id=vlan)
 
         if passes == 'PASS':
-            if lf_test.station_ip != '0.0.0.0':
-                print(f"{station_names_fiveg}---{lf_test.station_ip}\nstation got IP. Test passed")
-                assert True
-            else:
-                assert False
+            assert True
         else:
             assert False
 
@@ -285,7 +251,6 @@ class TestMaxSsidBridge5G(object):
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
-        lf_test.station_ip = '0.0.0.0'
 
         passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                              mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
@@ -293,11 +258,7 @@ class TestMaxSsidBridge5G(object):
                                              key_mgmt=key_mgmt, vlan_id=vlan)
 
         if passes == 'PASS':
-            if lf_test.station_ip != '0.0.0.0':
-                print(f"{station_names_fiveg}---{lf_test.station_ip}\nstation got IP. Test passed")
-                assert True
-            else:
-                assert False
+            assert True
         else:
             assert False
 
@@ -371,7 +332,6 @@ class TestAdditionalSsidBridge5G(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
-        lf_test.station_ip = '0.0.0.0'
 
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      mode=mode, band=band,
@@ -421,7 +381,6 @@ class TestAdditionalSsidBridge5G(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
-        lf_test.station_ip = '0.0.0.0'
 
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
@@ -447,7 +406,6 @@ class TestAdditionalSsidBridge5G(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
-        lf_test.station_ip = '0.0.0.0'
 
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                                      passkey=security_key, mode=mode, band=band,
@@ -472,7 +430,6 @@ class TestAdditionalSsidBridge5G(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
-        lf_test.station_ip = '0.0.0.0'
 
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
@@ -501,7 +458,6 @@ class TestAdditionalSsidBridge5G(object):
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
-        lf_test.station_ip = '0.0.0.0'
 
         passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                              mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
@@ -532,7 +488,6 @@ class TestAdditionalSsidBridge5G(object):
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
-        lf_test.station_ip = '0.0.0.0'
 
         passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                              mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
@@ -563,7 +518,6 @@ class TestAdditionalSsidBridge5G(object):
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
-        lf_test.station_ip = '0.0.0.0'
 
         passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                              mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
@@ -595,7 +549,6 @@ class TestAdditionalSsidBridge5G(object):
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
-        lf_test.station_ip = '0.0.0.0'
 
         passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                              mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
