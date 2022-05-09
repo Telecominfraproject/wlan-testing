@@ -2690,22 +2690,30 @@ def gets_ip_add_and_does_not_forget_ssid_ios(request, WifiName, WifiPass, setup_
             available_ssids = get_all_available_ssids(driver)
             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
             try:
-                if WifiName not in available_ssids:
+                if (not ssid_Visible(driver, WifiName)) or (WifiName not in available_ssids):
                     scrollDown(setup_perfectoMobile)
                     time.sleep(2)
                 else:
-                    report.step_start("Selecting SSID To Connect")
-                    ssid_found = True
-                    print(WifiName + " : Found in Device")
-                    wifiSelElement = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
-                    print(wifiSelElement)
-                    wifiSelElement.click()
-                    print("Selecting SSID")
-                    # allure.attach(name= body=str(WifiName + " : Found in Device"))
-                    break
+                    try:
+                        driver.implicitly_wait(8)
+                        report.step_start("Selecting SSID To Connect")
+                        ssid_found = True
+                        print(WifiName + " : Found in Device")
+                        wifiSelElement = WebDriverWait(driver, 35).until(
+                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
+                        print(wifiSelElement)
+                        wifiSelElement.click()
+                        print("Selecting SSID")
+                        break
+                    except:
+                        print("SSID unable to select")
+                        report.step_start("Selecting Unable SSID To Connect")
+                        closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+                        return ip_address_element_text, is_internet
+
             except:
                 print("couldn't connect to " + WifiName)
-                #request.config.cache.set(key="SelectingWifiFailed", value=str(e))
+                # request.config.cache.set(key="SelectingWifiFailed", value=str(e))
                 closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
                 return ip_address_element_text, is_internet
                 pass
@@ -2792,6 +2800,7 @@ def gets_ip_add_and_does_not_forget_ssid_ios(request, WifiName, WifiPass, setup_
         except Exception as e:
             print("WiFi-Address not Found")
         try:
+            time.sleep(4)
             report.step_start("Checking IP Address")
             print("Checking IP address")
             # (//*[@label="IP Address"]/parent::*/XCUIElementTypeStaticText)[2]
@@ -2799,8 +2808,16 @@ def gets_ip_add_and_does_not_forget_ssid_ios(request, WifiName, WifiPass, setup_
                 "(//*[@label='IP Address']/parent::*/XCUIElementTypeStaticText)[2]").text
             print("ip_address_element_text: ", ip_address_element_text)
         except Exception as e:
-            print("IP Address not Found")
-            request.config.cache.set(key="select IP failed", value=str(e))
+            try:
+                time.sleep(4)
+                print("Scrolling for checking ip address")
+                scrollDown(setup_perfectoMobile)
+                ip_address_element_text = driver.find_element_by_xpath(
+                    "(//*[@label='IP Address']/parent::*/XCUIElementTypeStaticText)[2]").text
+                print("ip_address_element_text: ", ip_address_element_text)
+            except:
+                print("IP Address not Found")
+                request.config.cache.set(key="select IP failed", value=str(e))
 
     except Exception as e:
         request.config.cache.set(key="select additional info failed", value=str(e))
@@ -2935,20 +2952,26 @@ def gets_ip_add_eap_and_does_not_forget_ssid_ios(request, WifiName, User, ttls_p
             available_ssids = get_all_available_ssids(driver)
             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
             try:
-                if WifiName not in available_ssids:
+                if (not ssid_Visible(driver, WifiName)) or (WifiName not in available_ssids):
                     scrollDown(setup_perfectoMobile)
                     time.sleep(2)
                 else:
-                    report.step_start("Selecting SSID To Connect")
-                    ssid_found = True
-                    print(WifiName + " : Found in Device")
-                    wifiSelElement = WebDriverWait(driver, 30).until(
-                        EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
-                    print(wifiSelElement)
-                    wifiSelElement.click()
-                    print("Selecting SSID")
-                    # allure.attach(name= body=str(WifiName + " : Found in Device"))
-                    break
+                    try:
+                        driver.implicitly_wait(8)
+                        report.step_start("Selecting SSID To Connect")
+                        ssid_found = True
+                        print(WifiName + " : Found in Device")
+                        wifiSelElement = WebDriverWait(driver, 35).until(
+                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
+                        print(wifiSelElement)
+                        wifiSelElement.click()
+                        print("Selecting SSID")
+                        break
+                    except:
+                        print("SSID unable to select")
+                        report.step_start("Selecting Unable SSID To Connect")
+                        closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+                        return ip_address_element_text, is_internet
             except:
                 print("couldn't connect to " + WifiName)
                 # request.config.cache.set(key="SelectingWifiFailed", value=str(e))
@@ -3058,17 +3081,24 @@ def gets_ip_add_eap_and_does_not_forget_ssid_ios(request, WifiName, User, ttls_p
             print("WiFi-Address not Found")
             allure.attach(name="No Connected SSID WiFi-Address Found")
         try:
-            driver.implicitly_wait(5)
-            print("Checking IP address")
-            report.step_start("Checking IP address")
             time.sleep(4)
+            report.step_start("Checking IP Address")
+            print("Checking IP address")
             # (//*[@label="IP Address"]/parent::*/XCUIElementTypeStaticText)[2]
             ip_address_element_text = driver.find_element_by_xpath(
                 "(//*[@label='IP Address']/parent::*/XCUIElementTypeStaticText)[2]").text
             print("ip_address_element_text: ", ip_address_element_text)
         except Exception as e:
-            print("IP Address not Found")
-            request.config.cache.set(key="select IP failed", value=str(e))
+            try:
+                time.sleep(4)
+                print("Scrolling for checking ip address")
+                scrollDown(setup_perfectoMobile)
+                ip_address_element_text = driver.find_element_by_xpath(
+                    "(//*[@label='IP Address']/parent::*/XCUIElementTypeStaticText)[2]").text
+                print("ip_address_element_text: ", ip_address_element_text)
+            except:
+                print("IP Address not Found")
+                request.config.cache.set(key="select IP failed", value=str(e))
 
     except Exception as e:
         request.config.cache.set(key="select additional info failed", value=str(e))
@@ -3201,6 +3231,7 @@ def gets_ip_add_for_checking_and_forgets_ssid_ios(request, WifiName, WifiPass, s
         except Exception as e:
             print("WiFi-Address not Found")
         try:
+            time.sleep(4)
             report.step_start("Checking IP Address")
             print("Checking IP address")
             # (//*[@label="IP Address"]/parent::*/XCUIElementTypeStaticText)[2]
@@ -3208,9 +3239,16 @@ def gets_ip_add_for_checking_and_forgets_ssid_ios(request, WifiName, WifiPass, s
                 "(//*[@label='IP Address']/parent::*/XCUIElementTypeStaticText)[2]").text
             print("ip_address_element_text: ", ip_address_element_text)
         except Exception as e:
-            print("IP Address not Found")
-            request.config.cache.set(key="select IP failed", value=str(e))
-
+            try:
+                time.sleep(4)
+                print("Scrolling for checking ip address")
+                scrollDown(setup_perfectoMobile)
+                ip_address_element_text = driver.find_element_by_xpath(
+                    "(//*[@label='IP Address']/parent::*/XCUIElementTypeStaticText)[2]").text
+                print("ip_address_element_text: ", ip_address_element_text)
+            except:
+                print("IP Address not Found")
+                request.config.cache.set(key="select IP failed", value=str(e))
     except Exception as e:
         request.config.cache.set(key="select additional info failed", value=str(e))
     # ---------------------Additional INFO-------------------------------
