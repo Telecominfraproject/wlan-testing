@@ -2444,8 +2444,8 @@ class RunTest:
             radio_ = self.ax_radios[0]
             sniff_radio = radio_.split(".")[2]
         if band == "sixg":
-            sixg_radio = self.ax_radios[0]
-            radio_ = self.ax_radios[1]
+            sixg_radio = self.ax_radios[1]
+            radio_ = self.ax_radios[2]
             sniff_radio = radio_.split(".")[2]
         obj = HardRoam(lanforge_ip=self.lanforge_ip,
                        lanforge_port=self.lanforge_port,
@@ -2453,7 +2453,7 @@ class RunTest:
                        c1_bssid=c1_bssid,
                        c2_bssid=c2_bssid,
                        fiveg_radio=fiveg_radio,
-                       twog_radio=None,
+                       twog_radio=twog_radio,
                        sixg_radio=sixg_radio,
                        band=band,
                        sniff_radio=sniff_radio,
@@ -2468,11 +2468,9 @@ class RunTest:
                        option=option,
                        duration_based=duration_based,
                        iteration_based=iteration_based,
-                       dut_name = dut_name )
+                       dut_name = dut_name)
         x = os.getcwd()
         print(x)
-
-
         file = obj.generate_csv()
         message = obj.run(file_n=file)
         allure.attach(name="message", body=str(message))
