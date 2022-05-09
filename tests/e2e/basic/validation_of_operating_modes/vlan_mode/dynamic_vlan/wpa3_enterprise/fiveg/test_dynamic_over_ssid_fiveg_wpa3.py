@@ -43,7 +43,7 @@ class TestDynamicVlanOverSsid5GWpa3(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
     @allure.testcase(name="test_dynamic_precedence_over_ssid_vlan",
-                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5705")
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-6096")
     def test_dynamic_precedence_over_ssid_vlan_5g_wpa3(self, get_vif_state, lf_tools, get_ap_logs, get_lf_logs,
                                                     create_lanforge_chamberview_dut, lf_test, get_configuration,
                                                     station_names_fiveg):
