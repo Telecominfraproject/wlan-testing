@@ -85,7 +85,7 @@ class TestToggleAirplaneModeBridgeModeEnterpriseTTLSSuiteA(object):
         connData = get_ToggleAirplaneMode_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = gets_ip_add_for_checking_and_forgets_ssid_ios(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = gets_ip_add_eap_and_does_not_forget_ssid_ios(request, ssidName, identity, ttls_passwd, setup_perfectoMobile_iOS, connData)
 
         if is_internet:
             if ip:
