@@ -64,6 +64,7 @@ class TestMaxSsidBridge2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.open
     @pytest.mark.twog
+    @pytest.mark.possible_ssid
     def test_client_bridge_open_2g(self, lf_test, station_names_twog, get_configuration):
         """Max-SSID Bridge Mode
            pytest -m "max_ssid and twog"
@@ -86,6 +87,7 @@ class TestMaxSsidBridge2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa
     @pytest.mark.twog
+    @pytest.mark.possible_ssid
     def test_client_bridge_wpa_2g(self, lf_test, station_names_twog, get_configuration):
         """Max-SSID Bridge Mode
            pytest -m "max_ssid and twog"
@@ -109,6 +111,7 @@ class TestMaxSsidBridge2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.possible_ssid
     def test_client_bridge_wpa2_2g(self, lf_test, station_names_twog, get_configuration):
         """Max-SSID Bridge Mode
            pytest -m "max_ssid and twog"
@@ -132,6 +135,7 @@ class TestMaxSsidBridge2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
+    @pytest.mark.possible_ssid
     def test_client_bridge_wpa_wpa2_2g(self, lf_test, station_names_twog, get_configuration):
         """Max-SSID Bridge Mode
            pytest -m "max_ssid and twog"
@@ -156,6 +160,7 @@ class TestMaxSsidBridge2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
+    @pytest.mark.possible_ssid
     def test_client_bridge_wpa3_2g(self, lf_test, station_names_twog, get_configuration):
         """Max-SSID Bridge Mode
            pytest -m "max_ssid and twog"
@@ -179,6 +184,7 @@ class TestMaxSsidBridge2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
+    @pytest.mark.possible_ssid
     def test_client_bridge_wpa2_eap_2g(self, get_ap_logs, get_lf_logs, station_names_twog, setup_profiles,  lf_test,
                                       update_report, exit_on_fail, test_cases, radius_info):
         """Max-SSID Bridge Mode
@@ -208,6 +214,7 @@ class TestMaxSsidBridge2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
+    @pytest.mark.possible_ssid
     def test_client_bridge_wpa3_eap_2g(self, get_ap_logs, get_lf_logs, station_names_twog, setup_profiles,  lf_test,
                                       update_report, exit_on_fail, test_cases, radius_info):
         """Max-SSID Bridge Mode
@@ -237,6 +244,7 @@ class TestMaxSsidBridge2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
+    @pytest.mark.possible_ssid
     def test_client_bridge_wpa_eap_2g(self, get_ap_logs, get_lf_logs, station_names_twog, setup_profiles,  lf_test,
                                       update_report, exit_on_fail, test_cases, radius_info):
         """Max-SSID Bridge Mode
@@ -244,7 +252,7 @@ class TestMaxSsidBridge2G(object):
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
-        security = "wpa2"
+        security = "wpa"
         mode = "BRIDGE"
         band = "twog"
         vlan = 100
@@ -324,7 +332,7 @@ class TestAdditionalSsidBridge2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.open
     @pytest.mark.twog
-    @pytest.mark.add_ssid
+    @pytest.mark.add_extra_ssid
     def test_client_bridge_open_2g(self, lf_test, station_names_twog, get_configuration):
         """Max-SSID Bridge Mode
            pytest -m "max_ssid and twog"
@@ -347,7 +355,7 @@ class TestAdditionalSsidBridge2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa
     @pytest.mark.twog
-    @pytest.mark.add_ssid
+    @pytest.mark.add_extra_ssid
     def test_client_bridge_wpa_2g(self, lf_test, station_names_twog, get_configuration):
         """Max-SSID Bridge Mode
            pytest -m "max_ssid and twog"
@@ -363,7 +371,21 @@ class TestAdditionalSsidBridge2G(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_twog, vlan_id=vlan)
+        allure.attach(name="Definition",
+                      body="Max-SSID test intends to verify stability of Wi-Fi device " \
+                           "where the AP is configured with max no.of SSIDs with different security modes where the "
+                           "2G radio has 8 SSIDs and 5G radio has 8 SSIDs.")
         if passes == "FAIL":
+
+            # allure.attach(name="Procedure",
+            #               body=f"This test case definition states that we push the basic {mode.lower()} mode config on the AP to "
+            #                    f"be tested by configuring it with {country} on {channel_width}MHz channel width and "
+            #                    f"channel {channel}. Create a client on {'5' if band == 'fiveg' else '2.4'} GHz radio. Pass/ fail criteria: "
+            #                    f"The client created on {'5' if band == 'fiveg' else '2.4'} GHz radio should get associated to the AP")
+            # allure.attach(name="Details",
+            #               body=f"Country code : {country[country.find('(') + 1:-1]}\n"
+            #                    f"Bandwidth : {channel_width}Mhz\n"
+            #                    f"Channel : {channel}\n")
             assert True
         else:
             assert False
@@ -371,7 +393,7 @@ class TestAdditionalSsidBridge2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.add_ssid
+    @pytest.mark.add_extra_ssid
     def test_client_bridge_wpa2_2g(self, lf_test, station_names_twog, get_configuration):
         """Max-SSID Bridge Mode
            pytest -m "max_ssid and twog"
@@ -395,7 +417,7 @@ class TestAdditionalSsidBridge2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
-    @pytest.mark.add_ssid
+    @pytest.mark.add_extra_ssid
     def test_client_bridge_wpa_wpa2_2g(self, lf_test, station_names_twog, get_configuration):
         """Max-SSID Bridge Mode
            pytest -m "max_ssid and twog"
@@ -420,7 +442,7 @@ class TestAdditionalSsidBridge2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
-    @pytest.mark.add_ssid
+    @pytest.mark.add_extra_ssid
     def test_client_bridge_wpa3_2g(self, lf_test, station_names_twog, get_configuration):
         """Max-SSID Bridge Mode
            pytest -m "max_ssid and twog"
@@ -444,7 +466,7 @@ class TestAdditionalSsidBridge2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
-    @pytest.mark.add_ssid
+    @pytest.mark.add_extra_ssid
     def test_client_bridge_wpa2_eap_2g(self, get_ap_logs, get_lf_logs, station_names_twog, setup_profiles, lf_test,
                                        update_report, exit_on_fail, test_cases, radius_info):
         """Max-SSID Bridge Mode
@@ -474,7 +496,7 @@ class TestAdditionalSsidBridge2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
-    @pytest.mark.add_ssid
+    @pytest.mark.add_extra_ssid
     def test_client_bridge_wpa3_eap_2g(self, get_ap_logs, get_lf_logs, station_names_twog, setup_profiles, lf_test,
                                        update_report, exit_on_fail, test_cases, radius_info):
         """Max-SSID Bridge Mode
@@ -504,7 +526,7 @@ class TestAdditionalSsidBridge2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
-    @pytest.mark.add_ssid
+    @pytest.mark.add_extra_ssid
     def test_client_bridge_wpa_eap_2g(self, get_ap_logs, get_lf_logs, station_names_twog, setup_profiles, lf_test,
                                       update_report, exit_on_fail, test_cases, radius_info):
         """Max-SSID Bridge Mode
@@ -512,7 +534,7 @@ class TestAdditionalSsidBridge2G(object):
         """
         profile_data = setup_params_general1["ssid_modes"]["wpa2_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
-        security = "wpa2"
+        security = "wpa"
         mode = "BRIDGE"
         band = "twog"
         vlan = 100
@@ -535,7 +557,7 @@ class TestAdditionalSsidBridge2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.twog
-    @pytest.mark.add_ssid
+    @pytest.mark.add_extra_ssid
     def test_client_bridge_wpa_wpa2_eap_2g(self, get_ap_logs, get_lf_logs, station_names_twog, setup_profiles,  lf_test,
                                       update_report, exit_on_fail, test_cases, radius_info):
         """Max-SSID Bridge Mode
