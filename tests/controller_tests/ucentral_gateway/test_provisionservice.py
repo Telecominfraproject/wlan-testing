@@ -31,7 +31,7 @@ class TestUcentralProvisionService(object):
         assert resp.status_code == 200
 
     @pytest.mark.prov_api_test
-    def test_prov_service_create_inventory_device(self, setup_prov_controller, testbed):
+    def test_prov_service_create_edit_delete_inventory_device(self, setup_prov_controller, testbed):
         """
             Test the create device in provision Inventory
         """
@@ -115,7 +115,7 @@ class TestUcentralProvisionService(object):
         assert system_info.status_code == 200
 
     @pytest.mark.prov_api_entity_test
-    def test_prov_service_create_entity(self, setup_prov_controller, testbed):
+    def test_prov_service_create_edit_delete_entity(self, setup_prov_controller, testbed):
         """
             Test the create Entity in provision Inventory
         """
@@ -190,7 +190,7 @@ class TestUcentralProvisionService(object):
         assert resp.status_code == 200
 
     @pytest.mark.prov_api_contact_test
-    def test_prov_service_create_contact(self, setup_prov_controller, testbed):
+    def test_prov_service_create_edit_delete_contact(self, setup_prov_controller, testbed):
         """
             Test the create Contact in provision Inventory
         """
