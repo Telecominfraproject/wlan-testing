@@ -195,6 +195,7 @@ class TestMultipskBridge(object):
 
     @pytest.mark.wpa
     @pytest.mark.twog
+    @pytest.mark.ow_sanity_interop
     def test_multi_psk_wpa_2g_2vlans(self, request, get_vif_state, get_ap_logs, lf_tools, get_configuration,
                                       get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
@@ -263,6 +264,7 @@ class TestMultipskBridge(object):
 
     @pytest.mark.wpa
     @pytest.mark.fiveg
+    @pytest.mark.ow_sanity_interop
     def test_multi_psk_wpa_5g_2vlans(self, request, get_vif_state, get_ap_logs, lf_tools,
                                       get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]

@@ -193,6 +193,8 @@ class TestMultipskBridge(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.two_vlan
+    @pytest.mark.ow_sanity_interop
     def test_multi_psk_wpa2_2g_2vlans(self, request, get_vif_state, get_ap_logs, lf_tools, get_configuration,
                             get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -261,6 +263,8 @@ class TestMultipskBridge(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.two_vlan
+    @pytest.mark.ow_sanity_interop
     def test_multi_psk_wpa2_5g_2vlans(self, request, get_vif_state, get_ap_logs, lf_tools,
                             get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -330,6 +334,7 @@ class TestMultipskBridge(object):
     #-------------4 Vlans----------------------------------
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.four_vlan
     def test_multi_psk_wpa2_2g_4vlans(self, request, get_vif_state, get_ap_logs, lf_tools, get_configuration,
                                       get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -446,6 +451,7 @@ class TestMultipskBridge(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.four_vlan
     def test_multi_psk_wpa2_5g_4vlans(self, request, get_vif_state, get_ap_logs, lf_tools,
                                       get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -565,6 +571,7 @@ class TestMultipskBridge(object):
     # -------------8 Vlans----------------------------------
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.eight_vlan
     def test_multi_psk_wpa2_2g_8vlans(self, request, get_vif_state, get_ap_logs, lf_tools, get_configuration,
                                       get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -777,6 +784,7 @@ class TestMultipskBridge(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.eight_vlan
     def test_multi_psk_wpa2_5g_8vlans(self, request, get_vif_state, get_ap_logs, lf_tools,
                                       get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -992,6 +1000,7 @@ class TestMultipskBridge(object):
     # -------------16 Vlans----------------------------------
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.sixteen_vlan
     def test_multi_psk_wpa2_2g_16vlans(self, request, get_vif_state, get_ap_logs, lf_tools, get_configuration,
                                       get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -1397,6 +1406,7 @@ class TestMultipskBridge(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.sixteen_vlan
     def test_multi_psk_wpa2_5g_16vlans(self, request, get_vif_state, get_ap_logs, lf_tools, get_configuration,
                                        get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
