@@ -272,7 +272,7 @@ class TestUcentralProvisionService(object):
 
     # Location related Test cases
     @pytest.mark.prov_api_location
-    def test_get_contacts(self, setup_prov_controller):
+    def test_get_locations(self, setup_prov_controller):
         resp = setup_prov_controller.get_location()
         print(resp.json())
         allure.attach(name="location", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
