@@ -57,6 +57,13 @@ jobs:
       fail-fast: false
       matrix:
         testbed: ${{ fromJson( needs.vars.outputs.testbeds )}}
+    env:
+      AWS_EKS_NAME: tip-wlan-main
+      AWS_DEFAULT_OUTPUT: json
+      AWS_DEFAULT_REGION: us-east-2
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
 
     steps:
       - uses: actions/checkout@v2
@@ -73,13 +80,6 @@ jobs:
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
-        env:
-          AWS_EKS_NAME: tip-wlan-main
-          AWS_DEFAULT_OUTPUT: json
-          AWS_DEFAULT_REGION: us-east-2
-          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
       - name: run dfs tests
@@ -93,6 +93,12 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           allure_results_artifact_name: allure-results-${{ matrix.testbed }}-dfs
 
+        # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait regression-${{ github.run_id }}-${{ matrix.testbed }}-dfs
+
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'multipsk')"
@@ -103,6 +109,12 @@ jobs:
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           allure_results_artifact_name: allure-results-${{ matrix.testbed }}-multipsk
+
+        # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait regression-${{ github.run_id }}-${{ matrix.testbed }}-multipsk
 
       - name: run rate_limiting tests
         uses: ./.github/actions/run-tests
@@ -115,6 +127,12 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           allure_results_artifact_name: allure-results-${{ matrix.testbed }}-rate_limiting
 
+        # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait regression-${{ github.run_id }}-${{ matrix.testbed }}-rate_limiting
+
       - name: run rate_limiting_with_radius tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'rate_limiting_with_radius')"
@@ -126,6 +144,12 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           allure_results_artifact_name: allure-results-${{ matrix.testbed }}-rate_limiting_with_radius
 
+        # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait regression-${{ github.run_id }}-${{ matrix.testbed }}-rate_limiting_with_radius
+
       - name: run dynamic_vlan tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'dynamic_vlan')"
@@ -136,6 +160,12 @@ jobs:
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           allure_results_artifact_name: allure-results-${{ matrix.testbed }}-dynamic_vlan
+
+        # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait regression-${{ github.run_id }}-${{ matrix.testbed }}-dynamic_vlan
 
   report:
     needs: [vars, test]

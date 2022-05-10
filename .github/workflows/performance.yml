@@ -82,6 +82,12 @@ jobs:
         testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
         allure_results_artifact_name: allure-results-${{ matrix.marker }}
 
+      # necessary because if conditionals in composite actions are currently not respected
+    - name: delete namespace
+      if: always()
+      continue-on-error: true
+      run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}
+
   report:
     runs-on: ubuntu-latest
     needs: [ test ]

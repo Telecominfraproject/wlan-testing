@@ -1,7 +1,7 @@
 """
 
    Dynamic_Vlan: VLAN Mode
-    pytest -m "dynamic_vlan and wpa2_enterprise and vlan"
+    pytest -m "dynamic_vlan and wpa3_enterprise and vlan"
 
 """
 
@@ -11,13 +11,13 @@ import pytest
 from configuration import DYNAMIC_VLAN_RADIUS_SERVER_DATA
 from configuration import DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA
 
-pytestmark = [pytest.mark.regression, pytest.mark.dynamic_vlan, pytest.mark.wpa2_enterprise, pytest.mark.vlan,pytest.mark.fiveg]
+pytestmark = [pytest.mark.regression, pytest.mark.dynamic_vlan, pytest.mark.wpa3_enterprise, pytest.mark.vlan,pytest.mark.fiveg]
 
 setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
-        "wpa2_enterprise": [
-            {"ssid_name": "ssid_wpa2e_5g", "appliedRadios": ["5G"],
+        "wpa3_enterprise": [
+            {"ssid_name": "ssid_wpa3e_5g", "appliedRadios": ["5G"],
              "security_key": "something",
              "radius_auth_data": DYNAMIC_VLAN_RADIUS_SERVER_DATA,
              "radius_acc_data": DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA,
@@ -29,7 +29,7 @@ setup_params_general = {
 
 
 @allure.suite("regression")
-@allure.feature("VLAN MODE wpa2_enterprise Dynamic Vlan")
+@allure.feature("VLAN MODE wpa3_enterprise Dynamic Vlan")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -37,21 +37,21 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestDynamicVlan(object):
+class TestDynamicVlanOverSsid5GWpa3(object):
 
     @pytest.mark.dynamic_precedence_over_ssid
-    @pytest.mark.wpa2_enterprise
+    @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
     @allure.testcase(name="test_dynamic_precedence_over_ssid_vlan",
-                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5705")
-    def test_dynamic_precedence_over_ssid_vlan(self, get_vif_state, lf_tools,get_ap_logs,get_lf_logs,
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-6096")
+    def test_dynamic_precedence_over_ssid_vlan_5g_wpa3(self, get_vif_state, lf_tools, get_ap_logs, get_lf_logs,
                                                     create_lanforge_chamberview_dut, lf_test, get_configuration,
                                                     station_names_fiveg):
         """
-                pytest -m "dynamic_precedence_over_ssid and wpa2_enterprise and vlan"
+                pytest -m "dynamic_precedence_over_ssid and wpa3_enterprise and vlan"
         """
 
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"]
+        profile_data = setup_params_general["ssid_modes"]["wpa3_enterprise"]
         ssid_5G = profile_data[0]["ssid_name"]
         mode = "VLAN"
         vlan = [100,200]
@@ -63,9 +63,9 @@ class TestDynamicVlan(object):
         lf_tools.reset_scenario()
         lf_tools.add_vlan(vlan_ids=vlan)
 
-        lf_test.EAP_Connect(ssid=ssid_5G, passkey="[BLANK]", security="wpa2", extra_securities=[],
+        lf_test.EAP_Connect(ssid=ssid_5G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                             mode=mode, band="fiveg", vlan_id=vlan[0],
-                            station_name=station_names_fiveg, key_mgmt="WPA-EAP",
+                            station_name=station_names_fiveg, key_mgmt="WPA-EAP-SHA256",
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordB", ieee80211w=0,
                             wep_key="NA", ca_cert="NA", eap="TTLS", identity="userB", d_vlan=True)

@@ -102,7 +102,7 @@ class ConfigureController:
         uri = self.build_uri_sec("oauth2")
         # self.session.mount(uri, HTTPAdapter(max_retries=15))
         payload = json.dumps({"userId": self.username, "password": self.password})
-        resp = requests.post(uri, data=payload, verify=False, timeout=100)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, "", payload, uri)
         token = resp.json()
         self.access_token = token["access_token"]
@@ -143,6 +143,7 @@ class ConfigureController:
     def make_headers(self):
         headers = {'Authorization': 'Bearer %s' % self.access_token,
                    "Connection": "keep-alive",
+                   "Content-Type": "application/json",
                    "Keep-Alive": "timeout=10, max=1000"
                    }
         return headers
@@ -392,6 +393,47 @@ class ProvUtils(ConfigureController):
 
     def edit_entity(self, payload, entity_id):
         uri = self.build_url_prov("entity/" + entity_id)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def get_contact(self):
+        uri = self.build_url_prov("contact")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_contact_by_id(self, contact_id):
+        uri = self.build_url_prov("contact/" + contact_id)
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def add_contact(self, payload):
+        uri = self.build_url_prov("contact/1")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_contact(self, contact_id):
+        uri = self.build_url_prov("contact/" + contact_id)
+        print(uri)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def edit_contact(self, payload, contact_id):
+        uri = self.build_url_prov("contact/" + contact_id)
         print(uri)
         print(payload)
         payload = json.dumps(payload)
@@ -761,12 +803,12 @@ if __name__ == '__main__':
         'password': 'OpenWifi%123',
     }
     obj = Controller(controller_data=controller)
-    up = UProfileUtility(sdk_client=obj, controller_data=controller)
-    up.set_mode(mode="BRIDGE")
-    up.set_radio_config()
-    up.add_ssid(ssid_data={"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something", "security": "psk2"})
-    up.push_config(serial_number="3c2c99f44e77")
-    print(obj.get_device_by_serial_number(serial_number="3c2c99f44e77"))
+    # up = UProfileUtility(sdk_client=obj, controller_data=controller)
+    # up.set_mode(mode="BRIDGE")
+    # up.set_radio_config()
+    # up.add_ssid(ssid_data={"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something", "security": "psk2"})
+    # up.push_config(serial_number="3c2c99f44e77")
+    # print(obj.get_device_by_serial_number(serial_number="3c2c99f44e77"))
     # print(datetime.datetime.utcnow())
     # fms = FMSUtils(sdk_client=obj)
     # new = fms.get_firmwares(model='ecw5410')

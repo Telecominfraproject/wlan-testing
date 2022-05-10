@@ -12,7 +12,7 @@ on:
       deployment_version:
         default: 'main'
         description: 'OpenWIFI deployment repository version to be deployed.'
-        required: false
+        required: true
       owgw_version:
         default: 'master'
         description: 'OpenWIFI Gateway version to be deployed'
@@ -77,10 +77,12 @@ jobs:
     - name: Checkout repo with Helm values
       uses: actions/checkout@v2
       with:
-        path: wlan-testing
+        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
+        path: wlan-cloud-ucentral-deploy
+        ref: ${{ github.event.inputs.deployment_version }}
 
     - name: Prepare certificates from secrets
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         echo "${{ secrets.DIGICERT_CERT }}" | base64 -d > cert.pem
         echo "${{ secrets.DIGICERT_KEY }}" | base64 -d > key.pem
@@ -108,7 +110,7 @@ jobs:
       run: echo "::set-output name=value::sec-${{ steps.namespace.outputs.value }}.cicd.lab.wlan.tip.build"
 
     - name: Deploy OpenWIFI Cloud SDK
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         export NAMESPACE=${{ steps.namespace.outputs.value }}
         export DEPLOY_METHOD=git
@@ -122,6 +124,7 @@ jobs:
         export OWANALYTICS_VERSION=${{ github.event.inputs.owanalytics_version }}
         export OWSUB_VERSION=${{ github.event.inputs.owsub_version }}
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
         export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}

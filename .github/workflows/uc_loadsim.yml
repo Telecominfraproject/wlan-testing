@@ -120,10 +120,12 @@ jobs:
         EOF
 
     # Deploy CloudSDK with OWLS in K8s
-    - name: Checkout Testing repo
+    - name: Checkout wlan-cloud-ucentral-deploy repo
       uses: actions/checkout@v2
       with:
-        path: wlan-testing
+        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
+        path: wlan-cloud-ucentral-deploy
+        ref: ${{ github.event.inputs.deployment_version }}
 
     - name: Get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -147,7 +149,7 @@ jobs:
       run: echo "::set-output name=url::ls-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build"
 
     - name: Prepare certificates from secrets
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         echo "${{ secrets.DIGICERT_CERT }}" | base64 -d > cert.pem
         echo "${{ secrets.DIGICERT_KEY }}" | base64 -d > key.pem
@@ -155,7 +157,7 @@ jobs:
         echo "${{ secrets.LOADSIM_DIGICERT_KEY }}" | base64 -d > device-key.pem
 
     - name: Deploy CloudSDK instance with load simulator
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         export NAMESPACE="${{ steps.ec2_facts.outputs.instance_name }}"
         export DEPLOY_METHOD=git
@@ -169,6 +171,7 @@ jobs:
         export OWANALYTICS_VERSION=main
         export OWSUB_VERSION=main
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.test-nodes.yaml,values.ucentral-qa.owls-enabled.yaml
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
         export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
@@ -378,10 +381,12 @@ jobs:
         EOF
 
     # Deploy CloudSDK with OWLS in K8s
-    - name: Checkout Testing repo
+    - name: Checkout wlan-cloud-ucentral-deploy repo
       uses: actions/checkout@v2
       with:
-        path: wlan-testing
+        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
+        path: wlan-cloud-ucentral-deploy
+        ref: ${{ github.event.inputs.deployment_version }}
 
     - name: Get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -405,7 +410,7 @@ jobs:
       run: echo "::set-output name=url::ls-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build"
 
     - name: Prepare certificates from secrets
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         echo "${{ secrets.DIGICERT_CERT }}" | base64 -d > cert.pem
         echo "${{ secrets.DIGICERT_KEY }}" | base64 -d > key.pem
@@ -413,7 +418,7 @@ jobs:
         echo "${{ secrets.LOADSIM_DIGICERT_KEY }}" | base64 -d > device-key.pem
 
     - name: Deploy CloudSDK instance with load simulator
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         export NAMESPACE="${{ steps.ec2_facts.outputs.instance_name }}"
         export DEPLOY_METHOD=git
@@ -427,6 +432,7 @@ jobs:
         export OWANALYTICS_VERSION=main
         export OWSUB_VERSION=main
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.test-nodes.yaml,values.ucentral-qa.owls-enabled.yaml
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
         export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
@@ -555,10 +561,12 @@ jobs:
       - docker-compose-sqlite
       - docker-compose-psql
     steps:
-    - name: Checkout Testing repo
+    - name: Checkout wlan-cloud-ucentral-deploy repo
       uses: actions/checkout@v2
       with:
-        path: wlan-testing
+        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
+        path: wlan-cloud-ucentral-deploy
+        ref: ${{ github.event.inputs.deployment_version }}
 
     - name: Get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -590,7 +598,7 @@ jobs:
       run: echo "::set-output name=url::ls-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
     - name: Prepare certificates from secrets
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         echo "${{ secrets.DIGICERT_CERT }}" | base64 -d > cert.pem
         echo "${{ secrets.DIGICERT_KEY }}" | base64 -d > key.pem
@@ -598,7 +606,7 @@ jobs:
         echo "${{ secrets.LOADSIM_DIGICERT_KEY }}" | base64 -d > device-key.pem
 
     - name: Deploy CloudSDK instance with load simulator
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         export NAMESPACE="${{ steps.namespace.outputs.namespace }}"
         export DEPLOY_METHOD=git
@@ -612,6 +620,7 @@ jobs:
         export OWANALYTICS_VERSION=main
         export OWSUB_VERSION=main
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.test-nodes.yaml,values.ucentral-qa.owls-enabled.yaml
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
         export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
@@ -713,10 +722,12 @@ jobs:
       - docker-compose-psql
       - kubernetes-sqlite
     steps:
-    - name: Checkout Testing repo
+    - name: Checkout wlan-cloud-ucentral-deploy repo
       uses: actions/checkout@v2
       with:
-        path: wlan-testing
+        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
+        path: wlan-cloud-ucentral-deploy
+        ref: ${{ github.event.inputs.deployment_version }}
 
     - name: Get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -748,7 +759,7 @@ jobs:
       run: echo "::set-output name=url::ls-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
     - name: Prepare certificates from secrets
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         echo "${{ secrets.DIGICERT_CERT }}" | base64 -d > cert.pem
         echo "${{ secrets.DIGICERT_KEY }}" | base64 -d > key.pem
@@ -756,7 +767,7 @@ jobs:
         echo "${{ secrets.LOADSIM_DIGICERT_KEY }}" | base64 -d > device-key.pem
 
     - name: Deploy CloudSDK instance with load simulator
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         export NAMESPACE="${{ steps.namespace.outputs.namespace }}"
         export DEPLOY_METHOD=git
@@ -770,6 +781,7 @@ jobs:
         export OWANALYTICS_VERSION=main
         export OWSUB_VERSION=main
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.test-nodes.yaml,values.ucentral-qa.owls-enabled.yaml,values.ucentral-qa.external-db.yaml
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
         export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
