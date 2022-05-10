@@ -171,6 +171,7 @@ jobs:
         export OWANALYTICS_VERSION=main
         export OWSUB_VERSION=main
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.test-nodes.yaml,values.ucentral-qa.owls-enabled.yaml
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
         export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
@@ -431,6 +432,7 @@ jobs:
         export OWANALYTICS_VERSION=main
         export OWSUB_VERSION=main
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.test-nodes.yaml,values.ucentral-qa.owls-enabled.yaml
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
         export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
@@ -618,6 +620,7 @@ jobs:
         export OWANALYTICS_VERSION=main
         export OWSUB_VERSION=main
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.test-nodes.yaml,values.ucentral-qa.owls-enabled.yaml
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
         export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
@@ -778,6 +781,7 @@ jobs:
         export OWANALYTICS_VERSION=main
         export OWSUB_VERSION=main
         export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.test-nodes.yaml,values.ucentral-qa.owls-enabled.yaml,values.ucentral-qa.external-db.yaml
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
         export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
