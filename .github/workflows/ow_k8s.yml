@@ -123,7 +123,7 @@ jobs:
         export OWPROVUI_VERSION=main
         export OWANALYTICS_VERSION=${{ github.event.inputs.owanalytics_version }}
         export OWSUB_VERSION=${{ github.event.inputs.owsub_version }}
-        export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
