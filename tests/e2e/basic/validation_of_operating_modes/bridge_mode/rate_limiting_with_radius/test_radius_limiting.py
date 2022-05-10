@@ -590,9 +590,10 @@ class TestRateLimitingWithRadiusBridge(object):
             report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             kpi_data = lf_tools.read_kpi_file(column_name=["short-description", "numeric-score"], dir_name=report_name)
             print(kpi_data)
-            achieved = float("{:.2f}".format(kpi_data[2][1]))
-            allure.attach(name="Check-Max-Upload-Use1-Info",
-                          body=f"Configured WISPr Bandwidth Max Upload : {configured} Mbps \nAchieved throughput via Test : {achieved} Mbps")
+            achieved = float("{:.2f}".format(kpi_data[1][1]))
+            allure.attach(name="Check PASS/FAIL information", body=f"Configured WISPr Bandwidth for Max Upload for "
+                                                                   f"user1: {configured} Mbps \nAchieved throughput "
+                                                                   f"via Test: {achieved} Mbps")
             lf_tools.attach_report_graphs(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
             if float(achieved) != float(0) and (achieved <= configured):
@@ -636,9 +637,10 @@ class TestRateLimitingWithRadiusBridge(object):
             report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             kpi_data = lf_tools.read_kpi_file(column_name=["short-description", "numeric-score"], dir_name=report_name)
             print(kpi_data)
-            achieved = float("{:.2f}".format(kpi_data[2][1]))
-            allure.attach(name="Check-Max-Download-User1-Info",
-                          body=f"Configured WISPr Bandwidth Max Upload : {configured} Mbps \nAchieved throughput via Test : {achieved} Mbps")
+            achieved = float("{:.2f}".format(kpi_data[0][1]))
+            allure.attach(name="Check PASS/FAIL information", body=f"Configured WISPr Bandwidth for Max Download for "
+                                                                   f"user1: {configured} Mbps \nAchieved throughput "
+                                                                   f"via Test: {achieved} Mbps")
             lf_tools.attach_report_graphs(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
             if float(achieved) != float(0) and (achieved <= configured):
@@ -682,8 +684,10 @@ class TestRateLimitingWithRadiusBridge(object):
             report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             kpi_data = lf_tools.read_kpi_file(column_name=["short-description", "numeric-score"], dir_name=report_name)
             print(kpi_data)
-            achieved = float("{:.2f}".format(kpi_data[2][1]))
-            allure.attach(name="Check-Max-Upload-User2-Info", body=f"Configured WISPr Bandwidth Max Upload : {configured} Mbps \nAchieved throughput via Test : {achieved} Mbps")
+            achieved = float("{:.2f}".format(kpi_data[1][1]))
+            allure.attach(name="Check PASS/FAIL information", body=f"Configured WISPr Bandwidth for Max Upload for "
+                                                                   f"user2: {configured} Mbps \nAchieved throughput "
+                                                                   f"via Test: {achieved} Mbps")
             lf_tools.attach_report_graphs(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
             if float(achieved) != float(0) and (achieved <= configured):
