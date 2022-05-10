@@ -401,6 +401,47 @@ class ProvUtils(ConfigureController):
         self.check_response("PUT", resp, self.make_headers(), payload, uri)
         return resp
 
+    def get_contact(self):
+        uri = self.build_url_prov("contact")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_contact_by_id(self, contact_id):
+        uri = self.build_url_prov("contact/" + contact_id)
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def add_contact(self, payload):
+        uri = self.build_url_prov("contact/1")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_contact(self, contact_id):
+        uri = self.build_url_prov("contact/" + contact_id)
+        print(uri)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def edit_contact(self, payload, contact_id):
+        uri = self.build_url_prov("contact/" + contact_id)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
 class UProfileUtility:
 
     def __init__(self, sdk_client=None, controller_data=None):
