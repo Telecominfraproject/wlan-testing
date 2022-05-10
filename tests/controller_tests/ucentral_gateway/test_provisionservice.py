@@ -194,12 +194,25 @@ class TestUcentralProvisionService(object):
         """
             Test the create Contact in provision Inventory
         """
-        payload = {"name": "Testing_prov",
-                   "rrm": "inherit",
-                   "description": "For testing Purposes through Automation",
-                   "notes": [{"note": "For testing Purposes through Automation"}],
-                   "parent": "0000-0000-0000"
-                   }
+        payload = {
+                    "name": "Prov-Testing-through-Automation",
+                    "type": "USER",
+                    "title": "Testing_contact",
+                    "salutation": "",
+                    "firstname": "ProvTesting",
+                    "lastname": "Through Automation",
+                    "initials": "",
+                    "visual": "",
+                    "phones": [],
+                    "mobiles": [],
+                    "primaryEmail": "tip@ucentral.com",
+                    "secondaryEmail": "",
+                    "accessPIN": "",
+                    "description": "",
+                    "initialNote": "",
+                    "entity": "0000-0000-0000",
+                    "notes": [{"note": ""}]
+                }
         print(json.dumps(payload))
         resp = setup_prov_controller.add_contact(payload)
         allure.attach(name="response: ", body=str(resp.json()))
@@ -219,14 +232,22 @@ class TestUcentralProvisionService(object):
 
         # This to edit Entity
         editing_payload = {
-            "description": "For testing Purposes through Automation after edit",
-            "deviceConfiguration": [],
-            "name": "Testing_prov",
-            "notes": [],
-            "rrm": "inherit",
-            "sourceIP": [],
-            "uuid": contact_id
-        }
+                          "accessPIN": "",
+                          "description": "",
+                          "entity": "0000-0000-0000",
+                          "firstname": "ProvTesting",
+                          "initials": "",
+                          "lastname": "Through Automation",
+                          "mobiles": [],
+                          "name": "Prov-Testing-Automation API's",
+                          "notes": [],
+                          "phones": [],
+                          "primaryEmail": "tip@ucentral.com",
+                          "salutation": "",
+                          "secondaryEmail": "",
+                          "title": "Testing_contact",
+                          "type": "USER"
+                        }
         print(json.dumps(editing_payload))
         resp = setup_prov_controller.edit_contact(editing_payload, contact_id)
         allure.attach(name="response: ", body=str(resp.json()))
