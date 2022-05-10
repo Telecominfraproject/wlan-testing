@@ -13,6 +13,8 @@ import allure
 
 
 @pytest.mark.uc_sanity
+@pytest.mark.ow_sanity_lf
+@pytest.mark.owgw_api_tests
 @allure.feature("SDK REST API")
 class TestUcentralGatewayService(object):
     """

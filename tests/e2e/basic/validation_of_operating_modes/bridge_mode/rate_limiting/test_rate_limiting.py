@@ -5,8 +5,10 @@ Rate LImiting Bridge Mode Scenario
 import allure
 import pytest
 
-pytestmark = [pytest.mark.rate_limiting, pytest.mark.bridge, pytest.mark.general, pytest.mark.ucentral,
-              pytest.mark.regression]
+pytestmark = [pytest.mark.regression,
+              pytest.mark.ow_sanity_lf,
+              pytest.mark.ow_rate_limiting_tests_lf,
+              pytest.mark.bridge]
 
 setup_params_general = {
     "mode": "BRIDGE",
