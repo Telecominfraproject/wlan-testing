@@ -181,3 +181,71 @@ class TestUcentralProvisionService(object):
         allure.attach(name="Entities", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
         assert resp.status_code == 200
 
+    # Contact related Test cases
+    @pytest.mark.prov_api_contact
+    def test_get_contacts(self, setup_prov_controller):
+        resp = setup_prov_controller.get_contact()
+        print(resp.json())
+        allure.attach(name="Contacts", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
+    @pytest.mark.prov_api_contact_test
+    def test_prov_service_create_contact(self, setup_prov_controller, testbed):
+        """
+            Test the create Contact in provision Inventory
+        """
+        payload = {"name": "Testing_prov",
+                   "rrm": "inherit",
+                   "description": "For testing Purposes through Automation",
+                   "notes": [{"note": "For testing Purposes through Automation"}],
+                   "parent": "0000-0000-0000"
+                   }
+        print(json.dumps(payload))
+        resp = setup_prov_controller.add_contact(payload)
+        allure.attach(name="response: ", body=str(resp.json()))
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov create contact", body=body)
+        if resp.status_code != 200:
+            assert False
+        contact = json.loads(resp.text)
+        print(contact)
+        contact_id = contact['id']
+
+        resp = setup_prov_controller.get_contact_by_id(contact_id)
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov create contact-verify", body=body)
+        if resp.status_code != 200:
+            assert False
+
+        # This to edit Entity
+        editing_payload = {
+            "description": "For testing Purposes through Automation after edit",
+            "deviceConfiguration": [],
+            "name": "Testing_prov",
+            "notes": [],
+            "rrm": "inherit",
+            "sourceIP": [],
+            "uuid": contact_id
+        }
+        print(json.dumps(editing_payload))
+        resp = setup_prov_controller.edit_contact(editing_payload, contact_id)
+        allure.attach(name="response: ", body=str(resp.json()))
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov create contact", body=body)
+        if resp.status_code != 200:
+            assert False
+        entitiy = json.loads(resp.text)
+        print(entitiy)
+
+        resp = setup_prov_controller.get_contact_by_id(contact_id)
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov create contact-verify", body=body)
+        if resp.status_code != 200:
+            assert False
+
+        resp = setup_prov_controller.delete_contact(contact_id)
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov created contact-delete", body=body)
+        if resp.status_code != 200:
+            assert False
+
