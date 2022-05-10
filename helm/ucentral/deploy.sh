@@ -37,7 +37,10 @@ usage () {
   echo "- EXTRA_VALUES - extra values that should be passed to Helm deployment separated by comma (,)"
   echo "- DEVICE_CERT_LOCATION - path to certificate in PEM format that will be used for load simulator";
   echo "- DEVICE_KEY_LOCATION - path to private key in PEM format that will be used for load simulator";
-  echo "- USE_SEPARATE_OWGW_LB - flag that should change split external DNS for OWGW and other services"
+  echo "- USE_SEPARATE_OWGW_LB - flag that should change split external DNS for OWGW and other services";
+  echo "- INTERNAL_RESTAPI_ENDPOINT_SCHEMA - what schema to use for internal RESTAPI endpoints (https by default)";
+  echo "- MAILER_USERNAME - SMTP username used for OWSEC mailer";
+  echo "- MAILER_PASSWORD - SMTP password used for OWSEC mailer (only if both MAILER_PASSWORD and MAILER_USERNAME are set, mailer will be enabled)";
 }
 
 # Global variables
@@ -85,6 +88,9 @@ fi
 
 [ -z ${DEVICE_CERT_LOCATION+x} ] && echo "DEVICE_CERT_LOCATION is unset, setting it to CERT_LOCATION" && export DEVICE_CERT_LOCATION=$CERT_LOCATION
 [ -z ${DEVICE_KEY_LOCATION+x} ] && echo "DEVICE_KEY_LOCATION is unset, setting it to KEY_LOCATION" && export DEVICE_KEY_LOCATION=$KEY_LOCATION
+[ -z ${INTERNAL_RESTAPI_ENDPOINT_SCHEMA+x} ] && echo "INTERNAL_RESTAPI_ENDPOINT_SCHEMA is unset, setting it to 'https'" && export INTERNAL_RESTAPI_ENDPOINT_SCHEMA=https
+export MAILER_ENABLED="false"
+[ ! -z ${MAILER_USERNAME+x} ] && [ ! -z ${MAILER_PASSWORD+x} ] && echo "MAILER_USERNAME and MAILER_PASSWORD are set, mailer will be enabled" && export MAILER_ENABLED="true"
 
 # Transform some environment variables
 export OWGW_VERSION_TAG=$(echo ${OWGW_VERSION} | tr '/' '-')
@@ -160,20 +166,24 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set owgw.configProperties."openwifi\.fileuploader\.host\.0\.name"=gw-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owgw.configProperties."rtty\.server"=gw-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owgw.configProperties."openwifi\.system\.uri\.public"=https://gw-${NAMESPACE}.cicd.lab.wlan.tip.build:16002 \
-  --set owgw.configProperties."openwifi\.system\.uri\.private"=https://owgw-owgw:17002 \
+  --set owgw.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owgw-owgw:17002 \
   --set owgw.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owgw.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owsec.configProperties."authentication\.default\.username"=${OWGW_AUTH_USERNAME} \
   --set owsec.configProperties."authentication\.default\.password"=${OWGW_AUTH_PASSWORD} \
   --set owsec.services.owsec.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=sec-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owsec.configProperties."openwifi\.system\.uri\.public"=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
-  --set owsec.configProperties."openwifi\.system\.uri\.private"=https://owsec-owsec:17001 \
+  --set owsec.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owsec-owsec:17001 \
   --set owsec.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owsec.configProperties."mailer\.sender"=sec-${NAMESPACE}@cicd.lab.wlan.tip.build \
+  --set owsec.configProperties."mailer\.enabled"=$MAILER_ENABLED \
+  --set owsec.configProperties."mailer\.username"=$MAILER_USERNAME \
+  --set owsec.configProperties."mailer\.password"=$MAILER_PASSWORD \
   --set owfms.configProperties."s3\.secret"=${OWFMS_S3_SECRET} \
   --set owfms.configProperties."s3\.key"=${OWFMS_S3_KEY} \
   --set owfms.services.owfms.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=fms-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owfms.configProperties."openwifi\.system\.uri\.public"=https://fms-${NAMESPACE}.cicd.lab.wlan.tip.build:16004 \
-  --set owfms.configProperties."openwifi\.system\.uri\.private"=https://owfms-owfms:17004 \
+  --set owfms.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owfms-owfms:17004 \
   --set owfms.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owfms.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owgwui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
@@ -181,7 +191,7 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set owgwui.public_env_variables.DEFAULT_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owprov.services.owprov.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=prov-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owprov.configProperties."openwifi\.system\.uri\.public"=https://prov-${NAMESPACE}.cicd.lab.wlan.tip.build:16005 \
-  --set owprov.configProperties."openwifi\.system\.uri\.private"=https://owprov-owprov:17005 \
+  --set owprov.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owprov-owprov:17005 \
   --set owprov.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owprov.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owprovui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=provui-${NAMESPACE}.cicd.lab.wlan.tip.build \
@@ -190,19 +200,19 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set owprovui.public_env_variables.REACT_APP_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owanalytics.services.owanalytics.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=analytics-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owanalytics.configProperties."openwifi\.system\.uri\.public"=https://analytics-${NAMESPACE}.cicd.lab.wlan.tip.build:16009 \
-  --set owanalytics.configProperties."openwifi\.system\.uri\.private"=https://owanalytics-owanalytics:17009 \
+  --set owanalytics.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owanalytics-owanalytics:17009 \
   --set owanalytics.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owanalytics.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owsub.services.owsub.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=sub-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owsub.configProperties."openwifi\.system\.uri\.public"=https://sub-${NAMESPACE}.cicd.lab.wlan.tip.build:16006 \
-  --set owsub.configProperties."openwifi\.system\.uri\.private"=https://owsub-owsub:17006 \
+  --set owsub.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owsub-owsub:17006 \
   --set owsub.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owsub.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set clustersysteminfo.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set clustersysteminfo.secret_env_variables.OWSEC_NEW_PASSWORD=${OWSEC_NEW_PASSWORD} \
   --set owls.services.owls.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=ls-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owls.configProperties."openwifi\.system\.uri\.public"=https://ls-${NAMESPACE}.cicd.lab.wlan.tip.build:16007 \
-  --set owls.configProperties."openwifi\.system\.uri\.private"=https://owls-owls:17007 \
+  --set owls.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owls-owls:17007 \
   --set owls.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owlsui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=lsui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owlsui.ingresses.default.hosts={lsui-${NAMESPACE}.cicd.lab.wlan.tip.build} \

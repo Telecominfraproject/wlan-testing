@@ -132,6 +132,8 @@ jobs:
           export CERT_LOCATION=cert.pem
           export KEY_LOCATION=key.pem
           export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
+          export MAILER_USERNAME=${{ secrets.MAILER_USERNAME }}
+          export MAILER_PASSWORD=${{ secrets.MAILER_PASSWORD }}
           ./deploy.sh
         else
           export NAMESPACE=${{ matrix.namespace }}
@@ -153,6 +155,8 @@ jobs:
           export CERT_LOCATION=cert.pem
           export KEY_LOCATION=key.pem
           export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
+          export MAILER_USERNAME=${{ secrets.MAILER_USERNAME }}
+          export MAILER_PASSWORD=${{ secrets.MAILER_PASSWORD }}
           ./deploy.sh
         fi
 
