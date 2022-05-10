@@ -156,6 +156,7 @@ owsec:
     openwifi.restapi.host.0.rootca: $OWSEC_ROOT/certs/restapi-certs/ca.crt
     openwifi.restapi.host.0.cert: $OWSEC_ROOT/certs/restapi-certs/tls.crt
     openwifi.restapi.host.0.key: $OWSEC_ROOT/certs/restapi-certs/tls.key
+    mailer.hostname: email-smtp.us-east-2.amazonaws.com
 
   volumes:
     owsec:
