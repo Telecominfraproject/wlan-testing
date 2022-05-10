@@ -90,7 +90,7 @@ class TestUcentralProvisionService(object):
         resp = setup_prov_controller.edit_device_from_inventory(device_name, editing_payload)
         allure.attach(name="response: ", body=str(resp.json()))
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="Prov create device", body=body)
+        allure.attach(name="Prov edited device", body=body)
         if resp.status_code != 200:
             assert False
         devices = json.loads(resp.text)
@@ -98,7 +98,7 @@ class TestUcentralProvisionService(object):
 
         resp = setup_prov_controller.get_inventory_by_device(device_name)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="Prov create device-verify", body=body)
+        allure.attach(name="Prov edited device-verify", body=body)
         if resp.status_code != 200:
             assert False
 
@@ -157,7 +157,7 @@ class TestUcentralProvisionService(object):
         resp = setup_prov_controller.edit_entity(editing_payload, entity_id)
         allure.attach(name="response: ", body=str(resp.json()))
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="Prov create entity", body=body)
+        allure.attach(name="Prov edited entity", body=body)
         if resp.status_code != 200:
             assert False
         entitiy = json.loads(resp.text)
@@ -165,7 +165,7 @@ class TestUcentralProvisionService(object):
 
         resp = setup_prov_controller.get_entity_by_id(entity_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="Prov create device-verify", body=body)
+        allure.attach(name="Prov edited device-verify", body=body)
         if resp.status_code != 200:
             assert False
 
@@ -253,7 +253,7 @@ class TestUcentralProvisionService(object):
         resp = setup_prov_controller.edit_contact(editing_payload, contact_id)
         allure.attach(name="response: ", body=str(resp.json()))
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="Prov create contact", body=body)
+        allure.attach(name="Prov edited contact", body=body)
         if resp.status_code != 200:
             assert False
         entitiy = json.loads(resp.text)
@@ -261,7 +261,7 @@ class TestUcentralProvisionService(object):
 
         resp = setup_prov_controller.get_contact_by_id(contact_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="Prov create contact-verify", body=body)
+        allure.attach(name="Prov edited contact-verify", body=body)
         if resp.status_code != 200:
             assert False
 
@@ -271,3 +271,91 @@ class TestUcentralProvisionService(object):
         if resp.status_code != 200:
             assert False
 
+    # Location related Test cases
+    @pytest.mark.prov_api_location
+    def test_get_locations(self, setup_prov_controller):
+        resp = setup_prov_controller.get_location()
+        print(resp.json())
+        allure.attach(name="location", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
+    @pytest.mark.prov_api_location_test
+    def test_prov_service_create_edit_delete_location(self, setup_prov_controller, testbed):
+        """
+            Test the create location in provision Inventory
+        """
+        payload = {
+                    "name": "TIP",
+                    "type": "AUTO",
+                    "buildingName": "",
+                    "addressLines": ["Pedda Rushikonda"],
+                    "city": "Visakhapatnam",
+                    "state": "Andhra pradesh",
+                    "postal": "530045",
+                    "country": "IN",
+                    "phones": [],
+                    "mobiles": [],
+                    "geoCode": "",
+                    "description": "For Testing through Automation",
+                    "initialNote": "Testing purposes through Automation",
+                    "entity": "0000-0000-0000",
+                    "notes": [{"note": "Testing purposes"}]
+                }
+        print(json.dumps(payload))
+        resp = setup_prov_controller.add_location(payload)
+        allure.attach(name="response: ", body=str(resp.json()))
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov create location", body=body)
+        if resp.status_code != 200:
+            assert False
+        location = json.loads(resp.text)
+        print(location)
+        location_id = location['id']
+
+        resp = setup_prov_controller.get_location_by_id(location_id)
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov create location-verify", body=body)
+        if resp.status_code != 200:
+            assert False
+
+        # This to edit Entity
+        editing_payload = {
+                          "addressLines": [
+                            "Madhurawada",
+                            ""
+                          ],
+                          "buildingName": "",
+                          "city": "Visakhapatnam",
+                          "country": "IN",
+                          "description": "Candela Testing",
+                          "entity": "0000-0000-0000",
+                          "geoCode": "",
+                          "mobiles": [],
+                          "name": "Candela IND",
+                          "notes": [],
+                          "phones": [],
+                          "postal": "530048",
+                          "state": "Andhra Pradesh",
+                          "type": "SERVICE"
+                        }
+        print(json.dumps(editing_payload))
+        resp = setup_prov_controller.edit_location(editing_payload, location_id)
+        allure.attach(name="response: ", body=str(resp.json()))
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov edited location", body=body)
+        if resp.status_code != 200:
+            assert False
+        entitiy = json.loads(resp.text)
+        print(entitiy)
+
+        resp = setup_prov_controller.get_location_by_id(location_id)
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov edited location-verify", body=body)
+        if resp.status_code != 200:
+            assert False
+
+        resp = setup_prov_controller.delete_location(location_id)
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov created location-delete", body=body)
+        if resp.status_code != 200:
+            assert False
