@@ -62,6 +62,7 @@ class TestMaxSsidBridge5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7856", name="WIFI-7856")
     @pytest.mark.open
     @pytest.mark.fiveg
+    @pytest.mark.eight_ssid
     def test_clients2_bridge_open_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Max-SSID Bridge Mode
            pytest -m "max_ssid and fiveg"
@@ -84,6 +85,7 @@ class TestMaxSsidBridge5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7856", name="WIFI-7856")
     @pytest.mark.wpa
     @pytest.mark.fiveg
+    @pytest.mark.eight_ssid
     def test_clients2_bridge_wpa_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Max-SSID Bridge Mode
            pytest -m "max_ssid and fiveg"
@@ -107,6 +109,7 @@ class TestMaxSsidBridge5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7856", name="WIFI-7856")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.eight_ssid
     def test_clients2_bridge_wpa2_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Max-SSID Bridge Mode
            pytest -m "max_ssid and fiveg"
@@ -130,6 +133,7 @@ class TestMaxSsidBridge5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7856", name="WIFI-7856")
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
+    @pytest.mark.eight_ssid
     def test_clients2_bridge_wpa_wpa2_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Max-SSID Bridge Mode
            pytest -m "max_ssid and fiveg"
@@ -154,6 +158,7 @@ class TestMaxSsidBridge5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7856", name="WIFI-7856")
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
+    @pytest.mark.eight_ssid
     def test_clients2_bridge_wpa3_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Max-SSID Bridge Mode
            pytest -m "max_ssid and fiveg"
@@ -177,6 +182,7 @@ class TestMaxSsidBridge5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7856", name="WIFI-7856")
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
+    @pytest.mark.eight_ssid
     def test_clients2_bridge_wpa2_eap_5g(self, get_ap_logs, get_lf_logs, station_names_fiveg, setup_profiles,  lf_test,
                                       update_report, exit_on_fail, test_cases, radius_info):
         """Max-SSID Bridge Mode
@@ -207,6 +213,7 @@ class TestMaxSsidBridge5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7856", name="WIFI-7856")
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
+    @pytest.mark.eight_ssid
     def test_clients2_bridge_wpa3_eap_5g(self,  get_ap_logs, get_lf_logs, station_names_fiveg, setup_profiles, lf_test,
                                        update_report, exit_on_fail, test_cases, radius_info):
         """Max-SSID Bridge Mode
@@ -220,7 +227,7 @@ class TestMaxSsidBridge5G(object):
         vlan = 100
         tls_passwd = radius_info["password"]
         eap = "TLS"
-        key_mgmt = "WPA-EAP"
+        key_mgmt = "WPA-EAP-SHA256"
         identity = radius_info['user']
 
         passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
@@ -236,6 +243,7 @@ class TestMaxSsidBridge5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7856", name="WIFI-7856")
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
+    @pytest.mark.eight_ssid
     def test_clients2_bridge_wpa_eap_5g(self,  get_ap_logs, get_lf_logs, station_names_fiveg, setup_profiles, lf_test,
                                        update_report, exit_on_fail, test_cases, radius_info):
         """Max-SSID Bridge Mode
