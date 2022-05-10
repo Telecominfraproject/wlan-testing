@@ -1,0 +1,183 @@
+name: Deploy SDK with Docker Compose on EC2
+
+inputs:
+  deployment_version:
+    description: 'OpenWIFI deployment repository version to be deployed.'
+    required: true
+  owgw_version:
+    description: 'OpenWIFI Gateway version to be deployed.'
+    required: false
+  owsec_version:
+    description: 'OpenWIFI Security version to be deployed.'
+    required: false
+  owfms_version:
+    description: 'OpenWIFI Firmware version to be deployed.'
+    required: false
+  owprov_version:
+    description: 'OpenWIFI Provisioning version to be deployed.'
+    required: false
+  owanalytics_version:
+    description: 'OpenWIFI Analytics version to be deployed.'
+    required: false
+  owsub_version:
+    description: 'OpenWIFI Subscription (Userportal) version to be deployed.'
+    required: false
+  owsec_default_username:
+    description: 'OpenWIFI default username'
+    required: true
+  owsec_default_password:
+    description: 'OpenWIFI default password'
+    required: true
+  owsec_hashed_default_password:
+    description: 'OpenWIFI hashed default password'
+    required: true
+  owsec_new_password:
+    description: 'New OpenWIFI to set for the deployment'
+    required: true
+  owfms_s3_secret:
+    description: 'Secret access key to access S3 firmware bucket'
+    required: true
+  owfms_s3_key:
+    description: 'Access key ID to access S3 firmware bucket'
+    required: true
+  rtty_token:
+    required: false
+  instance_ssh_key:
+    description: 'SSH key to connect to the EC2 instance'
+    required: true
+
+outputs:
+  gateway_url:
+    value: ${{ steps.set_outputs.outputs.gateway_url }}
+  sec_url:
+    value: ${{ steps.set_outputs.outputs.sec_url }}
+  instance_id:
+    value: ${{ steps.ec2_instance.outputs.instance_id }}
+  instance_name:
+    value: ${{ steps.ec2_facts.outputs.instance_name }}
+  instance_public_ip:
+    value: ${{ steps.ec2_instance.outputs.instance_public_ip }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set outputs
+      shell: bash
+      id: set_outputs
+      run: |
+        echo "::set-output name=gateway_url::ow-docker-compose-${{ github.run_number }}.wlan.local"
+        echo "::set-output name=sec_url::ow-docker-compose-${{ github.run_number }}.wlan.local"
+
+    - name: Set EC2 facts
+      shell: bash
+      id: ec2_facts
+      run: |
+        AMI=$(aws ec2 describe-images --filters '[{"Name":"description","Values":["Canonical, Ubuntu, 20.04 LTS, amd64*"]},{"Name":"owner-id","Values":["099720109477"]}]' --query 'sort_by(Images, &CreationDate)[-1].ImageId' --output text)
+        INSTANCE_NAME=ow-docker-compose-${{ github.run_number }}
+        echo "::set-output name=ami::${AMI}"
+        echo "::set-output name=instance_name::${INSTANCE_NAME}"
+
+    # Create EC2 infrastructure
+    - name: Create EC2 instance for CloudSDK
+      env:
+        EC2_INSTANCE_TYPE: t2.small
+        EC2_SECURITY_GROUP_ID: sg-012299a8201a0761c
+        EC2_KEY_NAME: loadsim
+        VPC_SUBNET_ID: subnet-08ef4ccda4af94c38
+      shell: bash
+      id: ec2_instance
+      run: |
+        aws ec2 run-instances --key-name $EC2_KEY_NAME --subnet-id $VPC_SUBNET_ID --security-group-ids $EC2_SECURITY_GROUP_ID --instance-type $EC2_INSTANCE_TYPE --image-id ${{ steps.ec2_facts.outputs.ami }} --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=${{ steps.ec2_facts.outputs.instance_name }}},{Key=Owner,Value=gha-wlan-testing}]" --output text
+        INSTANCE_PUBLIC_IP=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.ec2_facts.outputs.instance_name }}" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+        INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.ec2_facts.outputs.instance_name }}" --query 'Reservations[*].Instances[*].InstanceId' --output text)
+        echo "::set-output name=instance_public_ip::${INSTANCE_PUBLIC_IP}"
+        echo "::set-output name=instance_id::${INSTANCE_ID}"
+
+    # Deploy target CloudSDK into EC2 instance
+    - name: Save SSH key for access to EC2 instance
+      env:
+        INSTANCE_SSH_KEY: ${{ inputs.instance_ssh_key }}
+      shell: bash
+      run: |
+        echo "${{ env.INSTANCE_SSH_KEY }}" > ssh_key.pem
+        chmod 600 ssh_key.pem
+
+    - name: Try connecting to EC2 instance and install Docker
+      shell: bash
+      run: |
+        until ssh -o "StrictHostKeyChecking accept-new" -i ssh_key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }}; do
+            sleep 5
+        done
+        ssh -i ssh_key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }} << EOF
+          sudo -i;
+          apt-get update && apt-get install -y ca-certificates curl gnupg lsb-release python3-pip jq git;
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg;
+          echo \
+          "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+          $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null;
+          apt-get update && apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-compose;
+          cat << EOT > /etc/docker/daemon.json
+        {
+          "log-driver": "syslog",
+          "log-opts": {
+          "syslog-address": "tcp://k8s-monitori-logstash-fdd0ff34dd-2abb6df4e49f3d1a.elb.us-east-2.amazonaws.com:514",
+          "tag": "{{.Name}}/ow-docker-compose-${{ github.run_number }}"
+          }
+        }
+        EOT
+          systemctl restart docker
+        EOF
+
+    - name: Deploy target CloudSDK in EC2
+      shell: bash
+      run: |
+        ssh -i ssh_key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }} << EOF
+          sudo -i;
+          git clone https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy.git;
+          cd wlan-cloud-ucentral-deploy;
+          git checkout ${{ inputs.deployment_version }};
+          cd docker-compose;
+          export OWGW_VERSION="${{ inputs.owgw_version }}";
+          export OWSEC_VERSION="${{ inputs.owsec_version }}";
+          export OWFMS_VERSION="${{ inputs.owfms_version }}";
+          export OWPROV_VERSION="${{ inputs.owprov_version }}";
+          export OWANALYTICS_VERSION="${{ inputs.owanalytics_version }}";
+          export OWSUB_VERSION="${{ inputs.owsub_version }}";
+          export DEFAULT_UCENTRALSEC_URL="https://${{ steps.set_outputs.outputs.sec_url }}:16001";
+          export SYSTEM_URI_UI="https://${{ steps.set_outputs.outputs.gateway_url }}";
+          export RTTY_TOKEN="${{ inputs.rtty_token }}";
+          export OWGW_FILEUPLOADER_HOST_NAME="${{ steps.set_outputs.outputs.gateway_url }}";
+          export OWGW_FILEUPLOADER_URI="https://${{ steps.set_outputs.outputs.gateway_url }}:16003";
+          export OWGW_SYSTEM_URI_PUBLIC="https://${{ steps.set_outputs.outputs.gateway_url }}:16002";
+          export OWGW_RTTY_SERVER="${{ steps.set_outputs.outputs.gateway_url }}";
+          export OWSEC_SYSTEM_URI_PUBLIC="https://${{ steps.set_outputs.outputs.sec_url }}:16001";
+          export OWSEC_AUTHENTICATION_DEFAULT_USERNAME="${{ inputs.owsec_default_username }}";
+          export OWSEC_AUTHENTICATION_DEFAULT_PASSWORD="${{ inputs.owsec_hashed_default_password }}";
+          export OWFMS_SYSTEM_URI_PUBLIC="https://${{ steps.set_outputs.outputs.gateway_url }}:16004";
+          export OWFMS_S3_SECRET="${{ inputs.owfms_s3_secret }}";
+          export OWFMS_S3_KEY="${{ inputs.owfms_s3_key }}";
+          export OWPROV_SYSTEM_URI_PUBLIC="https://${{ steps.set_outputs.outputs.gateway_url }}:16005";
+          export OWANALYTICS_SYSTEM_URI_PUBLIC="https://${{ steps.set_outputs.outputs.gateway_url }}:16009";
+          export OWSUB_SYSTEM_URI_PUBLIC="https://${{ steps.set_outputs.outputs.gateway_url }}:16006";
+          ./deploy.sh
+        EOF
+
+    - name: Change password and check if deployment is ready using clustersysteminfo image
+      env:
+        OWSEC: "${{ steps.set_outputs.outputs.sec_url }}:16001"
+        OWSEC_DEFAULT_USERNAME: ${{ inputs.owsec_default_username }}
+        OWSEC_DEFAULT_PASSWORD: ${{ inputs.owsec_default_password }}
+        OWSEC_NEW_PASSWORD: ${{ inputs.owsec_new_password }}
+        CHECK_RETRIES: 60
+        FLAGS: "-s -k"
+      shell: bash
+      run: |
+        docker run --rm \
+          -e OWSEC \
+          -e OWSEC_DEFAULT_USERNAME \
+          -e OWSEC_DEFAULT_PASSWORD \
+          -e OWSEC_NEW_PASSWORD \
+          -e CHECK_RETRIES \
+          -e FLAGS \
+          --add-host ow-docker-compose-${{ github.run_number }}.wlan.local:${{ steps.ec2_instance.outputs.instance_public_ip }} \
+          tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo:main
