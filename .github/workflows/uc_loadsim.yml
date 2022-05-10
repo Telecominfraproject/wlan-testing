@@ -170,7 +170,7 @@ jobs:
         export OWPROVUI_VERSION=main
         export OWANALYTICS_VERSION=main
         export OWSUB_VERSION=main
-        export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.test-nodes.yaml,values.ucentral-qa.owls-enabled.yaml
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.test-nodes.yaml,values.openwifi-qa.owls-enabled.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
@@ -431,7 +431,7 @@ jobs:
         export OWPROVUI_VERSION=main
         export OWANALYTICS_VERSION=main
         export OWSUB_VERSION=main
-        export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.test-nodes.yaml,values.ucentral-qa.owls-enabled.yaml
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.test-nodes.yaml,values.openwifi-qa.owls-enabled.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
@@ -619,7 +619,7 @@ jobs:
         export OWPROVUI_VERSION=main
         export OWANALYTICS_VERSION=main
         export OWSUB_VERSION=main
-        export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.test-nodes.yaml,values.ucentral-qa.owls-enabled.yaml
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.test-nodes.yaml,values.openwifi-qa.owls-enabled.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
@@ -780,7 +780,7 @@ jobs:
         export OWPROVUI_VERSION=main
         export OWANALYTICS_VERSION=main
         export OWSUB_VERSION=main
-        export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.test-nodes.yaml,values.ucentral-qa.owls-enabled.yaml,values.ucentral-qa.external-db.yaml
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.test-nodes.yaml,values.openwifi-qa.owls-enabled.yaml,values.openwifi-qa.external-db.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
