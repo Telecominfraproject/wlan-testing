@@ -980,7 +980,7 @@ class Fixtures_2x:
             print("get equipment id ref [0]", get_equipment_ref[length])
             instantiate_profile_obj.push_config(serial_number=get_equipment_ref[length])
 
-            config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"'))
+            config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"').replace("True", "true"))
             config["uuid"] = 0
 
             # Attach the config that is sent from API
