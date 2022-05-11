@@ -358,3 +358,77 @@ class TestUcentralProvisionService(object):
         allure.attach(name="Prov created location-delete", body=body)
         if resp.status_code != 200:
             assert False
+
+    # Venue related Test cases
+    @pytest.mark.prov_api_venue
+    def test_get_venue(self, setup_prov_controller):
+        resp = setup_prov_controller.get_venue()
+        print(resp.json())
+        allure.attach(name="venue", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
+    @pytest.mark.prov_api_venue_test
+    def test_prov_service_create_edit_delete_venue(self, setup_prov_controller, testbed):
+        """
+            Test the create venue in provision Inventory
+        """
+        payload = {
+                      "description": "For testing Purposes",
+                      "entity": "6a657863-9940-4303-ac68-4cc10d3078ec",
+                      "location": "",
+                      "name": "Testing Prov",
+                      "notes": [
+                        {
+                          "note": "For testing Purposes"
+                        }
+                      ],
+                      "parent": "",
+                      "rrm": "inherit"
+                    }
+        print(json.dumps(payload))
+        resp = setup_prov_controller.add_venue(payload)
+        allure.attach(name="response: ", body=str(resp.json()))
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov create venue", body=body)
+        if resp.status_code != 200:
+            assert False
+        venue = json.loads(resp.text)
+        print(venue)
+        venue_id = venue['id']
+
+        resp = setup_prov_controller.get_venue_by_id(venue_id)
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov create venue-verify", body=body)
+        if resp.status_code != 200:
+            assert False
+
+        # This to edit venue
+        editing_payload = {
+                          "description": "For testing Purposes through Automation",
+                          "location": "",
+                          "name": "Testing Prov",
+                          "notes": [],
+                          "rrm": "inherit",
+                          "sourceIP": []
+                        }
+        print(json.dumps(editing_payload))
+        resp = setup_prov_controller.edit_venue(editing_payload, venue_id)
+        allure.attach(name="response: ", body=str(resp.json()))
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov edited venue", body=body)
+        if resp.status_code != 200:
+            assert False
+        entitiy = json.loads(resp.text)
+        print(entitiy)
+
+        resp = setup_prov_controller.get_venue_by_id(venue_id)
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov edited venue-verify", body=body)
+        if resp.status_code != 200:
+            assert False
+
+        resp = setup_prov_controller.delete_venue(venue_id)
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov created venue-delete", body=body)
+        if resp.status_code != 200:
+            assert False
