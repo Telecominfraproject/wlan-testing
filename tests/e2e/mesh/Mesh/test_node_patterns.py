@@ -110,7 +110,7 @@ class TestNodePatters(object):
                      ['sta_amount-4: 1'], ['radios-0-0: 1.2.6 wiphy0'], ['radios-0-3: 1.2.7 wiphy1'],
                      ['radios-1-0: 1.3.6 wiphy0'],
                      ['radios-1-3: 1.3.7 wiphy1'], ['radios-2-0: 1.4.6 wiphy0'], ['radios-2-3: 1.4.7 wiphy1'],
-                     ['radios-4-0: 1.1.6 wiphy2'], ['radios-4-3: 1.1.7 wiphy3'], ['ap_arrangements: AB_C'],
+                     ['radios-4-0: 1.1.6 wiphy2'], ['radios-4-3: 1.1.7 wiphy3'], ['ap_arrangements: AB-C'],
                      ['sta_position: Current Position'], ['chamber-0: Root'], ['chamber-1: Node1'],
                      ['chamber-2: Node2'], ['chamber-4: Mobile-Sta'],
                      ['path: Orbit Current'], ['traffic_types: UDP'], ['direction: Both'], ['tests: Throughput'],
