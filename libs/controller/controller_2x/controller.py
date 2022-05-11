@@ -174,18 +174,17 @@ class Controller(ConfigureController):
 
     def get_devices(self):
         uri = self.build_uri("devices/")
+        print(uri)
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
-        devices = resp.json()
-        # resp.close()()
-        return devices
+        return resp
 
-    def get_device_by_serial_number(self, serial_number=None):
+    def get_device_by_serial_number(self, serial_number):
         uri = self.build_uri("device/" + serial_number)
+        print(uri)
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
-        device = resp.json()
-        # resp.close()()
-        return device
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
 
     def get_sdk_version(self):
         uri = self.build_uri("system/?command=info")
@@ -219,6 +218,22 @@ class Controller(ConfigureController):
         device_info = self.get_device_by_serial_number(serial_number=serial_number)
         return device_info["UUID"]
 
+    def add_device_to_gw(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_device_from_gw(self, device_name):
+        uri = self.build_uri("device/" + device_name)
+        print(uri)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
 
 class FMSUtils:
 
