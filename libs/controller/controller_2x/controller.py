@@ -235,6 +235,49 @@ class Controller(ConfigureController):
         self.check_response("DELETE", resp, self.make_headers(), "", uri)
         return resp
 
+    def get_commands(self):
+        uri = self.build_uri("commands")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_device_logs(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/logs")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_device_health_checks(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/healthchecks")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_device_capabilities(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/capabilities")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_device_statistics(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/statistics")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_device_status(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/status")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+
 class FMSUtils:
 
     def __init__(self, sdk_client=None, controller_data=None):

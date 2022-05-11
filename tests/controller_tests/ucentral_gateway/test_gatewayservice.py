@@ -177,3 +177,57 @@ class TestUcentralGatewayService(object):
         allure.attach(name="system info", body=str(system_info.json()),attachment_type=allure.attachment_type.JSON)
         assert system_info.status_code == 200
 
+    @pytest.mark.gw_device
+    def test_gw_service_get_logs(self, setup_controller, get_configuration):
+        """
+            Test the device logs present in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        resp = setup_controller.get_device_logs(device_name)
+        print(resp.json())
+        allure.attach(name="Device Logs", body=str(resp.json()),attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
+    @pytest.mark.gw_device
+    def test_gw_service_get_health_checks(self, setup_controller, get_configuration):
+        """
+            Test the device health checks present in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        resp = setup_controller.get_device_health_checks(device_name)
+        print(resp.json())
+        allure.attach(name="Device Health checks", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
+    @pytest.mark.gw_device
+    def test_gw_service_get_capabilities(self, setup_controller, get_configuration):
+        """
+            Test the device capabilities present in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        resp = setup_controller.get_device_capabilities(device_name)
+        print(resp.json())
+        allure.attach(name="Device capabilities", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
+    @pytest.mark.gw_device
+    def test_gw_service_get_statistics(self, setup_controller, get_configuration):
+        """
+            Test the device statistics present in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        resp = setup_controller.get_device_statistics(device_name)
+        print(resp.json())
+        allure.attach(name="Device statistics", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
+    @pytest.mark.gw_device
+    def test_gw_service_get_status(self, setup_controller, get_configuration):
+        """
+            Test the device status present in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        resp = setup_controller.get_device_status(device_name)
+        print(resp.json())
+        allure.attach(name="Device status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
