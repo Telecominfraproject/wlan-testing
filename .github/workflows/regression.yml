@@ -120,7 +120,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'rate_limiting')"
         with:
-          namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-rate_limiting
+          namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-rate-limiting
           testbed: "${{ matrix.testbed }}"
           marker_expression: "regression and rate_limiting"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
@@ -131,13 +131,13 @@ jobs:
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait regression-${{ github.run_id }}-${{ matrix.testbed }}-rate_limiting
+        run: kubectl delete ns --ignore-not-found=true --wait regression-${{ github.run_id }}-${{ matrix.testbed }}-rate-limiting
 
       - name: run rate_limiting_with_radius tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'rate_limiting_with_radius')"
         with:
-          namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-rate_limiting_with_radius
+          namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-rate-limiting-with-radius
           testbed: "${{ matrix.testbed }}"
           marker_expression: "regression and rate_limiting_with_radius"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
@@ -148,13 +148,13 @@ jobs:
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait regression-${{ github.run_id }}-${{ matrix.testbed }}-rate_limiting_with_radius
+        run: kubectl delete ns --ignore-not-found=true --wait regression-${{ github.run_id }}-${{ matrix.testbed }}-rate-limiting-with-radius
 
       - name: run dynamic_vlan tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'dynamic_vlan')"
         with:
-          namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-dynamic_vlan
+          namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-dynamic-vlan
           testbed: "${{ matrix.testbed }}"
           marker_expression: "regression and dynamic_vlan"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
@@ -165,7 +165,7 @@ jobs:
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait regression-${{ github.run_id }}-${{ matrix.testbed }}-dynamic_vlan
+        run: kubectl delete ns --ignore-not-found=true --wait regression-${{ github.run_id }}-${{ matrix.testbed }}-dynamic-vlan
 
   report:
     needs: [vars, test]
