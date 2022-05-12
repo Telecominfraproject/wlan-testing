@@ -149,6 +149,12 @@ def pytest_addoption(parser):
         help="skip cloud controller and AP, run only lanforge tests on a ssid preconfigured"
     )
     parser.addoption(
+        "--skip-pcap",
+        action="store_true",
+        default=False,
+        help="skip packet capture for sanity"
+    )
+    parser.addoption(
         "--device",
         default="iPhone-11",
         help="Device Model which is needed to test"
@@ -221,6 +227,11 @@ def run_lf(request):
     var = request.config.getoption("--run-lf")
     yield var
 
+@pytest.fixture(scope="session")
+def skip_pcap(request):
+    """yields the --skip-pcap option for skipping the packet capture for sanity"""
+    var = request.config.getoption("--skip-pcap")
+    yield var
 
 @pytest.fixture(scope="session")
 def should_upgrade_firmware(request):
@@ -646,14 +657,14 @@ def lf_tools(get_configuration, testbed, skip_lf, run_lf, get_ap_version):
 
 
 @pytest.fixture(scope="session")
-def lf_test(get_configuration, setup_influx, request, skip_lf, run_lf):
+def lf_test(get_configuration, setup_influx, request, skip_lf, run_lf, skip_pcap):
     if not skip_lf:
         if request.config.getoption("--exit-on-fail"):
             obj = RunTest(configuration_data=get_configuration, influx_params=setup_influx,
-                          debug=True, run_lf=run_lf)
+                          debug=True, run_lf=run_lf, skip_pcap=skip_pcap)
         if request.config.getoption("--exit-on-fail") is False:
             obj = RunTest(configuration_data=get_configuration, influx_params=setup_influx,
-                          debug=False, run_lf=run_lf)
+                          debug=False, run_lf=run_lf, skip_pcap=skip_pcap)
     yield obj
 
 
