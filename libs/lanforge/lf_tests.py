@@ -68,7 +68,7 @@ Realm = realm.Realm
 class RunTest:
 
     def __init__(self, configuration_data=None, local_report_path="../reports/", influx_params=None, run_lf=False,
-                 debug=False):
+                 debug=False, skip_pcap=False):
         if "type" in configuration_data['traffic_generator'].keys():
             if lanforge_data["type"] == "mesh":
                 self.lanforge_ip = lanforge_data["ip"]
@@ -108,6 +108,7 @@ class RunTest:
             self.ax_prefix = configuration_data['traffic_generator']['details']["AX-Station-Name"]
             self.debug = debug
             self.run_lf = run_lf
+            self.skip_pcap = skip_pcap
             if self.run_lf:
                 self.ssid_data = configuration_data['access_point'][0]['ssid']
             self.lf_ssh_port = configuration_data['traffic_generator']['details']["ssh_port"]
@@ -166,10 +167,11 @@ class RunTest:
         result = self.check_ssid_available_scan_result(scan_ssid_data=self.data_scan_ssid, ssid=ssid)
         print("ssid available:-", result)
         if not result and ssid_channel:
-            print("sniff radio", self.ax_radios[0].split(".")[2])
-            self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
-            time.sleep(30)
-            self.stop_sniffer()
+            if not self.skip_pcap:
+                print("sniff radio", self.ax_radios[0].split(".")[2])
+                self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
+                time.sleep(30)
+                self.stop_sniffer()
             print("ssid not available in scan result")
             return "FAIL", "ssid not available in scan result"
         self.staConnect.resource = 1
@@ -193,8 +195,9 @@ class RunTest:
             except Exception as e:
                 print(e)
         if ssid_channel:
-            print("sniff radio", self.ax_radios[0].split(".")[2])
-            self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
+            if not self.skip_pcap:
+                print("sniff radio", self.ax_radios[0].split(".")[2])
+                self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
         self.staConnect.start()
         print("napping %f sec" % self.staConnect.runtime_secs)
         time.sleep(self.staConnect.runtime_secs)
@@ -264,7 +267,8 @@ class RunTest:
             result = "FAIL"
         time.sleep(3)
         if ssid_channel:
-            self.stop_sniffer()
+            if not self.skip_pcap:
+                self.stop_sniffer()
         self.set_radio_channel(radio=self.staConnect.radio, channel="AUTO")
         return result, description
 
@@ -315,10 +319,11 @@ class RunTest:
         result = self.check_ssid_available_scan_result(scan_ssid_data=self.data_scan_ssid, ssid=ssid)
         print("ssid available:-", result)
         if not result and ssid_channel:
-            print("sniff radio", self.ax_radios[0].split(".")[2])
-            self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
-            time.sleep(30)
-            self.stop_sniffer()
+            if not self.skip_pcap:
+                print("sniff radio", self.ax_radios[0].split(".")[2])
+                self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
+                time.sleep(30)
+                self.stop_sniffer()
             print("ssid not available in scan result")
             return "FAIL", "ssid not available in scan result"
         if eap == "TTLS":
@@ -358,8 +363,9 @@ class RunTest:
             except Exception as e:
                 print(e)
         if ssid_channel:
-            print("sniff radio", self.ax_radios[0].split(".")[2])
-            self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
+            if not self.skip_pcap:
+                print("sniff radio", self.ax_radios[0].split(".")[2])
+                self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
         self.eap_connect.start(station_name, True, True)
         if d_vlan:
             self.station_ip = {}
@@ -428,7 +434,8 @@ class RunTest:
         else:
             result = "FAIL"
         if ssid_channel:
-            self.stop_sniffer()
+            if not self.skip_pcap:
+                self.stop_sniffer()
         self.set_radio_channel(radio=self.eap_connect.radio, channel="AUTO")
         return result, description
 
