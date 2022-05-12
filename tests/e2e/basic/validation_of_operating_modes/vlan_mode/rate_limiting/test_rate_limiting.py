@@ -5,8 +5,8 @@ Rate LImiting Vlan Mode Scenario
 import allure
 import pytest
 
-pytestmark = [pytest.mark.rate_limiting, pytest.mark.vlan, pytest.mark.general, pytest.mark.ucentral,
-              pytest.mark.regression]
+# pytestmark = [pytest.mark.rate_limiting, pytest.mark.vlan, pytest.mark.general, pytest.mark.ucentral,
+#               pytest.mark.regression]
 
 setup_params_general = {
     "mode": "VLAN",
