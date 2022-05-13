@@ -23,7 +23,7 @@ from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnecti
     verifyUploadDownloadSpeediOS, gets_ip_add_eap_and_does_not_forget_ssid_ios, gets_ip_add_for_checking_and_forgets_ssid_ios, wifi_connect_eap, wifi_disconnect_and_forget
 
 pytestmark = [pytest.mark.regression, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.client_reconnect
-              , pytest.mark.bridge, pytest.mark.enterprise, pytest.mark.ToggleWifiMode]
+              , pytest.mark.bridge, pytest.mark.enterprise, pytest.mark.ToggleWifiMode, pytest.mark.client_reconnect_testing]
 
 setup_params_enterprise = {
     "mode": "BRIDGE",
