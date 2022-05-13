@@ -12,8 +12,8 @@ on:
         default: dfs,multipsk,rate_limiting,rate_limiting_with_radius,dynamic_vlan
         required: true
 
-  #schedule:
-  #  - cron: "30 20 * * *"
+  schedule:
+    - cron: "30 20 * * 6"
 
 defaults:
   run:
