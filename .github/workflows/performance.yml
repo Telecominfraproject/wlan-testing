@@ -6,7 +6,8 @@ on:
         default: 'basic-01'
         description: 'Testbed to test'
         required: false
-
+  schedule:
+    - cron: "30 20 * * 1"
 defaults:
   run:
     shell: bash
