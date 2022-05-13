@@ -3,10 +3,11 @@ on:
   workflow_dispatch:
     inputs:
       testbed:
-        default: 'basic-01'
+        default: 'basic-05'
         description: 'Testbed to test'
         required: false
-
+  schedule:
+    - cron: "30 20 * * 6"
 defaults:
   run:
     shell: bash
@@ -64,7 +65,7 @@ jobs:
 
     - name: set testbed
       id: testbed
-      run: echo "::set-output name=name::${{ github.event.inputs.testbed || 'basic-01' }}"
+      run: echo "::set-output name=name::${{ github.event.inputs.testbed || 'basic-05' }}"
 
     - name: prepare namespace
       id: namespace
