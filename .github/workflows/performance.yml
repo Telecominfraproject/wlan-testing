@@ -7,7 +7,7 @@ on:
         description: 'Testbed to test'
         required: false
   schedule:
-    - cron: "30 20 * * 1"
+    - cron: "30 20 * * 6"
 defaults:
   run:
     shell: bash
