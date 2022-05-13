@@ -880,12 +880,12 @@ class RunTest:
             ]
         else:
             input_data = [{
-                "password": key1,
-                "upstream": str(self.upstream_port) + "." + str(vlan_id[0]),
-                "mac": "",
-                "num_station": 1,
-                "radio": str(radio)
-            },
+                    "password": key1,
+                    "upstream": str(self.upstream_port) + "." + str(vlan_id[0]),
+                    "mac": "",
+                    "num_station": 1,
+                    "radio": str(radio)
+                },
                 {
                     "password": key2,
                     "upstream": str(self.upstream_port) + "." + str(vlan_id[1]),
@@ -933,30 +933,10 @@ class RunTest:
         elif mode == "NAT":
             result1 = self.multi_obj.compare_nonvlan_ip_nat()
         # station_name =  ['sta100', 'sta200', 'sta00']
-        for sta_name_ in station_name:
-            if sta_name_ is None:
-                raise ValueError("get_station_url wants a station name")
-            if self.sta_url_map is None:
-                self.sta_url_map = {}
-                for sta_name in station_name:
-                    self.sta_url_map[sta_name] = "port/1/%s/%s" % (str(1), sta_name)
-                    print(self.sta_url_map)
-
-        for sta_name in station_name:
-            try:
-                station_data_str = ""
-                # sta_url = self.staConnect.get_station_url(sta_name)
-                station_info = self.multi_obj.local_realm.json_get(self.sta_url_map[sta_name])
-                print("station info", station_info)
-                for i in station_info["interface"]:
-                    try:
-                        station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
-                    except Exception as e:
-                        print(e)
-                print("sta name", sta_name)
-                allure.attach(name=str(sta_name), body=str(station_data_str))   
-            except Exception as e:
-                print(e)
+        cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port)
+        res_data = cli_base.json_get(_req_url='port?fields=alias,port+type,ip,mac',)['interfaces']
+        # attach station data to allure
+        self.attach_stationdata_to_allure(name="Station Data", station_name=station_name)
         if result1 == "Pass":
             print("Test passed for non vlan ip ")
         else:
