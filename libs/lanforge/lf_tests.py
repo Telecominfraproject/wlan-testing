@@ -1388,6 +1388,19 @@ class RunTest:
         while sniffer.is_alive():
             time.sleep(1)
         report_name = ofdma_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        # pull pcap from lanforge to current directory
+        if self.pcap_obj.pcap_name is not None:
+            lf_report.pull_reports(hostname=self.lanforge_ip, port=self.lanforge_ssh_port, username="lanforge",
+                                   password="lanforge", report_location="/home/lanforge/" + self.pcap_obj.pcap_name,
+                                   report_dir=".")
+        else:
+            raise ValueError("pcap_name should not be None")
+
+        # check for mu-mimo bearmformee association request
+        check_he = self.pcap_obj.check_beamformee_association_request(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check HE Capabilities in Beacon Frame")
+        allure.attach.file(source=self.pcap_obj.pcap_name,
+                           name="pcap_file", attachment_type=allure.attachment_type.PCAP)
         influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
                              influx_port=self.influx_params["influx_port"],
                              influx_org=self.influx_params["influx_org"],
