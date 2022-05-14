@@ -562,7 +562,10 @@ class RunTest:
                     except Exception as e:
                         print(e)
                 print("sta name", sta_name)
-                allure.attach(name=name, body=str(station_data_str))
+                if name == "":
+                    allure.attach(name=f"{sta_name} info", body=str(station_data_str))
+                else:
+                    allure.attach(name=name, body=str(station_data_str))
             except Exception as e:
                 print(e)
 
@@ -935,8 +938,9 @@ class RunTest:
         # station_name =  ['sta100', 'sta200', 'sta00']
         cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port)
         res_data = cli_base.json_get(_req_url='port?fields=alias,port+type,ip,mac',)['interfaces']
+        print(res_data)
         # attach station data to allure
-        self.attach_stationdata_to_allure(name="Station Data", station_name=station_name)
+        self.attach_stationdata_to_allure(name="", station_name=station_name)
         if result1 == "Pass":
             print("Test passed for non vlan ip ")
         else:
