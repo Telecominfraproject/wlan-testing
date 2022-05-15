@@ -17,7 +17,7 @@ import allure
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-pytestmark = [pytest.mark.regression, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.ToggleAirplaneMode, pytest.mark.client_reconnect, pytest.mark.client_reconnect_testing]
+pytestmark = [pytest.mark.regression, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.ToggleAirplaneMode, pytest.mark.client_reconnect,pytest.mark.general_security, pytest.mark.client_reconnect_testing]
 
 from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp,\
     gets_ip_add_for_checking_and_forgets_ssid, verifyUploadDownloadSpeed_android, wifi_connect, wifi_disconnect_and_forget, gets_ip_add_and_does_not_forget_ssid

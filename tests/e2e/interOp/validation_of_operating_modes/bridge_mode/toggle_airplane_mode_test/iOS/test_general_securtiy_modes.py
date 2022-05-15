@@ -22,7 +22,7 @@ from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnecti
     Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown,\
     verifyUploadDownloadSpeediOS, gets_ip_add_and_does_not_forget_ssid_ios, gets_ip_add_for_checking_and_forgets_ssid_ios, wifi_connect, wifi_disconnect_and_forget
 
-pytestmark = [pytest.mark.regression, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
+pytestmark = [pytest.mark.regression, pytest.mark.interop, pytest.mark.ios,pytest.mark.general_security, pytest.mark.interop_ios,
               pytest.mark.client_reconnect, pytest.mark.bridge, pytest.mark.ToggleAirplaneMode, pytest.mark.client_reconnect_testing]
 
 setup_params_general = {
