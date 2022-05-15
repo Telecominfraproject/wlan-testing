@@ -931,9 +931,10 @@ class UProfileUtility:
         allure.attach(name="/configure response: " + str(resp.status_code), body=str(resp.json()),
                       attachment_type=allure.attachment_type.JSON)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
-        # print(resp.url)
+        print(resp.url)
         resp.close()
         print(resp)
+        return resp
 
 
 if __name__ == '__main__':
