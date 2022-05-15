@@ -13,6 +13,7 @@ import allure
 
 
 @pytest.mark.uc_sanity
+@pytest.mark.gw_all_api
 @allure.feature("SDK REST API")
 class TestUcentralGatewayService(object):
     """
@@ -121,15 +122,13 @@ class TestUcentralGatewayService(object):
             Test the list devices endpoint
             WIFI-3452
         """
-        resp = setup_controller.request("gw", "devices", "GET", None, None)
-        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="gw list devices", body=body)
-        if resp.status_code != 200:
-            assert False
-        devices = json.loads(resp.text)
-        print(devices)
+        resp = setup_controller.get_devices()
+        print(resp.json())
+        allure.attach(name="Devices", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
 
     @pytest.mark.sdk_restapi
+    @pytest.mark.gw_lsdev
     def test_gwservice_createdevice(self, setup_controller, testbed):
         """
             Test the create device endpoint
@@ -146,104 +145,30 @@ class TestUcentralGatewayService(object):
                    'deviceType': 'AP',
                    'location': '',
                    'macAddress': device_mac,
-                   'manufacturer': 'Testing',
+                   'manufacturer': 'Testing through Automation',
                    'owner': ''}
         print(json.dumps(payload))
-        resp = setup_controller.request("gw", "device/" + device_name, "POST", None, json.dumps(payload))
+        resp = setup_controller.add_device_to_gw(device_name, payload)
         allure.attach(name="response: ", body=str(resp.json()))
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="gw create devices", body=body)
+        allure.attach(name="Gateway create device", body=body)
         if resp.status_code != 200:
             assert False
         devices = json.loads(resp.text)
         print(devices)
 
-        resp = setup_controller.request("gw", "device/" + device_name, "GET", None, None)
+        resp = setup_controller.get_device_by_serial_number(device_name)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="gw create device verify", body=body)
+        allure.attach(name="Gateway create device-verify", body=body)
         if resp.status_code != 200:
             assert False
 
-        resp = setup_controller.request("gw", "device/" + device_name, "DELETE", None, None)
+        resp = setup_controller.delete_device_from_gw(device_name)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="gw create device delete", body=body)
-        if resp.status_code != 200:
-            assert False
-    '''
-    @pytest.mark.sdk_restapi
-    def test_gwservice_updatedevice(self, setup_controller):
-        """
-            Test the update device endpoint
-            WIFI-3454
-        """
-        payload = {'serialNumber': 'deadbeef0011',
-                   'UUID': '123456',
-                   'configuration': self.configuration,
-                   'deviceType': 'AP',
-                   'location': '',
-                   'macAddress': 'DE:AD:BE:EF:00:11',
-                   'manufacturer': 'Testing',
-                   'owner': ''}
-        resp = setup_controller.request("gw", "device/deadbeef0011", "POST", None, json.dumps(payload))
-        allure.attach(name="response: ", body=str(resp.json()))
-        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="gw create devices", body=body)
-        if resp.status_code != 200:
-            assert False
-        devices = json.loads(resp.text)
-        print(devices)
-
-        payload = {'serialNumber': 'deadbeef0011',
-                   'notes': [{"note": "This is a test"}]}
-        resp = setup_controller.request("gw", "device/deadbeef0011", "PUT", None, json.dumps(payload))
-        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="gw get device", body=body)
+        allure.attach(name="gw created device-delete", body=body)
         if resp.status_code != 200:
             assert False
 
-        resp = setup_controller.request("gw", "device/deadbeef0011", "GET", None, None)
-        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="gw create device verify", body=body)
-        if resp.status_code != 200:
-            assert False
-
-        device = json.loads(resp.text)
-        print(device)
-
-        resp = setup_controller.request("gw", "device/deadbeef0011", "DELETE", None, None)
-        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="gw get device", body=body)
-        if resp.status_code != 200:
-            assert False
-
-        @pytest.mark.sdk_restapi
-        def test_gwservice_deletedevice(self, setup_controller):
-            """
-                Test the delete device endpoint
-                WIFI-3455
-            """
-            payload = {'serialNumber': 'deadbeef0011',
-                       'UUID': '123456',
-                       'configuration': self.configuration,
-                       'deviceType': 'AP',
-                       'location': 'testing',
-                       'macAddress': 'DE:AD:BE:EF:00:11',
-                       'manufacturer': 'Testing',
-                       'owner': ''}
-            resp = setup_controller.request("gw", "device/deadbeef0011", "POST", None, json.dumps(payload))
-            body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-            allure.attach(name="gw create devices", body=body)
-            if resp.status_code != 200:
-                assert False
-            devices = json.loads(resp.text)
-            print(devices)
-
-            resp = setup_controller.request("gw", "device/deadbeef0011", "DELETE", None, None)
-            body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-            allure.attach(name="gw get device", body=body)
-            if resp.status_code != 200:
-                assert False
-    '''
 
     @pytest.mark.system_info_gw
     def test_system_info_gw(self, setup_controller):
@@ -252,9 +177,64 @@ class TestUcentralGatewayService(object):
         allure.attach(name="system info", body=str(system_info.json()),attachment_type=allure.attachment_type.JSON)
         assert system_info.status_code == 200
 
-    @pytest.mark.system_info_gw
-    def test_system_info_fms(self, setup_controller):
-        system_info = setup_controller.get_system_fms()
+    @pytest.mark.gw_commands
+    def test_gw_commands(self, setup_controller):
+        system_info = setup_controller.get_commands()
         print(system_info.json())
-        allure.attach(name="system info", body=str(system_info.json()), attachment_type=allure.attachment_type.JSON)
+        allure.attach(name="Gateway list of commands", body=str(system_info.json()), attachment_type=allure.attachment_type.JSON)
         assert system_info.status_code == 200
+
+    @pytest.mark.gw_device_logs
+    def test_gw_service_get_logs(self, setup_controller, get_configuration):
+        """
+            Test the device logs present in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        resp = setup_controller.get_device_logs(device_name)
+        print(resp.json())
+        allure.attach(name="Device Logs", body=str(resp.json()),attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
+    @pytest.mark.gw_device_health_checks
+    def test_gw_service_get_health_checks(self, setup_controller, get_configuration):
+        """
+            Test the device health checks present in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        resp = setup_controller.get_device_health_checks(device_name)
+        print(resp.json())
+        allure.attach(name="Device Health checks", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
+    @pytest.mark.gw_device_capabilities
+    def test_gw_service_get_capabilities(self, setup_controller, get_configuration):
+        """
+            Test the device capabilities present in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        resp = setup_controller.get_device_capabilities(device_name)
+        print(resp.json())
+        allure.attach(name="Device capabilities", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
+    @pytest.mark.gw_device_statistics
+    def test_gw_service_get_statistics(self, setup_controller, get_configuration):
+        """
+            Test the device statistics present in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        resp = setup_controller.get_device_statistics(device_name)
+        print(resp.json())
+        allure.attach(name="Device statistics", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
+    @pytest.mark.gw_device_status
+    def test_gw_service_get_status(self, setup_controller, get_configuration):
+        """
+            Test the device status present in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        resp = setup_controller.get_device_status(device_name)
+        print(resp.json())
+        allure.attach(name="Device status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200

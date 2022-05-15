@@ -72,10 +72,12 @@ jobs:
     - name: Checkout repo with Helm values
       uses: actions/checkout@v2
       with:
-        path: wlan-testing
+        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
+        path: wlan-cloud-ucentral-deploy
+        ref: ${{ matrix.chart_version }}
 
     - name: Prepare certificates from secrets
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         echo "${{ env.DIGICERT_CERT }}" | base64 -d > cert.pem
         echo "${{ env.DIGICERT_KEY }}" | base64 -d > key.pem
@@ -91,7 +93,7 @@ jobs:
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: Deploy OpenWIFI Cloud SDK
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         export NAMESPACE=${{ matrix.namespace }}
         export DEPLOY_METHOD=${{ matrix.deploy_method }}
@@ -104,7 +106,8 @@ jobs:
         export OWPROVUI_VERSION=${{ matrix.owprovui_version }}
         export OWANALYTICS_VERSION=${{ matrix.owanalytics_version }}
         export OWSUB_VERSION=${{ matrix.owsub_version }}
-        export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.external-db.yaml
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.external-db.yaml
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
         export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
@@ -112,6 +115,8 @@ jobs:
         export CERT_LOCATION=cert.pem
         export KEY_LOCATION=key.pem
         export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
+        export MAILER_USERNAME=${{ secrets.MAILER_USERNAME }}
+        export MAILER_PASSWORD=${{ secrets.MAILER_PASSWORD }}
         ./deploy.sh
 
     - name: Show resource state on deployment failure

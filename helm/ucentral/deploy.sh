@@ -3,41 +3,44 @@ set -e
 
 # Usage function
 usage () {
-  echo;
-  echo "This script is indended for OpenWIFI Cloud SDK deployment to TIP QA/Dev environments using assembly Helm chart (https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy/tree/main/chart) with configuration through environment variables";
-  echo;
-  echo "Required environment variables:"
-  echo;
-  echo "- NAMESPACE - namespace suffix that will used added for the Kubernetes environment (i.e. if you pass 'test', kubernetes namespace will be named 'ucentral-test')";
-  echo "- DEPLOY_METHOD - deployment method for the chart deployment (supported methods - 'git' (will use helm-git from assembly chart) and 'bundle' (will use chart stored in the Artifactory0";
-  echo "- CHART_VERSION - version of chart to be deployed from assembly chart (for 'git' method git ref may be passed, for 'bundle' method version of chart may be passed)";
-  echo;
-  echo "- VALUES_FILE_LOCATION - path to file with override values that may be used for deployment";
-  echo "- OWGW_AUTH_USERNAME - username to be used for requests to OpenWIFI Security";
-  echo "- OWGW_AUTH_PASSWORD - hashed password for OpenWIFI Security (details on this may be found in https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/#authenticationdefaultpassword)";
-  echo "- OWFMS_S3_SECRET - secret key that is used for OpenWIFI Firmware access to firmwares S3 bucket";
-  echo "- OWFMS_S3_KEY - access key that is used for OpenWIFI Firmware access to firmwares S3 bucket";
-  echo "- OWSEC_NEW_PASSWORD - password that should be set to default user instead of default password from properties";
-  echo "- CERT_LOCATION - path to certificate in PEM format that will be used for securing all endpoint in all services";
-  echo "- KEY_LOCATION - path to private key in PEM format that will be used for securing all endpoint in all services";
-  echo;
-  echo "Following environmnet variables may be passed, but will be ignored if CHART_VERSION is set to release (i.e. v2.4.0):"
-  echo;
-  echo "- OWGW_VERSION - OpenWIFI Gateway version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)";
-  echo "- OWGWUI_VERSION - OpenWIFI Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)";
-  echo "- OWSEC_VERSION - OpenWIFI Security version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)";
-  echo "- OWFMS_VERSION - OpenWIFI Firmware version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)";
-  echo "- OWPROV_VERSION - OpenWIFI Provisioning version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)";
-  echo "- OWPROVUI_VERSION - OpenWIFI Provisioning Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)";
-  echo "- OWANALYTICS_VERSION - OpenWIFI Analytics version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)";
-  echo "- OWSUB_VERSION - OpenWIFI Subscription (Userportal) version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)";
-  echo;
-  echo "Optional environment variables:"
-  echo;
-  echo "- EXTRA_VALUES - extra values that should be passed to Helm deployment separated by comma (,)"
-  echo "- DEVICE_CERT_LOCATION - path to certificate in PEM format that will be used for load simulator";
-  echo "- DEVICE_KEY_LOCATION - path to private key in PEM format that will be used for load simulator";
-  echo "- USE_SEPARATE_OWGW_LB - flag that should change split external DNS for OWGW and other services"
+  echo >&2;
+  echo "This script is indended for OpenWIFI Cloud SDK deployment to TIP QA/Dev environments using assembly Helm chart (https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy/tree/main/chart) with configuration through environment variables" >&2;
+  echo >&2;
+  echo "Required environment variables:" >&2;
+  echo >&2;
+  echo "- NAMESPACE - namespace suffix that will used added for the Kubernetes environment (i.e. if you pass 'test', kubernetes namespace will be named 'ucentral-test')" >&2;
+  echo "- DEPLOY_METHOD - deployment method for the chart deployment (supported methods - 'git' (will use helm-git from assembly chart) and 'bundle' (will use chart stored in the Artifactory0" >&2;
+  echo "- CHART_VERSION - version of chart to be deployed from assembly chart (for 'git' method git ref may be passed, for 'bundle' method version of chart may be passed)" >&2;
+  echo >&2;
+  echo "- VALUES_FILE_LOCATION - path to file with override values that may be used for deployment" >&2;
+  echo "- OWGW_AUTH_USERNAME - username to be used for requests to OpenWIFI Security" >&2;
+  echo "- OWGW_AUTH_PASSWORD - hashed password for OpenWIFI Security (details on this may be found in https://github.com/Telecominfraproject/wlan-cloud-ucentralsec/#authenticationdefaultpassword)" >&2;
+  echo "- OWFMS_S3_SECRET - secret key that is used for OpenWIFI Firmware access to firmwares S3 bucket" >&2;
+  echo "- OWFMS_S3_KEY - access key that is used for OpenWIFI Firmware access to firmwares S3 bucket" >&2;
+  echo "- OWSEC_NEW_PASSWORD - password that should be set to default user instead of default password from properties" >&2;
+  echo "- CERT_LOCATION - path to certificate in PEM format that will be used for securing all endpoint in all services" >&2;
+  echo "- KEY_LOCATION - path to private key in PEM format that will be used for securing all endpoint in all services" >&2;
+  echo >&2;
+  echo "Following environmnet variables may be passed, but will be ignored if CHART_VERSION is set to release (i.e. v2.4.0):" >&2;
+  echo >&2;
+  echo "- OWGW_VERSION - OpenWIFI Gateway version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
+  echo "- OWGWUI_VERSION - OpenWIFI Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
+  echo "- OWSEC_VERSION - OpenWIFI Security version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
+  echo "- OWFMS_VERSION - OpenWIFI Firmware version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
+  echo "- OWPROV_VERSION - OpenWIFI Provisioning version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
+  echo "- OWPROVUI_VERSION - OpenWIFI Provisioning Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
+  echo "- OWANALYTICS_VERSION - OpenWIFI Analytics version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
+  echo "- OWSUB_VERSION - OpenWIFI Subscription (Userportal) version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)" >&2;
+  echo >&2;
+  echo "Optional environment variables:" >&2;
+  echo >&2;
+  echo "- EXTRA_VALUES - extra values that should be passed to Helm deployment separated by comma (,)" >&2;
+  echo "- DEVICE_CERT_LOCATION - path to certificate in PEM format that will be used for load simulator" >&2;
+  echo "- DEVICE_KEY_LOCATION - path to private key in PEM format that will be used for load simulator" >&2;
+  echo "- USE_SEPARATE_OWGW_LB - flag that should change split external DNS for OWGW and other services" >&2;
+  echo "- INTERNAL_RESTAPI_ENDPOINT_SCHEMA - what schema to use for internal RESTAPI endpoints (https by default)" >&2;
+  echo "- MAILER_USERNAME - SMTP username used for OWSEC mailer" >&2;
+  echo "- MAILER_PASSWORD - SMTP password used for OWSEC mailer (only if both MAILER_PASSWORD and MAILER_USERNAME are set, mailer will be enabled)" >&2;
 }
 
 # Global variables
@@ -56,35 +59,38 @@ check_if_chart_version_is_release() {
 
 # Check if required environment variables were passed
 ## Deployment specifics
-[ -z ${DEPLOY_METHOD+x} ] && echo "DEPLOY_METHOD is unset" && usage && exit 1
-[ -z ${CHART_VERSION+x} ] && echo "CHART_VERSION is unset" && usage && exit 1
+[ -z ${DEPLOY_METHOD+x} ] && echo "DEPLOY_METHOD is unset" >&2 && usage && exit 1
+[ -z ${CHART_VERSION+x} ] && echo "CHART_VERSION is unset" >&2 && usage && exit 1
 if check_if_chart_version_is_release; then
   echo "Chart version ($CHART_VERSION) is release version, ignoring services versions"
 else
   echo "Chart version ($CHART_VERSION) is not release version, checking if services versions are set"
-  [ -z ${OWGW_VERSION+x} ] && echo "OWGW_VERSION is unset" && usage && exit 1
-  [ -z ${OWGWUI_VERSION+x} ] && echo "OWGWUI_VERSION is unset" && usage && exit 1
-  [ -z ${OWSEC_VERSION+x} ] && echo "OWSEC_VERSION is unset" && usage && exit 1
-  [ -z ${OWFMS_VERSION+x} ] && echo "OWFMS_VERSION is unset" && usage && exit 1
-  [ -z ${OWPROV_VERSION+x} ] && echo "OWPROV_VERSION is unset" && usage && exit 1
-  [ -z ${OWPROVUI_VERSION+x} ] && echo "OWPROVUI_VERSION is unset" && usage && exit 1
-  [ -z ${OWANALYTICS_VERSION+x} ] && echo "OWANALYTICS_VERSION is unset" && usage && exit 1
-  [ -z ${OWSUB_VERSION+x} ] && echo "OWSUB_VERSION is unset" && usage && exit 1
+  [ -z ${OWGW_VERSION+x} ] && echo "OWGW_VERSION is unset" >&2 && usage && exit 1
+  [ -z ${OWGWUI_VERSION+x} ] && echo "OWGWUI_VERSION is unset" >&2 && usage && exit 1
+  [ -z ${OWSEC_VERSION+x} ] && echo "OWSEC_VERSION is unset" >&2 && usage && exit 1
+  [ -z ${OWFMS_VERSION+x} ] && echo "OWFMS_VERSION is unset" >&2 && usage && exit 1
+  [ -z ${OWPROV_VERSION+x} ] && echo "OWPROV_VERSION is unset" >&2 && usage && exit 1
+  [ -z ${OWPROVUI_VERSION+x} ] && echo "OWPROVUI_VERSION is unset" >&2 && usage && exit 1
+  [ -z ${OWANALYTICS_VERSION+x} ] && echo "OWANALYTICS_VERSION is unset" >&2 && usage && exit 1
+  [ -z ${OWSUB_VERSION+x} ] && echo "OWSUB_VERSION is unset" >&2 && usage && exit 1
 fi
 ## Environment specifics
-[ -z ${NAMESPACE+x} ] && echo "NAMESPACE is unset" && usage && exit 1
+[ -z ${NAMESPACE+x} ] && echo "NAMESPACE is unset" >&2 && usage && exit 1
 ## Variables specifics
-[ -z ${VALUES_FILE_LOCATION+x} ] && echo "VALUES_FILE_LOCATION is unset" && usage && exit 1
-[ -z ${OWGW_AUTH_USERNAME+x} ] && echo "OWGW_AUTH_USERNAME is unset" && usage && exit 1
-[ -z ${OWGW_AUTH_PASSWORD+x} ] && echo "OWGW_AUTH_PASSWORD is unset" && usage && exit 1
-[ -z ${OWFMS_S3_SECRET+x} ] && echo "OWFMS_S3_SECRET is unset" && usage && exit 1
-[ -z ${OWFMS_S3_KEY+x} ] && echo "OWFMS_S3_KEY is unset" && usage && exit 1
-[ -z ${OWSEC_NEW_PASSWORD+x} ] && echo "OWSEC_NEW_PASSWORD is unset" && usage && exit 1
-[ -z ${CERT_LOCATION+x} ] && echo "CERT_LOCATION is unset" && usage && exit 1
-[ -z ${KEY_LOCATION+x} ] && echo "KEY_LOCATION is unset" && usage && exit 1
+[ -z ${VALUES_FILE_LOCATION+x} ] && echo "VALUES_FILE_LOCATION is unset" >&2 && usage && exit 1
+[ -z ${OWGW_AUTH_USERNAME+x} ] && echo "OWGW_AUTH_USERNAME is unset" >&2 && usage && exit 1
+[ -z ${OWGW_AUTH_PASSWORD+x} ] && echo "OWGW_AUTH_PASSWORD is unset" >&2 && usage && exit 1
+[ -z ${OWFMS_S3_SECRET+x} ] && echo "OWFMS_S3_SECRET is unset" >&2 && usage && exit 1
+[ -z ${OWFMS_S3_KEY+x} ] && echo "OWFMS_S3_KEY is unset" >&2 && usage && exit 1
+[ -z ${OWSEC_NEW_PASSWORD+x} ] && echo "OWSEC_NEW_PASSWORD is unset" >&2 && usage && exit 1
+[ -z ${CERT_LOCATION+x} ] && echo "CERT_LOCATION is unset" >&2 && usage && exit 1
+[ -z ${KEY_LOCATION+x} ] && echo "KEY_LOCATION is unset" >&2 && usage && exit 1
 
 [ -z ${DEVICE_CERT_LOCATION+x} ] && echo "DEVICE_CERT_LOCATION is unset, setting it to CERT_LOCATION" && export DEVICE_CERT_LOCATION=$CERT_LOCATION
 [ -z ${DEVICE_KEY_LOCATION+x} ] && echo "DEVICE_KEY_LOCATION is unset, setting it to KEY_LOCATION" && export DEVICE_KEY_LOCATION=$KEY_LOCATION
+[ -z ${INTERNAL_RESTAPI_ENDPOINT_SCHEMA+x} ] && echo "INTERNAL_RESTAPI_ENDPOINT_SCHEMA is unset, setting it to 'https'" && export INTERNAL_RESTAPI_ENDPOINT_SCHEMA=https
+export MAILER_ENABLED="false"
+[ ! -z ${MAILER_USERNAME+x} ] && [ ! -z ${MAILER_PASSWORD+x} ] && echo "MAILER_USERNAME and MAILER_PASSWORD are set, mailer will be enabled" && export MAILER_ENABLED="true"
 
 # Transform some environment variables
 export OWGW_VERSION_TAG=$(echo ${OWGW_VERSION} | tr '/' '-')
@@ -97,7 +103,7 @@ export OWANALYTICS_VERSION_TAG=$(echo ${OWANALYTICS_VERSION} | tr '/' '-')
 export OWSUB_VERSION_TAG=$(echo ${OWSUB_VERSION} | tr '/' '-')
 
 # Debug get bash version
-bash --version > /dev/stderr
+bash --version >&2
 
 # Check deployment method that's required for this environment
 helm plugin install https://github.com/databus23/helm-diff || true
@@ -128,7 +134,7 @@ else
     helm repo add tip-wlan-cloud-ucentral-helm https://tip.jfrog.io/artifactory/tip-wlan-cloud-ucentral-helm/ || true
     export DEPLOY_SOURCE="tip-wlan-cloud-ucentral-helm/openwifi --version $CHART_VERSION"
   else
-    echo "Deploy method is not correct: $DEPLOY_METHOD. Valid value - git or bundle"
+    echo "Deploy method is not correct: $DEPLOY_METHOD. Valid value - git or bundle" >&2
     exit 1
   fi
 fi
@@ -160,20 +166,24 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set owgw.configProperties."openwifi\.fileuploader\.host\.0\.name"=gw-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owgw.configProperties."rtty\.server"=gw-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owgw.configProperties."openwifi\.system\.uri\.public"=https://gw-${NAMESPACE}.cicd.lab.wlan.tip.build:16002 \
-  --set owgw.configProperties."openwifi\.system\.uri\.private"=https://owgw-owgw:17002 \
+  --set owgw.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owgw-owgw:17002 \
   --set owgw.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owgw.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owsec.configProperties."authentication\.default\.username"=${OWGW_AUTH_USERNAME} \
   --set owsec.configProperties."authentication\.default\.password"=${OWGW_AUTH_PASSWORD} \
   --set owsec.services.owsec.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=sec-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owsec.configProperties."openwifi\.system\.uri\.public"=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
-  --set owsec.configProperties."openwifi\.system\.uri\.private"=https://owsec-owsec:17001 \
+  --set owsec.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owsec-owsec:17001 \
   --set owsec.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
+  --set owsec.configProperties."mailer\.sender"=sec-${NAMESPACE}@cicd.lab.wlan.tip.build \
+  --set owsec.configProperties."mailer\.enabled"=$MAILER_ENABLED \
+  --set owsec.configProperties."mailer\.username"=$MAILER_USERNAME \
+  --set owsec.configProperties."mailer\.password"=$MAILER_PASSWORD \
   --set owfms.configProperties."s3\.secret"=${OWFMS_S3_SECRET} \
   --set owfms.configProperties."s3\.key"=${OWFMS_S3_KEY} \
   --set owfms.services.owfms.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=fms-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owfms.configProperties."openwifi\.system\.uri\.public"=https://fms-${NAMESPACE}.cicd.lab.wlan.tip.build:16004 \
-  --set owfms.configProperties."openwifi\.system\.uri\.private"=https://owfms-owfms:17004 \
+  --set owfms.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owfms-owfms:17004 \
   --set owfms.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owfms.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owgwui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
@@ -181,7 +191,7 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set owgwui.public_env_variables.DEFAULT_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owprov.services.owprov.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=prov-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owprov.configProperties."openwifi\.system\.uri\.public"=https://prov-${NAMESPACE}.cicd.lab.wlan.tip.build:16005 \
-  --set owprov.configProperties."openwifi\.system\.uri\.private"=https://owprov-owprov:17005 \
+  --set owprov.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owprov-owprov:17005 \
   --set owprov.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owprov.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owprovui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=provui-${NAMESPACE}.cicd.lab.wlan.tip.build \
@@ -190,19 +200,19 @@ helm upgrade --install --create-namespace --wait --timeout 60m \
   --set owprovui.public_env_variables.REACT_APP_UCENTRALSEC_URL=https://sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owanalytics.services.owanalytics.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=analytics-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owanalytics.configProperties."openwifi\.system\.uri\.public"=https://analytics-${NAMESPACE}.cicd.lab.wlan.tip.build:16009 \
-  --set owanalytics.configProperties."openwifi\.system\.uri\.private"=https://owanalytics-owanalytics:17009 \
+  --set owanalytics.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owanalytics-owanalytics:17009 \
   --set owanalytics.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owanalytics.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set owsub.services.owsub.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=sub-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owsub.configProperties."openwifi\.system\.uri\.public"=https://sub-${NAMESPACE}.cicd.lab.wlan.tip.build:16006 \
-  --set owsub.configProperties."openwifi\.system\.uri\.private"=https://owsub-owsub:17006 \
+  --set owsub.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owsub-owsub:17006 \
   --set owsub.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owsub.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set clustersysteminfo.public_env_variables.OWSEC=sec-${NAMESPACE}.cicd.lab.wlan.tip.build:16001 \
   --set clustersysteminfo.secret_env_variables.OWSEC_NEW_PASSWORD=${OWSEC_NEW_PASSWORD} \
   --set owls.services.owls.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=ls-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owls.configProperties."openwifi\.system\.uri\.public"=https://ls-${NAMESPACE}.cicd.lab.wlan.tip.build:16007 \
-  --set owls.configProperties."openwifi\.system\.uri\.private"=https://owls-owls:17007 \
+  --set owls.configProperties."openwifi\.system\.uri\.private"=$INTERNAL_RESTAPI_ENDPOINT_SCHEMA://owls-owls:17007 \
   --set owls.configProperties."openwifi\.system\.uri\.ui"=https://webui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owlsui.ingresses.default.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=lsui-${NAMESPACE}.cicd.lab.wlan.tip.build \
   --set owlsui.ingresses.default.hosts={lsui-${NAMESPACE}.cicd.lab.wlan.tip.build} \
