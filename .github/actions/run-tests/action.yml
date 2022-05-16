@@ -135,7 +135,7 @@ runs:
           kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
         done
         echo "tests completed"
-        rm -f allure-results
+        rm -rf allure-results
         echo "downloading allure results..."
         kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
         echo "waiting for pod to exit"
