@@ -938,44 +938,32 @@ class RunTest:
         # station_name =  ['sta100', 'sta200', 'sta00']
         cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port)
         res_data = cli_base.json_get(_req_url='port?fields=alias,port+type,ip,mac',)['interfaces']
-        table_data = {"station name": [], "configured vlan-id": [], "expected IP Range": [], "allocated IP": [],"mac address":[]}
+        table_heads = ["station name", "configured vlan-id", "expected IP Range", "allocated IP","mac address"]
+        table_data = []
         temp = {'sta100':'', 'sta200': '', 'sta00': ''}
         for i in res_data:
             for item in i:
-                if i[item]['port type'] == 'Ethernet':
-                    if i[item]['alias'] == self.upstream_port:
-                        temp.update({'sta00': i[item]['ip']})
-                if i[item]['port type'] == '802.1Q VLAN':
-                    if i[item]['alias'] == str(self.upstream_port+".100"):
-                        temp.update({'sta100': i[item]['ip']})
-                    elif i[item]['alias'] == str(self.upstream_port+".200"):
-                        temp.update({'sta200': i[item]['ip']})
-                if i[item]['port type'] == 'WIFI-STA':
-                    if i[item]['alias'] == "sta100":
-                        exp1 = temp['sta100'].split('.')
-                        table_data["station name"].append(i[item]['alias'])
-                        table_data["configured vlan-id"].append('100')
-                        table_data['expected IP Range'].append(f'{exp1[0]}.{exp1[1]}.X.X')
-                        table_data['allocated IP'].append(i[item]['ip'])
-                        table_data['mac address'].append(i[item]['mac'])
-                    elif i[item]['alias'] == 'sta200':
+                if i[item]['port type'] == 'Ethernet' and i[item]['alias'] == self.upstream_port:
+                    temp.update({'sta00': i[item]['ip']})
+                if i[item]['port type'] == '802.1Q VLAN' and i[item]['alias'] == str(self.upstream_port+".100"):
+                    temp.update({'sta100': i[item]['ip']})
+                elif i[item]['port type'] == '802.1Q VLAN' and i[item]['alias'] == str(self.upstream_port+".200"):
+                    temp.update({'sta200': i[item]['ip']})
+        for i in res_data:
+            for item in i:
+                if i[item]['port type'] == 'WIFI-STA' and i[item]['alias'] == "sta100":
+                    exp1 = temp['sta100'].split('.')
+                    table_data.append([i[item]['alias'], '100', f'{exp1[0]}.{exp1[1]}.X.X', i[item]['ip'], i[item]['mac']])
+                elif i[item]['port type'] == 'WIFI-STA' and i[item]['alias'] == 'sta200':
                         exp2 = temp['sta200'].split('.')
-                        table_data["station name"].append(i[item]['alias'])
-                        table_data["configured vlan-id"].append('200')
-                        table_data['expected IP Range'].append(f'{exp2[0]}.{exp2[1]}.X.X')
-                        table_data['allocated IP'].append(i[item]['ip'])
-                        table_data['mac address'].append(i[item]['mac'])
-                    elif i[item]['alias'] == 'sta00':
-                        exp3 = temp['sta00'].split('.')
-                        table_data["station name"].append(i[item]['alias'])
-                        table_data["configured vlan-id"].append('-')
-                        table_data['expected IP Range'].append(f'{exp3[0]}.{exp3[1]}.X.X')
-                        table_data['allocated IP'].append(i[item]['ip'])
-                        table_data['mac address'].append(i[item]['mac'])
+                        table_data.append([i[item]['alias'], '200', f'{exp2[0]}.{exp2[1]}.X.X', i[item]['ip'], i[item]['mac']])
+                elif i[item]['port type'] == 'WIFI-STA' and i[item]['alias'] == 'sta00':
+                    exp3 = temp['sta00'].split('.')
+                    table_data.append([i[item]['alias'], 'Non Vlan upstream', f'{exp3[0]}.{exp3[1]}.X.X', i[item]['ip'], i[item]['mac']])
         print(table_data)
         # attach test data in a table to allure
         report_obj = Report()
-        table_info = report_obj.table2(table=[table_data["station name"],table_data["configured vlan-id"],table_data["expected IP Range"],table_data["allocated IP"],table_data["mac address"]], headers=table_data.keys())
+        table_info = report_obj.table2(table=table_data, headers=table_heads)
         allure.attach(name="Test Results Info", body=table_info)
 
         # attach station data to allure
