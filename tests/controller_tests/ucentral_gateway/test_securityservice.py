@@ -7,7 +7,10 @@ import pytest
 import json
 import allure
 
+
 @pytest.mark.uc_sanity
+@pytest.mark.ow_sanity_lf
+@pytest.mark.owsec_api_tests
 @allure.feature("SDK REST API")
 class TestUcentralSecService(object):
     """
@@ -37,6 +40,7 @@ class TestUcentralSecService(object):
         assert resp.status_code == 204
         setup_controller.login()
     '''
+
     @pytest.mark.sdk_restapi
     def test_secservice_system_endpoints(self, setup_controller):
         """
