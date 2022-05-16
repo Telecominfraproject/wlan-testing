@@ -5,8 +5,9 @@ Rate LImiting Bridge Mode Scenario
 import allure
 import pytest
 
-pytestmark = [pytest.mark.rate_limiting, pytest.mark.bridge, pytest.mark.general, pytest.mark.ucentral,
-              pytest.mark.regression]
+pytestmark = [pytest.mark.regression,
+              pytest.mark.ow_rate_limiting_tests_lf,
+              pytest.mark.bridge]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -110,6 +111,7 @@ class TestRateLimitingBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.up_dw
+    @pytest.mark.ow_sanity_lf
     @pytest.mark.batch_size_125
     @allure.story('Rate Limiting Open SSID 2.4 GHZ Band')
     def test_wpa2_personal_ssid_up_dw_batch_size_125_2g(self, lf_test, get_vif_state, lf_tools):

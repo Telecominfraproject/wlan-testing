@@ -541,6 +541,7 @@ class ProvUtils(ConfigureController):
         self.check_response("PUT", resp, self.make_headers(), payload, uri)
         return resp
 
+
     def get_venue(self):
         uri = self.build_url_prov("venue/")
         print(uri)
@@ -959,4 +960,4 @@ if __name__ == '__main__':
 
     # print(profile.get_ssid_info())
     # # print(obj.get_devices())
-    # obj.logout()
+    obj.logout()
