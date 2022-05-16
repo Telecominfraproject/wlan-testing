@@ -483,9 +483,8 @@ class RunTest:
                                             sets=sets)
         wificapacity_obj.setup()
         wificapacity_obj.run()
-        for tag in influx_tags:
-            self.influx_params["influx_tag"].append(tag)
-        report_name = wificapacity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+
+        report_name = "../reports/" + wificapacity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
                              influx_port=self.influx_params["influx_port"],
                              influx_org=self.influx_params["influx_org"],
