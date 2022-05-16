@@ -7,7 +7,9 @@ import pytest
 from configuration import RATE_LIMITING_RADIUS_SERVER_DATA
 from configuration import RATE_LIMITING_RADIUS_ACCOUNTING_DATA
 
-pytestmark = [pytest.mark.regression, pytest.mark.rate_limiting_with_radius, pytest.mark.bridge]
+pytestmark = [pytest.mark.regression,
+              pytest.mark.rate_limiting_with_radius,
+              pytest.mark.bridge]
 
 
 setup_params_general = {
@@ -54,6 +56,7 @@ class TestRateLimitingWithRadiusBridge(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
+    @pytest.mark.ow_sanity_lf
     @pytest.mark.twog_upload_per_ssid
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5849", name="WIFI-5849")
     def test_radius_server_2g_upload_per_ssid(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info, station_names_twog):
@@ -89,6 +92,7 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.twog_download_perssid_persta
+    @pytest.mark.ow_sanity_lf
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5850", name="WIFI-5850")
     def test_radius_server_2g_download_perssid_persta(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
                                      station_names_twog):

@@ -4,15 +4,15 @@
      pytest -m "multipsk and wpa2_personal and twog" -s -vvv --skip-testrail --testbed=basic-03 --alluredir=../allure_reports
         wifi-3493
 """
-import os
 import time
 
-import pytest
 import allure
+import pytest
 
-pytestmark = [pytest.mark.regression, pytest.mark.multipsk, pytest.mark.bridge, pytest.mark.regression, pytest.mark.regression_multipsk]
-
-
+pytestmark = [pytest.mark.regression,
+              pytest.mark.ow_sanity_lf,
+              pytest.mark.ow_multipsk_tests_lf,
+              pytest.mark.bridge]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -124,7 +124,6 @@ class TestMultipskBridge(object):
             station_name.append("sta" + str(i))
         time.sleep(10)
 
-
         station_name.append("sta00")
         print(station_name)
         allure.attach(name="multipsk-config", body=str(setup_params_general["ssid_modes"]["wpa2_personal"][0]["multi-psk"]))
@@ -135,4 +134,3 @@ class TestMultipskBridge(object):
             assert True
         else:
             assert False
-

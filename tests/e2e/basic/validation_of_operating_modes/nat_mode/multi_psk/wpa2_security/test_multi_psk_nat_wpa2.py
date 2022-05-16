@@ -4,14 +4,14 @@
      pytest -m "multipsk and wpa2_personal and twog" -s -vvv --skip-testrail --testbed=basic-03 --alluredir=../allure_reports
         wifi-3495
 """
-import os
 import time
-
-import pytest
 import allure
+import pytest
 
-pytestmark = [pytest.mark.regression, pytest.mark.multipsk, pytest.mark.nat, pytest.mark.regression, pytest.mark.regression_multipsk]
-# pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.regression,
+              pytest.mark.ow_sanity_lf,
+              pytest.mark.ow_multipsk_tests_lf,
+              pytest.mark.nat]
 
 
 setup_params_general = {

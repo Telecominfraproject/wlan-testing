@@ -8,7 +8,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.client_connectivity, pytest.mark.bridge, pytest.mark.general, pytest.mark.ucentral,
+pytestmark = [pytest.mark.ow_client_connectivity_lf, pytest.mark.bridge, pytest.mark.general, pytest.mark.ucentral,
               pytest.mark.sanity, pytest.mark.uc_sanity]  # pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
@@ -29,7 +29,7 @@ setup_params_general = {
 }
 
 
-@allure.suite(suite_name="sanity")
+@allure.suite(suite_name="OpenWifi Sanity LF")
 @allure.sub_suite(sub_suite_name="Bridge Mode Client Connectivity : Suite-A")
 @pytest.mark.suiteA
 @pytest.mark.sudo
@@ -215,7 +215,7 @@ setup_params_general_two = {
 }
 
 
-@allure.suite(suite_name="sanity")
+@allure.suite(suite_name="OpenWifi Sanity LF")
 @allure.sub_suite(sub_suite_name="Bridge Mode Client Connectivity : Suite-B")
 @pytest.mark.suiteB
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")

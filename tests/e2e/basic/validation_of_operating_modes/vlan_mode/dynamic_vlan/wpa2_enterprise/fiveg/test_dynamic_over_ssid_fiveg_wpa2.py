@@ -11,7 +11,11 @@ import pytest
 from configuration import DYNAMIC_VLAN_RADIUS_SERVER_DATA
 from configuration import DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA
 
-pytestmark = [pytest.mark.regression, pytest.mark.dynamic_vlan, pytest.mark.wpa2_enterprise, pytest.mark.vlan,pytest.mark.fiveg]
+pytestmark = [pytest.mark.regression,
+              pytest.mark.ow_sanity_lf,
+              pytest.mark.dynamic_vlan,
+              pytest.mark.wpa2_enterprise,
+              pytest.mark.fiveg]
 
 setup_params_general = {
     "mode": "VLAN",

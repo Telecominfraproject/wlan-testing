@@ -1,8 +1,13 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.client_connectivity, pytest.mark.nat, pytest.mark.enterprise, pytest.mark.ttls,
-              pytest.mark.ucentral, pytest.mark.sanity, pytest.mark.uc_sanity]
+pytestmark = [pytest.mark.ow_sanity_lf,
+              pytest.mark.ow_client_connectivity_lf,
+              pytest.mark.nat,
+              pytest.mark.enterprise,
+              pytest.mark.ttls,
+              pytest.mark.sanity,
+              pytest.mark.uc_sanity]
 
 setup_params_enterprise = {
     "mode": "NAT",
@@ -21,7 +26,7 @@ setup_params_enterprise = {
     "radius": True
 }
 
-
+@allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_enterprise],
@@ -33,6 +38,7 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
+    @allure.story('open 2.4 GHZ Band')
     def test_wpa_enterprise_2g(self, get_ap_logs, get_lf_logs,
                                station_names_twog, lf_test, update_report,
                                test_cases, radius_info, exit_on_fail, get_ap_channel):
