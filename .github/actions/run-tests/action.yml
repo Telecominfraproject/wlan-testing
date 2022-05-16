@@ -129,6 +129,7 @@ runs:
         kubectl wait "pod/$podname" --for condition=ready --timeout=600s
         kubectl logs -f $podname &
 
+        rm -f test_everything.xml
         until [ -s test_everything.xml ]
         do
           sleep 10
