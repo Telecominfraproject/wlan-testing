@@ -174,18 +174,17 @@ class Controller(ConfigureController):
 
     def get_devices(self):
         uri = self.build_uri("devices/")
+        print(uri)
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
-        devices = resp.json()
-        # resp.close()()
-        return devices
+        return resp
 
-    def get_device_by_serial_number(self, serial_number=None):
+    def get_device_by_serial_number(self, serial_number):
         uri = self.build_uri("device/" + serial_number)
+        print(uri)
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
-        device = resp.json()
-        # resp.close()()
-        return device
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
 
     def get_sdk_version(self):
         uri = self.build_uri("system/?command=info")
@@ -218,6 +217,65 @@ class Controller(ConfigureController):
     def get_device_uuid(self, serial_number):
         device_info = self.get_device_by_serial_number(serial_number=serial_number)
         return device_info["UUID"]
+
+    def add_device_to_gw(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_device_from_gw(self, device_name):
+        uri = self.build_uri("device/" + device_name)
+        print(uri)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_commands(self):
+        uri = self.build_uri("commands")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_device_logs(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/logs")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_device_health_checks(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/healthchecks")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_device_capabilities(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/capabilities")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_device_statistics(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/statistics")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_device_status(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/status")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
 
 
 class FMSUtils:
@@ -475,6 +533,48 @@ class ProvUtils(ConfigureController):
 
     def edit_location(self, payload, location_id):
         uri = self.build_url_prov("location/" + location_id)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
+
+    def get_venue(self):
+        uri = self.build_url_prov("venue/")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_venue_by_id(self, venue_id):
+        uri = self.build_url_prov("venue/" + venue_id)
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def add_venue(self, payload):
+        uri = self.build_url_prov("venue/0")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_venue(self, venue_id):
+        uri = self.build_url_prov("venue/" + venue_id)
+        print(uri)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def edit_venue(self, payload, venue_id):
+        uri = self.build_url_prov("venue/" + venue_id)
         print(uri)
         print(payload)
         payload = json.dumps(payload)
@@ -832,9 +932,10 @@ class UProfileUtility:
         allure.attach(name="/configure response: " + str(resp.status_code), body=str(resp.json()),
                       attachment_type=allure.attachment_type.JSON)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
-        # print(resp.url)
+        print(resp.url)
         resp.close()
         print(resp)
+        return resp
 
 
 if __name__ == '__main__':
@@ -859,4 +960,4 @@ if __name__ == '__main__':
 
     # print(profile.get_ssid_info())
     # # print(obj.get_devices())
-    # obj.logout()
+    obj.logout()
