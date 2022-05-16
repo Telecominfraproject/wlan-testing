@@ -5,8 +5,11 @@ Rate LImiting Nat Mode Scenario
 import allure
 import pytest
 
-# pytestmark = [pytest.mark.rate_limiting, pytest.mark.nat, pytest.mark.general, pytest.mark.ucentral,
-#               pytest.mark.regression]
+
+pytestmark = [pytest.mark.regression,
+              pytest.mark.ow_rate_limiting_tests_lf,
+              pytest.mark.nat]
+
 
 setup_params_general = {
     "mode": "NAT",
@@ -111,6 +114,7 @@ class TestRateLimitingNat(object):
     @pytest.mark.twog
     @pytest.mark.up_dw
     @pytest.mark.batch_size_125
+    @pytest.mark.ow_sanity_lf
     @allure.story('Rate Limiting Open SSID 2.4 GHZ Band')
     def test_wpa2_personal_nat_ssid_up_dw_batch_size_125_2g(self, lf_test, get_vif_state, lf_tools):
         """
