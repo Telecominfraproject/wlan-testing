@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "hfcl_ion4xe,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4,indio_um-305ac,hfcl_ion4xi,udaya_a5-id2"
+        default: "edgecore_eap102_1,hfcl_ion4xe,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102_2,cig_wf194c,hfcl_ion4,indio_um-305ac,hfcl_ion4xi,udaya_a5-id2"
         description: "the AP models to test"
       ap_version:
         required: true
@@ -59,7 +59,7 @@ jobs:
           echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'uc_sanity' }}")
           echo ::set-output name=existing_controller::$(echo "${{ github.event.inputs.existing_controller || '' }}")
 
-          AP_MODELS="${{ github.event.inputs.ap_models || 'hfcl_ion4xe,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4,indio_um-305ac,hfcl_ion4xi,udaya_a5-id2' }}"
+          AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap102_1,hfcl_ion4xe,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102_2,cig_wf194c,hfcl_ion4,indio_um-305ac,hfcl_ion4xi,udaya_a5-id2' }}"
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           echo "::set-output name=ap_models::${AP_MODELS}"
 
@@ -76,8 +76,129 @@ jobs:
           registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   # Run tests on APs
+  test-edgecore-eap102-1:
+    needs: [ "vars", "build" ]
+    runs-on: ubuntu-latest
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap102_1')"
+    env:
+      CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
+      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
+      CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
+      AP_MODEL: edgecore_eap102_1
+    steps:
+      - name: Set AP model output
+        id: ap_model
+        run: |
+          echo "::set-output name=model::${AP_MODEL}"
+
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+
+      - name: install dependencies
+        run: pip install -r .quali/requirements.txt
+
+      - name: start reservation
+        run: |
+          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
+          then
+            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' "Basic Lab"
+          else
+            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}"}' "Basic Lab"
+          fi
+
+      - name: set reservation outputs
+        if: always()
+        id: reservation
+        run: |
+          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
+          then
+            echo ::set-output name=namespace::"${{ needs.vars.outputs.existing_controller }}"
+          else
+            echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+          fi
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+      - name: prepare namespace name
+        id: namespace
+        run: |
+          NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
+          echo "::set-output name=name::${NAMESPACE}"
+
+      - name: prepare configuration
+        run: |
+          cat << EOF > lab_info.json
+          ${{ secrets.LAB_CONFIGURATION_JSON }}
+          EOF
+          
+          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
+          jq ".CONFIGURATION.basic=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
+          
+          # overwrite configuration value from Quali
+          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
+          then
+            jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
+          fi
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}
+          testbed: basic
+          marker_expression: "${{ needs.vars.outputs.marker_expression }}"
+          configuration_file: "./lab_info.json"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
+          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+        # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}
+
+      - name: show gw logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+
+      - name: show fms logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+
+      - name: show prov logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+
+      - name: show analytics logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+
+      - name: show subscription (userportal) logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+
+      - name: show sec logs
+        if: failure()
+        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+
+      - name: stop reservation
+        if: always()
+        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
+
   test-hfcl-ion4xe:
-    needs: ["vars", "build", "test-edgecore-eap102"]
+    needs: ["vars", "build", "test-edgecore-eap102-2"]
     runs-on: ubuntu-latest
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'hfcl_ion4xe')"
     env:
@@ -681,15 +802,15 @@ jobs:
         if: always()
         run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
-  test-edgecore-eap102:
+  test-edgecore-eap102-2:
     needs: ["vars", "build"]
     runs-on: ubuntu-latest
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap102')"
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap102_2')"
     env:
       CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
       CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
       CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
-      AP_MODEL: edgecore_eap102
+      AP_MODEL: edgecore_eap102_2
     steps:
       - name: Set AP model output
         id: ap_model
@@ -1410,6 +1531,60 @@ jobs:
         run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
   # Save reports
+  report-edgecore-eap102-1:
+    runs-on: ubuntu-latest
+    needs: [ vars, test-edgecore-eap102-1 ]
+    if: always()
+    env:
+      AP_MODEL: edgecore_eap102_1
+    steps:
+      - name: Set AP model output
+        id: ap_model
+        run: |
+          echo "::set-output name=model::${AP_MODEL}"
+
+      - name: checkout testing repo
+        uses: actions/checkout@v2
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: allure-results-${{ steps.ap_model.outputs.model }}
+          path: allure-results
+
+      - name: download history of previous run
+        continue-on-error: true
+        run: |
+          LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key sanity/${{ steps.ap_model.outputs.model }}/latest/index.html | jq -r .Metadata.latest)
+          aws s3 cp --recursive s3://openwifi-allure-reports/sanity/${{ steps.ap_model.outputs.model }}/$LAST_RUN_ID/history history
+
+      - name: generate Allure report
+        uses: ./.github/actions/generate-allure-report
+        with:
+          results_path: ./allure-results
+          history_path: ./history
+          additional_metadata: |
+            Ap.Model=${{ steps.ap_model.outputs.model }}
+
+      - name: upload Allure report as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: allure-report-${{ steps.ap_model.outputs.model }}
+          path: allure-report
+
+      # doing this to be able to aggregate multiple reports together later on
+      - name: copy results into report
+        run: cp -r allure-results allure-report/results
+
+      - name: upload to S3
+        if: github.ref == 'refs/heads/master' && needs.vars.outputs.marker_expression == 'uc_sanity'
+        uses: ./.github/actions/allure-report-to-s3
+        with:
+          test_type: sanity
+          testbed: ${{ steps.ap_model.outputs.model }}
+          report_path: allure-report
+          s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
+          s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
+
   report-hfcl-ion4xe:
     runs-on: ubuntu-latest
     needs: [vars, test-hfcl-ion4xe]
@@ -1680,12 +1855,12 @@ jobs:
           s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
           s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
 
-  report-edgecore-eap102:
+  report-edgecore-eap102-2:
     runs-on: ubuntu-latest
-    needs: [vars, test-edgecore-eap102]
+    needs: [vars, test-edgecore-eap102-2]
     if: always()
     env:
-      AP_MODEL: edgecore_eap102
+      AP_MODEL: edgecore_eap102_2
     steps:
       - name: Set AP model output
         id: ap_model
@@ -2006,7 +2181,7 @@ jobs:
 
   # Cleanup
   cleanup:
-    needs: [test-hfcl-ion4xe, test-edgecore-eap101, test-tp-link-ec420-g1, test-edgecore-ecw5211, test-cig-wf188n, test-edgecore-eap102, test-cig-wf194c, test-hfcl-ion4, test-indio-um-305ac, test-hfcl-ion4xi, test-udaya-a5-id2]
+    needs: [test-edgecore-eap102-1, test-hfcl-ion4xe, test-edgecore-eap101, test-tp-link-ec420-g1, test-edgecore-ecw5211, test-cig-wf188n, test-edgecore-eap102-2, test-cig-wf194c, test-hfcl-ion4, test-indio-um-305ac, test-hfcl-ion4xi, test-udaya-a5-id2]
     runs-on: ubuntu-latest
     if: always()
     steps:
