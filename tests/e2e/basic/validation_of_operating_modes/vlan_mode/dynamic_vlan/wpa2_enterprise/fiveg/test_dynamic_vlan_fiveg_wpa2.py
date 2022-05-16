@@ -12,7 +12,9 @@ import time
 from configuration import DYNAMIC_VLAN_RADIUS_SERVER_DATA
 from configuration import DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA
 
-pytestmark = [pytest.mark.regression, pytest.mark.dynamic_vlan, pytest.mark.wpa2_enterprise, pytest.mark.vlan,
+pytestmark = [pytest.mark.regression,
+              pytest.mark.dynamic_vlan,
+              pytest.mark.wpa2_enterprise,
               pytest.mark.fiveg]
 
 setup_params_general = {
@@ -44,6 +46,7 @@ class TestDynamicVlan5GWpa2(object):
     @pytest.mark.absence_of_radius_vlan_identifier
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
+    @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_ssid_vlan_in_the_absence_of_radius_vlan_identifier",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5704")
     def test_ssid_vlan_in_the_absence_of_radius_vlan_identifier_5g_wpa2(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
