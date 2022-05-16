@@ -51,7 +51,6 @@ class TestRateLimitingNat(object):
     @pytest.mark.twog
     @pytest.mark.up
     @pytest.mark.batch_size_125
-    @pytest.mark.ow_sanity_lf
     @allure.story('Rate Limiting Open SSID 2.4 GHZ Band')
     def test_wpa2_personal_nat_ssid_up_batch_size_125_2g(self, lf_test, get_vif_state, lf_tools):
         """
@@ -84,7 +83,6 @@ class TestRateLimitingNat(object):
     @pytest.mark.twog
     @pytest.mark.dw
     @pytest.mark.batch_size_125
-    @pytest.mark.ow_sanity_lf
     @allure.story('Rate Limiting Open SSID 2.4 GHZ Band')
     def test_wpa2_personal_nat_ssid_dw_batch_size_125_2g(self, lf_test, get_vif_state, lf_tools):
         """
