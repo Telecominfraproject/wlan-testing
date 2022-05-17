@@ -605,7 +605,7 @@ class TestRateLimitingWithRadiusBridge(object):
             else:
                 assert False, f"Expected Throughput should be less than {configured} Mbps"
         else:
-            assert False, "EAP Connect Failed"
+            assert False, "EAP Connect Failed
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
