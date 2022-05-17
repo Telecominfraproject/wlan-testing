@@ -944,7 +944,10 @@ class RunTest:
         for i in res_data:
             for item in i:
                 if i[item]['port type'] == 'Ethernet' and i[item]['alias'] == self.upstream_port:
-                    temp.update({'sta00': i[item]['ip']})
+                    if mode == 'NAT':
+                        temp.update({'sta00': '192.168.1.1'})
+                    else:
+                        temp.update({'sta00': i[item]['ip']})
                 if i[item]['port type'] == '802.1Q VLAN' and i[item]['alias'] == str(self.upstream_port+".100"):
                     temp.update({'sta100': i[item]['ip']})
                 elif i[item]['port type'] == '802.1Q VLAN' and i[item]['alias'] == str(self.upstream_port+".200"):
