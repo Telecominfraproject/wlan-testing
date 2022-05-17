@@ -2,7 +2,7 @@
 
     Performance Test: Multi-psk Test: Bridge Mode
      pytest -m "multipsk and wpa2_personal and twog" -s -vvv --skip-testrail --testbed=basic-03 --alluredir=../allure_reports
-        wifi-3492
+        wifi-3493
 """
 import os
 import time
@@ -63,7 +63,7 @@ class TestMultipskBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.twogvlan1
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3492", name="WIFI-3492")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
     def test_client_wpa2_2g_vlan1(self, lf_test, lf_tools):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -98,7 +98,7 @@ class TestMultipskBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.twogvlan2
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3492", name="WIFI-3492")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
     def test_client_wpa2_2g_vlan2(self, lf_test, lf_tools):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]

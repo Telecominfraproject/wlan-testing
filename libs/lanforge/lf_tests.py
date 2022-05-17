@@ -938,7 +938,7 @@ class RunTest:
         # station_name =  ['sta100', 'sta200', 'sta00']
         cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port)
         res_data = cli_base.json_get(_req_url='port?fields=alias,port+type,ip,mac',)['interfaces']
-        table_heads = ["station name", "configured vlan-id", "expected IP Range", "allocated IP","mac address"]
+        table_heads = ["station name", "configured vlan-id", "expected IP Range", "allocated IP", "mac address", 'pass/fail']
         table_data = []
         temp = {'sta100':'', 'sta200': '', 'sta00': ''}
         for i in res_data:
@@ -953,13 +953,36 @@ class RunTest:
             for item in i:
                 if i[item]['port type'] == 'WIFI-STA' and i[item]['alias'] == "sta100":
                     exp1 = temp['sta100'].split('.')
-                    table_data.append([i[item]['alias'], '100', f'{exp1[0]}.{exp1[1]}.X.X', i[item]['ip'], i[item]['mac']])
+                    ip1 = i[item]['ip'].split('.')
+                    if exp1[0] == ip1[0] and exp1[1] == ip1[1]:
+                        pf = 'PASS'
+                    else:
+                        pf = 'FAIL'
+                    table_data.append([i[item]['alias'], '100', f'{exp1[0]}.{exp1[1]}.X.X', i[item]['ip'], i[item]['mac'],
+                                       f'{pf}'])
                 elif i[item]['port type'] == 'WIFI-STA' and i[item]['alias'] == 'sta200':
                         exp2 = temp['sta200'].split('.')
-                        table_data.append([i[item]['alias'], '200', f'{exp2[0]}.{exp2[1]}.X.X', i[item]['ip'], i[item]['mac']])
+                        ip2 = i[item]['ip'].split('.')
+                        if exp2[0] == ip2[0] and exp2[1] == ip2[1]:
+                            pf = 'PASS'
+                        else:
+                            pf = 'FAIL'
+                        table_data.append([i[item]['alias'], '200', f'{exp2[0]}.{exp2[1]}.X.X', i[item]['ip'], i[item]['mac'], f'{pf}'])
                 elif i[item]['port type'] == 'WIFI-STA' and i[item]['alias'] == 'sta00':
                     exp3 = temp['sta00'].split('.')
-                    table_data.append([i[item]['alias'], 'Non Vlan upstream', f'{exp3[0]}.{exp3[1]}.X.X', i[item]['ip'], i[item]['mac']])
+                    ip2 = i[item]['ip'].split('.')
+                    if mode == "BRIDGE":
+                        if exp3[0] == ip2[0] and exp3[1] == ip2[1]:
+                            pf = 'PASS'
+                        else:
+                            pf = 'FAIL'
+                        table_data.append([i[item]['alias'], 'WAN upstream', f'{exp3[0]}.{exp3[1]}.X.X', i[item]['ip'], i[item]['mac'], f'{pf}'])
+                    elif mode == "NAT":
+                        if exp3[0] == '192' and exp3[1] == '168':
+                            pf = 'PASS'
+                        else:
+                            pf = 'FAIL'
+                        table_data.append([i[item]['alias'], 'LAN upstream', f'192.168.X.X', i[item]['ip'], i[item]['mac'], f'{pf}'])
         print(table_data)
         # attach test data in a table to allure
         report_obj = Report()
@@ -972,7 +995,6 @@ class RunTest:
             print("Test passed for non vlan ip ")
         else:
             print("Test failed for non vlan ip")
-        print("all result gathered")
         print("clean up")
         self.multi_obj.postcleanup()
         if result == result1:

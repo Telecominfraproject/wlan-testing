@@ -2,7 +2,7 @@
 
     Performance Test: Multi-psk Test: NAT Mode
      pytest -m "multipsk and wpa and twog" -s -vvv --skip-testrail --testbed=basic-03 --alluredir=../allure_reports
-        wifi-3492
+        wifi-3494
 """
 import os
 import time
@@ -63,7 +63,7 @@ class TestMultipskNAT(object):
     @pytest.mark.wpa
     @pytest.mark.twog
     @pytest.mark.twogvlan1
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3492", name="WIFI-3492")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3494", name="WIFI-3494")
     def test_client_wpa_2g_vlan1(self, lf_test, lf_tools):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
@@ -96,7 +96,7 @@ class TestMultipskNAT(object):
     @pytest.mark.wpa
     @pytest.mark.twog
     @pytest.mark.twogvlan2
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3492", name="WIFI-3492")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3494", name="WIFI-3494")
     def test_client_wpa_2g_vlan2(self, lf_test, lf_tools):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
