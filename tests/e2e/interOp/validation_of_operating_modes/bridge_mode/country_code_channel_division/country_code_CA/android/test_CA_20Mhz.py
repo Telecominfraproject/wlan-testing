@@ -67,6 +67,7 @@ class TestBridgeModeConnectSuiteOne(object):
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.twentyMhz
+    @pytest.mark.patience
     def test_ClientConnect_bridge_wpa2_chn36_20Mhz_CA_5g(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][1]

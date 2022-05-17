@@ -17,7 +17,7 @@ if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
-              pytest.mark.ToggleWifiMode]
+              pytest.mark.ToggleWifiMode, pytest.mark.client_reconnect_testing, pytest.mark.client_reconnect]
 
 from iOS_lib import closeApp, openApp, Toggle_AirplaneMode_iOS, ForgetWifiConnection, set_APconnMobileDevice_iOS, \
     verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown
