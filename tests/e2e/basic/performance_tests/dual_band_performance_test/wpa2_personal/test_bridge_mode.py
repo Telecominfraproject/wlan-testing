@@ -63,7 +63,7 @@ class TestDualbandPerformanceBRIDGE(object):
 
         dbpt_obj = lf_test.dualbandperformancetest(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
                                                    instance_name="dbp_instance_wpa2p_BRIDGE_p",
-                                                   vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g, influx_tags=influx_tags)
+                                                   vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g, influx_tags=influx_tags, move_to_influx=True)
         report_name = dbpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dual Band Performance Test Wpa2 Bridge")
         assert True

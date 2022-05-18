@@ -62,7 +62,7 @@ class TestDataplaneThroughputNAT(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
                                        instance_name="TIP_DPT_DPT_WPA2_2G_NAT",
-                                       vlan_id=vlan, dut_name=dut_name, influx_tags=influx_tags)
+                                       vlan_id=vlan, dut_name=dut_name, influx_tags=influx_tags, move_to_influx=True)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dataplane Throughput Test - TCP-UDP 2.4G")
             lf_test.Client_disconnect(station_name=station_names_twog)
@@ -94,7 +94,7 @@ class TestDataplaneThroughputNAT(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
                                        instance_name="TIP_DPT_DPT_WPA2_5G_NAT",
-                                       vlan_id=vlan, dut_name=dut_name, influx_tags=influx_tags)
+                                       vlan_id=vlan, dut_name=dut_name, influx_tags=influx_tags, move_to_influx=True)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dataplane Throughput Test - TCP-UDP 5G")
             print("Test Completed... Cleaning up Stations")
@@ -127,7 +127,7 @@ class TestDataplaneThroughputNAT(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_ax, mode=mode,
                                        instance_name="TIP_DPT_DPT_WPA2_2G_NAT_AX",
-                                       vlan_id=vlan, dut_name=dut_name, influx_tags=influx_tags)
+                                       vlan_id=vlan, dut_name=dut_name, influx_tags=influx_tags, move_to_influx=True)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dataplane Throughput Test - TCP-UDP 2.4G")
             lf_test.Client_disconnect(station_name=station_names_ax)
@@ -159,7 +159,7 @@ class TestDataplaneThroughputNAT(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_ax, mode=mode,
                                        instance_name="TIP_DPT_DPT_WPA2_5G_NAT_AX",
-                                       vlan_id=vlan, dut_name=dut_name, influx_tags=influx_tags)
+                                       vlan_id=vlan, dut_name=dut_name, influx_tags=influx_tags, move_to_influx=True)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dataplane Throughput Test - TCP-UDP 5G")
             print("Test Completed... Cleaning up Stations")
