@@ -9,11 +9,9 @@ import pytest
 import allure
 
 pytestmark = [pytest.mark.throughput_across_bw_test, pytest.mark.bridge]
-raw_lines = [['pkts: %s' % 1],
-                         ['directions: DUT Transmit;DUT Receive'],
-                         ['bandw_options: %s' % 1],
-                         ['traffic_types: UDP;TCP'], ["show_3s: 1"],
-                         ["show_ll_graphs: 1"], ["show_log: 1"]]
+raw_lines = [['pkts: 60;142;256;512;1024;MTU;4000'], ['directions: DUT Transmit;DUT Receive'],
+                     ['traffic_types: UDP;TCP'], ['bandw_options: %s' % 20],
+                     ["show_3s: 1"], ["show_ll_graphs: 1"], ["show_log: 1"]]
 
 setup_params_general_20Mhz = {
     "mode": "BRIDGE",
@@ -46,8 +44,7 @@ class TestThroughputAcrossBw20MhzBRIDGE(object):
     @pytest.mark.bw20Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    def test_client_wpa2_personal_2g(self, 
-                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_2g(self, lf_test, lf_tools, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
         """Throughput Across Bw Bridge Mode
            pytest -m "throughput_across_bw_test and Bridge and wpa2_personal and twog"
@@ -55,10 +52,11 @@ class TestThroughputAcrossBw20MhzBRIDGE(object):
         profile_data = setup_params_general_20Mhz["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        security = "open"
+        security = "wpa2"
         mode = "BRIDGE"
         band = "twog"
         vlan = 1
+        global raw_lines
         dut_name = create_lanforge_chamberview_dut
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -67,16 +65,9 @@ class TestThroughputAcrossBw20MhzBRIDGE(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
                                        instance_name="TIP_PERF_DPT_WPA2_2G",
-                                       vlan_id=vlan, dut_name=dut_name, bw="20")
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
+            lf_tools.attach_report_graphs(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
@@ -87,8 +78,7 @@ class TestThroughputAcrossBw20MhzBRIDGE(object):
     @pytest.mark.bw20Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    def test_client_wpa2_personal_5g(self, 
-                                     lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
+    def test_client_wpa2_personal_5g(self, lf_test, lf_tools, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
         """Throughput Across Bw Bridge Mode
            pytest -m "throughput_across_bw_test and Bridge and wpa2_personal and fiveg"
         """
@@ -99,6 +89,7 @@ class TestThroughputAcrossBw20MhzBRIDGE(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
+        global raw_lines
         dut_name = create_lanforge_chamberview_dut
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -107,16 +98,9 @@ class TestThroughputAcrossBw20MhzBRIDGE(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
                                        instance_name="TIP_PERF_DPT_WPA2_5G",
-                                       vlan_id=vlan, dut_name=dut_name, bw="20")
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
+            lf_tools.attach_report_graphs(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_fiveg)
             assert station
@@ -155,8 +139,7 @@ class TestThroughputAcrossBw40MhzBRIDGE(object):
     @pytest.mark.bw40Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    def test_client_wpa2_personal_2g(self, 
-                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_2g(self, lf_test, lf_tools, station_names_twog, create_lanforge_chamberview_dut,
                                      get_configuration):
         """Throughput Across Bw Bridge Mode
            pytest -m "throughput_across_bw_test and Bridge and wpa2_personal and twog"
@@ -164,10 +147,12 @@ class TestThroughputAcrossBw40MhzBRIDGE(object):
         profile_data = setup_params_general_80Mhz["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        security = "open"
+        security = "wpa2"
         mode = "BRIDGE"
         band = "twog"
         vlan = 1
+        global raw_lines
+        raw_lines[3] = ['bandw_options: %s' % 40]
         dut_name = create_lanforge_chamberview_dut
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -176,16 +161,9 @@ class TestThroughputAcrossBw40MhzBRIDGE(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
                                        instance_name="TIP_PERF_DPT_WPA2_2G",
-                                       vlan_id=vlan, dut_name=dut_name, bw="40")
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
+            lf_tools.attach_report_graphs(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
@@ -196,8 +174,7 @@ class TestThroughputAcrossBw40MhzBRIDGE(object):
     @pytest.mark.bw40Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    def test_client_wpa2_personal_5g(self, 
-                                     lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
+    def test_client_wpa2_personal_5g(self, lf_test, lf_tools, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
         """Throughput Across Bw Bridge Mode
            pytest -m "throughput_across_bw_test and Bridge and wpa2_personal and fiveg"
         """
@@ -208,6 +185,8 @@ class TestThroughputAcrossBw40MhzBRIDGE(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
+        global raw_lines
+        raw_lines[3] = ['bandw_options: %s' % 40]
         dut_name = create_lanforge_chamberview_dut
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -216,16 +195,9 @@ class TestThroughputAcrossBw40MhzBRIDGE(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
                                        instance_name="TIP_PERF_DPT_WPA2_5G",
-                                       vlan_id=vlan, dut_name=dut_name, bw="40")
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
+            lf_tools.attach_report_graphs(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_fiveg)
             assert station
@@ -259,53 +231,49 @@ class TestThroughputAcrossBw80MhzBRIDGE(object):
     """Throughput Across Bw Bridge Mode
        pytest -m "throughput_across_bw_test and Bridge"
     """
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2558", name="WIFI-2558")
-    @pytest.mark.bw80Mhz
-    @pytest.mark.wpa2_personal
-    @pytest.mark.twog
-    def test_client_wpa2_personal_2g(self, 
-                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                     get_configuration):
-        """Throughput Across Bw Bridge Mode
-           pytest -m "throughput_across_bw_test and Bridge and wpa2_personal and twog"
-        """
-        profile_data = setup_params_general_80Mhz["ssid_modes"]["wpa2_personal"][0]
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "open"
-        mode = "BRIDGE"
-        band = "twog"
-        vlan = 1
-        dut_name = create_lanforge_chamberview_dut
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
-                                         passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_twog, vlan_id=vlan)
-
-        if station:
-            dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_2G",
-                                       vlan_id=vlan, dut_name=dut_name, bw="80")
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
-            print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_twog)
-            assert station
-        else:
-            assert False
+    # @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2558", name="WIFI-2558")
+    # @pytest.mark.bw80Mhz
+    # @pytest.mark.wpa2_personal
+    # @pytest.mark.twog
+    # def test_client_wpa2_personal_2g(self, lf_test, lf_tools, station_names_twog, create_lanforge_chamberview_dut,
+    #                                  get_configuration):
+    #     """Throughput Across Bw Bridge Mode
+    #        pytest -m "throughput_across_bw_test and Bridge and wpa2_personal and twog"
+    #     """
+    #     profile_data = setup_params_general_80Mhz["ssid_modes"]["wpa2_personal"][0]
+    #     ssid_name = profile_data["ssid_name"]
+    #     security_key = profile_data["security_key"]
+    #     security = "wpa2"
+    #     mode = "BRIDGE"
+    #     band = "twog"
+    #     vlan = 1
+    #     global raw_lines
+    #     raw_lines[3] = ['bandw_options: %s' % 80]
+    #     dut_name = create_lanforge_chamberview_dut
+    #     # if ssid_name not in get_vif_state:
+    #     #     allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+    #     #     pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+    #     station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+    #                                      passkey=security_key, mode=mode, band=band,
+    #                                      station_name=station_names_twog, vlan_id=vlan)
+    #
+    #     if station:
+    #         dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
+    #                                    instance_name="TIP_PERF_DPT_WPA2_2G",
+    #                                    vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
+    #         report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+    #         lf_tools.attach_report_graphs(report_name=report_name)
+    #         print("Test Completed... Cleaning up Stations")
+    #         lf_test.Client_disconnect(station_name=station_names_twog)
+    #         assert station
+    #     else:
+    #         assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2558", name="WIFI-2558")
     @pytest.mark.bw80Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    def test_client_wpa2_personal_5g(self, 
-                                     lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
+    def test_client_wpa2_personal_5g(self, lf_test, lf_tools, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
         """Throughput Across Bw Bridge Mode
            pytest -m "throughput_across_bw_test and Bridge and wpa2_personal and fiveg"
         """
@@ -316,6 +284,8 @@ class TestThroughputAcrossBw80MhzBRIDGE(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
+        global raw_lines
+        raw_lines[3] = ['bandw_options: %s' % 80]
         dut_name = create_lanforge_chamberview_dut
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -324,16 +294,9 @@ class TestThroughputAcrossBw80MhzBRIDGE(object):
         if station:
             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
                                        instance_name="TIP_PERF_DPT_WPA2_5G",
-                                       vlan_id=vlan, dut_name=dut_name, bw="80")
+                                       vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
+            lf_tools.attach_report_graphs(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_fiveg)
             assert station
@@ -341,110 +304,116 @@ class TestThroughputAcrossBw80MhzBRIDGE(object):
             assert False
 
 
-setup_params_general_160Mhz = {
-    "mode": "BRIDGE",
-    "ssid_modes": {
-        "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"],
-             "security_key": "something"}]},
-    "rf": {
-        "is5GHz": {"channelBandwidth": "is160MHz"},
-        "is5GHzL": {"channelBandwidth": "is160MHz"},
-        "is5GHzU": {"channelBandwidth": "is160MHz"}},
-    "radius": False
-}
-
-
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
-@pytest.mark.parametrize(
-    'setup_profiles',
-    [setup_params_general_160Mhz],
-    indirect=True,
-    scope="class"
-)
-@pytest.mark.usefixtures("setup_profiles")
-class TestThroughputAcrossBw160MhzBRIDGE(object):
-    """Throughput Across Bw Bridge Mode
-       pytest -m "throughput_across_bw_test and Bridge"
-    """
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2559", name="WIFI-2559")
-    @pytest.mark.bw160Mhz
-    @pytest.mark.wpa2_personal
-    @pytest.mark.twog
-    def test_client_wpa2_personal_2g(self, 
-                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
-                                     get_configuration):
-        """Throughput Across Bw Bridge Mode
-           pytest -m "throughput_across_bw_test and Bridge and wpa2_personal and twog"
-        """
-        profile_data = setup_params_general_160Mhz["ssid_modes"]["wpa2_personal"][0]
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "open"
-        mode = "BRIDGE"
-        band = "twog"
-        vlan = 1
-        dut_name = create_lanforge_chamberview_dut
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
-                                         passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_twog, vlan_id=vlan)
-
-        if station:
-            dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_2G",
-                                       vlan_id=vlan, dut_name=dut_name, bw="160")
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
-            print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_twog)
-            assert station
-        else:
-            assert False
-
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2559", name="WIFI-2559")
-    @pytest.mark.bw160Mhz
-    @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
-    def test_client_wpa2_personal_5g(self, 
-                                     lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
-        """Throughput Across Bw Bridge Mode
-           pytest -m "throughput_across_bw_test and Bridge and wpa2_personal and fiveg"
-        """
-        profile_data = setup_params_general_160Mhz["ssid_modes"]["wpa2_personal"][1]
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "wpa2"
-        mode = "BRIDGE"
-        band = "fiveg"
-        vlan = 1
-        dut_name = create_lanforge_chamberview_dut
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
-                                         passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
-
-        if station:
-            dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
-                                       instance_name="TIP_PERF_DPT_WPA2_5G",
-                                       vlan_id=vlan, dut_name=dut_name, bw="160")
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
-            print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
-            assert station
-        else:
-            assert False
+# setup_params_general_160Mhz = {
+#     "mode": "BRIDGE",
+#     "ssid_modes": {
+#         "wpa2_personal": [
+#             {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+#             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"],
+#              "security_key": "something"}]},
+#     "rf": {
+#         "is5GHz": {"channelBandwidth": "is160MHz"},
+#         "is5GHzL": {"channelBandwidth": "is160MHz"},
+#         "is5GHzU": {"channelBandwidth": "is160MHz"}},
+#     "radius": False
+# }
+#
+#
+# @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+# @pytest.mark.parametrize(
+#     'setup_profiles',
+#     [setup_params_general_160Mhz],
+#     indirect=True,
+#     scope="class"
+# )
+# @pytest.mark.usefixtures("setup_profiles")
+# class TestThroughputAcrossBw160MhzBRIDGE(object):
+#     """Throughput Across Bw Bridge Mode
+#        pytest -m "throughput_across_bw_test and Bridge"
+#     """
+#     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2559", name="WIFI-2559")
+#     @pytest.mark.bw160Mhz
+#     @pytest.mark.wpa2_personal
+#     @pytest.mark.twog
+#     def test_client_wpa2_personal_2g(self, get_vif_state,
+#                                      lf_test, station_names_twog, create_lanforge_chamberview_dut,
+#                                      get_configuration):
+#         """Throughput Across Bw Bridge Mode
+#            pytest -m "throughput_across_bw_test and Bridge and wpa2_personal and twog"
+#         """
+#         profile_data = setup_params_general_160Mhz["ssid_modes"]["wpa2_personal"][0]
+#         ssid_name = profile_data["ssid_name"]
+#         security_key = profile_data["security_key"]
+#         security = "open"
+#         mode = "BRIDGE"
+#         band = "twog"
+#         vlan = 1
+#         dut_name = create_lanforge_chamberview_dut
+#         if ssid_name not in get_vif_state:
+#             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+#             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+#         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+#                                          passkey=security_key, mode=mode, band=band,
+#                                          station_name=station_names_twog, vlan_id=vlan)
+#
+#         if station:
+#             dp_obj = lf_test.dataplane(station_name=station_names_twog, mode=mode,
+#                                        instance_name="TIP_PERF_DPT_WPA2_2G",
+#                                        vlan_id=vlan, dut_name=dut_name, bw="160")
+#             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+#             entries = os.listdir("../reports/" + report_name + '/')
+#             pdf = False
+#             for i in entries:
+#                 if ".pdf" in i:
+#                     pdf = i
+#             if pdf:
+#                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
+#                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
+#             print("Test Completed... Cleaning up Stations")
+#             lf_test.Client_disconnect(station_name=station_names_twog)
+#             assert station
+#         else:
+#             assert False
+#
+#     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2559", name="WIFI-2559")
+#     @pytest.mark.bw160Mhz
+#     @pytest.mark.wpa2_personal
+#     @pytest.mark.fiveg
+#     def test_client_wpa2_personal_5g(self, get_vif_state,
+#                                      lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):
+#         """Throughput Across Bw Bridge Mode
+#            pytest -m "throughput_across_bw_test and Bridge and wpa2_personal and fiveg"
+#         """
+#         profile_data = setup_params_general_160Mhz["ssid_modes"]["wpa2_personal"][1]
+#         ssid_name = profile_data["ssid_name"]
+#         security_key = profile_data["security_key"]
+#         security = "wpa2"
+#         mode = "BRIDGE"
+#         band = "fiveg"
+#         vlan = 1
+#         dut_name = create_lanforge_chamberview_dut
+#         if ssid_name not in get_vif_state:
+#             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+#             pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+#         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+#                                          passkey=security_key, mode=mode, band=band,
+#                                          station_name=station_names_fiveg, vlan_id=vlan)
+#
+#         if station:
+#             dp_obj = lf_test.dataplane(station_name=station_names_fiveg, mode=mode,
+#                                        instance_name="TIP_PERF_DPT_WPA2_5G",
+#                                        vlan_id=vlan, dut_name=dut_name, bw="160")
+#             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+#             entries = os.listdir("../reports/" + report_name + '/')
+#             pdf = False
+#             for i in entries:
+#                 if ".pdf" in i:
+#                     pdf = i
+#             if pdf:
+#                 allure.attach.file(source="../reports/" + report_name + "/" + pdf,
+#                                    name=get_configuration["access_point"][0]["model"] + "_dataplane")
+#             print("Test Completed... Cleaning up Stations")
+#             lf_test.Client_disconnect(station_name=station_names_fiveg)
+#             assert station
+#         else:
+#             assert False
