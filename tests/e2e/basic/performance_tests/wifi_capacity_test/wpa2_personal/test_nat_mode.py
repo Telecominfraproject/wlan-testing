@@ -70,7 +70,7 @@ class TestWifiCapacityNATModeDualBand(object):
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_tcp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags, sets=sets,
-                                        upload_rate="0", protocol="TCP-IPv4", duration="60000")
+                                        upload_rate="0", protocol="TCP-IPv4", duration="60000", move_to_influx=True)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -102,7 +102,7 @@ class TestWifiCapacityNATModeDualBand(object):
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_udp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags, sets=sets,
-                                        upload_rate="100Mbps", protocol="UDP-IPv4", duration="60000")
+                                        upload_rate="100Mbps", protocol="UDP-IPv4", duration="60000", move_to_influx=True)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -134,7 +134,7 @@ class TestWifiCapacityNATModeDualBand(object):
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_tcp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags, sets=sets,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000")
+                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", move_to_influx=True)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -166,7 +166,7 @@ class TestWifiCapacityNATModeDualBand(object):
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_udp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags, sets=sets,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", move_to_influx=True)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -176,7 +176,7 @@ class TestWifiCapacityNATModeDualBand(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7127", name="WIFI-7127")
     @pytest.mark.tcp_upload
-    def test_client_wpa2_bridge_tcp_ul(self, lf_tools, get_apnos_max_clients,
+    def test_client_wpa2_NAT_tcp_ul(self, lf_tools, get_apnos_max_clients,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -198,7 +198,7 @@ class TestWifiCapacityNATModeDualBand(object):
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_tcp_ul", mode=mode, vlan_id=vlan,
                                         download_rate="0", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags, sets=sets,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000")
+                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", move_to_influx=True)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -208,7 +208,7 @@ class TestWifiCapacityNATModeDualBand(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7128", name="WIFI-7128")
     @pytest.mark.udp_upload
-    def test_client_wpa2_bridge_udp_ul(self, lf_tools, get_apnos_max_clients,
+    def test_client_wpa2_NAT_udp_ul(self, lf_tools, get_apnos_max_clients,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -230,7 +230,7 @@ class TestWifiCapacityNATModeDualBand(object):
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_udp_ul", mode=mode, vlan_id=vlan,
                                         download_rate="0", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags, sets=sets,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", move_to_influx=True)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
