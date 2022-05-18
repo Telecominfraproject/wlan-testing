@@ -1306,7 +1306,7 @@ class RunTest:
                           body="Country code channel test intends to verify stability of Wi-Fi device " \
                                "where the AP is configured with different countries with different channels.")
             allure.attach(name="Procedure",
-                          body=f"This test case definition states that we push the basic {mode.lower()} mode config on the AP to "
+                          body=f"This test case definition states that we need to push the basic {mode.lower()} mode config on the AP to "
                                f"be tested by configuring it with {country} on {channel_width}MHz channel width and "
                                f"channel {channel}. Create a client on {'5' if band=='fiveg' else '2.4'} GHz radio. Pass/ fail criteria: "
                                f"The client created on {'5' if band=='fiveg' else '2.4'} GHz radio should get associated to the AP")
@@ -1358,21 +1358,14 @@ class RunTest:
         self.staConnect.cleanup_on_exit = True
         self.staConnect.station_profile.up = True
         self.staConnect.use_existing_sta = True
-        if band == '2.4 Ghz':
-            sta_prefix = self.twog_prefix
-        elif band == '5 Ghz':
-            sta_prefix = self.fiveg_prefix
         allure.attach(name="Definition",
                       body="Max-SSID test intends to verify stability of Wi-Fi device " \
                          "where the AP is configured with max no.of SSIDs with different security modes.")
         allure.attach(name="Procedure",
-                      body=f"This test case definition states that we push the basic bridge mode config on the AP to be"
-                           f"tested by configuring it with maximum {ssid_num} SSIDs in {band} radio. "
-                           f"Create client on each SSIDs and Layer3 traffic. Pass/ fail criteria: "
+                      body=f"This test case definition states that we need to push the basic bridge mode config on the "
+                           f"AP to be tested by configuring it with maximum {ssid_num} SSIDs in {band} radio. "
+                           f"Create client on each SSIDs and run Layer-3 traffic. Pass/ fail criteria: "
                            f"The client created should get associated to the AP")
-        # port_list = list(self.staConnect.find_ports_like("%s+" % sta_prefix))
-        # if (port_list is None) or (len(port_list) < 1):
-        #     raise ValueError("Unable to find ports named '%s'+" % sta_prefix)
         # Create UDP endpoints
         self.staConnect.l3_udp_profile = self.staConnect.new_l3_cx_profile()
         self.staConnect.l3_udp_profile.report_timer = 1000
@@ -1397,35 +1390,38 @@ class RunTest:
         self.staConnect.start()
         print("napping %f sec" % self.staConnect.runtime_secs)
         time.sleep(self.staConnect.runtime_secs)
-        self.staConnect.stop()
         count = 0
+        report_obj = Report()
         for station_info in self.staConnect.resulting_stations:
-            station_data_str = ""
-            tcp_data_str = ""
-            udp_data_str = ""
-            for i in self.staConnect.resulting_stations[station_info]["interface"]:
-                try:
-                    station_data_str += i + "  :  " + str(self.staConnect.resulting_stations[station_info]["interface"][i]) + "\n"
-                except Exception as e:
-                    print(e)
-            allure.attach(name=str(self.staConnect.resulting_stations[station_info]["interface"]['alias']), body=str(station_data_str))
+            data_table, dict_table = "", {}
+            dict_data = self.staConnect.resulting_stations[station_info]["interface"]
+            dict_table["Interface"] = list(dict_data.keys())
+            dict_table["Value"] = list(dict_data.values())
+            try:
+                data_table = report_obj.table2(table=dict_table, headers='keys')
+            except Exception as e:
+                print(e)
+            allure.attach(name=str(self.staConnect.resulting_stations[station_info]["interface"]['alias']), body=data_table)
+            data_table = ""
+            dict_table.clear()
             cx = list(self.staConnect.l3_tcp_profile.created_cx.keys())[count]
-            cx_data = self.staConnect.json_get(f"/cx/{cx}")
-            for i in cx_data[cx]:
-                try:
-                    tcp_data_str += i + "  :  " + str(cx_data[cx][i]) + "\n"
-                except Exception as e:
-                    print(e)
-            allure.attach(name="L3-"+str(cx), body=str(tcp_data_str))
+            dict_data = self.staConnect.json_get(f"/cx/{cx}")
+            dict_table["Cross-connect"] = list(dict_data[cx].keys())
+            dict_table["tcp-Value"] = list(dict_data[cx].values())
+            try:
+                data_table = report_obj.table2(table=dict_table, headers='keys')
+            except Exception as e:
+                print(e)
             cx = list(self.staConnect.l3_udp_profile.created_cx.keys())[count]
-            cx_data = self.staConnect.json_get(f"/cx/{cx}")
-            for i in cx_data[cx]:
-                try:
-                    udp_data_str += i + "  :  " + str(cx_data[cx][i]) + "\n"
-                except Exception as e:
-                    print(e)
-            allure.attach(name="L3-" + str(cx), body=str(udp_data_str))
-        count += 1
+            dict_data = self.staConnect.json_get(f"/cx/{cx}")
+            dict_table["udp-Value"] = list(dict_data[cx].values())
+            try:
+                data_table = report_obj.table2(table=dict_table, headers='keys')
+            except Exception as e:
+                print(e)
+            allure.attach(name="cx-" + str(self.staConnect.resulting_stations[station_info]["interface"]['alias']), body=str(data_table))
+            count += 1
+        self.staConnect.stop()
         self.staConnect.cleanup()
 
 
