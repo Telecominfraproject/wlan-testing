@@ -117,6 +117,7 @@ jobs:
         export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
         export MAILER_USERNAME=${{ secrets.MAILER_USERNAME }}
         export MAILER_PASSWORD=${{ secrets.MAILER_PASSWORD }}
+        export IPTOCOUNTRY_IPINFO_TOKEN=${{ secrets.IPTOCOUNTRY_IPINFO_TOKEN }}
         ./deploy.sh
 
     - name: Show resource state on deployment failure
