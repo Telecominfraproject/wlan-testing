@@ -77,7 +77,6 @@ jobs:
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
-        continue-on-error: true
         uses: ./.github/actions/run-tests
         with:
           namespace: "manual-${{ github.run_id }}-${{ github.event.inputs.testbed }}"
@@ -94,9 +93,15 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait manual-${{ github.run_id }}-${{ github.event.inputs.testbed }}
 
-      - name: upload Allure results as artifact
-        if: always()
-        uses: actions/upload-artifact@v2
+  report:
+    runs-on: ubuntu-latest
+    needs: [ test ]
+    if: always()
+    steps:
+      - name: checkout testing repo
+        uses: actions/checkout@v2
+
+      - uses: actions/download-artifact@v2
         with:
           name: allure-results
           path: allure-results
