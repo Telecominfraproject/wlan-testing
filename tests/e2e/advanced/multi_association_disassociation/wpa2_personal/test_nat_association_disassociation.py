@@ -5,7 +5,7 @@ import time
 import pandas as pd
 import threading
 
-#pytestmark = [pytest.mark.advance, pytest.mark.multiassodisasso, pytest.mark.nat]
+pytestmark = [pytest.mark.advance, pytest.mark.multiassodisasso, pytest.mark.nat]
 
 setup_params_general = {
     "mode": "NAT",
