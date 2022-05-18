@@ -497,7 +497,7 @@ class RunTest:
 
     def Client_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog",
                        vlan_id=100,
-                       station_name=[]):
+                       station_name=[], scan_ssid=True):
         if band == "twog":
             if self.run_lf:
                 ssid = self.ssid_data["2g-ssid"]
@@ -526,7 +526,8 @@ class RunTest:
         if band == "ax":
             self.client_connect.radio = self.ax_radios[0]
         print("scan ssid radio", self.client_connect.radio.split(".")[2])
-        self.data_scan_ssid = self.scan_ssid(radio=self.client_connect.radio.split(".")[2])
+        if scan_ssid:
+            self.data_scan_ssid = self.scan_ssid(radio=self.client_connect.radio.split(".")[2])
         print("ssid scan data :- ", self.data_scan_ssid)
         self.client_connect.build()
         self.client_connect.wait_for_ip(station_name)
@@ -1345,6 +1346,86 @@ class RunTest:
             time.sleep(2)
         except Exception as e:
             print(e)
+
+    def layer3_traffic(self, ssid_num=8, band="2.4 Ghz", station_name=[]):
+        self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
+        self.staConnect.station_profile = self.staConnect.new_station_profile()
+        self.staConnect.resource = 1
+        self.staConnect.station_names = station_name
+        self.staConnect.runtime_secs = 40
+        self.staConnect.bringup_time_sec = 80
+        self.staConnect.cleanup_on_exit = True
+        self.staConnect.station_profile.up = True
+        self.staConnect.use_existing_sta = True
+        if band == '2.4 Ghz':
+            sta_prefix = self.twog_prefix
+        elif band == '5 Ghz':
+            sta_prefix = self.fiveg_prefix
+        allure.attach(name="Definition",
+                      body="Max-SSID test intends to verify stability of Wi-Fi device " \
+                         "where the AP is configured with max no.of SSIDs with different security modes.")
+        allure.attach(name="Procedure",
+                      body=f"This test case definition states that we push the basic bridge mode config on the AP to be"
+                           f"tested by configuring it with maximum {ssid_num} SSIDs in {band} radio. "
+                           f"Create client on each SSIDs and Layer3 traffic. Pass/ fail criteria: "
+                           f"The client created should get associated to the AP")
+        # port_list = list(self.staConnect.find_ports_like("%s+" % sta_prefix))
+        # if (port_list is None) or (len(port_list) < 1):
+        #     raise ValueError("Unable to find ports named '%s'+" % sta_prefix)
+        # Create UDP endpoints
+        self.staConnect.l3_udp_profile = self.staConnect.new_l3_cx_profile()
+        self.staConnect.l3_udp_profile.report_timer = 1000
+        self.staConnect.l3_udp_profile.name_prefix = "udp"
+        self.staConnect.cx_profile.name_prefix = "udp"
+        self.staConnect.pre_cleanup()
+        self.staConnect.l3_udp_profile.create(endp_type="lf_udp",
+                                   side_a=station_name,
+                                   side_b="%d.%s" % (self.staConnect.resource, self.upstream_port),
+                                   suppress_related_commands=True)
+
+        # Create TCP endpoints
+        self.staConnect.l3_tcp_profile = self.staConnect.new_l3_cx_profile()
+        self.staConnect.l3_tcp_profile.report_timer = 1000
+        self.staConnect.l3_tcp_profile.name_prefix = "tcp"
+        self.staConnect.cx_profile.name_prefix = "tcp"
+        self.staConnect.pre_cleanup()
+        self.staConnect.l3_tcp_profile.create(endp_type="lf_tcp",
+                                   side_a=station_name,
+                                   side_b="%d.%s" % (self.staConnect.resource, self.upstream_port),
+                                   suppress_related_commands=True)
+        self.staConnect.start()
+        print("napping %f sec" % self.staConnect.runtime_secs)
+        time.sleep(self.staConnect.runtime_secs)
+        self.staConnect.stop()
+        count = 0
+        for station_info in self.staConnect.resulting_stations:
+            station_data_str = ""
+            tcp_data_str = ""
+            udp_data_str = ""
+            for i in self.staConnect.resulting_stations[station_info]["interface"]:
+                try:
+                    station_data_str += i + "  :  " + str(self.staConnect.resulting_stations[station_info]["interface"][i]) + "\n"
+                except Exception as e:
+                    print(e)
+            allure.attach(name=str(self.staConnect.resulting_stations[station_info]["interface"]['alias']), body=str(station_data_str))
+            cx = list(self.staConnect.l3_tcp_profile.created_cx.keys())[count]
+            cx_data = self.staConnect.json_get(f"/cx/{cx}")
+            for i in cx_data[cx]:
+                try:
+                    tcp_data_str += i + "  :  " + str(cx_data[cx][i]) + "\n"
+                except Exception as e:
+                    print(e)
+            allure.attach(name="L3-"+str(cx), body=str(tcp_data_str))
+            cx = list(self.staConnect.l3_udp_profile.created_cx.keys())[count]
+            cx_data = self.staConnect.json_get(f"/cx/{cx}")
+            for i in cx_data[cx]:
+                try:
+                    udp_data_str += i + "  :  " + str(cx_data[cx][i]) + "\n"
+                except Exception as e:
+                    print(e)
+            allure.attach(name="L3-" + str(cx), body=str(udp_data_str))
+        count += 1
+        self.staConnect.cleanup()
 
 
 if __name__ == '__main__':
