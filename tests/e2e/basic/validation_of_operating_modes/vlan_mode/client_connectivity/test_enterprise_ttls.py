@@ -1,7 +1,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.client_connectivity, pytest.mark.vlan, pytest.mark.enterprise, pytest.mark.ttls,
+pytestmark = [pytest.mark.ow_client_connectivity_lf, pytest.mark.vlan, pytest.mark.enterprise, pytest.mark.ttls,
               pytest.mark.ucentral, pytest.mark.sanity]  # pytest.mark.usefixtures("setup_test_run")
 
 setup_params_enterprise = {
