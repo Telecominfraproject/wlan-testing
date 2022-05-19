@@ -559,7 +559,7 @@ class ChamberView:
     def read_csv_individual_station_throughput(self, dir_name, option):
         try:
             df = pd.read_csv(
-                "../reports/" + str(dir_name) + "/csv-data/data-Combined_Mbps__60_second_running_average-1.csv",
+                "../reports/" + str(dir_name) + "/csv-data/data-Combined_bps__60_second_running_average-1.csv",
                 sep=r'\t', engine='python')
             print("csv file opened")
         except FileNotFoundError:
