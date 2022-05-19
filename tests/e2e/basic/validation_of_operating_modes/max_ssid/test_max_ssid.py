@@ -234,6 +234,15 @@ class TestMoreThanEightSsid2G(object):
             count_security += 1
         fail_list = list(filter(lambda x : x == False, pass_list))
         if len(fail_list) == len(pass_list):
+            lf_test.Client_disconnect(sta_list)
+            allure.attach(name="Definition",
+                          body="Max-SSID test intends to verify stability of Wi-Fi device " \
+                               "where the AP is configured with max no.of SSIDs with different security modes.")
+            allure.attach(name="Procedure",
+                          body=f"This test case definition states that we need to push the basic bridge mode config on the "
+                               f"AP to be tested by configuring it with maximum {len(pass_list)} SSIDs in {band} radio. "
+                               f"Create client on each SSIDs and run Layer-3 traffic. Pass/ fail criteria: "
+                               f"The client created should not get associated to the AP")
             # lf_test.layer3_traffic(ssid_num=len(pass_list), band="2.4 Ghz", station_name=sta_list)
             assert True
         else:
@@ -311,6 +320,15 @@ class TestMoreThanEightSsid5G(object):
             count_security += 1
         fail_list = list(filter(lambda x : x == False, pass_list))
         if len(fail_list) == pass_list:
+            lf_test.Client_disconnect(sta_list)
+            allure.attach(name="Definition",
+                          body="Max-SSID test intends to verify stability of Wi-Fi device " \
+                               "where the AP is configured with max no.of SSIDs with different security modes.")
+            allure.attach(name="Procedure",
+                          body=f"This test case definition states that we need to push the basic bridge mode config on the "
+                               f"AP to be tested by configuring it with maximum {len(pass_list)} SSIDs in {band} radio. "
+                               f"Create client on each SSIDs and run Layer-3 traffic. Pass/ fail criteria: "
+                               f"The client created should not get associated to the AP")
             # lf_test.layer3_traffic(ssid_num=len(pass_list), band="5 Ghz", station_name=sta_list)
             assert True
         else:
@@ -493,6 +511,15 @@ class TestMoreThanSixteenSsid(object):
             count_security += 1
         fail_list = list(filter(lambda x: x == False, pass_list))
         if len(fail_list) == len(pass_list):
+            lf_test.Client_disconnect(sta_list)
+            allure.attach(name="Definition",
+                          body="Max-SSID test intends to verify stability of Wi-Fi device " \
+                               "where the AP is configured with max no.of SSIDs with different security modes.")
+            allure.attach(name="Procedure",
+                          body=f"This test case definition states that we need to push the basic bridge mode config on the "
+                               f"AP to be tested by configuring it with maximum {len(pass_list)} SSIDs in 2.4 Ghz and 5 Ghz radio. "
+                               f"Create client on each SSIDs and run Layer-3 traffic. Pass/ fail criteria: "
+                               f"The client created should not get associated to the AP")
             # lf_test.layer3_traffic(ssid_num=len(pass_list), band="2.4 Ghz and 5 Ghz", station_name=sta_list)
             assert True
         else:
