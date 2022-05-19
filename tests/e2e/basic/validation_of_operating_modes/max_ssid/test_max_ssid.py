@@ -233,8 +233,8 @@ class TestMoreThanEightSsid2G(object):
                 sta_count += 1
             count_security += 1
         fail_list = list(filter(lambda x : x == False, pass_list))
-        if len(fail_list) == 0:
-            lf_test.layer3_traffic(ssid_num=len(pass_list), band="2.4 Ghz", station_name=sta_list)
+        if len(fail_list) == len(pass_list):
+            # lf_test.layer3_traffic(ssid_num=len(pass_list), band="2.4 Ghz", station_name=sta_list)
             assert True
         else:
             assert False
@@ -310,8 +310,8 @@ class TestMoreThanEightSsid5G(object):
                 sta_count += 1
             count_security += 1
         fail_list = list(filter(lambda x : x == False, pass_list))
-        if len(fail_list) == 0:
-            lf_test.layer3_traffic(ssid_num=len(pass_list), band="5 Ghz", station_name=sta_list)
+        if len(fail_list) == pass_list:
+            # lf_test.layer3_traffic(ssid_num=len(pass_list), band="5 Ghz", station_name=sta_list)
             assert True
         else:
             assert False
@@ -492,8 +492,8 @@ class TestMoreThanSixteenSsid(object):
                 sta_count += 1
             count_security += 1
         fail_list = list(filter(lambda x: x == False, pass_list))
-        if len(fail_list) == 0:
-            lf_test.layer3_traffic(ssid_num=len(pass_list), band="2.4 Ghz and 5 Ghz", station_name=sta_list)
+        if len(fail_list) == len(pass_list):
+            # lf_test.layer3_traffic(ssid_num=len(pass_list), band="2.4 Ghz and 5 Ghz", station_name=sta_list)
             assert True
         else:
             assert False
