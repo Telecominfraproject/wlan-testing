@@ -24,7 +24,9 @@ class TestAP(object):
             iwinfo = ap_ssh.get_iwinfo()
             print("iwinfo:")
             print(iwinfo)
-        allure.attach(name="Status before reboot:", body=str(gw, connected, iwinfo))
+        allure.attach(name="Status before reboot(Uci show ucentral):", body=str(gw))
+        allure.attach(name="Status before reboot(ubus call ucentral status):", body=str(connected))
+        allure.attach(name="Status before reboot(iwinfo):", body=str(iwinfo))
         device_name = get_configuration['access_point'][0]['serial']
         payload = {
                   "serialNumber": device_name,
@@ -47,7 +49,9 @@ class TestAP(object):
             iwinfo1 = ap_ssh.get_iwinfo()
             print("iwinfo1:")
             print(iwinfo1)
-        allure.attach(name="Status after reboot:", body=str(gw1, connected1, iwinfo1))
+        allure.attach(name="Status after reboot(Uci show ucentral):", body=str(gw1))
+        allure.attach(name="Status after reboot(ubus call ucentral status):", body=str(connected1))
+        allure.attach(name="Status after reboot(iwinfo):", body=str(iwinfo1))
         assert (resp.status_code == 200) & (gw == gw1) & (connected == connected1) & (iwinfo == iwinfo1)
 
     def test_ap_factory_reset(self, setup_controller, get_configuration, get_apnos):
@@ -64,7 +68,9 @@ class TestAP(object):
             iwinfo = ap_ssh.get_iwinfo()
             print("iwinfo:")
             print(iwinfo)
-        allure.attach(name="Status before factory reset:", body=str(gw, connected, iwinfo))
+        allure.attach(name="Status before factory reset(Uci show ucentral):", body=str(gw))
+        allure.attach(name="Status before factory reset(ubus call ucentral status):", body=str(connected))
+        allure.attach(name="Status before factory reset(iwinfo):", body=str(iwinfo))
         device_name = get_configuration['access_point'][0]['serial']
         payload = {
                   "serialNumber": device_name,
@@ -88,5 +94,7 @@ class TestAP(object):
             iwinfo1 = ap_ssh.get_iwinfo()
             print("iwinfo1:")
             print(iwinfo1)
-        allure.attach(name="Status after factory reset:", body=str(gw1, connected1, iwinfo1))
+        allure.attach(name="Status after factory reset(Uci show ucentral):", body=str(gw1))
+        allure.attach(name="Status after factory reset(ubus call ucentral status):", body=str(connected1))
+        allure.attach(name="Status after factory reset(iwinfo):", body=str(iwinfo1))
         assert (resp.status_code == 200) & (gw == gw1) & (connected == connected1) & (iwinfo == iwinfo1)
