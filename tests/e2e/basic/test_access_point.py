@@ -7,6 +7,7 @@ import pytest
 @pytest.mark.uc_sanity
 @allure.feature("SDK REST API")
 @pytest.mark.gateway_ap_api
+@pytest.mark.ow_sanity_lf
 class TestAP(object):
 
     def test_ap_reboot(self, setup_controller, get_configuration, get_apnos):
