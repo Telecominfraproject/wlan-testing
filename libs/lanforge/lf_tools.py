@@ -567,9 +567,8 @@ class ChamberView:
                                                file_name="/csv-data/data-Combined_bps__60_second_running_average-1.csv",
                                                batch_size="0"):
         try:
-            df = pd.read_csv(
-                "../reports/" + str(dir_name) + file_name,
-                sep=r'\t', engine='python')
+            df = pd.read_csv("../reports/" + str(dir_name) + file_name,
+                            sep=r'\t', engine='python')
             print("csv file opened")
         except FileNotFoundError:
             print("csv file does not exist")
