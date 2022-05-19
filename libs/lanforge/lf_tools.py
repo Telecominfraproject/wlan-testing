@@ -574,7 +574,6 @@ class ChamberView:
         try:
             df = pd.read_csv("../reports/" + str(dir_name) + file_name,
                             sep=r'\t', engine='python')
-
             print("csv file opened")
         except FileNotFoundError:
             print("csv file does not exist")
