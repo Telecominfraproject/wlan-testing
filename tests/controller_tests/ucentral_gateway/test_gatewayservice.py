@@ -129,7 +129,7 @@ class TestUcentralGatewayService(object):
         assert resp.status_code == 200
 
     @pytest.mark.sdk_restapi
-    @pytest.mark.gw_lsdev
+    @pytest.mark.gw_cred_dev
     def test_gwservice_createdevice(self, setup_controller, testbed):
         """
             Test the create device endpoint
@@ -161,6 +161,30 @@ class TestUcentralGatewayService(object):
         resp = setup_controller.get_device_by_serial_number(device_name)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Gateway create device-verify", body=body)
+        if resp.status_code != 200:
+            assert False
+
+        editing_payload = {
+                          "id": device_name,
+                          "notes": [
+                            {
+                              "note": "Testing through Automation"
+                            }
+                          ]
+                        }
+        print(json.dumps(editing_payload))
+        resp = setup_controller.edit_device_on_gw(device_name, editing_payload)
+        allure.attach(name="response: ", body=str(resp.json()))
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Gateway edited device", body=body)
+        if resp.status_code != 200:
+            assert False
+        devices = json.loads(resp.text)
+        print(devices)
+
+        resp = setup_controller.get_device_by_serial_number(device_name)
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Gateway edited device-verify", body=body)
         if resp.status_code != 200:
             assert False
 
