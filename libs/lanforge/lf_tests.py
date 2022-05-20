@@ -529,9 +529,10 @@ class RunTest:
         self.data_scan_ssid = self.scan_ssid(radio=self.client_connect.radio.split(".")[2])
         print("ssid scan data :- ", self.data_scan_ssid)
         self.client_connect.build()
-        self.client_connect.wait_for_ip(station_name)
-        print(self.client_connect.wait_for_ip(station_name))
-        if self.client_connect.wait_for_ip(station_name):
+        result = self.client_connect.wait_for_ip(station_list=station_name, timeout_sec=100)
+        #print(self.client_connect.wait_for_ip(station_name))
+        print(result)
+        if result:
             self.client_connect._pass("ALL Stations got IP's", print_=True)
             return self.client_connect
         else:
