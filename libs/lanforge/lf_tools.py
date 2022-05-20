@@ -584,6 +584,13 @@ class ChamberView:
 
         return dict_data
 
+    def attach_report_kpi(self, report_name=None, file_name="kpi_file"):
+        path = "../reports/" + str(report_name) + "/kpi.csv"
+        if os.path.exists(path):
+            allure.attach.file(source=path,
+                               name=file_name, attachment_type="CSV")
+        return os.path.exists(path)
+
     def attach_report_graphs(self, report_name=None, pdf_name="WIFI Capacity Test PDF Report"):
         relevant_path = "../reports/" + report_name + "/"
         entries = os.listdir("../reports/" + report_name + '/')

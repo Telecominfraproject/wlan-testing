@@ -54,7 +54,7 @@ class TestDataplaneThroughputNAT(object):
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
-        influx_tags = "tcp-udp-nat-wpa2-2.4G-ac"
+        influx_tags = "dataplane-tcp-udp-nat-wpa2-2.4G-ac"
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
@@ -65,6 +65,7 @@ class TestDataplaneThroughputNAT(object):
                                        vlan_id=vlan, dut_name=dut_name, influx_tags=influx_tags, move_to_influx=True)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dataplane Throughput Test - TCP-UDP 2.4G")
+            lf_tools.attach_report_kpi(report_name=report_name)
             lf_test.Client_disconnect(station_name=station_names_twog)
             assert station
         else:
@@ -86,7 +87,7 @@ class TestDataplaneThroughputNAT(object):
         band = "fiveg"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
-        influx_tags = "tcp-udp-nat-wpa2-5G-ac"
+        influx_tags = "dataplane-tcp-udp-nat-wpa2-5G-ac"
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -97,6 +98,7 @@ class TestDataplaneThroughputNAT(object):
                                        vlan_id=vlan, dut_name=dut_name, influx_tags=influx_tags, move_to_influx=True)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dataplane Throughput Test - TCP-UDP 5G")
+            lf_tools.attach_report_kpi(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_fiveg)
             assert station
@@ -119,7 +121,7 @@ class TestDataplaneThroughputNAT(object):
         band = "ax"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
-        influx_tags = "tcp-udp-nat-wpa2-2.4G-ax"
+        influx_tags = "dataplane-tcp-udp-nat-wpa2-2.4G-ax"
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_ax, vlan_id=vlan)
@@ -130,6 +132,7 @@ class TestDataplaneThroughputNAT(object):
                                        vlan_id=vlan, dut_name=dut_name, influx_tags=influx_tags, move_to_influx=True)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dataplane Throughput Test - TCP-UDP 2.4G")
+            lf_tools.attach_report_kpi(report_name=report_name)
             lf_test.Client_disconnect(station_name=station_names_ax)
             assert station
         else:
@@ -151,7 +154,7 @@ class TestDataplaneThroughputNAT(object):
         band = "ax"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
-        influx_tags = "tcp-udp-nat-wpa2-5G-ax"
+        influx_tags = "dataplane-tcp-udp-nat-wpa2-5G-ax"
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_ax, vlan_id=vlan)
@@ -162,6 +165,7 @@ class TestDataplaneThroughputNAT(object):
                                        vlan_id=vlan, dut_name=dut_name, influx_tags=influx_tags, move_to_influx=True)
             report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dataplane Throughput Test - TCP-UDP 5G")
+            lf_tools.attach_report_kpi(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(station_name=station_names_ax)
             assert station
