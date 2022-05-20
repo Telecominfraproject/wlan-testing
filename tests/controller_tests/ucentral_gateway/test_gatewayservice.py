@@ -251,7 +251,7 @@ class TestUcentralGatewayService(object):
         print(json.dumps(payload))
         resp = setup_controller.ping_device(device_name, payload)
         print(resp.json())
-        allure.attach(name="Device status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        allure.attach(name="Device Ping status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
 
     @pytest.mark.gw_led_blink_device
     def test_gw_service_led_blink_device(self, setup_controller, get_configuration):
@@ -268,7 +268,7 @@ class TestUcentralGatewayService(object):
         print(json.dumps(payload))
         resp = setup_controller.led_blink_device(device_name, payload)
         print(resp.json())
-        allure.attach(name="Device status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        allure.attach(name="Device Blink led status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
 
     @pytest.mark.gw_trace_device
     def test_gw_service_trace_device(self, setup_controller, get_configuration):
@@ -287,7 +287,7 @@ class TestUcentralGatewayService(object):
         print(json.dumps(payload))
         resp = setup_controller.trace_device(device_name, payload)
         print(resp.json())
-        allure.attach(name="Device status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        allure.attach(name="Device trace status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
 
     @pytest.mark.gw_wifi_scan_device
     def test_gw_service_wifi_scan_device(self, setup_controller, get_configuration):
@@ -308,7 +308,7 @@ class TestUcentralGatewayService(object):
         print(json.dumps(payload))
         resp = setup_controller.wifi_scan_device(device_name, payload)
         print(resp.json())
-        allure.attach(name="Device status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        allure.attach(name="Device Wifi scan status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
 
     @pytest.mark.gw_request_msg_device
     def test_gw_service_request_msg_device(self, setup_controller, get_configuration):
@@ -324,7 +324,7 @@ class TestUcentralGatewayService(object):
         print(json.dumps(payload))
         resp = setup_controller.request_specific_msg_from_device(device_name, payload)
         print(resp.json())
-        allure.attach(name="Device status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        allure.attach(name="Device Request specific msg status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
 
     @pytest.mark.gw_event_queue_device
     def test_gw_service_event_queue_device(self, setup_controller, get_configuration):
@@ -341,7 +341,7 @@ class TestUcentralGatewayService(object):
         print(json.dumps(payload))
         resp = setup_controller.event_queue(device_name, payload)
         print(resp.json())
-        allure.attach(name="Device status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        allure.attach(name="Device Request Event Queue status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
 
     @pytest.mark.gw_telemetry_device
     def test_gw_service_telemetry_device(self, setup_controller, get_configuration):
@@ -362,4 +362,4 @@ class TestUcentralGatewayService(object):
         print(json.dumps(payload))
         resp = setup_controller.telemetry(device_name, payload)
         print(resp.json())
-        allure.attach(name="Device status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        allure.attach(name="Device telemetry status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
