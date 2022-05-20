@@ -367,6 +367,13 @@ class Controller(ConfigureController):
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
 
+    def get_rtty_params(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/rtty")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
 class FMSUtils:
 
     def __init__(self, sdk_client=None, controller_data=None):
