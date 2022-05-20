@@ -168,15 +168,15 @@ jobs:
         run: kubectl delete ns --ignore-not-found=true --wait regression-${{ github.run_id }}-${{ matrix.testbed }}-dynamic-vlan
 
       - name: run multi_vlan tests
-          uses: ./.github/actions/run-tests
-          if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'ow_multi_vlan_tests_lf')"
-          with:
-            namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-multi-vlan
-            testbed: "${{ matrix.testbed }}"
-            marker_expression: "ow_regression_lf and ow_multi_vlan_tests_lf"
-            configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
-            testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-            allure_results_artifact_name: allure-results-${{ matrix.testbed }}-multi-vlan
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'ow_multi_vlan_tests_lf')"
+        with:
+          namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-multi-vlan
+          testbed: "${{ matrix.testbed }}"
+          marker_expression: "ow_regression_lf and ow_multi_vlan_tests_lf"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-multi-vlan
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
