@@ -77,6 +77,7 @@ class TestBridgeModeConnectSuiteOne(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4570", name="WIFI-4570")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
+    @pytest.mark.Sub
     def test_ClientConnect_5g_WPA2_Personal_Bridge(self, request, get_vif_state, get_ap_logs,
                                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
 
