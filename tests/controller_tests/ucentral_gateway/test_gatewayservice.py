@@ -130,9 +130,9 @@ class TestUcentralGatewayService(object):
 
     @pytest.mark.sdk_restapi
     @pytest.mark.gw_cred_dev
-    def test_gwservice_createdevice(self, setup_controller, testbed):
+    def test_gwservice_create_edit_delete_device(self, setup_controller, testbed):
         """
-            Test the create device endpoint
+            Test the create & edit and delete device endpoint
             WIFI-3453
         """
         device_mac = "02:00:00:%02x:%02x:%02x" % (random.randint(0, 255),
