@@ -23,9 +23,6 @@ class TestAP(object):
             iwinfo = ap_ssh.get_iwinfo()
             print("iwinfo:")
             print(iwinfo)
-            maverick = ap_ssh.set_maverick()
-            print("maverick:")
-            print(maverick)
         allure.attach(name="Status before maverick:", body=str(gw, connected, iwinfo))
         device_name = get_configuration['access_point'][0]['serial']
         payload = {
@@ -46,6 +43,9 @@ class TestAP(object):
             connected1, latest1, active1 = ap_ssh.get_ucentral_status()
             print("Connected1:")
             print(connected1)
+            maverick = ap_ssh.set_maverick()
+            print("setting maverick was done!")
+
             iwinfo1 = ap_ssh.get_iwinfo()
             print("iwinfo1:")
             print(iwinfo1)
