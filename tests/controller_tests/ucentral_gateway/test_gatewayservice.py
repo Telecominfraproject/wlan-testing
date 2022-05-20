@@ -363,3 +363,14 @@ class TestUcentralGatewayService(object):
         resp = setup_controller.telemetry(device_name, payload)
         print(resp.json())
         allure.attach(name="Device telemetry status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+
+    @pytest.mark.gw_rtty
+    def test_gw_service_get_rtty(self, setup_controller, get_configuration):
+        """
+            Test the device rtty parameters in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        resp = setup_controller.get_rtty_params(device_name)
+        print(resp.json())
+        allure.attach(name="Device RTTY parameters", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
