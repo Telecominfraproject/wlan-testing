@@ -442,7 +442,7 @@ class RunTest:
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
                       instance_name="wct_instance", download_rate="1Gbps", influx_tags="",
                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", stations="", create_stations=True,
-                      sort="interleave", raw_lines=[], sets=[]):
+                      sort="interleave", raw_lines=[], sets=[], move_to_influx=False):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         if mode == "BRIDGE":
             upstream_port = self.upstream_port
@@ -483,16 +483,16 @@ class RunTest:
                                             sets=sets)
         wificapacity_obj.setup()
         wificapacity_obj.run()
+        if move_to_influx:
+            report_name = "../reports/" + wificapacity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                                 influx_port=self.influx_params["influx_port"],
+                                 influx_org=self.influx_params["influx_org"],
+                                 influx_token=self.influx_params["influx_token"],
+                                 influx_bucket=self.influx_params["influx_bucket"],
+                                 path=report_name)
 
-        report_name = "../reports/" + wificapacity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
-                             influx_port=self.influx_params["influx_port"],
-                             influx_org=self.influx_params["influx_org"],
-                             influx_token=self.influx_params["influx_token"],
-                             influx_bucket=self.influx_params["influx_bucket"],
-                             path=report_name)
-
-        influx.glob()
+            influx.glob()
         return wificapacity_obj
 
     def Client_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog",
@@ -529,9 +529,10 @@ class RunTest:
         self.data_scan_ssid = self.scan_ssid(radio=self.client_connect.radio.split(".")[2])
         print("ssid scan data :- ", self.data_scan_ssid)
         self.client_connect.build()
-        self.client_connect.wait_for_ip(station_name)
-        print(self.client_connect.wait_for_ip(station_name))
-        if self.client_connect.wait_for_ip(station_name):
+        result = self.client_connect.wait_for_ip(station_list=station_name, timeout_sec=100)
+        #print(self.client_connect.wait_for_ip(station_name))
+        print(result)
+        if result:
             self.client_connect._pass("ALL Stations got IP's", print_=True)
             return self.client_connect
         else:
@@ -606,7 +607,8 @@ class RunTest:
         return True
 
     def dataplane(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
-                  upload_rate="0", duration="15s", instance_name="test_demo", raw_lines=None, influx_tags=""):
+                  upload_rate="0", duration="15s", instance_name="test_demo", raw_lines=None, influx_tags="",
+                  move_to_influx=False):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
 
         if mode == "BRIDGE":
@@ -652,21 +654,21 @@ class RunTest:
 
         self.dataplane_obj.setup()
         self.dataplane_obj.run()
-        report_name = self.dataplane_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        if move_to_influx:
+            report_name = "../reports/" + self.dataplane_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                                 influx_port=self.influx_params["influx_port"],
+                                 influx_org=self.influx_params["influx_org"],
+                                 influx_token=self.influx_params["influx_token"],
+                                 influx_bucket=self.influx_params["influx_bucket"],
+                                 path=report_name)
 
-        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
-                             influx_port=self.influx_params["influx_port"],
-                             influx_org=self.influx_params["influx_org"],
-                             influx_token=self.influx_params["influx_token"],
-                             influx_bucket=self.influx_params["influx_bucket"],
-                             path=report_name)
-
-        influx.glob()
+            influx.glob()
 
         return self.dataplane_obj
 
     def dualbandperformancetest(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
-                                instance_name="test_demo", dut_5g="", dut_2g="", influx_tags=""):
+                                instance_name="test_demo", dut_5g="", dut_2g="", influx_tags="", move_to_influx=False):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
 
         if mode == "BRIDGE":
@@ -705,15 +707,16 @@ class RunTest:
                                             )
         self.dualbandptest_obj.setup()
         self.dualbandptest_obj.run()
-        report_name = self.dualbandptest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
-                             influx_port=self.influx_params["influx_port"],
-                             influx_org=self.influx_params["influx_org"],
-                             influx_token=self.influx_params["influx_token"],
-                             influx_bucket=self.influx_params["influx_bucket"],
-                             path=report_name)
+        if move_to_influx:
+            report_name = "../reports/" + self.dualbandptest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                                 influx_port=self.influx_params["influx_port"],
+                                 influx_org=self.influx_params["influx_org"],
+                                 influx_token=self.influx_params["influx_token"],
+                                 influx_bucket=self.influx_params["influx_bucket"],
+                                 path=report_name)
 
-        influx.glob()
+            influx.glob()
         return self.dualbandptest_obj
 
     def apstabilitytest(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
