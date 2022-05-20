@@ -379,7 +379,7 @@ class Controller(ConfigureController):
         print(uri)
         print(payload)
         payload = json.dumps(payload)
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         print(resp)
         self.check_response("PUT", resp, self.make_headers(), payload, uri)
         return resp
