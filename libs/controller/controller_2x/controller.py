@@ -297,6 +297,75 @@ class Controller(ConfigureController):
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
 
+    def ping_device(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/ping")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def led_blink_device(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/leds")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def trace_device(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/trace")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def wifi_scan_device(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/wifiscan")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def request_specific_msg_from_device(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/request")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def event_queue(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/eventqueue")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def telemetry(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/telemetry")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
 
 class FMSUtils:
 
