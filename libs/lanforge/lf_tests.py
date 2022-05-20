@@ -1363,6 +1363,22 @@ class RunTest:
         check_he = self.pcap_obj.check_he_capability_probe_request(pcap_file=self.pcap_obj.pcap_name)
         allure.attach(body=check_he, name="Check HE Capabilities in Probe Request")
 
+        # check for HE Capability in probe response
+        check_he = self.pcap_obj.check_he_capability_probe_response(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check HE Capabilities in Probe Request")
+
+        # check for HE Capability in Association request
+        check_he = self.pcap_obj.check_he_capability_association_request(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check HE Capabilities in Association Request")
+
+        # check for HE Capability in Association response
+        check_he = self.pcap_obj.check_he_capability_association_response(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check HE Capabilities in Association Response")
+
+        # check for Guard Interval
+        check_he = self.pcap_obj.check_he_guard_interval(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check Guard Interval")
+
         allure.attach.file(source=self.pcap_obj.pcap_name,
                            name="pcap_file", attachment_type=allure.attachment_type.PCAP)
         influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
