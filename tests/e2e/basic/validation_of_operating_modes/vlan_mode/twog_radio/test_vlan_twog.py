@@ -7,7 +7,8 @@ import time
 import allure
 import pytest
 
-pytestmark = [pytest.mark.multi_vlan,
+pytestmark = [pytest.mark.ow_regression_lf,
+              pytest.mark.ow_multi_vlan_tests_lf,
               pytest.mark.twog]
 
 setup_params_general = {
