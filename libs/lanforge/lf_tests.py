@@ -598,7 +598,10 @@ class RunTest:
                     except Exception as e:
                         print(e)
                 print("sta name", sta_name)
-                allure.attach(name=name, body=str(station_data_str))
+                if name == "":
+                    allure.attach(name=f"{sta_name} info", body=str(station_data_str))
+                else:
+                    allure.attach(name=name, body=str(station_data_str))
             except Exception as e:
                 print(e)
 
@@ -918,12 +921,12 @@ class RunTest:
             ]
         else:
             input_data = [{
-                "password": key1,
-                "upstream": str(self.upstream_port) + "." + str(vlan_id[0]),
-                "mac": "",
-                "num_station": 1,
-                "radio": str(radio)
-            },
+                    "password": key1,
+                    "upstream": str(self.upstream_port) + "." + str(vlan_id[0]),
+                    "mac": "",
+                    "num_station": 1,
+                    "radio": str(radio)
+                },
                 {
                     "password": key2,
                     "upstream": str(self.upstream_port) + "." + str(vlan_id[1]),
@@ -971,35 +974,66 @@ class RunTest:
         elif mode == "NAT":
             result1 = self.multi_obj.compare_nonvlan_ip_nat()
         # station_name =  ['sta100', 'sta200', 'sta00']
-        for sta_name_ in station_name:
-            if sta_name_ is None:
-                raise ValueError("get_station_url wants a station name")
-            if self.sta_url_map is None:
-                self.sta_url_map = {}
-                for sta_name in station_name:
-                    self.sta_url_map[sta_name] = "port/1/%s/%s" % (str(1), sta_name)
-                    print(self.sta_url_map)
+        cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port)
+        res_data = cli_base.json_get(_req_url='port?fields=alias,port+type,ip,mac',)['interfaces']
+        table_heads = ["station name", "configured vlan-id", "expected IP Range", "allocated IP", "mac address", 'pass/fail']
+        table_data = []
+        temp = {'sta100':'', 'sta200': '', 'sta00': ''}
+        for i in res_data:
+            for item in i:
+                if i[item]['port type'] == 'Ethernet' and i[item]['alias'] == self.upstream_port:
+                    if mode == 'NAT':
+                        temp.update({'sta00': '192.168.1.1'})
+                    else:
+                        temp.update({'sta00': i[item]['ip']})
+                if i[item]['port type'] == '802.1Q VLAN' and i[item]['alias'] == str(self.upstream_port+".100"):
+                    temp.update({'sta100': i[item]['ip']})
+                elif i[item]['port type'] == '802.1Q VLAN' and i[item]['alias'] == str(self.upstream_port+".200"):
+                    temp.update({'sta200': i[item]['ip']})
+        for i in res_data:
+            for item in i:
+                if i[item]['port type'] == 'WIFI-STA' and i[item]['alias'] == "sta100":
+                    exp1 = temp['sta100'].split('.')
+                    ip1 = i[item]['ip'].split('.')
+                    if exp1[0] == ip1[0] and exp1[1] == ip1[1]:
+                        pf = 'PASS'
+                    else:
+                        pf = 'FAIL'
+                    table_data.append([i[item]['alias'], '100', f'{exp1[0]}.{exp1[1]}.X.X', i[item]['ip'], i[item]['mac'],
+                                       f'{pf}'])
+                elif i[item]['port type'] == 'WIFI-STA' and i[item]['alias'] == 'sta200':
+                        exp2 = temp['sta200'].split('.')
+                        ip2 = i[item]['ip'].split('.')
+                        if exp2[0] == ip2[0] and exp2[1] == ip2[1]:
+                            pf = 'PASS'
+                        else:
+                            pf = 'FAIL'
+                        table_data.append([i[item]['alias'], '200', f'{exp2[0]}.{exp2[1]}.X.X', i[item]['ip'], i[item]['mac'], f'{pf}'])
+                elif i[item]['port type'] == 'WIFI-STA' and i[item]['alias'] == 'sta00':
+                    exp3 = temp['sta00'].split('.')
+                    ip2 = i[item]['ip'].split('.')
+                    if mode == "BRIDGE":
+                        if exp3[0] == ip2[0] and exp3[1] == ip2[1]:
+                            pf = 'PASS'
+                        else:
+                            pf = 'FAIL'
+                        table_data.append([i[item]['alias'], 'WAN upstream', f'{exp3[0]}.{exp3[1]}.X.X', i[item]['ip'], i[item]['mac'], f'{pf}'])
+                    elif mode == "NAT":
+                        if exp3[0] == '192' and exp3[1] == '168':
+                            pf = 'PASS'
+                        else:
+                            pf = 'FAIL'
+                        table_data.append([i[item]['alias'], 'LAN upstream', f'192.168.X.X', i[item]['ip'], i[item]['mac'], f'{pf}'])
+        print(table_data)
+        # attach test data in a table to allure
+        report_obj = Report()
+        table_info = report_obj.table2(table=table_data, headers=table_heads)
+        allure.attach(name="Test Results Info", body=table_info)
 
-        for sta_name in station_name:
-            try:
-                station_data_str = ""
-                # sta_url = self.staConnect.get_station_url(sta_name)
-                station_info = self.multi_obj.local_realm.json_get(self.sta_url_map[sta_name])
-                print("station info", station_info)
-                for i in station_info["interface"]:
-                    try:
-                        station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
-                    except Exception as e:
-                        print(e)
-                print("sta name", sta_name)
-                allure.attach(name=str(sta_name), body=str(station_data_str))
-            except Exception as e:
-                print(e)
         if result1 == "Pass":
             print("Test passed for non vlan ip ")
         else:
             print("Test failed for non vlan ip")
-        print("all result gathered")
         print("clean up")
         self.multi_obj.postcleanup()
         if result == result1:
