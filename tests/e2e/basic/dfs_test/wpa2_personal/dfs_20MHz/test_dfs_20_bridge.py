@@ -4,7 +4,9 @@ import os
 import time
 import pandas as pd
 
-pytestmark = [pytest.mark.regression, pytest.mark.dfs, pytest.mark.bridge]
+pytestmark = [pytest.mark.regression,
+              pytest.mark.ow_dfs_tests_lf,
+              pytest.mark.bandwidth_20MHz]
 
 setup_params_general1 = {
     "mode": "BRIDGE",
@@ -25,6 +27,8 @@ setup_params_general1 = {
     },
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general1],
@@ -32,7 +36,6 @@ setup_params_general1 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel52Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6472", name="WIFI-6472")
     @pytest.mark.wpa2_personal
@@ -85,6 +88,7 @@ class TestDFSChannel52Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general2 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -104,6 +108,8 @@ setup_params_general2 = {
     },
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general2],
@@ -111,7 +117,6 @@ setup_params_general2 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel100Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6473", name="WIFI-6473")
     @pytest.mark.wpa2_personal
@@ -164,6 +169,7 @@ class TestDFSChannel100Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general3 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -183,6 +189,8 @@ setup_params_general3 = {
     },
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general3],
@@ -190,7 +198,6 @@ setup_params_general3 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel104Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6474", name="WIFI-6474")
     @pytest.mark.wpa2_personal
@@ -243,6 +250,7 @@ class TestDFSChannel104Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general4 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -262,6 +270,8 @@ setup_params_general4 = {
     },
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general4],
@@ -269,7 +279,6 @@ setup_params_general4 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel56Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6475", name="WIFI-6475")
     @pytest.mark.wpa2_personal
@@ -322,6 +331,7 @@ class TestDFSChannel56Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general5 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -341,6 +351,8 @@ setup_params_general5 = {
     },
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general5],
@@ -348,7 +360,6 @@ setup_params_general5 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel60Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6476", name="WIFI-6476")
     @pytest.mark.wpa2_personal
@@ -401,6 +412,7 @@ class TestDFSChannel60Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general6 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -420,6 +432,8 @@ setup_params_general6 = {
     },
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general6],
@@ -427,7 +441,6 @@ setup_params_general6 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel64Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6477", name="WIFI-6477")
     @pytest.mark.wpa2_personal
@@ -480,6 +493,7 @@ class TestDFSChannel64Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general7 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -499,6 +513,8 @@ setup_params_general7 = {
     },
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general7],
@@ -506,7 +522,6 @@ setup_params_general7 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel108Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6478", name="WIFI-6478")
     @pytest.mark.wpa2_personal
@@ -559,6 +574,7 @@ class TestDFSChannel108Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general8 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -578,6 +594,8 @@ setup_params_general8 = {
     },
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general8],
@@ -585,7 +603,6 @@ setup_params_general8 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel112Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6479", name="WIFI-6479")
     @pytest.mark.wpa2_personal
@@ -637,6 +654,7 @@ class TestDFSChannel112Bw20(object):
             time.sleep(1)
         if not dfs_fail:
             assert False
+
 
 # setup_params_general9 = {
 #     "mode": "BRIDGE",
@@ -731,6 +749,8 @@ setup_params_general10 = {
     },
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general10],
@@ -738,7 +758,6 @@ setup_params_general10 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel132Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6481", name="WIFI-6481")
     @pytest.mark.wpa2_personal
@@ -791,6 +810,7 @@ class TestDFSChannel132Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general11 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -810,6 +830,8 @@ setup_params_general11 = {
     },
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general11],
@@ -817,7 +839,6 @@ setup_params_general11 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel136Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6482", name="WIFI-6482")
     @pytest.mark.wpa2_personal
@@ -870,6 +891,7 @@ class TestDFSChannel136Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general12 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -889,6 +911,8 @@ setup_params_general12 = {
     },
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general12],
@@ -896,7 +920,6 @@ setup_params_general12 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel140Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6483", name="WIFI-6483")
     @pytest.mark.wpa2_personal
@@ -949,6 +972,7 @@ class TestDFSChannel140Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general13 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -968,6 +992,8 @@ setup_params_general13 = {
     },
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general13],
@@ -975,7 +1001,6 @@ setup_params_general13 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel144Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6484", name="WIFI-6484")
     @pytest.mark.wpa2_personal
