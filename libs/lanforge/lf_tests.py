@@ -1326,7 +1326,7 @@ class RunTest:
                 return False
 
     def ofdma(self, mode="BRIDGE", vlan_id=1, inst_name="ofdma", batch_size='1', rawlines=None, sniffer_channel=0,
-              sniffer_radio="wiphy0", wct_stations=None, sniffer_duration = 60):
+              sniffer_radio="wiphy0", wct_stations=None, sniffer_duration=60):
         if inst_name == "ofdma":
             inst_name = "ofdma-instance-{}".format(str(random.randint(0, 100000)))
 
@@ -1334,14 +1334,37 @@ class RunTest:
             rawlines = [['pdu_sz: 300']]
 
         self.pcap_obj = LfPcap(host=self.lanforge_ip, port=self.lanforge_port)
-        sniffer = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniffer_radio, "ofdma-test", sniffer_channel, 90))
+        sniffer = threading.Thread(target=self.pcap_obj.sniff_packets,
+                                   args=(sniffer_radio, "ofdma-test", sniffer_channel, 90))
         sniffer.start()
         ofdma_obj = self.wifi_capacity(instance_name=inst_name, mode=mode, vlan_id=vlan_id, download_rate="10 Mbps",
-                                       batch_size=batch_size, stations=wct_stations, create_stations=False, sort="interleave",
+                                       batch_size=batch_size, stations=wct_stations, create_stations=False,
+                                       sort="interleave",
                                        upload_rate="0", protocol="TCP-IPv4", duration="60000", raw_lines=rawlines)
         while sniffer.is_alive():
             time.sleep(1)
         report_name = ofdma_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        # pull pcap from lanforge to current directory
+        if self.pcap_obj.pcap_name is not None:
+            try:
+                lf_report.pull_reports(hostname=self.lanforge_ip, port=self.lanforge_ssh_port, username="lanforge",
+                                       password="lanforge", report_location="/home/lanforge/" + self.pcap_obj.pcap_name,
+                                       report_dir=".")
+            except Exception as e:
+                print("error while pulling pcap file from lanforge", e)
+        else:
+            raise ValueError("pcap_name should not be None")
+
+        # check for HE Capability in Beacon Frame
+        check_he = self.pcap_obj.check_he_capability_beacon_frame(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check HE Capabilities in Beacon Frame")
+
+        # check for HE Capability in probe request
+        check_he = self.pcap_obj.check_he_capability_probe_request(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check HE Capabilities in Probe Request")
+
+        allure.attach.file(source=self.pcap_obj.pcap_name,
+                           name="pcap_file", attachment_type=allure.attachment_type.PCAP)
         influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
                              influx_port=self.influx_params["influx_port"],
                              influx_org=self.influx_params["influx_org"],
@@ -1371,44 +1394,7 @@ class RunTest:
         except Exception as e:
             print(e)
 
-    def ofdma(self, mode="BRIDGE", vlan_id=1, inst_name="ofdma", batch_size='1', rawlines=None, sniffer_channel=0,
-              sniffer_radio="wiphy0", wct_stations=None, sniffer_duration = 60):
-        if inst_name == "ofdma":
-            inst_name = "ofdma-instance-{}".format(str(random.randint(0, 100000)))
 
-        if rawlines is None:
-            rawlines = [['pdu_sz: 300']]
-
-        self.pcap_obj = LfPcap(host=self.lanforge_ip, port=self.lanforge_port)
-        sniffer = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniffer_radio, "ofdma-test", sniffer_channel, 90))
-        sniffer.start()
-        ofdma_obj = self.wifi_capacity(instance_name=inst_name, mode=mode, vlan_id=vlan_id, download_rate="10 Mbps",
-                                       batch_size=batch_size, stations=wct_stations, create_stations=False, sort="interleave",
-                                       upload_rate="0", protocol="TCP-IPv4", duration="60000", raw_lines=rawlines)
-        while sniffer.is_alive():
-            time.sleep(1)
-        report_name = ofdma_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        # pull pcap from lanforge to current directory
-        if self.pcap_obj.pcap_name is not None:
-            lf_report.pull_reports(hostname=self.lanforge_ip, port=self.lanforge_ssh_port, username="lanforge",
-                                   password="lanforge", report_location="/home/lanforge/" + self.pcap_obj.pcap_name,
-                                   report_dir=".")
-        else:
-            raise ValueError("pcap_name should not be None")
-
-        # check for mu-mimo bearmformee association request
-        check_he = self.pcap_obj.check_beamformee_association_request(pcap_file=self.pcap_obj.pcap_name)
-        allure.attach(body=check_he, name="Check HE Capabilities in Beacon Frame")
-        allure.attach.file(source=self.pcap_obj.pcap_name,
-                           name="pcap_file", attachment_type=allure.attachment_type.PCAP)
-        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
-                             influx_port=self.influx_params["influx_port"],
-                             influx_org=self.influx_params["influx_org"],
-                             influx_token=self.influx_params["influx_token"],
-                             influx_bucket=self.influx_params["influx_bucket"],
-                             path=report_name)
-        influx.glob()
-        return ofdma_obj
 
 if __name__ == '__main__':
     influx_host = "influx.cicd.lab.wlan.tip.build"
