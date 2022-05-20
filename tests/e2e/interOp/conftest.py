@@ -280,6 +280,19 @@ def get_vif_state(get_apnos, get_configuration, request, lf_tools, skip_lf):
             yield lf_tools.ssid_list
     else:
         yield empty_get_vif_state_list
+@pytest.fixture(scope="class")
+def set_maverick(get_apnos, get_configuration, request, lf_tools, skip_lf, self):
+    client = self.ssh_cli_connect()
+    cmd = "/etc/init.d/ucentral stop && /usr/libexec/ucentral/maverick.sh"
+    if self.mode:
+        cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+              f"cmd --value \"{cmd}\" "
+    stdin, stdout, stderr = client.exec_command(cmd)
+    output = stdout.read().replace(b":~# iwinfo", b"").decode('utf-8')
+    o = output
+    client.close()
+    return o
+
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):

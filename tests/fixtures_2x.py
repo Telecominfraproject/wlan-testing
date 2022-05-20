@@ -408,6 +408,11 @@ class Fixtures_2x:
             mode = "BRIDGE"
             instantiate_profile_obj.set_mode(mode=mode)
             vlan_id = 1
+        if parameter['mode'] == "NONE":
+            mode = "NONE"
+            instantiate_profile_obj.set_mode(mode=mode)
+            vlan_id = 1
+            print("No Mode is selected!..")
         if parameter['mode'] == "VLAN":
             mode = "VLAN"
             instantiate_profile_obj.set_mode(mode=mode)

@@ -483,6 +483,19 @@ class APNOS:
         client.close()
         return o
 
+    def set_maverick(self):
+        client = self.ssh_cli_connect()
+        cmd = "/etc/init.d/ucentral stop && /usr/libexec/ucentral/maverick.sh"
+        if self.mode:
+            cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                  f"cmd --value \"{cmd}\" "
+        stdin, stdout, stderr = client.exec_command(cmd)
+        output = stdout.read().replace(b":~# /etc/init.d/ucentral stop && /usr/libexec/ucentral/maverick.sh ", b"").decode('utf-8')
+        o = output
+        client.close()
+        return o
+
+
     def gettxpower(self):
         client = self.ssh_cli_connect()
         cmd = "iw dev | grep txpower"
