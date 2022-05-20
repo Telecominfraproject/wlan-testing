@@ -239,3 +239,127 @@ class TestUcentralGatewayService(object):
         print(resp.json())
         allure.attach(name="Device status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
 
+    @pytest.mark.gw_ping_device
+    def test_gw_service_ping_device(self, setup_controller, get_configuration):
+        """
+            Test to Ping device present in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        payload = {
+                  "serialNumber": device_name
+                }
+        print(json.dumps(payload))
+        resp = setup_controller.ping_device(device_name, payload)
+        print(resp.json())
+        allure.attach(name="Device status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+
+    @pytest.mark.gw_led_blink_device
+    def test_gw_service_led_blink_device(self, setup_controller, get_configuration):
+        """
+            Test to Blink led on device present in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        payload = {
+                  "serialNumber": device_name,
+                  "when": 0,
+                  "duration": 1,
+                  "pattern": "on"
+                }
+        print(json.dumps(payload))
+        resp = setup_controller.led_blink_device(device_name, payload)
+        print(resp.json())
+        allure.attach(name="Device status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+
+    @pytest.mark.gw_trace_device
+    def test_gw_service_trace_device(self, setup_controller, get_configuration):
+        """
+            Test to trace device present in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        payload = {
+                  "serialNumber": device_name,
+                  "when": 0,
+                  "duration": 1,
+                  "numberOfPackets": 0,
+                  "network": "string",
+                  "interface": "string"
+                }
+        print(json.dumps(payload))
+        resp = setup_controller.trace_device(device_name, payload)
+        print(resp.json())
+        allure.attach(name="Device status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+
+    @pytest.mark.gw_wifi_scan_device
+    def test_gw_service_wifi_scan_device(self, setup_controller, get_configuration):
+        """
+            Test to Wifi scan device present in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        payload = {
+                  "serialNumber": device_name,
+                  "verbose": True,
+                  "activeScan": True,
+                  "selector": {
+                    "bands": [
+                      "2"
+                    ]
+                  }
+                }
+        print(json.dumps(payload))
+        resp = setup_controller.wifi_scan_device(device_name, payload)
+        print(resp.json())
+        allure.attach(name="Device status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+
+    @pytest.mark.gw_request_msg_device
+    def test_gw_service_request_msg_device(self, setup_controller, get_configuration):
+        """
+            Test to Request specific msg from device present in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        payload = {
+                  "serialNumber": device_name,
+                  "when": 0,
+                  "message": "state"
+                }
+        print(json.dumps(payload))
+        resp = setup_controller.request_specific_msg_from_device(device_name, payload)
+        print(resp.json())
+        allure.attach(name="Device status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+
+    @pytest.mark.gw_event_queue_device
+    def test_gw_service_event_queue_device(self, setup_controller, get_configuration):
+        """
+            Test to Request Event Queue from device present in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        payload = {
+                  "serialNumber": device_name,
+                  "types": [
+                    "dhcp"
+                  ]
+                }
+        print(json.dumps(payload))
+        resp = setup_controller.event_queue(device_name, payload)
+        print(resp.json())
+        allure.attach(name="Device status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+
+    @pytest.mark.gw_telemetry_device
+    def test_gw_service_telemetry_device(self, setup_controller, get_configuration):
+        """
+            Test to Request telemetry from device present in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        payload = {
+                  "serialNumber": device_name,
+                  "interval": 0,
+                  "lifetime": 0,
+                  "kafka": False,
+                  "types": [
+                    "dhcp-snooping"
+                  ],
+                  "uuid": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                }
+        print(json.dumps(payload))
+        resp = setup_controller.telemetry(device_name, payload)
+        print(resp.json())
+        allure.attach(name="Device status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
