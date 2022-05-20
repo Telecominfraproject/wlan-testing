@@ -991,8 +991,6 @@ class RunTest:
         table_info = report_obj.table2(table=table_data, headers=table_heads)
         allure.attach(name="Test Results Info", body=table_info)
 
-        # attach station data to allure
-        self.attach_stationdata_to_allure(name="", station_name=station_name)
         if result1 == "Pass":
             print("Test passed for non vlan ip ")
         else:
