@@ -122,7 +122,7 @@ jobs:
         with:
           namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-rate-limiting
           testbed: "${{ matrix.testbed }}"
-          marker_expression: "ow_regression_lf and ow_rate_limiting_tests_lf"
+          marker_expression: "ow_regression_lf and bridge and ow_rate_limiting_tests_lf"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           allure_results_artifact_name: allure-results-${{ matrix.testbed }}-rate-limiting
