@@ -12,7 +12,9 @@ import time
 from configuration import DYNAMIC_VLAN_RADIUS_SERVER_DATA
 from configuration import DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA
 
-pytestmark = [pytest.mark.regression, pytest.mark.dynamic_vlan, pytest.mark.wpa3_enterprise, pytest.mark.vlan,
+pytestmark = [pytest.mark.ow_regression_lf,
+              pytest.mark.ow_dvlan_tests_lf,
+              pytest.mark.wpa3_enterprise,
               pytest.mark.twog]
 
 setup_params_general = {
