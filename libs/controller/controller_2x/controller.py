@@ -374,6 +374,17 @@ class Controller(ConfigureController):
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
+    def edit_device_on_gw(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
+
 class FMSUtils:
 
     def __init__(self, sdk_client=None, controller_data=None):
