@@ -8,7 +8,7 @@ from configuration import RATE_LIMITING_RADIUS_SERVER_DATA
 from configuration import RATE_LIMITING_RADIUS_ACCOUNTING_DATA
 
 pytestmark = [pytest.mark.regression,
-              pytest.mark.rate_limiting_with_radius,
+              pytest.mark.ow_rate_limiting_tests_lf,
               pytest.mark.bridge]
 
 
