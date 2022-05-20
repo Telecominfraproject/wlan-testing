@@ -9,7 +9,7 @@ on:
         required: true
       regression_markers:
         description: regression markers to execute
-        default: dfs,multipsk,rate_limiting,rate_limiting_with_radius,dynamic_vlan
+        default: ow_dfs_tests_lf,ow_multipsk_tests_lf,ow_rate_limiting_tests_lf,ow_dynamic_qos_tests_lf,ow_dvlan_tests_lf,ow_multi_vlan_tests_lf
         required: true
 
   schedule:
@@ -30,7 +30,7 @@ jobs:
       - name: set variables
         id: vars
         run: |
-          MARKERS="${{ github.event.inputs.regression_markers || 'dfs,multipsk,rate_limiting,rate_limiting_with_radius,dynamic_vlan' }}"
+          MARKERS="${{ github.event.inputs.regression_markers || 'ow_dfs_tests_lf,ow_multipsk_tests_lf,ow_rate_limiting_tests_lf,ow_dynamic_qos_tests_lf,ow_dvlan_tests_lf,ow_multi_vlan_tests_lf' }}"
           MARKERS=$(echo $MARKERS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           echo "::set-output name=regression_markers::${MARKERS}"
 
@@ -84,11 +84,11 @@ jobs:
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'dfs')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'ow_dfs_tests_lf')"
         with:
           namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-dfs
           testbed: "${{ matrix.testbed }}"
-          marker_expression: "regression and dfs"
+          marker_expression: "ow_regression_lf and ow_dfs_tests_lf"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           allure_results_artifact_name: allure-results-${{ matrix.testbed }}-dfs
@@ -101,11 +101,11 @@ jobs:
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'multipsk')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'ow_multipsk_tests_lf')"
         with:
           namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-multipsk
           testbed: "${{ matrix.testbed }}"
-          marker_expression: "regression and multipsk"
+          marker_expression: "ow_regression_lf and ow_multipsk_tests_lf"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           allure_results_artifact_name: allure-results-${{ matrix.testbed }}-multipsk
@@ -118,14 +118,14 @@ jobs:
 
       - name: run rate_limiting tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'rate_limiting')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'ow_rate_limiting_tests_lf')"
         with:
           namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-rate-limiting
           testbed: "${{ matrix.testbed }}"
-          marker_expression: "regression and rate_limiting"
+          marker_expression: "ow_regression_lf and ow_rate_limiting_tests_lf"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-rate_limiting
+          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-rate-limiting
 
         # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
@@ -133,39 +133,56 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait regression-${{ github.run_id }}-${{ matrix.testbed }}-rate-limiting
 
-      - name: run rate_limiting_with_radius tests
+      - name: run dynamic_qos tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'rate_limiting_with_radius')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'ow_dynamic_qos_tests_lf')"
         with:
-          namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-rate-limiting-with-radius
+          namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-dynamic-qos
           testbed: "${{ matrix.testbed }}"
-          marker_expression: "regression and rate_limiting_with_radius"
+          marker_expression: "ow_regression_lf and ow_dynamic_qos_tests_lf"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-rate_limiting_with_radius
+          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-dynamic-qos
 
         # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait regression-${{ github.run_id }}-${{ matrix.testbed }}-rate-limiting-with-radius
+        run: kubectl delete ns --ignore-not-found=true --wait regression-${{ github.run_id }}-${{ matrix.testbed }}-dynamic-qos
 
       - name: run dynamic_vlan tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'dynamic_vlan')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'ow_dvlan_tests_lf')"
         with:
           namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-dynamic-vlan
           testbed: "${{ matrix.testbed }}"
-          marker_expression: "regression and dynamic_vlan"
+          marker_expression: "ow_regression_lf and ow_dvlan_tests_lf"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-dynamic_vlan
+          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-dynamic-vlan
 
         # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
         if: always()
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait regression-${{ github.run_id }}-${{ matrix.testbed }}-dynamic-vlan
+
+      - name: run multi_vlan tests
+          uses: ./.github/actions/run-tests
+          if: "!cancelled() && contains(fromJSON(needs.vars.outputs.regression_markers), 'ow_multi_vlan_tests_lf')"
+          with:
+            namespace: regression-${{ github.run_id }}-${{ matrix.testbed }}-multi-vlan
+            testbed: "${{ matrix.testbed }}"
+            marker_expression: "ow_regression_lf and ow_multi_vlan_tests_lf"
+            configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
+            testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+            allure_results_artifact_name: allure-results-${{ matrix.testbed }}-multi-vlan
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait regression-${{ github.run_id }}-${{ matrix.testbed }}-multi-vlan
 
   report:
     needs: [vars, test]
