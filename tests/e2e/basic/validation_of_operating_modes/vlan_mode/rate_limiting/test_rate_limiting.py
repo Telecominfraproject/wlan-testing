@@ -5,7 +5,7 @@ Rate LImiting Vlan Mode Scenario
 import allure
 import pytest
 
-pytestmark = [pytest.mark.regression,
+pytestmark = [pytest.mark.ow_regression_lf,
               pytest.mark.ow_rate_limiting_tests_lf,
               pytest.mark.vlan]
 
