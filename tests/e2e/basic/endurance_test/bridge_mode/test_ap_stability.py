@@ -9,7 +9,8 @@ import os
 import allure
 import pytest
 
-pytestmark = [pytest.mark.regression, pytest.mark.bridge, pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.ow_stability_lf,
+              pytest.mark.bridge]
 
 setup_params_general = {
     "mode": "BRIDGE",
