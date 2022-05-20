@@ -13,7 +13,7 @@ from configuration import DYNAMIC_VLAN_RADIUS_SERVER_DATA
 from configuration import DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA
 
 pytestmark = [pytest.mark.regression,
-              pytest.mark.dynamic_vlan,
+              pytest.mark.ow_dvlan_tests_lf,
               pytest.mark.wpa2_enterprise,
               pytest.mark.fiveg]
 
