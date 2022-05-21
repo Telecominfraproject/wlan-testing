@@ -4,7 +4,7 @@ import os
 import time
 import pandas as pd
 
-#pytestmark = [pytest.mark.advance, pytest.mark.multistaperf, pytest.mark.vlan]
+pytestmark = [pytest.mark.advance, pytest.mark.multistaperf, pytest.mark.vlan]
 
 setup_params_general = {
     "mode": "VLAN",
