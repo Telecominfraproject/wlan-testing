@@ -267,7 +267,7 @@ def cc_1(request):
 def roaming_delay(request):
     """yields the --roaming_delay  option """
     var = request.config.getoption("--roaming_delay")
-    allure.attach(name="roaming delay provided in seconds", body=var)
+    allure.attach(name="roaming delay provided in seconds", body=str(var))
     yield var
 
 @pytest.fixture(scope="session")
@@ -291,10 +291,11 @@ def client(request):
     allure.attach(name="number of clients", body=var)
     yield var
 
+@pytest.fixture(scope="session")
 def skip_pcap(request):
     """yields the --skip-pcap option for skipping the packet capture for sanity"""
     var = request.config.getoption("--skip-pcap")
-    yield var
+    yield varg
 
 
 @pytest.fixture(scope="session")
@@ -391,9 +392,12 @@ def get_uci_show(fixtures_ver, get_apnos, get_configuration):
     yield uci_show
 
 @pytest.fixture(scope="session")
-def get_ap_version(fixtures_ver, get_apnos, get_configuration):
-    ap_version = fixtures_ver.get_ap_version(get_apnos, get_configuration)
-    yield ap_version
+def get_ap_version(fixtures_ver, get_apnos, get_configuration, cc_1):
+    if not cc_1:
+        ap_version = fixtures_ver.get_ap_version(get_apnos, get_configuration)
+        yield ap_version
+    else:
+        yield True
 
 @pytest.fixture(scope="session")
 def skip_lf(request):
@@ -909,7 +913,7 @@ def get_controller_logs(get_configuration, ):
     obj = CController(controller_data=get_configuration['controller'], ap_data=get_configuration['access_point'])
     summary = obj.show_ap_summary()
     print(summary)
-    allure.attach(name='controller_log', body=str(summary))
+    allure.attach(name='show ap summary', body=str(summary))
 
 
 @pytest.fixture(scope="function")
@@ -963,4 +967,31 @@ def get_ap_channel(get_apnos, get_configuration):
             pass
     print(all_data)
     yield all_data
+
+@pytest.fixture(scope="function")
+def disable_band5ghz(get_configuration):
+    obj = CController(controller_data=get_configuration['controller'], ap_data=get_configuration['access_point'])
+    shut= obj.ap_5ghz_shutdown()
+    print(shut)
+
+@pytest.fixture(scope="function")
+def disable_band2ghz(get_configuration):
+    obj = CController(controller_data=get_configuration['controller'], ap_data=get_configuration['access_point'])
+    shut = obj.ap_2ghz_shutdown()
+    print(shut)
+
+@pytest.fixture(scope="function")
+def disable_band6ghz(get_configuration):
+    obj = CController(controller_data=get_configuration['controller'], ap_data=get_configuration['access_point'])
+    shut = obj.ap_6ghz_shutdown()
+    print(shut)
+
+@pytest.fixture(scope="function")
+def enable_all_bands(get_configuration):
+    obj = CController(controller_data=get_configuration['controller'], ap_data=get_configuration['access_point'])
+    obj.no_ap_5ghz_shutdown()
+    obj.no_ap_2ghz_shutdown()
+    obj.no_ap_6ghz_shutdown()
+
+
 
