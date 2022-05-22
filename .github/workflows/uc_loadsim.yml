@@ -1,4 +1,5 @@
 name: OpenWifi 2.0 load simulation
+
 env:
   # AWS credentials
   AWS_EKS_NAME: tip-wlan-main
@@ -7,13 +8,28 @@ env:
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+  # Docker-compose related ENVs
+  EC2_INSTANCE_TYPE: m5a.xlarge
+  EC2_SECURITY_GROUP_ID: sg-012299a8201a0761c
+  EC2_KEY_NAME: loadsim
+  VPC_SUBNET_ID: subnet-08ef4ccda4af94c38
+  ROUTE_53_ZONE_ID: Z09534373UTXT2L1YL912
+  SIMULATORID: 53494D020202
 
-on: 
+on:
   workflow_dispatch:
     inputs:
       sdk_version:
         default: 'main'
         description: 'Version of Cloud SDK to test'
+        required: true
+      devices_count:
+        default: '25000'
+        description: 'Amount of devices to simulate'
+        required: true
+      simulation_lenght:
+        default: '360'
+        description: 'Simulation lenght in seconds'
         required: true
 
 defaults:
@@ -21,23 +37,552 @@ defaults:
     shell: bash
 
 jobs:
-  loadsim:
+  docker-compose-sqlite:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Testing repo
+    - name: Set EC2 facts
+      id: ec2_facts
+      run: |
+        AMI=$(aws ec2 describe-images --filters '[{"Name":"description","Values":["Canonical, Ubuntu, 20.04 LTS, amd64*"]},{"Name":"owner-id","Values":["099720109477"]}]' --query 'sort_by(Images, &CreationDate)[-1].ImageId' --output text)
+        INSTANCE_NAME=owgw-dc-sqlite-${{ github.run_number }}
+        echo "::set-output name=ami::${AMI}"
+        echo "::set-output name=instance_name::${INSTANCE_NAME}"
+
+    # Create EC2 infrastructure
+    - name: Create EC2 instance for CloudSDK
+      id: ec2_instance
+      run: |
+        aws ec2 run-instances --key-name $EC2_KEY_NAME --subnet-id $VPC_SUBNET_ID --security-group-ids $EC2_SECURITY_GROUP_ID --instance-type $EC2_INSTANCE_TYPE --image-id ${{ steps.ec2_facts.outputs.ami }} --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=${{ steps.ec2_facts.outputs.instance_name }}},{Key=Owner,Value=gha-wlan-testing}]" --output text
+        INSTANCE_PUBLIC_IP=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.ec2_facts.outputs.instance_name }}" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+        INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.ec2_facts.outputs.instance_name }}" --query 'Reservations[*].Instances[*].InstanceId' --output text)
+        echo "::set-output name=instance_public_ip::${INSTANCE_PUBLIC_IP}"
+        echo "::set-output name=instance_id::${INSTANCE_ID}"
+
+    - name: Create Route53 record
+      run: |
+        cat > changeset.json << EOF
+        {
+             "Comment": "Creating A for ${{ steps.ec2_facts.outputs.instance_name }}",
+             "Changes": [{
+                        "Action": "CREATE",
+                        "ResourceRecordSet": {
+                                    "Name": "${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build",
+                                    "Type": "A",
+                                    "TTL": 600,
+                                    "ResourceRecords":[{
+                                            "Value": "${{ steps.ec2_instance.outputs.instance_public_ip }}"
+                                      }]}
+                                  }]
+        }
+        EOF
+        aws route53 change-resource-record-sets --hosted-zone-id $ROUTE_53_ZONE_ID --change-batch file://changeset.json
+
+    # Deploy target CloudSDK into EC2 instance
+    - name: Get DigiCert certificates
+      run: |
+        echo "${{ secrets.DIGICERT_CERT }}" | base64 -d > cert.pem
+        echo "${{ secrets.DIGICERT_KEY }}" | base64 -d > key.pem
+
+    - name: Save SSH key for access to EC2 instance
+      run: |
+        echo "${{ secrets.SSH_LOADSIM }}" > ssh_key.pem
+        chmod 600 ssh_key.pem
+
+    - name: Try connecting to EC2 instance
+      run: |
+        until ssh -o "StrictHostKeyChecking no" -i ssh_key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }}; do
+            sleep 5
+        done
+        ssh -i ssh_key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }} << EOF
+          sudo -i;
+          whoami;
+          curl https://get.docker.com -o docker.sh;
+          chmod +x docker.sh;
+          bash docker.sh;
+          apt install -y python3-pip jq git;
+          pip3 install docker-compose;
+        EOF
+        scp -i ssh_key.pem cert.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }}:/tmp/websocket-cert.pem
+        scp -i ssh_key.pem key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }}:/tmp/websocket-key.pem
+
+    - name: Deploy target CloudSDK in EC2
+      run: |
+        ssh -o "StrictHostKeyChecking no" -i ssh_key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }} << EOF
+          sudo -i;
+          git clone https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy.git;
+          cd wlan-cloud-ucentral-deploy;
+          git checkout ${{ github.event.inputs.sdk_version }};
+          cd docker-compose;
+          sed "s/#SIMULATORID=/SIMULATORID=$SIMULATORID/" -i owgw.env;
+          cp /tmp/websocket-cert.pem certs/websocket-cert.pem;
+          cp /tmp/websocket-key.pem certs/websocket-key.pem;
+          docker-compose up -d
+        EOF
+
+    # Deploy CloudSDK with OWLS in K8s
+    - name: Checkout wlan-cloud-ucentral-deploy repo
       uses: actions/checkout@v2
       with:
-        path: wlan-testing
+        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
+        path: wlan-cloud-ucentral-deploy
+        ref: ${{ github.event.inputs.deployment_version }}
 
     - name: Get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
+    # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+    - name: Set gateway URL output
+      id: gateway
+      run: echo "::set-output name=url::gw-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build"
+
+    - name: Set sec service URL output
+      id: sec
+      run: echo "::set-output name=url::sec-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build"
+
+    - name: Set ls service URL output
+      id: ls
+      run: echo "::set-output name=url::ls-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build"
+
+    - name: Prepare certificates from secrets
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
+      run: |
+        echo "${{ secrets.DIGICERT_CERT }}" | base64 -d > cert.pem
+        echo "${{ secrets.DIGICERT_KEY }}" | base64 -d > key.pem
+        echo "${{ secrets.LOADSIM_DIGICERT_CERT }}" | base64 -d > device-cert.pem
+        echo "${{ secrets.LOADSIM_DIGICERT_KEY }}" | base64 -d > device-key.pem
+
+    - name: Deploy CloudSDK instance with load simulator
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
+      run: |
+        export NAMESPACE="${{ steps.ec2_facts.outputs.instance_name }}"
+        export DEPLOY_METHOD=git
+        export CHART_VERSION=main
+        export OWGW_VERSION=master
+        export OWGWUI_VERSION=main
+        export OWSEC_VERSION=main
+        export OWFMS_VERSION=main
+        export OWPROV_VERSION=main
+        export OWPROVUI_VERSION=main
+        export OWANALYTICS_VERSION=main
+        export OWSUB_VERSION=main
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.test-nodes.yaml,values.openwifi-qa.owls-enabled.yaml
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
+        export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
+        export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
+        export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
+        export OWFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
+        export CERT_LOCATION=cert.pem
+        export KEY_LOCATION=key.pem
+        export DEVICE_CERT_LOCATION=device-cert.pem
+        export DEVICE_KEY_LOCATION=device-key.pem
+        export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
+        export USE_SEPARATE_OWGW_LB=true
+        ./deploy.sh
+
+    # Run tests
+    - name: Checkout OWLS for CLI tool
+      uses: actions/checkout@v2
+      with:
+        repository: Telecominfraproject/wlan-cloud-owls
+        path: wlan-cloud-owls
+
+    - name: Run simulation
+      working-directory: wlan-cloud-owls/test_scripts/curl
+      run: |
+        export OWGW="${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build:15002"
+        export OWSEC="${{ steps.sec.outputs.url }}:16001"
+        export OWSEC_USERNAME="tip@ucentral.com"
+        export OWSEC_PASSWORD="${{ secrets.OWSEC_NEW_PASSWORD }}"
+
+        echo "Trying to cache OWLS FQDN in /etc/hosts"
+        export HOST_ENTRY=""
+        until [ ! -z "$HOST_ENTRY" ]; do export HOST_ENTRY=$(getent hosts ${{ steps.ls.outputs.url }}); sleep 1; done;
+        cat /etc/hosts > /tmp/hosts
+        echo "$HOST_ENTRY" >> /tmp/hosts
+        sudo cp /tmp/hosts /etc/hosts
+        echo "DNS record for ${{ steps.ls.outputs.url }} resolved successfully!"
+        cat /etc/hosts
+
+        echo "[Info] Creating simulation"
+        touch output_sim_info.json
+        cat > input_sim_info.json <<EOF
+        {
+          "name":"${{ steps.ec2_facts.outputs.instance_name }}",
+          "deviceType":"edgecore_ecw5410",
+          "devices":${{ github.event.inputs.devices_count }},
+          "gateway":"https://$OWGW",
+          "macPrefix":"030000",
+          "simulationLength":${{ github.event.inputs.simulation_lenght }}
+        }
+        EOF
+        export SIMULATION_ID="null"
+        while [[ "$SIMULATION_ID" == "null" ]]; do
+          ./cli createsim input_sim_info.json || true
+          export SIMULATION_ID=$(cat result.json | jq '.id' -r)
+          echo $SIMULATION_ID
+        done
+
+        echo "[Info] Starting simulation"
+        ./cli startsim $SIMULATION_ID
+
+        echo "[Info] Waiting for simulation to end"
+        ./cli getsimstats > /dev/null
+        export SIM_STATE=$(cat result.json | jq '.state' -r)
+        until [[ "$SIM_STATE" == "completed" ]]; do
+          sleep 10
+          ./cli getsimstats > /dev/null
+          export SIM_STATE=$(cat result.json | jq '.state' -r)
+        done
+        echo
+        echo "[Info] Final results:"
+        cat result.json | jq .
+
+    # Delete CloudSDK with OWLS in K8s
+    - name: Show resource state on deployment failure
+      if: failure()
+      run: |
+        kubectl get pods --namespace openwifi-${{ steps.ec2_facts.outputs.instance_name }}
+        kubectl get services --namespace openwifi-${{ steps.ec2_facts.outputs.instance_name }}
+        kubectl get persistentvolumeclaims --namespace openwifi-${{ steps.ec2_facts.outputs.instance_name }}
+    - name: Describe pods on deployment failure
+      if: failure()
+      run: |
+        kubectl describe pods --namespace openwifi-${{ steps.ec2_facts.outputs.instance_name }}
+    - name: Describe services on deployment failure
+      if: failure()
+      run: |
+        kubectl describe services --namespace openwifi-${{ steps.ec2_facts.outputs.instance_name }}
+    - name: Describe persistentvolumeclaims on deployment failure
+      if: failure()
+      run: |
+        kubectl describe persistentvolumeclaims --namespace openwifi-${{ steps.ec2_facts.outputs.instance_name }}
+
+    - name: Cleanup
+      if: always()
+      run: |
+        helm delete -n openwifi-${{ steps.ec2_facts.outputs.instance_name }} tip-openwifi || true
+        kubectl delete ns openwifi-"${{ steps.ec2_facts.outputs.instance_name }}" --wait=true
+
+    # Delete EC2 infrastructure
+    - name: Delete Route53 record
+      if: always()
+      run: |
+        cat > changeset.json << EOF
+        {
+             "Comment": "Deleting A for ${{ steps.ec2_facts.outputs.instance_name }}",
+             "Changes": [{
+                        "Action": "DELETE",
+                        "ResourceRecordSet": {
+                                    "Name": "${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build",
+                                    "Type": "A",
+                                    "TTL": 600,
+                                    "ResourceRecords":[{
+                                            "Value": "${{ steps.ec2_instance.outputs.instance_public_ip }}"
+                                      }]}
+                                  }]
+        }
+        EOF
+        aws route53 change-resource-record-sets --hosted-zone-id $ROUTE_53_ZONE_ID --change-batch file://changeset.json
+
+    - name: Delete EC2 instance
+      if: always()
+      run: |
+        aws ec2 terminate-instances --instance-ids ${{ steps.ec2_instance.outputs.instance_id }}
+
+  docker-compose-psql:
+    runs-on: ubuntu-latest
+    needs:
+      - docker-compose-sqlite
+    steps:
+    - name: Set EC2 facts
+      id: ec2_facts
+      run: |
+        AMI=$(aws ec2 describe-images --filters '[{"Name":"description","Values":["Canonical, Ubuntu, 20.04 LTS, amd64*"]},{"Name":"owner-id","Values":["099720109477"]}]' --query 'sort_by(Images, &CreationDate)[-1].ImageId' --output text)
+        INSTANCE_NAME=owgw-dc-psql-${{ github.run_number }}
+        echo "::set-output name=ami::${AMI}"
+        echo "::set-output name=instance_name::${INSTANCE_NAME}"
+
+    # Create EC2 infrastructure
+    - name: Create EC2 instance for CloudSDK
+      id: ec2_instance
+      run: |
+        aws ec2 run-instances --key-name $EC2_KEY_NAME --subnet-id $VPC_SUBNET_ID --security-group-ids $EC2_SECURITY_GROUP_ID --instance-type $EC2_INSTANCE_TYPE --image-id ${{ steps.ec2_facts.outputs.ami }} --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=${{ steps.ec2_facts.outputs.instance_name }}},{Key=Owner,Value=gha-wlan-testing}]" --output text
+        INSTANCE_PUBLIC_IP=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.ec2_facts.outputs.instance_name }}" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+        INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.ec2_facts.outputs.instance_name }}" --query 'Reservations[*].Instances[*].InstanceId' --output text)
+        echo "::set-output name=instance_public_ip::${INSTANCE_PUBLIC_IP}"
+        echo "::set-output name=instance_id::${INSTANCE_ID}"
+
+    - name: Create Route53 record
+      run: |
+        cat > changeset.json << EOF
+        {
+             "Comment": "Creating A for ${{ steps.ec2_facts.outputs.instance_name }}",
+             "Changes": [{
+                        "Action": "CREATE",
+                        "ResourceRecordSet": {
+                                    "Name": "${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build",
+                                    "Type": "A",
+                                    "TTL": 600,
+                                    "ResourceRecords":[{
+                                            "Value": "${{ steps.ec2_instance.outputs.instance_public_ip }}"
+                                      }]}
+                                  }]
+        }
+        EOF
+        aws route53 change-resource-record-sets --hosted-zone-id $ROUTE_53_ZONE_ID --change-batch file://changeset.json
+
+    # Deploy target CloudSDK into EC2 instance
+    - name: Get DigiCert certificates
+      run: |
+        echo "${{ secrets.DIGICERT_CERT }}" | base64 -d > cert.pem
+        echo "${{ secrets.DIGICERT_KEY }}" | base64 -d > key.pem
+
+    - name: Save SSH key for access to EC2 instance
+      run: |
+        echo "${{ secrets.SSH_LOADSIM }}" > ssh_key.pem
+        chmod 600 ssh_key.pem
+
+    - name: Try connecting to EC2 instance
+      run: |
+        until ssh -o "StrictHostKeyChecking no" -i ssh_key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }}; do
+            sleep 5
+        done
+        ssh -i ssh_key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }} << EOF
+          sudo -i;
+          whoami;
+          curl https://get.docker.com -o docker.sh;
+          chmod +x docker.sh;
+          bash docker.sh;
+          apt install -y python3-pip jq git;
+          pip3 install docker-compose;
+        EOF
+        scp -i ssh_key.pem cert.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }}:/tmp/websocket-cert.pem
+        scp -i ssh_key.pem key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }}:/tmp/websocket-key.pem
+
+    - name: Deploy target CloudSDK in EC2
+      run: |
+        ssh -o "StrictHostKeyChecking no" -i ssh_key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }} << EOF
+          sudo -i;
+          git clone https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy.git;
+          cd wlan-cloud-ucentral-deploy;
+          git checkout ${{ github.event.inputs.sdk_version }};
+          cd docker-compose;
+          sed "s/#SIMULATORID=/SIMULATORID=$SIMULATORID/" -i owgw.env;
+          sed 's/#STORAGE_TYPE_POSTGRESQL_HOST=.*/STORAGE_TYPE_POSTGRESQL_HOST=postgresql/' -i owgw.env;
+          sed 's/#STORAGE_TYPE=.*/STORAGE_TYPE=postgresql/' -i owgw.env;
+          cp /tmp/websocket-cert.pem certs/websocket-cert.pem;
+          cp /tmp/websocket-key.pem certs/websocket-key.pem;
+          docker-compose --file docker-compose.yml --file docker-compose.postgresql.yml up -d
+        EOF
+
+    # Deploy CloudSDK with OWLS in K8s
+    - name: Checkout wlan-cloud-ucentral-deploy repo
+      uses: actions/checkout@v2
+      with:
+        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
+        path: wlan-cloud-ucentral-deploy
+        ref: ${{ github.event.inputs.deployment_version }}
+
+    - name: Get EKS access credentials
+      run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+    - name: Set gateway URL output
+      id: gateway
+      run: echo "::set-output name=url::gw-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build"
+
+    - name: Set sec service URL output
+      id: sec
+      run: echo "::set-output name=url::sec-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build"
+
+    - name: Set ls service URL output
+      id: ls
+      run: echo "::set-output name=url::ls-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build"
+
+    - name: Prepare certificates from secrets
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
+      run: |
+        echo "${{ secrets.DIGICERT_CERT }}" | base64 -d > cert.pem
+        echo "${{ secrets.DIGICERT_KEY }}" | base64 -d > key.pem
+        echo "${{ secrets.LOADSIM_DIGICERT_CERT }}" | base64 -d > device-cert.pem
+        echo "${{ secrets.LOADSIM_DIGICERT_KEY }}" | base64 -d > device-key.pem
+
+    - name: Deploy CloudSDK instance with load simulator
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
+      run: |
+        export NAMESPACE="${{ steps.ec2_facts.outputs.instance_name }}"
+        export DEPLOY_METHOD=git
+        export CHART_VERSION=main
+        export OWGW_VERSION=master
+        export OWGWUI_VERSION=main
+        export OWSEC_VERSION=main
+        export OWFMS_VERSION=main
+        export OWPROV_VERSION=main
+        export OWPROVUI_VERSION=main
+        export OWANALYTICS_VERSION=main
+        export OWSUB_VERSION=main
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.test-nodes.yaml,values.openwifi-qa.owls-enabled.yaml
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
+        export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
+        export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
+        export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
+        export OWFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
+        export CERT_LOCATION=cert.pem
+        export KEY_LOCATION=key.pem
+        export DEVICE_CERT_LOCATION=device-cert.pem
+        export DEVICE_KEY_LOCATION=device-key.pem
+        export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
+        export USE_SEPARATE_OWGW_LB=true
+        ./deploy.sh
+
+    # Run tests
+    - name: Checkout OWLS for CLI tool
+      uses: actions/checkout@v2
+      with:
+        repository: Telecominfraproject/wlan-cloud-owls
+        path: wlan-cloud-owls
+
+    - name: Run simulation
+      working-directory: wlan-cloud-owls/test_scripts/curl
+      run: |
+        export OWGW="${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build:15002"
+        export OWSEC="${{ steps.sec.outputs.url }}:16001"
+        export OWSEC_USERNAME="tip@ucentral.com"
+        export OWSEC_PASSWORD="${{ secrets.OWSEC_NEW_PASSWORD }}"
+
+        echo "Trying to cache OWLS FQDN in /etc/hosts"
+        export HOST_ENTRY=""
+        until [ ! -z "$HOST_ENTRY" ]; do export HOST_ENTRY=$(getent hosts ${{ steps.ls.outputs.url }}); sleep 1; done;
+        cat /etc/hosts > /tmp/hosts
+        echo "$HOST_ENTRY" >> /tmp/hosts
+        sudo cp /tmp/hosts /etc/hosts
+        echo "DNS record for ${{ steps.ls.outputs.url }} resolved successfully!"
+        cat /etc/hosts
+
+        echo "[Info] Creating simulation"
+        touch output_sim_info.json
+        cat > input_sim_info.json <<EOF
+        {
+          "name":"${{ steps.ec2_facts.outputs.instance_name }}",
+          "deviceType":"edgecore_ecw5410",
+          "devices":${{ github.event.inputs.devices_count }},
+          "gateway":"https://$OWGW",
+          "macPrefix":"030000",
+          "simulationLength":${{ github.event.inputs.simulation_lenght }}
+        }
+        EOF
+        export SIMULATION_ID="null"
+        while [[ "$SIMULATION_ID" == "null" ]]; do
+          ./cli createsim input_sim_info.json || true
+          export SIMULATION_ID=$(cat result.json | jq '.id' -r)
+          echo $SIMULATION_ID
+        done
+
+        echo "[Info] Starting simulation"
+        ./cli startsim $SIMULATION_ID
+
+        echo "[Info] Waiting for simulation to end"
+        ./cli getsimstats > /dev/null
+        export SIM_STATE=$(cat result.json | jq '.state' -r)
+        until [[ "$SIM_STATE" == "completed" ]]; do
+          sleep 10
+          ./cli getsimstats > /dev/null
+          export SIM_STATE=$(cat result.json | jq '.state' -r)
+        done
+        echo
+        echo "[Info] Final results:"
+        cat result.json | jq .
+
+    # Delete CloudSDK with OWLS in K8s
+    - name: Show resource state on deployment failure
+      if: failure()
+      run: |
+        kubectl get pods --namespace openwifi-${{ steps.ec2_facts.outputs.instance_name }}
+        kubectl get services --namespace openwifi-${{ steps.ec2_facts.outputs.instance_name }}
+        kubectl get persistentvolumeclaims --namespace openwifi-${{ steps.ec2_facts.outputs.instance_name }}
+    - name: Describe pods on deployment failure
+      if: failure()
+      run: |
+        kubectl describe pods --namespace openwifi-${{ steps.ec2_facts.outputs.instance_name }}
+    - name: Describe services on deployment failure
+      if: failure()
+      run: |
+        kubectl describe services --namespace openwifi-${{ steps.ec2_facts.outputs.instance_name }}
+    - name: Describe persistentvolumeclaims on deployment failure
+      if: failure()
+      run: |
+        kubectl describe persistentvolumeclaims --namespace openwifi-${{ steps.ec2_facts.outputs.instance_name }}
+
+    - name: Cleanup
+      if: always()
+      run: |
+        helm delete -n openwifi-${{ steps.ec2_facts.outputs.instance_name }} tip-openwifi || true
+        kubectl delete ns openwifi-"${{ steps.ec2_facts.outputs.instance_name }}" --wait=true
+
+    # Delete EC2 infrastructure
+    - name: Delete Route53 record
+      if: always()
+      run: |
+        cat > changeset.json << EOF
+        {
+             "Comment": "Deleting A for ${{ steps.ec2_facts.outputs.instance_name }}",
+             "Changes": [{
+                        "Action": "DELETE",
+                        "ResourceRecordSet": {
+                                    "Name": "${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build",
+                                    "Type": "A",
+                                    "TTL": 600,
+                                    "ResourceRecords":[{
+                                            "Value": "${{ steps.ec2_instance.outputs.instance_public_ip }}"
+                                      }]}
+                                  }]
+        }
+        EOF
+        aws route53 change-resource-record-sets --hosted-zone-id $ROUTE_53_ZONE_ID --change-batch file://changeset.json
+
+    - name: Delete EC2 instance
+      if: always()
+      run: |
+        aws ec2 terminate-instances --instance-ids ${{ steps.ec2_instance.outputs.instance_id }}
+
+  kubernetes-sqlite:
+    runs-on: ubuntu-latest
+    needs:
+      - docker-compose-sqlite
+      - docker-compose-psql
+    steps:
+    - name: Checkout wlan-cloud-ucentral-deploy repo
+      uses: actions/checkout@v2
+      with:
+        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
+        path: wlan-cloud-ucentral-deploy
+        ref: ${{ github.event.inputs.deployment_version }}
+
+    - name: Get EKS access credentials
+      run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
     - name: Prepare namespace
       id: namespace
       run: |
-        NAMESPACE="ls-${{ github.run_number }}"
-        kubectl create ns $NAMESPACE
-        kubectl config set-context --current --namespace=$NAMESPACE
+        NAMESPACE="ls-sqlite-${{ github.run_number }}"
+        kubectl create ns openwifi-$NAMESPACE
+        kubectl config set-context --current --namespace=openwifi-$NAMESPACE
         echo "::set-output name=namespace::${NAMESPACE}"
 
     - name: Set gateway URL output
@@ -53,7 +598,7 @@ jobs:
       run: echo "::set-output name=url::ls-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
     - name: Prepare certificates from secrets
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         echo "${{ secrets.DIGICERT_CERT }}" | base64 -d > cert.pem
         echo "${{ secrets.DIGICERT_KEY }}" | base64 -d > key.pem
@@ -61,7 +606,7 @@ jobs:
         echo "${{ secrets.LOADSIM_DIGICERT_KEY }}" | base64 -d > device-key.pem
 
     - name: Deploy CloudSDK instance with load simulator
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         export NAMESPACE="${{ steps.namespace.outputs.namespace }}"
         export DEPLOY_METHOD=git
@@ -72,7 +617,9 @@ jobs:
         export OWFMS_VERSION=main
         export OWPROV_VERSION=main
         export OWPROVUI_VERSION=main
-        export VALUES_FILE_LOCATION=values.ucentral-qa.yaml,values.ucentral-qa.test-nodes.yaml,values.ucentral-qa.owls-enabled.yaml
+        export OWANALYTICS_VERSION=main
+        export OWSUB_VERSION=main
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.test-nodes.yaml,values.openwifi-qa.owls-enabled.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
@@ -83,6 +630,7 @@ jobs:
         export DEVICE_CERT_LOCATION=device-cert.pem
         export DEVICE_KEY_LOCATION=device-key.pem
         export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
+        export USE_SEPARATE_OWGW_LB=true
         ./deploy.sh
 
     - name: Checkout OWLS for CLI tool
@@ -96,40 +644,212 @@ jobs:
       run: |
         export OWGW="${{ steps.gateway.outputs.url }}:15002"
         export OWSEC="${{ steps.sec.outputs.url }}:16001"
-        export OWLS="${{ steps.ls.outputs.url }}:16007"
-        echo "OWGW - $OWGW"
-        echo "OWSEC - $OWSEC"
-        echo "OWLS - $OWLS"
-        curl -s -X POST -H 'Content-Type: application/json' https://$OWSEC/api/v1/oauth2 -d '{"userId": "tip@ucentral.com", "password": "'${{ secrets.OWSEC_NEW_PASSWORD }}'"}' | jq '.access_token' -r > access_token
-        echo
+        export OWSEC_USERNAME="tip@ucentral.com"
+        export OWSEC_PASSWORD="${{ secrets.OWSEC_NEW_PASSWORD }}"
+
+        echo "Trying to cache OWLS FQDN in /etc/hosts"
+        export HOST_ENTRY=""
+        until [ ! -z "$HOST_ENTRY" ]; do export HOST_ENTRY=$(getent hosts ${{ steps.ls.outputs.url }}); sleep 1; done;
+        cat /etc/hosts > /tmp/hosts
+        echo "$HOST_ENTRY" >> /tmp/hosts
+        sudo cp /tmp/hosts /etc/hosts
+        echo "DNS record for ${{ steps.ls.outputs.url }} resolved successfully!"
+        cat /etc/hosts
+
         echo "[Info] Creating simulation"
+        touch output_sim_info.json
         cat > input_sim_info.json <<EOF
         {
-          "name":"${{ steps.namespace.outputs.namespace }}",
+          "name":"${{ steps.ec2_facts.outputs.instance_name }}",
           "deviceType":"edgecore_ecw5410",
-          "devices":5,
+          "devices":${{ github.event.inputs.devices_count }},
           "gateway":"https://$OWGW",
           "macPrefix":"030000",
-          "simulationLength":600
+          "simulationLength":${{ github.event.inputs.simulation_lenght }}
         }
         EOF
-        curl -s -X POST https://$OWLS/api/v1/simulation -H "Content-Type: application/json" -H "Authorization: Bearer $(cat access_token)" -d @input_sim_info.json | tee output_sim_info.json
-        echo
+        export SIMULATION_ID="null"
+        while [[ "$SIMULATION_ID" == "null" ]]; do
+          ./cli createsim input_sim_info.json || true
+          export SIMULATION_ID=$(cat result.json | jq '.id' -r)
+          echo $SIMULATION_ID
+        done
+
         echo "[Info] Starting simulation"
-        export SIMULATION_ID=$(cat output_sim_info.json | jq '.id' -r)
-        curl -s -X POST "https://$OWLS/api/v1/operation?simulationId=$SIMULATION_ID&operation=start" -H "Content-Type: application/json" -H "Authorization: Bearer $(cat access_token)" | tee output_sim_start.json | jq .
-        echo
+        ./cli startsim $SIMULATION_ID
+
         echo "[Info] Waiting for simulation to end"
-        curl -s -X GET "https://$OWLS/api/v1/status" -H "Content-Type: application/json" -H "Authorization: Bearer $(cat access_token)" | tee output_sim_status.json | jq .
-        export SIM_STATE=$(cat output_sim_status.json | jq '.state' -r)
+        ./cli getsimstats > /dev/null
+        export SIM_STATE=$(cat result.json | jq '.state' -r)
         until [[ "$SIM_STATE" == "completed" ]]; do
           sleep 10
-          curl -s -X GET "https://$OWLS/api/v1/status" -H "Content-Type: application/json" -H "Authorization: Bearer $(cat access_token)" > output_sim_status.json
-          export SIM_STATE=$(cat output_sim_status.json | jq '.state' -r)
+          ./cli getsimstats > /dev/null
+          export SIM_STATE=$(cat result.json | jq '.state' -r)
         done
         echo
         echo "[Info] Final results:"
-        cat output_sim_status.json | jq .
+        cat result.json | jq .
+
+    - name: Show resource state on deployment failure
+      if: failure()
+      run: |
+        kubectl get pods --namespace openwifi-${{ steps.namespace.outputs.namespace }}
+        kubectl get services --namespace openwifi-${{ steps.namespace.outputs.namespace }}
+        kubectl get persistentvolumeclaims --namespace openwifi-${{ steps.namespace.outputs.namespace }}
+    - name: Describe pods on deployment failure
+      if: failure()
+      run: |
+        kubectl describe pods --namespace openwifi-${{ steps.namespace.outputs.namespace }}
+    - name: Describe services on deployment failure
+      if: failure()
+      run: |
+        kubectl describe services --namespace openwifi-${{ steps.namespace.outputs.namespace }}
+    - name: Describe persistentvolumeclaims on deployment failure
+      if: failure()
+      run: |
+        kubectl describe persistentvolumeclaims --namespace openwifi-${{ steps.namespace.outputs.namespace }}
+
+    - name: Cleanup
+      if: always()
+      run: |
+        helm delete -n openwifi-${{ steps.namespace.outputs.namespace }} tip-openwifi || true
+        kubectl delete ns openwifi-"${{ steps.namespace.outputs.namespace }}" --wait=true
+
+  kubernetes-psql:
+    runs-on: ubuntu-latest
+    needs:
+      - docker-compose-sqlite
+      - docker-compose-psql
+      - kubernetes-sqlite
+    steps:
+    - name: Checkout wlan-cloud-ucentral-deploy repo
+      uses: actions/checkout@v2
+      with:
+        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
+        path: wlan-cloud-ucentral-deploy
+        ref: ${{ github.event.inputs.deployment_version }}
+
+    - name: Get EKS access credentials
+      run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+    - name: Prepare namespace
+      id: namespace
+      run: |
+        NAMESPACE="ls-psql-${{ github.run_number }}"
+        kubectl create ns openwifi-$NAMESPACE
+        kubectl config set-context --current --namespace=openwifi-$NAMESPACE
+        echo "::set-output name=namespace::${NAMESPACE}"
+
+    - name: Set gateway URL output
+      id: gateway
+      run: echo "::set-output name=url::gw-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+    - name: Set sec service URL output
+      id: sec
+      run: echo "::set-output name=url::sec-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+    - name: Set ls service URL output
+      id: ls
+      run: echo "::set-output name=url::ls-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+    - name: Prepare certificates from secrets
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
+      run: |
+        echo "${{ secrets.DIGICERT_CERT }}" | base64 -d > cert.pem
+        echo "${{ secrets.DIGICERT_KEY }}" | base64 -d > key.pem
+        echo "${{ secrets.LOADSIM_DIGICERT_CERT }}" | base64 -d > device-cert.pem
+        echo "${{ secrets.LOADSIM_DIGICERT_KEY }}" | base64 -d > device-key.pem
+
+    - name: Deploy CloudSDK instance with load simulator
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
+      run: |
+        export NAMESPACE="${{ steps.namespace.outputs.namespace }}"
+        export DEPLOY_METHOD=git
+        export CHART_VERSION="${{ github.event.inputs.sdk_version }}"
+        export OWGW_VERSION=master
+        export OWGWUI_VERSION=main
+        export OWSEC_VERSION=main
+        export OWFMS_VERSION=main
+        export OWPROV_VERSION=main
+        export OWPROVUI_VERSION=main
+        export OWANALYTICS_VERSION=main
+        export OWSUB_VERSION=main
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.test-nodes.yaml,values.openwifi-qa.owls-enabled.yaml,values.openwifi-qa.external-db.yaml
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
+        export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
+        export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
+        export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
+        export OWFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
+        export CERT_LOCATION=cert.pem
+        export KEY_LOCATION=key.pem
+        export DEVICE_CERT_LOCATION=device-cert.pem
+        export DEVICE_KEY_LOCATION=device-key.pem
+        export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
+        export USE_SEPARATE_OWGW_LB=true
+        ./deploy.sh
+
+    - name: Checkout OWLS for CLI tool
+      uses: actions/checkout@v2
+      with:
+        repository: Telecominfraproject/wlan-cloud-owls
+        path: wlan-cloud-owls
+
+    - name: Run simulation
+      working-directory: wlan-cloud-owls/test_scripts/curl
+      run: |
+        export OWGW="${{ steps.gateway.outputs.url }}:15002"
+        export OWSEC="${{ steps.sec.outputs.url }}:16001"
+        export OWSEC_USERNAME="tip@ucentral.com"
+        export OWSEC_PASSWORD="${{ secrets.OWSEC_NEW_PASSWORD }}"
+
+        echo "Trying to cache OWLS FQDN in /etc/hosts"
+        export HOST_ENTRY=""
+        until [ ! -z "$HOST_ENTRY" ]; do export HOST_ENTRY=$(getent hosts ${{ steps.ls.outputs.url }}); sleep 1; done;
+        cat /etc/hosts > /tmp/hosts
+        echo "$HOST_ENTRY" >> /tmp/hosts
+        sudo cp /tmp/hosts /etc/hosts
+        echo "DNS record for ${{ steps.ls.outputs.url }} resolved successfully!"
+        cat /etc/hosts
+
+        echo "[Info] Creating simulation"
+        touch output_sim_info.json
+        cat > input_sim_info.json <<EOF
+        {
+          "name":"${{ steps.ec2_facts.outputs.instance_name }}",
+          "deviceType":"edgecore_ecw5410",
+          "devices":${{ github.event.inputs.devices_count }},
+          "gateway":"https://$OWGW",
+          "macPrefix":"030000",
+          "simulationLength":${{ github.event.inputs.simulation_lenght }}
+        }
+        EOF
+        export SIMULATION_ID="null"
+        while [[ "$SIMULATION_ID" == "null" ]]; do
+          ./cli createsim input_sim_info.json || true
+          export SIMULATION_ID=$(cat result.json | jq '.id' -r)
+          echo $SIMULATION_ID
+        done
+
+        echo "[Info] Starting simulation"
+        ./cli startsim $SIMULATION_ID
+
+        echo "[Info] Waiting for simulation to end"
+        ./cli getsimstats > /dev/null
+        export SIM_STATE=$(cat result.json | jq '.state' -r)
+        until [[ "$SIM_STATE" == "completed" ]]; do
+          sleep 10
+          ./cli getsimstats > /dev/null
+          export SIM_STATE=$(cat result.json | jq '.state' -r)
+        done
+        echo
+        echo "[Info] Final results:"
+        cat result.json | jq .
 
     - name: Show resource state on deployment failure
       if: failure()

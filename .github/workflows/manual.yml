@@ -72,7 +72,8 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          # TODO WIFI-7839 revert to using stable when issue is resolved on AWS CLI side
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -81,14 +82,26 @@ jobs:
           namespace: "manual-${{ github.run_id }}-${{ github.event.inputs.testbed }}"
           testbed: "${{ github.event.inputs.testbed }}"
           marker_expression: "${{ github.event.inputs.marker_expression }}"
-          configuration: "${{ secrets.LAB_CONFIGURATION }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ github.event.inputs.firmware }} ${{ github.event.inputs.additional_args }}"
           allure_results_artifact_name: allure-results
 
-      - name: upload Allure results as artifact
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: delete namespace
         if: always()
-        uses: actions/upload-artifact@v2
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait manual-${{ github.run_id }}-${{ github.event.inputs.testbed }}
+
+  report:
+    runs-on: ubuntu-latest
+    needs: [ test ]
+    if: always()
+    steps:
+      - name: checkout testing repo
+        uses: actions/checkout@v2
+
+      - uses: actions/download-artifact@v2
         with:
           name: allure-results
           path: allure-results

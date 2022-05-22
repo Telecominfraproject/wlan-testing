@@ -4,7 +4,9 @@ import os
 import time
 import pandas as pd
 
-pytestmark = [pytest.mark.regression, pytest.mark.dfs, pytest.mark.bridge]
+pytestmark = [pytest.mark.ow_regression_lf,
+              pytest.mark.ow_dfs_tests_lf,
+              pytest.mark.bandwidth_20MHz]
 
 setup_params_general1 = {
     "mode": "BRIDGE",
@@ -13,13 +15,20 @@ setup_params_general1 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 52,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 52
+        }
     },
-    "rf": {},
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general1],
@@ -27,7 +36,6 @@ setup_params_general1 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel52Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6472", name="WIFI-6472")
     @pytest.mark.wpa2_personal
@@ -38,7 +46,7 @@ class TestDFSChannel52Bw20(object):
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general1["dfs"]["channel"]
+        channel = setup_params_general1["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -80,6 +88,7 @@ class TestDFSChannel52Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general2 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -87,13 +96,20 @@ setup_params_general2 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 100,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 100
+        }
     },
-    "rf": {},
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general2],
@@ -101,7 +117,6 @@ setup_params_general2 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel100Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6473", name="WIFI-6473")
     @pytest.mark.wpa2_personal
@@ -112,7 +127,7 @@ class TestDFSChannel100Bw20(object):
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general2["dfs"]["channel"]
+        channel = setup_params_general2["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -154,6 +169,7 @@ class TestDFSChannel100Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general3 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -161,13 +177,20 @@ setup_params_general3 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 104,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 104
+        }
     },
-    "rf": {},
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general3],
@@ -175,7 +198,6 @@ setup_params_general3 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel104Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6474", name="WIFI-6474")
     @pytest.mark.wpa2_personal
@@ -186,7 +208,7 @@ class TestDFSChannel104Bw20(object):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general3["dfs"]["channel"]
+        channel = setup_params_general3["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -228,6 +250,7 @@ class TestDFSChannel104Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general4 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -235,13 +258,20 @@ setup_params_general4 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 56,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 56
+        }
     },
-    "rf": {},
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general4],
@@ -249,7 +279,6 @@ setup_params_general4 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel56Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6475", name="WIFI-6475")
     @pytest.mark.wpa2_personal
@@ -260,7 +289,7 @@ class TestDFSChannel56Bw20(object):
         profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general4["dfs"]["channel"]
+        channel = setup_params_general4["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -302,6 +331,7 @@ class TestDFSChannel56Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general5 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -309,13 +339,20 @@ setup_params_general5 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 60,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 60
+        }
     },
-    "rf": {},
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general5],
@@ -323,7 +360,6 @@ setup_params_general5 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel60Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6476", name="WIFI-6476")
     @pytest.mark.wpa2_personal
@@ -334,7 +370,7 @@ class TestDFSChannel60Bw20(object):
         profile_data = setup_params_general5["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general5["dfs"]["channel"]
+        channel = setup_params_general5["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -376,6 +412,7 @@ class TestDFSChannel60Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general6 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -383,13 +420,20 @@ setup_params_general6 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 64,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 64
+        }
     },
-    "rf": {},
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general6],
@@ -397,7 +441,6 @@ setup_params_general6 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel64Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6477", name="WIFI-6477")
     @pytest.mark.wpa2_personal
@@ -408,7 +451,7 @@ class TestDFSChannel64Bw20(object):
         profile_data = setup_params_general6["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general6["dfs"]["channel"]
+        channel = setup_params_general6["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -450,6 +493,7 @@ class TestDFSChannel64Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general7 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -457,13 +501,20 @@ setup_params_general7 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 108,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 108
+        }
     },
-    "rf": {},
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general7],
@@ -471,7 +522,6 @@ setup_params_general7 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel108Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6478", name="WIFI-6478")
     @pytest.mark.wpa2_personal
@@ -482,7 +532,7 @@ class TestDFSChannel108Bw20(object):
         profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general7["dfs"]["channel"]
+        channel = setup_params_general7["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -524,6 +574,7 @@ class TestDFSChannel108Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general8 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -531,13 +582,20 @@ setup_params_general8 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 112,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 112
+        }
     },
-    "rf": {},
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general8],
@@ -545,7 +603,6 @@ setup_params_general8 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel112Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6479", name="WIFI-6479")
     @pytest.mark.wpa2_personal
@@ -556,7 +613,7 @@ class TestDFSChannel112Bw20(object):
         profile_data = setup_params_general8["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general8["dfs"]["channel"]
+        channel = setup_params_general8["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -597,6 +654,7 @@ class TestDFSChannel112Bw20(object):
             time.sleep(1)
         if not dfs_fail:
             assert False
+
 
 # setup_params_general9 = {
 #     "mode": "BRIDGE",
@@ -679,13 +737,20 @@ setup_params_general10 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 132,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 132
+        }
     },
-    "rf": {},
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general10],
@@ -693,7 +758,6 @@ setup_params_general10 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel132Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6481", name="WIFI-6481")
     @pytest.mark.wpa2_personal
@@ -704,7 +768,7 @@ class TestDFSChannel132Bw20(object):
         profile_data = setup_params_general10["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general10["dfs"]["channel"]
+        channel = setup_params_general10["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -746,6 +810,7 @@ class TestDFSChannel132Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general11 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -753,13 +818,20 @@ setup_params_general11 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 136,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 136
+        }
     },
-    "rf": {},
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general11],
@@ -767,7 +839,6 @@ setup_params_general11 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel136Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6482", name="WIFI-6482")
     @pytest.mark.wpa2_personal
@@ -778,7 +849,7 @@ class TestDFSChannel136Bw20(object):
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general11["dfs"]["channel"]
+        channel = setup_params_general11["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -820,6 +891,7 @@ class TestDFSChannel136Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general12 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -827,13 +899,20 @@ setup_params_general12 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 140,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 140
+        }
     },
-    "rf": {},
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general12],
@@ -841,7 +920,6 @@ setup_params_general12 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel140Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6483", name="WIFI-6483")
     @pytest.mark.wpa2_personal
@@ -852,7 +930,7 @@ class TestDFSChannel140Bw20(object):
         profile_data = setup_params_general12["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general12["dfs"]["channel"]
+        channel = setup_params_general12["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
@@ -894,6 +972,7 @@ class TestDFSChannel140Bw20(object):
         if not dfs_fail:
             assert False
 
+
 setup_params_general13 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -901,13 +980,20 @@ setup_params_general13 = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "dfs": {
-        "channel": 144,
-        "channel_bandwidth": 20
+    "rf": {
+        "5G": {
+            "band": "5G",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "VHT",
+            "channel-width": 20,
+            "channel": 144
+        }
     },
-    "rf": {},
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general13],
@@ -915,7 +1001,6 @@ setup_params_general13 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel144Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6484", name="WIFI-6484")
     @pytest.mark.wpa2_personal
@@ -926,7 +1011,7 @@ class TestDFSChannel144Bw20(object):
         profile_data = setup_params_general13["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general13["dfs"]["channel"]
+        channel = setup_params_general13["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"

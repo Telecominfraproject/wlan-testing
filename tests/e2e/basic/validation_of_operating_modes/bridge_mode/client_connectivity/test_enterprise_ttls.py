@@ -7,8 +7,8 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.client_connectivity, pytest.mark.bridge, pytest.mark.enterprise, pytest.mark.ttls,
-              pytest.mark.ucentral, pytest.mark.sanity]  # , pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.ow_client_connectivity_lf, pytest.mark.bridge, pytest.mark.enterprise, pytest.mark.ttls,
+              pytest.mark.ucentral, pytest.mark.sanity, pytest.mark.uc_sanity]
 
 setup_params_enterprise = {
     "mode": "BRIDGE",
@@ -28,8 +28,8 @@ setup_params_enterprise = {
 }
 
 
-@allure.suite(suite_name="sanity")
-@allure.sub_suite(sub_suite_name="Bridge Mode EAP Client Connectivity : Suite-A")
+@allure.suite(suite_name="OpenWifi Sanity LF")
+@allure.sub_suite(sub_suite_name="Bridge Mode EAP TTLS Client Connectivity : Suite-A")
 @pytest.mark.suiteA
 @pytest.mark.parametrize(
     'setup_profiles',
@@ -37,7 +37,6 @@ setup_params_enterprise = {
     indirect=True,
     scope="class"
 )
-@pytest.mark.uc_sanity
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeEnterpriseTTLSSuiteA(object):
     """ SuiteA Enterprise Test Cases
@@ -46,9 +45,9 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
-    def test_wpa_enterprise_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
-                               station_names_twog, setup_profiles,  lf_test, update_report,
-                               test_cases, radius_info, exit_on_fail):
+    def test_wpa_enterprise_2g(self, get_ap_logs, get_lf_logs,
+                               station_names_twog, lf_test, update_report,
+                               test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa_enterprise and twog"
         """
@@ -58,24 +57,24 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
-                                     mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_twog, vlan_id=vlan)
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
+                                             mode=mode, band=band,
+                                             eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                             station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
     def test_wpa_enterprise_5g(self, station_names_fiveg, get_ap_logs, get_lf_logs,
-                               setup_profiles,  lf_test, update_report,
-                               test_cases, radius_info, exit_on_fail):
+                               lf_test, update_report,
+                               test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 5g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa_enterprise and fiveg"
         """
@@ -85,22 +84,24 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
-                                     mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_fiveg, vlan_id=vlan)
-        assert passes
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
+                                             mode=mode, band=band,
+                                             eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                             station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
+        assert passes == "PASS", result
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
-    def test_wpa2_enterprise_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
-                                station_names_twog, setup_profiles,  lf_test, update_report,
-                                test_cases, radius_info, exit_on_fail):
+    def test_wpa2_enterprise_2g(self, get_ap_logs, get_lf_logs,
+                                station_names_twog, lf_test, update_report,
+                                test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa2_enterprise and twog"
         """
@@ -109,26 +110,24 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         security = "wpa2"
         mode = "BRIDGE"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                     mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_twog, vlan_id=vlan)
-        assert passes
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+                                             mode=mode, band=band,
+                                             eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                             station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
+        assert passes == "PASS", result
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
-    def test_wpa2_enterprise_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
-                                station_names_fiveg, setup_profiles,  lf_test, update_report,
-                                test_cases, radius_info, exit_on_fail):
+    def test_wpa2_enterprise_5g(self, get_ap_logs, get_lf_logs,
+                                station_names_fiveg, lf_test, update_report,
+                                test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa2_enterprise and fiveg"
         """
@@ -137,26 +136,24 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         security = "wpa2"
         mode = "BRIDGE"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                     mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_fiveg, vlan_id=vlan)
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+                                             mode=mode, band=band,
+                                             eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                             station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
-    def test_wpa3_enterprise_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
-                                station_names_twog, setup_profiles,  lf_test, update_report,
-                                test_cases, radius_info, exit_on_fail):
+    def test_wpa3_enterprise_2g(self, get_ap_logs, get_lf_logs,
+                                station_names_twog, lf_test, update_report,
+                                test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa3_enterprise and twog"
         """
@@ -165,25 +162,24 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         security = "wpa3"
         mode = "BRIDGE"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                     mode=mode, band=band, ieee80211w=2, key_mgmt="WPA-EAP-SHA256",
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_twog, vlan_id=vlan)
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+                                             mode=mode, band=band, ieee80211w=2, key_mgmt="WPA-EAP-SHA256",
+                                             eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                             station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
-    def test_wpa3_enterprise_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
-                                station_names_fiveg, setup_profiles,  lf_test, update_report,
-                                test_cases, radius_info, exit_on_fail):
+    def test_wpa3_enterprise_5g(self, get_ap_logs, get_lf_logs,
+                                station_names_fiveg, lf_test, update_report,
+                                test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa3_enterprise and fiveg"
         """
@@ -192,19 +188,18 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         security = "wpa3"
         mode = "BRIDGE"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                     mode=mode, band=band, ieee80211w=2, key_mgmt="WPA-EAP-SHA256",
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_fiveg, vlan_id=vlan)
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+                                             mode=mode, band=band, ieee80211w=2, key_mgmt="WPA-EAP-SHA256",
+                                             eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                             station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
 
 setup_params_enterprise_two = {
@@ -222,8 +217,8 @@ setup_params_enterprise_two = {
 }
 
 
-@allure.suite(suite_name="sanity")
-@allure.sub_suite(sub_suite_name="Bridge Mode EAP Client Connectivity : Suite-B")
+@allure.suite(suite_name="OpenWifi Sanity LF")
+@allure.sub_suite(sub_suite_name="Bridge Mode EAP TTLS Client Connectivity : Suite-B")
 @pytest.mark.suiteB
 @pytest.mark.parametrize(
     'setup_profiles',
@@ -239,9 +234,9 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.twog
-    def test_wpa_wpa2_enterprise_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
-                                    station_names_twog, setup_profiles,  lf_test, update_report,
-                                    test_cases, radius_info, exit_on_fail):
+    def test_wpa_wpa2_enterprise_2g(self, get_ap_logs, get_lf_logs,
+                                    station_names_twog, lf_test, update_report,
+                                    test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa_wpa2_enterprise_mixed and twog"
         """
@@ -251,25 +246,24 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
-                                     mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_twog, vlan_id=vlan)
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
+                                             mode=mode, band=band,
+                                             eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                             station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.fiveg
-    def test_wpa_wpa2_enterprise_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
-                                    station_names_fiveg, setup_profiles,  lf_test,
-                                    update_report, test_cases, radius_info, exit_on_fail):
+    def test_wpa_wpa2_enterprise_5g(self, get_ap_logs, get_lf_logs,
+                                    station_names_fiveg, lf_test,
+                                    update_report, test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa_wpa2_enterprise_mixed and fiveg"
         """
@@ -279,25 +273,24 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
-                                     mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_fiveg, vlan_id=vlan)
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
+                                             mode=mode, band=band,
+                                             eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                             station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.twog
-    def test_wpa3_enterprise_mixed_2g(self, get_vif_state, get_ap_logs, get_lf_logs,
-                                      station_names_twog, setup_profiles,  lf_test,
-                                      update_report, test_cases, radius_info, exit_on_fail):
+    def test_wpa3_enterprise_mixed_2g(self, get_ap_logs, get_lf_logs,
+                                      station_names_twog, lf_test,
+                                      update_report, test_cases, radius_info, exit_on_fail, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa3_enterprise_mixed and twog"
         """
@@ -306,26 +299,25 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
         security = "wpa3"
         mode = "BRIDGE"
         band = "twog"
+        channel = get_ap_channel[0]["2G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                     mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_twog, vlan_id=vlan)
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+                                             mode=mode, band=band,
+                                             eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                             station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.fiveg
-    def test_wpa3_enterprise_mixed_5g(self, get_vif_state, get_ap_logs, get_lf_logs,
-                                      station_names_fiveg, setup_profiles,  lf_test,
+    def test_wpa3_enterprise_mixed_5g(self, get_ap_logs, get_lf_logs,
+                                      station_names_fiveg, lf_test,
                                       update_report, exit_on_fail,
-                                      test_cases, radius_info):
+                                      test_cases, radius_info, get_ap_channel):
         """ wpa enterprise 2g
             pytest -m "client_connectivity and bridge and enterprise and ttls and wpa3_enterprise_mixed and fiveg"
         """
@@ -334,16 +326,15 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
         security = "wpa3"
         mode = "BRIDGE"
         band = "fiveg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
         vlan = 1
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
         identity = radius_info['user']
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                     mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_fiveg, vlan_id=vlan)
+        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+                                             mode=mode, band=band,
+                                             eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                             station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
 
-        assert passes
+        assert passes == "PASS", result

@@ -1,0 +1,78 @@
+name: Deploy virtual AP instance
+description: create EC2 instance running latest wlan-ap release and connect to gateway
+
+inputs:
+  virtual_ap_password:
+    description: SSH password used to connect to virtual AP instance
+    required: true
+  virtual_ap_cert:
+    description: AP cert which is uploaded and used to connect to the gateway
+    required: true
+  virtual_ap_key:
+    description: AP key which is uploaded and used to connect to the gateway
+    required: true
+  virtual_ap_dev_id:
+    description: Dev-id associated with the AP cert
+    required: true
+  gateway_url:
+    description: URL of the gateway the virtual AP should connect to
+    required: true
+  gateway_public_ip:
+    description: IP of the cloud SDK gateway (only required if Docker Compose default deployment with self-signed certs is used)
+    required: false
+
+outputs:
+  serial_number:
+    description: Serial number of the created virtual AP instance
+    value: ${{ steps.get_virtual_ap_facts.outputs.serial_number }}
+  instance_id:
+    description: ID of the created virtual AP EC2 instance
+    value: ${{ steps.get_virtual_ap_facts.outputs.instance_id }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get AMI ID of most recent x64_vmware firmware image
+      shell: bash
+      id: get_ami_id
+      run: |
+        echo ::set-output name=id::"$(aws ec2 describe-images --owners self --filters 'Name=name,Values=*-x64_vmware-*' --query 'sort_by(Images, &CreationDate)[-1].ImageId' --output text)"
+
+    - name: Create openwifi-virtual-ap EC2 instance
+      shell: bash
+      run: |
+        aws ec2 run-instances --key-name openwifi-virtual-ap --security-groups openwifi-virtual-ap --instance-type t2.nano --image-id ${{ steps.get_ami_id.outputs.id }} --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=openwifi-virtual-ap-${{ github.run_number }}},{Key=Owner,Value=gha-wlan-testing}]'
+
+    - name: Wait for virtual AP instance to get ready
+      shell: bash
+      run: |
+        INSTANCE_STATE=$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_number }}' --query 'Reservations[*].Instances[*].State.Name' --output text)
+        until [[ "$INSTANCE_STATE" == "running" ]]; do
+          echo "Virtual AP instance state is $INSTANCE_STATE, waiting for the instance to get ready."
+          INSTANCE_STATE=$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_number }}' --query 'Reservations[*].Instances[*].State.Name' --output text)
+        done
+
+    - name: Get virtual AP instance facts
+      shell: bash
+      id: get_virtual_ap_facts
+      run: |
+        echo ::set-output name=public_ip::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_number }}' --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)"
+        echo ::set-output name=serial_number::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_number }}' --query 'Reservations[*].Instances[*].NetworkInterfaces[*].MacAddress' --output text | sed 's/://g')"
+        echo ::set-output name=instance_id::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_number }}' --query 'Reservations[*].Instances[*].InstanceId' --output text)"
+
+    - name: Upload AP certificate, key and dev-id to instance
+      env:
+        VIRTUAL_AP_PASSWORD: ${{ inputs.virtual_ap_password }}
+        VIRTUAL_AP_CERT: ${{ inputs.virtual_ap_cert }}
+        VIRTUAL_AP_KEY: ${{ inputs.virtual_ap_key }}
+        VIRTUAL_AP_DEV_ID: ${{ inputs.virtual_ap_dev_id }}
+      shell: bash
+      run: |
+        sshpass -p ${{ env.VIRTUAL_AP_PASSWORD }} ssh -o StrictHostKeyChecking=accept-new root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} 'echo "${{ inputs.gateway_public_ip }} ${{ inputs.gateway_url }}" >> /etc/hosts; echo "${{ env.VIRTUAL_AP_CERT }}" > /etc/ucentral/cert.pem; echo "${{ env.VIRTUAL_AP_KEY }}" > /etc/ucentral/key.pem && chmod 600 /etc/ucentral/key.pem; echo "${{ env.VIRTUAL_AP_DEV_ID }}" > /etc/ucentral/dev-id; sleep 10'
+
+    - name: Stop ucentral service on AP and connect manually to gateway
+      env:
+        VIRTUAL_AP_PASSWORD: ${{ inputs.virtual_ap_password }}
+      shell: bash
+      run: |
+        sshpass -p ${{ env.VIRTUAL_AP_PASSWORD }} ssh -f -o StrictHostKeyChecking=accept-new root@${{ steps.get_virtual_ap_facts.outputs.public_ip }} "curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentral-deploy/main/docker-compose/certs/restapi-ca.pem >> /etc/ssl/cert.pem; /etc/init.d/ucentral stop; /usr/sbin/ucentral -S ${{ steps.get_virtual_ap_facts.outputs.serial_number }} -s ${{ inputs.gateway_url }} -P 15002 -d -f \$(awk -F '=' 'FNR == 8 {print \$2}' /etc/openwrt_release | tr -d \') &> /dev/null"

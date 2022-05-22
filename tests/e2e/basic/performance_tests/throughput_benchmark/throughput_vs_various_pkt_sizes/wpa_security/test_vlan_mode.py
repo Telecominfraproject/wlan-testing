@@ -366,7 +366,7 @@ class TestThroughputVsPktVLANWpa5G(object):
         security = "wpa"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 60'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -415,7 +415,7 @@ class TestThroughputVsPktVLANWpa5G(object):
         security = "wpa"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 142'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -464,7 +464,7 @@ class TestThroughputVsPktVLANWpa5G(object):
         security = "wpa"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 256'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -513,7 +513,7 @@ class TestThroughputVsPktVLANWpa5G(object):
         security = "wpa"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 512'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -562,7 +562,7 @@ class TestThroughputVsPktVLANWpa5G(object):
         security = "wpa"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: 1024'],
                      ['directions: DUT Transmit;DUT Receive'],
@@ -611,7 +611,7 @@ class TestThroughputVsPktVLANWpa5G(object):
         security = "wpa"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 1
+        vlan = 100
         dut_name = create_lanforge_chamberview_dut
         raw_lines = [['pkts: MTU'],
                      ['directions: DUT Transmit;DUT Receive'],

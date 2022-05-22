@@ -45,7 +45,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3687", name="WIFI-3687")
     @pytest.mark.wpa_personal
     @pytest.mark.tcp_download
-    def test_client_wpa_bridge_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
+    def test_client_wpa_bridge_tcp_dl(self, lf_tools, setup_profiles,
                                       lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                       get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -56,10 +56,6 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         vlan = 1
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)

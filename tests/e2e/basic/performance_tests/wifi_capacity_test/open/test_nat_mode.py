@@ -44,7 +44,7 @@ class TestWifiCapacityNATModeDualBand(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3695", name="WIFI-3695")
     @pytest.mark.open
     @pytest.mark.tcp_download
-    def test_client_open_nat_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
+    def test_client_open_nat_tcp_dl(self, lf_tools, setup_profiles,
                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                     get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -54,9 +54,6 @@ class TestWifiCapacityNATModeDualBand(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
@@ -74,7 +71,7 @@ class TestWifiCapacityNATModeDualBand(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3696", name="WIFI-3696")
     @pytest.mark.open
     @pytest.mark.udp_download
-    def test_client_open_nat_udp_dl(self, get_vif_state, lf_tools,
+    def test_client_open_nat_udp_dl(self, lf_tools,
                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                     get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -84,9 +81,6 @@ class TestWifiCapacityNATModeDualBand(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
@@ -104,7 +98,7 @@ class TestWifiCapacityNATModeDualBand(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3698", name="WIFI-3698")
     @pytest.mark.open
     @pytest.mark.tcp_bidirectional
-    def test_client_open_nat_tcp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_open_nat_tcp_bidirectional(self, lf_tools,
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -114,9 +108,6 @@ class TestWifiCapacityNATModeDualBand(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
@@ -134,7 +125,7 @@ class TestWifiCapacityNATModeDualBand(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3697", name="WIFI-3697")
     @pytest.mark.open
     @pytest.mark.udp_bidirectional
-    def test_client_open_nat_udp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_open_nat_udp_bidirectional(self, lf_tools,
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -144,9 +135,6 @@ class TestWifiCapacityNATModeDualBand(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
         vlan = 1
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)

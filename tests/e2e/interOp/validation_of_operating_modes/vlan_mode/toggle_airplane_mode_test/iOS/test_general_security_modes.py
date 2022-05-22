@@ -20,7 +20,7 @@ if 'perfecto_libs' not in sys.path:
 
 from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnection, ping_deftapps_iOS, \
     Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown,\
-    get_ip_add_ios, get_ip_add_check_ios
+    gets_ip_add_and_does_not_forget_ssid_ios, gets_ip_add_for_checking_and_forgets_ssid_ios
 
 pytestmark = [pytest.mark.regression, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
               pytest.mark.client_reconnect, pytest.mark.ToggleAirplaneMode, pytest.mark.vlan]
@@ -84,7 +84,7 @@ class TestToggleAirplaneModeSuiteOneVLAN(object):
         connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_add_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = gets_ip_add_and_does_not_forget_ssid_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         #
         if is_internet:
             if ip:
@@ -96,7 +96,7 @@ class TestToggleAirplaneModeSuiteOneVLAN(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
-            ip_check, is_internet_check = get_ip_add_check_ios(request, ssidName, ssidPassword,
+            ip_check, is_internet_check = gets_ip_add_for_checking_and_forgets_ssid_ios(request, ssidName, ssidPassword,
                                                                setup_perfectoMobile_iOS, connData)
             if (ip_check == ip):
                 assert True
@@ -126,7 +126,7 @@ class TestToggleAirplaneModeSuiteOneVLAN(object):
         connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_add_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = gets_ip_add_and_does_not_forget_ssid_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         #
         if is_internet:
             if ip:
@@ -138,7 +138,7 @@ class TestToggleAirplaneModeSuiteOneVLAN(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
-            ip_check, is_internet_check = get_ip_add_check_ios(request, ssidName, ssidPassword,
+            ip_check, is_internet_check = gets_ip_add_for_checking_and_forgets_ssid_ios(request, ssidName, ssidPassword,
                                                                setup_perfectoMobile_iOS, connData)
             if (ip_check == ip):
                 assert True
@@ -168,7 +168,7 @@ class TestToggleAirplaneModeSuiteOneVLAN(object):
         connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_add_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = gets_ip_add_and_does_not_forget_ssid_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         #
         if is_internet:
             if ip:
@@ -180,7 +180,7 @@ class TestToggleAirplaneModeSuiteOneVLAN(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
-            ip_check, is_internet_check = get_ip_add_check_ios(request, ssidName, ssidPassword,
+            ip_check, is_internet_check = gets_ip_add_for_checking_and_forgets_ssid_ios(request, ssidName, ssidPassword,
                                                                setup_perfectoMobile_iOS, connData)
             if (ip_check == ip):
                 assert True
@@ -210,7 +210,7 @@ class TestToggleAirplaneModeSuiteOneVLAN(object):
         connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_add_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = gets_ip_add_and_does_not_forget_ssid_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         #
         if is_internet:
             if ip:
@@ -222,7 +222,7 @@ class TestToggleAirplaneModeSuiteOneVLAN(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
-            ip_check, is_internet_check = get_ip_add_check_ios(request, ssidName, ssidPassword,
+            ip_check, is_internet_check = gets_ip_add_for_checking_and_forgets_ssid_ios(request, ssidName, ssidPassword,
                                                                setup_perfectoMobile_iOS, connData)
             if (ip_check == ip):
                 assert True
@@ -252,7 +252,7 @@ class TestToggleAirplaneModeSuiteOneVLAN(object):
         connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_add_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = gets_ip_add_and_does_not_forget_ssid_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         #
         if is_internet:
             if ip:
@@ -264,7 +264,7 @@ class TestToggleAirplaneModeSuiteOneVLAN(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
-            ip_check, is_internet_check = get_ip_add_check_ios(request, ssidName, ssidPassword,
+            ip_check, is_internet_check = gets_ip_add_for_checking_and_forgets_ssid_ios(request, ssidName, ssidPassword,
                                                                setup_perfectoMobile_iOS, connData)
             if (ip_check == ip):
                 assert True
@@ -294,7 +294,7 @@ class TestToggleAirplaneModeSuiteOneVLAN(object):
         connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_add_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = gets_ip_add_and_does_not_forget_ssid_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         #
         if is_internet:
             if ip:
@@ -306,7 +306,7 @@ class TestToggleAirplaneModeSuiteOneVLAN(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
-            ip_check, is_internet_check = get_ip_add_check_ios(request, ssidName, ssidPassword,
+            ip_check, is_internet_check = gets_ip_add_for_checking_and_forgets_ssid_ios(request, ssidName, ssidPassword,
                                                                setup_perfectoMobile_iOS, connData)
             if (ip_check == ip):
                 assert True
@@ -383,7 +383,7 @@ class TestToggleAirplaneModeSuiteVLANTwo(object):
         connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_add_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = gets_ip_add_and_does_not_forget_ssid_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         #
         if is_internet:
             if ip:
@@ -395,7 +395,7 @@ class TestToggleAirplaneModeSuiteVLANTwo(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
-            ip_check, is_internet_check = get_ip_add_check_ios(request, ssidName, ssidPassword,
+            ip_check, is_internet_check = gets_ip_add_for_checking_and_forgets_ssid_ios(request, ssidName, ssidPassword,
                                                                setup_perfectoMobile_iOS, connData)
             if (ip_check == ip):
                 assert True
@@ -426,7 +426,7 @@ class TestToggleAirplaneModeSuiteVLANTwo(object):
         connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_add_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = gets_ip_add_and_does_not_forget_ssid_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         #
         if is_internet:
             if ip:
@@ -438,7 +438,7 @@ class TestToggleAirplaneModeSuiteVLANTwo(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
-            ip_check, is_internet_check = get_ip_add_check_ios(request, ssidName, ssidPassword,
+            ip_check, is_internet_check = gets_ip_add_for_checking_and_forgets_ssid_ios(request, ssidName, ssidPassword,
                                                                setup_perfectoMobile_iOS, connData)
             if (ip_check == ip):
                 assert True
@@ -469,7 +469,7 @@ class TestToggleAirplaneModeSuiteVLANTwo(object):
         connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_add_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = gets_ip_add_and_does_not_forget_ssid_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         #
         if is_internet:
             if ip:
@@ -481,7 +481,7 @@ class TestToggleAirplaneModeSuiteVLANTwo(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
-            ip_check, is_internet_check = get_ip_add_check_ios(request, ssidName, ssidPassword,
+            ip_check, is_internet_check = gets_ip_add_for_checking_and_forgets_ssid_ios(request, ssidName, ssidPassword,
                                                                setup_perfectoMobile_iOS, connData)
             if (ip_check == ip):
                 assert True
@@ -512,7 +512,7 @@ class TestToggleAirplaneModeSuiteVLANTwo(object):
         connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_add_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = gets_ip_add_and_does_not_forget_ssid_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         #
         if is_internet:
             if ip:
@@ -524,7 +524,7 @@ class TestToggleAirplaneModeSuiteVLANTwo(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
-            ip_check, is_internet_check = get_ip_add_check_ios(request, ssidName, ssidPassword,
+            ip_check, is_internet_check = gets_ip_add_for_checking_and_forgets_ssid_ios(request, ssidName, ssidPassword,
                                                                setup_perfectoMobile_iOS, connData)
             if (ip_check == ip):
                 assert True
@@ -556,7 +556,7 @@ class TestToggleAirplaneModeSuiteVLANTwo(object):
         connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_add_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = gets_ip_add_and_does_not_forget_ssid_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         #
         if is_internet:
             if ip:
@@ -568,7 +568,7 @@ class TestToggleAirplaneModeSuiteVLANTwo(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
-            ip_check, is_internet_check = get_ip_add_check_ios(request, ssidName, ssidPassword,
+            ip_check, is_internet_check = gets_ip_add_for_checking_and_forgets_ssid_ios(request, ssidName, ssidPassword,
                                                                setup_perfectoMobile_iOS, connData)
             if (ip_check == ip):
                 assert True
@@ -600,7 +600,7 @@ class TestToggleAirplaneModeSuiteVLANTwo(object):
         connData = get_APToMobileDevice_data
 
         # Set Wifi/AP Mode
-        ip, is_internet = get_ip_add_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
+        ip, is_internet = gets_ip_add_and_does_not_forget_ssid_ios(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         #
         if is_internet:
             if ip:
@@ -612,7 +612,7 @@ class TestToggleAirplaneModeSuiteVLANTwo(object):
 
             # wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             Toggle_AirplaneMode_iOS(request, setup_perfectoMobile_iOS, connData)
-            ip_check, is_internet_check = get_ip_add_check_ios(request, ssidName, ssidPassword,
+            ip_check, is_internet_check = gets_ip_add_for_checking_and_forgets_ssid_ios(request, ssidName, ssidPassword,
                                                                setup_perfectoMobile_iOS, connData)
             if (ip_check == ip):
                 assert True

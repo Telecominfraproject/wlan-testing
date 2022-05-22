@@ -38,6 +38,19 @@ setup_params_general = {
     "radius": False
 }
 
+# class TestUniqueSSIDGeneralBridgeAnd(object):
+#
+#     @pytest.mark.unique_ssid_general_one_bridge_and
+#     def test_unique_ssid_general_one_bridge_and(self):
+#         for sec_modes in setup_params_general['ssid_modes'].keys():
+#             for i in range(len(setup_params_general['ssid_modes'][sec_modes])):
+#                 N = 3
+#                 rand_string = (''.join(random.choices(string.ascii_uppercase +
+#                                                       string.digits, k=N))) + str(int(time.time_ns()) % 10000)
+#                 setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = \
+#                 setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
+#             assert True
+
 for sec_modes in setup_params_general['ssid_modes'].keys():
     for i in range(len(setup_params_general['ssid_modes'][sec_modes])):
         N = 3
@@ -304,6 +317,20 @@ setup_params_general_two = {
     "rf": {},
     "radius": False
 }
+
+# class TestUniqueSSIDGeneralTwoBridgeAnd(object):
+#
+#     @pytest.mark.unique_ssid_general_two_bridge_and
+#     def test_unique_ssid_general_two_bridge_and(self):
+#         for sec_modes in setup_params_general_two['ssid_modes'].keys():
+#             for i in range(len(setup_params_general_two['ssid_modes'][sec_modes])):
+#                 N = 3
+#                 rand_string = (''.join(random.choices(string.ascii_uppercase +
+#                                                       string.digits, k=N))) + str(int(time.time_ns()) % 10000)
+#                 setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] = \
+#                 setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
+#
+#         assert True
 
 for sec_modes in setup_params_general_two['ssid_modes'].keys():
     for i in range(len(setup_params_general_two['ssid_modes'][sec_modes])):
