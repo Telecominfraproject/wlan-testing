@@ -102,7 +102,6 @@ class CController:
         self.cc.value = None
         self.cc.command = []
         self.cc.command_extend = []
-        self.cc.info = "Cisco 9800 Controller Series"
         self.cc.pwd = "../lanforge/lanforge-scripts"
 
 
@@ -154,6 +153,27 @@ class CController:
         print("shut down 6ghz network")
         shut = self.cc.ap_dot11_6ghz_shutdown()
         return shut
+
+    def no_ap_5ghz_shutdown(self):
+        print("no shutdown 5ghz network")
+        shut = self.cc.config_no_ap_dot11_5ghz_shutdown()
+        return shut
+
+    def no_ap_2ghz_shutdown(self):
+        print("shutdown 2ghz network")
+        shut = self.cc.config_no_ap_dot11_24ghz_shutdown()
+        return shut
+
+    def no_ap_6ghz_shutdown(self):
+        print("shut down 6ghz network")
+        shut = self.cc.config_no_ap_dot11_6ghz_shutdown
+        return shut
+
+    def enable_all_bands(self):
+        print("enable all bands")
+        self.no_ap_5ghz_shutdown()
+        self.no_ap_2ghz_shutdown()
+        self.no_ap_6ghz_shutdown()
 
     def get_ssids(self):
         print("show ssid's present")
@@ -243,6 +263,67 @@ class CController:
         sum= self.cc.show_ap_dot11_6gz_summary()
         return sum
 
+    def check_admin_state_2ghz(self, ap_name):
+        summ = self.show_2ghz_summary()
+        print(sum)
+        ele_list = [y for y in (x.strip() for x in summ.splitlines()) if y]
+        print("ele_list", ele_list)
+        indices = [i for i, s in enumerate(ele_list) if str(ap_name) in s]
+        print("indices", indices)
+        y = ele_list[indices[3]]
+        list_ = []
+        list_.append(y)
+        z = list_[0].split(" ")
+        state = None
+        if "Down" in z:
+            print("yes")
+            state = "Down"
+        if "Up" in z:
+            print("ap is up")
+            state = "Up"
+        return state
+
+    def check_admin_state_5ghz(self, ap_name):
+        summ = self.show_5ghz_summary()
+        print(summ)
+        ele_list = [y for y in (x.strip() for x in summ.splitlines()) if y]
+        print(ele_list)
+        indices = [i for i, s in enumerate(ele_list) if str(ap_name) in s]
+        print(indices)
+        y = ele_list[indices[3]]
+        list_ = []
+        list_.append(y)
+        z = list_[0].split(" ")
+        state = None
+        if "Down" in z:
+            print("yes")
+            state = "Down"
+        if "Up" in z:
+            print("ap is up")
+            state = "Up"
+        return state
+
+    def check_admin_state_6ghz(self, ap_name):
+        summ = self.show_6ghz_summary()
+        print(sum)
+        ele_list = [y for y in (x.strip() for x in summ.splitlines()) if y]
+        print("ele_list", ele_list)
+        indices = [i for i, s in enumerate(ele_list) if str(ap_name) in s]
+        print("indices", indices)
+        # print(ele_list[])
+        y = ele_list[indices[3]]
+        list_ = []
+        list_.append(y)
+        z = list_[0].split(" ")
+        state = None
+        if "Down" in z:
+            print("yes")
+            state = "Down"
+        if "Up" in z:
+            print("ap is up")
+            state = "Up"
+        return state
+
     def create_wlan_open(self):
         open = self.cc.config_wlan_open()
         return open
@@ -257,8 +338,7 @@ class CController:
         return number
         # do some formatting here and return actual data
 
-    def show_5ghz_summary(self):
-        pass
+
 
     def calculate_data(self, place):
         wlan_number = self.get_number_of_wlan_present()
@@ -531,6 +611,7 @@ class CController:
         return channel
 
     def set_channel_width(self, band=None, width=None, slot=None):
+        bdwth = None
         self.cc.bandwidth = width
         self.cc.ap_band_slot = slot
         if band == "6g":
@@ -552,6 +633,34 @@ class CController:
         en = self.cc.enable_ft_dot1x_sha256_wpa3_cc()
         print(en)
         return en
+
+    def show_wireless_client_sum(self):
+        en = self.cc.show_wireless_client_sum_cc()
+        return en
+
+    def get_mc_address(self):
+        wlan_sumry = self.show_wireless_client_sum()
+        print(wlan_sumry)
+        ele_list = [y for y in (x.strip() for x in wlan_sumry.splitlines()) if y]
+        print(ele_list)
+        indices = [i for i, s in enumerate(ele_list) if 'MAC Address' in s]
+        data = indices[1]
+        data2 = data + 1
+        data3 = data + 2
+        data4 = data + 3
+        # ele_list[data]
+        y = ele_list[data3]
+        print(y)
+        list_ = []
+        list_.append(y)
+        z = list_[0].split(" ")
+        print(z[0])
+        return z[0]
+
+    def show_wireless_client_detail(self):
+        mac = self.get_mc_address()
+        detail = self.cc.show_wireless_client_mac_details(mac=mac)
+        return detail
 
 
 if __name__ == '__main__':
