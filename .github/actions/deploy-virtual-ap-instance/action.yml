@@ -48,25 +48,8 @@ runs:
     - name: Wait for virtual AP instance to get ready
       shell: bash
       run: |
-        SECONDS=0
-        TIMEOUT_SECONDS=900
-        while (( $SECONDS < $TIMEOUT_SECONDS )); do
-          INSTANCE_STATE=$(aws ec2 describe-instances --instance-id ${{ steps.ec2_instance.outputs.instance_id }} --query 'Reservations[*].Instances[*].State.Name' --output text)
-
-          if [[ "$INSTANCE_STATE" != "running" ]]; do
-            echo "Virtual AP instance state is $INSTANCE_STATE, waiting for the instance to get ready"
-            sleep 10
-          else
-            echo "Virtual AP instance is running, proceeding with workflow run"
-            break
-          fi
-
-        done
-
-        if (( $SECONDS >= $TIMEOUT_SECONDS )); then
-          echo "Error: timed out waiting for instance to get ready"
-          exit 1
-        fi
+        INSTANCE_STATE=$(aws ec2 describe-instances --instance-id ${{ steps.ec2_instance.outputs.instance_id }} --query 'Reservations[*].Instances[*].State.Name' --output text)
+        timeout 10m bash -c 'until [[ "$INSTANCE_STATE" == "running" ]]; do echo "Virtual AP instance state is $INSTANCE_STATE, waiting for the instance to get ready"; sleep 5; INSTANCE_STATE=$(aws ec2 describe-instances --instance-id ${{ steps.ec2_instance.outputs.instance_id }} --query 'Reservations[*].Instances[*].State.Name' --output text); done'
 
     - name: Get virtual AP instance facts
       shell: bash

@@ -88,25 +88,8 @@ runs:
     - name: Wait for cloud SDK instance to get ready
       shell: bash
       run: |
-        SECONDS=0
-        TIMEOUT_SECONDS=900
-        while (( $SECONDS < $TIMEOUT_SECONDS )); do
-          INSTANCE_STATE=$(aws ec2 describe-instances --instance-id ${{ steps.ec2_instance.outputs.instance_id }} --query 'Reservations[*].Instances[*].State.Name' --output text)
-
-          if [[ "$INSTANCE_STATE" != "running" ]]; do
-            echo "Cloud SDK instance state is $INSTANCE_STATE, waiting for the instance to get ready"
-            sleep 10
-          else
-            echo "Cloud SDK instance is running, proceeding with workflow run"
-            break
-          fi
-
-        done
-
-        if (( $SECONDS >= $TIMEOUT_SECONDS )); then
-          echo "Error: timed out waiting for instance to get ready"
-          exit 1
-        fi
+        INSTANCE_STATE=$(aws ec2 describe-instances --instance-id ${{ steps.ec2_instance.outputs.instance_id }} --query 'Reservations[*].Instances[*].State.Name' --output text)
+        timeout 10m bash -c 'until [[ "$INSTANCE_STATE" == "running" ]]; do echo "Cloud SDK instance state is $INSTANCE_STATE, waiting for the instance to get ready"; sleep 5; INSTANCE_STATE=$(aws ec2 describe-instances --instance-id ${{ steps.ec2_instance.outputs.instance_id }} --query 'Reservations[*].Instances[*].State.Name' --output text); done'
 
     - name: Get cloud SDK instance public IP
       shell: bash
@@ -126,22 +109,7 @@ runs:
     - name: Try connecting to EC2 instance and install Docker
       shell: bash
       run: |
-        SECONDS=0
-        TIMEOUT_SECONDS=900
-        while (( $SECONDS < $TIMEOUT_SECONDS )); do
-          ssh -o "StrictHostKeyChecking accept-new" -i ssh_key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }}
-          if [ $? -eq 0 ]; then
-            break
-          else
-            sleep 5
-          fi
-
-        done
-
-        if (( $SECONDS >= $TIMEOUT_SECONDS )); then
-          echo "Error: timed out connecting to instance"
-          exit 1
-        fi
+        timeout 10m bash -c 'until ssh -o "StrictHostKeyChecking accept-new" -i ssh_key.pem ubuntu@${{ steps.get_instance_public_ip.outputs.ip }}; do sleep 5; done'
 
         ssh -i ssh_key.pem ubuntu@${{ steps.get_instance_public_ip.outputs.ip }} << EOF
           sudo -i;
