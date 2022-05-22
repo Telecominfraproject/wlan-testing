@@ -37,7 +37,16 @@ class Fixtures_3x:
         print("cc.1")
         self.controller_obj = ""
 
-    def setup_profiles(self, request, param, run_lf, instantiate_profile, get_configuration, get_markers, lf_tools):
+
+    def setup_profiles(self, request, param, run_lf, instantiate_profile, get_configuration, get_markers, lf_tools, lf_reports):
+        table1= []
+        instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
+                                                  timeout="10", ssid_data=None,
+                                                  ap_data=self.lab_info['access_point'], type=0)
+
+        instantiate_profile_obj.enable_all_bands()
+
+
         if run_lf:
             return 0
         print("check params")
@@ -107,8 +116,10 @@ class Fixtures_3x:
         # lf dut data [{'ssid_name': 'ssid_wpa2_2g', 'appliedRadios': ['2G'], 'security_key': 'something', 'security': 'wpa2'}, {'ssid_name': 'ssid_wpa2_5g', 'appliedRadios': ['5G'], 'security_key': 'something', 'security': 'wpa2'}, {'ssid_name': 'ssid_wpa2_5g', 'appliedRadios': ['6G'], 'security_key': 'something', 'security': 'wpa3'}]
         print("lf dut data", lf_dut_data)
         allure.attach(name="wlan data passing", body=str(parameter))
+        ap = instantiate_profile_obj.show_ap_summary()
+        print("show ap summ", ap)
+        allure.attach(name="show ap summary", body=str(ap))
 
-        # if parameter["roam"] == True:
         print("create 3 wlans on slot1,2 and 3")
         for ap_name in range(len(self.lab_info['access_point'])):
             print("ap ", ap_name)
@@ -120,13 +131,25 @@ class Fixtures_3x:
                                                           ap_data=self.lab_info['access_point'], type=ap_name)
             instantiate_profile_obj.set_channel(band="6g", channel=self.lab_info['access_point'][ap_name]["channel_6g"],
                                                 slot=self.lab_info['access_point'][ap_name]["6g_slot"])
-            allure.attach(name="set 6g channel", body=str(self.lab_info['access_point'][ap_name]["channel_6g"]))
+            allure.attach(name="set 6g channel on " + str(ap_name + 1) + " ap ", body=str(self.lab_info['access_point'][ap_name]["channel_6g"]))
             instantiate_profile_obj.set_channel(band="5g", channel=self.lab_info['access_point'][ap_name]["channel_5g"],
                                                 slot=self.lab_info['access_point'][ap_name]["5g_slot"])
-            allure.attach(name="set 5g channel", body=str(self.lab_info['access_point'][ap_name]["channel_5g"]))
+            allure.attach(name="set 5g channel on " + str(ap_name + 1) + " ap ", body=str(self.lab_info['access_point'][ap_name]["channel_5g"]))
             instantiate_profile_obj.set_channel(band="2g", channel=self.lab_info['access_point'][ap_name]["channel_2g"],
                                                 slot=self.lab_info['access_point'][ap_name]["2g_slot"])
-            allure.attach(name="set 5g channel", body=str(self.lab_info['access_point'][ap_name]["channel_2g"]))
+            allure.attach(name="set 2g channel on " + str(ap_name + 1) + " ap ", body=str(self.lab_info['access_point'][ap_name]["channel_2g"]))
+            print(self.lab_info['access_point'][ap_name]["ap_name"])
+            check_admin = instantiate_profile_obj.check_admin_state_2ghz(ap_name=self.lab_info['access_point'][ap_name]["ap_name"])
+            allure.attach(name="2ghz ap admin state for " + str(ap_name + 1) + " ap", body=str(check_admin))
+
+            check_admin_5 = instantiate_profile_obj.check_admin_state_5ghz(ap_name=self.lab_info['access_point'][ap_name]["ap_name"])
+            allure.attach(name="5ghz ap admin state for " + str(ap_name + 1) + " ap", body=str(check_admin_5))
+
+            check_admin_6 = instantiate_profile_obj.check_admin_state_6ghz(ap_name=self.lab_info['access_point'][ap_name]["ap_name"])
+            allure.attach(name="6ghz ap admin state for " + str(ap_name + 1) + " ap", body=str(check_admin_6))
+
+            # table1.append(tab)
+
 
             if ap_name == 0:
                 for band in range(len(lf_dut_data)):
@@ -262,15 +285,15 @@ class Fixtures_3x:
                         if parameter["ft-dot1x_sha256"] == True:
                             instantiate_profile_obj.enable_ft_dot1x_sha256_wpa3(ssid=lf_dut_data[2]['ssid_name'])
                         instantiate_profile_obj.get_ssids()
-            sumy = instantiate_profile_obj.get_ssids()
-            allure.attach(name="wlan summary after creating test wlan", body=str(sumy))
-            twog_sum = instantiate_profile_obj.show_2ghz_summary()
-            fiveg_sum = instantiate_profile_obj.show_5ghz_summary()
-            sixg_sum = instantiate_profile_obj.show_6ghz_summary()
-            allure.attach(name="ap 2ghz summary", body=str(twog_sum))
-            allure.attach(name="ap 5ghz summary", body=str(fiveg_sum))
-            allure.attach(name="ap 6ghz summary", body=str(sixg_sum))
 
+        twog_sum = instantiate_profile_obj.show_2ghz_summary()
+        fiveg_sum = instantiate_profile_obj.show_5ghz_summary()
+        sixg_sum = instantiate_profile_obj.show_6ghz_summary()
+        allure.attach(name="ap admin state 2ghz ", body=str(twog_sum))
+        allure.attach(name="ap admin state 5ghz ", body=str(fiveg_sum))
+        allure.attach(name="ap admin state 6ghz", body=str(sixg_sum))
+        sumy = instantiate_profile_obj.get_ssids()
+        allure.attach(name="wlan summary after creating test wlan", body=str(sumy))
         if "roam_type" in list_key:
             print("after creating wlan's assign wlan to respective tag policy")
             for ap_name in range(len(self.lab_info['access_point'])):
@@ -356,6 +379,16 @@ class Fixtures_3x:
         #              [['ssid_idx=0 ssid=ssid_wpa2_2g security=WPA2 password=something bssid=14:16:9d:53:58:c0'],
         #               ['ssid_idx=1 ssid=ssid_wpa2_5g security=WPA2 password=something bssid=14:16:9d:53:58:ce']]]
         lf_tools.create_non_meh_dut(ssid_data=ssid_data_list)
+        table1 = [["show ap summarry", "done"], ["Configure wlan", "done"], ["configure channel/width", "done"],
+                  ["ap admin state up", "done"], ["checking admin state of ap", "done"],
+                  ["sniffer capture", "done"],
+                  ["client connect", "don"], ["roam", "done"], ["sniffer verification", "done"],
+                  ["iteration", "done"],
+                  ["table display", "done"], ["check in controller client connected", "done"],
+                  ["Bring down unused band before start of testcase", "done"]]
+        tab1 = lf_reports.table2(table=table1)
+        allure.attach(name="skeleton of code", body=str(tab1))
+
 
 
 
