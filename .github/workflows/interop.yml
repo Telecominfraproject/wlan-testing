@@ -85,7 +85,7 @@ jobs:
           CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
           CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
         run: |
-          python .quali/start_reservation.py --global-inputs '{"Phone ID(s)":"1,2,3,4,5,6","AP ID(s)":"1,2,3,4","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}","Include a LANForge?":"Yes","securityToken":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJpYXQiOjE2MzI4Mzc2NDEsImp0aSI6IjAwZGRiYWY5LWQwYjMtNDRjNS1hYjVlLTkyNzFlNzc5ZGUzNiIsImlzcyI6Imh0dHBzOi8vYXV0aDIucGVyZmVjdG9tb2JpbGUuY29tL2F1dGgvcmVhbG1zL3RpcC1wZXJmZWN0b21vYmlsZS1jb20iLCJhdWQiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwic3ViIjoiODNkNjUxMWQtNTBmZS00ZWM5LThkNzAtYTA0ZjBkNTdiZDUyIiwidHlwIjoiT2ZmbGluZSIsImF6cCI6Im9mZmxpbmUtdG9rZW4tZ2VuZXJhdG9yIiwibm9uY2UiOiI2ZjE1YzYxNy01YTU5LTQyOWEtODc2Yi1jOTQxMTQ1ZDFkZTIiLCJzZXNzaW9uX3N0YXRlIjoiYmRjZTFmYTMtMjlkYi00MmFmLWI5YWMtYjZjZmJkMDEyOTFhIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.5R85_1R38ZFXv_wIjjCIsj8NJm1p66dCsLJI5DBEmks"}' --reservation-duration 480 "InterOp Lab - Specific Selection" 
+          python .quali/start_reservation.py --global-inputs '{"Phone ID(s)":"1,2,5,6","AP ID(s)":"1,2,3,4","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}","Include a LANForge?":"Yes","securityToken":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJpYXQiOjE2MzI4Mzc2NDEsImp0aSI6IjAwZGRiYWY5LWQwYjMtNDRjNS1hYjVlLTkyNzFlNzc5ZGUzNiIsImlzcyI6Imh0dHBzOi8vYXV0aDIucGVyZmVjdG9tb2JpbGUuY29tL2F1dGgvcmVhbG1zL3RpcC1wZXJmZWN0b21vYmlsZS1jb20iLCJhdWQiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwic3ViIjoiODNkNjUxMWQtNTBmZS00ZWM5LThkNzAtYTA0ZjBkNTdiZDUyIiwidHlwIjoiT2ZmbGluZSIsImF6cCI6Im9mZmxpbmUtdG9rZW4tZ2VuZXJhdG9yIiwibm9uY2UiOiI2ZjE1YzYxNy01YTU5LTQyOWEtODc2Yi1jOTQxMTQ1ZDFkZTIiLCJzZXNzaW9uX3N0YXRlIjoiYmRjZTFmYTMtMjlkYi00MmFmLWI5YWMtYjZjZmJkMDEyOTFhIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.5R85_1R38ZFXv_wIjjCIsj8NJm1p66dCsLJI5DBEmks"}' --reservation-duration 480 "InterOp Lab - Specific Selection" 
 
       - name: set reservation outputs
         if: always()
@@ -159,6 +159,13 @@ jobs:
         #  unzip awscliv2.zip
         #  sudo ./aws/install
 
+      - name: set reservation outputs
+        if: always()
+        id: reservation
+        run: |
+          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+          echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+
 
       - name: prepare configuration
         env:
@@ -227,6 +234,13 @@ jobs:
           curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
+      - name: set reservation outputs
+        if: always()
+        id: reservation
+        run: |
+          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+          echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+
       - name: prepare configuration
         env:
           CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
@@ -281,13 +295,6 @@ jobs:
         #  unzip awscliv2.zip
         #  sudo ./aws/install
 
-      - name: start reservation
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
-        run: |
-          python .quali/start_reservation.py --global-inputs '{"Phone ID(s)":"5","AP ID(s)":"2","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}","Include a LANForge?":"Yes","securityToken":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJpYXQiOjE2MzI4Mzc2NDEsImp0aSI6IjAwZGRiYWY5LWQwYjMtNDRjNS1hYjVlLTkyNzFlNzc5ZGUzNiIsImlzcyI6Imh0dHBzOi8vYXV0aDIucGVyZmVjdG9tb2JpbGUuY29tL2F1dGgvcmVhbG1zL3RpcC1wZXJmZWN0b21vYmlsZS1jb20iLCJhdWQiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwic3ViIjoiODNkNjUxMWQtNTBmZS00ZWM5LThkNzAtYTA0ZjBkNTdiZDUyIiwidHlwIjoiT2ZmbGluZSIsImF6cCI6Im9mZmxpbmUtdG9rZW4tZ2VuZXJhdG9yIiwibm9uY2UiOiI2ZjE1YzYxNy01YTU5LTQyOWEtODc2Yi1jOTQxMTQ1ZDFkZTIiLCJzZXNzaW9uX3N0YXRlIjoiYmRjZTFmYTMtMjlkYi00MmFmLWI5YWMtYjZjZmJkMDEyOTFhIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.5R85_1R38ZFXv_wIjjCIsj8NJm1p66dCsLJI5DBEmks"}' --reservation-duration 480 "InterOp Lab - Specific Selection" 
 
       - name: set reservation outputs
         if: always()
@@ -342,13 +349,6 @@ jobs:
           additional_args: "--device='iPhone-7' --skip-lanforge"
           allure_results_artifact_name: allure-results-iphone-7
 
-      - name: stop reservation
-        if: always()
-        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
