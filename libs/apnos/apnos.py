@@ -445,6 +445,31 @@ class APNOS:
             print(e)
         return json_output
 
+    def set_maverick(self):
+        try:
+            client = self.ssh_cli_connect()
+            cmd = "/etc/init.d/ucentral stop && /usr/libexec/ucentral/maverick.sh"
+            if self.mode:
+                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                      f"cmd --value \"{cmd}\" "
+            stdin, stdout, stderr = client.exec_command(cmd)
+            output = stdout.read().replace(b":~# /etc/init.d/ucentral stop && /usr/libexec/ucentral/maverick.sh", b"").decode('utf-8')
+            o = output.split()
+            maverick_bssid_data = {}
+            for i in range(len(o)):
+                if o[i].__contains__("ESSID"):
+                    if o[i + 9].__contains__("2.4"):
+                        band = "2G"
+                    else:
+                        band = "5G"
+                    maverick_bssid_data[o[i - 1]] = [o[i + 1].replace('"', ''), o[i + 4], band]
+            client.close()
+        except Exception as e:
+            maverick_bssid_data = False
+            print(e)
+        return maverick_bssid_data
+
+
     def get_iwinfo(self):
         try:
             # [['ssid_wpa2_2g', 'wpa', 'something', '2G'], ['ssid_wpa2_2g', 'wpa', 'something', '5G']]
@@ -470,6 +495,7 @@ class APNOS:
             iwinfo_bssid_data = False
             print(e)
         return iwinfo_bssid_data
+
 
     def iwinfo(self):
         client = self.ssh_cli_connect()
