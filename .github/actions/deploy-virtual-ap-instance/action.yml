@@ -1,5 +1,5 @@
 name: Deploy virtual AP instance
-description: create EC2 instance running latest wlan-ap release and connect to gateway
+description: Create EC2 instance running latest wlan-ap release and connect to gateway
 
 inputs:
   virtual_ap_password:
@@ -27,38 +27,36 @@ outputs:
     value: ${{ steps.get_virtual_ap_facts.outputs.serial_number }}
   instance_id:
     description: ID of the created virtual AP EC2 instance
-    value: ${{ steps.get_virtual_ap_facts.outputs.instance_id }}
+    value: ${{ steps.ec2_instance.outputs.instance_id }}
 
 runs:
   using: "composite"
   steps:
     - name: Get AMI ID of most recent x64_vmware firmware image
       shell: bash
-      id: get_ami_id
+      id: set_outputs
       run: |
-        echo ::set-output name=id::"$(aws ec2 describe-images --owners self --filters 'Name=name,Values=*-x64_vmware-*' --query 'sort_by(Images, &CreationDate)[-1].ImageId' --output text)"
+        echo ::set-output name=ami::"$(aws ec2 describe-images --owners self --filters 'Name=name,Values=*-x64_vmware-*' --query 'sort_by(Images, &CreationDate)[-1].ImageId' --output text)"
+        echo ::set-output name=instance_name::openwifi-virtual-ap-${{ github.run_id }}
 
     - name: Create openwifi-virtual-ap EC2 instance
       shell: bash
+      id: ec2_instance
       run: |
-        aws ec2 run-instances --key-name openwifi-virtual-ap --security-groups openwifi-virtual-ap --instance-type t2.nano --image-id ${{ steps.get_ami_id.outputs.id }} --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=openwifi-virtual-ap-${{ github.run_number }}},{Key=Owner,Value=gha-wlan-testing}]'
+        echo ::set-output name=instance_id::"$(aws ec2 run-instances --key-name openwifi-virtual-ap --security-groups openwifi-virtual-ap --instance-type t2.nano --image-id ${{ steps.set_outputs.outputs.ami }} --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=${{ steps.set_outputs.outputs.instance_name }}},{Key=Owner,Value=gha-wlan-testing}]' | jq -r '.Instances[].InstanceId')"
 
     - name: Wait for virtual AP instance to get ready
       shell: bash
       run: |
-        INSTANCE_STATE=$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_number }}' --query 'Reservations[*].Instances[*].State.Name' --output text)
-        until [[ "$INSTANCE_STATE" == "running" ]]; do
-          echo "Virtual AP instance state is $INSTANCE_STATE, waiting for the instance to get ready."
-          INSTANCE_STATE=$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_number }}' --query 'Reservations[*].Instances[*].State.Name' --output text)
-        done
+        INSTANCE_STATE=$(aws ec2 describe-instances --instance-id ${{ steps.ec2_instance.outputs.instance_id }} --query 'Reservations[*].Instances[*].State.Name' --output text)
+        timeout 10m bash -c 'until [[ "$INSTANCE_STATE" == "running" ]]; do echo "Virtual AP instance state is $INSTANCE_STATE, waiting for the instance to get ready"; sleep 5; INSTANCE_STATE=$(aws ec2 describe-instances --instance-id ${{ steps.ec2_instance.outputs.instance_id }} --query 'Reservations[*].Instances[*].State.Name' --output text); done'
 
     - name: Get virtual AP instance facts
       shell: bash
       id: get_virtual_ap_facts
       run: |
-        echo ::set-output name=public_ip::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_number }}' --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)"
-        echo ::set-output name=serial_number::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_number }}' --query 'Reservations[*].Instances[*].NetworkInterfaces[*].MacAddress' --output text | sed 's/://g')"
-        echo ::set-output name=instance_id::"$(aws ec2 describe-instances --filters 'Name=tag:Name,Values=openwifi-virtual-ap-${{ github.run_number }}' --query 'Reservations[*].Instances[*].InstanceId' --output text)"
+        echo ::set-output name=public_ip::"$(aws ec2 describe-instances --instance-id ${{ steps.ec2_instance.outputs.instance_id }} --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)"
+        echo ::set-output name=serial_number::"$(aws ec2 describe-instances --instance-id ${{ steps.ec2_instance.outputs.instance_id }} --query 'Reservations[*].Instances[*].NetworkInterfaces[*].MacAddress' --output text | sed 's/://g')"
 
     - name: Upload AP certificate, key and dev-id to instance
       env:
