@@ -1363,7 +1363,7 @@ class RunTest:
 
     def ofdma(self, mode="BRIDGE", vlan_id=1, inst_name="ofdma", batch_size='1', rawlines=None, sniffer_channel=0,
               sniffer_radio="wiphy0", wct_stations=None, sniffer_duration=60):
-        result = 'PASS'
+
         if inst_name == "ofdma":
             inst_name = "ofdma-instance-{}".format(str(random.randint(0, 100000)))
 
@@ -1378,6 +1378,7 @@ class RunTest:
                                        batch_size=batch_size, stations=wct_stations, create_stations=False,
                                        sort="interleave",
                                        upload_rate="0", protocol="TCP-IPv4", duration="60000", raw_lines=rawlines)
+        ofdma_obj.result = 'PASS'
         while sniffer.is_alive():
             time.sleep(1)
         report_name = ofdma_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -1402,7 +1403,7 @@ class RunTest:
             table_data.append(['Beacon Frame', check_he, 'PASS'])
         else:
             table_data.append(['Beacon Frame', check_he, 'FAIL'])
-            result = 'FAIL'
+            ofdma_obj.result = 'FAIL'
 
         # check for HE Capability in probe request
         check_he = self.pcap_obj.check_he_capability_probe_request(pcap_file=self.pcap_obj.pcap_name)
@@ -1411,7 +1412,7 @@ class RunTest:
             table_data.append(['Probe Request', check_he, 'PASS'])
         else:
             table_data.append(['Probe Request', check_he, 'FAIL'])
-            result = 'FAIL'
+            ofdma_obj.result = 'FAIL'
 
         # check for HE Capability in probe response
         check_he = self.pcap_obj.check_he_capability_probe_response(pcap_file=self.pcap_obj.pcap_name)
@@ -1420,7 +1421,7 @@ class RunTest:
             table_data.append(['Probe Response', check_he, 'PASS'])
         else:
             table_data.append(['Probe Response', check_he, 'FAIL'])
-            result = 'FAIL'
+            ofdma_obj.result = 'FAIL'
 
         # check for HE Capability in Association request
         check_he = self.pcap_obj.check_he_capability_association_request(pcap_file=self.pcap_obj.pcap_name)
@@ -1429,7 +1430,7 @@ class RunTest:
             table_data.append(['Association Request', check_he, 'PASS'])
         else:
             table_data.append(['Association Request', check_he, 'FAIL'])
-            result = 'FAIL'
+            ofdma_obj.result = 'FAIL'
 
         # check for HE Capability in Association response
         check_he = self.pcap_obj.check_he_capability_association_response(pcap_file=self.pcap_obj.pcap_name)
@@ -1438,14 +1439,14 @@ class RunTest:
             table_data.append(['Association Response', check_he, 'PASS'])
         else:
             table_data.append(['Association Response', check_he, 'FAIL'])
-            result = 'FAIL'
+            ofdma_obj.result = 'FAIL'
 
         # check for Guard Interval
         check_he = self.pcap_obj.check_he_guard_interval(pcap_file=self.pcap_obj.pcap_name)
         allure.attach(body=check_he, name="Check Guard Interval")
         if check_he == "Packet Not Found" or check_he is None:
             table_data.append(['Guard Interval', check_he, 'FAIL'])
-            result = 'FAIL'
+            ofdma_obj.result = 'FAIL'
         else:
             table_data.append(['Association Request', check_he, 'PASS'])
 
@@ -1464,7 +1465,7 @@ class RunTest:
                              influx_bucket=self.influx_params["influx_bucket"],
                              path=report_name)
         influx.glob()
-        return result
+        return ofdma_obj
 
     def set_radio_channel(self, radio="1.1.wiphy0", channel="AUTO"):
         try:
