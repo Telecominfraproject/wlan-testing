@@ -1448,7 +1448,7 @@ class RunTest:
             table_data.append(['Guard Interval', check_he, 'FAIL'])
             ofdma_obj.result = 'FAIL'
         else:
-            table_data.append(['Association Request', check_he, 'PASS'])
+            table_data.append(['Guard Interval', check_he, 'PASS'])
 
         print(table_data)
         # attach test data in a table to allure
