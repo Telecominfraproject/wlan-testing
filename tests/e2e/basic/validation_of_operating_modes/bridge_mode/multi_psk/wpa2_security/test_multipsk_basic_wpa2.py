@@ -2,14 +2,14 @@
 
     Performance Test: Multi-psk Test: Bridge Mode
      pytest -m "multipsk and wpa2_personal and twog" -s -vvv --skip-testrail --testbed=basic-03 --alluredir=../allure_reports
-        wifi-3492
+        wifi-3493
 """
 import time
 
 import allure
 import pytest
 
-pytestmark = [pytest.mark.regression,
+pytestmark = [pytest.mark.ow_regression_lf,
               pytest.mark.ow_sanity_lf,
               pytest.mark.ow_multipsk_tests_lf,
               pytest.mark.bridge]
@@ -63,6 +63,7 @@ class TestMultipskBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.twogvlan1
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
     def test_client_wpa2_2g_vlan1(self, lf_test, lf_tools):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -85,9 +86,9 @@ class TestMultipskBridge(object):
         station_name.append("sta" + str(vlan_id[0]))
         station_name.append("sta00")
         print(station_name)
-        multipsk_obj = lf_test.multipsk(ssid=ssid_name, security="wpa2", mode="BRIDGE",
-                                        vlan_id=vlan_id, key1=key1, key2=key2, band=band, station_name=station_name,
-                                        n_vlan="1")
+        allure.attach(name="multipsk-config", body=str(setup_params_general["ssid_modes"]["wpa2_personal"][0]["multi-psk"]))
+        multipsk_obj = lf_test.multipsk(ssid=ssid_name,  security="wpa2", mode="BRIDGE",
+                                        vlan_id=vlan_id, key1=key1, key2=key2, band=band, station_name=station_name, n_vlan="1")
         if multipsk_obj == True:
             assert True
         else:
@@ -97,6 +98,7 @@ class TestMultipskBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.twogvlan2
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
     def test_client_wpa2_2g_vlan2(self, lf_test, lf_tools):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -124,6 +126,7 @@ class TestMultipskBridge(object):
 
         station_name.append("sta00")
         print(station_name)
+        allure.attach(name="multipsk-config", body=str(setup_params_general["ssid_modes"]["wpa2_personal"][0]["multi-psk"]))
         multipsk_obj = lf_test.multipsk(ssid=ssid_name, security="wpa2", mode="BRIDGE",
                                         vlan_id=vlan_id, key1=key1, key2=key2, band=band,
                                         station_name=station_name, n_vlan="2", key3=key3)

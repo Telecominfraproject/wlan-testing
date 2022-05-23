@@ -52,7 +52,7 @@ class TestDualbandPerformanceBRIDGE(object):
         print(lf_tools.dut_idx_mapping)
         dut_5g = ""
         dut_2g = ""
-        influx_tags = "bridge-wpa2"
+        influx_tags = "dual-band-bridge-wpa2"
         for i in lf_tools.dut_idx_mapping:
             if lf_tools.dut_idx_mapping[i][3] == "5G":
                 dut_5g = dut_name + ' ' + lf_tools.dut_idx_mapping[i][0] + ' ' + lf_tools.dut_idx_mapping[i][4]
@@ -66,4 +66,5 @@ class TestDualbandPerformanceBRIDGE(object):
                                                    vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g, influx_tags=influx_tags, move_to_influx=True)
         report_name = dbpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dual Band Performance Test Wpa2 Bridge")
+        lf_tools.attach_report_kpi(report_name=report_name)
         assert True

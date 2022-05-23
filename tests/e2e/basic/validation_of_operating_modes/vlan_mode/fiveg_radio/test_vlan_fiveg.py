@@ -7,8 +7,9 @@ import time
 import allure
 import pytest
 
-pytestmark = [pytest.mark.ow_sanity_lf,
-              pytest.mark.multi_vlan,
+
+pytestmark = [pytest.mark.ow_regression_lf,
+              pytest.mark.ow_multi_vlan_tests_lf,
               pytest.mark.fiveg]
 
 setup_params_general = {
@@ -44,6 +45,7 @@ class TestVlanConfigFivegRadio(object):
     @pytest.mark.wpa
     @pytest.mark.fiveg
     @pytest.mark.valid_client_ip_wpa_fiveg  # wifi-2169
+    @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_station_ip_wpa_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2169")
     def test_station_ip_wpa_ssid_5g(self, lf_test, lf_tools,
@@ -100,6 +102,7 @@ class TestVlanConfigFivegRadio(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.valid_client_ip_wpa2_fiveg  # wifi-2157
+    @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_station_ip_wpa2_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2157")
     def test_station_ip_wpa2_ssid_5g(self, lf_test, lf_tools,
@@ -148,6 +151,7 @@ class TestVlanConfigFivegRadio(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.disable_vlan_fiveg  # wifi-2174
+    @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_disable_vlan_wpa2_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2174")
     def test_disable_vlan_wpa2_ssid_5g(self, lf_test, lf_tools,
