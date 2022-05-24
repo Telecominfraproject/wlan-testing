@@ -407,7 +407,7 @@ class RunTest:
 
         if not self.eap_connect.passes():
             if self.debug:
-                print("test result: " + self.eap_connect.passes())
+                #print("test result: " + self.eap_connect.passes())
                 pytest.exit("Test Failed: Debug True")
         endp_data = []
         result = "PASS"
