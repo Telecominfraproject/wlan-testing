@@ -129,10 +129,10 @@ class TestUcentralGatewayService(object):
         assert resp.status_code == 200
 
     @pytest.mark.sdk_restapi
-    @pytest.mark.gw_lsdev
-    def test_gwservice_createdevice(self, setup_controller, testbed):
+    @pytest.mark.gw_cred_dev
+    def test_gwservice_create_edit_delete_device(self, setup_controller, testbed):
         """
-            Test the create device endpoint
+            Test the create & edit and delete device endpoint
             WIFI-3453
         """
         device_mac = "02:00:00:%02x:%02x:%02x" % (random.randint(0, 255),
@@ -161,6 +161,30 @@ class TestUcentralGatewayService(object):
         resp = setup_controller.get_device_by_serial_number(device_name)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Gateway create device-verify", body=body)
+        if resp.status_code != 200:
+            assert False
+
+        editing_payload = {
+                          "id": device_name,
+                          "notes": [
+                            {
+                              "note": "Testing through Automation"
+                            }
+                          ]
+                        }
+        print(json.dumps(editing_payload))
+        resp = setup_controller.edit_device_on_gw(device_name, editing_payload)
+        allure.attach(name="response: ", body=str(resp.json()))
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Gateway edited device", body=body)
+        if resp.status_code != 200:
+            assert False
+        devices = json.loads(resp.text)
+        print(devices)
+
+        resp = setup_controller.get_device_by_serial_number(device_name)
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Gateway edited device-verify", body=body)
         if resp.status_code != 200:
             assert False
 
@@ -363,3 +387,14 @@ class TestUcentralGatewayService(object):
         resp = setup_controller.telemetry(device_name, payload)
         print(resp.json())
         allure.attach(name="Device telemetry status", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+
+    @pytest.mark.gw_rtty
+    def test_gw_service_get_rtty(self, setup_controller, get_configuration):
+        """
+            Test the device rtty parameters in Gateway UI
+        """
+        device_name = get_configuration['access_point'][0]['serial']
+        resp = setup_controller.get_rtty_params(device_name)
+        print(resp.json())
+        allure.attach(name="Device RTTY parameters", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
