@@ -75,7 +75,7 @@ class TestOfdmaNatMode(object):
                     if i[item]['port type'] == 'WIFI-STA':
                         sta_names += item + ","
             if sta_names.endswith(','):
-                sta_names.removesuffix(',')
+                sta_names.rstrip(',')
             ofdma_obj = lf_test.ofdma(mode=mode, vlan_id=vlan, inst_name="ofdma", batch_size='1', rawlines=None,
                                       sniffer_channel=sniffer_channel, sniffer_radio=sniffer_radio,
                                       wct_stations=sta_names)
