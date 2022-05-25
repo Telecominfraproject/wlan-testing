@@ -295,7 +295,7 @@ def client(request):
 def skip_pcap(request):
     """yields the --skip-pcap option for skipping the packet capture for sanity"""
     var = request.config.getoption("--skip-pcap")
-    yield varg
+    yield var
 
 
 @pytest.fixture(scope="session")
