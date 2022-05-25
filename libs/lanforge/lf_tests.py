@@ -1302,7 +1302,6 @@ class RunTest:
         influx.glob()
         return self.cvtest_obj
 
-
     def scan_ssid(self, radio=""):
         '''This method for scan ssid data'''
         list_data = []
