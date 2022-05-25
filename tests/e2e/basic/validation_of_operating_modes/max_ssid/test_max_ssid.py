@@ -305,9 +305,9 @@ class TestMoreThanEightSsid5G(object):
         security_key = "something"
         security_list = ["open", "wpa", "wpa2", "wpa3"]
         sta_list = []
-        for i in setup_params_general["ssid_modes"]:
-            for j in range(len(setup_params_general["ssid_modes"][i])):
-                profile_data = setup_params_general["ssid_modes"][i][j]
+        for i in setup_params_general3["ssid_modes"]:
+            for j in range(len(setup_params_general3["ssid_modes"][i])):
+                profile_data = setup_params_general3["ssid_modes"][i][j]
                 ssid_name = profile_data["ssid_name"]
                 security = security_list[count_security]
                 station_names = station_names_fiveg[0] + str(int(station_names_fiveg[0][-1]) + sta_count)
@@ -319,7 +319,7 @@ class TestMoreThanEightSsid5G(object):
                 sta_count += 1
             count_security += 1
         fail_list = list(filter(lambda x : x == False, pass_list))
-        if len(fail_list) == pass_list:
+        if len(fail_list) == len(pass_list):
             lf_test.Client_disconnect(sta_list)
             allure.attach(name="Definition",
                           body="Max-SSID test intends to verify stability of Wi-Fi device " \
