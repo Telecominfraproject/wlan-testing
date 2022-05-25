@@ -8,20 +8,19 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.rx_sensitivity_test, pytest.mark.nat,
-              pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.rx_sensitivity_test, pytest.mark.nat]
 
 setup_params_general = {
     "mode": "NAT",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["is2dot4GHz"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["is5GHzU", "is5GHz", "is5GHzL"],
+            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G-upper", "5G", "5G-lower"],
              "security_key": "something"}]},
     "rf": {
-        "is5GHz": {"channelBandwidth": "is20MHz"},
-        "is5GHzL": {"channelBandwidth": "is20MHz"},
-        "is5GHzU": {"channelBandwidth": "is20MHz"}},
+        "5G": {"channel-width": 20},
+        "5G-lower": {"channel-width": 20},
+        "5G-upper": {"channel-width": 20}},
     "radius": False,
 
     "attenuator": {
@@ -45,8 +44,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs0
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs0_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs0_nss1_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -67,9 +65,7 @@ class TestRxSensitivityNAT5G(object):
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2],
                      ["show_3s: 1"], ['txo_txpower: 15'], ['path_loss: 23'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -98,8 +94,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs1
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs1_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs1_nss1_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -119,9 +114,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -151,8 +144,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs2
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs2_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs2_nss1_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -172,9 +164,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -204,8 +194,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs3
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs3_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs3_nss1_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -225,9 +214,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -256,8 +243,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs4
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs4_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs4_nss1_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -277,9 +263,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -309,8 +293,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs5
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs5_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs5_nss1_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -330,9 +313,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -361,8 +342,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs6
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs6_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs6_nss1_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -382,9 +362,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -414,8 +392,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs7
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs7_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs7_nss1_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -435,9 +412,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -466,8 +441,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs8
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs8_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs8_nss1_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -487,9 +461,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -519,8 +491,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs9
     @pytest.mark.nss1
-    def test_client_wpa2_personal_mcs9_nss1_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs9_nss1_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -540,9 +511,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_fiveg, vlan_id=vlan)
@@ -572,8 +541,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs0
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs0_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs0_nss2_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -593,9 +561,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 2'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -625,8 +591,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs1
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs1_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs1_nss2_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -646,9 +611,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 2'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -678,8 +641,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs2
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs2_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs2_nss2_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -699,9 +661,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 2'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -731,8 +691,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs3
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs3_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs3_nss2_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -752,9 +711,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 2'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -784,8 +741,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs4
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs4_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs4_nss2_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -805,9 +761,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -837,8 +791,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs5
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs5_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs5_nss2_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -858,9 +811,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 2'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -890,8 +841,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs6
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs6_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs6_nss2_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -911,9 +861,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 2'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -943,8 +891,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs7
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs7_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs7_nss2_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -964,9 +911,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 2'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -996,8 +941,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs8
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs8_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs8_nss2_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1017,9 +961,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 2'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -1049,8 +991,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs9
     @pytest.mark.nss2
-    def test_client_wpa2_personal_mcs9_nss2_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs9_nss2_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1070,9 +1011,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 2'], ['bandw_options: 20'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -1103,8 +1042,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs0
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs0_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs0_nss3_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1124,9 +1062,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -1156,8 +1092,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs1
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs1_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs1_nss3_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1177,9 +1112,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -1209,8 +1142,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs2
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs2_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs2_nss3_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1230,9 +1162,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -1262,8 +1192,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs3
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs3_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs3_nss3_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1283,9 +1212,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -1315,8 +1242,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs4
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs4_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs4_nss3_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1336,9 +1262,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -1368,8 +1292,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs5
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs5_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs5_nss3_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1389,9 +1312,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -1421,8 +1342,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs6
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs6_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs6_nss3_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1442,9 +1362,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -1474,8 +1392,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs7
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs7_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs7_nss3_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1495,9 +1412,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -1527,8 +1442,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs8
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs8_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs8_nss3_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1548,9 +1462,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -1580,8 +1492,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs9
     @pytest.mark.nss3
-    def test_client_wpa2_personal_mcs9_nss3_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs9_nss3_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1601,9 +1512,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 3'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -1634,8 +1543,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs0
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs0_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs0_nss4_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1655,9 +1563,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -1687,8 +1593,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs1
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs1_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs1_nss4_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1708,9 +1613,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -1740,8 +1643,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs2
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs2_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs2_nss4_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1761,9 +1663,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -1793,8 +1693,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs3
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs3_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs3_nss4_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1814,9 +1713,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -1846,8 +1743,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs4
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs4_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs4_nss4_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1867,9 +1763,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -1899,8 +1793,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs5
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs5_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs5_nss4_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1920,9 +1813,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -1952,8 +1843,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs6
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs6_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs6_nss4_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -1973,9 +1863,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -2005,8 +1893,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs7
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs7_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs7_nss4_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -2026,9 +1913,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -2058,8 +1943,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs8
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs8_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs8_nss4_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -2079,9 +1963,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -2111,8 +1993,7 @@ class TestRxSensitivityNAT5G(object):
     @pytest.mark.fiveg
     @pytest.mark.mcs9
     @pytest.mark.nss4
-    def test_client_wpa2_personal_mcs9_nss4_5g(self, get_vif_state,
-                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_mcs9_nss4_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity nat Mode
            pytest -m "rx_sensitivity_test and nat and wpa2_personal and fiveg"
@@ -2132,9 +2013,7 @@ class TestRxSensitivityNAT5G(object):
                      ['spatial_streams: 4'], ['bandw_options: 80'], ['txo_sgi: ON'],
                      ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2], ["show_3s: 1"], ['txo_txpower: 17'], ['path_loss: 10'],
                      ["show_ll_graphs: 1"], ["show_log: 1"]]
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+        
 
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
@@ -2158,3 +2037,5 @@ class TestRxSensitivityNAT5G(object):
             assert station
         else:
             assert False
+# todo:
+# debug rf - chn bw
