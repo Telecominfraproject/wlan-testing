@@ -881,6 +881,21 @@ class UProfileUtility:
             "channel-mode": "HE",
             "channel": "auto"
         }
+        base_radio_config_5g_upper = {
+            "band": "5G-upper",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "HE",
+            "channel": "auto"
+        }
+        base_radio_config_5g_lower = {
+            "band": "5G-lower",
+            "country": "CA",
+            "allow-dfs": True,
+            "channel-mode": "HE",
+            "channel": "auto"
+        }
+
         for band in radio_config:
             if band == "2G":
                 for keys in radio_config[band]:
@@ -888,6 +903,14 @@ class UProfileUtility:
             if band == "5G":
                 for keys in radio_config[band]:
                     base_radio_config_5g[keys] = radio_config[band][keys]
+            if band == "5G-upper":
+                for keys in radio_config[band]:
+                    base_radio_config_5g_upper[keys] = radio_config[band][keys]
+                self.base_profile_config["radios"].append(base_radio_config_5g_upper)
+            if band == "5G-lower":
+                for keys in radio_config[band]:
+                    base_radio_config_5g_lower[keys] = radio_config[band][keys]
+                self.base_profile_config["radios"].append(base_radio_config_5g_lower)
             # if band == "6G":
             #     for keys in radio_config[band]:
             #         base_radio_config_6g[keys] = radio_config[band][keys]
