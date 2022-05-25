@@ -170,6 +170,7 @@ class TestResources(object):
         allure.attach(name="SDK Pointed by AP: ", body=str(get_uci_show.split("=")[1]))
         for ap in get_configuration["access_point"]:
             out = setup_controller.get_device_by_serial_number(serial_number=ap["serial"])
+            out = out.json()
             if "ErrorCode" in out.keys():
                 print(out)
                 allure.attach(name="Error Device not found in Gateway: ", body=str(out))
@@ -318,6 +319,7 @@ class TestFMS(object):
             ap_version = ap_ssh.get_ap_version_ucentral()
             current_version_ap = str(ap_version).split()
             data = setup_controller.get_device_by_serial_number(serial_number=ap['serial'])
+            data = data.json()
             allure.attach(name=str(data['firmware']) + str(current_version_ap), body="")
             status.append(current_version_ap == data['firmware'].split())
         assert False not in status
