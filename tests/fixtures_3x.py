@@ -283,7 +283,8 @@ class Fixtures_3x:
                         if parameter["ft-dot1x"] == True:
                             instantiate_profile_obj.enable_ft_dot1x_wpa3(ssid=lf_dut_data[2]['ssid_name'])
                         if parameter["ft-dot1x_sha256"] == True:
-                            instantiate_profile_obj.enable_ft_dot1x_sha256_wpa3(ssid=lf_dut_data[2]['ssid_name'])
+                            instantiate_profile_obj.enable_ft_dot1x_sha256_wpa3(ssid=lf_dut_data[2]['ssid_name'],
+                                                                                radius=get_configuration['controller']["radius"])
                         instantiate_profile_obj.get_ssids()
 
         twog_sum = instantiate_profile_obj.show_2ghz_summary()
@@ -379,7 +380,7 @@ class Fixtures_3x:
         #              [['ssid_idx=0 ssid=ssid_wpa2_2g security=WPA2 password=something bssid=14:16:9d:53:58:c0'],
         #               ['ssid_idx=1 ssid=ssid_wpa2_5g security=WPA2 password=something bssid=14:16:9d:53:58:ce']]]
         lf_tools.create_non_meh_dut(ssid_data=ssid_data_list)
-        table1 = [["show ap summarry", "done"], ["Configure wlan", "done"], ["configure channel/width", "done"],
+        table1 = [["show ap summary", "done"], ["Configure wlan", "done"], ["configure channel/width", "done"],
                   ["ap admin state up", "done"], ["checking admin state of ap", "done"],
                   ["sniffer capture", "done"],
                   ["client connect", "don"], ["roam", "done"], ["sniffer verification", "done"],
