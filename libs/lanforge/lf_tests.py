@@ -2487,7 +2487,7 @@ class RunTest:
     def hard_roam(self, run_lf, instantiate_profile, lf_tools, lf_reports, get_configuration, test=None, band=None, num_sta=1,
                   security=None, security_key=None,  iteration=1, ssid_name=None,
                   roaming_delay=None, option=None, channel=36, duration=None, duration_based=False,
-                  iteration_based=True, dut_name=None):
+                  iteration_based=True, dut_name=None, identity=None, ttls_pass=None):
         allure.attach(name="Test Procedure", body="This test consists of creating a multiple  client which will be " \
                                                   " connected to the nearest ap, here the test automation will " \
                                                   "do hard roam based on forced roam method" \
@@ -2629,13 +2629,15 @@ class RunTest:
                        ap="AP687D.B45C.1D1C",
                        port="8888",
                        band_cc="5g",
-                       timeout="10"
+                       timeout="10",
+                       identity = identity,
+                       ttls_pass = ttls_pass
                        )
         x = os.getcwd()
         print(x)
         file = obj.generate_csv()
-        kernel = obj.run(file_n=file)
-        # allure.attach(name="message", body=str(message))
+        kernel, message  = obj.run(file_n=file)
+        allure.attach(name="message", body=str(message))
         # file = ["test_client_0.csv"]
         report_dir_name = obj.generate_report(csv_list=file, kernel_lst=kernel, current_path=str(x) + "/tests")
         print(report_dir_name)
