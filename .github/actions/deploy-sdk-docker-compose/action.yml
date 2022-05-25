@@ -1,4 +1,5 @@
-name: Deploy SDK with Docker Compose on EC2
+name: Deploy cloud SDK instance with Docker Compose
+description: Create EC2 instance and run Docker Compose cloud SDK deployment
 
 inputs:
   deployment_version:
@@ -54,9 +55,9 @@ outputs:
   instance_id:
     value: ${{ steps.ec2_instance.outputs.instance_id }}
   instance_name:
-    value: ${{ steps.ec2_facts.outputs.instance_name }}
+    value: ${{ steps.set_outputs.outputs.instance_name }}
   instance_public_ip:
-    value: ${{ steps.ec2_instance.outputs.instance_public_ip }}
+    value: ${{ steps.get_instance_public_ip.outputs.ip }}
 
 runs:
   using: "composite"
@@ -65,15 +66,10 @@ runs:
       shell: bash
       id: set_outputs
       run: |
-        echo "::set-output name=gateway_url::ow-docker-compose-${{ github.run_number }}.wlan.local"
-        echo "::set-output name=sec_url::ow-docker-compose-${{ github.run_number }}.wlan.local"
-
-    - name: Set EC2 facts
-      shell: bash
-      id: ec2_facts
-      run: |
+        echo "::set-output name=gateway_url::ow-docker-compose-${{ github.run_id }}.wlan.local"
+        echo "::set-output name=sec_url::ow-docker-compose-${{ github.run_id }}.wlan.local"
         AMI=$(aws ec2 describe-images --filters '[{"Name":"description","Values":["Canonical, Ubuntu, 20.04 LTS, amd64*"]},{"Name":"owner-id","Values":["099720109477"]}]' --query 'sort_by(Images, &CreationDate)[-1].ImageId' --output text)
-        INSTANCE_NAME=ow-docker-compose-${{ github.run_number }}
+        INSTANCE_NAME=ow-docker-compose-${{ github.run_id }}
         echo "::set-output name=ami::${AMI}"
         echo "::set-output name=instance_name::${INSTANCE_NAME}"
 
@@ -87,11 +83,19 @@ runs:
       shell: bash
       id: ec2_instance
       run: |
-        aws ec2 run-instances --key-name $EC2_KEY_NAME --subnet-id $VPC_SUBNET_ID --security-group-ids $EC2_SECURITY_GROUP_ID --instance-type $EC2_INSTANCE_TYPE --image-id ${{ steps.ec2_facts.outputs.ami }} --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=${{ steps.ec2_facts.outputs.instance_name }}},{Key=Owner,Value=gha-wlan-testing}]" --output text
-        INSTANCE_PUBLIC_IP=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.ec2_facts.outputs.instance_name }}" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
-        INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.ec2_facts.outputs.instance_name }}" --query 'Reservations[*].Instances[*].InstanceId' --output text)
-        echo "::set-output name=instance_public_ip::${INSTANCE_PUBLIC_IP}"
-        echo "::set-output name=instance_id::${INSTANCE_ID}"
+        echo ::set-output name=instance_id::"$(aws ec2 run-instances --key-name $EC2_KEY_NAME --subnet-id $VPC_SUBNET_ID --security-group-ids $EC2_SECURITY_GROUP_ID --instance-type $EC2_INSTANCE_TYPE --image-id ${{ steps.set_outputs.outputs.ami }} --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=${{ steps.set_outputs.outputs.instance_name }}},{Key=Owner,Value=gha-wlan-testing}]' | jq -r '.Instances[].InstanceId')"
+
+    - name: Wait for cloud SDK instance to get ready
+      shell: bash
+      run: |
+        INSTANCE_STATE=$(aws ec2 describe-instances --instance-id ${{ steps.ec2_instance.outputs.instance_id }} --query 'Reservations[*].Instances[*].State.Name' --output text)
+        timeout 10m bash -c 'until [[ "$INSTANCE_STATE" == "running" ]]; do echo "Cloud SDK instance state is $INSTANCE_STATE, waiting for the instance to get ready"; sleep 5; INSTANCE_STATE=$(aws ec2 describe-instances --instance-id ${{ steps.ec2_instance.outputs.instance_id }} --query 'Reservations[*].Instances[*].State.Name' --output text); done'
+
+    - name: Get cloud SDK instance public IP
+      shell: bash
+      id: get_instance_public_ip
+      run: |
+        echo ::set-output name=ip::"$(aws ec2 describe-instances --instance-id ${{ steps.ec2_instance.outputs.instance_id }} --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)"
 
     # Deploy target CloudSDK into EC2 instance
     - name: Save SSH key for access to EC2 instance
@@ -105,10 +109,9 @@ runs:
     - name: Try connecting to EC2 instance and install Docker
       shell: bash
       run: |
-        until ssh -o "StrictHostKeyChecking accept-new" -i ssh_key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }}; do
-            sleep 5
-        done
-        ssh -i ssh_key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }} << EOF
+        timeout 10m bash -c 'until ssh -o "StrictHostKeyChecking accept-new" -i ssh_key.pem ubuntu@${{ steps.get_instance_public_ip.outputs.ip }}; do sleep 5; done'
+
+        ssh -i ssh_key.pem ubuntu@${{ steps.get_instance_public_ip.outputs.ip }} << EOF
           sudo -i;
           apt-get update && apt-get install -y ca-certificates curl gnupg lsb-release python3-pip jq git;
           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg;
@@ -121,7 +124,7 @@ runs:
           "log-driver": "syslog",
           "log-opts": {
           "syslog-address": "tcp://k8s-monitori-logstash-fdd0ff34dd-2abb6df4e49f3d1a.elb.us-east-2.amazonaws.com:514",
-          "tag": "{{.Name}}/ow-docker-compose-${{ github.run_number }}"
+          "tag": "{{.Name}}/ow-docker-compose-${{ github.run_id }}"
           }
         }
         EOT
@@ -131,7 +134,7 @@ runs:
     - name: Deploy target CloudSDK in EC2
       shell: bash
       run: |
-        ssh -i ssh_key.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }} << EOF
+        ssh -i ssh_key.pem ubuntu@${{ steps.get_instance_public_ip.outputs.ip }} << EOF
           sudo -i;
           git clone https://github.com/Telecominfraproject/wlan-cloud-ucentral-deploy.git;
           cd wlan-cloud-ucentral-deploy;
@@ -179,5 +182,5 @@ runs:
           -e OWSEC_NEW_PASSWORD \
           -e CHECK_RETRIES \
           -e FLAGS \
-          --add-host ow-docker-compose-${{ github.run_number }}.wlan.local:${{ steps.ec2_instance.outputs.instance_public_ip }} \
+          --add-host ${{ steps.set_outputs.outputs.instance_name }}.wlan.local:${{ steps.get_instance_public_ip.outputs.ip }} \
           tip-tip-wlan-cloud-ucentral.jfrog.io/clustersysteminfo:main
