@@ -37,7 +37,7 @@ on:
         default: ""
         description: "Use an existing cloud controller, e.g. like qa01 instead of dynamic one"
   schedule:
-    - cron: "0 21 * * 0-5"
+    - cron: "30 20 * * 0-4"
 
 jobs:
   # Set vars
