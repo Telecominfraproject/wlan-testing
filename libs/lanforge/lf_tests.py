@@ -62,7 +62,10 @@ from lf_sniff_radio import SniffRadio
 cv_test_reports = importlib.import_module("py-json.cv_test_reports")
 lf_report = cv_test_reports.lanforge_reports
 realm = importlib.import_module("py-json.realm")
+cv_test_reports = importlib.import_module("py-json.cv_test_reports")
+lf_report = cv_test_reports.lanforge_reports
 Realm = realm.Realm
+
 
 
 class RunTest:
@@ -375,10 +378,10 @@ class RunTest:
             # sta_url = self.eap_connect.get_station_url(sta_name)
             # station_info = self.eap_connect.json_get(sta_url)
             station_info = self.eap_connect.json_get("port/1/1/" + sta_name)
+
             if d_vlan:
                 if "ip" in station_info["interface"].keys():
                     self.station_ip[sta_name] = station_info["interface"]["ip"]
-
             dict_data = station_info["interface"]
             dict_table["After"] = list(dict_data.values())
             try:
@@ -404,7 +407,7 @@ class RunTest:
 
         if not self.eap_connect.passes():
             if self.debug:
-                print("test result: " + self.eap_connect.passes())
+                #print("test result: " + self.eap_connect.passes())
                 pytest.exit("Test Failed: Debug True")
         endp_data = []
         result = "PASS"
@@ -497,7 +500,7 @@ class RunTest:
 
     def Client_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog",
                        vlan_id=100,
-                       station_name=[]):
+                       station_name=[], scan_ssid=True):
         if band == "twog":
             if self.run_lf:
                 ssid = self.ssid_data["2g-ssid"]
@@ -526,7 +529,8 @@ class RunTest:
         if band == "ax":
             self.client_connect.radio = self.ax_radios[0]
         print("scan ssid radio", self.client_connect.radio.split(".")[2])
-        self.data_scan_ssid = self.scan_ssid(radio=self.client_connect.radio.split(".")[2])
+        if scan_ssid:
+            self.data_scan_ssid = self.scan_ssid(radio=self.client_connect.radio.split(".")[2])
         print("ssid scan data :- ", self.data_scan_ssid)
         self.client_connect.build()
         result = self.client_connect.wait_for_ip(station_list=station_name, timeout_sec=100)
@@ -1170,7 +1174,7 @@ class RunTest:
         raw_line = []
         skip_twog = '1' if skip_2g else '0'
         skip_fiveg = '1' if skip_5g else '0'
-        sniff_radio = 'wiphy6'
+        sniff_radio = 'wiphy0'
         channel = 149 if skip_2g else 11
         upstream_port = self.upstream_port
 
@@ -1180,13 +1184,51 @@ class RunTest:
                 ['Multiple STAs Performance', '0'], ['Multiple Assoc Stability', '0'], ['Downlink MU-MIMO', '1'],
                 ['AP Coexistence', '0'], ['Long Term Stability', '0'], ['Skip 2.4Ghz Tests', f'{skip_twog}'],
                 ['Skip 5Ghz Tests', f'{skip_fiveg}'], ['2.4Ghz Channel', 'AUTO'], ['5Ghz Channel', 'AUTO']]
-        for i in range(6):
-            if i == 0 or i == 2:
-                raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
-            if i == 1 or i == 3:
-                raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
-            if i == 4 or i == 5:
-                raw_line.append([f'radio-{i}: {radios_ax[0] if i == 4 else radios_ax[1]}'])
+        if len(radios_2g) >= 3 and len(radios_5g) >= 3:
+            for i in range(6):
+                if i == 0 or i == 2:
+                    raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
+                if i == 1 or i == 3:
+                    raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
+                if i == 4 or i == 5:
+                    raw_line.append([f'radio-{i}: {radios_5g[2] if i == 4 else radios_2g[2]}'])
+            if len(radios_ax) >= 1:
+                temp_ax = str(radios_ax[0]).split(" ")
+                if len(temp_ax) == 2:
+                    sniff_radio = str(temp_ax[1])
+            elif skip_2g:
+                temp = str(radios_5g[0]).split(" ")
+                if len(temp) == 2:
+                    sniff_radio = str(temp[1])
+            elif skip_5g:
+                temp = str(radios_2g[0]).split(" ")
+                if len(temp) == 2:
+                    sniff_radio = str(temp[1])
+        elif len(radios_2g) >= 2 and len(radios_5g) >= 2 and len(radios_ax) >= 2:
+            if len(radios_2g) >= 3 and len(radios_5g) >= 3:
+                for i in range(6):
+                    if i == 0 or i == 2:
+                        raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
+                    if i == 1 or i == 3:
+                        raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
+                    if i == 4 or i == 5:
+                        raw_line.append([f'radio-{i}: {radios_5g[2] if i == 4 else radios_2g[2]}'])
+                if len(radios_ax) >= 1:
+                    temp_ax = str(radios_ax[0]).split(" ")
+                    if len(temp_ax) == 2:
+                        sniff_radio = str(temp_ax[1])
+            else:
+                for i in range(6):
+                    if i == 0 or i == 2:
+                        raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
+                    if i == 1 or i == 3:
+                        raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
+                    if i == 4 or i == 5:
+                        raw_line.append([f'radio-{i}: {radios_ax[0] if i == 4 else radios_ax[1]}'])
+                if len(radios_ax) >= 3:
+                    temp_ax = str(radios_ax[2]).split(" ")
+                    if len(temp_ax) == 2:
+                        sniff_radio = str(temp_ax[1])
 
         if len(raw_line) != 6:
             raw_line = [['radio-0: 1.1.5 wiphy1'], ['radio-1: 1.1.4 wiphy0'], ['radio-2: 1.1.7 wiphy3'],
@@ -1204,7 +1246,7 @@ class RunTest:
         else:
             upstream_port = self.upstream_port + "." + str(vlan_id)
         print("Upstream Port: ", self.upstream_port)
-
+        print("radio used to sniff :", sniff_radio)
         self.pcap_obj = LfPcap(host=self.lanforge_ip, port=self.lanforge_port)
         self.cvtest_obj = TR398Test(lf_host=self.lanforge_ip,
                                     lf_port=self.lanforge_port,
@@ -1228,14 +1270,27 @@ class RunTest:
         self.cvtest_obj.setup()
         t1 = threading.Thread(target=self.cvtest_obj.run)
         t1.start()
-        # t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 60))
-        # if t1.is_alive():
-        #     time.sleep(180)
-        #     t2.start()
+        if t1.is_alive():
+            time.sleep(150)
+            t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 45))
+            t2.start()
         while t1.is_alive():
             time.sleep(1)
         if os.path.exists("mu-mimo-config.txt"):
             os.remove("mu-mimo-config.txt")
+        # pull pcap from lanforge to current directory
+        if self.pcap_obj.pcap_name is not None:
+            lf_report.pull_reports(hostname=self.lanforge_ip, port=self.lanforge_ssh_port, username="lanforge",
+                                   password="lanforge", report_location="/home/lanforge/" + self.pcap_obj.pcap_name,
+                                   report_dir=".")
+        else:
+            raise ValueError("pcap_name should not be None")
+
+        # check for mu-mimo bearmformee association request
+        assoc_req = self.pcap_obj.check_beamformee_association_request(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=assoc_req, name="Check Bearmformee Association Request")
+        allure.attach.file(source=self.pcap_obj.pcap_name,
+                           name="pcap_file", attachment_type=allure.attachment_type.PCAP)
 
         report_name = self.cvtest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
@@ -1246,9 +1301,6 @@ class RunTest:
                              path=report_name)
         influx.glob()
         return self.cvtest_obj
-
-        print(f"Lanforge-radio Country changed {_country_num}")
-        self.local_realm.json_post("/cli-json/set_wifi_radio", _data=data)
 
     def scan_ssid(self, radio=""):
         '''This method for scan ssid data'''
@@ -1339,7 +1391,7 @@ class RunTest:
                           body="Country code channel test intends to verify stability of Wi-Fi device " \
                                "where the AP is configured with different countries with different channels.")
             allure.attach(name="Procedure",
-                          body=f"This test case definition states that we push the basic {mode.lower()} mode config on the AP to "
+                          body=f"This test case definition states that we need to push the basic {mode.lower()} mode config on the AP to "
                                f"be tested by configuring it with {country} on {channel_width}MHz channel width and "
                                f"channel {channel}. Create a client on {'5' if band=='fiveg' else '2.4'} GHz radio. Pass/ fail criteria: "
                                f"The client created on {'5' if band=='fiveg' else '2.4'} GHz radio should get associated to the AP")
@@ -1486,6 +1538,82 @@ class RunTest:
             time.sleep(2)
         except Exception as e:
             print(e)
+
+    def layer3_traffic(self, ssid_num=8, band="2.4 Ghz", station_name=[]):
+        self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
+        self.staConnect.station_profile = self.staConnect.new_station_profile()
+        self.staConnect.resource = 1
+        self.staConnect.station_names = station_name
+        self.staConnect.runtime_secs = 40
+        self.staConnect.bringup_time_sec = 80
+        self.staConnect.cleanup_on_exit = True
+        self.staConnect.station_profile.up = True
+        self.staConnect.use_existing_sta = True
+        allure.attach(name="Definition",
+                      body="Max-SSID test intends to verify stability of Wi-Fi device " \
+                         "where the AP is configured with max no.of SSIDs with different security modes.")
+        allure.attach(name="Procedure",
+                      body=f"This test case definition states that we need to push the basic bridge mode config on the "
+                           f"AP to be tested by configuring it with maximum {ssid_num} SSIDs in {band} radio. "
+                           f"Create client on each SSIDs and run Layer-3 traffic. Pass/ fail criteria: "
+                           f"The client created should get associated to the AP")
+        # Create UDP endpoints
+        self.staConnect.l3_udp_profile = self.staConnect.new_l3_cx_profile()
+        self.staConnect.l3_udp_profile.report_timer = 1000
+        self.staConnect.l3_udp_profile.name_prefix = "udp"
+        self.staConnect.cx_profile.name_prefix = "udp"
+        self.staConnect.pre_cleanup()
+        self.staConnect.l3_udp_profile.create(endp_type="lf_udp",
+                                   side_a=station_name,
+                                   side_b="%d.%s" % (self.staConnect.resource, self.upstream_port),
+                                   suppress_related_commands=True)
+
+        # Create TCP endpoints
+        self.staConnect.l3_tcp_profile = self.staConnect.new_l3_cx_profile()
+        self.staConnect.l3_tcp_profile.report_timer = 1000
+        self.staConnect.l3_tcp_profile.name_prefix = "tcp"
+        self.staConnect.cx_profile.name_prefix = "tcp"
+        self.staConnect.pre_cleanup()
+        self.staConnect.l3_tcp_profile.create(endp_type="lf_tcp",
+                                   side_a=station_name,
+                                   side_b="%d.%s" % (self.staConnect.resource, self.upstream_port),
+                                   suppress_related_commands=True)
+        self.staConnect.start()
+        print("napping %f sec" % self.staConnect.runtime_secs)
+        time.sleep(self.staConnect.runtime_secs)
+        count = 0
+        report_obj = Report()
+        for station_info in self.staConnect.resulting_stations:
+            data_table, dict_table = "", {}
+            dict_data = self.staConnect.resulting_stations[station_info]["interface"]
+            dict_table["Interface"] = list(dict_data.keys())
+            dict_table["Value"] = list(dict_data.values())
+            try:
+                data_table = report_obj.table2(table=dict_table, headers='keys')
+            except Exception as e:
+                print(e)
+            allure.attach(name=str(self.staConnect.resulting_stations[station_info]["interface"]['alias']), body=data_table)
+            data_table = ""
+            dict_table.clear()
+            cx = list(self.staConnect.l3_tcp_profile.created_cx.keys())[count]
+            dict_data = self.staConnect.json_get(f"/cx/{cx}")
+            dict_table["Cross-connect"] = list(dict_data[cx].keys())
+            dict_table["tcp-Value"] = list(dict_data[cx].values())
+            try:
+                data_table = report_obj.table2(table=dict_table, headers='keys')
+            except Exception as e:
+                print(e)
+            cx = list(self.staConnect.l3_udp_profile.created_cx.keys())[count]
+            dict_data = self.staConnect.json_get(f"/cx/{cx}")
+            dict_table["udp-Value"] = list(dict_data[cx].values())
+            try:
+                data_table = report_obj.table2(table=dict_table, headers='keys')
+            except Exception as e:
+                print(e)
+            allure.attach(name="cx-" + str(self.staConnect.resulting_stations[station_info]["interface"]['alias']), body=str(data_table))
+            count += 1
+        self.staConnect.stop()
+        self.staConnect.cleanup()
 
 
 if __name__ == '__main__':

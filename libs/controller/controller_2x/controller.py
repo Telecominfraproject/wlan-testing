@@ -216,6 +216,7 @@ class Controller(ConfigureController):
 
     def get_device_uuid(self, serial_number):
         device_info = self.get_device_by_serial_number(serial_number=serial_number)
+        device_info = device_info.json()
         return device_info["UUID"]
 
     def add_device_to_gw(self, serial_number, payload):
@@ -366,6 +367,24 @@ class Controller(ConfigureController):
         print(resp)
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
+
+    def get_rtty_params(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/rtty")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def edit_device_on_gw(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
 
 class FMSUtils:
 
