@@ -1124,7 +1124,7 @@ class Fixtures_2x:
         create_dut = lf_tools.create_mesh_dut(ssid_data=dut_final_data)
 
         #create mesh scenario
-        mesh_scenario = lf_tools.create_mesh_scenario()
+        #mesh_scenario = lf_tools.create_mesh_scenario()
 
         #check for all ap are connected and is pinging
         for length in range(0, len(get_configuration['access_point'])):
