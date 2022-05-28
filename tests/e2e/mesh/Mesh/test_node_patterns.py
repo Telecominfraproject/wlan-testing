@@ -44,8 +44,6 @@ class TestNodePatters(object):
         mesh_o = lf_test.mesh_test(instance_name="node_patterns_ABC", raw_lines=raw_lines)
         report_name = mesh_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         print("report name ", report_name)
-        entries = os.listdir("../reports/" + report_name + '/')
-        print("entries", entries)
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Node patterns")
 
         assert True
