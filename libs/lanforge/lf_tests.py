@@ -288,6 +288,8 @@ class RunTest:
 
         self.eap_connect.station_profile.sta_mode = 0
         self.eap_connect.upstream_resource = self.upstream_resource
+        self.eap_connect.l3_cx_obj_udp.upstream_resource = self.upstream_resource
+        self.eap_connect.l3_cx_obj_tcp.upstream_resource = self.upstream_resource
         if mode == "BRIDGE":
             self.eap_connect.l3_cx_obj_udp.upstream = self.upstream_port
             self.eap_connect.l3_cx_obj_tcp.upstream = self.upstream_port
