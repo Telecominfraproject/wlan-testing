@@ -9,7 +9,7 @@
         },
         "access_point": [
             {
-                "model": "edgecore_eap102_1",
+                "model": "edgecore_eap102",
                 "mode": "wifi6",
                 "serial": "903cb3bd7299",
                 "jumphost": true,
@@ -546,7 +546,7 @@
             {
                 "model": "cig_wf196",
                 "mode": "wifi6",
-                "serial": "00037fbadbad",
+                "serial": "824f816011e4",
                 "jumphost": true,
                 "ip": "10.28.3.115",
                 "username": "lanforge",
