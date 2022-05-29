@@ -91,7 +91,7 @@ jobs:
           marker_expression: "ow_regression_lf and ow_dfs_tests_lf"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-dfs
+          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-ow_dfs_tests_lf
 
         # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
@@ -108,7 +108,7 @@ jobs:
           marker_expression: "ow_regression_lf and ow_multipsk_tests_lf"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-multipsk
+          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-ow_multipsk_tests_lf
 
         # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
@@ -125,7 +125,7 @@ jobs:
           marker_expression: "ow_regression_lf and ow_rate_limiting_tests_lf"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-rate-limiting
+          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-ow_rate_limiting_tests_lf
 
         # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
@@ -142,7 +142,7 @@ jobs:
           marker_expression: "ow_regression_lf and ow_dynamic_qos_tests_lf"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-dynamic-qos
+          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-ow_dynamic_qos_tests_lf
 
         # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
@@ -159,7 +159,7 @@ jobs:
           marker_expression: "ow_regression_lf and ow_dvlan_tests_lf"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-dynamic-vlan
+          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-ow_dvlan_tests_lf
 
         # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
@@ -176,7 +176,7 @@ jobs:
           marker_expression: "ow_regression_lf and ow_multi_vlan_tests_lf"
           configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-multi-vlan
+          allure_results_artifact_name: allure-results-${{ matrix.testbed }}-ow_multi_vlan_tests_lf
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
