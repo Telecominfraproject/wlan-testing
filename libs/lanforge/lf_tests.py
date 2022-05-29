@@ -106,6 +106,7 @@ class RunTest:
             self.fiveg_radios = configuration_data['traffic_generator']['details']["5G-Radio"]
             self.ax_radios = configuration_data['traffic_generator']['details']["AX-Radio"]
             self.upstream_port = configuration_data['traffic_generator']['details']["upstream"].split(".")[2]
+            self.upstream_resource = configuration_data['traffic_generator']['details']["upstream"].split(".")[1]
             self.twog_prefix = configuration_data['traffic_generator']['details']["2.4G-Station-Name"]
             self.fiveg_prefix = configuration_data['traffic_generator']['details']["5G-Station-Name"]
             self.ax_prefix = configuration_data['traffic_generator']['details']["AX-Station-Name"]
@@ -138,7 +139,7 @@ class RunTest:
         self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
 
         self.staConnect.sta_mode = 0
-        self.staConnect.upstream_resource = 1
+        self.staConnect.upstream_resource = self.upstream_resource
         if mode == "BRIDGE":
             self.staConnect.upstream_port = self.upstream_port
         elif mode == "NAT":
@@ -286,7 +287,9 @@ class RunTest:
                                     sta_list=station_name, vap=False, _debug_on=self.debug)
 
         self.eap_connect.station_profile.sta_mode = 0
-        self.eap_connect.upstream_resource = 1
+        self.eap_connect.upstream_resource = self.upstream_resource
+        self.eap_connect.l3_cx_obj_udp.upstream_resource = self.upstream_resource
+        self.eap_connect.l3_cx_obj_tcp.upstream_resource = self.upstream_resource
         if mode == "BRIDGE":
             self.eap_connect.l3_cx_obj_udp.upstream = self.upstream_port
             self.eap_connect.l3_cx_obj_tcp.upstream = self.upstream_port
