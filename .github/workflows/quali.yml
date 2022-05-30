@@ -102,6 +102,8 @@ jobs:
 
       - name: start reservation
         run: |
+          echo ${{ steps.ap_model.outputs.model }}
+          echo ${{ needs.vars.outputs.openwifi_revision }}
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
             python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' "Basic Lab"
@@ -163,7 +165,7 @@ jobs:
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
-        # necessary because if conditionals in composite actions are currently not respected
+      # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -284,7 +286,7 @@ jobs:
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
-        # necessary because if conditionals in composite actions are currently not respected
+      # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -405,7 +407,7 @@ jobs:
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
-        # necessary because if conditionals in composite actions are currently not respected
+      # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -526,7 +528,7 @@ jobs:
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
-        # necessary because if conditionals in composite actions are currently not respected
+      # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -647,7 +649,7 @@ jobs:
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
-        # necessary because if conditionals in composite actions are currently not respected
+      # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -768,7 +770,7 @@ jobs:
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
-        # necessary because if conditionals in composite actions are currently not respected
+      # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -889,7 +891,7 @@ jobs:
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
-        # necessary because if conditionals in composite actions are currently not respected
+      # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1010,7 +1012,7 @@ jobs:
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
-        # necessary because if conditionals in composite actions are currently not respected
+      # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1131,7 +1133,7 @@ jobs:
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
-        # necessary because if conditionals in composite actions are currently not respected
+      # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1253,7 +1255,7 @@ jobs:
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
-        # necessary because if conditionals in composite actions are currently not respected
+      # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1375,7 +1377,7 @@ jobs:
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
-        # necessary because if conditionals in composite actions are currently not respected
+      # necessary because if conditionals in composite actions are currently not respected
       - name: delete namespace
         if: always()
         continue-on-error: true
