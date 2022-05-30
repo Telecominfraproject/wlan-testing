@@ -32,6 +32,7 @@ import time
 import string
 import random
 import csv
+from datetime import datetime
 from pull_report import Report
 from scp_util import SCP_File
 
@@ -56,13 +57,21 @@ from LANforge.lfcli_base import LFCliBase
 from lf_tr398_test import TR398Test
 from lf_pcap import LfPcap
 from sta_scan_test import StaScan
+from lf_sniff_radio import SniffRadio
+
+cv_test_reports = importlib.import_module("py-json.cv_test_reports")
+lf_report = cv_test_reports.lanforge_reports
 realm = importlib.import_module("py-json.realm")
+cv_test_reports = importlib.import_module("py-json.cv_test_reports")
+lf_report = cv_test_reports.lanforge_reports
 Realm = realm.Realm
+
 
 
 class RunTest:
 
-    def __init__(self, configuration_data=None, local_report_path="../reports/", influx_params=None, run_lf=False, debug=False):
+    def __init__(self, configuration_data=None, local_report_path="../reports/", influx_params=None, run_lf=False,
+                 debug=False, skip_pcap=False):
         if "type" in configuration_data['traffic_generator'].keys():
             if lanforge_data["type"] == "mesh":
                 self.lanforge_ip = lanforge_data["ip"]
@@ -97,11 +106,13 @@ class RunTest:
             self.fiveg_radios = configuration_data['traffic_generator']['details']["5G-Radio"]
             self.ax_radios = configuration_data['traffic_generator']['details']["AX-Radio"]
             self.upstream_port = configuration_data['traffic_generator']['details']["upstream"].split(".")[2]
+            self.upstream_resource = configuration_data['traffic_generator']['details']["upstream"].split(".")[1]
             self.twog_prefix = configuration_data['traffic_generator']['details']["2.4G-Station-Name"]
             self.fiveg_prefix = configuration_data['traffic_generator']['details']["5G-Station-Name"]
             self.ax_prefix = configuration_data['traffic_generator']['details']["AX-Station-Name"]
             self.debug = debug
             self.run_lf = run_lf
+            self.skip_pcap = skip_pcap
             if self.run_lf:
                 self.ssid_data = configuration_data['access_point'][0]['ssid']
             self.lf_ssh_port = configuration_data['traffic_generator']['details']["ssh_port"]
@@ -122,14 +133,13 @@ class RunTest:
             if not os.path.exists(self.local_report_path):
                 os.mkdir(self.local_report_path)
 
-
     def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[],
-                            station_name=[], mode="BRIDGE", vlan_id=1, band="twog"):
+                            station_name=[], mode="BRIDGE", vlan_id=1, band="twog", ssid_channel=None):
         """SINGLE CLIENT CONNECTIVITY using test_connect2.py"""
         self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
 
         self.staConnect.sta_mode = 0
-        self.staConnect.upstream_resource = 1
+        self.staConnect.upstream_resource = self.upstream_resource
         if mode == "BRIDGE":
             self.staConnect.upstream_port = self.upstream_port
         elif mode == "NAT":
@@ -154,8 +164,20 @@ class RunTest:
             self.staConnect.radio = self.fiveg_radios[0]
             self.staConnect.reset_port(self.staConnect.radio)
             self.staConnect.sta_prefix = self.fiveg_prefix
-        print("scand ssid radio", self.staConnect.radio.split(".")[2])
-        self.scan_ssid(radio=self.staConnect.radio.split(".")[2])
+        self.set_radio_channel(radio=self.staConnect.radio, channel=ssid_channel)
+        print("scan ssid radio", self.staConnect.radio.split(".")[2])
+        self.data_scan_ssid = self.scan_ssid(radio=self.staConnect.radio.split(".")[2])
+        print("ssid scan data :- ", self.data_scan_ssid)
+        result = self.check_ssid_available_scan_result(scan_ssid_data=self.data_scan_ssid, ssid=ssid)
+        print("ssid available:-", result)
+        if not result and ssid_channel:
+            if not self.skip_pcap:
+                print("sniff radio", self.ax_radios[0].split(".")[2])
+                self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
+                time.sleep(30)
+                self.stop_sniffer()
+            print("ssid not available in scan result")
+            return "FAIL", "ssid not available in scan result"
         self.staConnect.resource = 1
         self.staConnect.dut_ssid = ssid
         self.staConnect.dut_passwd = passkey
@@ -164,21 +186,38 @@ class RunTest:
         self.staConnect.runtime_secs = 40
         self.staConnect.bringup_time_sec = 80
         self.staConnect.cleanup_on_exit = True
+        data_table = ""
+        dict_table = {}
         self.staConnect.setup(extra_securities=extra_securities)
+        for sta_name in self.staConnect.station_names:
+            try:
+                sta_url = self.staConnect.get_station_url(sta_name)
+                station_info = self.staConnect.json_get(sta_url)
+                dict_data = station_info["interface"]
+                dict_table[""] = list(dict_data.keys())
+                dict_table["Before"] = list(dict_data.values())
+            except Exception as e:
+                print(e)
+        if ssid_channel:
+            if not self.skip_pcap:
+                print("sniff radio", self.ax_radios[0].split(".")[2])
+                self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
         self.staConnect.start()
         print("napping %f sec" % self.staConnect.runtime_secs)
         time.sleep(self.staConnect.runtime_secs)
+        report_obj = Report()
         for sta_name in self.staConnect.station_names:
             try:
-                station_data_str = ""
                 sta_url = self.staConnect.get_station_url(sta_name)
                 station_info = self.staConnect.json_get(sta_url)
-                for i in station_info["interface"]:
-                    try:
-                        station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
-                    except Exception as e:
-                        print(e)
-                allure.attach(name=str(sta_name), body=str(station_data_str))
+                self.station_ip = station_info["interface"]["ip"]
+                dict_data = station_info["interface"]
+                dict_table["After"] = list(dict_data.values())
+                try:
+                    data_table = report_obj.table2(table=dict_table, headers='keys')
+                except Exception as e:
+                    print(e)
+                allure.attach(name=str(sta_name), body=data_table)
             except Exception as e:
                 print(e)
         self.staConnect.stop()
@@ -202,36 +241,55 @@ class RunTest:
 
         for result in run_results:
             print("test result: " + result)
-        result = True
+        result = "PASS"
+        description = "Unknown error"
+        dict_table = {}
         print("Client Connectivity :", self.staConnect.passes)
         endp_data = []
         for i in self.staConnect.resulting_endpoints:
             endp_data.append(self.staConnect.resulting_endpoints[i]["endpoint"])
-        cx_data = ""
-        for i in endp_data:
-            for j in i:
-                cx_data = cx_data + str(j) + " : " + str(i[j]) + "\n"
-            cx_data = cx_data + "\n"
-        allure.attach(name="cx_data", body=str(cx_data))
+        dict_table["key"] = [i for s in [d.keys() for d in endp_data] for i in s]
+        dict_table["value"] = [i for s in [d.values() for d in endp_data] for i in s]
+        data_table = report_obj.table2(table=dict_table, headers='keys')
+        allure.attach(name="cx_data", body=data_table)
+        for i in range(len(run_results)):
+            if i == 0:
+                if "FAILED" in run_results[i]:
+                    result = "FAIL"
+                    description = "Station did not get an ip"
+                    break
+            else:
+                if "FAILED" in run_results[i]:
+                    result = "FAIL"
+                    description = "did not report traffic"
+
         if self.staConnect.passes():
             print("client connection to", self.staConnect.dut_ssid, "successful. Test Passed")
+            result = "PASS"
         else:
             print("client connection to", self.staConnect.dut_ssid, "unsuccessful. Test Failed")
-            result = False
+            result = "FAIL"
         time.sleep(3)
-        return self.staConnect.passes(), result
+        if ssid_channel:
+            if not self.skip_pcap:
+                self.stop_sniffer()
+        self.set_radio_channel(radio=self.staConnect.radio, channel="AUTO")
+        return result, description
 
     def EAP_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", extra_securities=[],
                     mode="BRIDGE", band="twog", vlan_id=100,
                     station_name=[], key_mgmt="WPA-EAP",
                     pairwise="NA", group="NA", wpa_psk="DEFAULT",
                     ttls_passwd="nolastart", ieee80211w=1,
-                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius", d_vlan=False, cleanup=True):
+                    wep_key="NA", ca_cert="NA", eap="TTLS", identity="nolaradius", d_vlan=False, cleanup=True,
+                    ssid_channel=None):
         self.eap_connect = TTLSTest(host=self.lanforge_ip, port=self.lanforge_port,
                                     sta_list=station_name, vap=False, _debug_on=self.debug)
 
         self.eap_connect.station_profile.sta_mode = 0
-        self.eap_connect.upstream_resource = 1
+        self.eap_connect.upstream_resource = self.upstream_resource
+        self.eap_connect.l3_cx_obj_udp.upstream_resource = self.upstream_resource
+        self.eap_connect.l3_cx_obj_tcp.upstream_resource = self.upstream_resource
         if mode == "BRIDGE":
             self.eap_connect.l3_cx_obj_udp.upstream = self.upstream_port
             self.eap_connect.l3_cx_obj_tcp.upstream = self.upstream_port
@@ -260,8 +318,20 @@ class RunTest:
             self.eap_connect.admin_up(self.eap_connect.radio)
             # self.eap_connect.sta_prefix = self.fiveg_prefix
         # self.eap_connect.resource = 1
-        print("scand ssid radio", self.eap_connect.radio.split(".")[2])
-        self.scan_ssid(radio=self.eap_connect.radio.split(".")[2])
+        self.set_radio_channel(radio=self.eap_connect.radio, channel=ssid_channel)
+        print("scan ssid radio", self.eap_connect.radio.split(".")[2])
+        self.data_scan_ssid = self.scan_ssid(radio=self.eap_connect.radio.split(".")[2])
+        print("ssid scan data :- ", self.data_scan_ssid)
+        result = self.check_ssid_available_scan_result(scan_ssid_data=self.data_scan_ssid, ssid=ssid)
+        print("ssid available:-", result)
+        if not result and ssid_channel:
+            if not self.skip_pcap:
+                print("sniff radio", self.ax_radios[0].split(".")[2])
+                self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
+                time.sleep(30)
+                self.stop_sniffer()
+            print("ssid not available in scan result")
+            return "FAIL", "ssid not available in scan result"
         if eap == "TTLS":
             self.eap_connect.ieee80211w = ieee80211w
             self.eap_connect.key_mgmt = key_mgmt
@@ -287,6 +357,21 @@ class RunTest:
         self.eap_connect.security = security
         self.eap_connect.sta_list = station_name
         self.eap_connect.build(extra_securities=extra_securities)
+        dict_table = {}
+        report_obj = Report()
+        data_table = ""
+        for sta_name in station_name:
+            try:
+                station_info = self.eap_connect.json_get("port/1/1/" + sta_name)
+                dict_data = station_info["interface"]
+                dict_table[""] = list(dict_data.keys())
+                dict_table["Before"] = list(dict_data.values())
+            except Exception as e:
+                print(e)
+        if ssid_channel:
+            if not self.skip_pcap:
+                print("sniff radio", self.ax_radios[0].split(".")[2])
+                self.start_sniffer(radio_channel=ssid_channel, radio=self.ax_radios[0].split(".")[2], duration=30)
         self.eap_connect.start(station_name, True, True)
         if d_vlan:
             self.station_ip = {}
@@ -297,19 +382,21 @@ class RunTest:
             # station_info = self.eap_connect.json_get(sta_url)
             station_info = self.eap_connect.json_get("port/1/1/" + sta_name)
 
-            for i in station_info["interface"]:
-                try:
-                    station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
-                    if d_vlan:
-                        if i == "ip":
-                            self.station_ip[sta_name] = station_info["interface"][i]
-                except Exception as e:
-                    print(e)
-            allure.attach(name=str(sta_name), body=str(station_data_str))
+            if d_vlan:
+                if "ip" in station_info["interface"].keys():
+                    self.station_ip[sta_name] = station_info["interface"]["ip"]
+            dict_data = station_info["interface"]
+            dict_table["After"] = list(dict_data.values())
+            try:
+                data_table = report_obj.table2(table=dict_table, headers='keys')
+            except Exception as e:
+                print(e)
+            allure.attach(name=str(sta_name), body=data_table)
             # except Exception as e:
             #     print(e)
 
         self.eap_connect.stop()
+        run_results = self.eap_connect.get_result_list()[1:]
         try:
             supplicant = "/home/lanforge/wifi/wpa_supplicant_log_" + self.eap_connect.radio.split(".")[2] + ".txt"
             obj = SCP_File(ip=self.lanforge_ip, port=self.lanforge_ssh_port, username="root", password="lanforge",
@@ -323,25 +410,45 @@ class RunTest:
 
         if not self.eap_connect.passes():
             if self.debug:
-                print("test result: " + self.eap_connect.passes())
+                #print("test result: " + self.eap_connect.passes())
                 pytest.exit("Test Failed: Debug True")
         endp_data = []
+        result = "PASS"
+        description = "Unknown error"
+        dict_table = {}
         for i in self.eap_connect.resulting_endpoints:
             endp_data.append(self.eap_connect.resulting_endpoints[i]["endpoint"])
-        cx_data = ""
-        for i in endp_data:
-            for j in i:
-                cx_data = cx_data + str(j) + " : " + str(i[j]) + "\n"
-            cx_data = cx_data + "\n"
-        allure.attach(name="cx_data", body=str(cx_data))
+        # finding all keys and values
+        dict_table["key"] = [i for s in [d.keys() for d in endp_data] for i in s]
+        dict_table["value"] = [i for s in [d.values() for d in endp_data] for i in s]
+        data_table = report_obj.table2(table=dict_table, headers='keys')
+        allure.attach(name="cx_data", body=data_table)
+        for i in range(len(run_results)):
+            if i == 0:
+                if "FAILED" in run_results[i]:
+                    result = "FAIL"
+                    description = "Station did not get an ip"
+                    break
+            else:
+                if "FAILED" in run_results[i]:
+                    result = "FAIL"
+                    description = "did not report traffic"
         if cleanup:
             self.eap_connect.cleanup(station_name)
-        return self.eap_connect.passes()
+        if self.eap_connect.passes():
+            result = "PASS"
+        else:
+            result = "FAIL"
+        if ssid_channel:
+            if not self.skip_pcap:
+                self.stop_sniffer()
+        self.set_radio_channel(radio=self.eap_connect.radio, channel="AUTO")
+        return result, description
 
     def wifi_capacity(self, mode="BRIDGE", vlan_id=100, batch_size="1,5,10,20,40,64,128",
-                      instance_name="wct_instance", download_rate="1Gbps", influx_tags=[],
+                      instance_name="wct_instance", download_rate="1Gbps", influx_tags="",
                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", stations="", create_stations=True,
-                      sort="interleave", raw_lines=[]):
+                      sort="interleave", raw_lines=[], sets=[], move_to_influx=False):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         if mode == "BRIDGE":
             upstream_port = self.upstream_port
@@ -378,25 +485,25 @@ class RunTest:
                                             disables=[],
                                             raw_lines=raw_lines,
                                             raw_lines_file="",
-                                            sets=[])
+                                            test_tag=influx_tags,
+                                            sets=sets)
         wificapacity_obj.setup()
         wificapacity_obj.run()
-        for tag in influx_tags:
-            self.influx_params["influx_tag"].append(tag)
-        report_name = wificapacity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
-                             influx_port=self.influx_params["influx_port"],
-                             influx_org=self.influx_params["influx_org"],
-                             influx_token=self.influx_params["influx_token"],
-                             influx_bucket=self.influx_params["influx_bucket"],
-                             path=report_name)
+        if move_to_influx:
+            report_name = "../reports/" + wificapacity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                                 influx_port=self.influx_params["influx_port"],
+                                 influx_org=self.influx_params["influx_org"],
+                                 influx_token=self.influx_params["influx_token"],
+                                 influx_bucket=self.influx_params["influx_bucket"],
+                                 path=report_name)
 
-        influx.glob()
+            influx.glob()
         return wificapacity_obj
 
     def Client_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog",
                        vlan_id=100,
-                       station_name=[]):
+                       station_name=[], scan_ssid=True):
         if band == "twog":
             if self.run_lf:
                 ssid = self.ssid_data["2g-ssid"]
@@ -425,11 +532,14 @@ class RunTest:
         if band == "ax":
             self.client_connect.radio = self.ax_radios[0]
         print("scan ssid radio", self.client_connect.radio.split(".")[2])
-        self.scan_ssid(radio=self.client_connect.radio.split(".")[2])
+        if scan_ssid:
+            self.data_scan_ssid = self.scan_ssid(radio=self.client_connect.radio.split(".")[2])
+        print("ssid scan data :- ", self.data_scan_ssid)
         self.client_connect.build()
-        self.client_connect.wait_for_ip(station_name)
-        print(self.client_connect.wait_for_ip(station_name))
-        if self.client_connect.wait_for_ip(station_name):
+        result = self.client_connect.wait_for_ip(station_list=station_name, timeout_sec=100)
+        #print(self.client_connect.wait_for_ip(station_name))
+        print(result)
+        if result:
             self.client_connect._pass("ALL Stations got IP's", print_=True)
             return self.client_connect
         else:
@@ -459,7 +569,10 @@ class RunTest:
                     except Exception as e:
                         print(e)
                 print("sta name", sta_name)
-                allure.attach(name=name, body=str(station_data_str))
+                if name == "":
+                    allure.attach(name=f"{sta_name} info", body=str(station_data_str))
+                else:
+                    allure.attach(name=name, body=str(station_data_str))
             except Exception as e:
                 print(e)
 
@@ -504,7 +617,8 @@ class RunTest:
         return True
 
     def dataplane(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
-                  upload_rate="0", duration="15s", instance_name="test_demo", raw_lines=None):
+                  upload_rate="0", duration="15s", instance_name="test_demo", raw_lines=None, influx_tags="",
+                  move_to_influx=False):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
 
         if mode == "BRIDGE":
@@ -545,25 +659,26 @@ class RunTest:
                                            duration=duration,
                                            dut=dut_name,
                                            station="1.1." + station_name[0],
+                                           test_tag=influx_tags,
                                            raw_lines=raw_lines)
 
         self.dataplane_obj.setup()
         self.dataplane_obj.run()
-        report_name = self.dataplane_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        if move_to_influx:
+            report_name = "../reports/" + self.dataplane_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                                 influx_port=self.influx_params["influx_port"],
+                                 influx_org=self.influx_params["influx_org"],
+                                 influx_token=self.influx_params["influx_token"],
+                                 influx_bucket=self.influx_params["influx_bucket"],
+                                 path=report_name)
 
-        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
-                             influx_port=self.influx_params["influx_port"],
-                             influx_org=self.influx_params["influx_org"],
-                             influx_token=self.influx_params["influx_token"],
-                             influx_bucket=self.influx_params["influx_bucket"],
-                             path=report_name)
-
-        influx.glob()
+            influx.glob()
 
         return self.dataplane_obj
 
     def dualbandperformancetest(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
-                                instance_name="test_demo", dut_5g="", dut_2g=""):
+                                instance_name="test_demo", dut_5g="", dut_2g="", influx_tags="", move_to_influx=False):
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
 
         if mode == "BRIDGE":
@@ -591,6 +706,7 @@ class RunTest:
                                             max_stations_dual=124,
                                             radio2=[self.twog_radios],
                                             radio5=[self.fiveg_radios],
+                                            test_tag=influx_tags,
                                             sets=[['Basic Client Connectivity', '0'], ['Multi Band Performance', '1'],
                                                   ['Throughput vs Pkt Size', '0'], ['Capacity', '0'],
                                                   ['Skip 2.4Ghz Tests', '1'],
@@ -601,15 +717,16 @@ class RunTest:
                                             )
         self.dualbandptest_obj.setup()
         self.dualbandptest_obj.run()
-        report_name = self.dualbandptest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
-                             influx_port=self.influx_params["influx_port"],
-                             influx_org=self.influx_params["influx_org"],
-                             influx_token=self.influx_params["influx_token"],
-                             influx_bucket=self.influx_params["influx_bucket"],
-                             path=report_name)
+        if move_to_influx:
+            report_name = "../reports/" + self.dualbandptest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                                 influx_port=self.influx_params["influx_port"],
+                                 influx_org=self.influx_params["influx_org"],
+                                 influx_token=self.influx_params["influx_token"],
+                                 influx_bucket=self.influx_params["influx_bucket"],
+                                 path=report_name)
 
-        influx.glob()
+            influx.glob()
         return self.dualbandptest_obj
 
     def apstabilitytest(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
@@ -775,12 +892,12 @@ class RunTest:
             ]
         else:
             input_data = [{
-                "password": key1,
-                "upstream": str(self.upstream_port) + "." + str(vlan_id[0]),
-                "mac": "",
-                "num_station": 1,
-                "radio": str(radio)
-            },
+                    "password": key1,
+                    "upstream": str(self.upstream_port) + "." + str(vlan_id[0]),
+                    "mac": "",
+                    "num_station": 1,
+                    "radio": str(radio)
+                },
                 {
                     "password": key2,
                     "upstream": str(self.upstream_port) + "." + str(vlan_id[1]),
@@ -828,35 +945,66 @@ class RunTest:
         elif mode == "NAT":
             result1 = self.multi_obj.compare_nonvlan_ip_nat()
         # station_name =  ['sta100', 'sta200', 'sta00']
-        for sta_name_ in station_name:
-            if sta_name_ is None:
-                raise ValueError("get_station_url wants a station name")
-            if self.sta_url_map is None:
-                self.sta_url_map = {}
-                for sta_name in station_name:
-                    self.sta_url_map[sta_name] = "port/1/%s/%s" % (str(1), sta_name)
-                    print(self.sta_url_map)
+        cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port)
+        res_data = cli_base.json_get(_req_url='port?fields=alias,port+type,ip,mac',)['interfaces']
+        table_heads = ["station name", "configured vlan-id", "expected IP Range", "allocated IP", "mac address", 'pass/fail']
+        table_data = []
+        temp = {'sta100':'', 'sta200': '', 'sta00': ''}
+        for i in res_data:
+            for item in i:
+                if i[item]['port type'] == 'Ethernet' and i[item]['alias'] == self.upstream_port:
+                    if mode == 'NAT':
+                        temp.update({'sta00': '192.168.1.1'})
+                    else:
+                        temp.update({'sta00': i[item]['ip']})
+                if i[item]['port type'] == '802.1Q VLAN' and i[item]['alias'] == str(self.upstream_port+".100"):
+                    temp.update({'sta100': i[item]['ip']})
+                elif i[item]['port type'] == '802.1Q VLAN' and i[item]['alias'] == str(self.upstream_port+".200"):
+                    temp.update({'sta200': i[item]['ip']})
+        for i in res_data:
+            for item in i:
+                if i[item]['port type'] == 'WIFI-STA' and i[item]['alias'] == "sta100":
+                    exp1 = temp['sta100'].split('.')
+                    ip1 = i[item]['ip'].split('.')
+                    if exp1[0] == ip1[0] and exp1[1] == ip1[1]:
+                        pf = 'PASS'
+                    else:
+                        pf = 'FAIL'
+                    table_data.append([i[item]['alias'], '100', f'{exp1[0]}.{exp1[1]}.X.X', i[item]['ip'], i[item]['mac'],
+                                       f'{pf}'])
+                elif i[item]['port type'] == 'WIFI-STA' and i[item]['alias'] == 'sta200':
+                        exp2 = temp['sta200'].split('.')
+                        ip2 = i[item]['ip'].split('.')
+                        if exp2[0] == ip2[0] and exp2[1] == ip2[1]:
+                            pf = 'PASS'
+                        else:
+                            pf = 'FAIL'
+                        table_data.append([i[item]['alias'], '200', f'{exp2[0]}.{exp2[1]}.X.X', i[item]['ip'], i[item]['mac'], f'{pf}'])
+                elif i[item]['port type'] == 'WIFI-STA' and i[item]['alias'] == 'sta00':
+                    exp3 = temp['sta00'].split('.')
+                    ip2 = i[item]['ip'].split('.')
+                    if mode == "BRIDGE":
+                        if exp3[0] == ip2[0] and exp3[1] == ip2[1]:
+                            pf = 'PASS'
+                        else:
+                            pf = 'FAIL'
+                        table_data.append([i[item]['alias'], 'WAN upstream', f'{exp3[0]}.{exp3[1]}.X.X', i[item]['ip'], i[item]['mac'], f'{pf}'])
+                    elif mode == "NAT":
+                        if exp3[0] == '192' and exp3[1] == '168':
+                            pf = 'PASS'
+                        else:
+                            pf = 'FAIL'
+                        table_data.append([i[item]['alias'], 'LAN upstream', f'192.168.X.X', i[item]['ip'], i[item]['mac'], f'{pf}'])
+        print(table_data)
+        # attach test data in a table to allure
+        report_obj = Report()
+        table_info = report_obj.table2(table=table_data, headers=table_heads)
+        allure.attach(name="Test Results Info", body=table_info)
 
-        for sta_name in station_name:
-            try:
-                station_data_str = ""
-                # sta_url = self.staConnect.get_station_url(sta_name)
-                station_info = self.multi_obj.local_realm.json_get(self.sta_url_map[sta_name])
-                print("station info", station_info)
-                for i in station_info["interface"]:
-                    try:
-                        station_data_str = station_data_str + i + "  :  " + str(station_info["interface"][i]) + "\n"
-                    except Exception as e:
-                        print(e)
-                print("sta name", sta_name)
-                allure.attach(name=str(sta_name), body=str(station_data_str))
-            except Exception as e:
-                print(e)
         if result1 == "Pass":
             print("Test passed for non vlan ip ")
         else:
             print("Test failed for non vlan ip")
-        print("all result gathered")
         print("clean up")
         self.multi_obj.postcleanup()
         if result == result1:
@@ -1011,11 +1159,25 @@ class RunTest:
         self.Client_disconnect(station_name=station_name)
         return atten_serial_radio
 
-    def downlink_mu_mimo(self, radios_2g=[], radios_5g=[], radios_ax=[], dut_name="TIP", dut_5g="", dut_2g="", mode="BRIDGE", vlan_id=1, skip_2g=True, skip_5g=False):
+
+    def set_radio_country_channel(self,_radio="wiphy0",_channel=0,_country_num=840,): # 840 - US
+        data = {
+            "shelf": _radio[0],
+            "resource": _radio[1],
+            "radio": _radio[2],
+            "mode": "NA",
+            "channel": _channel,
+            "country": _country_num
+        }
+        print(f"Lanforge-radio Country changed {_country_num}")
+        self.local_realm.json_post("/cli-json/set_wifi_radio", _data=data)
+
+    def downlink_mu_mimo(self, radios_2g=[], radios_5g=[], radios_ax=[], dut_name="TIP", dut_5g="", dut_2g="",
+                         mode="BRIDGE", vlan_id=1, skip_2g=True, skip_5g=False):
         raw_line = []
         skip_twog = '1' if skip_2g else '0'
         skip_fiveg = '1' if skip_5g else '0'
-        sniff_radio = 'wiphy6'
+        sniff_radio = 'wiphy0'
         channel = 149 if skip_2g else 11
         upstream_port = self.upstream_port
 
@@ -1025,13 +1187,51 @@ class RunTest:
                 ['Multiple STAs Performance', '0'], ['Multiple Assoc Stability', '0'], ['Downlink MU-MIMO', '1'],
                 ['AP Coexistence', '0'], ['Long Term Stability', '0'], ['Skip 2.4Ghz Tests', f'{skip_twog}'],
                 ['Skip 5Ghz Tests', f'{skip_fiveg}'], ['2.4Ghz Channel', 'AUTO'], ['5Ghz Channel', 'AUTO']]
-        for i in range(6):
-            if i == 0 or i == 2:
-                raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
-            if i == 1 or i == 3:
-                raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
-            if i == 4 or i == 5:
-                raw_line.append([f'radio-{i}: {radios_ax[0] if i == 4 else radios_ax[1]}'])
+        if len(radios_2g) >= 3 and len(radios_5g) >= 3:
+            for i in range(6):
+                if i == 0 or i == 2:
+                    raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
+                if i == 1 or i == 3:
+                    raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
+                if i == 4 or i == 5:
+                    raw_line.append([f'radio-{i}: {radios_5g[2] if i == 4 else radios_2g[2]}'])
+            if len(radios_ax) >= 1:
+                temp_ax = str(radios_ax[0]).split(" ")
+                if len(temp_ax) == 2:
+                    sniff_radio = str(temp_ax[1])
+            elif skip_2g:
+                temp = str(radios_5g[0]).split(" ")
+                if len(temp) == 2:
+                    sniff_radio = str(temp[1])
+            elif skip_5g:
+                temp = str(radios_2g[0]).split(" ")
+                if len(temp) == 2:
+                    sniff_radio = str(temp[1])
+        elif len(radios_2g) >= 2 and len(radios_5g) >= 2 and len(radios_ax) >= 2:
+            if len(radios_2g) >= 3 and len(radios_5g) >= 3:
+                for i in range(6):
+                    if i == 0 or i == 2:
+                        raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
+                    if i == 1 or i == 3:
+                        raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
+                    if i == 4 or i == 5:
+                        raw_line.append([f'radio-{i}: {radios_5g[2] if i == 4 else radios_2g[2]}'])
+                if len(radios_ax) >= 1:
+                    temp_ax = str(radios_ax[0]).split(" ")
+                    if len(temp_ax) == 2:
+                        sniff_radio = str(temp_ax[1])
+            else:
+                for i in range(6):
+                    if i == 0 or i == 2:
+                        raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
+                    if i == 1 or i == 3:
+                        raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
+                    if i == 4 or i == 5:
+                        raw_line.append([f'radio-{i}: {radios_ax[0] if i == 4 else radios_ax[1]}'])
+                if len(radios_ax) >= 3:
+                    temp_ax = str(radios_ax[2]).split(" ")
+                    if len(temp_ax) == 2:
+                        sniff_radio = str(temp_ax[1])
 
         if len(raw_line) != 6:
             raw_line = [['radio-0: 1.1.5 wiphy1'], ['radio-1: 1.1.4 wiphy0'], ['radio-2: 1.1.7 wiphy3'],
@@ -1049,7 +1249,7 @@ class RunTest:
         else:
             upstream_port = self.upstream_port + "." + str(vlan_id)
         print("Upstream Port: ", self.upstream_port)
-
+        print("radio used to sniff :", sniff_radio)
         self.pcap_obj = LfPcap(host=self.lanforge_ip, port=self.lanforge_port)
         self.cvtest_obj = TR398Test(lf_host=self.lanforge_ip,
                                     lf_port=self.lanforge_port,
@@ -1081,6 +1281,19 @@ class RunTest:
             time.sleep(1)
         if os.path.exists("mu-mimo-config.txt"):
             os.remove("mu-mimo-config.txt")
+        # pull pcap from lanforge to current directory
+        if self.pcap_obj.pcap_name is not None:
+            lf_report.pull_reports(hostname=self.lanforge_ip, port=self.lanforge_ssh_port, username="lanforge",
+                                   password="lanforge", report_location="/home/lanforge/" + self.pcap_obj.pcap_name,
+                                   report_dir=".")
+        else:
+            raise ValueError("pcap_name should not be None")
+
+        # check for mu-mimo bearmformee association request
+        assoc_req = self.pcap_obj.check_beamformee_association_request(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=assoc_req, name="Check Bearmformee Association Request")
+        allure.attach.file(source=self.pcap_obj.pcap_name,
+                           name="pcap_file", attachment_type=allure.attachment_type.PCAP)
 
         if self.pcap_obj.pcap_name is not None:
             self.pcap_obj.move_pcap(pcap_name=self.pcap_obj.pcap_name)
@@ -1102,41 +1315,82 @@ class RunTest:
                              path=report_name)
         influx.glob()
         return self.cvtest_obj
-  
+
     def scan_ssid(self, radio=""):
         '''This method for scan ssid data'''
-        obj_scan = StaScan(host=self.lanforge_ip, port=self.lanforge_port, ssid="fake ssid", security="open", password="[BLANK]", radio=radio, sta_list=["sta0000"], csv_output="scan_ssid.csv")
+        list_data = []
+        obj_scan = StaScan(host=self.lanforge_ip, port=self.lanforge_port, ssid="fake ssid", security="open",
+                           password="[BLANK]", radio=radio, sta_list=["sta0000"], csv_output="scan_ssid.csv")
         obj_scan.pre_cleanup()
+        time1 = datetime.now()
+        first = time.mktime(time1.timetuple()) * 1000
         obj_scan.build()
         obj_scan.start()
-        with open(obj_scan.csv_output, 'r') as file:
-            reader = csv.reader(file)
-            list_data = []
-            for row in reader:
-                list_data.append(row)
+        time2 = datetime.now()
+        second = time.mktime(time2.timetuple()) * 1000
+        diff = int(second - first)
+        try:
+            with open(obj_scan.csv_output, 'r') as file:
+                reader = csv.reader(file)
+                for row in reader:
+                    if row[1] == "age":
+                        list_data.append(row)
+                        continue
+                    elif int(row[1]) < diff:
+                        list_data.append(row)
+        except Exception as e:
+            print(e)
         report_obj = Report()
         csv_data_table = report_obj.table2(list_data)
         allure.attach(name="scan_ssid_data", body=csv_data_table)
         obj_scan.cleanup()
+        return list_data
 
+    def start_sniffer(self, radio_channel=None, radio=None, test_name="sniff_radio", duration=60):
+        self.pcap_name = test_name + ".pcap"
+        self.pcap_obj = SniffRadio(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port, radio=radio,
+                                   channel=radio_channel)
+        self.pcap_obj.setup(0, 0, 0)
+        time.sleep(5)
+        self.pcap_obj.monitor.admin_up()
+        time.sleep(5)
+        self.pcap_obj.monitor.start_sniff(capname=self.pcap_name, duration_sec=duration)
 
+    def stop_sniffer(self):
+        self.pcap_obj.monitor.admin_down()
+        time.sleep(2)
+        self.pcap_obj.cleanup()
+        lf_report.pull_reports(hostname=self.lanforge_ip, port=self.lanforge_ssh_port, username="lanforge",
+                               password="lanforge",
+                               report_location="/home/lanforge/" + self.pcap_name,
+                               report_dir=".")
+        allure.attach.file(source=self.pcap_name,
+                           name="pcap_file", attachment_type=allure.attachment_type.PCAP)
+        print("pcap file name : ", self.pcap_name)
+        return self.pcap_name
+
+    def check_ssid_available_scan_result(self, scan_ssid_data=None, ssid=None):
+        '''This method will check ssid available or not in scan ssid data'''
+        try:
+            flag = False
+            for i in scan_ssid_data:
+                if ssid in i:
+                    flag = True
+            if flag:
+                return True
+            else:
+                return False
+        except Exception as e:
+            print(e)
 
     def country_code_channel_division(self, ssid = "[BLANK]", passkey='[BLANK]', security="wpa2", mode="BRIDGE",
-                                      band='2G', station_name=[], vlan_id=100, channel='1',country=392):
+                                      band='2G', station_name=[], vlan_id=100, channel='1', channel_width=20,
+                                      country_num=392, country='United States(US)'):
         self.local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
         radio = (self.fiveg_radios[0] if band == "fiveg" else self.twog_radios[0]).split('.')
-        data = {
-            "shelf": radio[0],
-            "resource": radio[1],
-            "radio": radio[2],
-            "mode": "NA",
-            "channel": "NA",
-            "country": country
-        }
-        print(f"Lanforge-radio Country changed {country}")
-        self.local_realm.json_post("/cli-json/set_wifi_radio", _data=data)
+        self.set_radio_country_channel(_radio=radio,_country_num=country_num)
         station = self.Client_Connect(ssid=ssid, passkey=passkey, security=security, mode=mode, band=band,
-                                         station_name=station_name, vlan_id=vlan_id)
+                                      station_name=station_name, vlan_id=vlan_id)
         if station:
             for i in range(10):
                 station_info = station.json_get(f"/port/1/1/{station_name[0]}")
@@ -1147,6 +1401,18 @@ class RunTest:
             print(f"station {station_name[0]} IP: {station_info['interface']['ip']}\n"
                   f"connected channel: {station_info['interface']['channel']}\n"
                   f"and expected channel: {channel}")
+            allure.attach(name="Definition",
+                          body="Country code channel test intends to verify stability of Wi-Fi device " \
+                               "where the AP is configured with different countries with different channels.")
+            allure.attach(name="Procedure",
+                          body=f"This test case definition states that we need to push the basic {mode.lower()} mode config on the AP to "
+                               f"be tested by configuring it with {country} on {channel_width}MHz channel width and "
+                               f"channel {channel}. Create a client on {'5' if band=='fiveg' else '2.4'} GHz radio. Pass/ fail criteria: "
+                               f"The client created on {'5' if band=='fiveg' else '2.4'} GHz radio should get associated to the AP")
+            allure.attach(name="Details",
+                          body=f"Country code : {country[country.find('(')+1:-1]}\n"
+                               f"Bandwidth : {channel_width}Mhz\n"
+                               f"Channel : {channel}\n")
             station_data_str = ""
             for i in station_info["interface"]:
                 try:
@@ -1155,10 +1421,213 @@ class RunTest:
                     print(e)
             allure.attach(name=str(station_name[0]), body=str(station_data_str))
             station.station_profile.cleanup()
+            self.set_radio_country_channel(_radio=radio)
             if station_info['interface']['ip'] and station_info['interface']['channel'] == str(channel):
                 return True
             else:
                 return False
+
+    def ofdma(self, mode="BRIDGE", vlan_id=1, inst_name="ofdma", batch_size='1', rawlines=None, sniffer_channel=0,
+              sniffer_radio="wiphy0", wct_stations=None, sniffer_duration=60):
+
+        if inst_name == "ofdma":
+            inst_name = "ofdma-instance-{}".format(str(random.randint(0, 100000)))
+
+        if rawlines is None:
+            rawlines = [['pdu_sz: 300']]
+
+        self.pcap_obj = LfPcap(host=self.lanforge_ip, port=self.lanforge_port)
+        sniffer = threading.Thread(target=self.pcap_obj.sniff_packets,
+                                   args=(sniffer_radio, "ofdma-test", sniffer_channel, 90))
+        sniffer.start()
+        ofdma_obj = self.wifi_capacity(instance_name=inst_name, mode=mode, vlan_id=vlan_id, download_rate="10 Mbps",
+                                       batch_size=batch_size, stations=wct_stations, create_stations=False,
+                                       sort="interleave",
+                                       upload_rate="0", protocol="TCP-IPv4", duration="60000", raw_lines=rawlines)
+        ofdma_obj.result = 'PASS'
+        while sniffer.is_alive():
+            time.sleep(1)
+        report_name = ofdma_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        # pull pcap from lanforge to current directory
+        if self.pcap_obj.pcap_name is not None:
+            try:
+                lf_report.pull_reports(hostname=self.lanforge_ip, port=self.lanforge_ssh_port, username="lanforge",
+                                       password="lanforge", report_location="/home/lanforge/" + self.pcap_obj.pcap_name,
+                                       report_dir=".")
+            except Exception as e:
+                print("error while pulling pcap file from lanforge", e)
+        else:
+            raise ValueError("pcap_name should not be None")
+
+        table_heads = ["Packet Type", "Capability Check", 'PASS/FAIL']
+        table_data = []
+
+        # check for HE Capability in Beacon Frame
+        check_he = self.pcap_obj.check_he_capability_beacon_frame(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check HE Capabilities in Beacon Frame")
+        if check_he == "HE SU PPDU & HE MU PPDU w 4x HE-LTF & 0.8us GI: Supported":
+            table_data.append(['Beacon Frame', check_he, 'PASS'])
+        else:
+            table_data.append(['Beacon Frame', check_he, 'FAIL'])
+            ofdma_obj.result = 'FAIL'
+
+        # check for HE Capability in probe request
+        check_he = self.pcap_obj.check_he_capability_probe_request(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check HE Capabilities in Probe Request")
+        if check_he == "HE SU PPDU & HE MU PPDU w 4x HE-LTF & 0.8us GI: Supported":
+            table_data.append(['Probe Request', check_he, 'PASS'])
+        else:
+            table_data.append(['Probe Request', check_he, 'FAIL'])
+            ofdma_obj.result = 'FAIL'
+
+        # check for HE Capability in probe response
+        check_he = self.pcap_obj.check_he_capability_probe_response(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check HE Capabilities in Probe Request")
+        if check_he == "HE SU PPDU & HE MU PPDU w 4x HE-LTF & 0.8us GI: Supported":
+            table_data.append(['Probe Response', check_he, 'PASS'])
+        else:
+            table_data.append(['Probe Response', check_he, 'FAIL'])
+            ofdma_obj.result = 'FAIL'
+
+        # check for HE Capability in Association request
+        check_he = self.pcap_obj.check_he_capability_association_request(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check HE Capabilities in Association Request")
+        if check_he == "HE SU PPDU & HE MU PPDU w 4x HE-LTF & 0.8us GI: Supported":
+            table_data.append(['Association Request', check_he, 'PASS'])
+        else:
+            table_data.append(['Association Request', check_he, 'FAIL'])
+            ofdma_obj.result = 'FAIL'
+
+        # check for HE Capability in Association response
+        check_he = self.pcap_obj.check_he_capability_association_response(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check HE Capabilities in Association Response")
+        if check_he == "HE SU PPDU & HE MU PPDU w 4x HE-LTF & 0.8us GI: Supported":
+            table_data.append(['Association Response', check_he, 'PASS'])
+        else:
+            table_data.append(['Association Response', check_he, 'FAIL'])
+            ofdma_obj.result = 'FAIL'
+
+        # check for Guard Interval
+        check_he = self.pcap_obj.check_he_guard_interval(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check Guard Interval")
+        if check_he == "Packet Not Found" or check_he is None:
+            table_data.append(['Guard Interval', check_he, 'FAIL'])
+            ofdma_obj.result = 'FAIL'
+        else:
+            table_data.append(['Guard Interval', check_he, 'PASS'])
+
+        print(table_data)
+        # attach test data in a table to allure
+        report_obj = Report()
+        table_info = report_obj.table2(table=table_data, headers=table_heads)
+        allure.attach(name="Test Results Info", body=table_info)
+
+        allure.attach.file(source=self.pcap_obj.pcap_name,
+                           name="pcap_file", attachment_type=allure.attachment_type.PCAP)
+        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                             influx_port=self.influx_params["influx_port"],
+                             influx_org=self.influx_params["influx_org"],
+                             influx_token=self.influx_params["influx_token"],
+                             influx_bucket=self.influx_params["influx_bucket"],
+                             path=report_name)
+        influx.glob()
+        return ofdma_obj
+
+    def set_radio_channel(self, radio="1.1.wiphy0", channel="AUTO"):
+        try:
+            radio = radio.split(".")
+            shelf = radio[0]
+            resource = radio[1]
+            radio_ = radio[2]
+            print("radio %s channel %s" % (radio, channel))
+            local_realm_obj = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
+            data = {
+                "shelf": shelf,
+                "resource": resource,
+                "radio": radio_,
+                "mode": "NA",
+                "channel": channel
+            }
+            local_realm_obj.json_post("/cli-json/set_wifi_radio", _data=data)
+            time.sleep(2)
+        except Exception as e:
+            print(e)
+
+    def layer3_traffic(self, ssid_num=8, band="2.4 Ghz", station_name=[]):
+        self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
+        self.staConnect.station_profile = self.staConnect.new_station_profile()
+        self.staConnect.resource = 1
+        self.staConnect.station_names = station_name
+        self.staConnect.runtime_secs = 40
+        self.staConnect.bringup_time_sec = 80
+        self.staConnect.cleanup_on_exit = True
+        self.staConnect.station_profile.up = True
+        self.staConnect.use_existing_sta = True
+        allure.attach(name="Definition",
+                      body="Max-SSID test intends to verify stability of Wi-Fi device " \
+                         "where the AP is configured with max no.of SSIDs with different security modes.")
+        allure.attach(name="Procedure",
+                      body=f"This test case definition states that we need to push the basic bridge mode config on the "
+                           f"AP to be tested by configuring it with maximum {ssid_num} SSIDs in {band} radio. "
+                           f"Create client on each SSIDs and run Layer-3 traffic. Pass/ fail criteria: "
+                           f"The client created should get associated to the AP")
+        # Create UDP endpoints
+        self.staConnect.l3_udp_profile = self.staConnect.new_l3_cx_profile()
+        self.staConnect.l3_udp_profile.report_timer = 1000
+        self.staConnect.l3_udp_profile.name_prefix = "udp"
+        self.staConnect.cx_profile.name_prefix = "udp"
+        self.staConnect.pre_cleanup()
+        self.staConnect.l3_udp_profile.create(endp_type="lf_udp",
+                                   side_a=station_name,
+                                   side_b="%d.%s" % (self.staConnect.resource, self.upstream_port),
+                                   suppress_related_commands=True)
+
+        # Create TCP endpoints
+        self.staConnect.l3_tcp_profile = self.staConnect.new_l3_cx_profile()
+        self.staConnect.l3_tcp_profile.report_timer = 1000
+        self.staConnect.l3_tcp_profile.name_prefix = "tcp"
+        self.staConnect.cx_profile.name_prefix = "tcp"
+        self.staConnect.pre_cleanup()
+        self.staConnect.l3_tcp_profile.create(endp_type="lf_tcp",
+                                   side_a=station_name,
+                                   side_b="%d.%s" % (self.staConnect.resource, self.upstream_port),
+                                   suppress_related_commands=True)
+        self.staConnect.start()
+        print("napping %f sec" % self.staConnect.runtime_secs)
+        time.sleep(self.staConnect.runtime_secs)
+        count = 0
+        report_obj = Report()
+        for station_info in self.staConnect.resulting_stations:
+            data_table, dict_table = "", {}
+            dict_data = self.staConnect.resulting_stations[station_info]["interface"]
+            dict_table["Interface"] = list(dict_data.keys())
+            dict_table["Value"] = list(dict_data.values())
+            try:
+                data_table = report_obj.table2(table=dict_table, headers='keys')
+            except Exception as e:
+                print(e)
+            allure.attach(name=str(self.staConnect.resulting_stations[station_info]["interface"]['alias']), body=data_table)
+            data_table = ""
+            dict_table.clear()
+            cx = list(self.staConnect.l3_tcp_profile.created_cx.keys())[count]
+            dict_data = self.staConnect.json_get(f"/cx/{cx}")
+            dict_table["Cross-connect"] = list(dict_data[cx].keys())
+            dict_table["tcp-Value"] = list(dict_data[cx].values())
+            try:
+                data_table = report_obj.table2(table=dict_table, headers='keys')
+            except Exception as e:
+                print(e)
+            cx = list(self.staConnect.l3_udp_profile.created_cx.keys())[count]
+            dict_data = self.staConnect.json_get(f"/cx/{cx}")
+            dict_table["udp-Value"] = list(dict_data[cx].values())
+            try:
+                data_table = report_obj.table2(table=dict_table, headers='keys')
+            except Exception as e:
+                print(e)
+            allure.attach(name="cx-" + str(self.staConnect.resulting_stations[station_info]["interface"]['alias']), body=str(data_table))
+            count += 1
+        self.staConnect.stop()
+        self.staConnect.cleanup()
 
 
 if __name__ == '__main__':
@@ -1207,7 +1676,3 @@ if __name__ == '__main__':
     # print(a)
     # print(obj.eap_connect.json_get("port/1/1/sta0000?fields=ap,ip"))
     # obj.EAP_Connect(station_name=["sta0000", "sta0001"], eap="TTLS", ssid="testing_radius")
-
-
-# TODO: create new funtion
-#  --> attach details to allure (ref:client_connectivity)

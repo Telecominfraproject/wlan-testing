@@ -1,0 +1,242 @@
+name: 2.x testing with Kubernetes deployment
+
+env:
+  AWS_EKS_NAME: tip-wlan-main
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      deployment_version:
+        default: 'main'
+        description: 'OpenWIFI deployment repository version to be deployed.'
+        required: true
+      owgw_version:
+        default: 'master'
+        description: 'OpenWIFI Gateway version to be deployed'
+        required: false
+      owsec_version:
+        default: 'main'
+        description: 'OpenWIFI Security version to be deployed'
+        required: false
+      owfms_version:
+        default: 'main'
+        description: 'OpenWIFI Firmware version to be deployed'
+        required: false
+      owprov_version:
+        default: 'main'
+        description: 'OpenWIFI Provisioning version to be deployed'
+        required: false
+      owanalytics_version:
+        default: 'main'
+        description: 'OpenWIFI Analytics version to be deployed'
+        required: false
+      owsub_version:
+        default: 'main'
+        description: 'OpenWIFI Subscription (Userportal) version to be deployed'
+        required: false
+      id:
+        description: 'run identifier'
+        required: false
+      microservice:
+        description: 'OpenWIFI microservice to be tested'
+        required: true
+        type: choice
+        options:
+        - owgw
+        - owsec
+        - owfms
+        - all
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  id:
+    name: Workflow ID Provider
+    runs-on: ubuntu-latest
+    steps:
+      - name: ${{ github.event.inputs.id }}
+        run: echo run identifier ${{ inputs.id }}
+
+  deploy-controller:
+    name: Deploy OpenWIFI Cloud SDK
+    env:
+      AWS_DEFAULT_OUTPUT: json
+      AWS_DEFAULT_REGION: us-east-2
+    runs-on: ubuntu-latest
+    needs: id
+    outputs:
+      gateway_url: ${{ steps.gateway_url.outputs.value }}
+      sec_url: ${{ steps.sec_url.outputs.value }}
+      namespace: ${{ steps.namespace.outputs.value }}
+    steps:
+    - name: Checkout repo with Helm values
+      uses: actions/checkout@v2
+      with:
+        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
+        path: wlan-cloud-ucentral-deploy
+        ref: ${{ github.event.inputs.deployment_version }}
+
+    - name: Prepare certificates from secrets
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
+      run: |
+        echo "${{ secrets.DIGICERT_CERT }}" | base64 -d > cert.pem
+        echo "${{ secrets.DIGICERT_KEY }}" | base64 -d > key.pem
+
+    - name: Fetch kubeconfig
+      run: |
+        aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+    - name: Set namespace output
+      id: namespace
+      run: echo "::set-output name=value::deploy-k8s-${{ github.run_id }}"
+
+    - name: Set gateway URL output
+      id: gateway_url
+      run: echo "::set-output name=value::gw-${{ steps.namespace.outputs.value }}.cicd.lab.wlan.tip.build"
+
+    - name: Set sec service URL output
+      id: sec_url
+      run: echo "::set-output name=value::sec-${{ steps.namespace.outputs.value }}.cicd.lab.wlan.tip.build"
+
+    - name: Deploy OpenWIFI Cloud SDK
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
+      run: |
+        export NAMESPACE=${{ steps.namespace.outputs.value }}
+        export DEPLOY_METHOD=git
+        export CHART_VERSION=${{ github.event.inputs.deployment_version }}
+        export OWGW_VERSION=${{ github.event.inputs.owgw_version }}
+        export OWGWUI_VERSION=main
+        export OWSEC_VERSION=${{ github.event.inputs.owsec_version }}
+        export OWFMS_VERSION=${{ github.event.inputs.owfms_version }}
+        export OWPROV_VERSION=${{ github.event.inputs.owprov_version }}
+        export OWPROVUI_VERSION=main
+        export OWANALYTICS_VERSION=${{ github.event.inputs.owanalytics_version }}
+        export OWSUB_VERSION=${{ github.event.inputs.owsub_version }}
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
+        export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
+        export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
+        export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
+        export OWFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
+        export CERT_LOCATION=cert.pem
+        export KEY_LOCATION=key.pem
+        export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
+        ./deploy.sh
+
+    - name: Show resource state on deployment failure
+      if: failure()
+      run: |
+        kubectl get pods --namespace openwifi-${{ steps.namespace.outputs.value }}
+        kubectl get services --namespace openwifi-${{ steps.namespace.outputs.value }}
+        kubectl get persistentvolumeclaims --namespace openwifi-${{ steps.namespace.outputs.value }}
+    - name: Describe pods on deployment failure
+      if: failure()
+      run: |
+        kubectl describe pods --namespace openwifi-${{ steps.namespace.outputs.value }}
+    - name: Describe services on deployment failure
+      if: failure()
+      run: |
+        kubectl describe services --namespace openwifi-${{ steps.namespace.outputs.value }}
+    - name: Describe persistentvolumeclaims on deployment failure
+      if: failure()
+      run: |
+        kubectl describe persistentvolumeclaims --namespace ${{ steps.namespace.outputs.value }}
+
+  deploy-virtual-ap-instance:
+    name: Deploy virtual AP EC2 instance
+    needs: deploy-controller
+    runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+    outputs:
+      serial_number: ${{ steps.deploy-virtual-ap-instance.outputs.serial_number }}
+      instance_id: ${{ steps.deploy-virtual-ap-instance.outputs.instance_id }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use deploy-virtual-ap-instance composite action
+        id: deploy-virtual-ap-instance
+        uses: ./.github/actions/deploy-virtual-ap-instance
+        with:
+          virtual_ap_password: ${{ secrets.VIRTUAL_AP_PASSWORD }}
+          virtual_ap_cert: ${{ secrets.VIRTUAL_AP_CERT }}
+          virtual_ap_key: ${{ secrets.VIRTUAL_AP_KEY }}
+          virtual_ap_dev_id: ${{ secrets.VIRTUAL_AP_DEV_ID }}
+          gateway_url: ${{ needs.deploy-controller.outputs.gateway_url }}
+
+  test:
+   name: Test specified microservice
+   needs: [deploy-controller, deploy-virtual-ap-instance]
+   runs-on: ubuntu-latest
+   env:
+     OWSEC: "${{ needs.deploy-controller.outputs.sec_url }}:16001"
+     OWSEC_USERNAME: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
+     OWSEC_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
+   steps:
+     - name: Get OWGW CLI script and test service
+       if: github.event.inputs.microservice == 'owgw' || github.event.inputs.microservice == 'all'
+       run: |
+         curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralgw/master/test_scripts/curl/cli -o cli
+         chmod +x cli
+         ./cli test_service ${{ needs.deploy-virtual-ap-instance.outputs.serial_number }}
+
+     - name: Get OWSec CLI script and test service
+       if: github.event.inputs.microservice == 'owsec' || github.event.inputs.microservice == 'all'
+       run: |
+         curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralsec/main/test_scripts/curl/cli -o cli
+         chmod +x cli
+         ./cli test_service
+
+     - name: Get OWFms CLI script and test service
+       if: github.event.inputs.microservice == 'owfms' || github.event.inputs.microservice == 'all'
+       run: |
+         curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralfms/main/test_scripts/curl/cli -o cli
+         chmod +x cli
+         ./cli test_service ${{ needs.deploy-virtual-ap-instance.outputs.serial_number }}
+
+  destroy-controller:
+    name: Destroy controller namespace
+    needs: [deploy-controller, test]
+    runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: us-east-2
+    if: always()
+    steps:
+      - name: Fetch kubeconfig
+        run: |
+          aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: Delete Cloud SDK
+        run: |
+          helm delete -n openwifi-${{ needs.deploy-controller.outputs.namespace }} tip-openwifi
+          kubectl delete namespace --ignore-not-found=true openwifi-${{ needs.deploy-controller.outputs.namespace }}
+
+  terminate-virtual-ap-instance:
+    name: Terminate virtual AP instance
+    needs: [deploy-virtual-ap-instance, test]
+    runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+    if: always()
+    steps:
+      - name: Terminate virtual AP EC2 instance
+        continue-on-error: true
+        run: |
+          aws ec2 terminate-instances --instance-ids ${{ needs.deploy-virtual-ap-instance.outputs.instance_id }}

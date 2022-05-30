@@ -38,25 +38,25 @@ setup_params_general = {
     "radius": False
 }
 
-class TestUniqueSSIDGeneralBridgeAnd(object):
+# class TestUniqueSSIDGeneralBridgeAnd(object):
+#
+#     @pytest.mark.unique_ssid_general_one_bridge_and
+#     def test_unique_ssid_general_one_bridge_and(self):
+#         for sec_modes in setup_params_general['ssid_modes'].keys():
+#             for i in range(len(setup_params_general['ssid_modes'][sec_modes])):
+#                 N = 3
+#                 rand_string = (''.join(random.choices(string.ascii_uppercase +
+#                                                       string.digits, k=N))) + str(int(time.time_ns()) % 10000)
+#                 setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = \
+#                 setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
+#             assert True
 
-    @pytest.mark.unique_ssid_general_one_bridge_and
-    def test_unique_ssid_general_one_bridge_and(self):
-        for sec_modes in setup_params_general['ssid_modes'].keys():
-            for i in range(len(setup_params_general['ssid_modes'][sec_modes])):
-                N = 3
-                rand_string = (''.join(random.choices(string.ascii_uppercase +
-                                                      string.digits, k=N))) + str(int(time.time_ns()) % 10000)
-                setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = \
-                setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
-            assert True
-
-# for sec_modes in setup_params_general['ssid_modes'].keys():
-#     for i in range(len(setup_params_general['ssid_modes'][sec_modes])):
-#         N = 3
-#         rand_string = (''.join(random.choices(string.ascii_uppercase +
-#                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
-#         setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
+for sec_modes in setup_params_general['ssid_modes'].keys():
+    for i in range(len(setup_params_general['ssid_modes'][sec_modes])):
+        N = 3
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                     string.digits, k=N)))+str(int(time.time_ns())%10000)
+        setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 @allure.suite(suite_name="interop sanity")
 @allure.sub_suite(sub_suite_name="Bridge Mode Client Connect : Suite-A")
@@ -318,26 +318,26 @@ setup_params_general_two = {
     "radius": False
 }
 
-class TestUniqueSSIDGeneralTwoBridgeAnd(object):
+# class TestUniqueSSIDGeneralTwoBridgeAnd(object):
+#
+#     @pytest.mark.unique_ssid_general_two_bridge_and
+#     def test_unique_ssid_general_two_bridge_and(self):
+#         for sec_modes in setup_params_general_two['ssid_modes'].keys():
+#             for i in range(len(setup_params_general_two['ssid_modes'][sec_modes])):
+#                 N = 3
+#                 rand_string = (''.join(random.choices(string.ascii_uppercase +
+#                                                       string.digits, k=N))) + str(int(time.time_ns()) % 10000)
+#                 setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] = \
+#                 setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
+#
+#         assert True
 
-    @pytest.mark.unique_ssid_general_two_bridge_and
-    def test_unique_ssid_general_two_bridge_and(self):
-        for sec_modes in setup_params_general_two['ssid_modes'].keys():
-            for i in range(len(setup_params_general_two['ssid_modes'][sec_modes])):
-                N = 3
-                rand_string = (''.join(random.choices(string.ascii_uppercase +
-                                                      string.digits, k=N))) + str(int(time.time_ns()) % 10000)
-                setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] = \
-                setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
-
-        assert True
-
-# for sec_modes in setup_params_general_two['ssid_modes'].keys():
-#     for i in range(len(setup_params_general_two['ssid_modes'][sec_modes])):
-#         N = 2
-#         rand_string = (''.join(random.choices(string.ascii_uppercase +
-#                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
-#         setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'].replace("ssid_","") + "_"+ rand_string
+for sec_modes in setup_params_general_two['ssid_modes'].keys():
+    for i in range(len(setup_params_general_two['ssid_modes'][sec_modes])):
+        N = 2
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                     string.digits, k=N)))+str(int(time.time_ns())%10000)
+        setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general_two['ssid_modes'][sec_modes][i]['ssid_name'].replace("ssid_","") + "_"+ rand_string
 
 @allure.suite(suite_name="interop sanity")
 @allure.sub_suite(sub_suite_name="Bridge Mode Client Connect : Suite-B")

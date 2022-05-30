@@ -60,19 +60,22 @@ class TestWifiCapacityNATModeDualBand(object):
         mode = "NAT"
         vlan = 1
         max = int(get_apnos_max_clients[0])
+        sets = [["DUT_NAME", lf_tools.dut_name]]
+        print("sets", sets)
         lf_tools.add_stations(band="2G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        influx_tags = ["tcp", "download", "2.4G-5G Combined"]
+        influx_tags = "wifi-capacity-tcp-download-nat-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_tcp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                        influx_tags=influx_tags,
-                                        upload_rate="0", protocol="TCP-IPv4", duration="60000")
+                                        influx_tags=influx_tags, sets=sets,
+                                        upload_rate="0", protocol="TCP-IPv4", duration="60000", move_to_influx=True)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.attach_report_kpi(report_name=report_name)
         LOGGER.info('test_client_wpa2_NAT_tcp_dl Test Finished')
         assert True
 
@@ -90,19 +93,22 @@ class TestWifiCapacityNATModeDualBand(object):
         mode = "NAT"
         vlan = 1
         max = int(get_apnos_max_clients[0])
+        sets = [["DUT_NAME", lf_tools.dut_name]]
+        print("sets", sets)
         lf_tools.add_stations(band="2G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        influx_tags = ["udp", "download", "2.4G-5G Combined"]
+        influx_tags = "wifi-capacity-udp-download-nat-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_udp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                        influx_tags=influx_tags,
-                                        upload_rate="100Mbps", protocol="UDP-IPv4", duration="60000")
+                                        influx_tags=influx_tags, sets=sets,
+                                        upload_rate="100Mbps", protocol="UDP-IPv4", duration="60000", move_to_influx=True)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.attach_report_kpi(report_name=report_name)
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -120,19 +126,22 @@ class TestWifiCapacityNATModeDualBand(object):
         mode = "NAT"
         vlan = 1
         max = int(get_apnos_max_clients[0])
+        sets = [["DUT_NAME", lf_tools.dut_name]]
+        print("sets", sets)
         lf_tools.add_stations(band="2G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        influx_tags = ["tcp", "bidirectional", "2.4G-5G Combined"]
+        influx_tags = "wifi-capacity-tcp-bidirectional-nat-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_tcp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                        influx_tags=influx_tags,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000")
+                                        influx_tags=influx_tags, sets=sets,
+                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", move_to_influx=True)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.attach_report_kpi(report_name=report_name)
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -150,25 +159,28 @@ class TestWifiCapacityNATModeDualBand(object):
         mode = "NAT"
         vlan = 1
         max = int(get_apnos_max_clients[0])
+        sets = [["DUT_NAME", lf_tools.dut_name]]
+        print("sets", sets)
         lf_tools.add_stations(band="2G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        influx_tags = ["udp", "bidirectional", "2.4G-5G Combined"]
+        influx_tags = "wifi-capacity-udp-bidirectional-nat-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_udp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                        influx_tags=influx_tags,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
+                                        influx_tags=influx_tags, sets=sets,
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", move_to_influx=True)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.attach_report_kpi(report_name=report_name)
         print("Test Completed... Cleaning up Stations")
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7127", name="WIFI-7127")
     @pytest.mark.tcp_upload
-    def test_client_wpa2_bridge_tcp_ul(self, lf_tools, get_apnos_max_clients,
+    def test_client_wpa2_NAT_tcp_ul(self, lf_tools, get_apnos_max_clients,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -180,25 +192,28 @@ class TestWifiCapacityNATModeDualBand(object):
         mode = "NAT"
         vlan = 1
         max = int(get_apnos_max_clients[0])
+        sets = [["DUT_NAME", lf_tools.dut_name]]
+        print("sets", sets)
         lf_tools.add_stations(band="2G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        influx_tags = ["tcp", "download", "2.4G-5G Combined"]
+        influx_tags = "wifi-capacity-tcp-upload-nat-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_tcp_ul", mode=mode, vlan_id=vlan,
                                         download_rate="0", batch_size="1,5,10,20,40,64,128,256",
-                                        influx_tags=influx_tags,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000")
+                                        influx_tags=influx_tags, sets=sets,
+                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", move_to_influx=True)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.attach_report_kpi(report_name=report_name)
         print("Test Completed... Cleaning up Stations")
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7128", name="WIFI-7128")
     @pytest.mark.udp_upload
-    def test_client_wpa2_bridge_udp_ul(self, lf_tools, get_apnos_max_clients,
+    def test_client_wpa2_NAT_udp_ul(self, lf_tools, get_apnos_max_clients,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -210,19 +225,22 @@ class TestWifiCapacityNATModeDualBand(object):
         mode = "NAT"
         vlan = 1
         max = int(get_apnos_max_clients[0])
+        sets = [["DUT_NAME", lf_tools.dut_name]]
+        print("sets", sets)
         lf_tools.add_stations(band="2G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        influx_tags = ["udp", "download", "2.4G-5G Combined"]
+        influx_tags = "wifi-capacity-udp-upload-nat-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_udp_ul", mode=mode, vlan_id=vlan,
                                         download_rate="0", batch_size="1,5,10,20,40,64,128,256",
-                                        influx_tags=influx_tags,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
+                                        influx_tags=influx_tags, sets=sets,
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", move_to_influx=True)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.attach_report_kpi(report_name=report_name)
         print("Test Completed... Cleaning up Stations")
         assert True
 

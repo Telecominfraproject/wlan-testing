@@ -26,6 +26,7 @@ env:
   # - owfms_version - OpenWIFI Firmware version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
   # - owprov_version - OpenWIFI Provisioning version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
   # - owanalytics_version - OpenWIFI Analytics version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+  # - owsub_version - OpenWIFI Subscription (Userportal) version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
   # - owgwui_version - OpenWIFI Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
   # - owprovui_version - OpenWIFI Provisioning Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
   testbeds: '[
@@ -38,18 +39,36 @@ env:
       "owfms_version": "main",
       "owprov_version": "main",
       "owanalytics_version": "main",
+      "owsub_version": "main",
       "owgwui_version": "main",
       "owprovui_version": "main"
     }
   ]'
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      force_latest:
+        default: 'false'
+        description: 'Force deployment of the latest versions of all microservices ignoring matrix versions'
+        required: true
+      id:
+        description: 'run identifier'
+        required: false
 
 jobs:
+  id:
+    name: Workflow ID Provider
+    runs-on: ubuntu-latest
+    steps:
+      - name: ${{ github.event.inputs.id }}
+        run: echo run identifier ${{ inputs.id }}
+
   generate-matrix:
     name: Generate matrix for build
     runs-on: ubuntu-latest
+    needs:
+      - id
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -61,7 +80,9 @@ jobs:
   deploy:
     name: Update OpenWIFI Cloud SDK instances
     runs-on: ubuntu-latest
-    needs: [ generate-matrix ]
+    needs:
+      - id
+      - generate-matrix
     strategy:
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
       fail-fast: false
@@ -70,10 +91,12 @@ jobs:
     - name: Checkout repo with Helm values
       uses: actions/checkout@v2
       with:
-        path: wlan-testing
+        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
+        path: wlan-cloud-ucentral-deploy
+        ref: ${{ matrix.chart_version }}
 
     - name: Prepare certificates from secrets
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         echo "${{ env.DIGICERT_CERT }}" | base64 -d > cert.pem
         echo "${{ env.DIGICERT_KEY }}" | base64 -d > key.pem
@@ -82,20 +105,17 @@ jobs:
       run: |
         aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
+    # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
     - name: Deploy OpenWIFI Cloud SDK
-      working-directory: wlan-testing/helm/ucentral
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         export NAMESPACE=${{ matrix.namespace }}
-        export DEPLOY_METHOD=${{ matrix.deploy_method }}
-        export CHART_VERSION=${{ matrix.chart_version }}
-        export OWGW_VERSION=${{ matrix.owgw_version }}
-        export OWGWUI_VERSION=${{ matrix.owgwui_version }}
-        export OWSEC_VERSION=${{ matrix.owsec_version }}
-        export OWFMS_VERSION=${{ matrix.owfms_version }}
-        export OWPROV_VERSION=${{ matrix.owprov_version }}
-        export OWPROVUI_VERSION=${{ matrix.owprovui_version }}
-        export OWANALYTICS_VERSION=${{ matrix.owanalytics_version }}
-        export VALUES_FILE_LOCATION=values.ucentral-qa.yaml
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.external-db.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
@@ -104,7 +124,34 @@ jobs:
         export CERT_LOCATION=cert.pem
         export KEY_LOCATION=key.pem
         export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
-        ./deploy.sh
+        export MAILER_USERNAME=${{ secrets.MAILER_USERNAME }}
+        export MAILER_PASSWORD=${{ secrets.MAILER_PASSWORD }}
+        export IPTOCOUNTRY_IPINFO_TOKEN=${{ secrets.IPTOCOUNTRY_IPINFO_TOKEN }}
+        if [[ "${{ github.event.inputs.force_latest }}" == "false" ]]; then
+          export DEPLOY_METHOD=${{ matrix.deploy_method }}
+          export CHART_VERSION=${{ matrix.chart_version }}
+          export OWGW_VERSION=${{ matrix.owgw_version }}
+          export OWGWUI_VERSION=${{ matrix.owgwui_version }}
+          export OWSEC_VERSION=${{ matrix.owsec_version }}
+          export OWFMS_VERSION=${{ matrix.owfms_version }}
+          export OWPROV_VERSION=${{ matrix.owprov_version }}
+          export OWPROVUI_VERSION=${{ matrix.owprovui_version }}
+          export OWANALYTICS_VERSION=${{ matrix.owanalytics_version }}
+          export OWSUB_VERSION=${{ matrix.owsub_version }}
+          ./deploy.sh
+        else
+          export DEPLOY_METHOD=git
+          export CHART_VERSION=main
+          export OWGW_VERSION=master
+          export OWGWUI_VERSION=main
+          export OWSEC_VERSION=main
+          export OWFMS_VERSION=main
+          export OWPROV_VERSION=main
+          export OWPROVUI_VERSION=main
+          export OWANALYTICS_VERSION=main
+          export OWSUB_VERSION=main
+          ./deploy.sh
+        fi
 
     - name: Show resource state on deployment failure
       if: failure()

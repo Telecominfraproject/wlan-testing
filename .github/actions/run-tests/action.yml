@@ -129,12 +129,14 @@ runs:
         kubectl wait "pod/$podname" --for condition=ready --timeout=600s
         kubectl logs -f $podname &
 
+        rm -f test_everything.xml
         until [ -s test_everything.xml ]
         do
           sleep 10
           kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
         done
         echo "tests completed"
+        rm -rf allure-results
         echo "downloading allure results..."
         kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
         echo "waiting for pod to exit"
@@ -144,14 +146,14 @@ runs:
         exit $EXIT_CODE
 
     - name: upload Allure results as artifact
-      if: ${{ always() }}
+      if: always()
       uses: actions/upload-artifact@v2
       with:
         name: ${{ inputs.allure_results_artifact_name }}
         path: allure-results
 
     - name: cleanup
-      if: ${{ always() }}
+      if: always()
       shell: bash
       run: |
         kubectl delete ns "${{ inputs.namespace }}" --wait=true
