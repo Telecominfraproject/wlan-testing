@@ -12,7 +12,8 @@
             "prompt" : "WLC2",
             "band": ["5g"],
             "scheme": "ssh",
-            "version": "17.9.0.292"
+            "version": "17.9.0.292",
+            "radius": "default"
         },
         "access_point": [
             {
