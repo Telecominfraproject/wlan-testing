@@ -67,6 +67,8 @@ from lf_sniff_radio import SniffRadio
 cv_test_reports = importlib.import_module("py-json.cv_test_reports")
 lf_report = cv_test_reports.lanforge_reports
 realm = importlib.import_module("py-json.realm")
+cv_test_reports = importlib.import_module("py-json.cv_test_reports")
+lf_report = cv_test_reports.lanforge_reports
 Realm = realm.Realm
 from LANforge import LFUtils
 from lf_cleanup import lf_clean
@@ -83,6 +85,7 @@ from lf_csv import lf_csv
 @allure.step
 def nested_step_allure(bssid, rssi):
     pass
+
 
 
 class RunTest:
@@ -1539,7 +1542,7 @@ class RunTest:
         raw_line = []
         skip_twog = '1' if skip_2g else '0'
         skip_fiveg = '1' if skip_5g else '0'
-        sniff_radio = 'wiphy6'
+        sniff_radio = 'wiphy0'
         channel = 149 if skip_2g else 11
         upstream_port = self.upstream_port
 
@@ -1549,13 +1552,51 @@ class RunTest:
                 ['Multiple STAs Performance', '0'], ['Multiple Assoc Stability', '0'], ['Downlink MU-MIMO', '1'],
                 ['AP Coexistence', '0'], ['Long Term Stability', '0'], ['Skip 2.4Ghz Tests', f'{skip_twog}'],
                 ['Skip 5Ghz Tests', f'{skip_fiveg}'], ['2.4Ghz Channel', 'AUTO'], ['5Ghz Channel', 'AUTO']]
-        for i in range(6):
-            if i == 0 or i == 2:
-                raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
-            if i == 1 or i == 3:
-                raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
-            if i == 4 or i == 5:
-                raw_line.append([f'radio-{i}: {radios_ax[0] if i == 4 else radios_ax[1]}'])
+        if len(radios_2g) >= 3 and len(radios_5g) >= 3:
+            for i in range(6):
+                if i == 0 or i == 2:
+                    raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
+                if i == 1 or i == 3:
+                    raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
+                if i == 4 or i == 5:
+                    raw_line.append([f'radio-{i}: {radios_5g[2] if i == 4 else radios_2g[2]}'])
+            if len(radios_ax) >= 1:
+                temp_ax = str(radios_ax[0]).split(" ")
+                if len(temp_ax) == 2:
+                    sniff_radio = str(temp_ax[1])
+            elif skip_2g:
+                temp = str(radios_5g[0]).split(" ")
+                if len(temp) == 2:
+                    sniff_radio = str(temp[1])
+            elif skip_5g:
+                temp = str(radios_2g[0]).split(" ")
+                if len(temp) == 2:
+                    sniff_radio = str(temp[1])
+        elif len(radios_2g) >= 2 and len(radios_5g) >= 2 and len(radios_ax) >= 2:
+            if len(radios_2g) >= 3 and len(radios_5g) >= 3:
+                for i in range(6):
+                    if i == 0 or i == 2:
+                        raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
+                    if i == 1 or i == 3:
+                        raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
+                    if i == 4 or i == 5:
+                        raw_line.append([f'radio-{i}: {radios_5g[2] if i == 4 else radios_2g[2]}'])
+                if len(radios_ax) >= 1:
+                    temp_ax = str(radios_ax[0]).split(" ")
+                    if len(temp_ax) == 2:
+                        sniff_radio = str(temp_ax[1])
+            else:
+                for i in range(6):
+                    if i == 0 or i == 2:
+                        raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
+                    if i == 1 or i == 3:
+                        raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
+                    if i == 4 or i == 5:
+                        raw_line.append([f'radio-{i}: {radios_ax[0] if i == 4 else radios_ax[1]}'])
+                if len(radios_ax) >= 3:
+                    temp_ax = str(radios_ax[2]).split(" ")
+                    if len(temp_ax) == 2:
+                        sniff_radio = str(temp_ax[1])
 
         if len(raw_line) != 6:
             raw_line = [['radio-0: 1.1.5 wiphy1'], ['radio-1: 1.1.4 wiphy0'], ['radio-2: 1.1.7 wiphy3'],
@@ -1573,7 +1614,7 @@ class RunTest:
         else:
             upstream_port = self.upstream_port + "." + str(vlan_id)
         print("Upstream Port: ", self.upstream_port)
-
+        print("radio used to sniff :", sniff_radio)
         self.pcap_obj = LfPcap(host=self.lanforge_ip, port=self.lanforge_port)
         self.cvtest_obj = TR398Test(lf_host=self.lanforge_ip,
                                     lf_port=self.lanforge_port,
@@ -1597,14 +1638,27 @@ class RunTest:
         self.cvtest_obj.setup()
         t1 = threading.Thread(target=self.cvtest_obj.run)
         t1.start()
-        # t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 60))
-        # if t1.is_alive():
-        #     time.sleep(180)
-        #     t2.start()
+        if t1.is_alive():
+            time.sleep(150)
+            t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 45))
+            t2.start()
         while t1.is_alive():
             time.sleep(1)
         if os.path.exists("mu-mimo-config.txt"):
             os.remove("mu-mimo-config.txt")
+        # pull pcap from lanforge to current directory
+        if self.pcap_obj.pcap_name is not None:
+            lf_report.pull_reports(hostname=self.lanforge_ip, port=self.lanforge_ssh_port, username="lanforge",
+                                   password="lanforge", report_location="/home/lanforge/" + self.pcap_obj.pcap_name,
+                                   report_dir=".")
+        else:
+            raise ValueError("pcap_name should not be None")
+
+        # check for mu-mimo bearmformee association request
+        assoc_req = self.pcap_obj.check_beamformee_association_request(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=assoc_req, name="Check Bearmformee Association Request")
+        allure.attach.file(source=self.pcap_obj.pcap_name,
+                           name="pcap_file", attachment_type=allure.attachment_type.PCAP)
 
         report_name = self.cvtest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
@@ -1615,9 +1669,6 @@ class RunTest:
                              path=report_name)
         influx.glob()
         return self.cvtest_obj
-
-        print(f"Lanforge-radio Country changed {_country_num}")
-        self.local_realm.json_post("/cli-json/set_wifi_radio", _data=data)
 
     def scan_ssid(self, radio=""):
         '''This method for scan ssid data'''
@@ -1729,6 +1780,112 @@ class RunTest:
                 return True
             else:
                 return False
+
+    def ofdma(self, mode="BRIDGE", vlan_id=1, inst_name="ofdma", batch_size='1', rawlines=None, sniffer_channel=0,
+              sniffer_radio="wiphy0", wct_stations=None, sniffer_duration=60):
+
+        if inst_name == "ofdma":
+            inst_name = "ofdma-instance-{}".format(str(random.randint(0, 100000)))
+
+        if rawlines is None:
+            rawlines = [['pdu_sz: 300']]
+
+        self.pcap_obj = LfPcap(host=self.lanforge_ip, port=self.lanforge_port)
+        sniffer = threading.Thread(target=self.pcap_obj.sniff_packets,
+                                   args=(sniffer_radio, "ofdma-test", sniffer_channel, 90))
+        sniffer.start()
+        ofdma_obj = self.wifi_capacity(instance_name=inst_name, mode=mode, vlan_id=vlan_id, download_rate="10 Mbps",
+                                       batch_size=batch_size, stations=wct_stations, create_stations=False,
+                                       sort="interleave",
+                                       upload_rate="0", protocol="TCP-IPv4", duration="60000", raw_lines=rawlines)
+        ofdma_obj.result = 'PASS'
+        while sniffer.is_alive():
+            time.sleep(1)
+        report_name = ofdma_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        # pull pcap from lanforge to current directory
+        if self.pcap_obj.pcap_name is not None:
+            try:
+                lf_report.pull_reports(hostname=self.lanforge_ip, port=self.lanforge_ssh_port, username="lanforge",
+                                       password="lanforge", report_location="/home/lanforge/" + self.pcap_obj.pcap_name,
+                                       report_dir=".")
+            except Exception as e:
+                print("error while pulling pcap file from lanforge", e)
+        else:
+            raise ValueError("pcap_name should not be None")
+
+        table_heads = ["Packet Type", "Capability Check", 'PASS/FAIL']
+        table_data = []
+
+        # check for HE Capability in Beacon Frame
+        check_he = self.pcap_obj.check_he_capability_beacon_frame(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check HE Capabilities in Beacon Frame")
+        if check_he == "HE SU PPDU & HE MU PPDU w 4x HE-LTF & 0.8us GI: Supported":
+            table_data.append(['Beacon Frame', check_he, 'PASS'])
+        else:
+            table_data.append(['Beacon Frame', check_he, 'FAIL'])
+            ofdma_obj.result = 'FAIL'
+
+        # check for HE Capability in probe request
+        check_he = self.pcap_obj.check_he_capability_probe_request(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check HE Capabilities in Probe Request")
+        if check_he == "HE SU PPDU & HE MU PPDU w 4x HE-LTF & 0.8us GI: Supported":
+            table_data.append(['Probe Request', check_he, 'PASS'])
+        else:
+            table_data.append(['Probe Request', check_he, 'FAIL'])
+            ofdma_obj.result = 'FAIL'
+
+        # check for HE Capability in probe response
+        check_he = self.pcap_obj.check_he_capability_probe_response(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check HE Capabilities in Probe Request")
+        if check_he == "HE SU PPDU & HE MU PPDU w 4x HE-LTF & 0.8us GI: Supported":
+            table_data.append(['Probe Response', check_he, 'PASS'])
+        else:
+            table_data.append(['Probe Response', check_he, 'FAIL'])
+            ofdma_obj.result = 'FAIL'
+
+        # check for HE Capability in Association request
+        check_he = self.pcap_obj.check_he_capability_association_request(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check HE Capabilities in Association Request")
+        if check_he == "HE SU PPDU & HE MU PPDU w 4x HE-LTF & 0.8us GI: Supported":
+            table_data.append(['Association Request', check_he, 'PASS'])
+        else:
+            table_data.append(['Association Request', check_he, 'FAIL'])
+            ofdma_obj.result = 'FAIL'
+
+        # check for HE Capability in Association response
+        check_he = self.pcap_obj.check_he_capability_association_response(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check HE Capabilities in Association Response")
+        if check_he == "HE SU PPDU & HE MU PPDU w 4x HE-LTF & 0.8us GI: Supported":
+            table_data.append(['Association Response', check_he, 'PASS'])
+        else:
+            table_data.append(['Association Response', check_he, 'FAIL'])
+            ofdma_obj.result = 'FAIL'
+
+        # check for Guard Interval
+        check_he = self.pcap_obj.check_he_guard_interval(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_he, name="Check Guard Interval")
+        if check_he == "Packet Not Found" or check_he is None:
+            table_data.append(['Guard Interval', check_he, 'FAIL'])
+            ofdma_obj.result = 'FAIL'
+        else:
+            table_data.append(['Guard Interval', check_he, 'PASS'])
+
+        print(table_data)
+        # attach test data in a table to allure
+        report_obj = Report()
+        table_info = report_obj.table2(table=table_data, headers=table_heads)
+        allure.attach(name="Test Results Info", body=table_info)
+
+        allure.attach.file(source=self.pcap_obj.pcap_name,
+                           name="pcap_file", attachment_type=allure.attachment_type.PCAP)
+        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                             influx_port=self.influx_params["influx_port"],
+                             influx_org=self.influx_params["influx_org"],
+                             influx_token=self.influx_params["influx_token"],
+                             influx_bucket=self.influx_params["influx_bucket"],
+                             path=report_name)
+        influx.glob()
+        return ofdma_obj
 
     def set_radio_channel(self, radio="1.1.wiphy0", channel="AUTO"):
         try:

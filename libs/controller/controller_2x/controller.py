@@ -216,6 +216,7 @@ class Controller(ConfigureController):
 
     def get_device_uuid(self, serial_number):
         device_info = self.get_device_by_serial_number(serial_number=serial_number)
+        device_info = device_info.json()
         return device_info["UUID"]
 
     def add_device_to_gw(self, serial_number, payload):
