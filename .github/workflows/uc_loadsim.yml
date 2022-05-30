@@ -199,20 +199,18 @@ jobs:
         export OWSEC_USERNAME="tip@ucentral.com"
         export OWSEC_PASSWORD="${{ secrets.OWSEC_NEW_PASSWORD }}"
 
-        echo "Trying to cache OWLS FQDN in /etc/hosts"
+        echo "[Info] Trying to cache OWLS FQDN in /etc/hosts"
         export HOST_ENTRY=""
         until [ ! -z "$HOST_ENTRY" ]; do export HOST_ENTRY=$(getent hosts ${{ steps.ls.outputs.url }}); sleep 1; done;
         cat /etc/hosts > /tmp/hosts
         echo "$HOST_ENTRY" >> /tmp/hosts
         sudo cp /tmp/hosts /etc/hosts
-        echo "DNS record for ${{ steps.ls.outputs.url }} resolved successfully!"
+        echo "[Info] DNS record for ${{ steps.ls.outputs.url }} resolved successfully!"
         cat /etc/hosts
 
-        echo "[Info] Creating simulation"
-        touch output_sim_info.json
         cat > input_sim_info.json <<EOF
         {
-          "name":"${{ steps.ec2_facts.outputs.instance_name }}",
+          "name":"test",
           "deviceType":"edgecore_ecw5410",
           "devices":${{ github.event.inputs.devices_count }},
           "gateway":"https://$OWGW",
@@ -220,15 +218,21 @@ jobs:
           "simulationLength":${{ github.event.inputs.simulation_lenght }}
         }
         EOF
+        echo "[Info] Simulation definition"
+        cat input_sim_info.json | jq .
+
+        echo "[Info] Creating simulation"
         export SIMULATION_ID="null"
         while [[ "$SIMULATION_ID" == "null" ]]; do
           ./cli createsim input_sim_info.json || true
           export SIMULATION_ID=$(cat result.json | jq '.id' -r)
-          echo $SIMULATION_ID
+          echo "[Info] Simulation ID from result file - $SIMULATION_ID"
         done
+        cat result.json | jq .
 
         echo "[Info] Starting simulation"
         ./cli startsim $SIMULATION_ID
+        cat result.json | jq .
 
         echo "[Info] Waiting for simulation to end"
         ./cli getsimstats > /dev/null
@@ -460,20 +464,18 @@ jobs:
         export OWSEC_USERNAME="tip@ucentral.com"
         export OWSEC_PASSWORD="${{ secrets.OWSEC_NEW_PASSWORD }}"
 
-        echo "Trying to cache OWLS FQDN in /etc/hosts"
+        echo "[Info] Trying to cache OWLS FQDN in /etc/hosts"
         export HOST_ENTRY=""
         until [ ! -z "$HOST_ENTRY" ]; do export HOST_ENTRY=$(getent hosts ${{ steps.ls.outputs.url }}); sleep 1; done;
         cat /etc/hosts > /tmp/hosts
         echo "$HOST_ENTRY" >> /tmp/hosts
         sudo cp /tmp/hosts /etc/hosts
-        echo "DNS record for ${{ steps.ls.outputs.url }} resolved successfully!"
+        echo "[Info] DNS record for ${{ steps.ls.outputs.url }} resolved successfully!"
         cat /etc/hosts
 
-        echo "[Info] Creating simulation"
-        touch output_sim_info.json
         cat > input_sim_info.json <<EOF
         {
-          "name":"${{ steps.ec2_facts.outputs.instance_name }}",
+          "name":"test",
           "deviceType":"edgecore_ecw5410",
           "devices":${{ github.event.inputs.devices_count }},
           "gateway":"https://$OWGW",
@@ -481,15 +483,21 @@ jobs:
           "simulationLength":${{ github.event.inputs.simulation_lenght }}
         }
         EOF
+        echo "[Info] Simulation definition"
+        cat input_sim_info.json | jq .
+
+        echo "[Info] Creating simulation"
         export SIMULATION_ID="null"
         while [[ "$SIMULATION_ID" == "null" ]]; do
           ./cli createsim input_sim_info.json || true
           export SIMULATION_ID=$(cat result.json | jq '.id' -r)
-          echo $SIMULATION_ID
+          echo "[Info] Simulation ID from result file - $SIMULATION_ID"
         done
+        cat result.json | jq .
 
         echo "[Info] Starting simulation"
         ./cli startsim $SIMULATION_ID
+        cat result.json | jq .
 
         echo "[Info] Waiting for simulation to end"
         ./cli getsimstats > /dev/null
@@ -647,20 +655,18 @@ jobs:
         export OWSEC_USERNAME="tip@ucentral.com"
         export OWSEC_PASSWORD="${{ secrets.OWSEC_NEW_PASSWORD }}"
 
-        echo "Trying to cache OWLS FQDN in /etc/hosts"
+        echo "[Info] Trying to cache OWLS FQDN in /etc/hosts"
         export HOST_ENTRY=""
         until [ ! -z "$HOST_ENTRY" ]; do export HOST_ENTRY=$(getent hosts ${{ steps.ls.outputs.url }}); sleep 1; done;
         cat /etc/hosts > /tmp/hosts
         echo "$HOST_ENTRY" >> /tmp/hosts
         sudo cp /tmp/hosts /etc/hosts
-        echo "DNS record for ${{ steps.ls.outputs.url }} resolved successfully!"
+        echo "[Info] DNS record for ${{ steps.ls.outputs.url }} resolved successfully!"
         cat /etc/hosts
 
-        echo "[Info] Creating simulation"
-        touch output_sim_info.json
         cat > input_sim_info.json <<EOF
         {
-          "name":"${{ steps.ec2_facts.outputs.instance_name }}",
+          "name":"test",
           "deviceType":"edgecore_ecw5410",
           "devices":${{ github.event.inputs.devices_count }},
           "gateway":"https://$OWGW",
@@ -668,15 +674,21 @@ jobs:
           "simulationLength":${{ github.event.inputs.simulation_lenght }}
         }
         EOF
+        echo "[Info] Simulation definition"
+        cat input_sim_info.json | jq .
+
+        echo "[Info] Creating simulation"
         export SIMULATION_ID="null"
         while [[ "$SIMULATION_ID" == "null" ]]; do
           ./cli createsim input_sim_info.json || true
           export SIMULATION_ID=$(cat result.json | jq '.id' -r)
-          echo $SIMULATION_ID
+          echo "[Info] Simulation ID from result file - $SIMULATION_ID"
         done
+        cat result.json | jq .
 
         echo "[Info] Starting simulation"
         ./cli startsim $SIMULATION_ID
+        cat result.json | jq .
 
         echo "[Info] Waiting for simulation to end"
         ./cli getsimstats > /dev/null
@@ -808,20 +820,18 @@ jobs:
         export OWSEC_USERNAME="tip@ucentral.com"
         export OWSEC_PASSWORD="${{ secrets.OWSEC_NEW_PASSWORD }}"
 
-        echo "Trying to cache OWLS FQDN in /etc/hosts"
+        echo "[Info] Trying to cache OWLS FQDN in /etc/hosts"
         export HOST_ENTRY=""
         until [ ! -z "$HOST_ENTRY" ]; do export HOST_ENTRY=$(getent hosts ${{ steps.ls.outputs.url }}); sleep 1; done;
         cat /etc/hosts > /tmp/hosts
         echo "$HOST_ENTRY" >> /tmp/hosts
         sudo cp /tmp/hosts /etc/hosts
-        echo "DNS record for ${{ steps.ls.outputs.url }} resolved successfully!"
+        echo "[Info] DNS record for ${{ steps.ls.outputs.url }} resolved successfully!"
         cat /etc/hosts
 
-        echo "[Info] Creating simulation"
-        touch output_sim_info.json
         cat > input_sim_info.json <<EOF
         {
-          "name":"${{ steps.ec2_facts.outputs.instance_name }}",
+          "name":"test",
           "deviceType":"edgecore_ecw5410",
           "devices":${{ github.event.inputs.devices_count }},
           "gateway":"https://$OWGW",
@@ -829,15 +839,21 @@ jobs:
           "simulationLength":${{ github.event.inputs.simulation_lenght }}
         }
         EOF
+        echo "[Info] Simulation definition"
+        cat input_sim_info.json | jq .
+
+        echo "[Info] Creating simulation"
         export SIMULATION_ID="null"
         while [[ "$SIMULATION_ID" == "null" ]]; do
           ./cli createsim input_sim_info.json || true
           export SIMULATION_ID=$(cat result.json | jq '.id' -r)
-          echo $SIMULATION_ID
+          echo "[Info] Simulation ID from result file - $SIMULATION_ID"
         done
+        cat result.json | jq .
 
         echo "[Info] Starting simulation"
         ./cli startsim $SIMULATION_ID
+        cat result.json | jq .
 
         echo "[Info] Waiting for simulation to end"
         ./cli getsimstats > /dev/null
