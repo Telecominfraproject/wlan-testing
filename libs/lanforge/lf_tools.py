@@ -316,7 +316,7 @@ class ChamberView:
                     flag = 1
         if flag == 1:
             for vlans in vlan_ids:
-                self.raw_line.append(["profile_link 1.1 " + "vlan-100 1 " + self.upstream_port
+                self.raw_line.append(["profile_link " + self.upstream_resources + " vlan-100 1 " + self.upstream_port
                                       + " NA " + self.upstream_port.split(".")[2] + ",AUTO -1 " + str(vlans)])
             self.Chamber_View()
 
