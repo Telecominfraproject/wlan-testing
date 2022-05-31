@@ -1293,33 +1293,46 @@ class RunTest:
         table_heads = ["Packet Type", "Capability Check", 'PASS/FAIL']
         table_data = []
 
-        # check for mu-mimo bearmformee association request
-        assoc_req = self.pcap_obj.check_beamformee_association_request(pcap_file=self.pcap_obj.pcap_name)
-        allure.attach(body=assoc_req, name="Check Bearmformee Association Request")
-        if assoc_req == "MU Beamformee Capable: Supported":
-            table_data.append(['Association Request', assoc_req, 'PASS'])
-        else:
-            table_data.append(['Association Request', assoc_req, 'FAIL'])
-            self.cvtest_obj.result = 'FAIL'
+        try:
+            if os.path.exists(self.pcap_obj.pcap_name):
+                # check for mu-mimo bearmformee association request
+                assoc_req = self.pcap_obj.check_beamformee_association_request(pcap_file=self.pcap_obj.pcap_name)
+                allure.attach(body=assoc_req, name="Check Bearmformee Association Request")
+                if assoc_req == "MU Beamformee Capable: Supported":
+                    table_data.append(['Association Request', assoc_req, 'PASS'])
+                else:
+                    table_data.append(['Association Request', assoc_req, 'FAIL'])
+                    self.cvtest_obj.result = 'FAIL'
 
-        #check for mu-mimo bearmformer association response
-        assoc_res = self.pcap_obj.check_beamformer_association_response(pcap_file=self.pcap_obj.pcap_name)
-        allure.attach(body=assoc_res, name="Check Bearmformer Association Response")
-        if assoc_res == "MU Beamformer Capable: Supported":
-            table_data.append(['Association Response', assoc_res, 'PASS'])
-        else:
-            table_data.append(['Association Response', assoc_res, 'FAIL'])
-            self.cvtest_obj.result = 'FAIL'
+                #check for mu-mimo bearmformer association response
+                assoc_res = self.pcap_obj.check_beamformer_association_response(pcap_file=self.pcap_obj.pcap_name)
+                allure.attach(body=assoc_res, name="Check Bearmformer Association Response")
+                if assoc_res == "MU Beamformer Capable: Supported":
+                    table_data.append(['Association Response', assoc_res, 'PASS'])
+                else:
+                    table_data.append(['Association Response', assoc_res, 'FAIL'])
+                    self.cvtest_obj.result = 'FAIL'
 
-        print(table_data)
-        # attach test data in a table to allure
-        report_obj = Report()
-        table_info = report_obj.table2(table=table_data, headers=table_heads)
-        allure.attach(name="Test Results Info", body=table_info)
+                # check for mu-mimo bearmformer in beacon frame
+                beacon_res = self.pcap_obj.check_beamformer_beacon_frame(pcap_file=self.pcap_obj.pcap_name)
+                allure.attach(body=beacon_res, name="Check Bearmformer in Beacon Frame")
+                if beacon_res == "MU Beamformer Capable: Supported":
+                    table_data.append(['Beacon Frame', beacon_res, 'PASS'])
+                else:
+                    table_data.append(['Beacon Frame', beacon_res, 'FAIL'])
+                    self.cvtest_obj.result = 'FAIL'
 
-        allure.attach.file(source=self.pcap_obj.pcap_name,
-                           name="pcap_file", attachment_type=allure.attachment_type.PCAP)
+                print(table_data)
+                # attach test data in a table to allure
+                report_obj = Report()
+                table_info = report_obj.table2(table=table_data, headers=table_heads)
+                allure.attach(name="Test Results Info", body=table_info)
 
+                # attach pcap file to allure
+                allure.attach.file(source=self.pcap_obj.pcap_name,
+                                   name="pcap_file", attachment_type=allure.attachment_type.PCAP)
+        except FileNotFoundError:
+            print(f"{self.pcap_obj.pcap_name} doesn't exist")
 
         report_name = self.cvtest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
