@@ -1172,7 +1172,8 @@ class RunTest:
         print(f"Lanforge-radio Country changed {_country_num}")
         self.local_realm.json_post("/cli-json/set_wifi_radio", _data=data)
 
-    def downlink_mu_mimo(self, radios_2g=[], radios_5g=[], radios_ax=[], dut_name="TIP", dut_5g="", dut_2g="", mode="BRIDGE", vlan_id=1, skip_2g=True, skip_5g=False):
+    def downlink_mu_mimo(self, radios_2g=[], radios_5g=[], radios_ax=[], dut_name="TIP", dut_5g="", dut_2g="",
+                         mode="BRIDGE", vlan_id=1, skip_2g=True, skip_5g=False):
         raw_line = []
         skip_twog = '1' if skip_2g else '0'
         skip_fiveg = '1' if skip_5g else '0'
