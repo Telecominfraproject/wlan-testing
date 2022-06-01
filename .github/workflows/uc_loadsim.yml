@@ -223,7 +223,7 @@ jobs:
 
         echo "[Info] Creating simulation"
         export SIMULATION_ID="null"
-        while [[ "$SIMULATION_ID" == "null" ]]; do
+        while [[ "$SIMULATION_ID" == "null" ]] || [[ "$SIMULATION_ID" == "" ]]; do
           ./cli createsim input_sim_info.json || true
           export SIMULATION_ID=$(cat result.json | jq '.id' -r)
           echo "[Info] Simulation ID from result file - $SIMULATION_ID"
@@ -488,7 +488,7 @@ jobs:
 
         echo "[Info] Creating simulation"
         export SIMULATION_ID="null"
-        while [[ "$SIMULATION_ID" == "null" ]]; do
+        while [[ "$SIMULATION_ID" == "null" ]] || [[ "$SIMULATION_ID" == "" ]]; do
           ./cli createsim input_sim_info.json || true
           export SIMULATION_ID=$(cat result.json | jq '.id' -r)
           echo "[Info] Simulation ID from result file - $SIMULATION_ID"
@@ -679,7 +679,7 @@ jobs:
 
         echo "[Info] Creating simulation"
         export SIMULATION_ID="null"
-        while [[ "$SIMULATION_ID" == "null" ]]; do
+        while [[ "$SIMULATION_ID" == "null" ]] || [[ "$SIMULATION_ID" == "" ]]; do
           ./cli createsim input_sim_info.json || true
           export SIMULATION_ID=$(cat result.json | jq '.id' -r)
           echo "[Info] Simulation ID from result file - $SIMULATION_ID"
@@ -844,7 +844,7 @@ jobs:
 
         echo "[Info] Creating simulation"
         export SIMULATION_ID="null"
-        while [[ "$SIMULATION_ID" == "null" ]]; do
+        while [[ "$SIMULATION_ID" == "null" ]] || [[ "$SIMULATION_ID" == "" ]]; do
           ./cli createsim input_sim_info.json || true
           export SIMULATION_ID=$(cat result.json | jq '.id' -r)
           echo "[Info] Simulation ID from result file - $SIMULATION_ID"
