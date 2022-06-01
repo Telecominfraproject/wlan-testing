@@ -1,92 +1,6 @@
 {
 
 "CONFIGURATION" : {
-    "lab-02": {
-        "controller": {
-            "url": "https://172.16.0.2",
-            "ip": "localhost",
-            "username": "admin",
-            "password": "Cisco123",
-            "ssh_port": "8888",
-            "series": "9800",
-            "prompt" : "WLC2",
-            "band": ["5g"],
-            "scheme": "ssh",
-            "version": "17.9.0.292",
-            "radius": "default"
-        },
-        "access_point": [
-            {
-                "ap_name":"AP687D.B45C.1D1C",
-                "chamber": "C1",
-                "model": "cisco9136i",
-                "mode": "wifi6",
-                "serial": "FOC25322JQP",
-                "tag_policy": "RM204-TB2",
-                "policy_profile": "myflexpolicy",
-                "jumphost": true,
-                "ip": "192.168.100.109",
-                "username": "lanforge",
-                "password": "lanforge",
-                "port": 22,
-                "jumphost_tty": "/dev/ttyAP1",
-                "6g_slot": "3",
-                "5g_slot": "1",
-                "2g_slot": "0",
-                "channel_5g": 40,
-                "channel_2g": 6,
-                "channel_6g": 1,
-                "channel_width_5g": 40,
-                "channel_width_2g": 20,
-                "channel_width": 40,
-                "version": "17.7.1.11"
-            },
-            {
-                "ap_name": "APCC9C.3EF1.0DB0",
-                "chamber": "C2",
-                "model": "cw9164",
-                "mode": "wifi6",
-                "serial": "FJC2428146G",
-                "tag_policy": "RM204-TB2",
-                "policy_profile": "myflexpolicy",
-                "jumphost": true,
-                "ip": "192.168.100.109",
-                "username": "lanforge",
-                "password": "lanforge",
-                "port": 22,
-                "jumphost_tty": "/dev/ttyAP2",
-                "6g_slot": "2",
-                "5g_slot": "1",
-                "2g_slot": "0",
-                 "channel_5g": 40,
-                "channel_2g": 6,
-                "channel_6g": 1,
-                "channel_width_5g": 40,
-                "channel_width_2g": 20,
-                "channel_width": 40,
-                "version": "17.7.1.11"
-            }
-        ],
-        "traffic_generator": {
-            "name": "lanforge",
-            "details": {
-                "type" : "Non-mesh",
-                "ip": "192.168.100.131",
-                "port": 8080,
-                "ssh_port": 22,
-                "2.4G-Radio": ["1.1.wiphy0"],
-                "5G-Radio": ["1.1.wiphy1"],
-                "AX-Radio": ["1.1.wiphy2", "1.1.wiphy3", "1.1.wiphy6"],
-                "upstream": "1.1.eth2",
-                "upstream_subnet": "192.168.100.1/24",
-                "uplink": "1.1.eth3",
-                "2.4G-Station-Name": "wlan0",
-                "5G-Station-Name": "wlan0",
-                "AX-Station-Name": "ax",
-                "Chip-set-info": "xyz"
-            }
-        }
-    },
     "basic-01": {
         "controller": {
             "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
@@ -95,16 +9,16 @@
         },
         "access_point": [
             {
-                "model": "edgecore_ecw5410",
-                "mode": "wifi5",
-                "serial": "3c2c99f44e77",
+                "model": "edgecore_eap102",
+                "mode": "wifi6",
+                "serial": "903cb3bd7299",
                 "jumphost": true,
                 "ip": "10.28.3.100",
                 "username": "lanforge",
                 "password": "pumpkin77",
-                "port": 22,
+                "port": 22,a
                 "jumphost_tty": "/dev/ttyAP1",
-                "version": "release-latest"
+                "version": "next-latest"
             }
         ],
         "traffic_generator": {
@@ -142,7 +56,7 @@
                 "password": "pumpkin77",
                 "port": 22,
                 "jumphost_tty": "/dev/ttyAP2",
-                "version": "release-latest"
+                "version": "next-latest"
             }
         ],
         "traffic_generator": {
@@ -180,7 +94,7 @@
                 "password": "pumpkin77",
                 "port": 22,
                 "jumphost_tty": "/dev/ttyAP3",
-                "version": "release-latest"
+                "version": "next-latest"
             }
         ],
         "traffic_generator": {
@@ -218,7 +132,7 @@
                 "password": "pumpkin77",
                 "port": 22,
                 "jumphost_tty": "/dev/ttyAP6",
-                "version": "release-latest"
+                "version": "next-latest"
             }
         ],
         "traffic_generator": {
@@ -256,7 +170,45 @@
                 "password": "pumpkin77",
                 "port": 22,
                 "jumphost_tty": "/dev/ttyAP5",
-                "version": "release-latest"
+                "version": "next-latest"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "10.28.3.12",
+                "port": 8080,
+                "ssh_port": 22,
+                "2.4G-Radio": ["1.1.wiphy4"],
+                "5G-Radio": ["1.1.wiphy5"],
+                "AX-Radio": ["1.1.wiphy0", "1.1.wiphy1", "1.1.wiphy2", "1.1.wiphy3"],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            }
+        }
+    },
+    "basic-04a": {
+        "controller": {
+            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+            "username": "tip@ucentral.com",
+            "password": "OpenWifi%123"
+        },
+        "access_point": [
+            {
+                "model": "hfcl_ion4xi",
+                "mode": "wifi5",
+                "serial": "0006ae6df11f",
+                "jumphost": true,
+                "ip": "10.28.3.100",
+                "username": "lanforge",
+                "password": "pumpkin77",
+                "port": 22,
+                "jumphost_tty": "/dev/ttyAP7",
+                "version": "next-latest"
             }
         ],
         "traffic_generator": {
@@ -294,7 +246,7 @@
                 "password": "pumpkin77",
                 "port": 22,
                 "jumphost_tty": "/dev/ttyAP1",
-                "version": "release-latest"
+                "version": "next-latest"
             }
         ],
         "traffic_generator": {
@@ -332,7 +284,45 @@
                 "password": "pumpkin77",
                 "port": 22,
                 "jumphost_tty": "/dev/ttyAP2",
-                "version": "release-latest"
+                "version": "next-latest"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "10.28.3.30",
+                "port": 8080,
+                "ssh_port": 22,
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
+                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
+                "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            }
+        }
+    },
+    "basic-06a": {
+        "controller": {
+            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+            "username": "tip@ucentral.com",
+            "password": "OpenWifi%123"
+        },
+        "access_point": [
+            {
+                "model": "hfcl_ion4xe",
+                "mode": "wifi6",
+                "serial": "0006ae6f7007",
+                "jumphost": true,
+                "ip": "10.28.3.103",
+                "username": "lanforge",
+                "password": "pumpkin77",
+                "port": 22,
+                "jumphost_tty": "/dev/ttyAP7",
+                "version": "next-latest"
             }
         ],
         "traffic_generator": {
@@ -370,7 +360,7 @@
                 "password": "pumpkin77",
                 "port": 22,
                 "jumphost_tty": "/dev/ttyAP3",
-                "version": "release-latest"
+                "version": "next-latest"
             }
         ],
         "traffic_generator": {
@@ -401,14 +391,52 @@
             {
                 "model": "cig_wf194c",
                 "mode": "wifi6",
-                "serial": "089b4bb2f10c",
+                "serial": "00c115194c15",
                 "jumphost": true,
                 "ip": "10.28.3.103",
                 "username": "lanforge",
                 "password": "pumpkin77",
                 "port": 22,
                 "jumphost_tty": "/dev/ttyAP5",
-                "version": "release-latest"
+                "version": "next-latest"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "10.28.3.34",
+                "port": 8080,
+                "ssh_port": 22,
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
+                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
+                "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
+                "upstream": "1.1.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            }
+        }
+    },
+    "basic-08a": {
+        "controller": {
+            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+            "username": "tip@ucentral.com",
+            "password": "OpenWifi%123"
+        },
+        "access_point": [
+            {
+                "model": "udaya_a5-id2",
+                "mode": "wifi6",
+                "serial": "50987100327b",
+                "jumphost": true,
+                "ip": "10.28.3.103",
+                "username": "lanforge",
+                "password": "pumpkin77",
+                "port": 22,
+                "jumphost_tty": "/dev/ttyAP6",
+                "version": "next-latest"
             }
         ],
         "traffic_generator": {
@@ -501,6 +529,48 @@
                 "upstream": "1.1.eth1",
                 "upstream_subnet": "10.28.2.1/24",
                 "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan0",
+                "AX-Station-Name": "ax"
+            }
+        }
+
+    },
+    "advanced-03": {
+        "controller": {
+            "url":"https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+            "username": "tip@ucentral.com",
+            "password": "OpenWifi%123"
+        },
+        "access_point": [
+            {
+                "model": "cig_wf196",
+                "mode": "wifi6",
+                "serial": "824f816011e4",
+                "jumphost": true,
+                "ip": "10.28.3.115",
+                "username": "lanforge",
+                "password": "pumpkin77",
+                "port": 22 ,
+                "jumphost_tty": "/dev/ttyAP0",
+                "version": "release-latest"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "10.28.3.117",
+                "port": 8080,
+                "ssh_port": 22,
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2","1.1.wiphy4"],
+                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3", "1.1.wiphy5"],
+                "AX-Radio": ["1.2.wiphy0", "1.2.wiphy1", "1.2.wiphy2", "1.2.wiphy3", "1.2.wiphy4", "1.2.wiphy5", "1.2.wiphy6", "1.2.wiphy7", "1.2.wiphy8",
+                            "1.2.wiphy9", "1.2.wiphy10", "1.2.wiphy11", "1.3.wiphy0", "1.3.wiphy1", "1.3.wiphy2", "1.3.wiphy3", "1.3.wiphy4", "1.3.wiphy5",
+                            "1.3.wiphy6", "1.3.wiphy7", "1.3.wiphy8", "1.3.wiphy9", "1.3.wiphy10", "1.3.wiphy11", "1.3.wiphy12", "1.3.wiphy13", "1.3.wiphy14",
+                            "1.3.wiphy15", "1.3.wiphy16", "1.3.wiphy17", "1.3.wiphy18", "1.3.wiphy19", "1.3.wiphy20", "1.3.wiphy21", "1.3.wiphy22", "1.3.wiphy23"],
+                "upstream": "1.3.eth2",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.3.eth3",
                 "2.4G-Station-Name": "wlan0",
                 "5G-Station-Name": "wlan0",
                 "AX-Station-Name": "ax"
@@ -679,7 +749,6 @@
         }
     },
 
-
     "interop-01": {
         "controller": {
             "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
@@ -688,8 +757,8 @@
         },
         "access_point": [
             {
-                "model": "eap102",
-                "mode": "wifi5",
+                "model": "edgecore_eap102",
+                "mode": "wifi6",
                 "serial": "903cb39d69c0",
                 "jumphost": true,
                 "ip": "10.28.3.102",
@@ -697,7 +766,7 @@
                 "password": "pumpkin77",
                 "port": 22,
                 "jumphost_tty": "/dev/ttyAP1",
-                "version": "release-latest"
+                "version": "next-latest"
             }
         ],
         "traffic_generator": {
@@ -738,7 +807,7 @@
                 "password": "pumpkin77",
                 "port": 22,
                 "jumphost_tty": "/dev/ttyAP4",
-                "version": "release-latest"
+                "version": "next-latest"
             }
         ],
         "traffic_generator": {
@@ -770,16 +839,57 @@
         },
         "access_point": [
             {
-                "model": "cig_wf194c",
+                "model": "edgecore_eap101",
                 "mode": "wifi6",
-                "serial": "f40b9fe78ce3",
+                "serial": "903cb36ae255",
                 "jumphost": true,
                 "ip": "10.28.3.102",
                 "username": "lanforge",
                 "password": "pumpkin77",
                 "port": 22,
-                "jumphost_tty": "/dev/ttyAP6",
-                "version": "release-latest"
+                "jumphost_tty": "/dev/ttyAP5",
+                "version": "next-latest"
+            }
+        ],
+        "traffic_generator": {
+            "name": "lanforge",
+            "details": {
+                "ip": "10.28.3.22",
+                "port": 8080,
+                "ssh_port": 22,
+                "2.4G-Radio": ["1.1.wiphy0", "1.1.wiphy2"],
+                "5G-Radio": ["1.1.wiphy1", "1.1.wiphy3"],
+                "AX-Radio": ["1.1.wiphy4", "1.1.wiphy5", "1.1.wiphy6", "1.1.wiphy7"],
+                "upstream": "1.1.eth1",
+                "upstream_subnet": "10.28.2.1/24",
+                "uplink": "1.1.eth3",
+                "2.4G-Station-Name": "wlan0",
+                "5G-Station-Name": "wlan1",
+                "AX-Station-Name": "ax",
+                "securityToken": "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJqdGkiOiJjYjRjYjQzYi05Y2FiLTQxNzQtOTYxYi04MDEwNTZkNDM2MzgiLCJleHAiOjAsIm5iZiI6MCwiaWF0IjoxNjExNTk0NzcxLCJpc3MiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwiYXVkIjoiaHR0cHM6Ly9hdXRoMi5wZXJmZWN0b21vYmlsZS5jb20vYXV0aC9yZWFsbXMvdGlwLXBlcmZlY3RvbW9iaWxlLWNvbSIsInN1YiI6IjdiNTMwYWUwLTg4MTgtNDdiOS04M2YzLTdmYTBmYjBkZGI0ZSIsInR5cCI6Ik9mZmxpbmUiLCJhenAiOiJvZmZsaW5lLXRva2VuLWdlbmVyYXRvciIsIm5vbmNlIjoiZTRmOTY4NjYtZTE3NS00YzM2LWEyODMtZTQwMmI3M2U5NzhlIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYWNkNTQ3MTctNzJhZC00MGU3LWI0ZDctZjlkMTAyNDRkNWZlIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJyZXBvcnRpdW0iOnsicm9sZXMiOlsiYWRtaW5pc3RyYXRvciJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.SOL-wlZiQ4BoLLfaeIW8QoxJ6xzrgxBjwSiSzkLBPYw",
+                "perfectoURL": "tip"
+            }
+        }
+    },
+
+    "interop-04": {
+        "controller": {
+            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+            "username": "tip@ucentral.com",
+            "password": "OpenWifi%123"
+        },
+        "access_point": [
+            {
+                "model": "cig_wf194c4",
+                "mode": "wifi6",
+                "serial": "f40b9fe78d3d",
+                "jumphost": true,
+                "ip": "10.28.3.102",
+                "username": "lanforge",
+                "password": "pumpkin77",
+                "port": 22,
+                "jumphost_tty": "/dev/ttyAP7",
+                "version": "next-latest"
             }
         ],
         "traffic_generator": {
@@ -940,15 +1050,13 @@
         "jobNumber": 38
     }
 },
-
 "RADIUS_SERVER_DATA" : {
-    "ip": "17.16.0.1",
+    "ip": "10.10.1.221",
     "port": 1812,
     "secret": "testing123",
-    "user": "testuser",
-    "password": "testpasswd",
-    "pk_password": "whatever",
-    "aaa_method_lit": "default"
+    "user": "user",
+    "password": "password",
+    "pk_password": "whatever"
 },
 
 "RADIUS_ACCOUNTING_DATA" : {
