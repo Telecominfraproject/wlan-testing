@@ -16,7 +16,7 @@
                 "ip": "10.28.3.100",
                 "username": "lanforge",
                 "password": "pumpkin77",
-                "port": 22,a
+                "port": 22,
                 "jumphost_tty": "/dev/ttyAP1",
                 "version": "next-latest"
             }
