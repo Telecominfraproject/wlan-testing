@@ -127,6 +127,7 @@ class RunTest:
             self.ax_radios = configuration_data['traffic_generator']['details']["AX-Radio"]
             self.upstream_port = configuration_data['traffic_generator']['details']["upstream"].split(".")[2]
             self.upstream = configuration_data['traffic_generator']['details']["upstream"]
+            self.upstream_resource = configuration_data['traffic_generator']['details']["upstream"].split(".")[1]
             self.twog_prefix = configuration_data['traffic_generator']['details']["2.4G-Station-Name"]
             self.fiveg_prefix = configuration_data['traffic_generator']['details']["5G-Station-Name"]
             self.ax_prefix = configuration_data['traffic_generator']['details']["AX-Station-Name"]
@@ -159,7 +160,7 @@ class RunTest:
         self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
 
         self.staConnect.sta_mode = 0
-        self.staConnect.upstream_resource = 1
+        self.staConnect.upstream_resource = self.upstream_resource
         if mode == "BRIDGE":
             self.staConnect.upstream_port = self.upstream_port
         elif mode == "NAT":
@@ -307,7 +308,9 @@ class RunTest:
                                     sta_list=station_name, vap=False, _debug_on=self.debug)
 
         self.eap_connect.station_profile.sta_mode = 0
-        self.eap_connect.upstream_resource = 1
+        self.eap_connect.upstream_resource = self.upstream_resource
+        self.eap_connect.l3_cx_obj_udp.upstream_resource = self.upstream_resource
+        self.eap_connect.l3_cx_obj_tcp.upstream_resource = self.upstream_resource
         if mode == "BRIDGE":
             self.eap_connect.l3_cx_obj_udp.upstream = self.upstream_port
             self.eap_connect.l3_cx_obj_tcp.upstream = self.upstream_port
@@ -1635,12 +1638,13 @@ class RunTest:
                                     sets=sets,
                                     test_rig=dut_name
                                     )
+        self.cvtest_obj.result = True
         self.cvtest_obj.setup()
         t1 = threading.Thread(target=self.cvtest_obj.run)
         t1.start()
+        t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 30))
         if t1.is_alive():
-            time.sleep(150)
-            t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 45))
+            time.sleep(480)
             t2.start()
         while t1.is_alive():
             time.sleep(1)
@@ -1654,11 +1658,49 @@ class RunTest:
         else:
             raise ValueError("pcap_name should not be None")
 
-        # check for mu-mimo bearmformee association request
-        assoc_req = self.pcap_obj.check_beamformee_association_request(pcap_file=self.pcap_obj.pcap_name)
-        allure.attach(body=assoc_req, name="Check Bearmformee Association Request")
-        allure.attach.file(source=self.pcap_obj.pcap_name,
-                           name="pcap_file", attachment_type=allure.attachment_type.PCAP)
+        table_heads = ["Packet Type", "Capability Check", 'PASS/FAIL']
+        table_data = []
+
+        try:
+            if os.path.exists(self.pcap_obj.pcap_name):
+                # check for mu-mimo bearmformee association request
+                assoc_req = self.pcap_obj.check_beamformee_association_request(pcap_file=self.pcap_obj.pcap_name)
+                allure.attach(body=assoc_req, name="Check Bearmformee Association Request")
+                if assoc_req == "MU Beamformee Capable: Supported":
+                    table_data.append(['Association Request', assoc_req, 'PASS'])
+                else:
+                    table_data.append(['Association Request', assoc_req, 'FAIL'])
+                    self.cvtest_obj.result = 'FAIL'
+
+                #check for mu-mimo bearmformer association response
+                assoc_res = self.pcap_obj.check_beamformer_association_response(pcap_file=self.pcap_obj.pcap_name)
+                allure.attach(body=assoc_res, name="Check Bearmformer Association Response")
+                if assoc_res == "MU Beamformer Capable: Supported":
+                    table_data.append(['Association Response', assoc_res, 'PASS'])
+                else:
+                    table_data.append(['Association Response', assoc_res, 'FAIL'])
+                    self.cvtest_obj.result = 'FAIL'
+
+                # check for mu-mimo bearmformer in beacon frame
+                beacon_res = self.pcap_obj.check_beamformer_beacon_frame(pcap_file=self.pcap_obj.pcap_name)
+                allure.attach(body=beacon_res, name="Check Bearmformer in Beacon Frame")
+                if beacon_res == "MU Beamformer Capable: Supported":
+                    table_data.append(['Beacon Frame', beacon_res, 'PASS'])
+                else:
+                    table_data.append(['Beacon Frame', beacon_res, 'FAIL'])
+                    self.cvtest_obj.result = 'FAIL'
+
+                print(table_data)
+                # attach test data in a table to allure
+                report_obj = Report()
+                table_info = report_obj.table2(table=table_data, headers=table_heads)
+                allure.attach(name="Test Results Info", body=table_info)
+
+                # attach pcap file to allure
+                allure.attach.file(source=self.pcap_obj.pcap_name,
+                                   name="pcap_file", attachment_type=allure.attachment_type.PCAP)
+        except FileNotFoundError:
+            print(f"{self.pcap_obj.pcap_name} doesn't exist")
 
         report_name = self.cvtest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
