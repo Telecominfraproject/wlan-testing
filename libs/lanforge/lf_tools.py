@@ -316,7 +316,7 @@ class ChamberView:
                     flag = 1
         if flag == 1:
             for vlans in vlan_ids:
-                self.raw_line.append(["profile_link 1.1 " + "vlan-100 1 " + self.upstream_port
+                self.raw_line.append(["profile_link " + self.upstream_resources + " vlan-100 1 " + self.upstream_port
                                       + " NA " + self.upstream_port.split(".")[2] + ",AUTO -1 " + str(vlans)])
             self.Chamber_View()
 
@@ -559,7 +559,7 @@ class ChamberView:
     def read_csv_individual_station_throughput(self, dir_name, option):
         try:
             df = pd.read_csv(
-                "../reports/" + str(dir_name) + "/csv-data/data-Combined_Mbps__60_second_running_average-1.csv",
+                "../reports/" + str(dir_name) + "/csv-data/data-Combined_bps__60_second_running_average-1.csv",
                 sep=r'\t', engine='python')
             print("csv file opened")
         except FileNotFoundError:
@@ -583,6 +583,13 @@ class ChamberView:
             dict_data[sta_list[i]] = th_list[i]
 
         return dict_data
+
+    def attach_report_kpi(self, report_name=None, file_name="kpi_file"):
+        path = "../reports/" + str(report_name) + "/kpi.csv"
+        if os.path.exists(path):
+            allure.attach.file(source=path,
+                               name=file_name, attachment_type="CSV")
+        return os.path.exists(path)
 
     def attach_report_graphs(self, report_name=None, pdf_name="WIFI Capacity Test PDF Report"):
         relevant_path = "../reports/" + report_name + "/"

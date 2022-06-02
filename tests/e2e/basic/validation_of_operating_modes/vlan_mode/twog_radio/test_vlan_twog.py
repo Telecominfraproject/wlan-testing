@@ -7,7 +7,10 @@ import time
 import allure
 import pytest
 
-pytestmark = [pytest.mark.vlan, pytest.mark.multi_vlan, pytest.mark.test_vlan_config_2g_radio, pytest.mark.twog]
+
+pytestmark = [pytest.mark.ow_regression_lf,
+              pytest.mark.ow_multi_vlan_tests_lf,
+              pytest.mark.twog]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -43,7 +46,7 @@ class TestVlanConfigTwogRadio(object):
     @allure.testcase(name="test_station_ip_wpa_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2168")
     def test_station_ip_wpa_ssid_2g(self, lf_test, lf_tools,
-                                    update_report, station_names_twog,
+                                     station_names_twog,
                                     test_cases, get_configuration):
         """
             Client connectivity using vlan, wpa, twog
@@ -97,7 +100,7 @@ class TestVlanConfigTwogRadio(object):
     @allure.testcase(name="test_station_ip_wpa2_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2156")
     def test_station_ip_wpa2_ssid_2g(self, lf_test, lf_tools,
-                                     update_report, station_names_twog,
+                                      station_names_twog,
                                      test_cases, get_configuration):
         """
             Client connectivity using vlan, wpa2, twog
@@ -144,7 +147,7 @@ class TestVlanConfigTwogRadio(object):
     @allure.testcase(name="test_disable_vlan_wpa2_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2158")
     def test_disable_vlan_wpa2_ssid_2g(self, lf_test, lf_tools,
-                                       update_report, station_names_twog,
+                                        station_names_twog,
                                        test_cases, get_configuration):
         """
             Client connectivity using vlan, wpa2, twog
@@ -196,10 +199,11 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.valid_client_ip_twog_open
+    @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_station_ip_open_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2160")
     def test_station_ip_open_ssid_2g(self, lf_test, lf_tools,
-                                     update_report, station_names_twog,
+                                      station_names_twog,
                                      test_cases, get_configuration):
         """
             Client connectivity using vlan, open, twog
@@ -250,10 +254,11 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
     @pytest.mark.test_station_ip_twog_wpa_wpa2
+    @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_station_ip_wpa_wpa2_personal_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2166")
     def test_station_ip_wpa_wpa2_personal_ssid_2g(self, lf_test,
-                                                  lf_tools, update_report, station_names_twog,
+                                                  lf_tools,  station_names_twog,
                                                   test_cases, get_configuration):
         """
             Client connectivity using vlan, wpa, wpa2, twog
@@ -306,10 +311,11 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.enable_vlan_twog  # wifi-2172
+    @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_station_ip_wpa2_personal_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2172")
     def test_enable_vlan_wpa2_ssid_2g(self, lf_test, lf_tools,
-                                              update_report, station_names_twog,
+                                               station_names_twog,
                                               test_cases, get_configuration):
         """
             Client connectivity using vlan, wpa2, twog

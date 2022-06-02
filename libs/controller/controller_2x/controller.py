@@ -174,18 +174,17 @@ class Controller(ConfigureController):
 
     def get_devices(self):
         uri = self.build_uri("devices/")
+        print(uri)
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
-        devices = resp.json()
-        # resp.close()()
-        return devices
+        return resp
 
-    def get_device_by_serial_number(self, serial_number=None):
+    def get_device_by_serial_number(self, serial_number):
         uri = self.build_uri("device/" + serial_number)
+        print(uri)
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
-        device = resp.json()
-        # resp.close()()
-        return device
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
 
     def get_sdk_version(self):
         uri = self.build_uri("system/?command=info")
@@ -217,7 +216,174 @@ class Controller(ConfigureController):
 
     def get_device_uuid(self, serial_number):
         device_info = self.get_device_by_serial_number(serial_number=serial_number)
+        device_info = device_info.json()
         return device_info["UUID"]
+
+    def add_device_to_gw(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_device_from_gw(self, device_name):
+        uri = self.build_uri("device/" + device_name)
+        print(uri)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_commands(self):
+        uri = self.build_uri("commands")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_device_logs(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/logs")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_device_health_checks(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/healthchecks")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_device_capabilities(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/capabilities")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_device_statistics(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/statistics")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_device_status(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/status")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def ap_reboot(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/reboot")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def ap_factory_reset(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/factory")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def ping_device(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/ping")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def led_blink_device(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/leds")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def trace_device(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/trace")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def wifi_scan_device(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/wifiscan")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def request_specific_msg_from_device(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/request")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def event_queue(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/eventqueue")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def telemetry(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/telemetry")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def get_rtty_params(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/rtty")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def edit_device_on_gw(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
 
 
 class FMSUtils:
@@ -434,6 +600,89 @@ class ProvUtils(ConfigureController):
 
     def edit_contact(self, payload, contact_id):
         uri = self.build_url_prov("contact/" + contact_id)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def get_location(self):
+        uri = self.build_url_prov("location")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_location_by_id(self, location_id):
+        uri = self.build_url_prov("location/" + location_id)
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def add_location(self, payload):
+        uri = self.build_url_prov("location/1")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_location(self, location_id):
+        uri = self.build_url_prov("location/" + location_id)
+        print(uri)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def edit_location(self, payload, location_id):
+        uri = self.build_url_prov("location/" + location_id)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
+
+    def get_venue(self):
+        uri = self.build_url_prov("venue/")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_venue_by_id(self, venue_id):
+        uri = self.build_url_prov("venue/" + venue_id)
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def add_venue(self, payload):
+        uri = self.build_url_prov("venue/0")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_venue(self, venue_id):
+        uri = self.build_url_prov("venue/" + venue_id)
+        print(uri)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def edit_venue(self, payload, venue_id):
+        uri = self.build_url_prov("venue/" + venue_id)
         print(uri)
         print(payload)
         payload = json.dumps(payload)
@@ -791,9 +1040,10 @@ class UProfileUtility:
         allure.attach(name="/configure response: " + str(resp.status_code), body=str(resp.json()),
                       attachment_type=allure.attachment_type.JSON)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
-        # print(resp.url)
+        print(resp.url)
         resp.close()
         print(resp)
+        return resp
 
 
 if __name__ == '__main__':
@@ -818,4 +1068,4 @@ if __name__ == '__main__':
 
     # print(profile.get_ssid_info())
     # # print(obj.get_devices())
-    # obj.logout()
+    obj.logout()
