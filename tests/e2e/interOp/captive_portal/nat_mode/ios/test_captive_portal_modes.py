@@ -23,7 +23,7 @@ from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnecti
     verifyUploadDownloadSpeediOS, get_ip_address_ios, captive_portal_ios, wifi_connect, wifi_disconnect_and_forget
 
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
-              pytest.mark.captive_portal, pytest.mark.regression_interop, pytest.mark.nat]
+              pytest.mark.internal_captive_portal, pytest.mark.regression_interop, pytest.mark.nat, pytest.mark.ow_sanity_interop]
 
 setup_params_general = {
     "mode": "NAT",
