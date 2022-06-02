@@ -77,8 +77,9 @@ class TestMultiStaPerfNat(object):
         skeleton_code["Generate reports"] = "Done"
         lf_tools.attach_report_graphs(report_name=report_name)
         print("Test Completed... Cleaning up Stations")
-        lf_test.allure_report_table_format(dict_data=[skeleton_code], key="Test workflow", value=["Status"], name="Skeleton of code")
-
+        lf_test.allure_report_table_format(dict_data=skeleton_code, key="Test workflow", value="Status",
+                                           name="Skeleton of code")
+        lf_test.Client_disconnect(station_name=sta, clean_l3_traffic=True)
         if sta_ip:
             assert True
 
