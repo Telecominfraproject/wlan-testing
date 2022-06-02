@@ -103,6 +103,7 @@ class TestMultiStaPerfNat(object):
                 assert False
         print("Test Completed... Cleaning up Stations")
 
+
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5898", name="WIFI-5898")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -1822,4 +1823,5 @@ class TestMultiStaPerfNat(object):
                 print("Test failed due to lesser value")
                 assert False
         print("Test Completed... Cleaning up Stations")
+
 
