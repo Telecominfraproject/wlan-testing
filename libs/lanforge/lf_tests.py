@@ -2053,6 +2053,7 @@ class RunTest:
         self.staConnect.l3_tcp_profile.name_prefix = "tcp"
         self.staConnect.cx_profile.name_prefix = "tcp"
         self.staConnect.pre_cleanup()
+        self.staConnect.pre_cleanup()
         self.staConnect.l3_tcp_profile.create(endp_type="lf_tcp",
                                    side_a=station_name,
                                    side_b="%d.%s" % (self.staConnect.resource, self.upstream_port),
@@ -2150,5 +2151,3 @@ if __name__ == '__main__':
     # print(a)
     # print(obj.eap_connect.json_get("port/1/1/sta0000?fields=ap,ip"))
     # obj.EAP_Connect(station_name=["sta0000", "sta0001"], eap="TTLS", ssid="testing_radius")
-
-
