@@ -153,6 +153,23 @@ class RunTest:
             if not os.path.exists(self.local_report_path):
                 os.mkdir(self.local_report_path)
 
+    def allure_report_table_format(self, dict_data=None, key=None, value=None, name=None):#, value_on_same_table=True):
+        # for i in range(len(name)):
+        report_obj = Report()
+        data_table, dict_table = "", {}
+        # if value_on_same_table:
+        dict_table[key] = list(dict_data.keys())
+        # for i in range(len(dict_data)):
+            # if value_on_same_table == False:
+            # dict_table[key[i]] = list(dict_data[i].keys())
+        dict_table[value] = list(dict_data.values())
+        try:
+            data_table = report_obj.table2(table=dict_table, headers='keys')
+        except Exception as e:
+            print(e)
+        if name != None:
+            allure.attach(name=name, body=str(data_table))
+
     def Client_Connectivity(self, ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=[],
                             station_name=[], mode="BRIDGE", vlan_id=1, band="twog", ssid_channel=None):
         """SINGLE CLIENT CONNECTIVITY using test_connect2.py"""
@@ -2053,6 +2070,7 @@ class RunTest:
         self.staConnect.l3_tcp_profile.name_prefix = "tcp"
         self.staConnect.cx_profile.name_prefix = "tcp"
         self.staConnect.pre_cleanup()
+        self.staConnect.pre_cleanup()
         self.staConnect.l3_tcp_profile.create(endp_type="lf_tcp",
                                    side_a=station_name,
                                    side_b="%d.%s" % (self.staConnect.resource, self.upstream_port),
@@ -2063,15 +2081,19 @@ class RunTest:
         count = 0
         report_obj = Report()
         for station_info in self.staConnect.resulting_stations:
+            self.allure_report_table_format(dict_data=[self.staConnect.resulting_stations[station_info]["interface"]],
+                                            key="Interface", value=["Value"],
+                                            name=str(
+                                                self.staConnect.resulting_stations[station_info]["interface"]['alias']))
             data_table, dict_table = "", {}
-            dict_data = self.staConnect.resulting_stations[station_info]["interface"]
-            dict_table["Interface"] = list(dict_data.keys())
-            dict_table["Value"] = list(dict_data.values())
-            try:
-                data_table = report_obj.table2(table=dict_table, headers='keys')
-            except Exception as e:
-                print(e)
-            allure.attach(name=str(self.staConnect.resulting_stations[station_info]["interface"]['alias']), body=data_table)
+            # dict_data = self.staConnect.resulting_stations[station_info]["interface"]
+            # dict_table["Interface"] = list(dict_data.keys())
+            # dict_table["Value"] = list(dict_data.values())
+            # try:
+            #     data_table = report_obj.table2(table=dict_table, headers='keys')
+            # except Exception as e:
+            #     print(e)
+            # allure.attach(name=str(self.staConnect.resulting_stations[station_info]["interface"]['alias']), body=data_table)
             data_table = ""
             dict_table.clear()
             cx = list(self.staConnect.l3_tcp_profile.created_cx.keys())[count]
@@ -2090,6 +2112,10 @@ class RunTest:
             except Exception as e:
                 print(e)
             allure.attach(name="cx-" + str(self.staConnect.resulting_stations[station_info]["interface"]['alias']), body=str(data_table))
+            # self.allure_report_table_format(dict_data=[self.staConnect.resulting_stations[station_info]["interface"]],
+            #                                 key="Interface", value=["Value"],
+            #                                 name=str(
+            #                                     self.staConnect.resulting_stations[station_info]["interface"]['alias']))
             count += 1
         self.staConnect.stop()
         self.staConnect.cleanup()
@@ -2142,3 +2168,4 @@ if __name__ == '__main__':
     # print(a)
     # print(obj.eap_connect.json_get("port/1/1/sta0000?fields=ap,ip"))
     # obj.EAP_Connect(station_name=["sta0000", "sta0001"], eap="TTLS", ssid="testing_radius")
+
