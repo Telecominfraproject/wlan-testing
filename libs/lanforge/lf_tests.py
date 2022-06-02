@@ -1321,6 +1321,24 @@ class RunTest:
                     table_data.append(['Beacon Frame', beacon_res, 'FAIL'])
                     self.cvtest_obj.result = 'FAIL'
 
+                # check for mu-mimo bearmformer in probe response
+                beacon_res = self.pcap_obj.check_beamformer_probe_response(pcap_file=self.pcap_obj.pcap_name)
+                allure.attach(body=beacon_res, name="Check Bearmformer in Probe Response")
+                if beacon_res == "MU Beamformer Capable: Supported":
+                    table_data.append(['Beacon Frame', beacon_res, 'PASS'])
+                else:
+                    table_data.append(['Beacon Frame', beacon_res, 'FAIL'])
+                    self.cvtest_obj.result = 'FAIL'
+
+                # check for Group ID Management in Packet
+                group_mgmt = self.pcap_obj.check_group_id_mgmt(pcap_file=self.pcap_obj.pcap_name)
+                allure.attach(body=group_mgmt, name="Check Group ID Management")
+                if group_mgmt != "Packet Not Found" or group_mgmt is not None:
+                    table_data.append(['Group ID Management Frame', group_mgmt, 'PASS'])
+                else:
+                    table_data.append(['Group ID Management Frame', group_mgmt, 'FAIL'])
+                    self.cvtest_obj.result = 'FAIL'
+
                 print(table_data)
                 # attach test data in a table to allure
                 report_obj = Report()
