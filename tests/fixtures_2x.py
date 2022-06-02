@@ -848,7 +848,7 @@ class Fixtures_2x:
 
     def setup_mesh_profile(self, request, param, get_apnos, get_configuration, setup_controller, instantiate_profile,
                            get_markers, get_equipment_ref, lf_tools, skip_lf=False, open_flow=None):
-
+        mesh_scenario = lf_tools.create_mesh_scenario()
         instantiate_profile_obj = instantiate_profile(sdk_client=setup_controller)
         print(1, instantiate_profile_obj.sdk_client)
         vlan_id, mode = 0, 0
@@ -980,7 +980,7 @@ class Fixtures_2x:
             print("get equipment id ref [0]", get_equipment_ref[length])
             instantiate_profile_obj.push_config(serial_number=get_equipment_ref[length])
 
-            config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"'))
+            config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"').replace("True", "true"))
             config["uuid"] = 0
 
             # Attach the config that is sent from API
@@ -1124,7 +1124,7 @@ class Fixtures_2x:
         create_dut = lf_tools.create_mesh_dut(ssid_data=dut_final_data)
 
         #create mesh scenario
-        mesh_scenario = lf_tools.create_mesh_scenario()
+        #mesh_scenario = lf_tools.create_mesh_scenario()
 
         #check for all ap are connected and is pinging
         for length in range(0, len(get_configuration['access_point'])):
