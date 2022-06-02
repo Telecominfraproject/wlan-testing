@@ -1334,7 +1334,7 @@ class RunTest:
                 # check for Group ID Management in Packet
                 group_mgmt = self.pcap_obj.check_group_id_mgmt(pcap_file=self.pcap_obj.pcap_name)
                 allure.attach(body=group_mgmt, name="Check Group ID Management")
-                if group_mgmt != "Packet Not Found" and group_mgmt is None:
+                if group_mgmt != "Packet Not Found" or group_mgmt is not None:
                     table_data.append(['Group ID Management Frame', group_mgmt, 'PASS'])
                 else:
                     table_data.append(['Group ID Management Frame', group_mgmt, 'FAIL'])
