@@ -106,6 +106,25 @@ def get_ToggleAirplaneMode_data(request, get_device_configuration):
     }
     yield passPoint_data
 
+@pytest.fixture(scope="function")
+def get_maverick_google_search_data(request, get_device_configuration):
+    passPoint_data = {
+        "webURL": "https://www.google.com",
+        "lblSearch": "//*[@class='gLFyf']",
+        "elelSearch": "(//*[@class='sbic sb43'])[1]",
+        "TipMaverickPage": "//*[text()='192.168.1.1']",
+        "bundleId-iOS-Settings": get_device_configuration["bundleId-iOS-Settings"],
+        "bundleId-iOS-Safari": get_device_configuration["bundleId-iOS-Safari"],
+        # "downloadMbps": "//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']",
+        # "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
+        # Android
+        "platformName-android": get_device_configuration["platformName-android"],
+        "appPackage-android": get_device_configuration["appPackage-android"]
+    }
+    yield passPoint_data
+
+
+
 
 @pytest.fixture(scope="function")
 def get_ToggleWifiMode_data(request,get_device_configuration):
