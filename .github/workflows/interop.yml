@@ -132,7 +132,7 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s9
           testbed: interop
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and android and not wpa3_personal' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and android and not wpa3_personal' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "--device='Galaxy S9' --skip-lanforge"
@@ -219,8 +219,8 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-iphone-11
           testbed: interop
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
-          configuration_file: "$./lab_info.json"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and ios' }}"
+          configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "--device='iPhone-11' --skip-lanforge"
           allure_results_artifact_name: allure-results-iphone-11
@@ -307,7 +307,7 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s10
           testbed: interop
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and android' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and android' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "--device='Galaxy S10.*' --skip-lanforge"
@@ -396,7 +396,7 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-iphone-7
           testbed: interop
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and ios' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "--device='iPhone-7' --skip-lanforge"
@@ -483,7 +483,7 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s20
           testbed: interop
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and android' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and android' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "--device='Galaxy S20' --skip-lanforge"
@@ -569,7 +569,7 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-iphone-xr
           testbed: interop
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and ios' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "--device='iPhone-XR' --skip-lanforge"
@@ -657,7 +657,7 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-pixel-4
           testbed: interop
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and android' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and android' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "--device='Pixel 4' --skip-lanforge"
@@ -742,7 +742,7 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-iphone-12
           testbed: interop
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and ios' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "--device='iPhone-12' --skip-lanforge"
