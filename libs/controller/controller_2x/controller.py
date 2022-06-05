@@ -691,6 +691,129 @@ class ProvUtils(ConfigureController):
         self.check_response("PUT", resp, self.make_headers(), payload, uri)
         return resp
 
+    def get_map(self):
+        uri = self.build_url_prov("map")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_map_by_id(self, map_id):
+        uri = self.build_url_prov("map/" + map_id)
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def add_map(self, payload):
+        uri = self.build_url_prov("map/0")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_map(self, map_id):
+        uri = self.build_url_prov("map/" + map_id)
+        print(uri)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def edit_map(self, payload, map_id):
+        uri = self.build_url_prov("map/" + map_id)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def get_operator(self):
+        uri = self.build_url_prov("operator")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_operator_by_id(self, operator_id):
+        uri = self.build_url_prov("operator/" + operator_id)
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def add_operator(self, payload):
+        uri = self.build_url_prov("operator/1")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_operator(self, operator_id):
+        uri = self.build_url_prov("operator/" + operator_id)
+        print(uri)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def edit_operator(self, payload, operator_id):
+        uri = self.build_url_prov("operator/" + operator_id)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def get_service_class_by_operator_id(self, operator_id):
+        uri = self.build_url_prov("serviceClass?operatorId=" + operator_id)
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_service_class_by_id(self, service_class_id):
+        uri = self.build_url_prov("serviceClass/" + service_class_id)
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def add_service_class(self, payload):
+        uri = self.build_url_prov("serviceClass/1")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_service_class(self, service_class_id):
+        uri = self.build_url_prov("serviceClass/" + service_class_id)
+        print(uri)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def edit_service_class(self, payload, service_class_id):
+        uri = self.build_url_prov("serviceClass/" + service_class_id)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
 class UProfileUtility:
 
     def __init__(self, sdk_client=None, controller_data=None):
