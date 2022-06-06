@@ -606,13 +606,22 @@ class APNOS:
         return status
 
     def dfs(self):
-        if self.type == "wifi5":
-            cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && echo 1 > dfs_simulate_radar"
-            print("cmd: ", cmd)
+        if self.type.lower() == "wifi5":
+            #cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && echo 1 > dfs_simulate_radar"
+            #print("cmd: ", cmd)
             if self.mode:
+                client = self.ssh_cli_connect()
+                cmd1 = '[ -f /sys/kernel/debug/ieee80211/phy1/ath10k/dfs_simulate_radar ] && echo "True" || echo "False"'
+                stdin, stdout, stderr = client.exec_command(cmd1)
+                output = str(stdout.read())
+                if output.__contains__("False"):
+                    cmd = "cd /sys/kernel/debug/ieee80211/phy0/ath10k/ && echo 1 > dfs_simulate_radar"
+                else:
+                    cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && echo 1 > dfs_simulate_radar"
+                client.close()
                 command = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                           f"cmd --value \"{cmd}\" "
-        elif self.type == "wifi6":
+        elif self.type.lower() == "wifi6":
             cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && echo 1 > dfs_simulate_radar'
             print("cmd: ", cmd)
             if self.mode:
@@ -621,13 +630,23 @@ class APNOS:
         client = self.ssh_cli_connect()
         stdin, stdout, stderr = client.exec_command(command)
         output = stdout.read()
-        print("hey", output)
+        print("Output", output)
         client.close()
 
     def dfs_logread(self):
         if self.type == "wifi5":
-            cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && logread | grep DFS"
-            print("cmd: ", cmd)
+            client = self.ssh_cli_connect()
+            cmd1 = '[ -f /sys/kernel/debug/ieee80211/phy1/ath10k/dfs_simulate_radar ] && echo "True" || echo "False"'
+            stdin, stdout, stderr = client.exec_command(cmd1)
+            output = str(stdout.read())
+            print("Output", output)
+            if output.__contains__("False"):
+                cmd = "cd /sys/kernel/debug/ieee80211/phy0/ath10k/ && logread | grep DFS"
+            else:
+                cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && logread | grep DFS"
+            client.close()
+            #cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && logread | grep DFS"
+            #print("cmd: ", cmd)
             if self.mode:
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                       f"cmd --value \"{cmd}\" "
