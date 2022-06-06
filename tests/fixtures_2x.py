@@ -35,6 +35,7 @@ if 'py-json' not in sys.path:
 from apnos.apnos import APNOS
 from controller.controller_2x.controller import Controller
 from controller.controller_2x.controller import FMSUtils
+from controller.controller_2x.controller import ProvUtils
 from configuration import CONFIGURATION
 from configuration import RADIUS_SERVER_DATA
 from configuration import RADIUS_ACCOUNTING_DATA
@@ -51,6 +52,7 @@ class Fixtures_2x:
         if not run_lf:
             try:
                 self.controller_obj = Controller(controller_data=self.lab_info["controller"])
+                self.prov_controller_obj = ProvUtils(controller_data=self.lab_info["controller"])
                 self.fw_client = FMSUtils(sdk_client=self.controller_obj)
             except Exception as e:
                 print(e)
@@ -106,6 +108,13 @@ class Fixtures_2x:
                 firmware_list.reverse()
 
                 for firmware in firmware_list:
+                    if firmware['image'] == "":
+                        continue
+                    if str(firmware['image']).__contains__("upgrade.bin"):
+                        temp = firmware['image'].split("-")
+                        temp.pop(-1)
+                        temp = "-".join(temp)
+                        firmware['image'] = temp
                     if ap['version'].split('-')[0] == 'release':
                         if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1].__contains__('v2.'):
                             print("Target Firmware: \n", firmware)
@@ -148,6 +157,7 @@ class Fixtures_2x:
                                 upgrade_status.append([ap['serial'], target_revision, current_version])
                                 print("firmware upgraded failed: ", target_revision)
                             break
+                    print("shivam", firmware['image'].split("-"), ap['version'].split('-')[0])
                     if firmware['image'].split("-")[-2] == ap['version'].split('-')[0]:
                         print("Target Firmware: \n", firmware)
                         allure.attach(name="Target firmware : ", body=str(firmware))
@@ -381,7 +391,6 @@ class Fixtures_2x:
         profile_data = {}
         var = ""
         if len(parameter['rf']) > 0:
-            print("Country code channel division")
             instantiate_profile_obj.set_radio_config(radio_config=parameter['rf'])
         else:
             instantiate_profile_obj.set_radio_config()
@@ -539,6 +548,11 @@ class Fixtures_2x:
                             test_cases["wpa2_personal"] = False
             if mode == "wpa3_enterprise":
                 for j in profile_data["ssid"][mode]:
+                    if "radius_auth_data" in j:
+                        var = True
+                    else:
+                        var = False
+                for j in profile_data["ssid"][mode]:
                     if mode in get_markers.keys() and get_markers[mode]:
                         try:
                             if j["appliedRadios"].__contains__("2G"):
@@ -547,12 +561,20 @@ class Fixtures_2x:
                                 lf_dut_data.append(j)
                             j["appliedRadios"] = list(set(j["appliedRadios"]))
                             j['security'] = 'wpa3'
-                            RADIUS_SERVER_DATA = radius_info
-                            RADIUS_ACCOUNTING_DATA = radius_accounting_info
-                            creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j, radius=True,
-                                                                               radius_auth_data=RADIUS_SERVER_DATA,
-                                                                               radius_accounting_data=RADIUS_ACCOUNTING_DATA)
-                            test_cases["wpa3_eap"] = True
+                            if var :
+                                RADIUS_SERVER_DATA = j["radius_auth_data"]
+                                RADIUS_ACCOUNTING_DATA = j['radius_acc_data']
+                                creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j, radius=True,
+                                                                                   radius_auth_data=RADIUS_SERVER_DATA,
+                                                                                   radius_accounting_data=RADIUS_ACCOUNTING_DATA)
+                                test_cases["wpa_2g"] = True
+                            else:
+                                RADIUS_SERVER_DATA = radius_info
+                                RADIUS_ACCOUNTING_DATA = radius_accounting_info
+                                creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j, radius=True,
+                                                                                   radius_auth_data=RADIUS_SERVER_DATA,
+                                                                                   radius_accounting_data=RADIUS_ACCOUNTING_DATA)
+                                test_cases["wpa3_eap"] = True
                         except Exception as e:
                             print(e)
                             test_cases["wpa3_eap"] = False
@@ -672,6 +694,12 @@ class Fixtures_2x:
         # Add logger command before config push
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
+
+
+
+        # Adding memory Profile code before applying config
+        output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+        allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
 
         time_1 = time.time()
 
@@ -802,6 +830,10 @@ class Fixtures_2x:
             print(e)
             pass
 
+        # Adding memory Profile code after applying config
+        output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+        allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
+
         def teardown_session():
             wifi_status = ap_ssh.get_wifi_status()
             allure.attach(name="wifi status", body=str(wifi_status))
@@ -816,7 +848,7 @@ class Fixtures_2x:
 
     def setup_mesh_profile(self, request, param, get_apnos, get_configuration, setup_controller, instantiate_profile,
                            get_markers, get_equipment_ref, lf_tools, skip_lf=False, open_flow=None):
-
+        mesh_scenario = lf_tools.create_mesh_scenario()
         instantiate_profile_obj = instantiate_profile(sdk_client=setup_controller)
         print(1, instantiate_profile_obj.sdk_client)
         vlan_id, mode = 0, 0
@@ -948,7 +980,7 @@ class Fixtures_2x:
             print("get equipment id ref [0]", get_equipment_ref[length])
             instantiate_profile_obj.push_config(serial_number=get_equipment_ref[length])
 
-            config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"'))
+            config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"').replace("True", "true"))
             config["uuid"] = 0
 
             # Attach the config that is sent from API
@@ -1092,7 +1124,7 @@ class Fixtures_2x:
         create_dut = lf_tools.create_mesh_dut(ssid_data=dut_final_data)
 
         #create mesh scenario
-        mesh_scenario = lf_tools.create_mesh_scenario()
+        #mesh_scenario = lf_tools.create_mesh_scenario()
 
         #check for all ap are connected and is pinging
         for length in range(0, len(get_configuration['access_point'])):

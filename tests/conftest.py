@@ -6,6 +6,7 @@ import os
 import random
 import string
 import sys
+import re
 
 import allure
 
@@ -38,6 +39,7 @@ import pytest
 from lanforge.lf_tests import RunTest
 from cv_test_manager import cv_test
 from configuration import CONFIGURATION
+from configuration import PERFECTO_DETAILS
 from configuration import open_flow
 from configuration import RADIUS_SERVER_DATA
 from configuration import RADIUS_ACCOUNTING_DATA
@@ -146,6 +148,18 @@ def pytest_addoption(parser):
         default=False,
         help="skip cloud controller and AP, run only lanforge tests on a ssid preconfigured"
     )
+    parser.addoption(
+        "--skip-pcap",
+        action="store_true",
+        default=False,
+        help="skip packet capture for sanity"
+    )
+    parser.addoption(
+        "--device",
+        default="iPhone-11",
+        help="Device Model which is needed to test"
+    )
+
 
     # Perfecto Parameters
     parser.addini("perfectoURL", "Cloud URL")
@@ -195,6 +209,11 @@ def testbed(request):
     var = request.config.getoption("--testbed")
     yield var
 
+@pytest.fixture(scope="session")
+def device(request):
+    """yields the device option selection"""
+    var = request.config.getoption("--device")
+    yield var
 
 @pytest.fixture(scope="session")
 def should_upload_firmware(request):
@@ -208,6 +227,11 @@ def run_lf(request):
     var = request.config.getoption("--run-lf")
     yield var
 
+@pytest.fixture(scope="session")
+def skip_pcap(request):
+    """yields the --skip-pcap option for skipping the packet capture for sanity"""
+    var = request.config.getoption("--skip-pcap")
+    yield var
 
 @pytest.fixture(scope="session")
 def should_upgrade_firmware(request):
@@ -257,6 +281,14 @@ def get_configuration(testbed, request):
             CONFIGURATION[testbed]["access_point"][i]["version"] = version_list[0]
     LOGGER.info("Selected the lab Info data: " + str((CONFIGURATION[testbed])))
     yield CONFIGURATION[testbed]
+
+@pytest.fixture(scope="session")
+def get_device_configuration(device, request):
+    """yields the selected device information from lab info file (configuration.py)"""
+
+    LOGGER.info("Selected the lab Info data: " + str((PERFECTO_DETAILS[device])))
+    print(PERFECTO_DETAILS[device])
+    yield PERFECTO_DETAILS[device]
 
 
 @pytest.fixture(scope="session")
@@ -313,6 +345,14 @@ def get_openflow():
 def setup_controller(request, get_configuration, add_env_properties, fixtures_ver):
     """sets up the controller connection and yields the sdk_client object"""
     sdk_client = fixtures_ver.controller_obj
+    request.addfinalizer(fixtures_ver.disconnect)
+    yield sdk_client
+
+# Prov Controller Fixture
+@pytest.fixture(scope="session")
+def setup_prov_controller(request, get_configuration, add_env_properties, fixtures_ver):
+    """sets up the prov controller connection and yields the sdk_client object"""
+    sdk_client = fixtures_ver.prov_controller_obj
     request.addfinalizer(fixtures_ver.disconnect)
     yield sdk_client
 
@@ -617,14 +657,14 @@ def lf_tools(get_configuration, testbed, skip_lf, run_lf, get_ap_version):
 
 
 @pytest.fixture(scope="session")
-def lf_test(get_configuration, setup_influx, request, skip_lf, run_lf):
+def lf_test(get_configuration, setup_influx, request, skip_lf, run_lf, skip_pcap):
     if not skip_lf:
         if request.config.getoption("--exit-on-fail"):
             obj = RunTest(configuration_data=get_configuration, influx_params=setup_influx,
-                          debug=True, run_lf=run_lf)
+                          debug=True, run_lf=run_lf, skip_pcap=skip_pcap)
         if request.config.getoption("--exit-on-fail") is False:
             obj = RunTest(configuration_data=get_configuration, influx_params=setup_influx,
-                          debug=False, run_lf=run_lf)
+                          debug=False, run_lf=run_lf, skip_pcap=skip_pcap)
     yield obj
 
 
@@ -725,6 +765,10 @@ def get_ap_logs(request, get_apnos, get_configuration, run_lf):
             ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
             ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
 
+        # Adding memory Profile code before every test start
+        output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+        allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
+
         def collect_logs():
             for ap in get_configuration['access_point']:
                 ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
@@ -732,7 +776,10 @@ def get_ap_logs(request, get_apnos, get_configuration, run_lf):
                 ap_logs = ap_ssh.get_logread(start_ref="start testcase: " + instance_name,
                                              stop_ref="stop testcase: " + instance_name)
                 allure.attach(name='logread', body=str(ap_logs))
-            pass
+
+            # Adding memory Profile code after every test completion
+            output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+            allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
 
         request.addfinalizer(collect_logs)
 
@@ -781,3 +828,35 @@ def get_apnos_max_clients(get_apnos, get_configuration):
         except Exception as e:
             pass
     yield all_logs
+
+@pytest.fixture(scope="function")
+def get_ap_channel(get_apnos, get_configuration):
+    all_data = []
+    dict_band_channel = {}
+    for ap in get_configuration['access_point']:
+        ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
+        a = ap_ssh.run_generic_command(cmd="iw dev | grep channel")
+        print("ap command output:- ", a)
+        try:
+            a = a[1:]
+            for i in a:
+                if i == '':
+                    continue
+                j = int(re.findall('\d+', i)[0])
+                print(j)
+                if j >= 36:
+                    dict_band_channel["5G"] = j
+                    continue
+                elif j < 36:
+                    dict_band_channel["2G"] = j
+                    continue
+            if not "2G" in dict_band_channel:
+                dict_band_channel["2G"] = "AUTO"
+            if not "5G" in dict_band_channel:
+                dict_band_channel["5G"] = "AUTO"
+            all_data.append(dict_band_channel)
+        except Exception as e:
+            print(e)
+            pass
+    print(all_data)
+    yield all_data

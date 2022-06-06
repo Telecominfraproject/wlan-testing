@@ -1,0 +1,200 @@
+name: Test cloud SDK Docker Compose deployment upgrade
+
+env:
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      deployment_version:
+        default: 'main'
+        description: 'OpenWiFi deployment repository version to be deployed.'
+        required: true
+      deployment_upgrade_version:
+        description: 'OpenWiFi deployment repository upgrade version.'
+        required: true
+      id:
+        description: 'run identifier'
+        required: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  id:
+    name: Workflow ID Provider
+    runs-on: ubuntu-latest
+    steps:
+      - name: ${{ github.event.inputs.id }}
+        run: echo run identifier ${{ inputs.id }}
+
+  deploy-controller:
+    name: Deploy OpenWiFi cloud SDK
+    needs: id
+    runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_OUTPUT: json
+      AWS_DEFAULT_REGION: us-east-2
+    outputs:
+      gateway_url: ${{ steps.deploy-sdk-docker-compose.outputs.gateway_url }}
+      sec_url: ${{ steps.deploy-sdk-docker-compose.outputs.sec_url }}
+      instance_id: ${{ steps.deploy-sdk-docker-compose.outputs.instance_id }}
+      instance_name: ${{ steps.deploy-sdk-docker-compose.outputs.instance_name }}
+      instance_public_ip: ${{ steps.deploy-sdk-docker-compose.outputs.instance_public_ip }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use deploy-sdk-docker-compose composite action
+        id: deploy-sdk-docker-compose
+        uses: ./.github/actions/deploy-sdk-docker-compose
+        with:
+          deployment_version: ${{ github.event.inputs.deployment_version }}
+          owsec_default_username: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
+          owsec_default_password: ${{ secrets.OWSEC_DEFAULT_PASSWORD }}
+          owsec_hashed_default_password: ${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
+          owsec_new_password: ${{ secrets.OWSEC_NEW_PASSWORD }}
+          owfms_s3_secret: ${{ secrets.UCENTRALFMS_S3_SECRET }}
+          owfms_s3_key: ${{ secrets.UCENTRALFMS_S3_KEY }}
+          rtty_token: ${{ secrets.RTTY_TOKEN }}
+          instance_ssh_key: ${{ secrets.SSH_LOADSIM }}
+
+  deploy-virtual-ap-instance:
+    name: Deploy virtual AP EC2 instance
+    needs: [deploy-controller]
+    runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+    outputs:
+      serial_number: ${{ steps.deploy-virtual-ap-instance.outputs.serial_number }}
+      instance_id: ${{ steps.deploy-virtual-ap-instance.outputs.instance_id }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use deploy-virtual-ap-instance composite action
+        id: deploy-virtual-ap-instance
+        uses: ./.github/actions/deploy-virtual-ap-instance
+        with:
+          virtual_ap_password: ${{ secrets.VIRTUAL_AP_PASSWORD }}
+          virtual_ap_cert: ${{ secrets.VIRTUAL_AP_CERT }}
+          virtual_ap_key: ${{ secrets.VIRTUAL_AP_KEY }}
+          virtual_ap_dev_id: ${{ secrets.VIRTUAL_AP_DEV_ID }}
+          gateway_url: ${{ needs.deploy-controller.outputs.gateway_url }}
+          gateway_public_ip: ${{ needs.deploy-controller.outputs.instance_public_ip }}
+
+  test:
+   name: Test all microservices
+   needs: [deploy-controller, deploy-virtual-ap-instance]
+   runs-on: ubuntu-latest
+   env:
+     OWSEC: "${{ needs.deploy-controller.outputs.sec_url }}:16001"
+     OWSEC_USERNAME: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
+     OWSEC_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
+     FLAGS: "-s -k"
+   steps:
+     - name: Add hostname for ${{ needs.deploy-controller.outputs.sec_url }}
+       run: |
+         echo "${{ needs.deploy-controller.outputs.instance_public_ip }} ${{ needs.deploy-controller.outputs.sec_url }}" | sudo tee -a /etc/hosts
+
+     - name: Get OWGW CLI script and test service
+       run: |
+         curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralgw/master/test_scripts/curl/cli -o cli
+         chmod +x cli
+         ./cli test_service ${{ needs.deploy-virtual-ap-instance.outputs.serial_number }}
+
+     - name: Get OWSec CLI script and test service
+       run: |
+         curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralsec/main/test_scripts/curl/cli -o cli
+         chmod +x cli
+         ./cli test_service
+
+     - name: Get OWFms CLI script and test service
+       run: |
+         curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralfms/main/test_scripts/curl/cli -o cli
+         chmod +x cli
+         ./cli test_service ${{ needs.deploy-virtual-ap-instance.outputs.serial_number }}
+
+  upgrade-controller-deployment:
+    name: Upgrade OpenWiFi Cloud SDK
+    env:
+      AWS_DEFAULT_REGION: us-east-2
+    needs: [deploy-controller, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Save SSH key for access to EC2 instance
+        env:
+          INSTANCE_SSH_KEY: ${{ secrets.SSH_LOADSIM }}
+        run: |
+          echo "${{ env.INSTANCE_SSH_KEY }}" >> ssh_key.pem
+          chmod 600 ssh_key.pem
+
+      - name: Upgrade Docker Compose cloud SDK deployment
+        run: |
+          ssh -o "StrictHostKeyChecking accept-new" -i ssh_key.pem ubuntu@${{ needs.deploy-controller.outputs.instance_public_ip }} << EOF
+            sudo -i;
+            cd wlan-cloud-ucentral-deploy/docker-compose;
+            docker-compose down;
+            git checkout ${{ github.event.inputs.deployment_upgrade_version }};
+            docker-compose up -d;
+          EOF
+
+  test-after-upgrade:
+   name: Test all microservices after deployment upgrade
+   needs: [deploy-controller, deploy-virtual-ap-instance, upgrade-controller-deployment]
+   runs-on: ubuntu-latest
+   env:
+     OWSEC: "${{ needs.deploy-controller.outputs.sec_url }}:16001"
+     OWSEC_USERNAME: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
+     OWSEC_PASSWORD: ${{ secrets.OWSEC_NEW_PASSWORD }}
+     FLAGS: "-s -k"
+   steps:
+     - name: Add hostname for ${{ needs.deploy-controller.outputs.sec_url }}
+       run: |
+         echo "${{ needs.deploy-controller.outputs.instance_public_ip }} ${{ needs.deploy-controller.outputs.sec_url }}" | sudo tee -a /etc/hosts
+
+     - name: Get OWGW CLI script and test service
+       run: |
+         curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralgw/master/test_scripts/curl/cli -o cli
+         chmod +x cli
+         ./cli test_service ${{ needs.deploy-virtual-ap-instance.outputs.serial_number }}
+
+     - name: Get OWSec CLI script and test service
+       run: |
+         curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralsec/main/test_scripts/curl/cli -o cli
+         chmod +x cli
+         ./cli test_service
+
+     - name: Get OWFms CLI script and test service
+       run: |
+         curl -s https://raw.githubusercontent.com/Telecominfraproject/wlan-cloud-ucentralfms/main/test_scripts/curl/cli -o cli
+         chmod +x cli
+         ./cli test_service ${{ needs.deploy-virtual-ap-instance.outputs.serial_number }}
+
+  destroy-controller:
+    name: Destroy OpenWiFi cloud SDK instance
+    needs: [deploy-controller, test-after-upgrade]
+    runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: us-east-2
+    if: always()
+    steps:
+      - name: Delete EC2 instance
+        continue-on-error: true
+        if: always()
+        run: |
+          aws ec2 terminate-instances --instance-ids ${{ needs.deploy-controller.outputs.instance_id }}
+
+  terminate-virtual-ap-instance:
+    name: Terminate virtual AP instance
+    needs: [deploy-virtual-ap-instance, test-after-upgrade]
+    runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+    if: always()
+    steps:
+      - name: Terminate virtual AP EC2 instance
+        continue-on-error: true
+        run: |
+          aws ec2 terminate-instances --instance-ids ${{ needs.deploy-virtual-ap-instance.outputs.instance_id }}

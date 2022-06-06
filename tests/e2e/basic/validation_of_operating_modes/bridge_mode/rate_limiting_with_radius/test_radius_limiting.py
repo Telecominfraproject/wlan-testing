@@ -7,7 +7,11 @@ import pytest
 from configuration import RATE_LIMITING_RADIUS_SERVER_DATA
 from configuration import RATE_LIMITING_RADIUS_ACCOUNTING_DATA
 
-pytestmark = [pytest.mark.regression, pytest.mark.rate_limiting_with_radius, pytest.mark.bridge]
+
+pytestmark = [pytest.mark.ow_regression_lf,
+              pytest.mark.ow_dynamic_qos_tests_lf,
+              pytest.mark.ow_rate_limiting_with_radius_tests_lf,
+              pytest.mark.bridge]
 
 
 setup_params_general = {
@@ -54,6 +58,7 @@ class TestRateLimitingWithRadiusBridge(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
+    @pytest.mark.ow_sanity_lf
     @pytest.mark.twog_upload_per_ssid
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5849", name="WIFI-5849")
     def test_radius_server_2g_upload_per_ssid(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info, station_names_twog):
@@ -89,6 +94,7 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.twog_download_perssid_persta
+    @pytest.mark.ow_sanity_lf
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5850", name="WIFI-5850")
     def test_radius_server_2g_download_perssid_persta(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
                                      station_names_twog):
@@ -575,6 +581,7 @@ class TestRateLimitingWithRadiusBridge(object):
         ttls_passwd = 'password'
         identity = 'user1'
         configured = 10
+        allure.attach(name="Max-Upload-User1", body=str(profile_data["rate-limit"]))
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
@@ -622,6 +629,7 @@ class TestRateLimitingWithRadiusBridge(object):
         ttls_passwd = 'password'
         identity = 'user1'
         configured = 10
+        allure.attach(name="Max-Download-User1", body=str(profile_data["rate-limit"]))
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
@@ -669,6 +677,7 @@ class TestRateLimitingWithRadiusBridge(object):
         ttls_passwd = 'password'
         identity = 'user2'
         configured = 20
+        allure.attach(name="Max-Upload-User2", body=str(profile_data["rate-limit"]))
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
@@ -721,6 +730,7 @@ class TestRateLimitingWithRadiusBridge(object):
                                      eap=eap, ttls_passwd=ttls_passwd, identity=identity,
                                      station_name=station_names_twog, ieee80211w=0, vlan_id=vlan, cleanup=False)
         print(passes)
+        allure.attach(name="Max-Download-User2", body=str(profile_data["rate-limit"]))
         if passes:
             raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel: Per-Total Download Rate:"]]
             wct_obj = lf_test.wifi_capacity(instance_name="Ratelimit_Radius_group_user1", mode=mode, vlan_id=vlan,

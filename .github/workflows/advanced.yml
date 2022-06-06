@@ -1,5 +1,13 @@
 name: advanced testing
 
+env:
+  AWS_EKS_NAME: tip-wlan-main
+  AWS_DEFAULT_OUTPUT: json
+  AWS_DEFAULT_REGION: us-east-2
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+
 on:
   workflow_dispatch:
 
@@ -23,13 +31,6 @@ jobs:
     runs-on: [ self-hosted, small ]
     needs: [ build ]
     timeout-minutes: 1440
-    env:
-      AWS_EKS_NAME: tip-wlan-main
-      AWS_DEFAULT_OUTPUT: json
-      AWS_DEFAULT_REGION: us-east-2
-      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
      
     strategy:
       fail-fast: false
@@ -48,7 +49,8 @@ jobs:
 
     - name: install kubectl
       run: |
-        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        # TODO WIFI-7839 revert to using stable when issue is resolved on AWS CLI side
+        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: get EKS access credentials
@@ -70,6 +72,12 @@ jobs:
         testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
         allure_results_artifact_name: allure-results-${{ matrix.testbed }}
 
+      # necessary because if conditionals in composite actions are currently not respected
+    - name: delete namespace
+      if: always()
+      continue-on-error: true
+      run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}
+
   report:
     needs: [ test ]
     if: always()
@@ -81,7 +89,7 @@ jobs:
         - advanced-01
         - advanced-02
     steps:
-    -  uses: actions/checkout@v2
+    - uses: actions/checkout@v2
     - uses: actions/download-artifact@v2
       with:
         name: allure-results-${{ matrix.testbed }}

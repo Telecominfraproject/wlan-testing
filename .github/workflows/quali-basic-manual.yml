@@ -109,7 +109,8 @@ jobs:
 
     - name: install kubectl
       run: |
-        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        # TODO WIFI-7839 revert to using stable when issue is resolved on AWS CLI side
+        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: prepare namespace
@@ -142,6 +143,12 @@ jobs:
         additional_args: '-o firmware="${{ github.event.inputs.firmware }}"'
         allure_results_artifact_name: allure-results
         dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+
+      # necessary because if conditionals in composite actions are currently not respected
+    - name: delete namespace
+      if: always()
+      continue-on-error: true
+      run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}
 
     - name: stop reservation
       if: always()
