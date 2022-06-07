@@ -646,7 +646,7 @@ class APNOS:
         client.close()
 
     def dfs_logread(self):
-        if self.type == "wifi5":
+        if self.type.lower() == "wifi5":
             client = self.ssh_cli_connect()
             cmd1 = '[ -f /sys/kernel/debug/ieee80211/phy1/ath10k/dfs_simulate_radar ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd1)
@@ -662,7 +662,7 @@ class APNOS:
             if self.mode:
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                       f"cmd --value \"{cmd}\" "
-        elif self.type == "wifi6":
+        elif self.type.lower() == "wifi6":
             cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && logread | grep DFS'
             print("cmd: ", cmd)
             if self.mode:
