@@ -483,6 +483,18 @@ class APNOS:
         client.close()
         return o
 
+    def get_memory_profile(self):
+        client = self.ssh_cli_connect()
+        cmd = "ucode /usr/share/ucentral/sysinfo.uc"
+        if self.mode:
+            cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                  f"cmd --value \"{cmd}\" "
+        stdin, stdout, stderr = client.exec_command(cmd)
+        output = stdout.read().replace(b":~# iwinfo", b"").decode('utf-8')
+        o = output
+        client.close()
+        return o
+
     def gettxpower(self):
         client = self.ssh_cli_connect()
         cmd = "iw dev | grep txpower"
@@ -674,18 +686,16 @@ class APNOS:
 
 if __name__ == '__main__':
     obj = {
-                "model": "edgecore_eap101",
+                "model": "cig_wf188n",
                 "mode": "wifi6",
-                "serial": "903cb36ae223",
+                "serial": "0000c1018812",
                 "jumphost": True,
                 "ip": "10.28.3.103",
                 "username": "lanforge",
                 "password": "pumpkin77",
                 "port": 22,
-                "jumphost_tty": "/dev/ttyAP3",
-                "version": "release-latest"
+                "jumphost_tty": "/dev/ttyAP1",
+                "version": "next-latest"
             }
     var = APNOS(credentials=obj, sdk="2.x")
-    var.run_generic_command(cmd="chmod +x /usr/share/ucentral/wifi_max_user.uc")
-    a = var.run_generic_command(cmd="/usr/share/ucentral/wifi_max_user.uc")
-    print(a)
+    print(var.get_memory_profile())
