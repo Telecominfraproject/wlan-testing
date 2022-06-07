@@ -15,8 +15,9 @@ import allure
 @pytest.mark.ow_sanity_lf
 @pytest.mark.uc_sanity
 @pytest.mark.owprov_api_tests
+@pytest.mark.owprov_api_inventory
 @allure.feature("SDK PROV REST API")
-class TestUcentralProvisionService(object):
+class TestProvAPIInventory(object):
 
 
     @pytest.mark.sdk_restapi
@@ -108,12 +109,33 @@ class TestUcentralProvisionService(object):
         if resp.status_code != 200:
             assert False
 
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.owprov_api_tests
+@pytest.mark.owprov_api_system_commands
+@allure.feature("SDK PROV REST API")
+class TestProvAPISystemCommands(object):
+
     @pytest.mark.system_info_prov
     def test_system_info_prov(self, setup_prov_controller):
         system_info = setup_prov_controller.get_system_prov()
         print(system_info.json())
         allure.attach(name="system info", body=str(system_info.json()), attachment_type=allure.attachment_type.JSON)
         assert system_info.status_code == 200
+
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.owprov_api_tests
+@pytest.mark.owprov_api_entity
+@allure.feature("SDK PROV REST API")
+class TestProvAPIEntity(object):
+
+    @pytest.mark.prov_api_entity
+    def test_get_entities(self, setup_prov_controller):
+        resp = setup_prov_controller.get_entity()
+        print(resp.json())
+        allure.attach(name="Entities", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
 
     @pytest.mark.prov_api_entity_test
     def test_prov_service_create_edit_delete_entity(self, setup_prov_controller, testbed):
@@ -175,12 +197,12 @@ class TestUcentralProvisionService(object):
         if resp.status_code != 200:
             assert False
 
-    @pytest.mark.prov_api_entity
-    def test_get_entities(self, setup_prov_controller):
-        resp = setup_prov_controller.get_entity()
-        print(resp.json())
-        allure.attach(name="Entities", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
-        assert resp.status_code == 200
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.owprov_api_tests
+@pytest.mark.owprov_api_contact
+@allure.feature("SDK PROV REST API")
+class TestProvAPIContact(object):
 
     # Contact related Test cases
     @pytest.mark.prov_api_contact
@@ -231,7 +253,7 @@ class TestUcentralProvisionService(object):
         if resp.status_code != 200:
             assert False
 
-        # This to edit Entity
+        # This to edit Contact
         editing_payload = {
                           "accessPIN": "",
                           "description": "",
@@ -270,6 +292,13 @@ class TestUcentralProvisionService(object):
         allure.attach(name="Prov created contact-delete", body=body)
         if resp.status_code != 200:
             assert False
+
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.owprov_api_tests
+@pytest.mark.owprov_api_location
+@allure.feature("SDK PROV REST API")
+class TestProvAPILocation(object):
 
     # Location related Test cases
     @pytest.mark.prov_api_location
@@ -318,7 +347,7 @@ class TestUcentralProvisionService(object):
         if resp.status_code != 200:
             assert False
 
-        # This to edit Entity
+        # This to edit Location
         editing_payload = {
                           "addressLines": [
                             "Madhurawada",
@@ -359,6 +388,13 @@ class TestUcentralProvisionService(object):
         allure.attach(name="Prov created location-delete", body=body)
         if resp.status_code != 200:
             assert False
+
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.owprov_api_tests
+@pytest.mark.owprov_api_venue
+@allure.feature("SDK PROV REST API")
+class TestProvAPIVenue(object):
 
     # Venue related Test cases
     @pytest.mark.prov_api_venue
@@ -433,6 +469,13 @@ class TestUcentralProvisionService(object):
         allure.attach(name="Prov created venue-delete", body=body)
         if resp.status_code != 200:
             assert False
+
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.owprov_api_tests
+@pytest.mark.owprov_api_maps
+@allure.feature("SDK PROV REST API")
+class TestProvAPIMaps(object):
 
     # Maps related Test cases
     @pytest.mark.prov_api_maps
@@ -551,6 +594,13 @@ class TestUcentralProvisionService(object):
         if resp.status_code != 200:
             assert False
 
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.owprov_api_tests
+@pytest.mark.owprov_api_operators
+@allure.feature("SDK PROV REST API")
+class TestProvAPIOperator(object):
+
     @pytest.mark.prov_api_operator_test
     def test_get_operator(self, setup_prov_controller):
         resp = setup_prov_controller.get_operator()
@@ -631,6 +681,13 @@ class TestUcentralProvisionService(object):
         allure.attach(name="Prov created operator-delete", body=body)
         if resp.status_code != 200:
             assert False
+
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.owprov_api_tests
+@pytest.mark.owprov_api_service_class
+@allure.feature("SDK PROV REST API")
+class TestProvAPIEntity(object):
 
     @pytest.mark.prov_api_service_class_test
     def test_prov_service_create_edit_delete_service_class(self, setup_prov_controller, testbed):
@@ -745,6 +802,13 @@ class TestUcentralProvisionService(object):
         allure.attach(name="Prov created operator-delete", body=body)
         if resp.status_code != 200:
             assert False
+
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.owprov_api_tests
+@pytest.mark.owprov_api_usecase
+@allure.feature("SDK PROV REST API")
+class TestProvAPIUseCase(object):
 
     @pytest.mark.prov_api_usecase_test
     def test_prov_service_use_case(self, setup_prov_controller, testbed):
