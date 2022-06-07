@@ -1,4 +1,4 @@
-"""
+""" pwu
 
     Client Connectivity and tcp-udp Traffic Test: Bridge Mode
     pytest -m "client_connectivity and bridge and general"
@@ -8,7 +8,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.ow_client_connectivity_lf, pytest.mark.bridge, pytest.mark.general, pytest.mark.ucentral,
+pytestmark = [pytest.mark.client_connectivity, pytest.mark.bridge, pytest.mark.general, pytest.mark.ucentral,
               pytest.mark.sanity, pytest.mark.uc_sanity]  # pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
@@ -29,7 +29,7 @@ setup_params_general = {
 }
 
 
-@allure.suite(suite_name="OpenWifi Sanity LF")
+@allure.suite(suite_name="sanity")
 @allure.sub_suite(sub_suite_name="Bridge Mode Client Connectivity : Suite-A")
 @pytest.mark.suiteA
 @pytest.mark.sudo
@@ -48,7 +48,6 @@ class TestBridgeModeConnectivitySuiteA(object):
 
     @pytest.mark.open
     @pytest.mark.twog
-    @pytest.mark.saurabh
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
     def test_open_ssid_2g(self, get_ap_logs, get_lf_logs, lf_test,
                           update_report,
@@ -216,7 +215,7 @@ setup_params_general_two = {
 }
 
 
-@allure.suite(suite_name="OpenWifi Sanity LF")
+@allure.suite(suite_name="sanity")
 @allure.sub_suite(sub_suite_name="Bridge Mode Client Connectivity : Suite-B")
 @pytest.mark.suiteB
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
