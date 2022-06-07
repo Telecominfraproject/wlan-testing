@@ -800,13 +800,20 @@ def add_env_properties(get_configuration, get_sdk_version, get_apnos, fixtures_v
         print(e)
         pass
     if cc_1:
-        add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
-        add_allure_environment_property('Controller-Version', get_configuration["controller"]["version"])
-        for i in range(len(get_configuration["access_point"])):
-            add_allure_environment_property(str('AP-Name-' + str(i+1)), get_configuration["access_point"][i]["ap_name"])
-        for i in range(len(get_configuration["access_point"])):
-            add_allure_environment_property(str('AP-Serial-Number-'+str(i+1)), get_configuration["access_point"][i]["serial"])
-        add_allure_environment_property('LANforge-Chipset-Info', get_configuration["traffic_generator"]["details"]["Chip-set-info"])
+        listkey = list(get_configuration["controller"].keys())
+        if "version" in listkey:
+            add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
+            add_allure_environment_property('Controller-Version', get_configuration["controller"]["version"])
+            for i in range(len(get_configuration["access_point"])):
+                add_allure_environment_property(str('AP-Name-' + str(i + 1)),
+                                                get_configuration["access_point"][i]["ap_name"])
+            for i in range(len(get_configuration["access_point"])):
+                add_allure_environment_property(str('AP-Serial-Number-' + str(i + 1)),
+                                                get_configuration["access_point"][i]["serial"])
+            add_allure_environment_property('LANforge-Chipset-Info',
+                                            get_configuration["traffic_generator"]["details"]["Chip-set-info"])
+        else:
+            pass
     else:
         add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
         add_allure_environment_property('AP-Serial-Number', get_configuration["access_point"][0]["serial"] + "\n")
