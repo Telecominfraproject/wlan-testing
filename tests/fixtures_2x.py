@@ -698,7 +698,7 @@ class Fixtures_2x:
 
 
         # Adding memory Profile code before applying config
-        output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+        output = ap_ssh.get_memory_profile()
         allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
 
         time_1 = time.time()
@@ -831,7 +831,7 @@ class Fixtures_2x:
             pass
 
         # Adding memory Profile code after applying config
-        output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+        output = ap_ssh.get_memory_profile()
         allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
 
         def teardown_session():
