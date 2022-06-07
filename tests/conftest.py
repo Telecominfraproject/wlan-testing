@@ -766,7 +766,7 @@ def get_ap_logs(request, get_apnos, get_configuration, run_lf):
             ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
 
         # Adding memory Profile code before every test start
-        output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+        output = ap_ssh.get_memory_profile()
         allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
 
         def collect_logs():
@@ -778,7 +778,7 @@ def get_ap_logs(request, get_apnos, get_configuration, run_lf):
                 allure.attach(name='logread', body=str(ap_logs))
 
             # Adding memory Profile code after every test completion
-            output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+            output = ap_ssh.get_memory_profile()
             allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
 
         request.addfinalizer(collect_logs)
