@@ -18,30 +18,30 @@ import allure
 @pytest.mark.owprov_api_inventory
 @allure.feature("SDK PROV REST API")
 class TestProvAPIInventory(object):
+    global device_name, entity_id, contact_id, location_id, venue_id, map_id, operator_id, service_class_id
+    device_mac = "02:00:00:%02x:%02x:%02x" % (random.randint(0, 255),
+                                              random.randint(0, 255),
+                                              random.randint(0, 255))
+    device_name = device_mac.replace(":", "")
 
-
-    @pytest.mark.sdk_restapi
+    @pytest.mark.owprov_api_inventory
     @pytest.mark.prov_api
-    def test_provservice_inventorylist(self, setup_prov_controller, get_configuration):
+    def test_provservice_inventory_list(self, setup_prov_controller, get_configuration):
         """
             Test the device present in Provisioning UI
         """
-        device_name = get_configuration['access_point'][0]['serial']
-        resp = setup_prov_controller.get_inventory_by_device(device_name)
+        resp = setup_prov_controller.get_inventory()
         print(resp.json())
-        allure.attach(name="Inventory", body=str(resp.json()),attachment_type=allure.attachment_type.JSON)
+        allure.attach(name="Inventory", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
         assert resp.status_code == 200
 
     @pytest.mark.prov_api_test
-    def test_prov_service_create_edit_delete_inventory_device(self, setup_prov_controller, testbed):
+    @pytest.mark.owprov_api_inventory
+    def test_prov_service_create_inventory_device(self, setup_prov_controller, testbed):
         """
             Test the create device in provision Inventory
         """
-        device_mac = "02:00:00:%02x:%02x:%02x" % (random.randint(0, 255),
-                                     random.randint(0, 255),
-                                     random.randint(0, 255))
-        device_name = device_mac.replace(":", "")
-        # device_name = "deadbeef0011" + testbed.replace("-","")
+        global device_name
         payload = {"serialNumber": device_name,
                    "name": "Testing_to_add_device_through_automation",
                    "rrm": "inherit",
@@ -70,12 +70,18 @@ class TestProvAPIInventory(object):
         devices = json.loads(resp.text)
         print(devices)
 
+    @pytest.mark.owprov_api_inventory
+    def test_prov_service_read_inventory_device(self, setup_prov_controller, testbed):
+        global device_name
         resp = setup_prov_controller.get_inventory_by_device(device_name)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="Prov create device-verify", body=body)
+        allure.attach(name="Prov read device created", body=body)
         if resp.status_code != 200:
             assert False
 
+    @pytest.mark.owprov_api_inventory
+    def test_prov_service_edit_inventory_device(self, setup_prov_controller, testbed):
+        global device_name
         # This is for Edititng the information fo device in Inventory
         editing_payload = {
                           "description": "For testing API through automation after editing",
@@ -103,6 +109,9 @@ class TestProvAPIInventory(object):
         if resp.status_code != 200:
             assert False
 
+    @pytest.mark.owprov_api_inventory
+    def test_prov_service_delete_inventory_device(self, setup_prov_controller, testbed):
+        global device_name
         resp = setup_prov_controller.delete_device_from_inventory(device_name)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov created device-delete", body=body)
@@ -138,10 +147,11 @@ class TestProvAPIEntity(object):
         assert resp.status_code == 200
 
     @pytest.mark.prov_api_entity_test
-    def test_prov_service_create_edit_delete_entity(self, setup_prov_controller, testbed):
+    def test_prov_service_create_entity(self, setup_prov_controller, testbed):
         """
             Test the create Entity in provision Service
         """
+        global entity_id
         payload = {"name": "Testing_prov",
                     "rrm": "inherit",
                     "description": "For testing Purposes through Automation",
@@ -155,16 +165,22 @@ class TestProvAPIEntity(object):
         allure.attach(name="Prov create entity", body=body)
         if resp.status_code != 200:
             assert False
-        entitiy = json.loads(resp.text)
-        print(entitiy)
-        entity_id = entitiy['id']
+        entity = json.loads(resp.text)
+        print(entity)
+        entity_id = entity['id']
 
+    @pytest.mark.prov_api_entity_test
+    def test_prov_service_read_entity(self, setup_prov_controller, testbed):
+        global entity_id
         resp = setup_prov_controller.get_entity_by_id(entity_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov create device-verify", body=body)
         if resp.status_code != 200:
             assert False
 
+    @pytest.mark.prov_api_entity_test
+    def test_prov_service_edit_entity(self, setup_prov_controller, testbed):
+        global entity_id
         # This to edit Entity
         editing_payload = {
                           "description": "For testing Purposes through Automation after edit",
@@ -182,8 +198,8 @@ class TestProvAPIEntity(object):
         allure.attach(name="Prov edited entity", body=body)
         if resp.status_code != 200:
             assert False
-        entitiy = json.loads(resp.text)
-        print(entitiy)
+        entity = json.loads(resp.text)
+        print(entity)
 
         resp = setup_prov_controller.get_entity_by_id(entity_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
@@ -191,6 +207,9 @@ class TestProvAPIEntity(object):
         if resp.status_code != 200:
             assert False
 
+    @pytest.mark.prov_api_entity_test
+    def test_prov_service_delete_entity(self, setup_prov_controller, testbed):
+        global entity_id
         resp = setup_prov_controller.delete_entity(entity_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov created device-delete", body=body)
@@ -213,10 +232,11 @@ class TestProvAPIContact(object):
         assert resp.status_code == 200
 
     @pytest.mark.prov_api_contact_test
-    def test_prov_service_create_edit_delete_contact(self, setup_prov_controller, testbed):
+    def test_prov_service_create_contact(self, setup_prov_controller, testbed):
         """
             Test the create Contact in provision Service
         """
+        global contact_id
         payload = {
                     "name": "Prov-Testing-through-Automation",
                     "type": "USER",
@@ -247,13 +267,19 @@ class TestProvAPIContact(object):
         print(contact)
         contact_id = contact['id']
 
+    @pytest.mark.prov_api_contact_test
+    def test_prov_service_read_contact(self, setup_prov_controller, testbed):
+        global contact_id
         resp = setup_prov_controller.get_contact_by_id(contact_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov create contact-verify", body=body)
         if resp.status_code != 200:
             assert False
 
+    @pytest.mark.prov_api_contact_test
+    def test_prov_service_edit_contact(self, setup_prov_controller, testbed):
         # This to edit Contact
+        global contact_id
         editing_payload = {
                           "accessPIN": "",
                           "description": "",
@@ -278,8 +304,8 @@ class TestProvAPIContact(object):
         allure.attach(name="Prov edited contact", body=body)
         if resp.status_code != 200:
             assert False
-        entitiy = json.loads(resp.text)
-        print(entitiy)
+        contact = json.loads(resp.text)
+        print(contact)
 
         resp = setup_prov_controller.get_contact_by_id(contact_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
@@ -287,6 +313,9 @@ class TestProvAPIContact(object):
         if resp.status_code != 200:
             assert False
 
+    @pytest.mark.prov_api_contact_test
+    def test_prov_service_delete_contact(self, setup_prov_controller, testbed):
+        global contact_id
         resp = setup_prov_controller.delete_contact(contact_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov created contact-delete", body=body)
@@ -309,10 +338,11 @@ class TestProvAPILocation(object):
         assert resp.status_code == 200
 
     @pytest.mark.prov_api_location_test
-    def test_prov_service_create_edit_delete_location(self, setup_prov_controller, testbed):
+    def test_prov_service_create_location(self, setup_prov_controller, testbed):
         """
             Test the create location in provision Service
         """
+        global location_id
         payload = {
                     "name": "TIP",
                     "type": "AUTO",
@@ -341,13 +371,19 @@ class TestProvAPILocation(object):
         print(location)
         location_id = location['id']
 
+    @pytest.mark.prov_api_location_test
+    def test_prov_service_read_location(self, setup_prov_controller, testbed):
+        global location_id
         resp = setup_prov_controller.get_location_by_id(location_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov create location-verify", body=body)
         if resp.status_code != 200:
             assert False
 
+    @pytest.mark.prov_api_location_test
+    def test_prov_service_edit_location(self, setup_prov_controller, testbed):
         # This to edit Location
+        global location_id
         editing_payload = {
                           "addressLines": [
                             "Madhurawada",
@@ -374,8 +410,8 @@ class TestProvAPILocation(object):
         allure.attach(name="Prov edited location", body=body)
         if resp.status_code != 200:
             assert False
-        entitiy = json.loads(resp.text)
-        print(entitiy)
+        location = json.loads(resp.text)
+        print(location)
 
         resp = setup_prov_controller.get_location_by_id(location_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
@@ -383,6 +419,9 @@ class TestProvAPILocation(object):
         if resp.status_code != 200:
             assert False
 
+    @pytest.mark.prov_api_location_test
+    def test_prov_service_delete_location(self, setup_prov_controller, testbed):
+        global location_id
         resp = setup_prov_controller.delete_location(location_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov created location-delete", body=body)
@@ -405,10 +444,11 @@ class TestProvAPIVenue(object):
         assert resp.status_code == 200
 
     @pytest.mark.prov_api_venue_test
-    def test_prov_service_create_edit_delete_venue(self, setup_prov_controller, testbed):
+    def test_prov_service_create_venue(self, setup_prov_controller, testbed):
         """
             Test the create venue in provision Service
         """
+        global venue_id
         payload = {
                       "description": "For testing Purposes",
                       "entity": "6a657863-9940-4303-ac68-4cc10d3078ec",
@@ -433,13 +473,19 @@ class TestProvAPIVenue(object):
         print(venue)
         venue_id = venue['id']
 
+    @pytest.mark.prov_api_venue_test
+    def test_prov_service_read_venue(self, setup_prov_controller, testbed):
+        global venue_id
         resp = setup_prov_controller.get_venue_by_id(venue_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov create venue-verify", body=body)
         if resp.status_code != 200:
             assert False
 
+    @pytest.mark.prov_api_venue_test
+    def test_prov_service_edit_venue(self, setup_prov_controller, testbed):
         # This to edit venue
+        global venue_id
         editing_payload = {
                           "description": "For testing Purposes through Automation",
                           "location": "",
@@ -455,8 +501,8 @@ class TestProvAPIVenue(object):
         allure.attach(name="Prov edited venue", body=body)
         if resp.status_code != 200:
             assert False
-        entitiy = json.loads(resp.text)
-        print(entitiy)
+        venue = json.loads(resp.text)
+        print(venue)
 
         resp = setup_prov_controller.get_venue_by_id(venue_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
@@ -464,6 +510,9 @@ class TestProvAPIVenue(object):
         if resp.status_code != 200:
             assert False
 
+    @pytest.mark.prov_api_venue_test
+    def test_prov_service_delete_venue(self, setup_prov_controller, testbed):
+        global venue_id
         resp = setup_prov_controller.delete_venue(venue_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov created venue-delete", body=body)
@@ -486,10 +535,11 @@ class TestProvAPIMaps(object):
         assert resp.status_code == 200
 
     @pytest.mark.prov_api_maps
-    def test_prov_service_maps_create_edit_delete(self, setup_prov_controller, testbed):
+    def test_prov_service_create_map(self, setup_prov_controller, testbed):
         """
                     Test the create Map in provision Service
                 """
+        global map_id
         payload = {
                   "access": {
                     "list": []
@@ -533,13 +583,19 @@ class TestProvAPIMaps(object):
         print(map)
         map_id = map['id']
 
+    @pytest.mark.prov_api_maps
+    def test_prov_service_read_map(self, setup_prov_controller, testbed):
+        global map_id
         resp = setup_prov_controller.get_map_by_id(map_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov create Map-verify", body=body)
         if resp.status_code != 200:
             assert False
 
+    @pytest.mark.prov_api_maps
+    def test_prov_service_edit_map(self, setup_prov_controller, testbed):
         # This to edit Map
+        global map_id
         editing_payload = {
                           "access": {
                             "list": []
@@ -588,6 +644,9 @@ class TestProvAPIMaps(object):
         if resp.status_code != 200:
             assert False
 
+    @pytest.mark.prov_api_maps
+    def test_prov_service_delete_map(self, setup_prov_controller, testbed):
+        global map_id
         resp = setup_prov_controller.delete_map(map_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov created Map-delete", body=body)
@@ -609,10 +668,11 @@ class TestProvAPIOperator(object):
         assert resp.status_code == 200
 
     @pytest.mark.prov_api_operator_test
-    def test_prov_service_create_edit_delete_operator(self, setup_prov_controller, testbed):
+    def test_prov_service_create_operator(self, setup_prov_controller, testbed):
         """
             Test the create Operator in provision Service
         """
+        global operator_id
         payload = {
                   "name": "Testing API through Automation",
                   "deviceRules": {
@@ -641,13 +701,19 @@ class TestProvAPIOperator(object):
         print(operator)
         operator_id = operator['id']
 
+    @pytest.mark.prov_api_operator_test
+    def test_prov_service_read_operator(self, setup_prov_controller, testbed):
+        global operator_id
         resp = setup_prov_controller.get_operator_by_id(operator_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov create operator-verify", body=body)
         if resp.status_code != 200:
             assert False
 
+    @pytest.mark.prov_api_operator_test
+    def test_prov_service_edit_operator(self, setup_prov_controller, testbed):
         # This to edit operator
+        global operator_id
         editing_payload = {
                           "name": "Testing API through Automation after edit",
                           "description": "Testing API through Automation after edit",
@@ -676,6 +742,9 @@ class TestProvAPIOperator(object):
         if resp.status_code != 200:
             assert False
 
+    @pytest.mark.prov_api_operator_test
+    def test_prov_service_delete_operator(self, setup_prov_controller, testbed):
+        global operator_id
         resp = setup_prov_controller.delete_operator(operator_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov created operator-delete", body=body)
@@ -687,13 +756,14 @@ class TestProvAPIOperator(object):
 @pytest.mark.owprov_api_tests
 @pytest.mark.owprov_api_service_class
 @allure.feature("SDK PROV REST API")
-class TestProvAPIEntity(object):
+class TestProvAPIServiceClass(object):
 
     @pytest.mark.prov_api_service_class_test
-    def test_prov_service_create_edit_delete_service_class(self, setup_prov_controller, testbed):
+    def test_prov_service_get_service_class_by_operator(self, setup_prov_controller, testbed):
         """
             Test the create Service class in provision Service (USE CASE)
         """
+        global operator_id
         payload = {
                   "name": "Testing API through Automation",
                   "deviceRules": {
@@ -734,6 +804,9 @@ class TestProvAPIEntity(object):
         if resp.status_code != 200:
             assert False
 
+    @pytest.mark.prov_api_service_class_test
+    def test_prov_service_create_service_class(self, setup_prov_controller, testbed):
+        global operator_id, service_class_id
         payload = {
                   "name": "Testing Purposes through API Automation",
                   "billingCode": "12345",
@@ -759,13 +832,19 @@ class TestProvAPIEntity(object):
         print(service_class)
         service_class_id = service_class['id']
 
+    @pytest.mark.prov_api_service_class_test
+    def test_prov_service_read_service_class(self, setup_prov_controller, testbed):
+        global operator_id, service_class_id
         resp = setup_prov_controller.get_service_class_by_id(service_class_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov  created Service Class-verify", body=body)
         if resp.status_code != 200:
             assert False
 
+    @pytest.mark.prov_api_service_class_test
+    def test_prov_service_edit_service_class(self, setup_prov_controller, testbed):
         # This to edit operator
+        global operator_id, service_class_id
         editing_payload = {
                           "name": "Testing Purposes through API Automation",
                           "billingCode": "12345",
@@ -791,6 +870,9 @@ class TestProvAPIEntity(object):
         if resp.status_code != 200:
             assert False
 
+    @pytest.mark.prov_api_service_class_test
+    def test_prov_service_delete_service_class(self, setup_prov_controller, testbed):
+        global operator_id, service_class_id
         resp = setup_prov_controller.delete_service_class(service_class_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         allure.attach(name="Prov created service_class-delete", body=body)
