@@ -184,8 +184,10 @@ class TestVlanConfigTwogRadio(object):
                                         station_name=station_names_twog, vlan_id=vlan)
 
         if not passes:
-            station_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
-                                           station_names_twog[0])["interface"]["ip"]
+            sta_info = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
+                                         station_names_twog[0])["interface"]
+            lf_test.allure_report_table_format(dict_data=sta_info, key="Interface", value="Value", name=station_names_twog[0])
+            station_ip = sta_info["ip"]
             print("station did not get an IP. Test passed")
             print("station ip: ", station_ip)
             assert True

@@ -544,6 +544,23 @@ class RunTest:
         else:
             return False
 
+    def allure_report_table_format(self, dict_data=None, key=None, value=None, name=None):#, value_on_same_table=True):
+        # for i in range(len(name)):
+        report_obj = Report()
+        data_table, dict_table = "", {}
+        # if value_on_same_table:
+        dict_table[key] = list(dict_data.keys())
+        # for i in range(len(dict_data)):
+            # if value_on_same_table == False:
+            # dict_table[key[i]] = list(dict_data[i].keys())
+        dict_table[value] = list(dict_data.values())
+        try:
+            data_table = report_obj.table2(table=dict_table, headers='keys')
+        except Exception as e:
+            print(e)
+        if name != None:
+            allure.attach(name=name, body=str(data_table))
+
     def attach_stationdata_to_allure(self, station_name=[], name=""):
         self.sta_url_map = None
         for sta_name_ in station_name:
@@ -609,10 +626,27 @@ class RunTest:
         else:
             return False
 
-    def Client_disconnect(self, station_name=[]):
+    def Client_disconnect(self, station_name=[], clean_l3_traffic=False, clear_all_sta = False):
         self.client_dis = CreateStation(_host=self.lanforge_ip, _port=self.lanforge_port,
                                         _sta_list=station_name, _password="passkey", _ssid="ssid", _security="security")
-        self.client_dis.station_profile.cleanup(station_name)
+        if len(station_name) > 0:
+            self.client_dis.station_profile.cleanup(station_name)
+        elif clear_all_sta:
+            exist_sta = []
+            for u in self.client_dis.json_get("/port/?fields=port+type,alias")['interfaces']:
+                if list(u.values())[0]['port type'] not in ['Ethernet', 'WIFI-Radio', 'NA']:
+                    exist_sta.append(list(u.values())[0]['alias'])
+            self.client_dis.station_profile.cleanup(desired_stations=exist_sta)
+        if clean_l3_traffic:
+            try:
+                exist_l3 = list(
+                    filter(lambda cx_name: cx_name if (cx_name != 'handler' and cx_name != 'uri') else False,
+                           self.client_dis.json_get("/cx/?fields=name")))
+                list(map(lambda i: self.client_dis.rm_cx(cx_name=i), exist_l3))
+                list(map(lambda cx_name: [self.client_dis.rm_endp(ename=i) for i in [f"{cx_name}-A", f"{cx_name}-B"]],
+                         exist_l3))
+            except Exception as e:
+                pass
         return True
 
     def dataplane(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
