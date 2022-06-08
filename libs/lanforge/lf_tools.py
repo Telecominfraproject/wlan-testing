@@ -42,13 +42,13 @@ LOGGER.addHandler(stdout_handler)
 
 
 class ChamberView:
-
-    def __init__(self, lanforge_data=None, access_point_data=None, run_lf=False, debug=True, testbed=None, ap_version=None):
+    def __init__(self, lanforge_data=None, access_point_data=None, run_lf=False, debug=True, testbed=None,  cc_1=False, ap_version=None):
         print("lanforge data", lanforge_data)
         print("access point data", access_point_data)
         self.access_point_data = access_point_data
         self.access_point_data = access_point_data
         self.run_lf = run_lf
+        self.cc_1 = cc_1
         print("testbed", testbed)
         if "type" in lanforge_data.keys():
             if lanforge_data["type"] == "Non-mesh":
@@ -83,6 +83,7 @@ class ChamberView:
                 self.delete_old_scenario = True
                 if access_point_data:
                     print(len(access_point_data))
+
                     for ap in range(len(access_point_data)):
                         print(access_point_data[ap])
                         self.dut_name = access_point_data[ap]["model"]
@@ -327,11 +328,13 @@ class ChamberView:
             LOGGER.warning("0 Stations")
             return
         idx = idx
-        if self.run_lf:
+        if self.run_lf or self.cc_1:
             if band == "2G":
                 idx = 0
             if band == "5G":
                 idx = 1
+
+
         for i in self.dut_idx_mapping:
             if self.dut_idx_mapping[i][0] == ssid_name and self.dut_idx_mapping[i][3] == band:
                 idx = i
@@ -705,6 +708,31 @@ class ChamberView:
             self.Create_Dut()
             # [['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58']]
             self.update_ssid(ssid_data=ssid_data[ssid])
+
+
+    def create_non_meh_dut(self, ssid_data=[]):
+        # print("hi")
+        for ap, ssid in zip(self.access_point_data, range(len(ssid_data))):
+            print("ap", ap)
+            print(ssid_data[ssid])
+            self.dut_name = ap["model"]
+            print(self.dut_name)
+            self.ap_model = ap["model"]
+            self.version = ap["version"].split("/")[-1]
+            self.serial = ap["serial"]
+            self.CreateDut = DUT(lfmgr=self.lanforge_ip,
+                                 port=self.lanforge_port,
+                                 dut_name=self.dut_name,
+                                 sw_version=self.version,
+                                 hw_version=self.ap_model,
+                                 model_num=self.ap_model,
+                                 serial_num=self.serial
+                                 )
+            self.Create_Dut()
+            # [['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58']]
+            self.update_ssid(ssid_data=ssid_data[ssid])
+
+
 
     def set_radio_antenna(self, req_url, shelf, resources, radio, antenna):
         data = {

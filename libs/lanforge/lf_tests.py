@@ -5,6 +5,9 @@
 import datetime
 import sys
 import os
+import time
+import datetime
+from datetime import datetime
 import threading
 
 import allure
@@ -27,6 +30,7 @@ sys.path.append(f"../lanforge/lanforge-scripts/py-scripts/tip-cicd-sanity")
 sys.path.append(f'../libs')
 sys.path.append(f'../tools')
 sys.path.append(f'../libs/lanforge/')
+sys.path.append(os.path.join(os.path.abspath("../../../lanforge/lanforge-scripts/")))
 from sta_connect2 import StaConnect2
 import time
 import string
@@ -35,6 +39,7 @@ import csv
 from datetime import datetime
 from pull_report import Report
 from scp_util import SCP_File
+import pyshark as ps
 
 S = 12
 # from eap_connect import EAPConnect
@@ -65,6 +70,21 @@ realm = importlib.import_module("py-json.realm")
 cv_test_reports = importlib.import_module("py-json.cv_test_reports")
 lf_report = cv_test_reports.lanforge_reports
 Realm = realm.Realm
+from LANforge import LFUtils
+from lf_cleanup import lf_clean
+from wifi_monitor_profile import WifiMonitor
+from sta_scan_test import StaScan
+from lf_sniff_radio import SniffRadio
+cv_test_reports = importlib.import_module("py-json.cv_test_reports")
+lf_report = cv_test_reports.lanforge_reports
+from lf_pcap import LfPcap
+from lf_hard_roam_test import HardRoam
+from lf_csv import lf_csv
+
+
+@allure.step
+def nested_step_allure(bssid, rssi):
+    pass
 
 
 
@@ -105,6 +125,7 @@ class RunTest:
             self.fiveg_radios = configuration_data['traffic_generator']['details']["5G-Radio"]
             self.ax_radios = configuration_data['traffic_generator']['details']["AX-Radio"]
             self.upstream_port = configuration_data['traffic_generator']['details']["upstream"].split(".")[2]
+            self.upstream = configuration_data['traffic_generator']['details']["upstream"]
             self.upstream_resource = configuration_data['traffic_generator']['details']["upstream"].split(".")[1]
             self.twog_prefix = configuration_data['traffic_generator']['details']["2.4G-Station-Name"]
             self.fiveg_prefix = configuration_data['traffic_generator']['details']["5G-Station-Name"]
@@ -1192,6 +1213,353 @@ class RunTest:
         self.Client_disconnect(station_name=station_name)
         return atten_serial_radio
 
+    def create_n_clients(self, start_id=0, sta_prefix=None, num_sta=None, dut_ssid=None,
+                         dut_security=None, dut_passwd=None, band=None, radio=None, lf_tools=None, type=None):
+
+        local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
+        station_profile = local_realm.new_station_profile()
+        if band == "fiveg":
+            radio = self.fiveg_radios[0]
+        if band == "twog":
+            radio = self.twog_radios[0]
+        if band == "sixg":
+            radio = self.ax_radios[0]
+
+        # pre clean
+        sta_list = lf_tools.get_station_list()
+        print(sta_list)
+        if not sta_list:
+            print("no stations on lanforge")
+        else:
+            station_profile.cleanup(sta_list, delay=1)
+            LFUtils.wait_until_ports_disappear(base_url=local_realm.lfclient_url,
+                                               port_list=sta_list,
+                                               debug=True)
+            time.sleep(2)
+            print("pre cleanup done")
+
+        station_list = LFUtils.portNameSeries(prefix_=sta_prefix, start_id_=start_id,
+                                                            end_id_=num_sta - 1, padding_number_=10000,
+                                                            radio=radio)
+
+        if type == "11r-sae-802.1x":
+            dut_passwd = "[BLANK]"
+        station_profile.use_security(dut_security, dut_ssid, dut_passwd)
+        station_profile.set_number_template("00")
+
+        station_profile.set_command_flag("add_sta", "create_admin_down", 1)
+
+        station_profile.set_command_param("set_port", "report_timer", 1500)
+
+        # connect station to particular bssid
+        # self.station_profile.set_command_param("add_sta", "ap", self.bssid[0])
+
+        station_profile.set_command_flag("set_port", "rpt_timer", 1)
+        if type == "11r":
+            station_profile.set_command_flag("add_sta", "80211u_enable", 0)
+            station_profile.set_command_flag("add_sta", "8021x_radius", 1)
+            station_profile.set_command_flag("add_sta", "disable_roam", 1)
+            station_profile.set_wifi_extra(key_mgmt="FT-PSK     ",
+                                           pairwise="",
+                                           group="",
+                                           psk="",
+                                           eap="",
+                                           identity="",
+                                           passwd="",
+                                           pin=""
+                                           )
+        if type == "11r-sae":
+            station_profile.set_command_flag("add_sta", "ieee80211w", 2)
+            station_profile.set_command_flag("add_sta", "80211u_enable", 0)
+            station_profile.set_command_flag("add_sta", "8021x_radius", 1)
+            station_profile.set_command_flag("add_sta", "disable_roam", 1)
+            station_profile.set_wifi_extra(key_mgmt="FT-SAE     ",
+                                           pairwise="",
+                                           group="",
+                                           psk="",
+                                           eap="",
+                                           identity="",
+                                           passwd="",
+                                           pin=""
+                                           )
+
+        if type == "11r-sae-802.1x":
+            station_profile.set_command_flag("set_port", "rpt_timer", 1)
+            station_profile.set_command_flag("add_sta", "ieee80211w", 2)
+            station_profile.set_command_flag("add_sta", "80211u_enable", 0)
+            station_profile.set_command_flag("add_sta", "8021x_radius", 1)
+            station_profile.set_command_flag("add_sta", "disable_roam", 1)
+            # station_profile.set_command_flag("add_sta", "ap", "68:7d:b4:5f:5c:3f")
+            station_profile.set_wifi_extra(key_mgmt="FT-EAP     ",
+                                           pairwise="[BLANK]",
+                                           group="[BLANK]",
+                                           psk="[BLANK]",
+                                           eap="TTLS",
+                                           identity="testuser",
+                                           passwd="testpasswd",
+                                           pin=""
+                                           )
+        station_profile.create(radio=radio, sta_names_=station_list)
+        local_realm.wait_until_ports_appear(sta_list=station_list)
+        station_profile.admin_up()
+        if local_realm.wait_for_ip(station_list):
+            print("All stations got IPs")
+            return True
+        else:
+            print("Stations failed to get IPs")
+            return False
+
+    def json_get(self, _req_url="/"):
+        cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port, )
+        json_response = cli_base.json_get(_req_url=_req_url)
+        return json_response
+
+    def create_layer3(self, side_a_min_rate, side_a_max_rate, side_b_min_rate, side_b_max_rate,
+                      traffic_type, sta_list,):
+        # checked
+        print(sta_list)
+        print(type(sta_list))
+        print(self.upstream)
+        local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
+        cx_profile = local_realm.new_l3_cx_profile()
+        cx_profile.host = self.lanforge_ip
+        cx_profile.port = self.lanforge_port
+        layer3_cols = ['name', 'tx bytes', 'rx bytes', 'tx rate', 'rx rate']
+        cx_profile.side_a_min_bps = side_a_min_rate
+        cx_profile.side_a_max_bps = side_a_max_rate
+        cx_profile.side_b_min_bps = side_b_min_rate
+        cx_profile.side_b_max_bps = side_b_max_rate
+
+        # create
+        cx_profile.create(endp_type=traffic_type, side_a=sta_list,
+                               side_b=self.upstream,
+                               sleep_time=0)
+        cx_profile.start_cx()
+
+    def get_cx_list(self):
+        local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
+        layer3_result = local_realm.cx_list()
+        layer3_names = [item["name"] for item in layer3_result.values() if "_links" in item]
+        print(layer3_names)
+        return layer3_names
+
+
+    def get_layer3_values(self, cx_name=None, query=None):
+        url = f"/cx/{cx_name}"
+        response = self.json_get(_req_url=url)
+        result = response[str(cx_name)][str(query)]
+        return result
+
+
+    def crete_file_attach(self, bssid,rssi, rx_rate, rx_bytes, rx_packets, cx_time,  filename, name ):
+        try:
+            filename = filename
+            with open(filename, 'w') as f:
+                lines = ["bssid: " + str(bssid), 'rssi: ' + str(rssi), "rx rate: " + str(rx_rate),
+                         "rx packets: " + str(rx_packets), "rx bytes: " + str(rx_bytes), "connection time: " + str(cx_time)]
+                for line in lines:
+                    f.write(line)
+                    f.write('\n')
+            allure.attach.file(name=str(name), source=str(filename))
+        except FileNotFoundError:
+            print("The 'docs' directory does not exist")
+
+
+    def hard_roam(self, run_lf, instantiate_profile, lf_tools, lf_reports, get_configuration, test=None, band=None, num_sta=1,
+                  security=None, security_key=None,  iteration=1, ssid_name=None,
+                  roaming_delay=None, option=None, channel=36, duration=None, duration_based=False,
+                  iteration_based=True, dut_name=None, identity=None, ttls_pass=None):
+        allure.attach(name="Test Procedure", body="This test consists of creating a multiple  client which will be " \
+                                                  " connected to the nearest ap, here the test automation will " \
+                                                  "do hard roam based on forced roam method" \
+                                                  "check if client performed roam by monitoring client bssid, for n number of iterions")
+        allure.attach(name="Pass Fail Criteria",
+                      body="Test is said to be pass if it satisfy 4 criterias as - 1 after roam bssid should change , 2- reassociation respone should be present, 3- auth request should be present, 4- roaming time should be less then 50 ms " \
+                           "other wise the test is said to be failed ")
+
+        # attaching 11r log before tart of test
+        instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
+                                                      timeout="10",
+                                                      ap_data=get_configuration['access_point'],
+                                                      type=0)
+        log = instantiate_profile_obj.show_11r_log()
+
+        # get bssid from ap for 2g and 5g
+        radio = ""
+        c1_bssid = ""
+        c2_bssid = ""
+        if test == "2g":
+            c1_2g_bssid = ""
+            c2_2g_bssid = ""
+            if run_lf:
+                c1_2g_bssid = get_configuration["access_point"][0]["ssid"]["2g-bssid"]
+                allure.attach(name="bssid of ap1", body=c1_2g_bssid)
+                c2_2g_bssid = get_configuration["access_point"][1]["ssid"]["2g-bssid"]
+                allure.attach(name="bssid of ap2", body=c2_2g_bssid)
+
+            else:
+                # instantiate controller class and check bssid's for each ap in testbed
+                for ap_name in range(len(get_configuration['access_point'])):
+                    instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
+                                                                  timeout="10",
+                                                                  ap_data=get_configuration['access_point'],
+                                                                  type=ap_name)
+                    bssid_2g = instantiate_profile_obj.cal_bssid_2g()
+                    if ap_name == 0:
+                        c1_2g_bssid = bssid_2g
+                    if ap_name == 1:
+                        c2_2g_bssid = bssid_2g
+            c1_bssid = c1_2g_bssid
+            c2_bssid = c2_2g_bssid
+        elif test == "5g":
+            c1_5g_bssid = ""
+            c2_5g_bssid = ""
+            if run_lf:
+                c1_5g_bssid = get_configuration["access_point"][0]["ssid"]["5g-bssid"]
+                allure.attach(name="bssid of ap1", body=c1_5g_bssid)
+                c2_5g_bssid = get_configuration["access_point"][1]["ssid"]["5g-bssid"]
+                allure.attach(name="bssid of ap2", body=c2_5g_bssid)
+            else:
+                for ap_name in range(len(get_configuration['access_point'])):
+                    instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
+                                                                  timeout="10",
+                                                                  ap_data=get_configuration['access_point'],
+                                                                  type=ap_name)
+                    bssid_5g = instantiate_profile_obj.cal_bssid_5g()
+                    if ap_name == 0:
+                        c1_5g_bssid = bssid_5g
+                    if ap_name == 1:
+                        c2_5g_bssid = bssid_5g
+            c1_bssid = c1_5g_bssid
+            c2_bssid = c2_5g_bssid
+
+        elif test == "6g":
+            c1_6g_bssid = ""
+            c2_6g_bssid = ""
+            if run_lf:
+                c1_6g_bssid = get_configuration["access_point"][0]["ssid"]["6g-bssid"]
+                allure.attach(name="bssid of ap1", body=c1_6g_bssid)
+                c2_6g_bssid = get_configuration["access_point"][1]["ssid"]["6g-bssid"]
+                allure.attach(name="bssid of ap2", body=c2_6g_bssid)
+            else:
+                for ap_name in range(len(get_configuration['access_point'])):
+                    instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
+                                                                  timeout="10",
+                                                                  ap_data=get_configuration['access_point'],
+                                                                  type=ap_name)
+                    bssid_6g = instantiate_profile_obj.cal_bssid_6g()
+                    if ap_name == 0:
+                        c1_6g_bssid = bssid_6g
+                    if ap_name == 1:
+                        c2_6g_bssid = bssid_6g
+            c1_bssid = c1_6g_bssid
+            c2_bssid = c2_6g_bssid
+
+        print("bssid of c1 ", c1_bssid)
+        allure.attach(name="bssid of ap1", body=c1_bssid)
+        print("bssid of c2", c2_bssid)
+        allure.attach(name="bssid of ap2", body=c2_bssid)
+        allure.attach(name="11r logs before roam test", body=str(log))
+        fiveg_radio, sixg_radio, twog_radio, sniff_radio = None, None, None, None
+        supplicant_radio = None
+        if band == "twog":
+            twog_radio = self.twog_radios[0]
+            supplicant_radio = twog_radio.split(".")[2]
+            radio_ = self.ax_radios[0]
+            sniff_radio = radio_.split(".")[2]
+        if band == "fiveg":
+            fiveg_radio = self.fiveg_radios[0]
+            supplicant_radio = fiveg_radio.split(".")[2]
+            radio_ = self.ax_radios[0]
+            sniff_radio = radio_.split(".")[2]
+        if band == "sixg":
+            sixg_radio = self.ax_radios[1]
+            supplicant_radio = sixg_radio.split(".")[2]
+            radio_ = self.ax_radios[2]
+            sniff_radio = radio_.split(".")[2]
+        obj = HardRoam(lanforge_ip=self.lanforge_ip,
+                       lanforge_port=self.lanforge_port,
+                       lanforge_ssh_port = 22,
+                       c1_bssid=c1_bssid,
+                       c2_bssid=c2_bssid,
+                       fiveg_radio=fiveg_radio,
+                       twog_radio=twog_radio,
+                       sixg_radio=sixg_radio,
+                       band=band,
+                       sniff_radio=sniff_radio,
+                       num_sta=num_sta,
+                       security=security,
+                       security_key=security_key,
+                       ssid=ssid_name,
+                       upstream=self.upstream,
+                       duration=duration,
+                       iteration=iteration,
+                       channel=channel,
+                       option=option,
+                       duration_based=duration_based,
+                       iteration_based=iteration_based,
+                       dut_name = dut_name,
+                       traffic_type="lf_udp",
+                       path="../lanforge/lanforge-scripts",
+                       scheme="ssh",
+                       dest="localhost",
+                       user="admin",
+                       passwd="Cisco123",
+                       prompt="WLC2",
+                       series_cc="9800",
+                       ap="AP687D.B45C.1D1C",
+                       port="8888",
+                       band_cc="5g",
+                       timeout="40",
+                       identity = identity,
+                       ttls_pass = ttls_pass
+                       )
+        x = os.getcwd()
+        print(x)
+        file = obj.generate_csv()
+        kernel, message = obj.run(file_n=file)
+        allure.attach(name="message", body=str(message))
+        # file = ["test_client_0.csv"]
+        report_dir_name = obj.generate_report(csv_list=file, kernel_lst=kernel, current_path=str(x) + "/tests")
+        print(report_dir_name)
+        lf_csv_obj = lf_csv()
+        for i, y in zip(file, range(len(file))):
+            data = lf_csv_obj.read_csv_row(file_name=str(x) + "/" + str(report_dir_name) + "/csv_data/" + str(i))
+            tab = lf_reports.table2(table=data)
+            allure.attach(name="client " + str(y) + " table", body=str(tab))
+        # report_dir_name = "2022-04-30-18-51-07_Hard Roam Test"
+        relevant_path =  report_dir_name + "/"
+        entries = os.listdir(report_dir_name + "/")
+        pdf = None
+        for i in entries:
+            if ".pdf" in i:
+                pdf = i
+        allure.attach.file(source=relevant_path + pdf, name="hard_roam_report")
+        instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
+                                                      timeout="10",
+                                                      ap_data=get_configuration['access_point'],
+                                                      type=0)
+        z = instantiate_profile_obj.show_wireless_client_detail()
+        allure.attach(name="wireless client details", body=str(z))
+        log = instantiate_profile_obj.show_11r_log()
+        allure.attach(name="11r logs after roam test", body=str(log))
+        allure.attach(name="test_result_folder", body=str(report_dir_name))
+        try:
+            supplicant = "/home/lanforge/wifi/wpa_supplicant_log_" + supplicant_radio + ".txt"
+            obj = SCP_File(ip=self.lanforge_ip, port=self.lanforge_ssh_port, username="root", password="lanforge",
+                           remote_path=supplicant,
+                           local_path=relevant_path)
+            obj.pull_file()
+            # obj.ssh_connect(command="journalctl --since '1 hour ago' > kernel_log.txt")
+            # kernel_log  = "/home/lanforge/kernel_log.txt"
+            # obj1 = SCP_File(ip=self.lanforge_ip, port=self.lanforge_ssh_port, username="root", password="lanforge",
+            #                remote_path=kernel_log,
+            #                local_path=relevant_path)
+            # obj1.pull_file()
+            allure.attach.file(source=relevant_path + "/wpa_supplicant_log_" + supplicant_radio + ".txt",
+                               name="supplicant_log")
+        except Exception as e:
+            print(e)
 
     def set_radio_country_channel(self,_radio="wiphy0",_channel=0,_country_num=840,): # 840 - US
         data = {
