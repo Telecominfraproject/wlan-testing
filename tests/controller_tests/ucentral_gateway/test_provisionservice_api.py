@@ -18,7 +18,8 @@ import allure
 @pytest.mark.owprov_api_inventory
 @allure.feature("SDK PROV REST API")
 class TestProvAPIInventory(object):
-    global device_name, entity_id, contact_id, location_id, venue_id, map_id, operator_id, service_class_id
+    global device_name, entity_id, contact_id, location_id, venue_id, map_id, operator_id, service_class_id, \
+           configuration_id, modified
     device_mac = "02:00:00:%02x:%02x:%02x" % (random.randint(0, 255),
                                               random.randint(0, 255),
                                               random.randint(0, 255))
@@ -885,3 +886,651 @@ class TestProvAPIServiceClass(object):
         if resp.status_code != 200:
             assert False
 
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.owprov_api_tests
+@pytest.mark.owprov_api_config
+@allure.feature("SDK PROV REST API")
+class TestProvAPIConfigurations(object):
+
+    configuration = [
+        {
+                      "name": "Radios",
+                      "description": "",
+                      "weight": 1,
+                      "configuration": {
+                        "radios": [
+                          {
+                            "band": "5G",
+                            "channel": 52,
+                            "channel-mode": "HE",
+                            "channel-width": 80,
+                            "country": "CA"
+                          },
+                          {
+                            "band": "2G",
+                            "channel": 11,
+                            "channel-mode": "HE",
+                            "channel-width": 20,
+                            "country": "CA"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "Interfaces",
+                      "description": "",
+                      "weight": 1,
+                      "configuration": {
+                        "interfaces": [
+                          {
+                            "name": "WAN",
+                            "role": "upstream",
+                            "services": [
+                              "lldp"
+                            ],
+                            "ethernet": [
+                              {
+                                "select-ports": [
+                                  "WAN*"
+                                ]
+                              }
+                            ],
+                            "ipv4": {
+                              "addressing": "dynamic"
+                            },
+                            "ssids": [
+                              {
+                                "name": "OpenWifi",
+                                "role": "downstream",
+                                "wifi-bands": [
+                                  "2G",
+                                  "5G"
+                                ],
+                                "bss-mode": "ap",
+                                "encryption": {
+                                  "proto": "none",
+                                  "ieee80211w": "optional"
+                                }
+                              },
+                              {
+                                "name": "OpenWifi_wpa",
+                                "role": "downstream",
+                                "wifi-bands": [
+                                  "2G",
+                                  "5G"
+                                ],
+                                "bss-mode": "ap",
+                                "encryption": {
+                                  "proto": "psk",
+                                  "key": "OpenWifi",
+                                  "ieee80211w": "optional"
+                                }
+                              },
+                              {
+                                "name": "OpenWifi_wpa2",
+                                "role": "downstream",
+                                "wifi-bands": [
+                                  "2G",
+                                  "5G"
+                                ],
+                                "bss-mode": "ap",
+                                "encryption": {
+                                  "proto": "psk2",
+                                  "key": "OpenWifi",
+                                  "ieee80211w": "optional"
+                                }
+                              },
+                              {
+                                "name": "OpenWifi_wpa3",
+                                "role": "downstream",
+                                "wifi-bands": [
+                                  "2G",
+                                  "5G"
+                                ],
+                                "bss-mode": "ap",
+                                "encryption": {
+                                  "proto": "sae",
+                                  "key": "OpenWifi",
+                                  "ieee80211w": "optional"
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "name": "LAN",
+                            "role": "downstream",
+                            "services": [
+                              "ssh",
+                              "lldp"
+                            ],
+                            "ethernet": [
+                              {
+                                "select-ports": [
+                                  "LAN*"
+                                ]
+                              }
+                            ],
+                            "ipv4": {
+                              "addressing": "static",
+                              "subnet": "192.168.1.1/24",
+                              "dhcp": {
+                                "lease-first": 10,
+                                "lease-count": 100,
+                                "lease-time": "6h"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "Metrics",
+                      "description": "",
+                      "weight": 1,
+                      "configuration": {
+                        "metrics": {
+                          "statistics": {
+                            "interval": 120,
+                            "types": [
+                              "ssids",
+                              "lldp",
+                              "clients"
+                            ]
+                          },
+                          "health": {
+                            "interval": 120
+                          },
+                          "wifi-frames": {
+                            "filters": [
+                              "probe",
+                              "auth"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "name": "Services",
+                      "description": "",
+                      "weight": 1,
+                      "configuration": {
+                        "services": {
+                          "lldp": {
+                            "describe": "uCentral",
+                            "location": "universe"
+                          },
+                          "ssh": {
+                            "port": 22
+                          }
+                        }
+                      }
+                    }
+                    ]
+
+    @pytest.mark.prov_api_config
+    def test_read_all_configurations(self, setup_prov_controller):
+        resp = setup_prov_controller.get_configuration()
+        print(resp.json())
+        allure.attach(name="Configurations", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
+    @pytest.mark.prov_api_config_test
+    def test_prov_service_create_configuration(self, setup_prov_controller, testbed):
+        """
+            Test the create configuration in provision Service
+        """
+        global configuration_id, modified
+        payload = {
+                  "name": "VLAN",
+                  "deviceRules": {
+                    "rrm": "inherit",
+                    "rcOnly": "inherit",
+                    "firmwareUpgrade": "inherit"
+                  },
+                  "deviceTypes": [
+                    "cig_wf188n",
+                    "edgecore_ssw2ac2600",
+                    "indio_um-305ax",
+                    "hfcl_ion4xe",
+                    "wallys_dr40x9",
+                    "udaya_a5-id2",
+                    "x64_vm"
+                  ],
+                  "entity": "0000-0000-0000",
+                  "venue": "",
+                  "configuration": [
+                    {
+                      "name": "Radios",
+                      "description": "",
+                      "weight": 1,
+                      "configuration": {
+                        "radios": [
+                          {
+                            "band": "5G",
+                            "channel": 52,
+                            "channel-mode": "HE",
+                            "channel-width": 80,
+                            "country": "CA"
+                          },
+                          {
+                            "band": "2G",
+                            "channel": 11,
+                            "channel-mode": "HE",
+                            "channel-width": 20,
+                            "country": "CA"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "Interfaces",
+                      "description": "",
+                      "weight": 1,
+                      "configuration": {
+                        "interfaces": [
+                          {
+                            "name": "WAN",
+                            "role": "upstream",
+                            "services": [
+                              "lldp"
+                            ],
+                            "ethernet": [
+                              {
+                                "select-ports": [
+                                  "WAN*"
+                                ]
+                              }
+                            ],
+                            "ipv4": {
+                              "addressing": "dynamic"
+                            },
+                            "ssids": [
+                              {
+                                "name": "OpenWifi",
+                                "role": "downstream",
+                                "wifi-bands": [
+                                  "2G",
+                                  "5G"
+                                ],
+                                "bss-mode": "ap",
+                                "encryption": {
+                                  "proto": "none",
+                                  "ieee80211w": "optional"
+                                }
+                              },
+                              {
+                                "name": "OpenWifi_wpa",
+                                "role": "downstream",
+                                "wifi-bands": [
+                                  "2G",
+                                  "5G"
+                                ],
+                                "bss-mode": "ap",
+                                "encryption": {
+                                  "proto": "psk",
+                                  "key": "OpenWifi",
+                                  "ieee80211w": "optional"
+                                }
+                              },
+                              {
+                                "name": "OpenWifi_wpa2",
+                                "role": "downstream",
+                                "wifi-bands": [
+                                  "2G",
+                                  "5G"
+                                ],
+                                "bss-mode": "ap",
+                                "encryption": {
+                                  "proto": "psk2",
+                                  "key": "OpenWifi",
+                                  "ieee80211w": "optional"
+                                }
+                              },
+                              {
+                                "name": "OpenWifi_wpa3",
+                                "role": "downstream",
+                                "wifi-bands": [
+                                  "2G",
+                                  "5G"
+                                ],
+                                "bss-mode": "ap",
+                                "encryption": {
+                                  "proto": "sae",
+                                  "key": "OpenWifi",
+                                  "ieee80211w": "optional"
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "name": "LAN",
+                            "role": "downstream",
+                            "services": [
+                              "ssh",
+                              "lldp"
+                            ],
+                            "ethernet": [
+                              {
+                                "select-ports": [
+                                  "LAN*"
+                                ]
+                              }
+                            ],
+                            "ipv4": {
+                              "addressing": "static",
+                              "subnet": "192.168.1.1/24",
+                              "dhcp": {
+                                "lease-first": 10,
+                                "lease-count": 100,
+                                "lease-time": "6h"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "Metrics",
+                      "description": "",
+                      "weight": 1,
+                      "configuration": {
+                        "metrics": {
+                          "statistics": {
+                            "interval": 120,
+                            "types": [
+                              "ssids",
+                              "lldp",
+                              "clients"
+                            ]
+                          },
+                          "health": {
+                            "interval": 120
+                          },
+                          "wifi-frames": {
+                            "filters": [
+                              "probe",
+                              "auth"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "name": "Services",
+                      "description": "",
+                      "weight": 1,
+                      "configuration": {
+                        "services": {
+                          "lldp": {
+                            "describe": "uCentral",
+                            "location": "universe"
+                          },
+                          "ssh": {
+                            "port": 22
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+        print(json.dumps(payload))
+        resp = setup_prov_controller.add_configuration(payload)
+        allure.attach(name="response: ", body=str(resp.json()))
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov create configuration", body=body)
+        if resp.status_code != 200:
+            assert False
+        configuration = json.loads(resp.text)
+        print(configuration)
+        configuration_id = configuration['id']
+        modified = configuration['modified']
+
+    @pytest.mark.prov_api_config_test
+    def test_prov_service_read_configuration(self, setup_prov_controller, testbed):
+        global configuration_id
+        resp = setup_prov_controller.get_configuration_by_id(configuration_id)
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov create configuration-verify", body=body)
+        if resp.status_code != 200:
+            assert False
+
+    @pytest.mark.prov_api_config_test
+    def test_prov_service_edit_configuration(self, setup_prov_controller, testbed):
+        # This to edit configuration
+        global configuration_id, modified
+        editing_payload = {
+                          "configuration": [
+                            {
+                              "configuration": {
+                                "radios": [
+                                  {
+                                    "band": "5G",
+                                    "channel": 52,
+                                    "channel-mode": "HE",
+                                    "channel-width": 80,
+                                    "country": "CA"
+                                  },
+                                  {
+                                    "band": "2G",
+                                    "channel": 11,
+                                    "channel-mode": "HE",
+                                    "channel-width": 20,
+                                    "country": "CA"
+                                  }
+                                ]
+                              },
+                              "description": "",
+                              "name": "Radios",
+                              "weight": 1
+                            },
+                            {
+                              "configuration": {
+                                "interfaces": [
+                                  {
+                                    "ethernet": [
+                                      {
+                                        "select-ports": [
+                                          "WAN*"
+                                        ]
+                                      }
+                                    ],
+                                    "ipv4": {
+                                      "addressing": "dynamic"
+                                    },
+                                    "name": "WAN",
+                                    "role": "upstream",
+                                    "services": [
+                                      "lldp"
+                                    ],
+                                    "ssids": [
+                                      {
+                                        "bss-mode": "ap",
+                                        "encryption": {
+                                          "ieee80211w": "optional",
+                                          "proto": "none"
+                                        },
+                                        "name": "OpenWifi",
+                                        "role": "downstream",
+                                        "wifi-bands": [
+                                          "2G",
+                                          "5G"
+                                        ]
+                                      },
+                                      {
+                                        "bss-mode": "ap",
+                                        "encryption": {
+                                          "ieee80211w": "optional",
+                                          "key": "OpenWifi",
+                                          "proto": "psk"
+                                        },
+                                        "name": "OpenWifi_wpa",
+                                        "role": "downstream",
+                                        "wifi-bands": [
+                                          "2G",
+                                          "5G"
+                                        ]
+                                      },
+                                      {
+                                        "bss-mode": "ap",
+                                        "encryption": {
+                                          "ieee80211w": "optional",
+                                          "key": "OpenWifi",
+                                          "proto": "psk2"
+                                        },
+                                        "name": "OpenWifi_wpa2",
+                                        "role": "downstream",
+                                        "wifi-bands": [
+                                          "2G",
+                                          "5G"
+                                        ]
+                                      },
+                                      {
+                                        "bss-mode": "ap",
+                                        "encryption": {
+                                          "ieee80211w": "optional",
+                                          "key": "OpenWifi",
+                                          "proto": "sae"
+                                        },
+                                        "name": "OpenWifi_wpa3",
+                                        "role": "downstream",
+                                        "wifi-bands": [
+                                          "2G",
+                                          "5G"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "ethernet": [
+                                      {
+                                        "select-ports": [
+                                          "LAN*"
+                                        ]
+                                      }
+                                    ],
+                                    "ipv4": {
+                                      "addressing": "static",
+                                      "dhcp": {
+                                        "lease-count": 100,
+                                        "lease-first": 10,
+                                        "lease-time": "6h"
+                                      },
+                                      "subnet": "192.168.1.1/24"
+                                    },
+                                    "name": "LAN",
+                                    "role": "downstream",
+                                    "services": [
+                                      "ssh",
+                                      "lldp"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "description": "",
+                              "name": "Interfaces",
+                              "weight": 1
+                            },
+                            {
+                              "configuration": {
+                                "metrics": {
+                                  "health": {
+                                    "interval": 120
+                                  },
+                                  "statistics": {
+                                    "interval": 120,
+                                    "types": [
+                                      "ssids",
+                                      "lldp",
+                                      "clients"
+                                    ]
+                                  },
+                                  "wifi-frames": {
+                                    "filters": [
+                                      "probe",
+                                      "auth"
+                                    ]
+                                  }
+                                }
+                              },
+                              "description": "",
+                              "name": "Metrics",
+                              "weight": 1
+                            },
+                            {
+                              "configuration": {
+                                "services": {
+                                  "lldp": {
+                                    "describe": "uCentral",
+                                    "location": "universe"
+                                  },
+                                  "ssh": {
+                                    "port": 22
+                                  }
+                                }
+                              },
+                              "description": "",
+                              "name": "Services",
+                              "weight": 1
+                            }
+                          ],
+                          "created": modified,
+                          "description": "After Editing",
+                          "deviceRules": {
+                            "firmwareUpgrade": "inherit",
+                            "rcOnly": "inherit",
+                            "rrm": "inherit"
+                          },
+                          "deviceTypes": [
+                            "cig_wf188n",
+                            "edgecore_ssw2ac2600",
+                            "indio_um-305ax",
+                            "hfcl_ion4xe",
+                            "wallys_dr40x9",
+                            "udaya_a5-id2",
+                            "x64_vm"
+                          ],
+                          "entity": "0000-0000-0000",
+                          "extendedInfo": {
+                            "entity": {
+                              "description": "",
+                              "id": "0000-0000-0000",
+                              "name": "World123"
+                            }
+                          },
+                          "id": configuration_id,
+                          "inUse": [],
+                          "managementPolicy": "",
+                          "modified": modified,
+                          "name": "VLAN",
+                          "notes": [],
+                          "subscriber": "",
+                          "subscriberOnly": False,
+                          "tags": [],
+                          "variables": [],
+                          "venue": ""
+                        }
+        print(json.dumps(editing_payload))
+        resp = setup_prov_controller.edit_configuration(editing_payload, configuration_id)
+        allure.attach(name="response: ", body=str(resp.json()))
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov edited configuration", body=body)
+        if resp.status_code != 200:
+            assert False
+        contact = json.loads(resp.text)
+        print(contact)
+
+        resp = setup_prov_controller.get_configuration_by_id(configuration_id)
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov edited configuration-verify", body=body)
+        if resp.status_code != 200:
+            assert False
+
+    @pytest.mark.prov_api_config_test
+    def test_prov_service_delete_configuration(self, setup_prov_controller, testbed):
+        global configuration_id
+        resp = setup_prov_controller.delete_configuration(configuration_id)
+        body = resp.url + "," + str(resp.status_code) + ',' + resp.text
+        allure.attach(name="Prov created configuration-delete", body=body)
+        if resp.status_code != 200:
+            assert False
